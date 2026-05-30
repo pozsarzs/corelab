@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
+{ | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | core_bus.pas                                                             | }
 { | System bus abstraction module                                            | }
@@ -12,58 +12,33 @@
   FOR A PARTICULAR PURPOSE. }
 
 unit core_bus;
-
 {$mode objfpc}{$H+}
-
 interface
-
 uses
   Classes, SysUtils, core_cpu, core_memory, core_ioport;
-
 type
-  { Rendszerbusz absztrakt ősosztálya.
-    Ez a komponens köti össze a CPU-t a memóriákkal és az I/O perifériákkal.
-    Megvalósítja az ICPUBus interfészt, amin keresztül a CPU eléri a külvilágot. }
+  // Abstract base systemm bus class
   TBus = class(TInterfacedObject, ICPUBus)
   protected
-    FCodeMemory: TMemory;                       { Csatlakoztatott programmemória modul }
-    FDataMemory: TMemory;                       { Csatlakoztatott adatmemória modul }
-    FIOPorts: TIOPort;                          { Csatlakoztatott I/O port vezérlő }
+    FCodeMemory: TMemory;                         // Connected code memory modul
+    FDataMemory: TMemory;                       // Connected (data) memory modul
+    FIOPorts: TIOPort;                                    // Connected I/O modul
   public
     constructor Create; virtual;
-    
-    { --- ICPUBus interfész megvalósítása (A CPU felőli oldal) --- }
-    
-    { Adatmemória olvasása globális cím alapján }
+    // Simulator side methods
     function  MemRead(Address: uint64): byte; virtual;
-    { Adatmemória írása globális cím alapján }
     procedure MemWrite(Address: uint64; Value: byte); virtual;
-    
-    { Programmemória olvasása (Harvard architektúra vagy külön kód-lekérés esetén) }
     function  CodeRead(Address: uint64): byte; virtual;
-    { Programmemória írása (pl. önmódosító kód vagy monitor program általi betöltés) }
     procedure CodeWrite(Address: uint64; Value: byte); virtual;
-    
-    { I/O port olvasása perifériacím alapján }
     function  IORead(Port: uint64): byte; virtual;
-    { I/O port írása perifériacím alapján }
     procedure IOWrite(Port: uint64; Value: byte); virtual;
-
-    { --- Keretrendszer felőli konfigurációs metódusok (A host oldala) --- }
-    
-    { Egységes memória csatlakoztatása (Neumann-architektúra esetén) }
+    // Host side methods
     procedure AttachMemory(AMemory: TMemory); virtual;
-    { Különálló programmemória csatlakoztatása (Harvard-architektúra esetén) }
-    procedure AttachCodeMemory(AMemory: TMemory); virtual;
-    { Különálló adatmemória csatlakoztatása (Harvard-architektúra esetén) }
     procedure AttachDataMemory(AMemory: TMemory); virtual;
-    { I/O port vezérlő hardver csatlakoztatása }
+    procedure AttachCodeMemory(AMemory: TMemory); virtual;
     procedure AttachIOPorts(APorts: TIOPort); virtual;
-    
-    { A buszra kötött összes hardverkomponens alaphelyzetbe állítása }
     procedure Reset; virtual;
-
-    { Publikus jellemzők a konfiguráció lekérdezéséhez }
+    // Public properties
     property CodeMemory: TMemory read FCodeMemory;
     property DataMemory: TMemory read FDataMemory;
     property IOPorts: TIOPort read FIOPorts;
@@ -79,81 +54,79 @@ begin
   FIOPorts := nil;
 end;
 
+// Reading (data) memory based on absolute address
 function TBus.MemRead(Address: uint64): byte;
 begin
-  if Assigned(FDataMemory) then
-    Result := FDataMemory.ReadByte(Address)
-  else
-    Result := $FF; { Lebegő busz alapértelmezett értéke, ha nincs hardver a címen }
+  if Assigned(FDataMemory)
+    then Result := FDataMemory.ReadByte(Address)
+    else Result := $FF;
 end;
 
+// Writing (data) memory based on absolute address
 procedure TBus.MemWrite(Address: uint64; Value: byte);
 begin
-  if Assigned(FDataMemory) then
-    FDataMemory.WriteByte(Address, Value);
+  if Assigned(FDataMemory) then FDataMemory.WriteByte(Address, Value);
 end;
 
+// Reading code memory based on absolute address
 function TBus.CodeRead(Address: uint64): byte;
 begin
-  if Assigned(FCodeMemory) then
-    Result := FCodeMemory.ReadByte(Address)
-  else
-    Result := $FF;
+  if Assigned(FCodeMemory)
+    then Result := FCodeMemory.ReadByte(Address)
+    else Result := $FF;
 end;
 
+// Writing code memory based on absolute address
 procedure TBus.CodeWrite(Address: uint64; Value: byte);
 begin
-  if Assigned(FCodeMemory) then
-    FCodeMemory.WriteByte(Address, Value);
+  if Assigned(FCodeMemory) then FCodeMemory.WriteByte(Address, Value);
 end;
 
+// Reading I/O port based on absolute address
 function TBus.IORead(Port: uint64): byte;
 begin
-  if Assigned(FIOPorts) then
-    Result := FIOPorts.ReadPort(Port)
-  else
-    Result := $FF;
+  if Assigned(FIOPorts)
+    then Result := FIOPorts.ReadPort(Port)
+    else Result := $FF;
 end;
 
+// Writing I/O port based on absolute address
 procedure TBus.IOWrite(Port: uint64; Value: byte);
 begin
-  if Assigned(FIOPorts) then
-    FIOPorts.WritePort(Port, Value);
+  if Assigned(FIOPorts) then FIOPorts.WritePort(Port, Value);
 end;
 
+// Connecting memory (Neumann)
 procedure TBus.AttachMemory(AMemory: TMemory);
 begin
-  { Neumann-architektúra esetén a kód- és az adattér ugyanarra a fizikai egységre mutat }
   FCodeMemory := AMemory;
   FDataMemory := AMemory;
 end;
 
-procedure TBus.AttachCodeMemory(AMemory: TMemory);
-begin
-  FCodeMemory := AMemory;
-end;
-
+// Connecting data memory (Harvard)
 procedure TBus.AttachDataMemory(AMemory: TMemory);
 begin
   FDataMemory := AMemory;
 end;
 
+// Connecting code memory (Harvard)
+procedure TBus.AttachCodeMemory(AMemory: TMemory);
+begin
+  FCodeMemory := AMemory;
+end;
+
+// Connecting I/O ports
 procedure TBus.AttachIOPorts(APorts: TIOPort);
 begin
   FIOPorts := APorts;
 end;
 
+// Reset all hardware components connected to the bus   
 procedure TBus.Reset;
 begin
-  { Programmemória resetelése }
   if Assigned(FCodeMemory) then FCodeMemory.Reset;
-  
-  { Védelem: Ha a kód- és adatmemória ugyanaz az objektumpéldány (Neumann), 
-    akkor nem hívjuk meg kétszer a Reset-et ugyanazon a területen. }
-  if Assigned(FDataMemory) and (FDataMemory <> FCodeMemory) then 
-    FDataMemory.Reset;
-    
-  { Perifériák resetelése }
+  if Assigned(FDataMemory) and (FDataMemory <> FCodeMemory)
+    then FDataMemory.Reset;
   if Assigned(FIOPorts) then FIOPorts.Reset;
 end;
 

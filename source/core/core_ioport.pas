@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
+{ | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | core_ioport.pas                                                          | }
 { | I/O port abstraction module                                              | }
@@ -17,11 +17,13 @@ interface
 uses
   Classes, SysUtils;
 type
+  // Abstract base I/O port class
   TIOPort = class
   protected
-    FMaxRelAddress: qword;
-    FSize: qword;
-    FReadOnly: boolean;
+    // Allocated I/O ports
+    FMaxRelAddress: qword;                           // Maximum relative address
+    FSize: qword;                                                 // Total range
+    FReadOnly: boolean;        //Flag indicating that the I/O block is read-only
   public
     // Public methods
     constructor Create(ASize: qword; AReadOnly: boolean); virtual;

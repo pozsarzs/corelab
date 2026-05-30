@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
+{ | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | core_mem.pas                                                             | }
 { | Memory abstraction module                                                | }
@@ -17,11 +17,13 @@ interface
 uses
   Classes, SysUtils;
 type
+  // Abstract base memory class
   TMemory = class
   protected
-    FMaxRelAddress: qword;
-    FSize: qword;
-    FReadOnly: boolean;
+    // Allocated memory block
+    FMaxRelAddress: qword;          // Stores the highest valid relative address
+    FSize: qword;                                         // Total size in bytes
+    FReadOnly: boolean;           //Flag indicating that the memory block is ROM
   public
     // Public methods
     constructor Create(ASize: qword; AReadOnly: boolean); virtual;
