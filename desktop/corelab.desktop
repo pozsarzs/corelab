@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=CoreLab
+GenericName=Modular Processor Simulation Framework
+GenericName[hu]=Moduláris processzorszimulációs keretrendszer
+Exec=corelab %F
+Icon=corelab
+Terminal=true
+StartupNotify=true
+Categories=Science;Development;Education;
+MimeType=application/x-corelab-project;application/x-corelab-snapshot;application/x-corelab-script;
