@@ -21,5 +21,3 @@
 
 ### Opcodes
 
-|Opcode|Mnemonic|NumOperand|Op1 type|Op1 name|Op2 type|Op2 name|AffectedFlags|
-|:----:|:-------|:--------:|:------:|:------:|:------:|:------:|:------------|

@@ -12,14 +12,17 @@
   FOR A PARTICULAR PURPOSE. }
 
   case OC of  
+    // NOP
     $00: begin
            LogRecord.Mnemonic:='NOP';
          end;
+    // HLT
     $76: begin
            LogRecord.Mnemonic:='HLT';
            FHalted := true;
            EmitEvent(ceHalt);
          end;
+    // XCHG
     $EB: begin
            LogRecord.Mnemonic:='XCHG';
            with FRegs do

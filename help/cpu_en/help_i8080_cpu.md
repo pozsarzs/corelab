@@ -2,281 +2,147 @@
 
 ## Documentation
 
-
 ### Technical Parameters
 
-| Parameter                        | Specification                                  |
-|----------------------------------|------------------------------------------------|
-| **Release Date**                 | April 1974                                     |
-| **Process Technology**           | 6 µm NMOS                                      |
-| **Transistor Count**             | ~4,500 (LSI)                                   |
-| **Architecture**                 | Von Neumann                                    |
-| **Data Bus Width**               | 8-bit                                          |
-| **Address Bus Width**            | 16-bit                                         |
-| **Maximum Addressable Memory**   | 64 KB                                          |
-| **Maximum Addressable I/O area** | 256 ports (8-bit I/O address space)            |
-| **Clock Speed**                  | 2 MHz (Intel 8080A), up to 3.125 MHz (8080A-1) |
-| **Internal Stack**               | No (External, RAM-based via Stack Pointer)     |
-| **General Purpose Registers**    | A (Accumulator), B, C, D, E, H, L              |
-| **Special Registers**            | PC (Program Counter), SP (Stack Pointer), Flags|
-
+|Parameter                       |Specification                                 |
+|--------------------------------|----------------------------------------------|
+|**Release Date**                |April 1974                                    |
+|**Process Technology**          |6 µm NMOS                                     |
+|**Transistor Count**            |~4,500 (LSI)                                  |
+|**Architecture**                |Von Neumann                                   |
+|**Data Bus Width**              |8-bit                                         |
+|**Address Bus Width**           |16-bit                                        |
+|**Maximum Addressable Memory**  |64 KB                                         |
+|**Maximum Addressable I/O area**|256 ports (8-bit I/O address space)           |
+|**Clock Speed**                 |2 MHz (Intel 8080A), up to 3.125 MHz (8080A-1)|
+|**Internal Stack**              |No (External, RAM-based via Stack Pointer)    |
+|**General Purpose Registers**   |A, B, C, D, E, H, L                           |
+|**Special Registers**           |PC, SP, Flags                                 |
 
 ### Opcodes
-| Opcode | Mnemonic      | NumOperand | Op1 Type | Op1 Name | Op2 Type | Op2 Name | AffectedFlags |
-|:------:|:--------------|:-----:| :---: | :---: | :---: | :---: | :--- |
-| `0x00` | **NOP**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x01` | **LXI B,d16** | 0     | `opFixed` | 3  10    | `opNone` | - | `0` |
-| `0x02` | **STAX B**    | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x03` | **INX B**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x04` | **INR B**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x05` | **DCR B**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x06` | **MVI B,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x07` | **RLC**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x08` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x09` | **DAD B**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0x0A` | **LDAX B**    | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x0B` | **DCX B**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x0C` | **INR C**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x0D` | **DCR C**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x0E` | **MVI C,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x0F` | **RRC**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x10` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x11` | **LXI D,d16** | 0     | `opFixed` | 3  10    | `opNone` | - | `0` |
-| `0x12` | **STAX D**    | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x13` | **INX D**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x14` | **INR D**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x15` | **DCR D**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x16` | **MVI D,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x17` | **RAL**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x18` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x19` | **DAD D**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0x1A` | **LDAX D**    | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x1B` | **DCX D**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x1C` | **INR E**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x1D` | **DCR E**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x1E` | **MVI E,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x1F` | **RAR**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x20` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x21` | **LXI H,d16** | 0     | `opFixed` | 3  10    | `opNone` | - | `0` |
-| `0x22` | **SHLD a16**  | 0     | `opFixed` | 3  16   | `opNone` | - | `0` |
-| `0x23` | **INX H**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x24` | **INR H**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x25` | **DCR H**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x26` | **MVI H,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x27` | **DAA**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x28` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x29` | **DAD H**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0x2A` | **LHLD a16**  | 0     | `opFixed` | 3  16   | `opNone` | - | `0` |
-| `0x2B` | **DCX H**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x2C` | **INR L**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x2D` | **DCR L**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x2E` | **MVI L,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x2F` | **CMA**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x30` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x31` | **LXI SP,d16**| 0     | `opFixed` | 3  10    | `opNone` | - | `0` |
-| `0x32` | **STA a16**   | 0     | `opFixed` | 3  13   | `opNone` | - | `0` |
-| `0x33` | **INX SP**    | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x34` | **INR M**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0x35` | **DCR M**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0x36` | **MVI M,d8**  | 0     | `opFixed` | 2  10   | `opNone` | - | `0` |
-| `0x37` | **STC**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x38` | ***NOP**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0x39` | **DAD SP**    | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0x3A` | **LDA a16**   | 0     | `opFixed` | 3  13   | `opNone` | - | `0` |
-| `0x3B` | **DCX SP**    | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x3C` | **INR A**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x3D` | **DCR A**     | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x3E` | **MVI A,d8**  | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0x3F` | **CMC**       | 0     | `opFixed` | 1  4 | `opNone` | - | `0` |
-| `0x40` | **MOV B,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x41` | **MOV B,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x42` | **MOV B,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x43` | **MOV B,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x44` | **MOV B,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x45` | **MOV B,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x46` | **MOV B,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x47` | **MOV B,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x48` | **MOV C,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x49` | **MOV C,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x4A` | **MOV C,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x4B` | **MOV C,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x4C` | **MOV C,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x4D` | **MOV C,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x4E` | **MOV C,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x4F` | **MOV C,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x50` | **MOV D,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x51` | **MOV D,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x52` | **MOV D,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x53` | **MOV D,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x54` | **MOV D,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x55` | **MOV D,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x56` | **MOV D,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x57` | **MOV D,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x58` | **MOV E,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x59` | **MOV E,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x5A` | **MOV E,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x5B` | **MOV E,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x5C` | **MOV E,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x5D` | **MOV E,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x5E` | **MOV E,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x5F` | **MOV E,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x60` | **MOV H,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x61` | **MOV H,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x62` | **MOV H,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x63` | **MOV H,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x64` | **MOV H,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x65` | **MOV H,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x66` | **MOV H,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x67` | **MOV H,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x68` | **MOV L,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x69` | **MOV L,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x6A` | **MOV L,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x6B` | **MOV L,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x6C` | **MOV L,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x6D` | **MOV L,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x6E` | **MOV L,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x6F` | **MOV L,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x70` | **MOV M,B**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x71` | **MOV M,C**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x72` | **MOV M,D**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x73` | **MOV M,E**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x74` | **MOV M,H**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x75` | **MOV M,L**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x76` | **HLT**       | 0     | `opFixed` | 1  7 | `opNone` | - | `0` |
-| `0x77` | **MOV M,A**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x78` | **MOV A,B**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x79` | **MOV A,C**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x7A` | **MOV A,D**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x7B` | **MOV A,E**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x7C` | **MOV A,H**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x7D` | **MOV A,L**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x7E` | **MOV A,M**   | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x7F` | **MOV A,A**   | 0     | `opFixed` | 1  5    | `opNone` | - | `0` |
-| `0x80` | **ADD B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x81` | **ADD C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x82` | **ADD D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x83` | **ADD E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x84` | **ADD H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x85` | **ADD L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x86` | **ADD M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x87` | **ADD A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x88` | **ADC B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x89` | **ADC C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x8A` | **ADC D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x8B` | **ADC E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x8C` | **ADC H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x8D` | **ADC L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x8E` | **ADC M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x8F` | **ADC A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x90` | **SUB B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x91` | **SUB C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x92` | **SUB D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x93` | **SUB E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x94` | **SUB H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x95` | **SUB L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x96` | **SUB M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x97` | **SUB A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x98` | **SBB B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x99` | **SBB C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x9A` | **SBB D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x9B` | **SBB E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x9C` | **SBB H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x9D` | **SBB L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0x9E` | **SBB M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0x9F` | **SBB A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA0` | **ANA B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA1` | **ANA C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA2` | **ANA D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA3` | **ANA E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA4` | **ANA H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA5` | **ANA L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA6` | **ANA M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0xA7` | **ANA A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA8` | **XRA B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xA9` | **XRA C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xAA` | **XRA D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xAB` | **XRA E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xAC` | **XRA H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xAD` | **XRA L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xAE` | **XRA M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0xAF` | **XRA A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB0` | **ORA B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB1` | **ORA C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB2` | **ORA D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB3` | **ORA E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB4` | **ORA H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB5` | **ORA L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB6` | **ORA M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0xB7` | **ORA A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB8` | **CMP B**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xB9` | **CMP C**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xBA` | **CMP D**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xBB` | **CMP E**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xBC` | **CMP H**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xBD` | **CMP L**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xBE` | **CMP M**     | 0     | `opFixed` | 1  7    | `opNone` | - | `0` |
-| `0xBF` | **CMP A**     | 0     | `opFixed` | 1  4    | `opNone` | - | `0` |
-| `0xC0` | **RNZ**       | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xC1` | **POP B**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0xC2` | **JNZ a16**   | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xC3` | **JMP a16**   | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xC4` | **CNZ a16**   | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xC5` | **PUSH B**    | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xC6` | **ADI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xC7` | **RST 0**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xC8` | **RZ**        | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xC9` | **RET**       | 0     | `opFixed` | 1  10 | `opNone` | - | `0` |
-| `0xCA` | **JZ a16**    | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xCB` | ***JMP a16**  | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xCC` | **CZ a16**    | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xCD` | **CALL a16**  | 0     | `opFixed` | 3  17   | `opNone` | - | `0` |
-| `0xCE` | **ACI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xCF` | **RST 1**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xD0` | **RNC**       | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xD1` | **POP D**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0xD2` | **JNC a16**   | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xD3` | **OUT d8**    | 0     | `opFixed` | 2  10   | `opNone` | - | `0` |
-| `0xD4` | **CNC a16**   | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xD5` | **PUSH D**    | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xD6` | **SUI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xD7` | **RST 2**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xD8` | **RC**        | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xD9` | ***RET**      | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0xDA` | **JC a16**    | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xDB` | **IN d8**     | 0     | `opFixed` | 2  10   | `opNone` | - | `0` |
-| `0xDC` | **CC a16**    | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xDD` | ***CALL a16** | 0     | `opFixed` | 3  17    | `opNone` | - | `0` |
-| `0xDE` | **SBI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xDF` | **RST 3**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xE0` | **RPO**       | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xE1` | **POP H**     | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0xE2` | **JPO a16**   | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xE3` | **XTHL**      | 0     | `opFixed` | 1  18   | `opNone` | - | `0` |
-| `0xE4` | **CPO a16**   | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xE5` | **PUSH H**    | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xE6` | **ANI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xE7` | **RST 4**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xE8` | **RPE**       | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xE9` | **PCHL**      | 0     | `opFixed` | 1  5  | `opNone` | - | `0` |
-| `0xEA` | **JPE a16**   | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xEB` | **XCHG**      | 0     | `opFixed` | 1  4  | `opNone` | - | `0` |
-| `0xEC` | **CPE a16**   | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xED` | ***CALL a16** | 0     | `opFixed` | 3  17    | `opNone` | - | `0` |
-| `0xEE` | **XRI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xEF` | **RST 5**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xF0` | **RP**        | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xF1` | **POP PSW**   | 0     | `opFixed` | 1  10   | `opNone` | - | `0` |
-| `0xF2` | **JP a16**    | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xF3` | **DI**        | 0     | `opFixed` | 1  4 | `opNone` | - | `0`|
-| `0xF4` | **CP a16**    | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xF5` | **PUSH PSW**  | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xF6` | **ORI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xF7` | **RST 6**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
-| `0xF8` | **RM**        | 0     | `opFixed` | 1  11/5 | `opNone` | - | `0` |
-| `0xF9` | **SPHL**      | 0     | `opFixed` | 1  5  | `opNone` | - | `0` |
-| `0xFA` | **JM a16**    | 0     | `opFixed` | 3  10   | `opNone` | - | `0` |
-| `0xFB` | **EI**        | 0     | `opFixed` | 1  4 | `opNone` | - | `0`|
-| `0xFC` | **CM a16**    | 0     | `opFixed` | 3  17/11 | `opNone` | - | `0` |
-| `0xFD` | ***CALL a16** | 0     | `opFixed` | 3  17    | `opNone` | - | `0` |
-| `0xFE` | **CPI d8**    | 0     | `opFixed` | 2  7    | `opNone` | - | `0` |
-| `0xFF` | **RST 7**     | 0     | `opFixed` | 1  11   | `opNone` | - | `0` |
+
+The following notation is used throughout the tables:
+
+* **`r`, `r1`, `r2`**: Any 8-bit register (`B`, `C`, `D`, `E`, `H`, `L`, `A`) or `M` (the memory location addressed by `HL`).
+* **`rp`**: A 16-bit register pair (`BC`, `DE`, `HL`, `SP`).
+* **`d8` / `d16`**: 8-bit or 16-bit immediate data.
+* **`a16`**: 16-bit memory address.
+* **`p8`**: 8-bit I/O port address.
+
+Flag abbreviations:
+
+* **S** – Sign Flag
+* **Z** – Zero Flag
+* **AC** – Auxiliary Carry Flag
+* **P** – Parity Flag
+* **CY** – Carry Flag
+
+Flag notation used in the tables:
+
+* **✔** – Modified according to the result of the operation.
+* **0** – Cleared.
+* **1** – Set.
+* **-** – Unaffected.
+
+#### Data Transfer Instructions
+
+|Opcode(s)                          |Mnemonic        |Description / Operation                               |S|Z|AC|P|CY|
+|-----------------------------------|----------------|------------------------------------------------------|-|-|--|-|--|
+|`$40`–`$7F` (except `$76`)         |`MOV r1, r2`    |Register-to-register or register-to-memory transfer   |-|-|- |-|- |
+|`$06, $0E, $16, $1E, $26, $2E, $3E`|`MVI r, d8`     |Load 8-bit immediate data into register               |-|-|- |-|- |
+|`$36`                              |`MVI M, d8`     |Store 8-bit immediate data into memory location `[HL]`|-|-|- |-|- |
+|`$01, $11, $21, $31`               |`LXI rp, d16`   |Load 16-bit immediate data into register pair         |-|-|- |-|- |
+|`$3A`                              |`LDA a16`       |Load accumulator from direct memory address           |-|-|- |-|- |
+|`$32`                              |`STA a16`       |Store accumulator to direct memory address            |-|-|- |-|- |
+|`$0A` / `$1A`                      |`LDAX BC` / `DE`|Load accumulator from memory pointed to by BC or DE   |-|-|- |-|- |
+|`$02` / `$12`                      |`STAX BC` / `DE`|Store accumulator to memory pointed to by BC or DE    |-|-|- |-|- |
+|`$2A`                              |`LHLD a16`      |Load HL pair directly from memory (2 bytes)           |-|-|- |-|- |
+|`$22`                              |`SHLD a16`      |Store HL pair directly to memory (2 bytes)            |-|-|- |-|- |
+|`$EB`                              |`XCHG`          |Exchange DE and HL register pairs                     |-|-|- |-|- |
+
+#### Arithmetic Instructions
+
+|Opcode(s)                               |Mnemonic|Description / Operation                    |S|Z|AC|P|CY|
+|----------------------------------------|--------|-------------------------------------------|-|-|--|-|--|
+|`$80`–`$87`                             |`ADD r` |`A := A + r`                               |✔|✔|✔ |✔|✔ |
+|`$C6`                                   |`ADI d8`|`A := A + d8`                              |✔|✔|✔ |✔|✔ |
+|`$88`–`$8F`                             |`ADC r` |`A := A + r + CY`                          |✔|✔|✔ |✔|✔ |
+|`$CE`                                   |`ACI d8`|`A := A + d8 + CY`                         |✔|✔|✔ |✔|✔ |
+|`$90`–`$97`                             |`SUB r` |`A := A - r`                               |✔|✔|✔ |✔|✔ |
+|`$D6`                                   |`SUI d8`|`A := A - d8`                              |✔|✔|✔ |✔|✔ |
+|`$98`–`$9F`                             |`SBB r` |`A := A - r - CY`                          |✔|✔|✔ |✔|✔ |
+|`$DE`                                   |`SBI d8`|`A := A - d8 - CY`                         |✔|✔|✔ |✔|✔ |
+|`$04, $0C, $14, $1C, $24, $2C, $34, $3C`|`INR r` |`r := r + 1` (**CY unchanged**)            |✔|✔|✔ |✔|- |
+|`$05, $0D, $15, $1D, $25, $2D, $35, $3D`|`DCR r` |`r := r - 1` (**CY unchanged**)            |✔|✔|✔ |✔|- |
+|`$03, $13, $23, $33`                    |`INX rp`|Increment register pair                    |-|-|- |-|- |
+|`$0B, $1B, $2B, $3B`                    |`DCX rp`|Decrement register pair                    |-|-|- |-|- |
+|`$09, $19, $29, $39`                    |`DAD rp`|`HL := HL + rp`                            |-|-|- |-|✔ |
+|`$27`                                   |`DAA`   |Decimal Adjust Accumulator (BCD correction)|✔|✔|✔ |✔|✔ |
+
+#### Logical and Compare Instructions
+
+|Opcode(s)  |Mnemonic|Description / Operation        |S|Z|AC|P|CY|
+|-----------|--------|-------------------------------|-|-|--|-|--|
+|`$A0`–`$A7`|`ANA r` |`A := A AND r`                 |✔|✔|1 |✔|0 |
+|`$E6`      |`ANI d8`|`A := A AND d8`                |✔|✔|1 |✔|0 |
+|`$A8`–`$AF`|`XRA r` |`A := A XOR r`                 |✔|✔|0 |✔|0 |
+|`$EE`      |`XRI d8`|`A := A XOR d8`                |✔|✔|0 |✔|0 |
+|`$B0`–`$B7`|`ORA r` |`A := A OR r`                  |✔|✔|0 |✔|0 |
+|`$F6`      |`ORI d8`|`A := A OR d8`                 |✔|✔|0 |✔|0 |
+|`$B8`–`$BF`|`CMP r` |Compare `A` with `r` (`A - r`) |✔|✔|✔ |✔|✔ |
+|`$FE`      |`CPI d8`|Compare `A` with immediate data|✔|✔|✔ |✔|✔ |
+|`$2F`      |`CMA`   |One's complement of accumulator|-|-|- |-|- |
+|`$3F`      |`CMC`   |Complement Carry flag          |-|-|- |-|✔ |
+|`$37`      |`STC`   |Set Carry flag                 |-|-|- |-|1 |
+
+#### Rotate Instructions
+
+*Only the Carry flag is affected.*
+
+|Opcode|Mnemonic|Description / Operation                              |S|Z|AC|P|CY|
+|------|--------|-----------------------------------------------------|-|-|--|-|--|
+|`$07` |`RLC`   |Rotate accumulator left. Bit 7 goes to CY and bit 0. |-|-|- |-|✔ |
+|`$0F` |`RRC`   |Rotate accumulator right. Bit 0 goes to CY and bit 7.|-|-|- |-|✔ |
+|`$17` |`RAL`   |Rotate accumulator left through Carry.               |-|-|- |-|✔ |
+|`$1F` |`RAR`   |Rotate accumulator right through Carry.              |-|-|- |-|✔ |
+
+#### Program Flow Control Instructions
+
+*These instructions do not modify flags; conditional forms only test them.*
+
+|Opcode                                  |Mnemonic         |Condition / Operation               |S|Z|AC|P|CY|
+|----------------------------------------|-----------------|------------------------------------|-|-|--|-|--|
+|`$C3`                                   |`JMP a16`        |Unconditional jump (`PC := a16`)    |-|-|- |-|- |
+|`$CA` / `$C2`                           |`JZ` / `JNZ a16` |Jump if Zero / Not Zero             |-|-|- |-|- |
+|`$DA` / `$D2`                           |`JC` / `JNC a16` |Jump if Carry / No Carry            |-|-|- |-|- |
+|`$FA` / `$F2`                           |`JM` / `JP a16`  |Jump if Minus / Plus                |-|-|- |-|- |
+|`$EA` / `$E2`                           |`JPE` / `JPO a16`|Jump if Even / Odd parity           |-|-|- |-|- |
+|`$CD`                                   |`CALL a16`       |Unconditional subroutine call       |-|-|- |-|- |
+|`$CC` / `$C4`                           |`CZ` / `CNZ a16` |Call if Zero / Not Zero             |-|-|- |-|- |
+|`$DC` / `$D4`                           |`CC` / `CNC a16` |Call if Carry / No Carry            |-|-|- |-|- |
+|`$FC` / `$F4`                           |`CM` / `CP a16`  |Call if Minus / Plus                |-|-|- |-|- |
+|`$EC` / `$E4`                           |`CPE` / `CPO a16`|Call if Even / Odd parity           |-|-|- |-|- |
+|`$C9`                                   |`RET`            |Return from subroutine              |-|-|- |-|- |
+|`$C8` / `$C0`                           |`RZ` / `RNZ`     |Return if Zero / Not Zero           |-|-|- |-|- |
+|`$D8` / `$D0`                           |`RC` / `RNC`     |Return if Carry / No Carry          |-|-|- |-|- |
+|`$F8` / `$F0`                           |`RM` / `RP`      |Return if Minus / Plus              |-|-|- |-|- |
+|`$E8` / `$E0`                           |`RPE` / `RPO`    |Return if Even / Odd parity         |-|-|- |-|- |
+|`$C7, $CF, $D7, $DF, $E7, $EF, $F7, $FF`|`RST n`          |Software interrupt, vector = `8 × n`|-|-|- |-|- |
+|`$E9`                                   |`PCHL`           |`PC := HL`                          |-|-|- |-|- |
+
+#### Stack, I/O and Machine Control Instructions
+
+|Opcode         |Mnemonic  |Description / Operation                          |S|Z|AC|P|CY|
+|---------------|----------|-------------------------------------------------|-|-|--|-|--|
+|`$C5, $D5, $E5`|`PUSH rp` |Push register pair (`BC`, `DE`, `HL`) onto stack |-|-|- |-|- |
+|`$F5`          |`PUSH PSW`|Push accumulator and flags onto stack            |-|-|- |-|- |
+|`$C1, $D1, $E1`|`POP rp`  |Pop register pair from stack                     |-|-|- |-|- |
+|`$F1`          |`POP PSW` |Restore accumulator and all flags from stack     |✔|✔|✔ |✔|✔ |
+|`$E3`          |`XTHL`    |Exchange HL with the word at the top of the stack|-|-|- |-|- |
+|`$F9`          |`SPHL`    |`SP := HL`                                       |-|-|- |-|- |
+|`$DB`          |`IN p8`   |Read byte from I/O port into accumulator         |-|-|- |-|- |
+|`$D3`          |`OUT p8`  |Write accumulator to I/O port                    |-|-|- |-|- |
+|`$FB`          |`EI`      |Enable interrupts                                |-|-|- |-|- |
+|`$F3`          |`DI`      |Disable interrupts                               |-|-|- |-|- |
+|`$76`          |`HLT`     |Halt processor execution                         |-|-|- |-|- |
+|`$00`          |`NOP`     |No operation                                     |-|-|- |-|- |
