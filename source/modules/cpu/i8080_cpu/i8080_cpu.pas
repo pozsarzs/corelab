@@ -16,13 +16,31 @@ library i8080_cpu;
 uses
   Classes, SysUtils, core_cpu;
 type
+  // Intruction table
+  // - type of operand
+  TOperandType = (opNone, opFixed, opI8, opI16);
+  // - an operand
+  TOperandDef = record
+    OpType: TOperandType;
+    FixedName: string[6];
+  end;
+  // - an record
+  TInstructionDef = record
+    NumOperand: byte;
+    Op1: TOperandDef;
+    Op2: TOperandDef;
+    AffectedFlags: byte;
+    Mnemonic: string[12];
+  end;
+  // Last executed instruction
   TLastInstruction = record
     Address: word;
     Opcode: byte;
     NumOperand: byte;
     Operands: array[1..2] of byte;
   end;
-  T8080Registers = record                                  { 8080 register set }
+  // Register set
+  T8080Registers = record
     case boolean of
       true: (
         BC, DE, HL, AF: word;
@@ -33,7 +51,8 @@ type
         PCL, PCH, SPL, SPH: byte;
       );
   end;
-  T8080CPU = class(TCPU)                             { 8080 CPU implementation }
+  // 8080 CPU implementation
+  T8080CPU = class(TCPU)
   protected
     FRegs: T8080Registers;
   public
@@ -44,9 +63,17 @@ type
     function GetRegister(const RegName: string): qword; override;
     procedure SetRegister(const RegName: string; Value: qword); override;
   end;
+const
+  // 8080 instruction table
+  {$I insttable.pas}
+  // Bit mask of flags (F: S Z X A X P X C)
+  FLAG_C  = $01; // Bit 0: Carry
+  FLAG_P  = $04; // Bit 2: Parity
+  FLAG_AC = $10; // Bit 4: Auxiliary Carry
+  FLAG_Z  = $40; // Bit 6: Zero
+  FLAG_S  = $80; // Bit 7: Sign
 var
   LogRecord: TLastInstruction;
-  {$I mnemonic.pas}
 
 // Creating a CPU instance 
 constructor T8080CPU.Create;
@@ -81,19 +108,20 @@ end;
 // Executing an instruction
 procedure T8080CPU.Step;
 var
-  Opcode: byte;
+  OC: byte;
 begin
   if CheckInterrupts then Exit;
   if FHalted then Exit;
-  Opcode := FBus.MemRead(FRegs.PC);                   { Fetch opcode from (PC) }
+  OC := FBus.MemRead(FRegs.PC);                       { Fetch opcode from (PC) }
   with LogRecord do
+  begin
     Address := FRegs.PC;
-    Opcode := Opcode;
+    Opcode := OC;
     NumOperand := 0;
   end;
   Inc(FRegs.PC);                                    { Increment Program Counter}
   EmitEvent(ceInstructionBoundary);             { Notify debugger/trace system }
-  case Opcode of
+  case OC of
     $00: { NOP }
       begin
       end;
