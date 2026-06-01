@@ -1,6 +1,6 @@
 # CoreLAB
 
-## Documentation
+## Source code
 
 ### System bus abstraction module (`core_bus.md`)
 

@@ -1,6 +1,6 @@
 # CoreLAB
 
-## Documentation
+## Source code
 
 ### CPU abstraction module (`core_cpu.md`)
 

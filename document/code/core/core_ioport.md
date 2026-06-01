@@ -1,6 +1,6 @@
 # CoreLAB
 
-## Documentation
+## Source code
 
 ### I/O port abstraction module (`core_ioport.md`)
 

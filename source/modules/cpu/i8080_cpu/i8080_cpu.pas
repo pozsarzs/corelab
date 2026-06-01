@@ -21,7 +21,7 @@ type
     Address: word;
     Opcode: byte;
     NumOperand: byte;
-    Operands: array[1..2] of byte;
+    Operands: array[1..2] of word;
     Mnemonic: string[12];
   end;
   // Register set
@@ -141,6 +141,7 @@ begin
     // 1st operand
     if NumOperand > 0
       then Result := Result + #9 + InttoHex(Operands[1], 2);
+    // 2st operand
     if NumOperand > 1
       then Result := Result + ', ' + InttoHex(Operands[2], 2);
   end;

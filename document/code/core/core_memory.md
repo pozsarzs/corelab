@@ -1,6 +1,6 @@
 # CoreLAB
 
-## Documentation
+## Source code
 
 ### Memory abstraction module (`core_memory.md`)
 

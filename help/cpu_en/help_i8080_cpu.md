@@ -1,6 +1,6 @@
 # CoreLAB
 
-## Documentation
+## Intel 8080 microprocessor
 
 ### Technical Parameters
 
@@ -9,7 +9,7 @@
 |**Release Date**                |April 1974                                    |
 |**Process Technology**          |6 µm NMOS                                     |
 |**Transistor Count**            |~4,500 (LSI)                                  |
-|**Architecture**                |Von Neumann                                   |
+|**Architecture**                |Neumann                                       |
 |**Data Bus Width**              |8-bit                                         |
 |**Address Bus Width**           |16-bit                                        |
 |**Maximum Addressable Memory**  |64 KB                                         |
@@ -97,8 +97,6 @@ Flag notation used in the tables:
 
 #### Rotate Instructions
 
-*Only the Carry flag is affected.*
-
 |Opcode|Mnemonic|Description / Operation                              |S|Z|AC|P|CY|
 |------|--------|-----------------------------------------------------|-|-|--|-|--|
 |`$07` |`RLC`   |Rotate accumulator left. Bit 7 goes to CY and bit 0. |-|-|- |-|✔ |
@@ -107,8 +105,6 @@ Flag notation used in the tables:
 |`$1F` |`RAR`   |Rotate accumulator right through Carry.              |-|-|- |-|✔ |
 
 #### Program Flow Control Instructions
-
-*These instructions do not modify flags; conditional forms only test them.*
 
 |Opcode                                  |Mnemonic         |Condition / Operation               |S|Z|AC|P|CY|
 |----------------------------------------|-----------------|------------------------------------|-|-|--|-|--|
