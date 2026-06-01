@@ -100,6 +100,7 @@ procedure T8080CPU.Step;
 var
   OC: byte;
   SourceRegIndex, DestRegIndex: byte;
+  dw1: cardinal;
   w1, w2: word;
   b1, b2: byte;
 begin

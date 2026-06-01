@@ -36,6 +36,30 @@
            LogRecord.Mnemonic:='INX B';
            Inc(FRegs.BC);
          end;
+    // RLC
+    $07: begin
+           LogRecord.Mnemonic := 'RLC';
+           b1 := FRegs.A shr 7; { A 7. bit }
+           FRegs.A := ((FRegs.A shl 1) or b1) and $FF;
+           FRegs.F := (FRegs.F and $FE) or b1; { CY frissítése }
+         end;
+    // LDAX B
+    $0A: begin
+           LogRecord.Mnemonic:='LDAX B';
+           FRegs.A := FBus.MemRead(FRegs.BC);
+         end;
+    // DCX B
+    $0B: begin
+           LogRecord.Mnemonic:='DCX B';
+           Dec(FRegs.BC);
+         end;
+    // RRC
+    $0F: begin
+           LogRecord.Mnemonic := 'RRC';
+           b1 := FRegs.A and $01; { A 0. bit }
+           FRegs.A := (FRegs.A shr 1) or (b1 shl 7);
+           FRegs.F := (FRegs.F and $FE) or b1;
+         end;
     // LXI D, d16
     $11: begin
            LogRecord.Mnemonic := 'LXI D';
@@ -55,6 +79,32 @@
     $13: begin
            LogRecord.Mnemonic:='INX D';
            Inc(FRegs.DE);
+         end;
+    // RAL
+    $17: begin
+           LogRecord.Mnemonic := 'RAL';
+           b1 := FRegs.F and $01;
+           b2 := FRegs.A shr 7;
+           FRegs.A := ((FRegs.A shl 1) or b1) and $FF;
+           FRegs.F := (FRegs.F and $FE) or b2;
+         end;         
+    // LDAX D
+    $1A: begin
+           LogRecord.Mnemonic:='LDAX D';
+           FRegs.A := FBus.MemRead(FRegs.DE);
+         end;
+    // DCX D
+    $1B: begin
+           LogRecord.Mnemonic:='DCX D';
+           Dec(FRegs.DE);
+         end;
+    // RAR
+    $1F: begin
+           LogRecord.Mnemonic := 'RAR';
+           b1 := FRegs.F and $01;
+           b2 := FRegs.A and $01;
+           FRegs.A := (FRegs.A shr 1) or (b1 shl 7);
+           FRegs.F := (FRegs.F and $FE) or b2;
          end;
     // LXI H, d16
     $21: begin
@@ -83,6 +133,28 @@
            LogRecord.Mnemonic:='INX H';
            Inc(FRegs.HL);
          end;
+    // LHLD a16
+    $2A: begin
+           LogRecord.Mnemonic:='LHLD';
+           LogRecord.NumOperand := 1;
+           w1 := FBus.MemRead(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           LogRecord.Operands[LogRecord.NumOperand] := w1;
+           FRegs.L := FBus.MemRead(w1);
+           FRegs.H := FBus.MemRead(w1 + 1);
+         end;
+    // DCX H
+    $2B: begin
+           LogRecord.Mnemonic:='DCX H';
+           Dec(FRegs.HL);
+         end;
+    // CMA
+    $2F: begin
+           LogRecord.Mnemonic := 'CMA';
+           FRegs.A := FRegs.A xor $FF;
+         end;
     // LXI SP, d16
     $31: begin
            LogRecord.Mnemonic := 'LXI SP';
@@ -108,6 +180,32 @@
     $33: begin
            LogRecord.Mnemonic:='INX SP';
            Inc(FRegs.SP);
+         end;
+    // STC
+    $37: begin
+           LogRecord.Mnemonic := 'STC';
+           FRegs.F := FRegs.F or $01;
+         end;
+    // LDA a16
+    $3A: begin
+           LogRecord.Mnemonic:='LDA';
+           LogRecord.NumOperand := 1;
+           w1 := FBus.MemRead(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           LogRecord.Operands[LogRecord.NumOperand] := w1;
+           FRegs.A := FBus.MemRead(w1);
+         end;
+    // DCX SP
+    $3B: begin
+           LogRecord.Mnemonic:='DCX SP';
+           Dec(FRegs.SP);
+         end;
+    // CMC
+    $3F: begin
+           LogRecord.Mnemonic := 'CMC';
+           FRegs.F := FRegs.F xor $01;
          end;
     // HLT
     $76: begin
@@ -135,6 +233,85 @@
            begin
              w1 := DE; DE := HL; HL := w1;
            end;
+         end;
+    // POP B
+    $C1: begin
+           LogRecord.Mnemonic := 'POP B';
+           FRegs.C := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+           FRegs.B := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+         end;
+    // PUSH B
+    $C5: begin
+           LogRecord.Mnemonic := 'PUSH B';
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.B);
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.C);
+         end;
+    // CALL a16
+    $CD: begin
+           LogRecord.Mnemonic := 'CALL';
+           LogRecord.NumOperand := 1;
+           w1 := FBus.MemRead(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           LogRecord.Operands[LogRecord.NumOperand] := w1;
+           Dec(FRegs.SP);                               { store return address }
+           FBus.MemWrite(FRegs.SP, FRegs.PCH);
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.PCL);
+           FRegs.PC := w1;                               { jump to new address }
+         end;
+    // POP D
+    $D1: begin
+           LogRecord.Mnemonic := 'POP D';
+           FRegs.E := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+           FRegs.D := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+         end;
+    // PUSH D
+    $D5: begin
+           LogRecord.Mnemonic := 'PUSH D';
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.D);
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.E);
+         end;
+    // POP H
+    $E1: begin
+           LogRecord.Mnemonic := 'POP H';
+           FRegs.L := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+           FRegs.H := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+         end;
+    // PUSH H
+    $E5: begin
+           LogRecord.Mnemonic := 'PUSH H';
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.H);
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.L);
+         end;
+    // POP PSW
+    $F1: begin
+           LogRecord.Mnemonic := 'POP PSW';
+           FRegs.F := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+           FRegs.A := FBus.MemRead(FRegs.SP);
+           Inc(FRegs.SP);
+         end;
+    // PUSH PSW
+    $F6: begin
+           LogRecord.Mnemonic := 'PUSH PSW';
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.A);
+           Dec(FRegs.SP);
+           FBus.MemWrite(FRegs.SP, FRegs.F);
          end;
     // DI
     $F3: begin
@@ -213,6 +390,23 @@
       if DestRegIndex = 6 
         then FBus.MemWrite(FRegs.HL, b1)                           { MVI M, d8 }
         else RegPointers[DestRegIndex]^ := b1;                     { MVI r, d8 }
+    end;
+    // DAD rp
+    // $09-$39)
+    if (OC <= $3F) and ((OC and $0F) = $09) then
+    begin
+      SourceRegIndex := (OC shr 4) and $03;
+      case SourceRegIndex of
+        0: begin LogRecord.Mnemonic := 'DAD B'; w1 := FRegs.BC; end;
+        1: begin LogRecord.Mnemonic := 'DAD D'; w1 := FRegs.DE; end;
+        2: begin LogRecord.Mnemonic := 'DAD H'; w1 := FRegs.HL; end;
+        3: begin LogRecord.Mnemonic := 'DAD SP'; w1 := FRegs.SP; end;
+      end;
+      dw1 := Cardinal(FRegs.HL) + Cardinal(w1);
+      FRegs.HL := dw1 and $FFFF;
+      if (dw1 and $10000) <> 0 
+        then FRegs.F := FRegs.F or $01
+        else FRegs.F := FRegs.F and $FE;
     end;
     // MOV r1, r2; MOV M, r1; MOV r1, M
     // $40-$7F
@@ -346,5 +540,16 @@
       UpdateFlags(b1 + (w1 xor $FF) + 1, b1, w1 xor $FF);
       FRegs.F := FRegs.F xor $01;
     end;
-
+    // RST n
+    // $C7-$F7, $CF-$FF
+    if (OC >= $C0) and ((OC and $07) = $07) then
+    begin
+      w1 := (OC shr 3) and $07;
+      LogRecord.Mnemonic := 'RST ' + IntToStr(w1);
+      Dec(FRegs.SP);                                    { store return address }
+      FBus.MemWrite(FRegs.SP, FRegs.PCH);
+      Dec(FRegs.SP);
+      FBus.MemWrite(FRegs.SP, FRegs.PCL);
+      FRegs.PC := w1 * 8;                                { jump to new address }
+    end;
   end;
