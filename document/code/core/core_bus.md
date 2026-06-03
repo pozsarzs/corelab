@@ -2,7 +2,12 @@
 
 ## Source code
 
-### System bus abstraction module (`core_bus.md`)
+### System bus abstraction module
+
+**Class:** TBus  
+**Type:** non-visual component  
+**File:** `core/core_bus.pas`  
+**Target:** compiled into main executable  
 
 |Type        |Name                         |Type/return value|Description                                                                    |
 |:----------:|-----------------------------|:---------------:|-------------------------------------------------------------------------------|

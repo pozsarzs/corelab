@@ -1,4 +1,4 @@
-@startuml CoreLab_Abstract_Architecture
+@startuml Core_modules
 
 ' style
 skinparam monochrome true

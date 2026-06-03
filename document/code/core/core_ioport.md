@@ -2,7 +2,12 @@
 
 ## Source code
 
-### I/O port abstraction module (`core_ioport.md`)
+### I/O port abstraction module
+
+**Class:** TIOPort  
+**Type:** non-visual component  
+**File:** `core/core_ioport.pas`  
+**Target:** compiled into main executable  
 
 |Type        |Name                  |Type/return value         |Description                                                                                    |
 |:----------:|----------------------|:------------------------:|-----------------------------------------------------------------------------------------------|

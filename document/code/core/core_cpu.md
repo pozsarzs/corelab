@@ -2,7 +2,12 @@
 
 ## Source code
 
-### CPU abstraction module (`core_cpu.md`)
+### CPU abstraction module
+
+**Class:** TCPU  
+**Type:** non-visual component  
+**File:** `core/core_cpu.pas`  
+**Target:** compiled into main executable  
 
 |Type        |Name                             |Type/return value  |Description                                                                             |
 |:----------:|---------------------------------|:-----------------:|----------------------------------------------------------------------------------------|

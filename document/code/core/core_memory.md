@@ -2,7 +2,12 @@
 
 ## Source code
 
-### Memory abstraction module (`core_memory.md`)
+### Memory abstraction module
+
+**Class:** TMemory  
+**Type:** non-visual component  
+**File:** `core/core_memory.pas`  
+**Target:** compiled into main executable  
 
 |Type        |Name                       |Type/return value         |Description                                                                                 |
 |:----------:|---------------------------|:------------------------:|--------------------------------------------------------------------------------------------|
