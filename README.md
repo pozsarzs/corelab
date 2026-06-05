@@ -3,7 +3,7 @@
 >
 
 <img align="left" style="float: left; margin: 0 10px 0 0;" alt="Icon"
-  src="document/corelab.png">
+  src="desktop/corelab.png">
 <br>
 
 # CoreLAB
