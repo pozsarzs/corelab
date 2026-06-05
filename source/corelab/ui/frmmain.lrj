@@ -1,0 +1,14 @@
+{"version":1,"strings":[
+{"hash":134403005,"name":"tmainform.caption","sourcebytes":[77,97,105,110,70,111,114,109],"value":"MainForm"},
+{"hash":2805797,"name":"tmainform.menuitem1.caption","sourcebytes":[38,70,105,108,101],"value":"&File"},
+{"hash":88261332,"name":"tmainform.menuitem2.caption","sourcebytes":[38,78,101,119,32,112,114,111,106,101,99,116],"value":"&New project"},
+{"hash":25033678,"name":"tmainform.menuitem3.caption","sourcebytes":[38,76,111,97,100,32,112,114,111,106,101,99,116,46,46],"value":"&Load project.."},
+{"hash":204393716,"name":"tmainform.menuitem4.caption","sourcebytes":[38,83,97,118,101,32,112,114,111,106,101,99,116],"value":"&Save project"},
+{"hash":222587598,"name":"tmainform.separator1.caption","sourcebytes":[83,97,118,101,32,112,114,111,106,101,99,116,32,97,115,46,46],"value":"Save project as.."},
+{"hash":91451854,"name":"tmainform.menuitem5.caption","sourcebytes":[76,111,97,100,32,97,110,100,32,114,117,110,32,115,38,99,114,105,112,116,46,46],"value":"Load and run s&cript.."},
+{"hash":4710148,"name":"tmainform.menuitem6.caption","sourcebytes":[69,38,120,105,116],"value":"E&xit"},
+{"hash":58322677,"name":"tmainform.menuitem7.caption","sourcebytes":[38,77,97,99,104,105,110,101],"value":"&Machine"},
+{"hash":45835827,"name":"tmainform.menuitem8.caption","sourcebytes":[38,84,111,111,108,115],"value":"&Tools"},
+{"hash":53961730,"name":"tmainform.menuitem10.caption","sourcebytes":[38,82,117,110,76,111,103,103,101,114],"value":"&RunLogger"},
+{"hash":2812976,"name":"tmainform.menuitem9.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"}
+]}

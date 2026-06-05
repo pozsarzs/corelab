@@ -21,7 +21,21 @@ type
   TMainForm = class(TForm)
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
+    MenuItem10: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
+    Separator3: TMenuItem;
+    Separator2: TMenuItem;
+    Separator1: TMenuItem;
     StatusBar1: TStatusBar;
+    TreeView1: TTreeView;
+    procedure MenuItem10Click(Sender: TObject);
   private
   public
   end;
@@ -31,5 +45,13 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TMainForm }
+
+procedure TMainForm.MenuItem10Click(Sender: TObject);
+begin
+  RunLogger.Show;
+  MenuItem10.Checked;
+end;
 
 end.

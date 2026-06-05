@@ -11,42 +11,69 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## I. About this project
+## I. Introduction and Project Goals
 
-(...)
+The CoreLAB project is a functional CPU, microprocessor, and microcontroller
+simulator born from a fusion of academic research, technical passion, and
+historical preservation. The project was initiated with several key objectives
+in mind:
+
+* **A Tribute to the Pioneers (Hardware and Human):** The project serves as a
+    respectful nod to the early eras of computing architecture and the brilliant
+    minds who designed them. By keeping the logic of these foundational
+    processors alive, it preserves the digital heritage that paved the way for
+    modern computing.
+* **Learning Machine Code Programming:** It provides an accessible, hands-on
+    educational platform to study low-level programming on classic architectures
+    (such as the i40xx, i80xx, or TMS1000). Many of these physical chips are now
+    rare, expensive, or completely obsolete, making software simulation the only
+    viable way to experience them.
+* **Academic Research (University Thesis):** The development of this simulator
+    and its modular plugin system forms the core framework of my university
+    thesis, exploring dynamic software architectures and instructional simulation
+    methodologies.
+* **Functional Execution over Full Emulation:** Unlike comprehensive emulators,
+    the goal of CoreLAB is **not** to replicate entire vintage computer systems,
+    run historical operating systems, or simulate cycle-accurate hardware quirks.
+    Instead, it focuses strictly on the clean, functional execution of
+    instructions, making the code's logic transparent and easy to analyze.
+* **A Playground for System Design and Modeling:**  Beyond a simple educational
+    tool, the project serves as a practical application of advanced system
+    design and hardware modeling concepts. It provides a platform to explore
+    how complex, real-world physical systems - such as buses, registers, memory
+    layouts, and I/O lines—can be accurately modeled, decoupled, and reconfigured
+    dynamically in software using modern software engineering patterns.
+* **Bridging Vintage Logic with Modern Automation:** A key innovation of the
+    project is wrapping these classic CPU architectures into a modern, scriptable
+    environment. By allowing users to dynamically build topologies, manipulate
+    registers, and automate tests via a command-line shell, it applies modern
+    DevOps and debugging workflows to the foundational hardware of the past.
 
 ## II. Features
 
-(...)
+|Features                  |Specification / Description                                                      |
+|--------------------------|---------------------------------------------------------------------------------|
+|**Project Type**          |Functional CPU/uP/MCU simulator                                                  |
+|**actual version**        |v0.1                                                                             |
+|**licence**               |EUPL v1.2                                                                        |
+|**language**              |en                                                                               |
+|**architecture**          |amd64, armhf, x86_64                                                             |
+|**operation system**      |FreeBSD, Linux, Windows                                                          |
+|**user interface**        |Graphical User Interface (GUI) with scriptable command-line control              |
+|**running modes**         |Normal or interpreter                                                            |
+|**Simulation Type**       |Instruction-level operation (not cycle-accurate)                                 |
+|**Supported Architecture**|Neumann and Harvard architectures                                                |
+|**Supported Processors**  |Word-based CPUs up to 64-bit, 4–16 bit uPs and 4–8 bit, simple MCUs              |
+|**Simulation Environment**|Configurable memory space and virtual I/O ports                                  |
+|**Peripherals**           |Simple, built-in virtual peripherals                                             |
+|**Modular Architecture**  |Dynamically loadable CPUs, peripherals, and devices                              |
+|**RunLogger**             |Real-time output of address, machine code, and mnemonic                          |
+|**Dump**                  |Displaying memory and register contents, with export to binary or Intel HEX files|
+|**Logging**               |Runtime log exportable to file                                                   |
+|**Debug Features**        |Breakpoints, memory monitoring, single-stepping, and commentable memory addresses|
+|**Program Loading**       |Via keyboard entry, virtual system monitor, or from binary/Intel HEX files       |
+|**State Saving**          |Saving and restoring CPU and full environment state                              |
 
-|Features                |Specification / Description                                                                                           |
-|------------------------|--------------------------------------------------------------------------------------------|
-|**actual version**          |v0.1                                                                                        |
-|**licence**                 |EUPL v1.2                                                                                   |
-|**language**                |en                                                                                          |
-|**architecture**            |amd64, armhf, x86_64                                                                        |
-|**operation system**        |FreeBSD, Linux, Windows                                                                     |
-| **UI** | Graphical User Interface (GUI) with scriptable command-line control |
-|
-|**running modes**           |normal or interpreter                                                                       |
-| **Project Type** | Functional CPU/uP/MCU simulator |
-| **Simulation Type** | Instruction-level operation (not cycle-accurate) |
-| **Supported Architecture** | Von Neumann and Harvard architectures |
-| **Supported Processors** | Word-based CPUs up to 64-bit word size: PDP, VAX, S3x0, ...<br>
-
-<br>4–16 bit microprocessors: i40xx, i80xx, MC68xx, ...<br>
-
-<br>4–8 bit, simple microcontrollers: TMS1000, MB8840, ... |
-| **Simulation Environment** | Configurable memory space and virtual I/O ports |
-| **Peripherals** | Simple, built-in virtual peripherals |
-| **Modular Architecture** | Dynamically loadable CPUs, peripherals, and devices |
-| **UI** | Graphical User Interface (GUI) with scriptable command-line control |
-| **RunLogger** | Real-time output of address, machine code, and mnemonic |
-| **Dump** | Displaying memory and register contents, with export to binary or Intel HEX files |
-| **Logging** | Runtime log exportable to file |
-| **Debug Features** | Breakpoints, memory monitoring, single-stepping, and commentable memory addresses |
-| **Program Loading** | Via keyboard entry, binarily (cell-by-cell) via virtual system monitor, or from binary / Intel HEX files |
-| **State Saving** | Saving and restoring CPU and full environment state |
 ## III. Screenshots
 
 (...)
@@ -60,13 +87,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
    Application  
    GNU GPL v2.0 or later, Copyright (C) 2005-2014 Andrew Haines, Lazarus contributors  
 
-## V. About the program in a nutshell
-
-(...)
-
-### Operating principle  
-
-(...)
+## V. About the program
 
 ### Projects  
 
@@ -76,7 +97,7 @@ directory will be created in the user's home directory. If only filename is
 specified during file operations (without path), this directory will be the
 source/destination directory.
 
-### File operations  
+### ???
 
 (...)
 
@@ -144,8 +165,9 @@ through the following channels:
 
 - Command-line assistance: Type the help command in the terminal to directly
   access usage guides and command references.
-- Graphical Help (GUI): Under the Help menu in the graphical interface, you
-  can find visual guides regarding the software's operation and supported CPU architectures.
+- Graphical Help: Under the Help menu in the graphical interface, you can find
+  visual guides regarding the software's operation and supported CPU
+  architectures.
 - Source code documentation: Detailed developer assistance and documentation
   for the source code are available in the document folder.
 - Additionally, you can view the manual page from *nix shell (_man modshell_) or
@@ -174,10 +196,4 @@ for details.
 ### Binaries and installer packages for several OS and architecture
 
 Not all test versions have binary or installation packages.
-To download, visit [Modshell's webpage](http://www.pozsarzs.hu/software/modshell_en.html).
-
-[^1]: [Synapse Github repository](https://github.com/geby/synapse)
-[^2]: [InpOut32 Github repository](https://github.com/ellysh/InpOut32)
-[^3]: [ProtCOM Github repository](https://github.com/pozsarzs/protcom)
-[^4]: [Modbus](https://modbus.org)
-[^5]: [Wiki - Differents between CUI and GUI version](https://github.com/pozsarzs/modshell/wiki/c.-Differents-between-CUI-and-GUI-version)
+To download, visit [CoreLAB's webpage](https://www.pozsarzs.hu/60_myprogcom/corelab/).

@@ -1,9 +1,9 @@
-object Form1: TForm1
-  Left = 394
+object RunLogger: TRunLogger
+  Left = 350
   Height = 510
   Top = 163
   Width = 666
-  Caption = 'Form1'
+  Caption = 'RunLogger'
   ClientHeight = 510
   ClientWidth = 666
   Menu = MainMenu1
@@ -30,18 +30,12 @@ object Form1: TForm1
     BorderSpacing.Top = 4
     BorderSpacing.Bottom = 4
     BorderSpacing.Around = 4
-    Items.Strings = (
-      'wsdasdasd'
-      'sdasd'
-      'asdasd'
-      'asd'
-      ''
-      'asd'
-      ''
-      'dasdasdasdasd'
-    )
-    ItemHeight = 23
-    TabOrder = 1
+    DoubleBuffered = True
+    ItemHeight = 0
+    MultiSelect = True
+    ParentDoubleBuffered = False
+    TabOrder = 2
+    TopIndex = -1
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -49,7 +43,7 @@ object Form1: TForm1
     Top = 0
     Width = 666
     Caption = 'ToolBar1'
-    TabOrder = 2
+    TabOrder = 1
   end
   object MainMenu1: TMainMenu
     Left = 98

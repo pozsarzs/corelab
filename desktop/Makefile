@@ -15,6 +15,8 @@ targetdir1=$(datarootdir)/applications
 files1=`ls $(sourcedir)/*.desktop | grep -v Makefile`
 targetdir2=$(datarootdir)/pixmaps
 files2=`ls $(sourcedir)/*.png | grep -v Makefile`
+targetdir3=$(datarootdir)mime/packages
+files3=`ls $(sourcedir)/*.xml | grep -v Makefile`
 
 all:
 
@@ -38,6 +40,14 @@ install:
 	    echo -n "#"; \
 	  fi \
 	done
+	@$(install) -d $(targetdir3)
+	@for x in $(files3); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(install) -m $(filemode) $(sourcedir)/$$x $(targetdir3); \
+	    echo -n "#"; \
+	  fi \
+	done
 	@echo "]"
 
 uninstall:
@@ -50,10 +60,15 @@ uninstall:
 	  $(rm) $(targetdir2)/$$x; \
 	  echo -n "#"; \
 	done
+	@for x in $(files3); do \
+	  $(rm) $(targetdir3)/$$x; \
+	  echo -n "#"; \
+	done
 	@if [ $(removetargetdir) -eq 1 ]; \
 	then \
 	  if [ -d $(targetdir1) ]; then $(rmdir) $(targetdir1); fi; \
 	  if [ -d $(targetdir2) ]; then $(rmdir) $(targetdir2); fi; \
+	  if [ -d $(targetdir3) ]; then $(rmdir) $(targetdir3); fi; \
 	fi;
 	@echo "]"
 

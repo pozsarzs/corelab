@@ -32,6 +32,6 @@ begin
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TRunLogger, RunLogger);
   Application.Run;
 end.

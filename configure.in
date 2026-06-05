@@ -1,0 +1,134 @@
+dnl +------------------------------------------------------------------------+
+dnl | CoreLab v0.1 - Modular Processor Simulation Framework                  |
+dnl | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                   |
+dnl | configure.in                                                           |
+dnl | Autoconf input file                                                    |
+dnl +------------------------------------------------------------------------+
+
+AC_INIT
+AC_CONFIG_SRCDIR([source/ui/])
+AC_CONFIG_AUX_DIR(autoconf)
+AC_CANONICAL_TARGET
+
+
+dnl -- SEARCH PROGRAMS --
+AC_PATH_PROG(ln, ln, no)
+AC_PATH_PROG(rm, rm, no)
+AC_PATH_PROG(rmdir, rmdir, no)
+AC_PATH_PROG(install, install, no)
+
+AC_PATH_PROG(make, make, no)
+if test "$make" == "no"; then AC_MSG_ERROR(Make utility not found!); fi
+AC_PATH_PROG(gmake, gmake, no)
+if test "$gmake" == "no"; then AC_MSG_WARN(GNU make utility not found!); fi
+if test $gmake != "no"; then make=$gmake; fi
+
+AC_PATH_PROG(rstconv, rstconv, no)
+if test "$rstconv" == "no"; then AC_MSG_ERROR(Free Pascal resource string converter tool not found!); fi
+
+AC_PATH_PROG(man, man, no)
+if test "$man" == "no"; then AC_MSG_WARN(Manual pager not found!); fi
+
+AC_PATH_PROG(unix2dos, unix2dos, no)
+if test "$unix2dos" == "no"; then AC_MSG_WARN(Dos2unix text file format converter not found!); fi
+
+AC_PATH_PROG(msgfmt, msgfmt, no)
+if test "$msgfmt" == "no"; then AC_MSG_WARN(Msgfmt tool (GNU gettext utilities) not found!); fi
+
+AC_PATH_PROG(iconv, iconv, no)
+if test "$iconv" == "no"; then AC_MSG_WARN(Iconv text encoding converter tool not found!); fi
+
+AC_PATH_PROG(fpc, fpc, no)
+if test "$fpc" == "no"; then AC_MSG_ERROR(Free Pascal compiler not found!); fi
+
+AC_PATH_PROG(chmcmd, chmcmd, no)
+if test "$chmcmd" == "no"; then AC_MSG_WARN(CHM compiler not found!); fi
+
+dnl -- DETECT ARCHITECTURE AND OS --
+os=`fpc -iSO`
+architecture=`fpc -iSP`
+
+dnl -- CHECK FILES AND DIRECTORIES --
+if test "$os" = "linux"; then lcldir=`find /usr/lib/lazarus -type d -name lcl | grep lazarus | grep -v doc | grep -v test`; fi
+if test "$os" = "freebsd"; then lcldir=`find /usr/local/share/lazarus*/ -type d -name lcl | grep lazarus | grep -v doc | grep -v test`; fi
+
+AC_CHECK_FILE($lcldir/lclbase.lpk, lclunits="yes", lclunits="no")
+if test "$lclunits" == "no"; then AC_MSG_ERROR(LCL unit files not found!); fi
+
+AC_CHECK_FILE(document/VERSION, , AC_MSG_ERROR(VERSION file not found!))
+version=`cat document/VERSION`
+
+AC_CHECK_FILE(document/copyright, , AC_MSG_ERROR(copyright file not found!))
+copyright=`cat document/copyright`
+
+AC_PREFIX_DEFAULT("/usr/local")
+if test x"$prefix" == xNONE; then prefix="$ac_default_prefix"; fi
+if test "$prefix" == "/usr"; then vardir="/var"; else vardir="/var/local"; fi
+mandir="$prefix/man"
+if test "$os" = "linux"; then mandir="$datarootdir/man"; fi
+bprefix="$prefix"
+
+
+dnl -- EVALUATION OF USER'S PARAMETERS --
+if test "$stagedir" != ""; then prefix="$stagedir"; fi
+if test "$stagedir" != ""; then mandir="$prefix/man"; fi
+
+if (test "$app" = "") || (test $app != "no"); then app="yes"; fi
+if (test "$lib" = "") || (test $lib != "no"); then lib="yes"; fi
+if (test "$lhelp" = "") || (test $lhelp != "no"); then lhelp="yes"; fi
+
+dnl -- SUBSTITUTION IN FILES --
+AC_SUBST(app)
+AC_SUBST(architecture)
+AC_SUBST(bindir)
+AC_SUBST(bprefix)
+AC_SUBST(chmcmd)
+AC_SUBST(copyright)
+AC_SUBST(datarootdir)
+AC_SUBST(fpc)
+AC_SUBST(fpcargs)
+AC_SUBST(iconv)
+AC_SUBST(install)
+AC_SUBST(lcldir)
+AC_SUBST(lclunits)
+AC_SUBST(lhelp)
+AC_SUBST(lib)
+AC_SUBST(libdir)
+AC_SUBST(ln)
+AC_SUBST(make)
+AC_SUBST(man)
+AC_SUBST(mandir)
+AC_SUBST(msgfmt)
+AC_SUBST(os)
+AC_SUBST(prefix)
+AC_SUBST(rm)
+AC_SUBST(rstconv)
+AC_SUBST(sysconfdir)
+AC_SUBST(unix2dos)
+AC_SUBST(vardir)
+AC_SUBST(version)
+AC_CONFIG_FILES([Makefile.global])
+
+dnl -- PRINT SUMMARY AND NOTES --
+AC_OUTPUT
+echo "
+Summary:
+  target op. system         $os
+  target processor          $architecture
+  target directory          $prefix
+  Application compilation   $app
+  Plugins compilation       $lib
+  LHelp compilation         $lhelp
+
+Notes:
+  disable compilation of application    configure app=no
+  disable compilation of plugins        configure lib=no
+  disable compilation of LHelp          configure lhelp=no
+  install to FreeBSD stage directory    configure stagedir=...
+
+  compile program                       make
+  install program                       make install
+  remove program                        make uninstall
+  convert files for DOS                 make convert
+  create CHM help file                  make createhelp
+"

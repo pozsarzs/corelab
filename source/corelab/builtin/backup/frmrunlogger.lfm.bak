@@ -1,0 +1,64 @@
+object RunLogger: TRunLogger
+  Left = 350
+  Height = 510
+  Top = 163
+  Width = 666
+  Caption = 'RunLogger'
+  ClientHeight = 510
+  ClientWidth = 666
+  Menu = MainMenu1
+  LCLVersion = '2.2.6.0'
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 19
+    Top = 491
+    Width = 666
+    Panels = <>
+  end
+  object ListBox1: TListBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ToolBar1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StatusBar1
+    Left = 4
+    Height = 449
+    Top = 34
+    Width = 658
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 4
+    BorderSpacing.Bottom = 4
+    BorderSpacing.Around = 4
+    DoubleBuffered = True
+    ItemHeight = 0
+    MultiSelect = True
+    ParentDoubleBuffered = False
+    TabOrder = 2
+    TopIndex = -1
+  end
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 26
+    Top = 0
+    Width = 666
+    Caption = 'ToolBar1'
+    TabOrder = 1
+  end
+  object MainMenu1: TMainMenu
+    Left = 98
+    Top = 45
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 114
+    Top = 174
+  end
+  object ImageList1: TImageList
+    Left = 448
+    Top = 103
+  end
+  object ActionList1: TActionList
+    Left = 336
+    Top = 114
+  end
+end
