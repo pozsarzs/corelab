@@ -3,8 +3,7 @@
 >
 
 <img align="left" style="float: left; margin: 0 10px 0 0;" alt="Icon"
-  src="desktop/corelab.png">
-<br>
+  src="desktop/corelab-48.png">
 
 # CoreLAB
 
@@ -20,16 +19,34 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 (...)
 
-|features                |                                                                                            |
+|Features                |Specification / Description                                                                                           |
 |------------------------|--------------------------------------------------------------------------------------------|
-|actual version          |v0.1                                                                                        |
-|licence                 |EUPL v1.2                                                                                   |
-|language                |en                                                                                          |
-|architecture            |amd64, armhf, x86_64                                                                        |
-|operation system        |FreeBSD, Linux, Windows                                                                     |
-|user interface          |GUI with command line                                                                       |
-|running modes           |normal or interpreter                                                                       |
+|**actual version**          |v0.1                                                                                        |
+|**licence**                 |EUPL v1.2                                                                                   |
+|**language**                |en                                                                                          |
+|**architecture**            |amd64, armhf, x86_64                                                                        |
+|**operation system**        |FreeBSD, Linux, Windows                                                                     |
+| **UI** | Graphical User Interface (GUI) with scriptable command-line control |
+|
+|**running modes**           |normal or interpreter                                                                       |
+| **Project Type** | Functional CPU/uP/MCU simulator |
+| **Simulation Type** | Instruction-level operation (not cycle-accurate) |
+| **Supported Architecture** | Von Neumann and Harvard architectures |
+| **Supported Processors** | Word-based CPUs up to 64-bit word size: PDP, VAX, S3x0, ...<br>
 
+<br>4–16 bit microprocessors: i40xx, i80xx, MC68xx, ...<br>
+
+<br>4–8 bit, simple microcontrollers: TMS1000, MB8840, ... |
+| **Simulation Environment** | Configurable memory space and virtual I/O ports |
+| **Peripherals** | Simple, built-in virtual peripherals |
+| **Modular Architecture** | Dynamically loadable CPUs, peripherals, and devices |
+| **UI** | Graphical User Interface (GUI) with scriptable command-line control |
+| **RunLogger** | Real-time output of address, machine code, and mnemonic |
+| **Dump** | Displaying memory and register contents, with export to binary or Intel HEX files |
+| **Logging** | Runtime log exportable to file |
+| **Debug Features** | Breakpoints, memory monitoring, single-stepping, and commentable memory addresses |
+| **Program Loading** | Via keyboard entry, binarily (cell-by-cell) via virtual system monitor, or from binary / Intel HEX files |
+| **State Saving** | Saving and restoring CPU and full environment state |
 ## III. Screenshots
 
 (...)
