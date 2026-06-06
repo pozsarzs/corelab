@@ -5,7 +5,7 @@
 # | Makefile for 64 bit Windows                                                |
 # +----------------------------------------------------------------------------+
 
-name = corelab
+name = lhelp
 architecture = x86_64
 os = win64
 fpc = ppcx64
@@ -18,8 +18,6 @@ fpcargs = -T$(os) \
           -v0 \
           -Fu. \
           -Fu../_ext/* \
-          -Fu./builtin/ \
-          -Fu./core/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \

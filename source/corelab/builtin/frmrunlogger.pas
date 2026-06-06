@@ -16,7 +16,7 @@ unit frmrunlogger;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ComCtrls,
-  StdCtrls, ActnList, ExtCtrls;
+  StdCtrls, ActnList, ExtCtrls, core_cpu;
 type
   { TRunLogger }
   TRunLogger = class(TForm)
@@ -35,7 +35,7 @@ type
     FIsPaused: boolean;
     constructor Create(AOwner: TComponent); override;
     procedure Clear;
-    procedure HandleCPUEvent;
+//    procedure HandleCPUEvent;
     function SaveToFile(FileName: string): boolean;
     procedure UpdateUI;
     property AutoScroll: boolean read FAutoScroll;
@@ -50,33 +50,20 @@ implementation
 
 constructor TRunLogger.Create(AOwner: TComponent);
 begin
-  inherited Create;
-  Autoscroll := true;
-  IsPaused := false;
-  With Timer1 do
-  begin
-    Create(Self);
-    timer1.
-
-    Enabled := true;
-  end;
-
-  StringList1.Create;
-  Clear;
 end;
 
 procedure TRunLogger.Clear;
 begin
 end;
 
-procedure TRunLogger.HandleCPUEvent(Sender: TObject; EventType: TCPUEventType);
-begin
-  if EventType = evInstructionExecuted then
-  begin
+//procedure TRunLogger.HandleCPUEvent(Sender: TObject; EventType: TCPUEventType);
+//begin
+  //if EventType = evInstructionExecuted then
+  //begin
     // Csak ekkor kérjük le a nehéz stringet, így nem lassul a CPU mag feleslegesen
-    LogLine(TCPU(Sender).GetCurrentInstruction);
-  end;
-end;
+    //LogLine(TCPU(Sender).GetCurrentInstruction);
+  //end;
+//end;
 
 function TRunLogger.SaveToFile(FileName: string): boolean;
 begin

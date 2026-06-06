@@ -7,7 +7,8 @@
 
 include ./Makefile.global
 
-dirs=desktop document help manual message source syntax
+dirs=desktop document help manual message source/corelab \
+     source/corelab-plugins source/lhelp source syntax
 
 all:
 	@echo "Compiling source code..."

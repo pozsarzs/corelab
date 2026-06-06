@@ -15,7 +15,8 @@ unit frmmain;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
+  frmRunLogger;
 type
   { TMainForm }
   TMainForm = class(TForm)
@@ -51,7 +52,7 @@ implementation
 procedure TMainForm.MenuItem10Click(Sender: TObject);
 begin
   RunLogger.Show;
-  MenuItem10.Checked;
+//  MenuItem10.Checked;
 end;
 
 end.

@@ -1,0 +1,19 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: tmainform.caption
+msgid "Form1"
+msgstr ""
+
+#: tmainform.menuitem1.caption
+msgid "&File"
+msgstr ""
+
+#: trunlogger.caption
+msgid "RunLogger"
+msgstr ""
+
+#: trunlogger.toolbar1.caption
+msgid "ToolBar1"
+msgstr ""
+
