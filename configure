@@ -619,6 +619,7 @@ LIBOBJS
 version
 vardir
 os
+libversion
 lib
 lhelp
 lclunits
@@ -2654,7 +2655,8 @@ else $as_nop
   as_fn_error $? "VERSION file not found!" "$LINENO" 5
 fi
 
-version=`cat document/VERSION`
+version=$(sed -n '1p' document/VERSION)
+libversion=$(sed -n '2p' document/VERSION)
 
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for document/copyright" >&5
 printf %s "checking for document/copyright... " >&6; }
@@ -2695,6 +2697,7 @@ if test "$stagedir" != ""; then mandir="$prefix/man"; fi
 if (test "$app" = "") || (test $app != "no"); then app="yes"; fi
 if (test "$lib" = "") || (test $lib != "no"); then lib="yes"; fi
 if (test "$lhelp" = "") || (test $lhelp != "no"); then lhelp="yes"; fi
+
 
 
 
@@ -3880,6 +3883,8 @@ fi
 
 echo "
 Summary:
+  application version       v$version
+  library vwersion          v$libversion
   target op. system         $os
   target processor          $architecture
   target directory          $prefix

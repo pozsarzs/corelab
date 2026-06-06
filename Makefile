@@ -7,8 +7,7 @@
 
 include ./Makefile.global
 
-dirs=desktop document help manual message source/corelab \
-     source/corelab-plugins source/lhelp source syntax
+dirs=desktop document help manual message source syntax
 
 all:
 	@echo "Compiling source code..."
@@ -32,8 +31,9 @@ install:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then $(make) -s -C $$dir install; fi; \
 	done
-	@update-mime-database
-	@gtk-update-icon-cache $(datarootdir)/pixmaps
+	@ldconfig
+	@update-mime-database $(datarootdir)/mime
+	@gtk-update-icon-cache $(datarootdir)/icons
 	@echo "Done."
 
 uninstall:
@@ -41,8 +41,9 @@ uninstall:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then $(make) -s -C $$dir uninstall; fi; \
 	done
-	@update-mime-database
-	@gtk-update-icon-cache $(datarootdir)/pixmaps
+	@ldconfig
+	@update-mime-database $(datarootdir)/mime
+	@gtk-update-icon-cache $(datarootdir)/icons
 	@echo "Done."
 
 convert:

@@ -15,6 +15,7 @@ all:
 	@for x in $(project); do \
 	  if [ -f $$x/$$x.pas ]; then \
 	    $(fpc) $(fpcargs) -Fu../corelab/core/ $$x/$$x.pas; \
+	  echo ""; \
 	  fi; \
 	done
 

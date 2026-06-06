@@ -6,8 +6,9 @@
 # +----------------------------------------------------------------------------+
 
 copyright	= @copyright@
-name		= modshell
+name		= corelab
 version		= @version@
+libversion	= @libversion@
 architecture	= @architecture@
 os              = @os@
 

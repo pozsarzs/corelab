@@ -56,7 +56,8 @@ AC_CHECK_FILE($lcldir/lclbase.lpk, lclunits="yes", lclunits="no")
 if test "$lclunits" == "no"; then AC_MSG_ERROR(LCL unit files not found!); fi
 
 AC_CHECK_FILE(document/VERSION, , AC_MSG_ERROR(VERSION file not found!))
-version=`cat document/VERSION`
+version=$(sed -n '1p' document/VERSION)
+libversion=$(sed -n '2p' document/VERSION)
 
 AC_CHECK_FILE(document/copyright, , AC_MSG_ERROR(copyright file not found!))
 copyright=`cat document/copyright`
@@ -94,6 +95,7 @@ AC_SUBST(lclunits)
 AC_SUBST(lhelp)
 AC_SUBST(lib)
 AC_SUBST(libdir)
+AC_SUBST(libversion)
 AC_SUBST(ln)
 AC_SUBST(make)
 AC_SUBST(man)
@@ -113,6 +115,8 @@ dnl -- PRINT SUMMARY AND NOTES --
 AC_OUTPUT
 echo "
 Summary:
+  application version       v$version
+  library vwersion          v$libversion
   target op. system         $os
   target processor          $architecture
   target directory          $prefix

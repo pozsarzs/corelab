@@ -13,6 +13,7 @@ sourcedir=_lib/$(architecture)-$(os)
 targetdir=$(bindir)
 targetlibdir=$(libdir)
 filemode=$(binmode)
+majorlibversion=`echo "$(libversion)" | cut -c1`
 projectdirs=corelab lhelp
 plugins=`ls corelab-plugins | grep -v Makefile | grep -v Makefile.w64`
 
@@ -51,7 +52,9 @@ install:
 	@for x in $(plugins); do \
 	  if [ -f $(sourcedir)/lib$$x.so ]; \
 	  then \
-	    $(install) -m $(filemode) $(sourcedir)/lib$$x.so $(targetlibdir); \
+	    $(install) -m $(filemode) $(sourcedir)/lib$$x.so $(targetlibdir)/lib$$x.so.$(libversion); \
+	    $(ln) $(targetlibdir)/lib$$x.so.$(libversion) $(targetlibdir)/lib$$x.so.$(majorlibversion); \
+	    $(ln) $(targetlibdir)/lib$$x.so.$(majorlibversion) $(targetlibdir)/lib$$x.so; \
 	    echo -n "#"; \
 	  fi; \
 	done
@@ -68,7 +71,7 @@ uninstall:
 	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir); fi; \
 	fi
 	@for x in $(plugins); do \
-	  $(rm) $(targetlibdir)/lib$$x.so; \
+	  $(rm) $(targetlibdir)/lib$$x.so*; \
 	  echo -n "#"; \
 	done
 	@if [ $(removetargetdir) -eq 1 ]; \
