@@ -12,11 +12,12 @@ removetargetdir=0
 sourcedir="."
 filemode=$(txtmode)
 targetdir1=$(datarootdir)/applications
-files1=`ls $(sourcedir)/*.desktop | grep -v Makefile`
-targetdir2=$(datarootdir)/pixmaps
-files2=`ls $(sourcedir)/*.png | grep -v Makefile`
-targetdir3=$(datarootdir)mime/packages
-files3=`ls $(sourcedir)/*.xml | grep -v Makefile`
+files1=`ls $(sourcedir)/*.desktop`
+targetdir2=$(datarootdir)mime/packages
+files2=`ls $(sourcedir)/*.xml`
+targetdir3=$(datarootdir)/icons/hicolor
+size3=16x16 32x32 48x48 64x64
+category3=apps mimetypes
 
 all:
 
@@ -32,6 +33,7 @@ install:
 	    echo -n "#"; \
 	  fi \
 	done
+
 	@$(install) -d $(targetdir2)
 	@for x in $(files2); do \
 	  if [ -f $(sourcedir)/$$x ]; \
@@ -40,13 +42,19 @@ install:
 	    echo -n "#"; \
 	  fi \
 	done
-	@$(install) -d $(targetdir3)
-	@for x in $(files3); do \
-	  if [ -f $(sourcedir)/$$x ]; \
-	  then \
-	    $(install) -m $(filemode) $(sourcedir)/$$x $(targetdir3); \
-	    echo -n "#"; \
-	  fi \
+
+	@for c in $(category3); do \
+	  for s in $(size3); do \
+	    $(install) -d $(targetdir3)/$$s/$$c; \
+	    files3=`ls $(sourcedir)/$$s/$$c`; \
+	    for x in $$files3; do \
+	      if [ -f $(sourcedir)/$$s/$$c/$$x ]; \
+	      then \
+	        $(install) -m $(filemode) $(sourcedir)/$$s/$$c/$$x $(targetdir3)/$$s/$$c; \
+	        echo -n "#"; \
+	      fi; \
+	    done; \
+	  done; \
 	done
 	@echo "]"
 

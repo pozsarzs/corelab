@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 64 64"
+   width="64"
+   height="64"
+   version="1.1"
+   id="svg350"
+   sodipodi:docname="gemini-svg (1).svg"
+   inkscape:export-filename="gemini-svg (1).png"
+   inkscape:export-xdpi="27.927273"
+   inkscape:export-ydpi="27.927273"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs354" />
+  <sodipodi:namedview
+     id="namedview352"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="3.53125"
+     inkscape:cx="34.265487"
+     inkscape:cy="21.380531"
+     inkscape:window-width="1024"
+     inkscape:window-height="718"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg350" />
+  <path
+     d="M12,6 H44 L54,16 V54 A4,4 0 0,1 50,58 H12 A4,4 0 0,1 8,54 V10 A4,4 0 0,1 12,6 Z"
+     fill="#eef5fa"
+     stroke="#1a4b75"
+     stroke-width="3"
+     stroke-linejoin="round"
+     id="path332" />
+  <path
+     d="M44,6 V16 H54 Z"
+     fill="#1b732c"
+     stroke="#1a4b75"
+     stroke-width="3"
+     stroke-linejoin="round"
+     id="path334" />
+  <rect
+     x="14"
+     y="14"
+     width="8"
+     height="8"
+     rx="2"
+     fill="#1e88e5"
+     id="rect336" />
+  <rect
+     x="24"
+     y="14"
+     width="8"
+     height="8"
+     rx="2"
+     fill="#ff9800"
+     id="rect338" />
+  <rect
+     x="14"
+     y="24"
+     width="8"
+     height="8"
+     rx="2"
+     fill="#1e88e5"
+     id="rect340" />
+  <rect
+     x="24"
+     y="24"
+     width="8"
+     height="8"
+     rx="2"
+     fill="#1e88e5"
+     id="rect342" />
+  <line
+     x1="14"
+     y1="38"
+     x2="44"
+     y2="38"
+     stroke="#1a4b75"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line344" />
+  <line
+     x1="14"
+     y1="44"
+     x2="44"
+     y2="44"
+     stroke="#1a4b75"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line346" />
+  <line
+     x1="14"
+     y1="50"
+     x2="30"
+     y2="50"
+     stroke="#1a4b75"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line348" />
+  <path
+     style="fill:#00b400;fill-opacity:1;stroke:#ffffff;stroke-width:0.0707965;stroke-linecap:round"
+     d="M 25.509556,21.92623 C 24.869267,21.771233 24.298981,21.230296 24.096123,20.585541 24.018467,20.338723 24.017699,20.313416 24.017699,18 c 0,-2.313416 7.68e-4,-2.338723 0.07842,-2.585541 0.206453,-0.656184 0.772178,-1.187357 1.429651,-1.342337 0.336173,-0.07924 4.612279,-0.07924 4.948452,0 0.657473,0.15498 1.223198,0.686153 1.429652,1.342337 0.07766,0.246818 0.07842,0.272125 0.07842,2.585541 v 2.336283 l -0.08497,0.259384 c -0.216723,0.661594 -0.768184,1.177832 -1.423107,1.332211 -0.324177,0.07642 -4.648125,0.07498 -4.96467,-0.0016 z"
+     id="path3730" />
+  <path
+     style="fill:#00b400;fill-opacity:1;stroke:#ffffff;stroke-width:0.0353982;stroke-linecap:round"
+     d="m 45.498525,14.501475 c -0.01641,-0.01641 -0.01491,-4.8731564 0.0015,-4.8731564 0.01736,0 4.871657,4.8543484 4.871657,4.8717054 0,0.01638 -4.856781,0.01783 -4.873156,0.0015 z"
+     id="path3734" />
+</svg>

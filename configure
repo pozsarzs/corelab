@@ -612,7 +612,7 @@ PACKAGE_STRING=''
 PACKAGE_BUGREPORT=''
 PACKAGE_URL=''
 
-ac_unique_file="source/ui/"
+ac_unique_file="source/corelab/"
 ac_default_prefix="/usr/local"
 ac_subst_vars='LTLIBOBJS
 LIBOBJS

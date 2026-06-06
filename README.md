@@ -182,7 +182,7 @@ for details.
 
 ## X. Links  
 
- - [Homepage] https://www.pozsarzs.hu/60_myprogcom/corelab/  
+ - [Homepage](https://www.pozsarzs.hu/60_myprogcom/corelab/)  
  - [GitHub repository](https://github.com/pozsarzs/corelab)  
  - [Project webpage on Github](https://pozsarzs.github.io/corelab)  
 
