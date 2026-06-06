@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ]; then
+  if [ -d /usr/doc -a ! -e /usr/doc/corelab-plugins -a -d /usr/share/doc/corelab-plugins ]; then
+    ln -sf /usr/share/doc/corelab-plugins /usr/doc/corelab-plugins
+  fi
+fi

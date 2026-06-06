@@ -3,10 +3,6 @@
 # create deb package on Linux
 #
 
-NAME="corelab"
-VERSION="0.1"
-RELEASE='1'
-
 if [ $# -eq 0 ]
 then
   read -p "Architecture: " ARCH
@@ -14,5 +10,20 @@ else
   ARCH=$1
 fi
 
-find "${NAME}_${VERSION}-${RELEASE}_${ARCH}" -exec touch {} +
-fakeroot dpkg-deb --build "${NAME}_${VERSION}-${RELEASE}_${ARCH}" && lintian "${NAME}_${VERSION}-${RELEASE}_${ARCH}.deb"
+function createpackage()
+{
+  find "${NAME}_${VERSION}-${RELEASE}_${ARCH}" -exec touch {} +
+  fakeroot dpkg-deb --build "${NAME}_${VERSION}-${RELEASE}_${ARCH}" && lintian "${NAME}_${VERSION}-${RELEASE}_${ARCH}.deb"
+}
+
+NAME="corelab"
+VERSION="0.1"
+RELEASE='1'
+
+createpackage
+
+NAME="corelab-plugins"
+VERSION="0.1"
+RELEASE='1'
+
+createpackage

@@ -3,10 +3,6 @@
 # create txz package on Linux
 #
 
-NAME="corelab"
-RELEASE="1"
-VERSION="0.1"
-
 if [ `whoami` != 'root' ]
 then echo 'ERROR: You are not root!'; exit
 fi
@@ -18,7 +14,21 @@ else
   ARCH=$1
 fi
 
+function createpackage()
+{
 find $NAME -exec touch {} +
 chown -R root:root $NAME
 makepkg -c y "../$NAME-$VERSION-$ARCH-$RELEASE.txz"
+}
 
+NAME="corelab"
+RELEASE="1"
+VERSION="0.1"
+
+createpackage
+
+NAME="corelab-plugins"
+RELEASE="1"
+VERSION="0.1"
+
+createpackage
