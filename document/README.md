@@ -2,12 +2,9 @@
 
 ### 1. About software
 
-This is a utility that can be used on several operating systems, which can
-communicate with connected equipment using Modbus/ASCII and -/RTU
-protocols. The program can - even automatically - read, write or copy data from
-one device to another (e.g. transferring settings). The basic communication
-protocol of the program is Modbus, but DCON and HART was also implemented due to
-communication with other devices.
+The CoreLAB project is a functional CPU, microprocessor, and microcontroller
+simulator born from a fusion of academic research, technical passion, and
+historical preservation.
 
 ### 2. How to get installer package for my OS?
 

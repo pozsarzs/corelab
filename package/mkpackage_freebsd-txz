@@ -1,0 +1,9 @@
+#!/usr/local/bin/bash
+#
+# create txz package on FreeBSD
+#
+
+make makesum
+make stage
+make stage-qa
+make package
