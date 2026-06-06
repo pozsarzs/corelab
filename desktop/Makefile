@@ -68,15 +68,27 @@ uninstall:
 	  $(rm) $(targetdir2)/$$x; \
 	  echo -n "#"; \
 	done
-	@for x in $(files3); do \
-	  $(rm) $(targetdir3)/$$x; \
-	  echo -n "#"; \
+	@for c in $(category3); do \
+	  for s in $(size3); do \
+	    files3=`ls $(sourcedir)/$$s/$$c`; \
+	    for x in $$files3; do \
+	      if [ -f $(sourcedir)/$$s/$$c/$$x ]; \
+	      then \
+	        $(rm) $(targetdir3)/$$s/$$c/$$x; \
+	        echo -n "#"; \
+	      fi; \
+	    done; \
+	  done; \
 	done
 	@if [ $(removetargetdir) -eq 1 ]; \
 	then \
 	  if [ -d $(targetdir1) ]; then $(rmdir) $(targetdir1); fi; \
 	  if [ -d $(targetdir2) ]; then $(rmdir) $(targetdir2); fi; \
-	  if [ -d $(targetdir3) ]; then $(rmdir) $(targetdir3); fi; \
+	  for c in $(category3); do \
+	    for s in $(size3); do \
+	      if [ -d $(targetdir3)/$$s/$$c ]; then $(rmdir) $(targetdir3)/$$s/$$c; fi; \
+	    done; \
+	  done; \
 	fi;
 	@echo "]"
 
