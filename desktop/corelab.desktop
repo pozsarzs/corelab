@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=CoreLab
+Name=CoreLAB
 GenericName=Modular Processor Simulation Framework
 GenericName[hu]=Moduláris processzorszimulációs keretrendszer
 Exec=corelab %F

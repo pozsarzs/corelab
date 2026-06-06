@@ -1,0 +1,51 @@
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | Makefile                                                                   |
+# | Makefile for many files of the same type                                   |
+# +----------------------------------------------------------------------------+
+
+include ../Makefile.global
+
+title="documentation "
+removetargetdir=1
+sourcedir="."
+targetdir=$(datarootdir)/doc/$(name)
+filemode=$(txtmode)
+files=`ls $(sourcedir) | grep -v Makefile`
+
+all:
+
+clean:
+
+install:
+	@echo -n "- Installing "$(title)"["
+	@$(install) -d $(targetdir)
+	@for x in $(files); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(install) -m $(filemode) $(sourcedir)/$$x $(targetdir); \
+	    echo -n "#"; \
+	  fi \
+	done
+	@$(install) -m $(filemode) "../LICENCE" $(targetdir)	
+	@echo -n "#"
+	@echo "]"
+
+uninstall:
+	@echo -n "- Removing "$(title)"["
+	@$(rm) $(targetdir)/LICENCE
+	@echo -n "#"
+	@for x in $(files); do \
+	  $(rm) $(targetdir)/$$x; \
+	  echo -n "#"; \
+	done
+	@if [ $(removetargetdir) -eq 1 ]; \
+	then \
+	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir); fi; \
+	fi;
+	@echo "]"
+
+convert:
+
+createhelp:
