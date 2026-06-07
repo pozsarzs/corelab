@@ -185,60 +185,60 @@ to be used with other development tools or transferred to real hardware.
 
 ## VI. Implemented commands  
 
-|command  |category           |description                                             |
-|--------:|:-----------------:|:-------------------------------------------------------|
-|`abs`    |Arithmetic         |Calculate absolute value                                |
-|`add`    |Arithmetic         |Perform addition                                        |
-|`and`    |Logic              |Bitwise / Logical AND operation                         |
-|`attach` |Object Management  |Connect a hardware module to a bus or CPU               |
-|`cls`    |Environment Control|Clear the command line screen                           |
-|`conv`   |Arithmetic         |Convert numbers between BIN, DEC, HEX, and OCT formats  |
-|`create` |Object Management  |Instantiate a hardware module, variable, or array       |
-|`dec`    |Arithmetic         |Decrement an integer value                              |
-|`destroy`|Object Management  |Delete an object and free its memory                    |
-|`detach` |Object Management  |Disconnect a module from the bus                        |
-|`div`    |Arithmetic         |Perform floating-point division                         |
-|`dump`   |Diagnostics        |Print raw internal content (registers, memory bytes)    |
-|`exit`   |Environment Control|Terminate the shell or simulation environment           |
-|`for`    |Program Flow       |Loop iteration statement                                |
-|`goto`   |Program Flow       |Jump to a defined label                                 |
-|`idiv`   |Arithmetic         |Perform integer division                                |
-|`if`     |Program Flow       |Conditional branch statement                            |
-|`imod`   |Arithmetic         |Calculate modulus (remainder of integer division)       |
-|`inc`    |Arithmetic         |Increment an integer value                              |
-|`info`   |Diagnostics        |Display metadata and general status of an object        |
-|`input`  |Diagnostics        |Read user input into a variable                         |
-|`inrange`|Logic              |Check if a value falls within a specified range         |
-|`label`  |Program Flow       |Define a target marker for goto commands                |
-|`let`    |Data Management    |Assign a value to a variable, array element, or register|
-|`load`   |File I/O           |Load a project, script, or memory image from file       |
-|`mul`    |Arithmetic         |Perform multiplication                                  |
-|`not`    |Logic              |Bitwise / Logical NOT operation                         |
-|`or`     |Logic              |Bitwise / Logical OR operation                          |
-|`pause`  |Simulation         |Pause execution for debugging or timing simulation      |
-|`print`  |Diagnostics        |Output a message or value to the console                |
-|`reset`  |Environment Control|Reset an object to its default initial state            |
-|`rnd`    |Arithmetic         |Generate a random integer                               |
-|`run`    |Simulation         |Start the execution of the loaded script or simulation  |
-|`save`   |File I/O           |Save the current project or script to disk              |
-|`shl`    |Logic              |Bitwise / Logical bit shift to the left                 |
-|`show`   |Object Management  |List all existing objects and the current topology      |
-|`shr`    |Logic              |Bitwise / Logical bit shift to the right                |
-|`sub`    |Arithmetic         |Perform subtraction                                     |
-|`swp`    |Data Management    |Swap the values of two targets                          |
-|`ver`    |Environment Control|Display version and build information                   |
-|`xor`    |Logic              |Bitwise / Logical XOR operation                         |
+|command  |category           |description                                                       |
+|:-------:|:-----------------:|------------------------------------------------------------------|
+|`create` |Object Management  |Instantiate a hardware module, variable or array                  |
+|`destroy`|Object Management  |Delete an object and free its memory                              |
+|`attach` |Object Management  |Connect a hardware module to the bus                              |
+|`detach` |Object Management  |Disconnect a module from the bus                                  |
+|`set`    |Object Management  |Write a value to an internal state, register or memory cell       |
+|`get`    |Object Management  |Read an internal state, register or memory cell into a variable   |
+|`reset`  |Object Management  |Clear data or restore a hardware module to default state          |
+|`load`   |Object Management  |Load binary data or state into an object from a file              |
+|`save`   |Object Management  |Save an object's current state or memory dump to a file           |
+|`info`   |Object Management  |Display metadata and general status of an object                  |
+|`show`   |Object Management  |List all existing objects and the current topology                |
+|`cls`    |General            |Clear the command line screen                                     |
+|`exit`   |General            |Terminate the shell or simulation environment                     |
+|`input`  |General            |Read user input into a variable from console                      |
+|`goto`   |General            |Jump to a defined label, optionally conditional upon an expression|
+|`print`  |General            |Output a message or value to the console                          |
+|`ver`    |General            |Display version and build information                             |
+|`let`    |Data Management    |Assign a value to a variable or array element                     |
+|`swp`    |Data Management    |Swap the values of two targets                                    |
+|`run`    |Simulation control |Start the continuous functional execution of a CPU                |
+|`step`   |Simulation control |Execute a single or a specific number of instructions on a CPU    |
+|`stop`   |Simulation control |Halt the execution of a running CPU                               |
+|`abs`    |Arithmetic         |Calculate absolute value                                          |
+|`add`    |Arithmetic         |Perform addition                                                  |
+|`conv`   |Arithmetic         |Convert numbers between BIN, DEC, HEX, and OCT formats            |
+|`dec`    |Arithmetic         |Decrement an integer value                                        |
+|`div`    |Arithmetic         |Perform floating-point division                                   |
+|`idiv`   |Arithmetic         |Perform integer division                                          |
+|`imod`   |Arithmetic         |Calculate modulus (remainder of integer division)                 |
+|`inc`    |Arithmetic         |Increment an integer value                                        |
+|`mul`    |Arithmetic         |Perform multiplication                                            |
+|`rnd`    |Arithmetic         |Generate a random integer                                         |
+|`sub`    |Arithmetic         |Perform subtraction                                               |
+|`and`    |Logic              |Bitwise / Logical AND operation                                   |
+|`inrange`|Logic              |Check if a value falls within a specified range                   |
+|`not`    |Logic              |Bitwise / Logical NOT operation                                   |
+|`or`     |Logic              |Bitwise / Logical OR operation                                    |
+|`shl`    |Logic              |Bitwise / Logical bit shift to the left                           |
+|`shr`    |Logic              |Bitwise / Logical bit shift to the right                          |
+|`xor`    |Logic              |Bitwise / Logical XOR operation                                   |
 
 ## VII. Predefined constants  
 
-|name    |value                                                     |
-|:-------|:---------------------------------------------------------|
-|$?      |exit value of the commands                                |
-|$ARGx   |OS command line arguments (interpreter mode)              |
-|$ARGCNT |number of the OS command line arguments (interpreter mode)|
-|$HOME   |user's home directory                                     |
-|$PRJDIR |directory of the actual project                           |
-|$PRJNAME|name of the actual project                                |
+|name      |value                                                     |
+|:---------|:---------------------------------------------------------|
+|`$?`      |exit value of the commands                                |
+|`$ARGx`   |OS command line arguments (interpreter mode)              |
+|`$ARGCNT` |number of the OS command line arguments (interpreter mode)|
+|`$HOME`   |user's home directory                                     |
+|`$PRJDIR` |directory of the actual project                           |
+|`$PRJNAME`|name of the actual project                                |
+|`$ICNT`   |total number of executed CPU instructions                 |
 
 ## VIII. Documentation and Help  
 
