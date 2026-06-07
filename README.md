@@ -118,17 +118,70 @@ in mind:
 
 ## V. About the program
 
-### Projects  
+### Project Management
 
-In the program, you can create projects for easier management of settings and
-data. The name of the current project is shown in the prompt. The project
-directory will be created in the user's home directory. If only filename is
-specified during file operations (without path), this directory will be the
-source/destination directory.
+CoreLAB uses a project-based workflow. A project contains not only program code
+but also the complete simulation environment, including created CPUs, memories,
+peripherals, their interconnections, and associated files and settings. This
+allows different developments or experiments to be managed independently from one
+another.
 
-### ???
+### Modular Architecture
 
-(...)
+One of the most important features of the simulator is its modular design.
+Processors, memories, and peripherals can be created as independent objects and
+connected dynamically. Users can build custom virtual hardware environments
+tailored to the requirements of the system being studied.
+
+### Supported Processor Architectures
+
+CoreLAB is not limited to a single processor type. Different CPU, microprocessor,
+and microcontroller architectures can be loaded as plug-ins. This enables the
+same environment to be used for studying multiple instruction sets and hardware
+models.
+
+### Virtual Memory and I/O Environment
+
+The memory map and I/O address space can be configured freely during simulation.
+Virtual peripherals can be assigned to memory locations or I/O ports in the same
+way as real hardware devices. This makes it possible to model complete systems
+without requiring physical components.
+
+### Debugging Features
+
+CoreLAB provides several built-in diagnostic and debugging tools. Users can halt
+execution at breakpoints, execute programs step by step, inspect memory and
+register contents, and monitor instruction execution in real time. These features
+are especially useful for educational purposes and low-level software
+development.
+
+### Bus and System Monitoring
+
+The Bus Monitor and Virtual System Monitor allow users to observe the operation
+of the virtual hardware in real time. Address, data, and control bus activity can
+be monitored, as well as communication between system components. This provides
+visibility into internal system behavior that would often require specialized
+measuring equipment on real hardware.
+
+### Scripting and Automation
+
+In addition to the graphical interface, the program includes its own command
+interpreter and scripting language. Repetitive tasks, automated tests, and
+measurement procedures can be executed through scripts. This makes it possible to
+reproduce complex hardware configurations and testing environments efficiently.
+
+### State Saving and Restoration
+
+The complete state of a simulation can be saved and restored at any time. This
+includes not only memory contents but also the current state of processors,
+peripherals, and other objects. As a result, development and debugging sessions
+can be paused and resumed without loss of progress.
+
+### Logging and Data Export
+
+Runtime events and execution logs can be saved to files for later analysis.
+Memory contents can be exported in binary or Intel HEX format, allowing results
+to be used with other development tools or transferred to real hardware.
 
 ## VI. Implemented commands  
 
