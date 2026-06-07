@@ -41,8 +41,9 @@ in mind:
     tool, the project serves as a practical application of advanced system
     design and hardware modeling concepts. It provides a platform to explore
     how complex, real-world physical systems - such as buses, registers, memory
-    layouts, and I/O lines—can be accurately modeled, decoupled, and reconfigured
-    dynamically in software using modern software engineering patterns.
+    layouts, and I/O lines - can be accurately modeled, decoupled, and
+    reconfigured dynamically in software using modern software engineering
+    patterns.
 * **Bridging Vintage Logic with Modern Automation:** A key innovation of the
     project is wrapping these classic CPU architectures into a modern, scriptable
     environment. By allowing users to dynamically build topologies, manipulate
@@ -218,7 +219,6 @@ to be used with other development tools or transferred to real hardware.
 |`imod`   |Arithmetic         |Calculate modulus (remainder of integer division)                 |
 |`inc`    |Arithmetic         |Increment an integer value                                        |
 |`mul`    |Arithmetic         |Perform multiplication                                            |
-|`rnd`    |Arithmetic         |Generate a random integer                                         |
 |`sub`    |Arithmetic         |Perform subtraction                                               |
 |`and`    |Logic              |Bitwise / Logical AND operation                                   |
 |`inrange`|Logic              |Check if a value falls within a specified range                   |
@@ -228,17 +228,20 @@ to be used with other development tools or transferred to real hardware.
 |`shr`    |Logic              |Bitwise / Logical bit shift to the right                          |
 |`xor`    |Logic              |Bitwise / Logical XOR operation                                   |
 
-## VII. Predefined constants  
+## VII. Predefined (virtual) constants  
 
 |name      |value                                                     |
 |:---------|:---------------------------------------------------------|
 |`$?`      |exit value of the commands                                |
-|`$ARGx`   |OS command line arguments (interpreter mode)              |
 |`$ARGCNT` |number of the OS command line arguments (interpreter mode)|
+|`$ARGx`   |OS command line arguments (interpreter mode)              |
+|`$BRND`   |gives a random byte                                       |
 |`$HOME`   |user's home directory                                     |
+|`$ICNT`   |total number of executed CPU instructions                 |
+|`$IRND`   |gives a random integer                                    |
 |`$PRJDIR` |directory of the actual project                           |
 |`$PRJNAME`|name of the actual project                                |
-|`$ICNT`   |total number of executed CPU instructions                 |
+|`$WRND`   |gives a random word                                       |
 
 ## VIII. Documentation and Help  
 

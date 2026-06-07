@@ -49,14 +49,14 @@ loop2:	let		$outdata[$i] 0
 	attach	myLEDs	14h
 
 # simulations
+	load	myROM	"z80-8080.hex" 100h           # load test program to ROM
 	print		$messages[0]
-	load	myROM	"prog_z80.bin" 100h           # load test program to ROM
 	call		sim
 	print		$messages[1]
+	reset	myRAM
 	detach	myZ80	                                      # change processor
 	attach	my8080
 	print		$messages[2]
-	load	myROM	"prog_8080.bin" 100h          # load test program to ROM
 	call		sim
 
 # detach component from system bus and destroy
