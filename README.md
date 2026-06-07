@@ -113,6 +113,11 @@ in mind:
  - _Convert - Bin/Oct/Dec/Hex number converter_  
    Unit for Turbo Pascal v3.0  
    Public Domain, Copyright (C) 1993 Tom Wellige  
+ - _InpOut32 v1.0.07 Driver Interface DLL_ [^1]  
+   Windows Dynamic Link Library (DLL)  
+   Open source/freeware  
+   Copyright (C) 2003-2015 Phil Gibbons  
+   Copyright (C) 2000 <logix4u.net>  
  - _LHelp v2021-02-12 CHM help viewer_  
    Application  
    GNU GPL v2.0 or later, Copyright (C) 2005-2014 Andrew Haines, Lazarus contributors  
@@ -188,28 +193,30 @@ to be used with other development tools or transferred to real hardware.
 
 |command  |category           |description                                                       |
 |:-------:|:-----------------:|------------------------------------------------------------------|
-|`create` |Object Management  |Instantiate a hardware module, variable or array                  |
-|`destroy`|Object Management  |Delete an object and free its memory                              |
-|`attach` |Object Management  |Connect a hardware module to the bus                              |
-|`detach` |Object Management  |Disconnect a module from the bus                                  |
-|`set`    |Object Management  |Write a value to an internal state, register or memory cell       |
-|`get`    |Object Management  |Read an internal state, register or memory cell into a variable   |
-|`reset`  |Object Management  |Clear data or restore a hardware module to default state          |
-|`load`   |Object Management  |Load binary data or state into an object from a file              |
-|`save`   |Object Management  |Save an object's current state or memory dump to a file           |
-|`info`   |Object Management  |Display metadata and general status of an object                  |
-|`show`   |Object Management  |List all existing objects and the current topology                |
 |`cls`    |General            |Clear the command line screen                                     |
+|`date`   |General            |Show system date and time                                         |
 |`exit`   |General            |Terminate the shell or simulation environment                     |
-|`input`  |General            |Read user input into a variable from console                      |
 |`goto`   |General            |Jump to a defined label, optionally conditional upon an expression|
+|`help`   |General            |Show description or usage of the commands                         |
+|`input`  |General            |Read user input into a variable from console                      |
+|`pause`  |General            |Waits for a keystroke or specified time                           |
 |`print`  |General            |Output a message or value to the console                          |
 |`ver`    |General            |Display version and build information                             |
+|`chr`    |Data Management    |Convert byte to char                                              |
+|`clear`  |Data Management    |Clear content of an array                                         |
+|`fill`   |Data Management    |Fill an array with a character                                    |
 |`let`    |Data Management    |Assign a value to a variable or array element                     |
+|`ord`    |Data Management    |Convert char to byte                                              |
 |`swp`    |Data Management    |Swap the values of two targets                                    |
-|`run`    |Simulation control |Start the continuous functional execution of a CPU                |
-|`step`   |Simulation control |Execute a single or a specific number of instructions on a CPU    |
-|`stop`   |Simulation control |Halt the execution of a running CPU                               |
+|`concat` |String Handler     |Concatenate strings                                               |
+|`length` |String Handler     |Length of string                                                  |
+|`lowcase`|String Handler     |Conversion to lowercase                                           |
+|`strdel` |String Handler     |Delete specified element(s) of the string                         |
+|`strfind`|String Handler     |Find specified element in the string                              |
+|`strins` |String Handler     |Insert element into string                                        |
+|`stritem`|String Handler     |Specified element of the string                                   |
+|`strrepl`|String Handler     |Replace element in the string                                     |
+|`upcase` |String Handler     |Conversion to uppercase                                           | 
 |`abs`    |Arithmetic         |Calculate absolute value                                          |
 |`add`    |Arithmetic         |Perform addition                                                  |
 |`conv`   |Arithmetic         |Convert numbers between BIN, DEC, HEX, and OCT formats            |
@@ -227,6 +234,20 @@ to be used with other development tools or transferred to real hardware.
 |`shl`    |Logic              |Bitwise / Logical bit shift to the left                           |
 |`shr`    |Logic              |Bitwise / Logical bit shift to the right                          |
 |`xor`    |Logic              |Bitwise / Logical XOR operation                                   |
+|`create` |Object Management  |Instantiate a hardware module, variable or array                  |
+|`destroy`|Object Management  |Delete an object and free its memory                              |
+|`attach` |Object Management  |Connect a hardware module to the bus                              |
+|`detach` |Object Management  |Disconnect a module from the bus                                  |
+|`set`    |Object Management  |Write a value to an internal state, register or memory cell       |
+|`get`    |Object Management  |Read an internal state, register or memory cell into a variable   |
+|`reset`  |Object Management  |Clear data or restore a hardware module to default state          |
+|`load`   |Object Management  |Load binary data or state into an object from a file              |
+|`save`   |Object Management  |Save an object's current state or memory dump to a file           |
+|`info`   |Object Management  |Display metadata and general status of an object                  |
+|`show`   |Object Management  |List all existing objects and the current topology                |
+|`run`    |Simulation Control |Start the continuous functional execution of a CPU                |
+|`step`   |Simulation Control |Execute a single or a specific number of instructions on a CPU    |
+|`stop`   |Simulation Control |Halt the execution of a running CPU                               |
 
 ## VII. Predefined (virtual) constants  
 
@@ -255,8 +276,8 @@ through the following channels:
   architectures.
 - Source code documentation: Detailed developer assistance and documentation
   for the source code are available in the document folder.
-- Additionally, you can view the manual page from *nix shell (_man modshell_) or
-  _modshell.txt_ on other systems.  
+- Additionally, you can view the manual page from *nix shell (_man corelab_) or
+  _corelab.txt_ on other systems.  
 
 ## IX. Contributing  
 
@@ -282,3 +303,5 @@ for details.
 
 Not all test versions have binary or installation packages.
 To download, visit [CoreLAB's webpage](https://www.pozsarzs.hu/60_myprogcom/corelab/).
+
+[^1]: [InpOut32 Github repository](https://github.com/ellysh/InpOut32)
