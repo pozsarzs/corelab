@@ -51,9 +51,11 @@ in mind:
 
 ## II. Features
 
+### General features
+
 |Features                  |Specification / Description                                                      |
 |--------------------------|---------------------------------------------------------------------------------|
-|**Project Type**          |Functional CPU/uP/MCU simulator                                                  |
+|**project type**          |Functional CPU/uP/MCU simulator                                                  |
 |**actual version**        |v0.1                                                                             |
 |**licence**               |EUPL v1.2                                                                        |
 |**language**              |en                                                                               |
@@ -61,18 +63,45 @@ in mind:
 |**operation system**      |FreeBSD, Linux, Windows                                                          |
 |**user interface**        |Graphical User Interface (GUI) with scriptable command-line control              |
 |**running modes**         |Normal or interpreter                                                            |
-|**Simulation Type**       |Instruction-level operation (not cycle-accurate)                                 |
-|**Supported Architecture**|Neumann and Harvard architectures                                                |
-|**Supported Processors**  |Word-based CPUs up to 64-bit, 4–16 bit uPs and 4–8 bit, simple MCUs              |
-|**Simulation Environment**|Configurable memory space and virtual I/O ports                                  |
-|**Peripherals**           |Simple, built-in virtual peripherals                                             |
-|**Modular Architecture**  |Dynamically loadable CPUs, peripherals, and devices                              |
-|**RunLogger**             |Real-time output of address, machine code, and mnemonic                          |
-|**Dump**                  |Displaying memory and register contents, with export to binary or Intel HEX files|
-|**Logging**               |Runtime log exportable to file                                                   |
-|**Debug Features**        |Breakpoints, memory monitoring, single-stepping, and commentable memory addresses|
-|**Program Loading**       |Via keyboard entry, virtual system monitor, or from binary/Intel HEX files       |
-|**State Saving**          |Saving and restoring CPU and full environment state                              |
+|**simulation type**       |Instruction-level operation (not cycle-accurate)                                 |
+|**supported architecture**|Neumann and Harvard architectures                                                |
+|**supported processors**  |Word-based CPUs up to 64-bit, 4–16 bit uPs and 4–8 bit, simple MCUs              |
+|**simulation environment**|Configurable memory space and virtual I/O ports                                  |
+|**modular architecture**  |Dynamically loadable CPUs, peripherals, and devices                              |
+|**dump**                  |Displaying memory and register contents, with export to binary or Intel HEX files|
+|**logging**               |Runtime log exportable to file                                                   |
+|**debug features**        |Breakpoints, memory monitoring, single-stepping, and commentable memory addresses|
+|**program loading**       |Via keyboard entry or from binary/Intel HEX files                                |
+|**state saving**          |Saving and restoring CPU and full environment state                              |
+
+### Integrated modules
+
+|Features                       |Specification / Description                                        |
+|-------------------------------|-------------------------------------------------------------------|
+|**Breakpoint Manager**         |Managing code, memory, and conditional hardware breakpoints        |
+|**Bus Monitor / Tracer**       |Passive real-time tracing of address, data, and control buses      |
+|**CPU Register Viewer**        |Real-time inspection of registers, program counter, and flag status|
+|**Device Manager Map**         |Overview of mapped virtual peripheral addresses and memory spaces  |
+|**HexEditor**                  |Memory viewer and editor component                                 |
+|**Interrupt Controller Status**|Monitoring interrupt requests, masks, and priorities               |
+|**RunLogger**                  |Real-time output of address, machine code, and mnemonic            |
+|**Script Editor**              |Built-in environment for writing and executing control scripts     |
+|**Virtual System Monitor**     |Altair-style virtual front panel with toggles and LED indicators   |
+
+### Plug-in modules
+
+|Features                 |Specification / Description                                           |
+|-------------------------|----------------------------------------------------------------------|
+|**8-digit Hex Display**  |Virtual multiplexed 7-segment hex display mapped to port addresses    |
+|**8 LED Array**          |Output peripheral displaying the bit-state of a specific virtual port |
+|**8 Switches / Buttons** |Input peripheral providing manual binary data to a virtual port       |
+|**CPU Extension**        |Dynamically loadable processor cores with unique instruction sets     |
+|**File Redirector**      |Module to pipe virtual port I/O streams directly into standard files  |
+|**Matrix LED Display**   |8x8 or 16x16 LED dot-matrix display for visual coordinate-based output|
+|**Memory (ROM/RAM)**     |Configurable memory blocks with custom size, speed, and mapping       |
+|**Pipe Redirector**      |Module to route virtual port I/O through system IPC pipes             |
+|**Real Port Redirector** |Bridges virtual port I/O to actual hardware ports of the host machine |
+|**Virtual Keypad**       |4x4 matrix keypad or ASCII keyboard stream buffer for character input |
 
 ## III. Screenshots
 
