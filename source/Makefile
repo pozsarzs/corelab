@@ -25,10 +25,18 @@ all:
 	  cd ..; \
 	  fi;
 	@if [ ! $(lib) = "no" ]; then \
-	  cd corelab-plugins; \
+	  cd corelab-plugins/cpu; \
 	  make; \
 	  cd ..; \
-	  fi;
+	  fi; \
+	  cd corelab-plugins/ioport; \
+	  make; \
+	  cd ..; \
+	  fi; \
+	  cd corelab-plugins/memory; \
+	  make; \
+	  cd ..; \
+	  fi; \
 	@if [ ! $(lhelp) = "no" ]; then \
 	  cd lhelp; \
 	  make; \

@@ -10,15 +10,15 @@ architecture = x86_64
 fpc = ppcx64
 os = win64
 lcldir = c:\lazarus\lcl
-outdir = ..\_lib\$(architecture)-$(os)
+outdir = ..\..\_lib\$(architecture)-$(os)
 fpcargs = -T$(os) \
           -MObjFPC \
           -Scgi \
           -O1 \
           -v0 \
           -Fu. \
-          -Fu../_ext/* \
-          -Fu../$(name)/core/ \
+          -Fu../../_ext/* \
+          -Fu../../$(name)/core/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \

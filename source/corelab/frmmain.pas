@@ -16,11 +16,13 @@ unit frmmain;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, Menus,
-  frmRunLogger;
+  ShellCtrls, ExtCtrls, StdCtrls, ValEdit, frmRunLogger;
 type
   { TMainForm }
   TMainForm = class(TForm)
+    ImageList1: TImageList;
     MainMenu1: TMainMenu;
+    Memo1: TMemo;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem2: TMenuItem;
@@ -31,12 +33,24 @@ type
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
+    PageControl1: TPageControl;
+    Panel1: TPanel;
     Separator3: TMenuItem;
     Separator2: TMenuItem;
     Separator1: TMenuItem;
+    ShellTreeView1: TShellTreeView;
+    Splitter1: TSplitter;
+    Splitter2: TSplitter;
     StatusBar1: TStatusBar;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+    ToolBar2: TToolBar;
     TreeView1: TTreeView;
+    ValueListEditor1: TValueListEditor;
+    procedure FormCreate(Sender: TObject);
     procedure MenuItem10Click(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
   private
   public
   end;
@@ -53,6 +67,16 @@ procedure TMainForm.MenuItem10Click(Sender: TObject);
 begin
   RunLogger.Show;
 //  MenuItem10.Checked;
+end;
+
+procedure TMainForm.PageControl1Change(Sender: TObject);
+begin
+
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+
 end;
 
 end.

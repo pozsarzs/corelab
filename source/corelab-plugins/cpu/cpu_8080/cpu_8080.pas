@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | i8080_cpu.pas                                                            | }
+{ | cpu_8080.pas                                                             | }
 { | Intel 8080 CPU implementation module                                     | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
@@ -11,7 +11,7 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library i8080_cpu;
+library cpu_8080;
 {$mode objfpc}{$H+}
 uses
   Classes, SysUtils, core_cpu;

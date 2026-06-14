@@ -21,11 +21,19 @@ type
   { TRunLogger }
   TRunLogger = class(TForm)
     ActionList1: TActionList;
-    ImageList1: TImageList;
     ListBox1: TListBox;
     MainMenu1: TMainMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    Separator2: TMenuItem;
+    Separator1: TMenuItem;
     PopupMenu1: TPopupMenu;
-    StatusBar1: TStatusBar;
     ToolBar1: TToolBar;
     Timer1: TTimer;
     TStringList1: TStringList;
@@ -33,7 +41,7 @@ type
   public
     FAutoScroll: boolean;
     FIsPaused: boolean;
-    constructor Create(AOwner: TComponent); override;
+//    constructor Create(AOwner: TComponent); override;
     procedure Clear;
 //    procedure HandleCPUEvent;
     function SaveToFile(FileName: string): boolean;
@@ -45,12 +53,8 @@ var
   RunLogger: TRunLogger;
 
 implementation
-
+uses frmmain;
 {$R *.lfm}
-
-constructor TRunLogger.Create(AOwner: TComponent);
-begin
-end;
 
 procedure TRunLogger.Clear;
 begin

@@ -14,38 +14,57 @@
 unit core_ioport;
 {$mode objfpc}{$H+}
 interface
-uses
-  Classes, SysUtils;
 type
+  // Operation mode
+  TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
   // Abstract base I/O port class
   TIOPort = class
   protected
-    // Allocated I/O ports
-    FMaxRelAddress: qword;                           // Maximum relative address
-    FSize: qword;                                                 // Total range
-    FReadOnly: boolean;        //Flag indicating that the I/O block is read-only
+    FModname: string;                                             // Module name
+    FDescription: string;                                   // Short description
+    FAddressRangeSize: byte;                               // Address range size
+    FEnabled: boolean;                    // Enable port without detach from bus
+    FHasGUI: boolean;                     // Does the implementation have a GUI?
+    FLatchedOutput: boolean;                                   // Latched output
+    FPortMode: TPortMode;                                 // Port operation mode
+    FReadBackOutput: boolean;           // Output port with read-back capability
   public
     // Public methods
-    constructor Create(ASize: qword; AReadOnly: boolean); virtual;
-    function ReadPort(Port: qword): byte; virtual; abstract;
-    procedure WritePort(Port: qword; Value: byte); virtual; abstract;
+    constructor Create; virtual;
+    destructor Destroy; virtual;
+    function ReadPort(Port: byte): byte; virtual; abstract;
+    procedure WritePort(Port: byte; Value: byte); virtual; abstract;
     procedure Reset; virtual; abstract;
     // Public properties
-    property MaxRelAddress: qword read FMaxRelAddress;
-    property Size: qword read FSize;
-    property ReadOnly: boolean read FReadOnly;
+    property AddressRangeSize: byte read FAddressRangeSize;
+    property Enabled: boolean read FEnabled write FEnabled;
+    property HasGUI: boolean read FHasGUI;
+    property LatchedOutput: boolean read FLatchedOutput;
+    property Description: string read FDescription;
+    property ModName: string read FModname;
+    property PortMode: TPortMode read FPortMode;
+    property ReadBackOutput: boolean read FReadBackOutput;
   end;
 
 implementation
 
 // Create TIOPort instance
-constructor TIOPort.Create(ASize: qword; AReadOnly: boolean);
+constructor TIOPort.Create;
 begin
   inherited Create;
   // Initial state
-  FSize := ASize;
-  if ASize > 0 then FMaxRelAddress := ASize - 1 else FMaxRelAddress := 0;
-  FReadOnly := false;
+  FAddressRangeSize := 1;
+  FEnabled := false;
+  FHasGUI := false;
+  FLatchedOutput := false;
+  FPortMode := pmReadWrite;
+  FReadBackOutput := false;
+end;
+
+// Destroy TIOPort instance
+destructor TIOPort.Destroy;
+begin
+  inherited Destroy;
 end;
 
 end.
