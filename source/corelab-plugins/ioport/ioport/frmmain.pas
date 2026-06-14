@@ -37,7 +37,7 @@ type
   TShowPanelProc = procedure; cdecl;
   THidePanelProc = procedure; cdecl;
   TFreePanelProc = procedure; cdecl;
-  TSetSizePosPanelProc = procedure; cdecl;
+  TSetSizePosPanelProc = procedure(Left, Top, Width, Height: integer); cdecl;
   { TForm1 }
   TForm1 = class(TForm)
     Bevel1: TBevel;
@@ -113,13 +113,9 @@ begin
   if ShellListView1.Selected <> nil then
   begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
-    Form1.Caption := Application.Title + ' - ' + ShellListView1.Selected.Caption;
     // remove previous loaded module
     // UI
-    if LoadedPlugin.PHasGUI and
-      Assigned(CreatePanel) and Assigned(ShowPanel) and
-      Assigned(HidePanel) and Assigned(FreePanel) and
-      Assigned(SetSizePosPanel) then FreePanel;
+    if Assigned(FreePanel) then FreePanel;
     // port
     if Assigned(CurrentPort) then
     begin
@@ -156,13 +152,17 @@ begin
     Pointer(SetSizePosPanel) := GetProcedureAddress(LibHandle, 'ioport_setsizepospanel');
     if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
     begin
-      CurrentPort := CreatePort();
       // get properties
+      CurrentPort := CreatePort();
       with LoadedPlugin do
       begin
         PFilename := SelectedFile;
-        PModname := CurrentPort.Modname;
-        PDescription := CurrentPort.Description;
+        if Assigned(CurrentPort.Modname)
+          then PModname := string(CurrentPort.Modname)
+          else PModname := '';
+        if Assigned(CurrentPort.Description)
+          then PDescription := string(CurrentPort.Description)
+          else PDescription := '';
         PAddressRangeSize := CurrentPort.AddressRangeSize;
         PEnabled := CurrentPort.Enabled;
         PHasGUI := CurrentPort.HasGUI;
@@ -211,6 +211,7 @@ begin
         CreatePanel(CurrentPort);
         ShowPanel;
       end;
+      Form1.Caption := Application.Title + ' - ' + ShellListView1.Selected.Caption;
     end else
     begin
       ShowMessage(ER + 'It is not a CoreLAB IOPort module!');

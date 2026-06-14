@@ -152,7 +152,14 @@ end;
 // Exportable function for destroy UI panel
 procedure FreePanel; cdecl;
 begin
-  PanelForm.Free;
+if Assigned(PanelForm) then
+  begin
+    PanelForm.Close;
+    PanelForm.Free;
+    PanelForm := nil;
+    EditRx := nil;
+    EditTx := nil;
+  end;
 end;
 
 // Exportable function for move and resize UI panel

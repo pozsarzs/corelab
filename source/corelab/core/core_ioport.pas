@@ -20,8 +20,8 @@ type
   // Abstract base I/O port class
   TIOPort = class
   protected
-    FModname: string;                                             // Module name
-    FDescription: string;                                   // Short description
+    FModname: PChar;                                              // Module name
+    FDescription: PChar;                                    // Short description
     FAddressRangeSize: byte;                               // Address range size
     FEnabled: boolean;                    // Enable port without detach from bus
     FHasGUI: boolean;                     // Does the implementation have a GUI?
@@ -40,8 +40,8 @@ type
     property Enabled: boolean read FEnabled write FEnabled;
     property HasGUI: boolean read FHasGUI;
     property LatchedOutput: boolean read FLatchedOutput;
-    property Description: string read FDescription;
-    property ModName: string read FModname;
+    property Description: PChar read FDescription;
+    property ModName: PChar read FModname;
     property PortMode: TPortMode read FPortMode;
     property ReadBackOutput: boolean read FReadBackOutput;
   end;

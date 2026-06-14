@@ -20,7 +20,7 @@ uses
 
 begin
   RequireDerivedFormResource:=True;
-  Application.Title:='CoreLAB | I/O plug-in teszter';
+  Application.Title:='CoreLAB | I/O plug-in tester';
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
