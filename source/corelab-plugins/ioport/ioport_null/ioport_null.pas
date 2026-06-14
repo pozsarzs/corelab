@@ -29,13 +29,14 @@ type
     procedure Reset;  override;
     property Response: TResponse read FResponse write FResponse;
   end;
-
+  
 // Create TIOPort instance
 constructor TNULLPort.Create;
 begin
   inherited Create;
   FModname := 'NULL device';
-  FDescription := 'It absorbs everything, returns 0, 255, or the port address.';
+  FDescription := 'It absorbs everything, returns 00h, FFh, or the port address.';
+  FHasGUI := false;
   Reset;
 end;
 
@@ -68,17 +69,19 @@ begin
   FResponse := rpFF;
 end;
 
-// Exported functions and procedures
+// Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
   result := TNULLPort.Create;
 end;
 
+// Exportable procedure for destroy TIOPort instance
 procedure DestroyPort(Port: TIOPort); cdecl; export;
 begin
   if Assigned(Port) then Port.Destroy;
 end;
 
+// Exported functions and procedures
 exports CreatePort name 'ioport_create';
 exports DestroyPort name 'ioport_destroy';
 

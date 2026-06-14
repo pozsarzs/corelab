@@ -29,8 +29,15 @@ type
     PPortMode: TPortMode;                                 // Port operation mode
     PReadBackOutput: boolean;           // Output port with read-back capability
   end;
+  // port
   TCreatePortFunc = function: TIOPort; cdecl;
-  TDestroyPortFunc = procedure(Port: TIOPort); cdecl;
+  TDestroyPortProc = procedure(Port: TIOPort); cdecl;
+  // UI
+  TCreatePanelProc = procedure(Port: TIOPort); cdecl;
+  TShowPanelProc = procedure; cdecl;
+  THidePanelProc = procedure; cdecl;
+  TFreePanelProc = procedure; cdecl;
+  TSetSizePosPanelProc = procedure; cdecl;
   { TForm1 }
   TForm1 = class(TForm)
     Bevel1: TBevel;
@@ -53,9 +60,17 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
+    // port
     CreatePort: TCreatePortFunc;
-    DestroyPort: TDestroyPortFunc;
+    DestroyPort: TDestroyPortProc;
     CurrentPort: TIOPort;                     // created object of TIOPort class
+    // UI
+    CreatePanel: TCreatePanelProc;
+    ShowPanel: TShowPanelProc;
+    HidePanel: THidePanelProc;
+    FreePanel: TFreePanelProc;
+    SetSizePosPanel: TSetSizePosPanelProc;
+    // module
     LibHandle: TLibHandle;                        // handle of the loaded module
     LoadedPlugin: TPluginAttributes;          // properties of the loaded module
   public
@@ -100,17 +115,29 @@ begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
     Form1.Caption := Application.Title + ' - ' + ShellListView1.Selected.Caption;
     // remove previous loaded module
+    // UI
+    if LoadedPlugin.PHasGUI and
+      Assigned(CreatePanel) and Assigned(ShowPanel) and
+      Assigned(HidePanel) and Assigned(FreePanel) and
+      Assigned(SetSizePosPanel) then FreePanel;
+    // port
     if Assigned(CurrentPort) then
     begin
       DestroyPort(CurrentPort);
       CurrentPort := nil;
     end;
+    // module
     if LibHandle <> NilHandle then
     begin
       UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
       CreatePort := nil;
       DestroyPort := nil;
+      CreatePanel := nil;
+      ShowPanel := nil;
+      HidePanel := nil;
+      FreePanel := nil;
+      SetSizePosPanel := nil;
     end;
     // load module
     LibHandle := LoadLibrary(SelectedFile);
@@ -122,7 +149,12 @@ begin
     // search exported function and instantiation
     Pointer(CreatePort) := GetProcedureAddress(LibHandle, 'ioport_create');
     Pointer(DestroyPort) := GetProcedureAddress(LibHandle, 'ioport_destroy');
-    if Assigned(CreatePort) and Assigned(DestroyPort) then
+    Pointer(CreatePanel) := GetProcedureAddress(LibHandle, 'ioport_createpanel');
+    Pointer(ShowPanel) := GetProcedureAddress(LibHandle, 'ioport_showpanel');
+    Pointer(HidePanel) := GetProcedureAddress(LibHandle, 'ioport_hidepanel');
+    Pointer(FreePanel) := GetProcedureAddress(LibHandle, 'ioport_freepanel');
+    Pointer(SetSizePosPanel) := GetProcedureAddress(LibHandle, 'ioport_setsizepospanel');
+    if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
     begin
       CurrentPort := CreatePort();
       // get properties
@@ -156,7 +188,7 @@ begin
       // preset address/data table
       ValueListEditor2.Clear;
       for b := 0 to LoadedPlugin.PAddressRangeSize - 1 do
-        begin
+      begin
         ValueListEditor2.InsertRow('BA+' + b.ToString, '', true);
         ValueListEditor2.Cells[1,1] := '0';
       end;
@@ -170,6 +202,15 @@ begin
         then Button1.Enabled := false
         else Button1.Enabled := true;
       ValueListEditor2.Enabled := true;
+      // show UI
+      if LoadedPlugin.PHasGUI and
+        Assigned(CreatePanel) and Assigned(ShowPanel) and
+        Assigned(HidePanel) and Assigned(FreePanel) and
+        Assigned(SetSizePosPanel) then
+      begin
+        CreatePanel(CurrentPort);
+        ShowPanel;
+      end;
     end else
     begin
       ShowMessage(ER + 'It is not a CoreLAB IOPort module!');
@@ -194,23 +235,26 @@ begin
   begin
     CurrentPort.Enabled := True;
     InData := CurrentPort.ReadPort(InAddr);
-    ShowMessage(InData.ToString + 'read from port ' + InAddr.ToString + '.');
+    ShowMessage(IntToHex(InData, 2) + 'H read from port ' + IntToHex(InAddr, 2) + 'H.');
   end;
-  ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToStr(InData);
+  ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToHex(InData, 2);
 end;
 
 // Write data to port
 procedure TForm1.Button2Click(Sender: TObject);
 var
-  OutAddr, OutData: byte;
+  OutAddr, OutData: integer;
 begin
   OutAddr := ValueListEditor2.Row - 1;
-  OutData := StrToInt(ValueListEditor2.Cells[1, ValueListEditor2.Row]);
-  if Assigned(CurrentPort) then
+  OutData := 0;
+  if TryStrToInt('$' + ValueListEditor2.Cells[1, ValueListEditor2.Row], OutData) then
   begin
-    CurrentPort.Enabled := True;
-    CurrentPort.WritePort(OutAddr, OutData);
-    ShowMessage('The ' + OutData.ToString + 'is written to port ' + OutAddr.ToString + '.');
+    if Assigned(CurrentPort) then
+    begin
+      CurrentPort.Enabled := True;
+      CurrentPort.WritePort(OutAddr, OutData);
+      ShowMessage('The ' + IntToHex(OutData, 2) + 'H is written to port ' + IntToHex(OutAddr, 2) + 'H.');
+    end;
   end;
 end;
 
@@ -224,8 +268,14 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   CreatePort := nil;
+  CurrentPort := nil;
+  CreatePort := nil;
   DestroyPort := nil;
-  CurrentPort := nil;  
+  CreatePanel := nil;
+  ShowPanel := nil;
+  HidePanel := nil;
+  FreePanel := nil;
+  SetSizePosPanel := nil;
   LibHandle := NilHandle;
   Form1.Caption := Application.Title;
   ValueListEditor2.Cells[0,1] := 'BA+0';
@@ -240,18 +290,28 @@ end;
 // OnDestroy event
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
+  // UI
+  if LoadedPlugin.PHasGUI and
+    Assigned(CreatePanel) and Assigned(ShowPanel) and
+    Assigned(HidePanel) and Assigned(FreePanel) then FreePanel;
+  // port
   if Assigned(CurrentPort) then
   begin
     DestroyPort(CurrentPort);
     CurrentPort := nil;
   end;
+  // module
   if LibHandle <> NilHandle then
   begin
     LibHandle := NilHandle;
     CreatePort := nil;
     DestroyPort := nil;
+    CreatePanel := nil;
+    ShowPanel := nil;
+    HidePanel := nil;
+    FreePanel := nil;
+    SetSizePosPanel := nil;
   end;
 end;
 
 end.
-
