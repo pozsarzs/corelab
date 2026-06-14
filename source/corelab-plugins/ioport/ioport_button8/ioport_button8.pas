@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_standard.pas                                                      | }
-{ | Standard port implementation module                                      | }
+{ | ioport_button8.pas                                                       | }
+{ | 8-button input implementation module                                     | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,13 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_standard;
+library ioport_button8;
 {$mode objfpc}{$H+}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, core_ioport;
+  Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
-  // Standard port implementation
-  TStandardPort = class(TIOPort)
+  // 8-button input implementation
+  TButton8Port = class(TIOPort)
   protected
   public
     constructor Create; override;
@@ -27,60 +27,54 @@ type
     procedure Reset;  override;
   end;
   var
-    CurrentPort: TStandardPort = nil;    
-    EditRx: TEdit = nil;
-    EditTx: TEdit = nil;
+    CurrentPort: TButton8Port = nil;    
     PanelForm: TForm = nil;
+    SB: array[0..7] of TSpeedButton;
   
 // Create TIOPort instance
-constructor TStandardPort.Create;
+constructor TButton8Port.Create;
 begin
   inherited Create;
-  FModname := 'Standard I/O port';
-  FDescription := 'It reads the entered value and displays the output value.';
+  FModname := '8-button input';
+  FDescription := 'This is an 8-button input, each button controls a specific bit within a byte.';
   FHasGUI := true;
+  FPortMode := pmReadOnly;
   Reset;
 end;
 
 // Destroy TIOPort instance
-destructor TStandardPort.Destroy;
+destructor TButton8Port.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TStandardPort.ReadPort(Port: byte): byte;
+function TButton8Port.ReadPort(Port: byte): byte;
 var
+  b: byte;
   Value: integer;
 begin
-  Result := 0;
-  if Assigned(EditRx) then
-  begin
-    if TryStrToInt('$' + EditRx.Text, Value) then 
-    begin
-      Result := Value;
-      EditRx.Clear;
-    end;
-  end;
+  Value := 0;
+  for b := 0 to 7 do
+    if SB[b].Down then Value := Value + (1 shl b);
+  Result := Value;
+  for b := 0 to 7 do SB[b].Down := false;
 end;
 
 // Write virtual port
-procedure TStandardPort.WritePort(Port: byte; Value: byte);
+procedure TButton8Port.WritePort(Port: byte; Value: byte);
 begin
-  if Assigned(EditTx) then EditTx.Text := IntToHex(Value, 2);
 end;
 
 // Reset virtual port
-procedure TStandardPort.Reset;
+procedure TButton8Port.Reset;
 begin
-  if Assigned(EditRx) then EditRx.Clear;
-  if Assigned(EditTx) then EditTx.Clear;
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TStandardPort.Create;
+  result := TButton8Port.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -92,7 +86,7 @@ end;
 // Exportable function for create UI panel
 procedure CreatePanel(Port: TIOPort); cdecl;
 var
-  L1, L2: TLabel;
+  b: byte;
 begin
   if Assigned(PanelForm) then exit;
 
@@ -100,41 +94,31 @@ begin
   PanelForm.Caption := Port.ModName;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  PanelForm.ClientWidth := 258;
-  PanelForm.ClientHeight := 80;
-
-  L1 := TLabel.Create(PanelForm);
-  L1.Parent := PanelForm;
-  L1.Caption := 'Received (hex):';
-  L1.Left := 10;
-  L1.Top := 12;
-
-  EditTx := TEdit.Create(PanelForm);
-  EditTx.Parent := PanelForm;
-  EditTx.Left := 150;
-  EditTx.Top := 8;
-  EditTx.Width := 100;
-  EditTx.ReadOnly := True;
-
-  L2 := TLabel.Create(PanelForm);
-  L2.Parent := PanelForm;
-  L2.Caption := 'To be sent (hex):';
-  L2.Left := 10;
-  L2.Top := 44;
-
-  EditRx := TEdit.Create(PanelForm);
-  EditRx.Parent := PanelForm;
-  EditRx.MaxLength := 2;
-  EditRx.Left := 150;
-  EditRx.Top := 40;
-  EditRx.Width := 100;
+  PanelForm.ClientWidth := 294;
+  PanelForm.ClientHeight := 50;
+  
+  for b := 0 to 7 do
+  begin
+    SB[b] := TSpeedButton.Create(nil);
+    with SB[b] do
+    begin
+      Parent := PanelForm;
+      Caption := IntToStr(b);
+      AllowAllUp := True;
+      GroupIndex := b + 1;
+      Top := 8;
+      Left := 8 + b * 34;
+      Height := 34;
+      Width := Height;
+    end;
+  end;
 
   PanelForm.Constraints.MinWidth := PanelForm.Width;
   PanelForm.Constraints.MaxWidth := PanelForm.Width;
   PanelForm.Constraints.MinHeight := PanelForm.Height;
   PanelForm.Constraints.MaxHeight := PanelForm.Height;
 
-  CurrentPort := TStandardPort(Port);
+  CurrentPort := TButton8Port(Port);
 end;
 
 // Exportable function for show UI panel
@@ -151,14 +135,15 @@ end;
 
 // Exportable function for destroy UI panel
 procedure FreePanel; cdecl;
+var
+  b: byte;
 begin
 if Assigned(PanelForm) then
   begin
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    EditRx := nil;
-    EditTx := nil;
+    for b := 0 to 7 do SB[b] := nil;
   end;
 end;
 

@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_null.pas                                                          | }
-{ | NULL device implementation module                                        | }
+{ | ioport_bell.pas                                                          | }
+{ | Bell device implementation module                                        | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,68 +11,60 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_null;
+library ioport_bell;
 {$mode objfpc}{$H+}
 uses
-  core_ioport;
+  SysUtils, core_ioport;
 type
-  TResponse = (rp00, rpFF, rpAd);
-  // NULL device implementation
-  TNULLPort = class(TIOPort)
+  // BELL device implementation
+  TBELLPort = class(TIOPort)
   protected
-    FResponse: TResponse;
   public
     constructor Create; override;
     destructor Destroy; override;
     function ReadPort(Port: byte): byte; override;
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
-    property Response: TResponse read FResponse write FResponse;
   end;
   
 // Create TIOPort instance
-constructor TNULLPort.Create;
+constructor TBELLPort.Create;
 begin
   inherited Create;
-  FModname := 'NULL device';
-  FDescription := 'It absorbs everything, returns 00h, FFh, or the port address.';
+  FModname := 'BELL device';
+  FDescription := 'It rings at a value greater than zero.';
   FHasGUI := false;
+  FPortMode := pmWriteOnly;
   Reset;
 end;
 
 // Destroy TIOPort instance
-destructor TNULLPort.Destroy;
+destructor TBELLPort.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TNULLPort.ReadPort(Port: byte): byte;
+function TBELLPort.ReadPort(Port: byte): byte;
 begin
   Result := 0;
-  if FEnabled then
-    case FResponse of
-      rp00: result := $00;
-      rpFF: result := $FF;
-      rpAd: result := byte(Port);
-    end;   
 end;
 
 // Write virtual port
-procedure TNULLPort.WritePort(Port: byte; Value: byte);
+procedure TBELLPort.WritePort(Port: byte; Value: byte);
 begin
+  if Value > 0 then Beep;
 end;
 
 // Reset virtual port
-procedure TNULLPort.Reset;
+procedure TBELLPort.Reset;
 begin
-  FResponse := rpFF;
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TNULLPort.Create;
+  result := TBELLPort.Create;
 end;
 
 // Exportable procedure for destroy TIOPort instance
