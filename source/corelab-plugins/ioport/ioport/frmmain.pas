@@ -194,7 +194,7 @@ begin
   begin
     CurrentPort.Enabled := True;
     InData := CurrentPort.ReadPort(InAddr);
-    ShowMessage('Adat beolvasva a portra.' + inaddr.ToString + '->' + indata.ToString);
+    ShowMessage(InData.ToString + 'read from port ' + InAddr.ToString + '.');
   end;
   ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToStr(InData);
 end;
@@ -210,7 +210,7 @@ begin
   begin
     CurrentPort.Enabled := True;
     CurrentPort.WritePort(OutAddr, OutData);
-    ShowMessage('Adat kiírva a portra.' + outdata.ToString + '->' + outaddr.ToString);
+    ShowMessage('The ' + OutData.ToString + 'is written to port ' + OutAddr.ToString + '.');
   end;
 end;
 
