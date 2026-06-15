@@ -82,7 +82,7 @@ end;
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TStandardPort.Create;
+  Result := TStandardPort.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -99,7 +99,7 @@ begin
   if Assigned(PanelForm) then exit;
 
   PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.ModName;
+  PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
   PanelForm.ClientWidth := 258;

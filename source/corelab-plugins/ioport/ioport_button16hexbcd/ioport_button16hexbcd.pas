@@ -39,7 +39,6 @@ begin
   FDescription := 'One button can be pressed at a time, the value of which can be read in BCD format.';
   FHasGUI := true;
   FPortMode := pmReadOnly;
-  Reset;
 end;
 
 // Destroy TIOPort instance
@@ -56,9 +55,7 @@ begin
   for x := 0 to 3 do
     for y := 0 to 3 do
       if SB[x, y].Down then Result := y * 4 + x;
-  for x := 0 to 3 do
-    for y := 0 to 3 do
-      SB[x, y].Down := false;
+  Reset;
 end;
 
 // Write virtual port
@@ -68,13 +65,18 @@ end;
 
 // Reset virtual port
 procedure TButton16HexBCDPort.Reset;
+var
+  x, y: byte;
 begin
+  for x := 0 to 3 do
+    for y := 0 to 3 do
+      SB[x, y].Down := false;
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TButton16HexBCDPort.Create;
+  Result := TButton16HexBCDPort.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -91,11 +93,9 @@ begin
   if Assigned(PanelForm) then exit;
 
   PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.ModName;
+  PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  PanelForm.ClientWidth := 160;
-  PanelForm.ClientHeight := 160;
   x := 4;
   y := 4;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;

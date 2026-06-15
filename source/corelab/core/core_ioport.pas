@@ -21,6 +21,7 @@ type
   TIOPort = class
   protected
     FModname: PChar;                                              // Module name
+    FTitle: PChar;                                                 // Form title
     FDescription: PChar;                                    // Short description
     FAddressRangeSize: byte;                               // Address range size
     FEnabled: boolean;                    // Enable port without detach from bus
@@ -42,6 +43,7 @@ type
     property LatchedOutput: boolean read FLatchedOutput;
     property Description: PChar read FDescription;
     property ModName: PChar read FModname;
+    property Title: PChar read FTitle write FTitle;
     property PortMode: TPortMode read FPortMode;
     property ReadBackOutput: boolean read FReadBackOutput;
   end;
@@ -59,6 +61,7 @@ begin
   FLatchedOutput := false;
   FPortMode := pmReadWrite;
   FReadBackOutput := false;
+  FTitle := FModname;
 end;
 
 // Destroy TIOPort instance

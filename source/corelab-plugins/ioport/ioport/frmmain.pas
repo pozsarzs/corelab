@@ -152,10 +152,10 @@ begin
     Pointer(SetSizePosPanel) := GetProcedureAddress(LibHandle, 'ioport_setsizepospanel');
     if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
     begin
-      // get properties
       CurrentPort := CreatePort();
       with LoadedPlugin do
       begin
+        // get properties
         PFilename := SelectedFile;
         if Assigned(CurrentPort.Modname)
           then PModname := string(CurrentPort.Modname)
@@ -169,6 +169,8 @@ begin
         PLatchedOutput := CurrentPort.LatchedOutput;
         PPortMode := CurrentPort.PortMode;
         PReadBackOutput := CurrentPort.ReadBackOutput;
+        // set a property
+        CurrentPort.Title := 'MyIO';
       end;
       // show properties
       with ValueListEditor1 do

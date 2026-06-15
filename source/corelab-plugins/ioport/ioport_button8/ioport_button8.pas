@@ -39,7 +39,6 @@ begin
   FDescription := 'This is an 8-button input, each button controls a specific bit within a byte.';
   FHasGUI := true;
   FPortMode := pmReadOnly;
-  Reset;
 end;
 
 // Destroy TIOPort instance
@@ -58,7 +57,7 @@ begin
   for x := 0 to 7 do
     if SB[x].Down then Value := Value + (1 shl x);
   Result := Value;
-  for x := 0 to 7 do SB[x].Down := false;
+  Reset;
 end;
 
 // Write virtual port
@@ -68,7 +67,10 @@ end;
 
 // Reset virtual port
 procedure TButton8Port.Reset;
+var
+  x: byte;
 begin
+  for x := 0 to 7 do SB[x].Down := false;
 end;
 
 // Exportable function for create TIOPort instance
@@ -91,7 +93,7 @@ begin
   if Assigned(PanelForm) then exit;
 
   PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.ModName;
+  PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
   x := 8;

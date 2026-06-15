@@ -39,7 +39,6 @@ begin
   FDescription := 'One switch can be pressed at a time, the value of which can be read in BCD format.';
   FHasGUI := true;
   FPortMode := pmReadOnly;
-  Reset;
 end;
 
 // Destroy TIOPort instance
@@ -65,13 +64,18 @@ end;
 
 // Reset virtual port
 procedure TSwitch16HexBCDPort.Reset;
+var
+  x, y: byte;
 begin
+  for x := 0 to 3 do
+    for y := 0 to 3 do
+      SB[x, y].Down := false;
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TSwitch16HexBCDPort.Create;
+  Result := TSwitch16HexBCDPort.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -88,7 +92,7 @@ begin
   if Assigned(PanelForm) then exit;
 
   PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.ModName;
+  PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
   x := 4;
