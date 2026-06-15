@@ -39,6 +39,8 @@ begin
   FModname := 'Standard I/O port';
   FDescription := 'It reads the entered value and displays the output value.';
   FHasGUI := true;
+  FPortMode := pmReadWrite;
+  FLatchedOutput := true;
   Reset;
 end;
 

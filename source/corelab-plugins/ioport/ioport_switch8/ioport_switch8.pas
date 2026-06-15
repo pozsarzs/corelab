@@ -51,12 +51,12 @@ end;
 // Read virtual port
 function TSwitch8Port.ReadPort(Port: byte): byte;
 var
-  b: byte;
+  x: byte;
   Value: integer;
 begin
   Value := 0;
-  for b := 0 to 7 do
-    if SB[b].Down then Value := Value + (1 shl b);
+  for x := 0 to 7 do
+    if SB[x].Down then Value := Value + (1 shl x);
   Result := Value;
 end;
 
@@ -85,7 +85,7 @@ end;
 // Exportable function for create UI panel
 procedure CreatePanel(Port: TIOPort); cdecl;
 var
-  b: byte;
+  x, y: byte;
 begin
   if Assigned(PanelForm) then exit;
 
@@ -93,20 +93,22 @@ begin
   PanelForm.Caption := Port.ModName;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  PanelForm.ClientWidth := 294;
-  PanelForm.ClientHeight := 50;
-  
-  for b := 0 to 7 do
+  x := 8;
+  y := 1;
+  PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
+  PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
+
+  for x := 0 to 7 do
   begin
-    SB[b] := TSpeedButton.Create(nil);
-    with SB[b] do
+    SB[x] := TSpeedButton.Create(nil);
+    with SB[x] do
     begin
       Parent := PanelForm;
-      Caption := IntToStr(b);
+      Caption := IntToStr(x);
       AllowAllUp := True;
-      GroupIndex := b + 1;
+      GroupIndex := x + 1;
       Top := 8;
-      Left := 8 + b * 34;
+      if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
       Height := 34;
       Width := Height;
     end;
@@ -135,14 +137,14 @@ end;
 // Exportable function for destroy UI panel
 procedure FreePanel; cdecl;
 var
-  b: byte;
+  x: byte;
 begin
 if Assigned(PanelForm) then
   begin
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for b := 0 to 7 do SB[b] := nil;
+    for x := 0 to 7 do SB[x] := nil;
   end;
 end;
 

@@ -37,6 +37,7 @@ begin
   FModname := 'NULL device';
   FDescription := 'It absorbs everything, returns 00h, FFh, or the port address.';
   FHasGUI := false;
+  FPortMode := pmReadWrite;
   Reset;
 end;
 
