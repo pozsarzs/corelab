@@ -18,8 +18,7 @@ fpcargs = -T$(os) \
           -v0 \
           -Fu. \
           -Fu../_ext/* \
-          -Fu./builtin/ \
-          -Fu./core/ \
+          -Fu../corelab-core/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \

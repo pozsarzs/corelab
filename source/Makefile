@@ -14,7 +14,7 @@ targetdir=$(bindir)
 targetlibdir=$(libdir)
 filemode=$(binmode)
 majorlibversion=`echo "$(libversion)" | cut -c1`
-projectdirs=corelab lhelp
+projectdirs=corelab lhelp clioport
 plugins=`ls corelab-plugins | grep -v Makefile | grep -v Makefile.w64`
 
 all:
@@ -23,25 +23,26 @@ all:
 	  cd corelab; \
 	  make; \
 	  cd ..; \
-	  fi;
+	  cd clcpu; \
+	  make; \
+	  cd ..; \
+	  cd clioport; \
+	  make; \
+	  cd ..; \
+	  cd clmemory; \
+	  make; \
+	  cd ..; \
+	  fi
 	@if [ ! $(lib) = "no" ]; then \
-	  cd corelab-plugins/cpu; \
+	  cd corelab-plugins; \
 	  make; \
 	  cd ..; \
-	  fi; \
-	  cd corelab-plugins/ioport; \
-	  make; \
-	  cd ..; \
-	  fi; \
-	  cd corelab-plugins/memory; \
-	  make; \
-	  cd ..; \
-	  fi; \
+	  fi
 	@if [ ! $(lhelp) = "no" ]; then \
 	  cd lhelp; \
 	  make; \
 	  cd ..; \
-	  fi;
+	  fi
 
 clean:
 	@$(rm) $(sourcedir)/*

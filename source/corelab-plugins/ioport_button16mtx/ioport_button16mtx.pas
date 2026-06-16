@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_button16hexbcd.pas                                                | }
-{ | 4x4 hexa button input implementation module                              | }
+{ | ioport_button16mtx.pas                                                   | }
+{ | 4x4 button matrix input implementation module                            | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,14 +11,15 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_button16hexbcd;
+library ioport_button16mtx;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
-  // 4x4 hexa button input implementation
-  TButton16HexBCDPort = class(TIOPort)
+  // 4x4 button matrix input implementation
+  TButton16Mtx = class(TIOPort)
   protected
+    procedure AllRelease(mx, my: byte);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -26,57 +27,94 @@ type
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
   end;
+  const
+    MAXX = 3;
+    MAXY = 3;
   var
-    CurrentPort: TButton16HexBCDPort = nil;    
+    CurrentPort: TButton16Mtx = nil;    
     PanelForm: TForm = nil;
-    SB: array[0..3, 0..3] of TSpeedButton;
+    SB: array[0..MAXX, 0..MAXY] of TSpeedButton;
+    SelLine: integer;
+
+// Release all buttons
+procedure TButton16Mtx.AllRelease(mx, my: byte);
+var
+  x, y: byte;
+begin
+  for x := 0 to mx do
+    for y := 0 to my do
+      SB[x, y].Down := false;
+end;
   
 // Create TIOPort instance
-constructor TButton16HexBCDPort.Create;
+constructor TButton16Mtx.Create;
+var
+  s: string;
 begin
   inherited Create;
-  FModname := '4x4 hexa button input with BCD output';
-  FDescription := 'One button can be pressed at a time, the value of which can be read in BCD format.';
+  s := (IntToStr(MAXX + 1)) + 'x' + PChar(IntToStr(MAXY + 1)) + ' button matrix input';
+  FModname := PChar(s);
+  FDescription := 'Select the column and read the row status..';
   FHasGUI := true;
-  FPortMode := pmReadOnly;
+  FPortMode := pmReadWrite;
+  FLatchedOutput := true;
 end;
 
 // Destroy TIOPort instance
-destructor TButton16HexBCDPort.Destroy;
+destructor TButton16Mtx.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TButton16HexBCDPort.ReadPort(Port: byte): byte;
+function TButton16Mtx.ReadPort(Port: byte): byte;
 var
+  Value: byte;
   x, y: byte;
 begin
-  for x := 0 to 3 do
-    for y := 0 to 3 do
-      if SB[x, y].Down then Result := y * 4 + x;
-  Reset;
+  Result := 0;
+  if SelLine = (-1) then exit;
+  Value := 0;
+  x := SelLine;
+  for y := 0 to MAXY do
+    if SB[x, y].Down then Value := Value + (1 shl y);
+
+  if FOutNegation then Value := not Value;
+  Result := Value;
+  AllRelease(MAXX, MAXY);
 end;
 
 // Write virtual port
-procedure TButton16HexBCDPort.WritePort(Port: byte; Value: byte);
+procedure TButton16Mtx.WritePort(Port: byte; Value: byte);
+var
+  i: integer;
 begin
+  if FSelNegation then Value := not Value;
+  if Value = 0 then
+  begin
+    SelLine := -1;
+    exit;
+  end;
+  i := 0;
+  while Value > 1 do
+  begin
+    Value := Value shr 1;
+    Inc(i);
+  end;
+  SelLine := i;
 end;
 
 // Reset virtual port
-procedure TButton16HexBCDPort.Reset;
-var
-  x, y: byte;
+procedure TButton16Mtx.Reset;
 begin
-  for x := 0 to 3 do
-    for y := 0 to 3 do
-      SB[x, y].Down := false;
+  SelLine := 0;
+  AllRelease(MAXX, MAXY);
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TButton16HexBCDPort.Create;
+  Result := TButton16Mtx.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -96,21 +134,21 @@ begin
   PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  x := 4;
-  y := 4;
+  x := MAXX + 1;
+  y := MAXY + 1;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
   PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
   
-  for x := 0 to 3 do
-    for y := 0 to 3 do
+  for x := 0 to MAXX do
+    for y := 0 to MAXY do
     begin
       SB[x, y] := TSpeedButton.Create(nil);
       with SB[x, y] do
       begin
         Parent := PanelForm;
-        Caption := IntToHex(y * 4 + x, 1);
+        Caption := IntToHex(x, 1) + IntToHex(y, 1);
         AllowAllUp := True;
-        GroupIndex := 1;
+        GroupIndex := y * 4 + x + 1;
         if y = 0 then Top := 8 else Top := (4 * (y + 1) + y * 34) + 4;
         if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
         Height := 34;
@@ -123,7 +161,7 @@ begin
   PanelForm.Constraints.MinHeight := PanelForm.Height;
   PanelForm.Constraints.MaxHeight := PanelForm.Height;
 
-  CurrentPort := TButton16HexBCDPort(Port);
+  CurrentPort := TButton16Mtx(Port);
 end;
 
 // Exportable function for show UI panel
@@ -148,8 +186,8 @@ if Assigned(PanelForm) then
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for x := 0 to 3 do
-      for y := 0 to 3 do
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
         SB[x, y] := nil;
   end;
 end;

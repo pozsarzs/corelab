@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_button8.pas                                                       | }
-{ | 8-button input implementation module                                     | }
+{ | ioport_button16mtxbinsel.pas                                             | }
+{ | 4x4 button matrix input implementation module                            | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,14 +11,15 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_button8;
+library ioport_button16mtxbinsel;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
-  // 8-button input implementation
-  TButton8Port = class(TIOPort)
+  // 4x4 button matrix input implementation
+  TButton16MtxBinSel = class(TIOPort)
   protected
+    procedure AllRelease(mx, my: byte);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -26,57 +27,77 @@ type
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
   end;
+  const
+    MAXX = 3;
+    MAXY = 3;
   var
-    CurrentPort: TButton8Port = nil;    
+    CurrentPort: TButton16MtxBinSel = nil;    
     PanelForm: TForm = nil;
-    SB: array[0..7] of TSpeedButton;
+    SB: array[0..MAXX, 0..MAXY] of TSpeedButton;
+    SelLine: byte;
+
+// Release all buttons
+procedure TButton16MtxBinSel.AllRelease(mx, my: byte);
+var
+  x, y: byte;
+begin
+  for x := 0 to mx do
+    for y := 0 to my do
+      SB[x, y].Down := false;
+end;
   
 // Create TIOPort instance
-constructor TButton8Port.Create;
+constructor TButton16MtxBinSel.Create;
+var
+  s: string;
 begin
   inherited Create;
-  FModname := '8-button input';
-  FDescription := 'This is an 8-button input, each button controls a specific bit within a byte.';
+  s := (IntToStr(MAXX + 1)) + 'x' + PChar(IntToStr(MAXY + 1)) + ' button matrix input';
+  FModname := PChar(s);
+  FDescription := 'Select the column (binary) and read the row status..';
   FHasGUI := true;
-  FPortMode := pmReadOnly;
+  FPortMode := pmReadWrite;
+  FLatchedOutput := true;
 end;
 
 // Destroy TIOPort instance
-destructor TButton8Port.Destroy;
+destructor TButton16MtxBinSel.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TButton8Port.ReadPort(Port: byte): byte;
+function TButton16MtxBinSel.ReadPort(Port: byte): byte;
 var
-  x: byte;
-  Value: integer;
+  Value: byte;
+  x, y: byte;
 begin
   Value := 0;
-  for x := 0 to 7 do
-    if SB[x].Down then Value := Value + (1 shl x);
+  x := SelLine;
+  for y := 0 to MAXY do
+    if SB[x, y].Down then Value := Value + (1 shl y);
+  if FOutNegation then Value := not Value;
   Result := Value;
-  Reset;
+  AllRelease(MAXX, MAXY);
 end;
 
 // Write virtual port
-procedure TButton8Port.WritePort(Port: byte; Value: byte);
+procedure TButton16MtxBinSel.WritePort(Port: byte; Value: byte);
 begin
+  if Value <= MAXY Then SelLine := Value;
 end;
 
 // Reset virtual port
-procedure TButton8Port.Reset;
-var
-  x: byte;
+procedure TButton16MtxBinSel.Reset;
 begin
-  for x := 0 to 7 do SB[x].Down := false;
+  SelLine := 0;
+  AllRelease(MAXX, MAXY);
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TButton8Port.Create;
+  Result := TButton16MtxBinSel.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -96,33 +117,34 @@ begin
   PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  x := 8;
-  y := 1;
+  x := MAXX + 1;
+  y := MAXY + 1;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
   PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
   
-  for x := 0 to 7 do
-  begin
-    SB[x] := TSpeedButton.Create(nil);
-    with SB[x] do
+  for x := 0 to MAXX do
+    for y := 0 to MAXY do
     begin
-      Parent := PanelForm;
-      Caption := IntToStr(x);
-      AllowAllUp := True;
-      GroupIndex := x + 1;
-      Top := 8;
-      if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
-      Height := 34;
-      Width := Height;
+      SB[x, y] := TSpeedButton.Create(nil);
+      with SB[x, y] do
+      begin
+        Parent := PanelForm;
+        Caption := IntToHex(x, 1) + IntToHex(y, 1);
+        AllowAllUp := True;
+        GroupIndex := y * 4 + x + 1;
+        if y = 0 then Top := 8 else Top := (4 * (y + 1) + y * 34) + 4;
+        if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
+        Height := 34;
+        Width := Height;
+      end;
     end;
-  end;
 
   PanelForm.Constraints.MinWidth := PanelForm.Width;
   PanelForm.Constraints.MaxWidth := PanelForm.Width;
   PanelForm.Constraints.MinHeight := PanelForm.Height;
   PanelForm.Constraints.MaxHeight := PanelForm.Height;
 
-  CurrentPort := TButton8Port(Port);
+  CurrentPort := TButton16MtxBinSel(Port);
 end;
 
 // Exportable function for show UI panel
@@ -140,14 +162,16 @@ end;
 // Exportable function for destroy UI panel
 procedure FreePanel; cdecl;
 var
-  x: byte;
+  x, y: byte;
 begin
 if Assigned(PanelForm) then
   begin
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for x := 0 to 7 do SB[x] := nil;
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
+        SB[x, y] := nil;
   end;
 end;
 

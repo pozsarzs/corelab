@@ -11,7 +11,7 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-program ioport;
+program clioport;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, frmmain;

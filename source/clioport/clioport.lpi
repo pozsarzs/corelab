@@ -15,6 +15,10 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <i18n>
+      <EnableI18N Value="True"/>
+      <OutDir Value="../_po"/>
+    </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="1"/>
@@ -37,7 +41,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="ioport.lpr"/>
+        <Filename Value="clioport.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -52,12 +56,12 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="ioport"/>
+      <Filename Value="clioport"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../../../corelab/core"/>
-      <UnitOutputDirectory Value="../../../_lib/$(TargetCPU)-$(TargetOS)"/>
+      <OtherUnitFiles Value="../corelab-core"/>
+      <UnitOutputDirectory Value="../_lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Options>

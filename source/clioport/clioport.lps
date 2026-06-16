@@ -5,9 +5,8 @@
     <BuildModes Active="Default"/>
     <Units>
       <Unit>
-        <Filename Value="ioport.lpr"/>
+        <Filename Value="clioport.lpr"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="2"/>
         <CursorPos Y="22"/>
         <UsageCount Value="68"/>
         <Loaded Value="True"/>
@@ -26,7 +25,7 @@
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../corelab/core/core_ioport.pas"/>
+        <Filename Value="../../core/core_ioport.pas"/>
         <EditorIndex Value="-1"/>
         <UsageCount Value="6"/>
       </Unit>
@@ -82,7 +81,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="17">
+    <JumpHistory HistoryIndex="18">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="189" TopLine="169"/>
@@ -154,6 +153,10 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="223" TopLine="211"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="2" Column="3"/>
       </Position>
     </JumpHistory>
     <RunParams>

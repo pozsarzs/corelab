@@ -19,6 +19,7 @@ type
   // 4x4 hexa switch input implementation
   TSwitch16HexBCDPort = class(TIOPort)
   protected
+    procedure AllRelease(mx, my: byte);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -26,16 +27,32 @@ type
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
   end;
+  const
+    MAXX = 3;                             // Index of the last button in the row
+    MAXY = 3;                          // Index of the last button in the column
   var
     CurrentPort: TSwitch16HexBCDPort = nil;    
     PanelForm: TForm = nil;
-    SB: array[0..3, 0..3] of TSpeedButton;
+    SB: array[0..MAXX, 0..MAXY] of TSpeedButton;
+
+// Release all buttons
+procedure TSwitch16HexBCDPort.AllRelease(mx, my: byte);
+var
+  x, y: byte;
+begin
+  for x := 0 to mx do
+    for y := 0 to my do
+      SB[x, y].Down := false;
+end;
   
 // Create TIOPort instance
 constructor TSwitch16HexBCDPort.Create;
+var
+  s: string;
 begin
   inherited Create;
-  FModname := '4x4 hexa switch input with BCD output';
+  s := (IntToStr(MAXX + 1)) + 'x' + PChar(IntToStr(MAXY + 1)) + ' hexa switch input with BCD output';
+  FModname := PChar(s);
   FDescription := 'One switch can be pressed at a time, the value of which can be read in BCD format.';
   FHasGUI := true;
   FPortMode := pmReadOnly;
@@ -52,8 +69,8 @@ function TSwitch16HexBCDPort.ReadPort(Port: byte): byte;
 var
   x, y: byte;
 begin
-  for x := 0 to 3 do
-    for y := 0 to 3 do
+  for x := 0 to MAXX do
+    for y := 0 to MAXY do
       if SB[x, y].Down then Result := y * 4 + x;
 end;
 
@@ -64,12 +81,8 @@ end;
 
 // Reset virtual port
 procedure TSwitch16HexBCDPort.Reset;
-var
-  x, y: byte;
 begin
-  for x := 0 to 3 do
-    for y := 0 to 3 do
-      SB[x, y].Down := false;
+  AllRelease(MAXX, MAXY);
 end;
 
 // Exportable function for create TIOPort instance
@@ -95,13 +108,13 @@ begin
   PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  x := 4;
-  y := 4;
+  x := MAXX + 1;
+  y := MAXY + 1;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
   PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
   
-  for x := 0 to 3 do
-    for y := 0 to 3 do
+  for x := 0 to MAXX do
+    for y := 0 to MAXY do
     begin
       SB[x, y] := TSpeedButton.Create(nil);
       with SB[x, y] do
@@ -147,8 +160,8 @@ if Assigned(PanelForm) then
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for x := 0 to 3 do
-      for y := 0 to 3 do
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
         SB[x, y] := nil;
   end;
 end;

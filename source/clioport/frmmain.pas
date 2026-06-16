@@ -26,8 +26,10 @@ type
     PEnabled: boolean;                    // Enable port without detach from bus
     PHasGUI: boolean;                     // Does the implementation have a GUI?
     PLatchedOutput: boolean;                                   // Latched output
+    POutNegation: boolean;                     // Negation of matrix output bits
     PPortMode: TPortMode;                                 // Port operation mode
     PReadBackOutput: boolean;           // Output port with read-back capability
+    PSelNegation: boolean;                   // Negation of matrix selector bits
   end;
   // port
   TCreatePortFunc = function: TIOPort; cdecl;
@@ -167,8 +169,10 @@ begin
         PEnabled := CurrentPort.Enabled;
         PHasGUI := CurrentPort.HasGUI;
         PLatchedOutput := CurrentPort.LatchedOutput;
+        POutNegation := CurrentPort.OutNegation;
         PPortMode := CurrentPort.PortMode;
         PReadBackOutput := CurrentPort.ReadBackOutput;
+        PSelNegation := CurrentPort.SelNegation;
         // set a property
         CurrentPort.Title := 'MyIO';
       end;
@@ -185,6 +189,8 @@ begin
         InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'Yes', 'No'), true);
         InsertRow('PortMode', PortModeNames[LoadedPlugin.PPortMode], true);
         InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'Yes', 'No'), true);
+        InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'Yes', 'No'), true);
+        InsertRow('OutNegation', BoolToStr(LoadedPlugin.POutNegation, 'Yes', 'No'), true);
         AutoSizeColumn(0);
       end;
       // preset address/data table
@@ -197,12 +203,12 @@ begin
       if LoadedPlugin.PPortMode = pmWriteOnly
         then Button1.Enabled := false
         else Button1.Enabled := true;
+      if LoadedPlugin.PReadBackOutput
+        then Button1.Enabled := true
+        else Button1.Enabled := true;
       if LoadedPlugin.PPortMode = pmReadOnly
         then Button2.Enabled := false
         else Button2.Enabled := true;
-      if LoadedPlugin.PReadBackOutput
-        then Button1.Enabled := false
-        else Button1.Enabled := true;
       ValueListEditor2.Enabled := true;
       // show UI
       if LoadedPlugin.PHasGUI and

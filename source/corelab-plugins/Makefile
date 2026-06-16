@@ -5,9 +5,9 @@
 # | Make file for source code                                                  |
 # +----------------------------------------------------------------------------+
 
-include ../../../Makefile.global
+include ../../Makefile.global
 
-outdir=../../_lib/$(architecture)-$(os)
+outdir=../_lib/$(architecture)-$(os)
 project=`ls | grep -v Makefile | grep -v Makefile.w64`
 
 all:
@@ -15,7 +15,7 @@ all:
 	@mkdir -p $(outdir)/
 	@for x in $(project); do \
 	  if [ -f $$x/$$x.pas ]; then \
-	    $(fpc) $(fpcargs) -Fu../../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
+	    $(fpc) $(fpcargs) -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
 	  echo ""; \
 	  fi; \
 	done

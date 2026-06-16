@@ -19,6 +19,7 @@ type
   // 8-switch input implementation
   TSwitch8Port = class(TIOPort)
   protected
+    procedure AllRelease(mx: byte);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -26,17 +27,32 @@ type
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
   end;
+  const
+    MAXX = 7;                             // Index of the last button in the row
   var
     CurrentPort: TSwitch8Port = nil;    
     PanelForm: TForm = nil;
-    SB: array[0..7] of TSpeedButton;
+    SB: array[0..MAXX] of TSpeedButton;
+
+// Release all buttons
+procedure TSwitch8Port.AllRelease(mx: byte);
+var
+  x: byte;
+begin
+  for x := 0 to mx do
+    SB[x].Down := false;
+end;
   
 // Create TIOPort instance
 constructor TSwitch8Port.Create;
+var
+  s: string;
 begin
   inherited Create;
-  FModname := '8-switch input';
-  FDescription := 'This is an 8-switch input, each button controls a specific bit within a byte.';
+  s := (IntToStr(MAXX + 1)) + '-switch input';
+  FModname := PChar(s);
+  s :=  'This is an ' + (IntToStr(MAXX + 1)) + '-switch input, each switch controls a specific bit within a byte.';
+  FDescription := PChar(s);
   FHasGUI := true;
   FPortMode := pmReadOnly;
 end;
@@ -54,8 +70,9 @@ var
   Value: integer;
 begin
   Value := 0;
-  for x := 0 to 7 do
+  for x := 0 to MAXX do
     if SB[x].Down then Value := Value + (1 shl x);
+  if FOutNegation then Value := not Value;
   Result := Value;
 end;
 
@@ -66,16 +83,14 @@ end;
 
 // Reset virtual port
 procedure TSwitch8Port.Reset;
-var
-  x: byte;
 begin
-  for x := 0 to 7 do SB[x].Down := false;
+  AllRelease(MAXX)
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TSwitch8Port.Create;
+  Result := TSwitch8Port.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -95,12 +110,12 @@ begin
   PanelForm.Caption := Port.Title;
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  x := 8;
+  x := MAXX + 1;
   y := 1;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
   PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
 
-  for x := 0 to 7 do
+  for x := 0 to MAXX do
   begin
     SB[x] := TSpeedButton.Create(nil);
     with SB[x] do

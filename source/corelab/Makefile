@@ -14,14 +14,14 @@ project=corelab
 all:
 	@mkdir -p $(outdir)/
 	@if [ -f $(project).lpr ]; then \
-	    $(fpc) $(fpcargs) -Fu./builtin/ -Fu./core/ $(project).lpr; \
+	    $(fpc) $(fpcargs) $(project).lpr; \
 	  echo ""; \
 	fi
-	@if [ -f $(outdir)/$(project).rsj ]; then \
-	  $(rstconv) -f po -p utf-8 -i $(outdir)/$(project).rsj -o ../../message/$(project).pot; \
+	@if [ -f $(outdir)/$(project)strconsts.rsj ]; then \
+	  $(rstconv) -f po -p utf-8 -i $(outdir)/$(project)strconsts.rsj -o ../../message/$(project).pot; \
 	fi
 	@if [ -f $(podir)/$(project).pot ]; then \
-	  mv $(podir)/$(project).pot  ../message/; \
+	  mv $(podir)/$(project).pot  ../../message/; \
 	fi
 
 clean:

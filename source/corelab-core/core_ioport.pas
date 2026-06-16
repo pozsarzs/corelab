@@ -27,8 +27,10 @@ type
     FEnabled: boolean;                    // Enable port without detach from bus
     FHasGUI: boolean;                     // Does the implementation have a GUI?
     FLatchedOutput: boolean;                                   // Latched output
+    FOutNegation: boolean;                     // Negation of matrix output bits
     FPortMode: TPortMode;                                 // Port operation mode
     FReadBackOutput: boolean;           // Output port with read-back capability
+    FSelNegation: boolean;                   // Negation of matrix selector bits
   public
     // Public methods
     constructor Create; virtual;
@@ -38,14 +40,16 @@ type
     procedure Reset; virtual; abstract;
     // Public properties
     property AddressRangeSize: byte read FAddressRangeSize;
+    property Description: PChar read FDescription;
     property Enabled: boolean read FEnabled write FEnabled;
     property HasGUI: boolean read FHasGUI;
     property LatchedOutput: boolean read FLatchedOutput;
-    property Description: PChar read FDescription;
     property ModName: PChar read FModname;
-    property Title: PChar read FTitle write FTitle;
+    property OutNegation: boolean read FOutNegation write FOutNegation;
     property PortMode: TPortMode read FPortMode;
     property ReadBackOutput: boolean read FReadBackOutput;
+    property SelNegation: boolean read FSelNegation write FSelNegation;
+    property Title: PChar read FTitle write FTitle;
   end;
 
 implementation
@@ -59,8 +63,10 @@ begin
   FEnabled := false;
   FHasGUI := false;
   FLatchedOutput := false;
+  FOutNegation := false;
   FPortMode := pmReadWrite;
   FReadBackOutput := false;
+  FSelNegation := false;
   FTitle := FModname;
 end;
 

@@ -22,18 +22,21 @@ if %buildapp%==0 goto :end
 cd corelab
 make -f Makefile.w64
 cd ..
+cd clcpu
+make -f Makefile.w64
+cd ..
+cd clioport
+make -f Makefile.w64
+cd ..
+cd clmemory
+make -f Makefile.w64
+cd ..
 
 :lib
 if %buildlib%==0 goto :end
-cd corelab-plugins\cpu
+cd corelab-plugins
 make -f Makefile.w64
-cd ..\..
-cd corelab-plugins\ioport
-make -f Makefile.w64
-cd ..\..
-cd corelab-plugins\memory
-make -f Makefile.w64
-cd ..\..
+cd ..
 
 :lhelp
 if %buildlhelp%==0 goto :gui

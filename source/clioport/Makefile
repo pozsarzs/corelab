@@ -5,20 +5,24 @@
 # | Make file for source code                                                  |
 # +----------------------------------------------------------------------------+
 
-include ../../../Makefile.global
+include ../../Makefile.global
 
-outdir=../../_lib/$(architecture)-$(os)
-project=`ls | grep -v Makefile | grep -v Makefile.w64`
+outdir=../_lib/$(architecture)-$(os)
+podir=../_po
+project=clioport
 
 all:
-	
 	@mkdir -p $(outdir)/
-	@for x in $(project); do \
-	  if [ -f $$x/$$x.pas ]; then \
-	    $(fpc) $(fpcargs) -Fu../../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
+	@if [ -f $(project).lpr ]; then \
+	    $(fpc) $(fpcargs) $(project).lpr; \
 	  echo ""; \
-	  fi; \
-	done
+	fi
+	@if [ -f $(outdir)/$(project).rsj ]; then \
+	  $(rstconv) -f po -p utf-8 -i $(outdir)/$(project).rsj -o ../../message/$(project).pot; \
+	fi
+	@if [ -f $(podir)/$(project).pot ]; then \
+	  mv $(podir)/$(project).pot  ../../message/; \
+	fi
 
 clean:
 
