@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=CoreLAB
-GenericName=Modular Processor Simulation Framework
-GenericName[hu]=Moduláris processzorszimulációs keretrendszer
-Exec=corelab %F
-Icon=corelab
+Name=CLCPU
+GenericName=CPU plugin tester
+GenericName[hu]=CPU beépülő teszter
+Exec=clcpu
+Icon=clapps
 Terminal=false
 StartupNotify=true
 Categories=Science;Development;Education;

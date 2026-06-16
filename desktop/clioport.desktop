@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=CoreLAB
-GenericName=Modular Processor Simulation Framework
-GenericName[hu]=Moduláris processzorszimulációs keretrendszer
-Exec=corelab %F
-Icon=corelab
+Name=CLIOPort
+GenericName=IOPort plugin tester
+GenericName[hu]=IOPort beépülő teszter
+Exec=clioport
+Icon=clapps
 Terminal=false
 StartupNotify=true
 Categories=Science;Development;Education;
