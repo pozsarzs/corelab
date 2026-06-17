@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | core_mem.pas                                                             | }
+{ | core_memory.pas                                                          | }
 { | Memory abstraction module                                                | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
@@ -14,40 +14,49 @@
 unit core_memory;
 {$mode objfpc}{$H+}
 interface
-uses
-  Classes, SysUtils;
 type
-  // Abstract base memory class
+  // Operation mode
+  TMemoryMode = (pmReadOnly, pmReadWrite);
+  // Abstract base I/O port class
   TMemory = class
   protected
-    // Allocated memory block
-    FMaxRelAddress: qword;          // Stores the highest valid relative address
-    FSize: qword;                                         // Total size in bytes
-    FReadOnly: boolean;           //Flag indicating that the memory block is ROM
+    FModname: PChar;                                              // Module name
+    FDescription: PChar;                                    // Short description
+    FAddressRangeSize: qword;                              // Address range size
+    FEnabled: boolean;                    // Enable port without detach from bus
+    FMemoryMode: TPortMode;                              //Memory operation mode
   public
     // Public methods
-    constructor Create(ASize: qword; AReadOnly: boolean); virtual;
-    function ReadByte(Address: qword): byte;  virtual; abstract;
-    procedure WriteByte(Address: qword; Value: byte);  virtual; abstract;
+    constructor Create; virtual;
+    destructor Destroy; virtual;
+    function ReadMemory(Address: qword): byte; virtual; abstract;
+    procedure WriteMemory(Address: qword; Value: byte); virtual; abstract;
     procedure Reset; virtual; abstract;
-    procedure LoadFromStream(Stream: TStream; TargetAddress: qword); virtual; abstract;
-    procedure SaveToStream(Stream: TStream; SourceAddress: qword; Length: qword); virtual; abstract;
     // Public properties
-    property MaxRelAddress: qword read FMaxRelAddress;
-    property Size: qword read FSize;
-    property ReadOnly: boolean read FReadOnly;
+    property AddressRangeSize: qword read FAddressRangeSize write FAddressRangeSize;
+    property Description: PChar read FDescription write FDescription;
+    property Enabled: boolean read FEnabled write FEnabled;
+    property ModName: PChar read FModname write FModname;
+    property MemoryMode: TPortMode read FPortMode write FPortMode;
   end;
 
 implementation
 
 // Create TMemory instance
-constructor TMemory.Create(ASize: qword; AReadOnly: boolean);
+constructor TMemory.Create;
 begin
   inherited Create;
   // Initial state
-  FSize := ASize;
-  if ASize > 0 then FMaxRelAddress := ASize - 1 else FMaxRelAddress := 0;
-  FReadOnly := false;
+  FAddressRangeSize := 4095;
+  FEnabled := false;
+  FMemoryMode := pmReadWrite;
+  FModname := 'RAM';
+end;
+
+// Destroy TMemory instance
+destructor TMemory.Destroy;
+begin
+  inherited Destroy;
 end;
 
 end.

@@ -16,18 +16,15 @@ library ioport_null;
 uses
   core_ioport;
 type
-  TResponse = (rp00, rpFF, rpAd);
   // NULL device implementation
   TNULLPort = class(TIOPort)
   protected
-    FResponse: TResponse;
   public
     constructor Create; override;
     destructor Destroy; override;
     function ReadPort(Port: byte): byte; override;
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
-    property Response: TResponse read FResponse write FResponse;
   end;
   
 // Create TIOPort instance
@@ -67,7 +64,7 @@ end;
 // Reset virtual port
 procedure TNULLPort.Reset;
 begin
-  FResponse := rpFF;
+  FResponse := rp00;
 end;
 
 // Exportable function for create TIOPort instance

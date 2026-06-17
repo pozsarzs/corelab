@@ -60,8 +60,8 @@ constructor T8080CPU.Create;
 begin
   inherited Create;
   // CPU identity information
-  FName := 'Intel 8080';
-  FFamily := '80xx';
+  FModname := '8080';
+  FDescription := 'Intel 8080 microprocessor';
   // CPU features
   FArchitecture := arNeumann;                           { Type of architecture }
   FBitWidth := 8;                           { Main processor word size in bits }

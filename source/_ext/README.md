@@ -1,3 +1,8 @@
+# CoreLAB
+
+**Modular Processor Simulation Framework**
+
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
 ## External and modificated Lazarus components
 

@@ -1,3 +1,9 @@
+# CoreLAB
+
+**Modular Processor Simulation Framework**
+
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+
 ## Installation from source package
 
 Lazarus LCL units are required to compile Xcorelab and FreePascal compiler is
@@ -8,7 +14,7 @@ required to compile all programs.
 > compiler and additional necessary utilities (make, rstconv), so this directory
 > must be included in the PATH.
 
-### 1. On Unix-like systems
+### On Unix-like systems
   
   Build and install:
   ```
@@ -21,10 +27,10 @@ required to compile all programs.
   # make uninstall
   ```
 
-### 2. On Windows
+### On Windows
   
   Build:
   ```
   > cd source
-  > buildw64.bat [/nocui] [/nogui] [/noutil] [/nolhelp]
+  > buildw64.bat [/noapp] [/nolib] [/nolhelp]
   ```  

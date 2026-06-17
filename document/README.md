@@ -1,12 +1,16 @@
-## CoreLAB - Modular Processor Simulation Framework
+# CoreLAB
 
-### 1. About software
+**Modular Processor Simulation Framework**
+
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+
+## About software
 
 The CoreLAB project is a functional CPU, microprocessor, and microcontroller
 simulator born from a fusion of academic research, technical passion, and
 historical preservation.
 
-### 2. How to get installer package for my OS?
+## How to get installer package for my OS?
 
 **Visit homepage (see later) to download installer packages:**  
 
@@ -26,13 +30,13 @@ historical preservation.
 |                |amd64|corelab-0.1-win64.zip        |      |
 |all             |all  |corelab-0.1.tar.gz           |source|
 
-**b. Download from Github**  
+**Download from Github**  
   
   ```
   $ git clone https://github.com/pozsarzs/corelab.git
   ```  
   
-**c. Download from Debian repository**  
+**Download from Debian repository**  
   
   set reporitory:  
   ```
@@ -66,7 +70,7 @@ historical preservation.
   $ sudo apt-key export f36e9ee8 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/pozsarzs.gpg
   ```
 
-### 3. Contact
+## Contact
 
  - Homepage: <https://www.pozsarzs.hu/60_myprogcom/corelab/>  
  - Project webpage on Github: <https://pozsarzs.github.io/corelab>  

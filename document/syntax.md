@@ -1,6 +1,3 @@
-<img align="left" style="float: left; margin: 0 10px 0 0;" alt="Icon"
-  src="../desktop/48x48/apps/corelab.png">
-
 # CoreLAB
 
 **Modular Processor Simulation Framework**

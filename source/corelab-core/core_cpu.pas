@@ -44,8 +44,8 @@ type
     FBus: ICPUBus;                                    { Connected external bus }
     FOnEvent: TCPUEventHandler;                               { Event callback }
     // CPU identity information
-    FName: PChar;
-    FFamily: PChar;
+    FModname: PChar;
+    FDescription: PChar;                                   { Short description }
     // CPU features
     FArchitecture: TArchitecture;                       { Type of architecture }
     FBitWidth: byte;                        { Main processor word size in bits }
@@ -84,8 +84,8 @@ type
     procedure ConnectBus(const Bus: ICPUBus); virtual;
 
     // Public properties
-    property Name: PChar read FName;
-    property Family: PChar read FFamily;
+    property Modname: PChar read FModname;
+    property Description: PChar read FDescription;
     property Architecture: TArchitecture read FArchitecture;
     property BitWidth: byte read FBitWidth;
     property AddressWidth: byte read FAddressWidth;

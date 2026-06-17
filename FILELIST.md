@@ -1,0 +1,240 @@
+# CoreLAB
+
+**Modular Processor Simulation Framework**
+
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+
+## File completion status
+
+ - [x] autoconf/config.guess
+ - [x] autoconf/config.sub
+ - [x] autoconf/install-sh
+
+ - [x] desktop/clcpu.desktop
+ - [x] desktop/clioport.desktop
+ - [x] desktop/clmemory.desktop
+ - [x] desktop/corelab.desktop
+ - [x] desktop/corelab.xml
+ - [x] desktop/Makefile
+ - [x] desktop/16x16/apps/clapps.png
+ - [x] desktop/16x16/apps/corelab.png
+ - [x] desktop/16x16/mimetypes/application-x-corelab-script.png
+ - [x] desktop/16x16/mimetypes/application-x-corelab-snapshot.png
+ - [x] desktop/32x32/apps/clapps.png
+ - [x] desktop/32x32/apps/corelab.png
+ - [x] desktop/32x32/mimetypes/application-x-corelab-script.png
+ - [x] desktop/32x32/mimetypes/application-x-corelab-snapshot.png
+ - [x] desktop/48x48/apps/clapps.png
+ - [x] desktop/48x48/apps/corelab.png
+ - [x] desktop/48x48/mimetypes/application-x-corelab-script.png
+ - [x] desktop/48x48/mimetypes/application-x-corelab-snapshot.png
+ - [x] desktop/64x64/apps/clapps.png
+ - [x] desktop/64x64/apps/corelab.png
+ - [x] desktop/64x64/mimetypes/application-x-corelab-script.png
+ - [x] desktop/64x64/mimetypes/application-x-corelab-snapshot.png
+ - [x] desktop/svg/application-x-corelab-script.svg
+ - [x] desktop/svg/application-x-corelab-snapshot.svg
+ - [x] desktop/svg/clapps.svg
+ - [x] desktop/svg/corelab.svg
+
+ - [x] document/AUTHORS
+ - [ ] document/changelog
+ - [x] document/copyright
+ - [x] document/INSTALL.md
+ - [x] document/Makefile
+ - [x] document/README.md
+ - [ ] document/syntax.md
+ - [x] document/VERSION
+
+ - [ ] help/en/corelab.hhc
+ - [ ] help/en/corelab.hhk
+ - [ ] help/en/corelab.hhp
+ - [ ] help/en/corelab.log
+ - [ ] help/en/md/cpu_8080.html
+ - [ ] help/corelab_en.chm
+ - [ ] help/corelab.hhk
+ - [x] help/createhhk
+ - [x] help/Makefile
+
+ - [x] library/inpout32/inpout32.dll
+ - [x] library/inpout32/inpout32.h
+ - [x] library/inpout32/inpout32.lib
+ - [x] library/inpout32/inpoutx64.dll
+ - [x] library/inpout32/inpoutx64.lib
+ - [x] library/inpout32/InstallDriver.exe
+ - [x] library/inpout32/license.txt
+ - [x] library/inpout32/ReadMe.txt
+ - [x] library/README.md
+
+ - [ ] manual/clcpu.1
+ - [ ] manual/clioport.1
+ - [ ] manual/clmemory.1
+ - [ ] manual/corelab.1
+ - [x] manual/Makefile
+
+ - [ ] message/corelab.pot
+ - [x] message/lhelp.pot
+ - [ ] message/hu/corelab.mo
+ - [ ] message/hu/corelab.po
+ - [x] message/hu/lhelp.mo
+ - [x] message/hu/lhelp.po
+ - [x] message/Makefile
+
+ - [ ] package/freebsd-bin/create_links
+ - [ ] package/freebsd-bin/install
+ - [ ] package/freebsd-bin/remove_links
+ - [ ] package/freebsd-bin/uninstall
+ - [ ] package/freebsd-txz/corelab/Makefile
+ - [ ] package/freebsd-txz/corelab/pkg-descr
+ - [ ] package/freebsd-txz/corelab/pkg-plist
+ - [ ] package/freebsd-txz/corelab-plugins/Makefile
+ - [ ] package/freebsd-txz/corelab-plugins/pkg-descr
+ - [ ] package/freebsd-txz/corelab-plugins/pkg-plist
+ - [ ] package/linux-bin/create_links
+ - [ ] package/linux-bin/install
+ - [ ] package/linux-bin/remove_links
+ - [ ] package/linux-bin/uninstall
+ - [ ] package/linux-deb/corelab/control
+ - [ ] package/linux-deb/corelab/postinst
+ - [ ] package/linux-deb/corelab/prerm
+ - [ ] package/linux-deb/corelab-plugins/control
+ - [ ] package/linux-deb/corelab-plugins/postinst
+ - [ ] package/linux-deb/corelab-plugins/prerm
+ - [ ] package/linux-rpm/corelab-0.1-1.spec
+ - [ ] package/linux-rpm/corelab-plugins-0.1-1.spec
+ - [ ] package/linux-txz/corelab-plugins/slack-desc
+ - [ ] package/linux-txz/corelab/slack-desc
+ - [ ] package/windows-exe/corelab-0.1-win64.nsi
+ - [ ] package/windows-msi/corelab-0.1.xml
+ - [x] package/mkpackage_freebsd-bin-zip
+ - [x] package/mkpackage_freebsd-txz
+ - [x] package/mkpackage_linux-bin-zip
+ - [x] package/mkpackage_linux-deb
+ - [x] package/mkpackage_linux-rpm
+ - [x] package/mkpackage_linux-txz
+ - [x] package/mkpackage_src-targz
+
+ - [x] project/README.md
+ - [ ] project/z80-8080/project.nfo
+ - [ ] project/z80-8080/test.asm
+ - [ ] project/z80-8080/test.hex
+ - [ ] project/z80-8080/test.z80
+ - [ ] project/z80-8080/z80-8080.clscr
+ - [ ] project/z80-8080/z80-8080.clsht
+ - [ ] project/z80-8080/z80-8080.hex
+
+ - [ ] setting/corelab.ini
+ - [ ] setting/README.md
+
+ - [ ] source/clcpu/clcpu.ico
+ - [ ] source/clcpu/clcpu.lpi
+ - [ ] source/clcpu/clcpu.lpr
+ - [ ] source/clcpu/clcpu.lps
+ - [ ] source/clcpu/clcpu.res
+ - [ ] source/clcpu/frmmain.lfm
+ - [ ] source/clcpu/frmmain.pas
+ - [ ] source/clcpu/Makefile
+ - [ ] source/clcpu/Makefile.w64
+ - [x] source/clioport/clioport.ico
+ - [x] source/clioport/clioport.lpi
+ - [x] source/clioport/clioport.lpr
+ - [x] source/clioport/clioport.lps
+ - [x] source/clioport/clioport.res
+ - [x] source/clioport/frmmain.lfm
+ - [x] source/clioport/frmmain.pas
+ - [x] source/clioport/Makefile
+ - [x] source/clioport/Makefile.w64
+ - [ ] source/clmemory/clmemory.ico
+ - [ ] source/clmemory/clmemory.lpi
+ - [ ] source/clmemory/clmemory.lpr
+ - [ ] source/clmemory/clmemory.lps
+ - [ ] source/clmemory/clmemory.res
+ - [ ] source/clmemory/frmmain.lfm
+ - [ ] source/clmemory/frmmain.pas
+ - [ ] source/clmemory/Makefile
+ - [ ] source/clmemory/Makefile.w64
+ - [x] source/corelab-core/core_bus.pas
+ - [x] source/corelab-core/core_cpu.pas
+ - [x] source/corelab-core/core_ioport.pas
+ - [x] source/corelab-core/core_memory.pas
+ - [ ] source/corelab/corelab.ico
+ - [ ] source/corelab/corelab.lpi
+ - [ ] source/corelab/corelab.lpr
+ - [ ] source/corelab/corelab.lps
+ - [ ] source/corelab/corelab.res
+ - [ ] source/corelab/frmmain.lfm
+ - [ ] source/corelab/frmmain.lrj
+ - [ ] source/corelab/frmmain.pas
+ - [ ] source/corelab/frmrunlogger.lfm
+ - [ ] source/corelab/frmrunlogger.lrj
+ - [ ] source/corelab/frmrunlogger.pas
+ - [x] source/corelab/Makefile
+ - [x] source/corelab/Makefile.w64
+ - [x] source/corelab-plugins/cpu_8080/cpu_8080.pas
+ - [x] source/corelab-plugins/cpu_8080/microcode.pas
+ - [x] source/corelab-plugins/ioport_bell/ioport_bell.pas
+ - [x] source/corelab-plugins/ioport_button16hexbcd/ioport_button16hexbcd.pas
+ - [x] source/corelab-plugins/ioport_button16mtxbinsel/ioport_button16mtxbinsel.pas
+ - [x] source/corelab-plugins/ioport_button16mtx/ioport_button16mtx.pas
+ - [x] source/corelab-plugins/ioport_button8/ioport_button8.pas
+ - [x] source/corelab-plugins/ioport_null/ioport_null.pas
+ - [x] source/corelab-plugins/ioport_standard/ioport_standard.pas
+ - [x] source/corelab-plugins/ioport_switch16hexbcd/ioport_switch16hexbcd.pas
+ - [x] source/corelab-plugins/ioport_switch16mtxbinsel/ioport_switch16mtxbinsel.pas
+ - [x] source/corelab-plugins/ioport_switch16mtx/ioport_switch16mtx.pas
+ - [x] source/corelab-plugins/ioport_switch8/ioport_switch8.pas
+ - [x] source/corelab-plugins/Makefile
+ - [x] source/corelab-plugins/Makefile.w64
+ - [x] source/corelab-plugins/README.md
+ - [x] source/lhelp/*
+ - [x] source/lhelp/Makefile
+ - [x] source/lhelp/Makefile.w64
+ - [x] source/_ext/convert/convert.diff
+ - [x] source/_ext/convert/convert.pas
+ - [x] source/_ext/convert/freeware.txt
+ - [x] source/_ext/convert/read.me
+ - [x] source/_ext/inpout32.zip
+ - [x] source/_ext/modlcltranslator/modlcltranslator.diff
+ - [x] source/_ext/modlcltranslator/modlcltranslator.pas
+ - [x] source/_ext/README.md
+ - [x] source/_lib/x86_64-freebsd/.gitignore
+ - [x] source/_lib/x86_64-linux/.gitignore
+ - [x] source/_lib/x86_64-win64/.gitignore
+ - [x] source/_png/*.png
+ - [x] source/_po/.gitignore
+ - [x] source/buildw64.bat
+ - [x] source/Makefile
+ - [x] source/README.md
+
+ - [ ] syntax/corelab-script/CHANGELOG.md
+ - [ ] syntax/corelab-script/images
+ - [ ] syntax/corelab-script/images/corelab.png
+ - [ ] syntax/corelab-script/language-configuration.json
+ - [x] syntax/corelab-script/LICENSE.md
+ - [ ] syntax/corelab-script/package.json
+ - [x] syntax/corelab-script/README.md
+ - [ ] syntax/corelab-script/snippets
+ - [ ] syntax/corelab-script/snippets/mdsscript.json
+ - [ ] syntax/corelab-script/syntaxes
+ - [ ] syntax/corelab-script/syntaxes/mdsscript.tmLanguage.json
+ - [ ] syntax/corelab.lang
+ - [ ] syntax/corelab.nanorc
+ - [ ] syntax/corelab-script-0.0.2.vsix
+ - [ ] syntax/corelab.syntax
+ - [ ] syntax/corelab.vim
+ - [ ] syntax/corelab.xml
+ - [ ] syntax/corelab.yaml
+ - [ ] syntax/createvsix.bat
+ - [ ] syntax/Makefile
+ - [x] syntax/README.md
+ - [ ] syntax/scripts.vim
+ - [ ] syntax/Syntax
+
+ - [x] CODE_OF_CONDUCT.md
+ - [x] configure
+ - [x] configure.in
+ - [ ] README.md
+ - [x] LICENCE
+ - [x] Makefile
+ - [x] Makefile.global.in
+ 

@@ -17,11 +17,11 @@ interface
 type
   // Operation mode
   TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
+  TResponse = (rp00, rpFF, rpAd);
   // Abstract base I/O port class
   TIOPort = class
   protected
     FModname: PChar;                                              // Module name
-    FTitle: PChar;                                                 // Form title
     FDescription: PChar;                                    // Short description
     FAddressRangeSize: byte;                               // Address range size
     FEnabled: boolean;                    // Enable port without detach from bus
@@ -30,7 +30,9 @@ type
     FOutNegation: boolean;                     // Negation of matrix output bits
     FPortMode: TPortMode;                                 // Port operation mode
     FReadBackOutput: boolean;           // Output port with read-back capability
+    FResponse: TResponse;                    // Response type of the null device
     FSelNegation: boolean;                   // Negation of matrix selector bits
+    FTitle: PChar;                                                 // Form title
   public
     // Public methods
     constructor Create; virtual;
@@ -48,6 +50,7 @@ type
     property OutNegation: boolean read FOutNegation write FOutNegation;
     property PortMode: TPortMode read FPortMode;
     property ReadBackOutput: boolean read FReadBackOutput;
+    property Response: TResponse read FResponse write FResponse;
     property SelNegation: boolean read FSelNegation write FSelNegation;
     property Title: PChar read FTitle write FTitle;
   end;
@@ -66,6 +69,7 @@ begin
   FOutNegation := false;
   FPortMode := pmReadWrite;
   FReadBackOutput := false;
+  FResponse := rp00;
   FSelNegation := false;
   FTitle := FModname;
 end;
