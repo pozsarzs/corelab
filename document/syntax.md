@@ -1,3 +1,12 @@
+<img align="left" style="float: left; margin: 0 10px 0 0;" alt="Icon"
+  src="../desktop/48x48/apps/corelab.png">
+
+# CoreLAB
+
+**Modular Processor Simulation Framework**
+
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+
 ## Syntax highlighting
 
 ### Syntax files
