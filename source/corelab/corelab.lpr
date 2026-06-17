@@ -20,9 +20,7 @@ uses
   {$IFDEF HASAMIGA}
   athreads,
   {$ENDIF}
-  Interfaces,
-  Forms,
-  frmmain, frmrunlogger;
+  Interfaces, Forms, frmmain, frmrunlogger;
 
 {$R *.res}
 
