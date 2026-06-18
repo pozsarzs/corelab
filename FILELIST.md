@@ -37,6 +37,22 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] desktop/svg/clapps.svg
  - [x] desktop/svg/corelab.svg
 
+ - [ ] document/code/corelab/frmintstatusviewer.md
+ - [ ] document/code/corelab/frmbusmonitor.md
+ - [ ] document/code/corelab/frmhexeditor.md
+ - [ ] document/code/corelab/frmcpuregviewer.md
+ - [ ] document/code/corelab/frmvirtualsysmonitor.md
+ - [ ] document/code/corelab/frmscripteditor.md
+ - [ ] document/code/corelab/frmrunlogger.md
+ - [x] document/code/corelab-core/core_bus.md
+ - [x] document/code/corelab-core/core_cpu.md
+ - [ ] document/code/corelab-core/core_ioport.md
+ - [ ] document/code/corelab-core/core_memory.md
+ - [ ] document/code/corelab-plugins/memory.md
+ - [ ] document/code/corelab-plugins/cpu.md
+ - [ ] document/code/corelab-plugins/bus.md
+ - [ ] document/code/corelab-plugins/ioport.md
+ - [x] document/code/README.md
  - [x] document/AUTHORS
  - [ ] document/changelog
  - [x] document/copyright
@@ -50,7 +66,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] help/en/corelab.hhk
  - [ ] help/en/corelab.hhp
  - [ ] help/en/corelab.log
- - [ ] help/en/md/cpu_8080.html
+ - [ ] help/en/cpu_8080.html
  - [ ] help/corelab_en.chm
  - [ ] help/corelab.hhk
  - [x] help/createhhk

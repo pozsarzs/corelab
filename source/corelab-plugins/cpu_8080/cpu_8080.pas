@@ -45,9 +45,9 @@ type
     constructor Create; override;
     procedure Reset; override;
     procedure Step; override;
-    function GetCurrentInstruction: string; override;
-    function GetRegister(const RegName: string): qword; override;
-    procedure SetRegister(const RegName: string; Value: qword); override;
+    function GetCurrentInstruction: PChar; override;
+    function GetRegister(const RegName: PChar): qword; override;
+    procedure SetRegister(const RegName: PChar; Value: qword); override;
   end;
 var
   LogRecord: TLastInstruction;                          { Raw running log data }
@@ -120,36 +120,39 @@ begin
 end;
 
 // Formatted query for the last statement
-function T8080CPU.GetCurrentInstruction: string;
+function T8080CPU.GetCurrentInstruction: PChar;
+var
+ s: string;
 begin
-  Result := '';
+  s := '';
   with LogRecord do
   begin
     // Address
-    Result := InttoHex(Address, 4) + #9;
+    s := InttoHex(Address, 4) + #9;
     // Opcode
-    Result := Result + InttoHex(Opcode, 2) + #9;
+    s := s + InttoHex(Opcode, 2) + #9;
     // 1st operand
     if NumOperand > 0
-      then Result := Result + InttoHex(Operands[1], 2) + ' '
-      else Result := Result + '   ';
+      then s := s + InttoHex(Operands[1], 2) + ' '
+      else s := s + '   ';
     // 2st operand
     if NumOperand > 1
-      then Result := Result + InttoHex(Operands[2], 2) + #9
-      else Result := Result + '  ' + #9;
+      then s := s + InttoHex(Operands[2], 2) + #9
+      else s := s + '  ' + #9;
     // Mnemonic
-    Result := Result + Mnemonic;
+    s := s + Mnemonic;
     // 1st operand
     if NumOperand > 0
-      then Result := Result + #9 + InttoHex(Operands[1], 2);
+      then s := s + #9 + InttoHex(Operands[1], 2);
     // 2st operand
     if NumOperand > 1
-      then Result := Result + ', ' + InttoHex(Operands[2], 2);
+      then s := s + ', ' + InttoHex(Operands[2], 2);
   end;
+  Result := PChar(s);
 end;
 
 // Querying registers
-function T8080CPU.GetRegister(const RegName: string): qword;
+function T8080CPU.GetRegister(const RegName: PChar): qword;
 begin
   Result := 0;
   case UpperCase(RegName) of
@@ -164,7 +167,7 @@ begin
 end;
 
 // Setting registers
-procedure T8080CPU.SetRegister(const RegName: string; Value: qword);
+procedure T8080CPU.SetRegister(const RegName: PChar; Value: qword);
 begin
   case UpperCase(RegName) of
     'A':  FRegs.A := Value and $FF;

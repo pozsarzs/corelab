@@ -17,14 +17,15 @@ interface
 uses
   Classes, SysUtils, core_cpu, core_memory, core_ioport;
 type
-  // Abstract base systemm bus class
+  // Abstract base system bus class
   TBus = class(TInterfacedObject, ICPUBus)
   protected
-    FCodeMemory: TMemory;                         // Connected code memory modul
-    FDataMemory: TMemory;                       // Connected (data) memory modul
-    FIOPorts: TIOPort;                                    // Connected I/O modul
+    FCodeMemory: TMemory;                        // Connected code memory module
+    FDataMemory: TMemory;                      // Connected (data) memory module
+    FIOPorts: TIOPort;                                   // Connected I/O module
   public
     constructor Create; virtual;
+    destructor Destroy; virtual;
     // Simulator side methods
     function  MemRead(Address: uint64): byte; virtual;
     procedure MemWrite(Address: uint64; Value: byte); virtual;
@@ -46,12 +47,19 @@ type
 
 implementation
 
+// Create TBus instance
 constructor TBus.Create;
 begin
   inherited Create;
   FCodeMemory := nil;
   FDataMemory := nil;
   FIOPorts := nil;
+end;
+
+// Destroy TBus instance
+destructor TBus.Destroy;
+begin
+  inherited Destroy;
 end;
 
 // Reading (data) memory based on absolute address

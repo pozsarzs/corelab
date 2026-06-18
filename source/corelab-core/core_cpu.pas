@@ -41,29 +41,29 @@ type
   // Abstract base CPU class
   TCPU = class
   protected
-    FBus: ICPUBus;                                    { Connected external bus }
-    FOnEvent: TCPUEventHandler;                               { Event callback }
+    FBus: ICPUBus;                                     // Connected external bus
+    FOnEvent: TCPUEventHandler;                                // Event callback
     // CPU identity information
     FModname: PChar;
-    FDescription: PChar;                                   { Short description }
+    FDescription: PChar;                                    // Short description
     // CPU features
-    FArchitecture: TArchitecture;                       { Type of architecture }
-    FBitWidth: byte;                        { Main processor word size in bits }
-    FAddressWidth: byte;                           { Address bus width in bits }
-    FEndianness: TEndianness;                                     { Byte order }
-    FMaxMemAddress: qword;                 { The highest (data) memory address }
-    FMaxCodeAddress: qword;                  { The highest code memory address }
-    FMaxIOPortAddress: qword;                   { The highest I/O port address }
-    FHasSeparateIOBus: boolean;      { Indicates separate memory and I/O buses }
+    FArchitecture: TArchitecture;                        // Type of architecture
+    FBitWidth: byte;                         // Main processor word size in bits
+    FAddressWidth: byte;                            // Address bus width in bits
+    FEndianness: TEndianness;                                      // Byte order
+    FMaxMemAddress: qword;                  // The highest (data) memory address
+    FMaxCodeAddress: qword;                   // The highest code memory address
+    FMaxIOPortAddress: qword;                    // The highest I/O port address
+    FHasSeparateIOBus: boolean;       // Indicates separate memory and I/O buses
     // Runtime state
-    FRunning: boolean;                                   { CPU execution state }
-    FHalted: boolean;                                         { CPU HALT state }
-    FInterruptEnabled: boolean;                 { Global interrupt enable flag }
-    FIRQPending: boolean;                         { Pending maskable interrupt }
-    FNMIPending: boolean;                     { Pending non-maskable interrupt }
+    FRunning: boolean;                                    // CPU execution state
+    FHalted: boolean;                                          // CPU HALT state
+    FInterruptEnabled: boolean;                  // Global interrupt enable flag
+    FIRQPending: boolean;                          // Pending maskable interrupt
+    FNMIPending: boolean;                      // Pending non-maskable interrupt
     // Execution statistics
-    FCycles: qword;                                             { Total cycles }
-    FInstructions: qword;                        { Total executed instructions }
+    FCycles: qword;                                              // Total cycles
+    FInstructions: qword;                         // Total executed instructions
   protected
     var FRegPtr: array of ^qword;
     procedure EmitEvent(Event: TCPUEvent); virtual;
@@ -71,13 +71,14 @@ type
   public
     // Public methods
     constructor Create; virtual;
-    procedure SetRegister(const RegName: string; Value: qword); virtual; abstract;
-    function  GetRegister(const RegName: string): qword; virtual; abstract;
+    destructor Destroy; virtual;
+    procedure SetRegister(const RegName: PChar; Value: qword); virtual; abstract;
+    function  GetRegister(const RegName: PChar): qword; virtual; abstract;
     procedure Reset; virtual; abstract;
     procedure Run; virtual;
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
-    function  GetCurrentInstruction: string; virtual; abstract;
+    function  GetCurrentInstruction: PChar; virtual; abstract;
     procedure IRQ; virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: boolean;
@@ -120,6 +121,12 @@ begin
   FInstructions := 0;
 end;
 
+// Destroy TCPU instance
+destructor TCPU.Destroy;
+begin
+  inherited Destroy;
+end;
+
 // Sends a CPU event to the host application
 procedure TCPU.EmitEvent(Event: TCPUEvent);
 begin
@@ -141,15 +148,15 @@ end;
 // Signal maskable interrupt
 procedure TCPU.IRQ;
 begin
-  FIRQPending := true;                                  { Set pending IRQ flag }
-  EmitEvent(ceInterrupt);                            { Notify host application }
+  FIRQPending := true;                                   // Set pending IRQ flag
+  EmitEvent(ceInterrupt);                             // Notify host application
 end;
 
 // Signal non-maskable interrupt
 procedure TCPU.NMI;
 begin
-  FNMIPending := true;                                  { Set pending NMI flag }
-  EmitEvent(ceInterrupt);                            { Notify host application }
+  FNMIPending := true;                                   // Set pending NMI flag
+  EmitEvent(ceInterrupt);                             // Notify host application
 end;
 
 // Check pending interrupt
@@ -158,17 +165,17 @@ begin
   Result := false;
   if FNMIPending then
   begin
-    FNMIPending := false;                                         { Accept NMI }
-    FHalted := false;                                            { Wake-up CPU }
-    DoInterrupt(ceInterrupt);                    { Call the instance's handler }
+    FNMIPending := false;                                          // Accept NMI
+    FHalted := false;                                             // Wake-up CPU
+    DoInterrupt(ceInterrupt);                     // Call the instance's handler
     Result := true;
     Exit;
   end;
   if FIRQPending and FInterruptEnabled then
   begin
-    FIRQPending := false;                                         { Accept IRQ }
-    FHalted := false;                                            { Wake-up CPU }
-    DoInterrupt(ceInterrupt);                    { Call the instance's handler }
+    FIRQPending := false;                                          // Accept IRQ
+    FHalted := false;                                             // Wake-up CPU
+    DoInterrupt(ceInterrupt);                     // Call the instance's handler
     Result := true;
   end;
 end;
@@ -182,7 +189,7 @@ end;
 // Connect CPU to external system bus
 procedure TCPU.ConnectBus(const Bus: ICPUBus);
 begin
-  FBus := Bus;                                  { Store external bus reference }
+  FBus := Bus;                                   // Store external bus reference
 end;
 
 end.
