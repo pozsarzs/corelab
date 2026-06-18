@@ -4,7 +4,23 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## I/O plugins
+## TIOPorts implementations
+
+### Exported functions
+
+|name           |exported name           |note|
+|---------------|------------------------|----|
+|CreatePort     |_ioport_create_         |    |
+|DestroyPort    |_ioport_destroy_        |    |
+|CreatePanel    |_ioport_createpanel_    |*   |
+|FreePanel      |_ioport_freepanel_      |*   |
+|HidePanel      |_ioport_hidepanel_      |*   |
+|SetSizePosPanel|_ioport_setsizepospanel_|*   |
+|ShowPanel      |_ioport_showpanel_      |*   |
+
+**Note:** Items marked with an asterisk are only available in the visual component.  
+
+### Libraries (.so/.dll)
 
 |name                    |dir|GUI|description                                                |
 |------------------------|---|---|-----------------------------------------------------------|

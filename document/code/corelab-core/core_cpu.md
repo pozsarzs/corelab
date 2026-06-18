@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## CPU base class
+## TCPU base class
 
 ### Public properties
 

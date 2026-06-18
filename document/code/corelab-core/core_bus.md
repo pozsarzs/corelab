@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## System bus base class
+## TBus base class
 
 ### Public properties
 

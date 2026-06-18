@@ -46,12 +46,12 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] document/code/corelab/frmrunlogger.md
  - [x] document/code/corelab-core/core_bus.md
  - [x] document/code/corelab-core/core_cpu.md
- - [ ] document/code/corelab-core/core_ioport.md
- - [ ] document/code/corelab-core/core_memory.md
+ - [x] document/code/corelab-core/core_ioport.md
+ - [x] document/code/corelab-core/core_memory.md
  - [ ] document/code/corelab-plugins/memory.md
  - [ ] document/code/corelab-plugins/cpu.md
  - [ ] document/code/corelab-plugins/bus.md
- - [ ] document/code/corelab-plugins/ioport.md
+ - [x] document/code/corelab-plugins/ioport.md
  - [x] document/code/README.md
  - [x] document/AUTHORS
  - [ ] document/changelog

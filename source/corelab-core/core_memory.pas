@@ -23,7 +23,7 @@ type
     FModname: PChar;                                              // Module name
     FDescription: PChar;                                    // Short description
     FAddressRangeSize: qword;                              // Address range size
-    FEnabled: boolean;                    // Enable port without detach from bus
+    FEnabled: boolean;                  // Enable memory without detach from bus
     FMemoryMode: TPortMode;                              //Memory operation mode
   public
     // Public methods
