@@ -46,8 +46,10 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] document/code/corelab/frmrunlogger.md
  - [x] document/code/corelab-core/core_bus.md
  - [x] document/code/corelab-core/core_cpu.md
+ - [ ] document/code/corelab-core/core_display.md
  - [x] document/code/corelab-core/core_ioport.md
  - [x] document/code/corelab-core/core_memory.md
+ - [ ] document/code/corelab-plugins/display_til311.md
  - [ ] document/code/corelab-plugins/memory.md
  - [ ] document/code/corelab-plugins/cpu.md
  - [ ] document/code/corelab-plugins/bus.md
@@ -171,6 +173,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] source/clmemory/Makefile.w64
  - [x] source/corelab-core/core_bus.pas
  - [x] source/corelab-core/core_cpu.pas
+ - [ ] source/corelab-core/core_display.pas
  - [x] source/corelab-core/core_ioport.pas
  - [x] source/corelab-core/core_memory.pas
  - [ ] source/corelab/corelab.ico
@@ -188,6 +191,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] source/corelab/Makefile.w64
  - [x] source/corelab-plugins/cpu_8080/cpu_8080.pas
  - [x] source/corelab-plugins/cpu_8080/microcode.pas
+ - [ ] source/corelab-plugins/display_til311/display_til311.pas
  - [x] source/corelab-plugins/ioport_bell/ioport_bell.pas
  - [x] source/corelab-plugins/ioport_button16hexbcd/ioport_button16hexbcd.pas
  - [x] source/corelab-plugins/ioport_button16mtxbinsel/ioport_button16mtxbinsel.pas
