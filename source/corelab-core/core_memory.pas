@@ -14,6 +14,8 @@
 unit core_memory;
 {$mode objfpc}{$H+}
 interface
+uses
+  Classes;
 type
   // Operation mode
   TMemoryMode = (pmReadOnly, pmReadWrite);
@@ -22,22 +24,25 @@ type
   protected
     FModname: PChar;                                              // Module name
     FDescription: PChar;                                    // Short description
-    FAddressRangeSize: qword;                              // Address range size
+    FAddressRangeSize: dword;                              // Address range size
     FEnabled: boolean;                  // Enable memory without detach from bus
-    FMemoryMode: TPortMode;                              //Memory operation mode
+    FMemoryMode: TMemoryMode;                            //Memory operation mode
+    FMemCells: array of byte;                                    // Memory cells
   public
     // Public methods
     constructor Create; virtual;
     destructor Destroy; virtual;
-    function ReadMemory(Address: qword): byte; virtual; abstract;
-    procedure WriteMemory(Address: qword; Value: byte); virtual; abstract;
-    procedure Reset; virtual; abstract;
+    function ReadMemory(Address: dword): byte; virtual;
+    procedure WriteMemory(Address: dword; Value: byte); virtual;
+    procedure Reset; virtual;
+    procedure LoadFromStream(Stream: TStream; Address, Count: dword);
+    procedure SaveToStream(Stream: TStream; Address, Count: dword);
     // Public properties
-    property AddressRangeSize: qword read FAddressRangeSize write FAddressRangeSize;
+    property AddressRangeSize: dword read FAddressRangeSize write FAddressRangeSize;
     property Description: PChar read FDescription write FDescription;
     property Enabled: boolean read FEnabled write FEnabled;
     property ModName: PChar read FModname write FModname;
-    property MemoryMode: TPortMode read FPortMode write FPortMode;
+    property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
   end;
 
 implementation
@@ -47,7 +52,7 @@ constructor TMemory.Create;
 begin
   inherited Create;
   // Initial state
-  FAddressRangeSize := 4095;
+  FAddressRangeSize := 1024;
   FEnabled := false;
   FMemoryMode := pmReadWrite;
   FModname := 'RAM';
@@ -57,6 +62,50 @@ end;
 destructor TMemory.Destroy;
 begin
   inherited Destroy;
+end;
+
+// Read virtual memory
+function TMemory.ReadMemory(Address: dword): byte;
+begin
+  Result := 0;
+  if FEnabled then
+    if Address < FAddressRangeSize
+      then Result := FMemCells[Address]
+      else Result := 0;
+end;
+
+// Write virtual memory
+procedure TMemory.WriteMemory(Address: dword; Value: byte);
+begin
+  if FEnabled and (FMemoryMode = pmReadWrite) then
+    if Address < FAddressRangeSize then FMemCells[Address] := Value;
+end;
+
+// Set size and reset cells
+procedure TMemory.Reset;
+var
+  dw: dword;
+begin
+  dw := 1 shl 24;
+  if FAddressRangeSize > dw then FAddressRangeSize := dw;
+  SetLength(FMemCells, FAddressRangeSize);
+  if FAddressRangeSize > 0 then FillByte(FMemCells[0], FAddressRangeSize, 0);
+end;
+
+// Load memory content from stream
+procedure TMemory.LoadFromStream(Stream: TStream; Address, Count: dword);
+begin
+  if not FEnabled then exit;
+  if (Address + Count > FAddressRangeSize) or (Stream.Size - Stream.Position < Count) then exit;
+  if Count > 0 then Stream.ReadBuffer(FMemCells[Address], Count);
+end;
+
+// Save memory content to stream
+procedure TMemory.SaveToStream(Stream: TStream; Address, Count: dword);
+begin
+  if not FEnabled then exit;
+  if Address + Count > FAddressRangeSize then exit;
+  if Count > 0 then Stream.WriteBuffer(FMemCells[Address], Count);
 end;
 
 end.

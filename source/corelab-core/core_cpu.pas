@@ -83,7 +83,6 @@ type
     procedure NMI; virtual;
     function  CheckInterrupts: boolean;
     procedure ConnectBus(const Bus: ICPUBus); virtual;
-
     // Public properties
     property Modname: PChar read FModname;
     property Description: PChar read FDescription;

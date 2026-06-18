@@ -18,7 +18,7 @@ type
   // Operation mode
   TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
   TResponse = (rp00, rpFF, rpAd);
-  // Abstract base I/O port class
+  // Abstract base memory class
   TIOPort = class
   protected
     FModname: PChar;                                              // Module name
