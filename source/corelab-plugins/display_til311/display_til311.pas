@@ -55,6 +55,7 @@ type
     constructor Create; override;
     destructor Destroy; override;
     procedure DrawToBuffer(InputData: TDisplayedData); override;
+    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); override;
   end;
     
 implementation
@@ -65,8 +66,8 @@ begin
   inherited Create;
   FModname := 'TIL311';
   FDescription := 'Texas Instruments TIL311 LED display';
-  Buffer.Width := 104;
-  Buffer.Height := 94;
+  Buffer.Width := 104 + 14;
+  Buffer.Height := 94 + 28;
   Reset;
 end;
 
@@ -84,6 +85,8 @@ var
 // Draw a dot
 procedure DrawDot(Status: boolean; x, y: byte);
 begin
+  x := x + 7;
+  y := y + 14;
   if Status then
   begin
     Buffer.Canvas.Brush.Color := RETRO_RED_ON;
@@ -108,6 +111,12 @@ begin
     for bit := 0 to 3 do
       DrawDot(((line and (1 shl bit)) <> 0), 79 - (bit * 14) - b, 5 + (b * 14));
   end;
+end;
+
+// Drawing to canvas of the target object
+procedure TDisplayTIL311.RenderTo(TargetCanvas: TCanvas; x, y: integer);
+begin
+  TargetCanvas.Draw(x, y, Buffer);
 end;
 
 end.

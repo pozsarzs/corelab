@@ -46,6 +46,7 @@ type
     procedure SetRightDot(Status: boolean); virtual;
     procedure SetValue(Value: byte); virtual;
     procedure DrawToBuffer(InputData: TDisplayedData); virtual; abstract;
+    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); virtual; abstract;
     // Public properties
     property ModName: PChar read FModname;
     property Description: PChar read FDescription;
