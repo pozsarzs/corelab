@@ -33,6 +33,7 @@ type
   // TIL311 display implementation
   TDisplayTIL311 = class(TDisplay)
   protected
+    procedure DrawDot(Status: boolean; x, y: byte);
     const CHARMAP_TIL311: array[0..15, 0..6] of byte = (
       { '0' } (%0110, %1001, %1001, %1001, %1001, %1001, %0110),
       { '1' } (%0001, %0001, %0001, %0001, %0001, %0001, %0001),
@@ -57,6 +58,9 @@ type
     procedure DrawToBuffer(InputData: TDisplayedData); override;
     procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); override;
   end;
+var
+  FrameX: byte = 14;
+  FrameY: byte = 28;
     
 implementation
 
@@ -66,8 +70,8 @@ begin
   inherited Create;
   FModname := 'TIL311';
   FDescription := 'Texas Instruments TIL311 LED display';
-  Buffer.Width := 104 + 14;
-  Buffer.Height := 94 + 28;
+  Buffer.Width := 104 + FrameX;
+  Buffer.Height := 94 + FrameY;
   Reset;
 end;
 
@@ -77,16 +81,11 @@ begin
   inherited Destroy;
 end;
 
-// Draw displayed data to internal buffer
-procedure TDisplayTIL311.DrawToBuffer(InputData: TDisplayedData);
-var
-  b, bit, line: byte;
-
 // Draw a dot
-procedure DrawDot(Status: boolean; x, y: byte);
+procedure TDisplayTIL311.DrawDot(Status: boolean; x, y: byte);
 begin
-  x := x + 7;
-  y := y + 14;
+  x := x + FrameX div 2;
+  y := y + FrameY div 2;
   if Status then
   begin
     Buffer.Canvas.Brush.Color := RETRO_RED_ON;
@@ -99,18 +98,27 @@ begin
   Buffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
 end;
 
+// Draw displayed data to internal buffer
+procedure TDisplayTIL311.DrawToBuffer(InputData: TDisplayedData);
+var
+  b, bit, line: byte;
 begin
   // background
   Buffer.Canvas.Brush.Color := RETRO_RED_BG;
   Buffer.Canvas.FillRect(0, 0, Buffer.Width, Buffer.Height);
   if InputData.Blank then exit;
-  // foreground
+  // sign
   for b := 0 to 6 do
   begin
     line := CHARMAP_TIL311[InputData.Value, b];
     for bit := 0 to 3 do
-      DrawDot(((line and (1 shl bit)) <> 0), 79 - (bit * 14) - b, 5 + (b * 14));
+      if not(((b = 1) or (b = 2) or (b = 4) or (b = 5)) and
+             ((bit = 1) or (bit = 2))) then
+        DrawDot(((line and (1 shl bit)) <> 0), 79 - (bit * 14) - b, 5 + (b * 14));
   end;
+  // decimal points
+  DrawDot(InputData.LeftDot, 3, 91);
+  DrawDot(InputData.RightDot, 101, 91);
 end;
 
 // Drawing to canvas of the target object
