@@ -69,7 +69,7 @@ constructor TDisplayTIL311.Create;
 begin
   inherited Create;
   FModname := 'TIL311';
-  FDescription := 'Texas Instruments TIL311 LED display';
+  FDescription := 'Texas Instruments TIL311 LED display (1972)';
   Buffer.Width := 104 + FrameX;
   Buffer.Height := 94 + FrameY;
   Reset;

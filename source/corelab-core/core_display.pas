@@ -19,19 +19,20 @@ uses
 type
   // Displayed value with decimal points and blank status
   TDisplayedData = record
+    Blank: boolean;
     LeftDot: boolean;
     RightDot: boolean;
-    Blank: boolean;
-    Value: byte;
+    Segments: byte; { bits 0-6 }
+    Value: byte; { bits 0-3 }
   end;
   // Abstract base display class
   TDisplay = class
-  protected
+  protected  
     FModname: PChar;                                              // Module name
     FDescription: PChar;                                    // Short description
     FEnabled: boolean;                                      // Enable displaying
     Buffer: TBitmap;                                          // Internal buffer
-    DisplayedData: TDisplayedData;
+    DisplayedData: TDisplayedData;        // Displayed value, dots, and segments
     const RETRO_RED_GLOW: TColor = $003333FF;        // Retro red display colors
     const RETRO_RED_ON:   TColor = $000000FF;
     const RETRO_RED_OFF:  TColor = $00000040;
@@ -45,6 +46,7 @@ type
     procedure SetLeftDot(Status: boolean); virtual;
     procedure SetRightDot(Status: boolean); virtual;
     procedure SetValue(Value: byte); virtual;
+    procedure SetSegments(Value: byte); virtual;
     procedure DrawToBuffer(InputData: TDisplayedData); virtual; abstract;
     procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); virtual; abstract;
     // Public properties
@@ -69,13 +71,16 @@ begin
   Buffer := nil;
   inherited Destroy;
 end;
+
+// Reset display
 procedure TDisplay.Reset;
 begin
   with DisplayedData do
   begin
+    Blank := false;
     RightDot := false;
     LeftDot := false;
-    Blank := false;
+    Segments := 0;
     Value := 0;
   end;
   DrawToBuffer(DisplayedData);
@@ -106,6 +111,13 @@ end;
 procedure TDisplay.SetValue(Value: byte);
 begin
   DisplayedData.Value := Value and $0F;
+  DrawToBuffer(DisplayedData);
+end;
+
+// Set input segment data
+procedure TDisplay.SetSegments(Value: byte);
+begin
+  DisplayedData.Segments := Value;
   DrawToBuffer(DisplayedData);
 end;
 
