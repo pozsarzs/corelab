@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_button8.pas                                                       | }
-{ | 8-button input implementation module                                     | }
+{ | ioport_disp17segbcd.pas                                                  | }
+{ | 7 segments display output implementation module                          | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,15 +11,16 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_button8;
+library ioport_disp17segbcd;
 {$mode objfpc}{$H+}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
+  Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils, Buttons,
+  core_ioport, display_til302;
 type
-  // 8-button input implementation
-  TButton8Port = class(TIOPort)
+  // 7 segments display output implementation
+  TDisp17SegBCD = class(TIOPort)
   protected
-    procedure AllRelease(mx: byte);
+    procedure PaintBoxPaint(Sender: TObject);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -27,117 +28,121 @@ type
     procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
   end;
-  const
-    MAXX = 7;                             // Index of the last button in the row
   var
-    CurrentPort: TButton8Port = nil;    
     PanelForm: TForm = nil;
-    SB: array[0..MAXX] of TSpeedButton;
+    Panel : TPanel = nil;
+    PaintBox: TPaintBox = nil;
+    DP: TDisplayTIL302;
 
-// Release all buttons
-procedure TButton8Port.AllRelease(mx: byte);
-var
-  x: byte;
+{$I ../display_til302/bcd7seg_7447.pas}
+
+// PaintBox onPaint event
+procedure TDisp17SegBCD.PaintBoxPaint(Sender: TObject);
 begin
-  for x := 0 to mx do
-    SB[x].Down := false;
+    DP.RenderTo(PaintBox.Canvas, 1, 1);
 end;
-  
+
 // Create TIOPort instance
-constructor TButton8Port.Create;
+constructor TDisp17SegBCD.Create;
 var
   s: string;
 begin
   inherited Create;
-  s := (IntToStr(MAXX + 1)) + '-button input';
+  s := '7 segments display with BCD input';
   FModname := PChar(s);
-  s :=  'This is an ' + (IntToStr(MAXX + 1)) + '-button input, each button controls a specific bit within a byte.';
+  s := 'TIL302 style display; low nibble: BCD input, high nibble: 0,blank,ldp.,rdp.';
   FDescription := PChar(s);
   FHasGUI := true;
-  FPortMode := pmReadOnly;
+  FLatchedOutput := true;
+  FPortMode := pmWriteOnly;
+  DP := TDisplayTIL302.Create;
+  DP.Reset;
 end;
 
 // Destroy TIOPort instance
-destructor TButton8Port.Destroy;
+destructor TDisp17SegBCD.Destroy;
 begin
+  DP.Free;
   inherited Destroy;
 end;
 
 // Read virtual port
-function TButton8Port.ReadPort(Port: byte): byte;
-var
-  x: byte;
-  Value: integer;
+function TDisp17SegBCD.ReadPort(Port: byte): byte;
 begin
-  Value := 0;
-  for x := 0 to MAXX do
-    if SB[x].Down then Value := Value + (1 shl x);
-  if FOutNegation then Value := not Value;
-  Result := Value;
-  AllRelease(MAXX);
+  Result := 0;
 end;
 
 // Write virtual port
-procedure TButton8Port.WritePort(Port: byte; Value: byte);
+procedure TDisp17SegBCD.WritePort(Port: byte; Value: byte);
 begin
+  with DP do
+  begin
+    SetBlank((Value and $40) > 0);
+    SetLeftDot((Value and $20) > 0);
+    SetRightDot((Value and $10) > 0);
+    SetSegments(BCD7seg_7447[Value and $0F]);
+    PaintBox.Invalidate;
+  end;
 end;
 
 // Reset virtual port
-procedure TButton8Port.Reset;
+procedure TDisp17SegBCD.Reset;
 begin
-  AllRelease(MAXX);
+  DP.Reset;
+  PaintBox.Invalidate;
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  result := TButton8Port.Create;
+  Result := TDisp17SegBCD.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
 procedure DestroyPort(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(Port) then Port.Free;
+  if Assigned(Port) then Port.Destroy;
 end;
 
 // Exportable function for create UI panel
 procedure CreatePanel(Port: TIOPort); cdecl; export;
-var
-  x, y: byte;
 begin
   if Assigned(PanelForm) then exit;
 
   PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.Title;
-  PanelForm.Position := poDefaultPosOnly;
-  PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  x := MAXX + 1;
-  y := 1;
-  PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
-  PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
-  
-  for x := 0 to MAXX do
+  with PanelForm do
   begin
-    SB[x] := TSpeedButton.Create(PanelForm);
-    with SB[x] do
-    begin
-      Parent := PanelForm;
-      Caption := IntToStr(x);
-      AllowAllUp := True;
-      GroupIndex := x + 1;
-      Top := 8;
-      if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
-      Height := 34;
-      Width := Height;
-    end;
+    Caption := Port.Title;
+    Position := poDefaultPosOnly;
+    BorderIcons := [biSystemMenu, biMinimize];
   end;
 
-  PanelForm.Constraints.MinWidth := PanelForm.Width;
-  PanelForm.Constraints.MaxWidth := PanelForm.Width;
-  PanelForm.Constraints.MinHeight := PanelForm.Height;
-  PanelForm.Constraints.MaxHeight := PanelForm.Height;
+  Panel := TPanel.Create(PanelForm);
+  with Panel do
+  begin
+    Parent := PanelForm;
+    BevelInner := bvLowered;
+    BevelOuter := bvLowered;
+    ClientWidth := 104 + FrameX;
+    ClientHeight := 94 + FrameY;
+    Left := 8;
+    Top := 8;
+  end;
 
-  CurrentPort := TButton8Port(Port);
+  PaintBox := TPaintBox.Create(PanelForm);
+  PaintBox.Parent := Panel;
+  PaintBox.Align := alClient;
+  PaintBox.OnPaint := @TDisp17SegBCD(Port).PaintBoxPaint;
+  
+  with PanelForm do
+  begin
+    ClientWidth := Panel.Width + 16;
+    ClientHeight := Panel.Height + 16;
+    Constraints.MinWidth := Width;
+    Constraints.MaxWidth := Width;
+    Constraints.MinHeight := Height;
+    Constraints.MaxHeight := Height;
+  end;
 end;
 
 // Exportable function for show UI panel
@@ -154,15 +159,14 @@ end;
 
 // Exportable function for destroy UI panel
 procedure FreePanel; cdecl; export;
-var
-  x: byte;
 begin
 if Assigned(PanelForm) then
   begin
+    DP.Free;
+    DP := nil;
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for x := 0 to MAXX do SB[x] := nil;
   end;
 end;
 

@@ -15,7 +15,7 @@ all:
 	@mkdir -p $(outdir)/
 	@for x in $(project); do \
 	  if [ -f $$x/$$x.pas ]; then \
-	    $(fpc) $(fpcargs) -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
+	    $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
 	  echo ""; \
 	  fi; \
 	done

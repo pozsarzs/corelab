@@ -50,7 +50,7 @@ end;
 // Exportable function for destroy TMemory instance
 procedure DestroyMemory(Memory: TMemory); cdecl; export;
 begin
-  if Assigned(Memory) then Memory.Destroy;
+  if Assigned(Memory) then Memory.Free;
 end;
 
 // Exported functions and procedures

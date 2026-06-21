@@ -88,11 +88,11 @@ end;
 // Exportable function for destroy TIOPort instance
 procedure DestroyPort(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(Port) then Port.Destroy;
+  if Assigned(Port) then Port.Free;
 end;
 
 // Exportable function for create UI panel
-procedure CreatePanel(Port: TIOPort); cdecl;
+procedure CreatePanel(Port: TIOPort); cdecl; export;
 var
   L1, L2: TLabel;
 begin
@@ -140,19 +140,19 @@ begin
 end;
 
 // Exportable function for show UI panel
-procedure ShowPanel; cdecl;
+procedure ShowPanel; cdecl; export;
 begin
   if Assigned(PanelForm) then PanelForm.Show;
 end;
 
 // Exportable function for hide UI panel
-procedure HidePanel; cdecl;
+procedure HidePanel; cdecl; export;
 begin
   if Assigned(PanelForm) then PanelForm.Hide;
 end;
 
 // Exportable function for destroy UI panel
-procedure FreePanel; cdecl;
+procedure FreePanel; cdecl; export;
 begin
 if Assigned(PanelForm) then
   begin
@@ -165,7 +165,7 @@ if Assigned(PanelForm) then
 end;
 
 // Exportable function for move and resize UI panel
-procedure SetSizePosPanel(Left, Top, Width, Height: integer); cdecl;
+procedure SetSizePosPanel(Left, Top, Width, Height: integer); cdecl; export;
 begin
   if Assigned(PanelForm) then
   begin

@@ -76,7 +76,7 @@ end;
 // Exportable procedure for destroy TIOPort instance
 procedure DestroyPort(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(Port) then Port.Destroy;
+  if Assigned(Port) then Port.Free;
 end;
 
 // Exported functions and procedures
