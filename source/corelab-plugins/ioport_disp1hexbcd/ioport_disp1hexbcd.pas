@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_disp17segbcd.pas                                                  | }
-{ | 7 segments display output implementation module                          | }
+{ | ioport_disp1hexbcd.pas                                                   | }
+{ | Hexadecimal display output implementation module                         | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,14 +11,14 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_disp17segbcd;
+library ioport_disp1hexbcd;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils, Buttons,
-  core_ioport, display_til302;
+  core_ioport, display_til311;
 type
-  // 7 segments display output implementation
-  TDisp17SegBCD = class(TIOPort)
+  // Hexadecimal display output implementation
+  TDisp1HexBCD = class(TIOPort)
   protected
     procedure PaintBoxPaint(Sender: TObject);
   public
@@ -32,61 +32,59 @@ type
     PanelForm: TForm = nil;
     Panel : TPanel = nil;
     PaintBox: TPaintBox = nil;
-    DP: TDisplayTIL302;
-
-{$I ../display_til302/bcd7seg_7447.pas}
+    DP: TDisplayTIL311;
 
 // PaintBox onPaint event
-procedure TDisp17SegBCD.PaintBoxPaint(Sender: TObject);
+procedure TDisp1HexBCD.PaintBoxPaint(Sender: TObject);
 begin
     DP.RenderTo(PaintBox.Canvas, 1, 1);
 end;
 
 // Create TIOPort instance
-constructor TDisp17SegBCD.Create;
+constructor TDisp1HexBCD.Create;
 var
   s: string;
 begin
   inherited Create;
-  s := '7 segments display with BCD input';
+  s := 'Hexadecimal display with BCD input';
   FModname := PChar(s);
-  s := 'TIL302 style display; low nibble: BCD input, high nibble: 0-blank-ldp-rdp.';
+  s := 'TIL311 style display; low nibble: BCD input, high nibble: 0-blank-ldp-rdp.';
   FDescription := PChar(s);
   FHasGUI := true;
   FLatchedOutput := true;
   FPortMode := pmWriteOnly;
-  DP := TDisplayTIL302.Create;
+  DP := TDisplayTIL311.Create;
   DP.Reset;
 end;
 
 // Destroy TIOPort instance
-destructor TDisp17SegBCD.Destroy;
+destructor TDisp1HexBCD.Destroy;
 begin
   DP.Free;
   inherited Destroy;
 end;
 
 // Read virtual port
-function TDisp17SegBCD.ReadPort(Port: byte): byte;
+function TDisp1HexBCD.ReadPort(Port: byte): byte;
 begin
   Result := 0;
 end;
 
 // Write virtual port
-procedure TDisp17SegBCD.WritePort(Port: byte; Value: byte);
+procedure TDisp1HexBCD.WritePort(Port: byte; Value: byte);
 begin
   with DP do
   begin
     SetBlank((Value and $40) > 0);
     SetLeftDot((Value and $20) > 0);
     SetRightDot((Value and $10) > 0);
-    SetSegments(BCD7seg_7447[Value and $0F]);
+    SetValue(Value and $0F);
     PaintBox.Invalidate;
   end;
 end;
 
 // Reset virtual port
-procedure TDisp17SegBCD.Reset;
+procedure TDisp1HexBCD.Reset;
 begin
   DP.Reset;
   PaintBox.Invalidate;
@@ -95,7 +93,7 @@ end;
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TDisp17SegBCD.Create;
+  Result := TDisp1HexBCD.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -132,7 +130,7 @@ begin
   PaintBox := TPaintBox.Create(PanelForm);
   PaintBox.Parent := Panel;
   PaintBox.Align := alClient;
-  PaintBox.OnPaint := @TDisp17SegBCD(Port).PaintBoxPaint;
+  PaintBox.OnPaint := @TDisp1HexBCD(Port).PaintBoxPaint;
   
   with PanelForm do
   begin

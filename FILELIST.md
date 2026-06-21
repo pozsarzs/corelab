@@ -16,25 +16,25 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] desktop/corelab.desktop
  - [x] desktop/corelab.xml
  - [x] desktop/Makefile
- - [x] desktop/16x16/apps/clapps.png
  - [x] desktop/16x16/apps/corelab.png
+ - [x] desktop/16x16/mimetypes/application-x-corelab-other.png
  - [x] desktop/16x16/mimetypes/application-x-corelab-script.png
  - [x] desktop/16x16/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/32x32/apps/clapps.png
  - [x] desktop/32x32/apps/corelab.png
+ - [x] desktop/32x32/mimetypes/application-x-corelab-other.png
  - [x] desktop/32x32/mimetypes/application-x-corelab-script.png
  - [x] desktop/32x32/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/48x48/apps/clapps.png
  - [x] desktop/48x48/apps/corelab.png
+ - [x] desktop/48x48/mimetypes/application-x-corelab-other.png
  - [x] desktop/48x48/mimetypes/application-x-corelab-script.png
  - [x] desktop/48x48/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/64x64/apps/clapps.png
  - [x] desktop/64x64/apps/corelab.png
+ - [x] desktop/64x64/mimetypes/application-x-corelab-other.png
  - [x] desktop/64x64/mimetypes/application-x-corelab-script.png
  - [x] desktop/64x64/mimetypes/application-x-corelab-snapshot.png
+ - [x] desktop/svg/application-x-corelab-other.svg
  - [x] desktop/svg/application-x-corelab-script.svg
  - [x] desktop/svg/application-x-corelab-snapshot.svg
- - [x] desktop/svg/clapps.svg
  - [x] desktop/svg/corelab.svg
 
  - [ ] document/code/corelab/frmintstatusviewer.md
@@ -46,11 +46,10 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] document/code/corelab/frmrunlogger.md
  - [x] document/code/corelab-core/core_bus.md
  - [x] document/code/corelab-core/core_cpu.md
- - [ ] document/code/corelab-core/core_display.md
+ - [x] document/code/corelab-core/core_display.md
  - [x] document/code/corelab-core/core_ioport.md
  - [x] document/code/corelab-core/core_memory.md
- - [ ] document/code/corelab-plugins/display_til311.md
- - [ ] document/code/corelab-plugins/memory.md
+ - [x] document/code/corelab-plugins/memory.md
  - [ ] document/code/corelab-plugins/cpu.md
  - [ ] document/code/corelab-plugins/bus.md
  - [x] document/code/corelab-plugins/ioport.md
@@ -191,18 +190,28 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] source/corelab/Makefile.w64
  - [x] source/corelab-plugins/cpu_8080/cpu_8080.pas
  - [x] source/corelab-plugins/cpu_8080/microcode.pas
- - [ ] source/corelab-plugins/display_til311/display_til311.pas
+ - [x] source/corelab-plugins/display_til302/bcd7seg_7447.pas
+ - [x] source/corelab-plugins/display_til302/clock_til302.tar.gz
+ - [x] source/corelab-plugins/display_til302/display_til302.pas
+ - [x] source/corelab-plugins/display_til302/test_til302.tar.gz
+ - [x] source/corelab-plugins/display_til311/clock_til311.tar.gz
+ - [x] source/corelab-plugins/display_til311/display_til311.pas
+ - [x] source/corelab-plugins/display_til311/test_til311.tar.gz
  - [x] source/corelab-plugins/ioport_bell/ioport_bell.pas
  - [x] source/corelab-plugins/ioport_button16hexbcd/ioport_button16hexbcd.pas
  - [x] source/corelab-plugins/ioport_button16mtxbinsel/ioport_button16mtxbinsel.pas
  - [x] source/corelab-plugins/ioport_button16mtx/ioport_button16mtx.pas
  - [x] source/corelab-plugins/ioport_button8/ioport_button8.pas
+ - [x] source/corelab-plugins/ioport_disp17segbcd/ioport_disp17segbcd.pas
+ - [x] source/corelab-plugins/ioport_disp17segbcd/ioport_disp1hexbcd.pas
+ - [x] source/corelab-plugins/ioport_disp17seg/ioport_disp17seg.pas
  - [x] source/corelab-plugins/ioport_null/ioport_null.pas
  - [x] source/corelab-plugins/ioport_standard/ioport_standard.pas
  - [x] source/corelab-plugins/ioport_switch16hexbcd/ioport_switch16hexbcd.pas
  - [x] source/corelab-plugins/ioport_switch16mtxbinsel/ioport_switch16mtxbinsel.pas
  - [x] source/corelab-plugins/ioport_switch16mtx/ioport_switch16mtx.pas
  - [x] source/corelab-plugins/ioport_switch8/ioport_switch8.pas
+ - [x] source/corelab-plugins/memory_standard/memory_standard.pas
  - [x] source/corelab-plugins/Makefile
  - [x] source/corelab-plugins/Makefile.w64
  - [x] source/corelab-plugins/README.md
