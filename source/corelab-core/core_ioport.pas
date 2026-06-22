@@ -27,7 +27,8 @@ type
     FEnabled: boolean;                    // Enable port without detach from bus
     FHasGUI: boolean;                     // Does the implementation have a GUI?
     FLatchedOutput: boolean;                                   // Latched output
-    FOutNegation: boolean;                     // Negation of matrix output bits
+    FOutNegation: boolean;             // Negation of buttons matrix output bits
+    FInNegation: boolean;               // Negation of display matrix input bits
     FPortMode: TPortMode;                                 // Port operation mode
     FReadBackOutput: boolean;           // Output port with read-back capability
     FResponse: TResponse;                    // Response type of the null device
@@ -45,6 +46,7 @@ type
     property Description: PChar read FDescription;
     property Enabled: boolean read FEnabled write FEnabled;
     property HasGUI: boolean read FHasGUI;
+    property InNegation: boolean read FInNegation write FInNegation;
     property LatchedOutput: boolean read FLatchedOutput;
     property ModName: PChar read FModname;
     property OutNegation: boolean read FOutNegation write FOutNegation;
@@ -65,6 +67,7 @@ begin
   FAddressRangeSize := 1;
   FEnabled := false;
   FHasGUI := false;
+  FInNegation := false;
   FLatchedOutput := false;
   FOutNegation := false;
   FPortMode := pmReadWrite;

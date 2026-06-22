@@ -35,10 +35,10 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |ioport_button16hexbcd   | I | + |4x4 button matrix with BCD output                          |
 |ioport_button16mtxbinsel| I | + |4x4 button matrix with binary select                       |
 |ioport_button16mtx      | I | + |4x4 button matrix with bit select                          |
-|ioport_button8          | I | + |8-button input                                             |
-|ioport_button16hexbcd   | I | + |4x4 button matrix with BCD output                          |
-|ioport_button16mtxbinsel| I | + |4x4 button matrix with binary select                       |
-|ioport_button16mtx      | I | + |4x4 button matrix with bit select                          |
+|ioport_switch8          | I | + |8-switch input                                             |
+|ioport_switch16hexbcd   | I | + |4x4 switch matrix with BCD output                          |
+|ioport_switch16mtxbinsel| I | + |4x4 switch matrix with binary select                       |
+|ioport_switch16mtx      | I | + |4x4 switch matrix with bit select                          |
 |ioport_led8             | O | + |8 pcs. LED                                                 |
 |ioport_led16matrix      | O | + |4x4 LED matrix                                             |
 |ioport_led64matrix      | O | + |8x8 LED matrix                                             |

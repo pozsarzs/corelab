@@ -205,6 +205,10 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] source/corelab-plugins/ioport_disp17segbcd/ioport_disp17segbcd.pas
  - [x] source/corelab-plugins/ioport_disp17segbcd/ioport_disp1hexbcd.pas
  - [x] source/corelab-plugins/ioport_disp17seg/ioport_disp17seg.pas
+ - [x] source/corelab-plugins/ioport_disp1hexbcd.pas
+ - [x] source/corelab-plugins/ioport_disp2hexmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp4hexmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp8hexmuxbcd.pas
  - [x] source/corelab-plugins/ioport_null/ioport_null.pas
  - [x] source/corelab-plugins/ioport_standard/ioport_standard.pas
  - [x] source/corelab-plugins/ioport_switch16hexbcd/ioport_switch16hexbcd.pas
