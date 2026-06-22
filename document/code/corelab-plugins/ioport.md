@@ -50,13 +50,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |ioport_disp27segmuxbcd  | O | + |2 pcs. multiplexed 7 segments display with BCD input       |
 |ioport_disp47segmuxbcd  | O | + |4 pcs. multiplexed 7 segments display with BCD input       |
 |ioport_disp87segmuxbcd  | O | + |8 pcs. multiplexed 7 segments display with BCD input       |
-|ioport_disp27segmuxdbcd | O | + |2 pcs. multiplexed 7 segments display with double BCD input|
-|ioport_disp47segmuxdbcd | O | + |4 pcs. multiplexed 7 segments display with double BCD input|
-|ioport_disp87segmuxdbcd | O | + |8 pcs. multiplexed 7 segments display with double BCD input|
 |ioport_disp1hexbcd      | O | + |1 pc. hexa display with BCD input                          |
 |ioport_disp2hexmuxbcd   | O | + |2 pcs. multiplexed hexa display with BCD input             |
 |ioport_disp4hexmuxbcd   | O | + |4 pcs. multiplexed hexa display with BCD input             |
 |ioport_disp8hexmuxbcd   | O | + |8 pcs. multiplexed hexa display with BCD input             |
-|ioport_disp2hexmuxdbcd  | O | + |2 pcs. multiplexed hexa display with double BCD input      |
-|ioport_disp4hexmuxdbcd  | O | + |4 pcs. multiplexed hexa display with double BCD input      |
-|ioport_disp8hexmuxdbcd  | O | + |8 pcs. multiplexed hexa display with double BCD input      |

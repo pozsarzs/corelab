@@ -54,7 +54,7 @@ begin
   inherited Create;
   s := '8 pcs. hexadecimal multiplexed display with BCD input';
   FModname := PChar(s);
-  s := 'TIL311 style display; A0: low nibble: BCD input, high nibble: 0-blank-ldp-rdp., A1: select';
+  s := 'TIL311 style display; A0: low nibble: BCD input, high nibble: 0-blank-ldp-rdp., A1: select.';
   FDescription := PChar(s);
   FAddressRangeSize:= 2;
   FHasGUI := true;

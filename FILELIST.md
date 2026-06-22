@@ -188,6 +188,13 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] source/corelab/frmrunlogger.pas
  - [x] source/corelab/Makefile
  - [x] source/corelab/Makefile.w64
+ - [ ] source/corelab-plugins/ioport_realcom/ioport_realcom.pas
+ - [ ] source/corelab-plugins/ioport_realprn/ioport_realprn.pas
+ - [ ] source/corelab-plugins/ioport_realrawioport_realraw.pas
+ - [ ] source/corelab-plugins/ioport_terminal/ioport_terminal.pas
+ - [ ] source/corelab-plugins/ioport_led8/ioport_led8.pas
+ - [ ] source/corelab-plugins/ioport_led16matrix/ioport_led16matrix.pas
+ - [ ] source/corelab-plugins/ioport_led64matrix/ioport_led64matrix.pas
  - [x] source/corelab-plugins/cpu_8080/cpu_8080.pas
  - [x] source/corelab-plugins/cpu_8080/microcode.pas
  - [x] source/corelab-plugins/display_til302/bcd7seg_7447.pas
@@ -202,12 +209,19 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] source/corelab-plugins/ioport_button16mtxbinsel/ioport_button16mtxbinsel.pas
  - [x] source/corelab-plugins/ioport_button16mtx/ioport_button16mtx.pas
  - [x] source/corelab-plugins/ioport_button8/ioport_button8.pas
+ - [x] source/corelab-plugins/ioport_disp17hexbcd/ioport_disp1hexbcd.pas
  - [x] source/corelab-plugins/ioport_disp17segbcd/ioport_disp17segbcd.pas
- - [x] source/corelab-plugins/ioport_disp17segbcd/ioport_disp1hexbcd.pas
+ - [x] source/corelab-plugins/ioport_disp17segbcd.pas
  - [x] source/corelab-plugins/ioport_disp17seg/ioport_disp17seg.pas
  - [x] source/corelab-plugins/ioport_disp1hexbcd.pas
+ - [x] source/corelab-plugins/ioport_disp27segmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp27segmux.pas
  - [x] source/corelab-plugins/ioport_disp2hexmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp47segmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp47segmux.pas
  - [x] source/corelab-plugins/ioport_disp4hexmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp87segmuxbcd.pas
+ - [x] source/corelab-plugins/ioport_disp87segmux.pas
  - [x] source/corelab-plugins/ioport_disp8hexmuxbcd.pas
  - [x] source/corelab-plugins/ioport_null/ioport_null.pas
  - [x] source/corelab-plugins/ioport_standard/ioport_standard.pas

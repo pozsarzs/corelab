@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_disp4hexmuxbcd.pas                                                   | }
-{ | Hexadecimal display output implementation module                         | }
+{ | ioport_disp47segmux.pas                                                  | }
+{ | 7 segments display output implementation module                          | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,14 +11,14 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_disp4hexmuxbcd;
+library ioport_disp47segMux;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils, Buttons,
-  core_ioport, display_til311;
+  core_ioport, display_til302;
 type
-  // Hexadecimal display output implementation
-  TDisp4HexMuxBCD = class(TIOPort)
+  // 7 segments display output implementation
+  TDisp47segMux = class(TIOPort)
   protected
     procedure PaintBoxPaint(Sender: TObject);
   public
@@ -34,11 +34,11 @@ type
     PanelForm: TForm = nil;
     Panel : TPanel = nil;
     PaintBox: TPaintBox = nil;
-    DP: array[0..MAXX] of TDisplayTIL311;
+    DP: array[0..MAXX] of TDisplayTIL302;
     SelLine: byte;
 
 // PaintBox onPaint event
-procedure TDisp4HexMuxBCD.PaintBoxPaint(Sender: TObject);
+procedure TDisp47segMux.PaintBoxPaint(Sender: TObject);
 var
   b: byte;
 begin
@@ -46,15 +46,15 @@ begin
 end;
 
 // Create TIOPort instance
-constructor TDisp4HexMuxBCD.Create;
+constructor TDisp47segMux.Create;
 var
   b: byte;
   s: string;
 begin
   inherited Create;
-  s := '4 pcs. hexadecimal multiplexed display with BCD input';
+  s := '4 pcs. 7 segments multiplexed display';
   FModname := PChar(s);
-  s := 'TIL311 style display; A0: low nibble: BCD input, high nibble: 0-blank-ldp-rdp., A1: select.';
+  s := 'TIL302 style display; A0: direct inversable input., A1: select.';
   FDescription := PChar(s);
   FAddressRangeSize:= 2;
   FHasGUI := true;
@@ -63,13 +63,13 @@ begin
   SelLine := 0;
   for b := 0 to MAXX do
   begin
-    DP[b] := TDisplayTIL311.Create;
+    DP[b] := TDisplayTIL302.Create;
     DP[b].Reset;
   end;
 end;
 
 // Destroy TIOPort instance
-destructor TDisp4HexMuxBCD.Destroy;
+destructor TDisp47segMux.Destroy;
 var
   b: byte;
 begin
@@ -78,21 +78,20 @@ begin
 end;
 
 // Read virtual port
-function TDisp4HexMuxBCD.ReadPort(Port: byte): byte;
+function TDisp47segMux.ReadPort(Port: byte): byte;
 begin
   Result := 0;
 end;
 
 // Write virtual port
-procedure TDisp4HexMuxBCD.WritePort(Port: byte; Value: byte);
+procedure TDisp47segMux.WritePort(Port: byte; Value: byte);
 begin
   case Port of
     0: with DP[SelLine] do
        begin
-         SetBlank((Value and $40) > 0);
-         SetLeftDot((Value and $20) > 0);
-         SetRightDot((Value and $10) > 0);
-         SetValue(Value and $0F);
+         if FInNegation then Value := not Value;
+         SetRightDot((Value and $80) > 0);
+         SetSegments(Value and $7F);
          PaintBox.Invalidate;
        end;
     1: if Value <= MAXX then SelLine := Value;
@@ -100,7 +99,7 @@ begin
 end;
 
 // Reset virtual port
-procedure TDisp4HexMuxBCD.Reset;
+procedure TDisp47segMux.Reset;
 var
   b: byte;
 begin
@@ -111,7 +110,7 @@ end;
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TDisp4HexMuxBCD.Create;
+  Result := TDisp47segMux.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -148,7 +147,7 @@ begin
   PaintBox := TPaintBox.Create(PanelForm);
   PaintBox.Parent := Panel;
   PaintBox.Align := alClient;
-  PaintBox.OnPaint := @TDisp4HexMuxBCD(Port).PaintBoxPaint;
+  PaintBox.OnPaint := @TDisp47segMux(Port).PaintBoxPaint;
   
   with PanelForm do
   begin
