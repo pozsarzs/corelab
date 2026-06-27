@@ -18,7 +18,7 @@ uses
   Classes;
 type
   // Operation mode
-  TMemoryMode = (pmReadOnly, pmReadWrite);
+  TMemoryMode = (mmReadOnly, mmReadWrite);
   // Abstract base I/O port class
   TMemory = class
   protected
@@ -27,7 +27,7 @@ type
     FAddressRangeSize: dword;                              // Address range size
     FEnabled: boolean;                  // Enable memory without detach from bus
     FMemoryMode: TMemoryMode;                            //Memory operation mode
-    FMemCells: array of byte;                                    // Memory cells
+    MemCells: array of byte;                                     // Memory cells
   public
     // Public methods
     constructor Create; virtual;
@@ -35,8 +35,8 @@ type
     function ReadMemory(Address: dword): byte; virtual;
     procedure WriteMemory(Address: dword; Value: byte); virtual;
     procedure Reset; virtual;
-    procedure LoadFromStream(Stream: TStream; Address, Count: dword);
-    procedure SaveToStream(Stream: TStream; Address, Count: dword);
+    procedure LoadFromStream(Stream: TStream; Address, Count: dword); virtual;
+    procedure SaveToStream(Stream: TStream; Address, Count: dword); virtual;
     // Public properties
     property AddressRangeSize: dword read FAddressRangeSize write FAddressRangeSize;
     property Description: PChar read FDescription write FDescription;
@@ -54,7 +54,7 @@ begin
   // Initial state
   FAddressRangeSize := 1024;
   FEnabled := false;
-  FMemoryMode := pmReadWrite;
+  FMemoryMode := mmReadWrite;
   FModname := 'RAM';
 end;
 

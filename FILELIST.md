@@ -6,36 +6,58 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## File completion status
 
+### `autoconf` directory
+
  - [x] autoconf/config.guess
  - [x] autoconf/config.sub
  - [x] autoconf/install-sh
 
+### `desktop` directory
+
+ - [x] desktop/16x16/apps/corelab-green.png
+ - [x] desktop/16x16/apps/corelab-orange.png
+ - [x] desktop/16x16/apps/corelab-red.png
+ - [x] desktop/16x16/mimetypes/application-x-corelab-green.png
+ - [x] desktop/16x16/mimetypes/application-x-corelab-orange.png
+ - [x] desktop/16x16/mimetypes/application-x-corelab-red.png
+ - [x] desktop/24x24/apps/corelab-green.png
+ - [x] desktop/24x24/apps/corelab-orange.png
+ - [x] desktop/24x24/apps/corelab-red.png
+ - [x] desktop/24x24/mimetypes/application-x-corelab-green.png
+ - [x] desktop/24x24/mimetypes/application-x-corelab-orange.png
+ - [x] desktop/24x24/mimetypes/application-x-corelab-red.png
+ - [x] desktop/32x32/apps/corelab-green.png
+ - [x] desktop/32x32/apps/corelab-orange.png
+ - [x] desktop/32x32/apps/corelab-red.png
+ - [x] desktop/32x32/mimetypes/application-x-corelab-green.png
+ - [x] desktop/32x32/mimetypes/application-x-corelab-orange.png
+ - [x] desktop/32x32/mimetypes/application-x-corelab-red.png
+ - [x] desktop/48x48/apps/corelab-green.png
+ - [x] desktop/48x48/apps/corelab-orange.png
+ - [x] desktop/48x48/apps/corelab-red.png
+ - [x] desktop/48x48/mimetypes/application-x-corelab-green.png
+ - [x] desktop/48x48/mimetypes/application-x-corelab-orange.png
+ - [x] desktop/48x48/mimetypes/application-x-corelab-red.png
+ - [x] desktop/64x64/apps/corelab-green.png
+ - [x] desktop/64x64/apps/corelab-orange.png
+ - [x] desktop/64x64/apps/corelab-red.png
+ - [x] desktop/64x64/mimetypes/application-x-corelab-green.png
+ - [x] desktop/64x64/mimetypes/application-x-corelab-orange.png
+ - [x] desktop/64x64/mimetypes/application-x-corelab-red.png
  - [x] desktop/clcpu.desktop
  - [x] desktop/clioport.desktop
  - [x] desktop/clmemory.desktop
  - [x] desktop/corelab.desktop
  - [x] desktop/corelab.xml
  - [x] desktop/Makefile
- - [x] desktop/16x16/apps/corelab.png
- - [x] desktop/16x16/mimetypes/application-x-corelab-other.png
- - [x] desktop/16x16/mimetypes/application-x-corelab-script.png
- - [x] desktop/16x16/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/32x32/apps/corelab.png
- - [x] desktop/32x32/mimetypes/application-x-corelab-other.png
- - [x] desktop/32x32/mimetypes/application-x-corelab-script.png
- - [x] desktop/32x32/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/48x48/apps/corelab.png
- - [x] desktop/48x48/mimetypes/application-x-corelab-other.png
- - [x] desktop/48x48/mimetypes/application-x-corelab-script.png
- - [x] desktop/48x48/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/64x64/apps/corelab.png
- - [x] desktop/64x64/mimetypes/application-x-corelab-other.png
- - [x] desktop/64x64/mimetypes/application-x-corelab-script.png
- - [x] desktop/64x64/mimetypes/application-x-corelab-snapshot.png
- - [x] desktop/svg/application-x-corelab-other.svg
- - [x] desktop/svg/application-x-corelab-script.svg
- - [x] desktop/svg/application-x-corelab-snapshot.svg
- - [x] desktop/svg/corelab.svg
+ - [x] desktop/scalable/apps/corelab-green.svg
+ - [x] desktop/scalable/apps/corelab-orange.svg
+ - [x] desktop/scalable/apps/corelab-red.svg
+ - [x] desktop/scalable/mimetypes/application-x-corelab-green.svg
+ - [x] desktop/scalable/mimetypes/application-x-corelab-orange.svg
+ - [x] desktop/scalable/mimetypes/application-x-corelab-red.svg
+
+### `document` directory
 
  - [ ] document/code/corelab/frmintstatusviewer.md
  - [ ] document/code/corelab/frmbusmonitor.md
@@ -44,16 +66,19 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] document/code/corelab/frmvirtualsysmonitor.md
  - [ ] document/code/corelab/frmscripteditor.md
  - [ ] document/code/corelab/frmrunlogger.md
- - [x] document/code/corelab-core/core_bus.md
+
+ - [ ] document/code/corelab-core/core_bus.md
  - [x] document/code/corelab-core/core_cpu.md
  - [x] document/code/corelab-core/core_display.md
  - [x] document/code/corelab-core/core_ioport.md
  - [x] document/code/corelab-core/core_memory.md
- - [x] document/code/corelab-plugins/memory.md
+
+ - [ ] document/code/corelab-plugins/memory.md
  - [ ] document/code/corelab-plugins/cpu.md
  - [ ] document/code/corelab-plugins/bus.md
- - [x] document/code/corelab-plugins/ioport.md
+ - [ ] document/code/corelab-plugins/ioport.md
  - [x] document/code/README.md
+
  - [x] document/AUTHORS
  - [ ] document/changelog
  - [x] document/copyright
@@ -62,6 +87,10 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] document/README.md
  - [ ] document/syntax.md
  - [x] document/VERSION
+
+### `help` directory
+
+
 
  - [ ] help/en/corelab.hhc
  - [ ] help/en/corelab.hhk

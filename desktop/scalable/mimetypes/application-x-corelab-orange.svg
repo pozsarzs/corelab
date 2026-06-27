@@ -5,15 +5,20 @@
    height="64"
    version="1.1"
    id="svg424"
-   sodipodi:docname="gemini-svg (2).svg"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   inkscape:export-filename="gemini-svg (2).png"
-   inkscape:export-xdpi="83.781815"
-   inkscape:export-ydpi="83.781815"
+   inkscape:export-filename="application-x-corelab-orange.png"
+   inkscape:export-xdpi="111.70909"
+   inkscape:export-ydpi="111.70909"
+   sodipodi:docname="application-x-corelab-orange.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title1091">CoreLAB file icon - orange version</title>
   <defs
      id="defs428" />
   <sodipodi:namedview
@@ -27,8 +32,8 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="2.6074563"
-     inkscape:cx="24.544995"
-     inkscape:cy="30.489486"
+     inkscape:cx="24.544994"
+     inkscape:cy="30.873001"
      inkscape:window-width="1024"
      inkscape:window-height="718"
      inkscape:window-x="0"
@@ -112,4 +117,18 @@
      style="fill:#ff9800;fill-opacity:1;stroke:#ffffff;stroke-width:0.135593;stroke-linecap:round"
      d="m 45.522387,14.423312 c -0.01797,-0.04684 -0.02464,-1.130068 -0.01482,-2.407173 l 0.01786,-2.3220113 2.406421,2.4071733 2.406422,2.407174 h -2.3916 c -1.856982,0 -2.398906,-0.01904 -2.42428,-0.08516 z"
      id="path2594" />
+  <metadata
+     id="metadata1089">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>CoreLAB file icon - orange version</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Pozsar Zsolt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>

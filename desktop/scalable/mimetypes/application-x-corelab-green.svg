@@ -5,15 +5,20 @@
    height="64"
    version="1.1"
    id="svg350"
-   sodipodi:docname="gemini-svg (1).svg"
-   inkscape:export-filename="gemini-svg (1).png"
-   inkscape:export-xdpi="27.927273"
-   inkscape:export-ydpi="27.927273"
+   inkscape:export-filename="application-x-corelab-green.png"
+   inkscape:export-xdpi="111.70909"
+   inkscape:export-ydpi="111.70909"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="application-x-corelab-green.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title1305">CoreLAB file icon - green version</title>
   <defs
      id="defs354" />
   <sodipodi:namedview
@@ -28,7 +33,7 @@
      showgrid="false"
      inkscape:zoom="3.53125"
      inkscape:cx="34.265487"
-     inkscape:cy="21.380531"
+     inkscape:cy="21.663717"
      inkscape:window-width="1024"
      inkscape:window-height="718"
      inkscape:window-x="0"
@@ -116,4 +121,18 @@
      style="fill:#00b400;fill-opacity:1;stroke:#ffffff;stroke-width:0.0353982;stroke-linecap:round"
      d="m 45.498525,14.501475 c -0.01641,-0.01641 -0.01491,-4.8731564 0.0015,-4.8731564 0.01736,0 4.871657,4.8543484 4.871657,4.8717054 0,0.01638 -4.856781,0.01783 -4.873156,0.0015 z"
      id="path3734" />
+  <metadata
+     id="metadata1303">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>CoreLAB file icon - green version</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Pozsar Zsolt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
 </svg>

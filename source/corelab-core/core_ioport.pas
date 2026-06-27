@@ -15,9 +15,9 @@ unit core_ioport;
 {$mode objfpc}{$H+}
 interface
 type
-  // Operation mode
-  TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
-  TResponse = (rp00, rpFF, rpAd);
+  TLineMode = (lmDirect, lmBCD); // Operation mode
+  TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);  // Operation mode
+  TResponse = (rp00, rpFF, rpAd); // Operation mode
   // Abstract base memory class
   TIOPort = class
   protected

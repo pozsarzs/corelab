@@ -16,7 +16,7 @@ unit frmmain;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
-  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport;
+  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_memory;
 type
   TPluginAttributes = record
     PFilename: string;                                 // Filename of the module
@@ -24,23 +24,11 @@ type
     PDescription: string;                                   // Short description
     PAddressRangeSize: byte;                               // Address range size
     PEnabled: boolean;                    // Enable port without detach from bus
-    PHasGUI: boolean;                     // Does the implementation have a GUI?
-    PLatchedOutput: boolean;                                   // Latched output
-    PInNegation: boolean;                       // Negation of matrix input bits
-    POutNegation: boolean;                     // Negation of matrix output bits
-    PPortMode: TPortMode;                                 // Port operation mode
-    PReadBackOutput: boolean;           // Output port with read-back capability
-    PSelNegation: boolean;                   // Negation of matrix selector bits
+    PMemoryMode: TMemoryMode;                           // Memory operation mode
   end;
   // port
-  TCreatePortFunc = function: TIOPort; cdecl;
-  TDestroyPortProc = procedure(Port: TIOPort); cdecl;
-  // UI
-  TCreatePanelProc = procedure(Port: TIOPort); cdecl;
-  TShowPanelProc = procedure; cdecl;
-  THidePanelProc = procedure; cdecl;
-  TFreePanelProc = procedure; cdecl;
-  TSetSizePosPanelProc = procedure(Left, Top, Width, Height: integer); cdecl;
+  TCreateMemoryFunc = function: TMemory; cdecl;
+  TDestroyMemoryProc = procedure(Memory: TMemory); cdecl;
   { TForm1 }
   TForm1 = class(TForm)
     Bevel1: TBevel;
@@ -64,15 +52,9 @@ type
     procedure FormDestroy(Sender: TObject);
   private
     // port
-    CreatePort: TCreatePortFunc;
-    DestroyPort: TDestroyPortProc;
-    CurrentPort: TIOPort;                     // created object of TIOPort class
-    // UI
-    CreatePanel: TCreatePanelProc;
-    ShowPanel: TShowPanelProc;
-    HidePanel: THidePanelProc;
-    FreePanel: TFreePanelProc;
-    SetSizePosPanel: TSetSizePosPanelProc;
+    CreateMemory: TCreateMemoryFunc;
+    DestroyMemory: TDestroyMemoryProc;
+    CurrentMemory: TMemory;                   // created object of TMemory class
     // module
     LibHandle: TLibHandle;                        // handle of the loaded module
     LoadedPlugin: TPluginAttributes;          // properties of the loaded module
@@ -82,7 +64,7 @@ var
   Form1: TForm1;
 const
   ER = 'ERROR: ';
-  PortModeNames: array[TPortMode] of string = ('Read only', 'Write only', 'Read/write');
+  MemoryModeNames: array[TMemoryMode] of string = ('Read only', 'Read/write');
 
 implementation
 
@@ -117,26 +99,19 @@ begin
   begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
     // remove previous loaded module
-    // UI
-    if Assigned(FreePanel) then FreePanel;
     // port
-    if Assigned(CurrentPort) then
+    if Assigned(CurrentMemory) then
     begin
-      DestroyPort(CurrentPort);
-      CurrentPort := nil;
+      DestroyMemory(CurrentMemory);
+      CurrentMemory := nil;
     end;
     // module
     if LibHandle <> NilHandle then
     begin
       UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
-      CreatePort := nil;
-      DestroyPort := nil;
-      CreatePanel := nil;
-      ShowPanel := nil;
-      HidePanel := nil;
-      FreePanel := nil;
-      SetSizePosPanel := nil;
+      CreateMemory := nil;
+      DestroyMemory := nil;
     end;
     // load module
     LibHandle := LoadLibrary(SelectedFile);
@@ -146,37 +121,24 @@ begin
       exit;
     end;
     // search exported function and instantiation
-    Pointer(CreatePort) := GetProcedureAddress(LibHandle, 'ioport_create');
-    Pointer(DestroyPort) := GetProcedureAddress(LibHandle, 'ioport_destroy');
-    Pointer(CreatePanel) := GetProcedureAddress(LibHandle, 'ioport_createpanel');
-    Pointer(ShowPanel) := GetProcedureAddress(LibHandle, 'ioport_showpanel');
-    Pointer(HidePanel) := GetProcedureAddress(LibHandle, 'ioport_hidepanel');
-    Pointer(FreePanel) := GetProcedureAddress(LibHandle, 'ioport_freepanel');
-    Pointer(SetSizePosPanel) := GetProcedureAddress(LibHandle, 'ioport_setsizepospanel');
-    if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
+    Pointer(CreateMemory) := GetProcedureAddress(LibHandle, 'ioport_create');
+    Pointer(DestroyMemory) := GetProcedureAddress(LibHandle, 'ioport_destroy');
+    if (Assigned(CreateMemory)) and (Assigned(DestroyMemory)) then
     begin
-      CurrentPort := CreatePort();
+      CurrentMemory := CreateMemory();
       with LoadedPlugin do
       begin
         // get properties
         PFilename := SelectedFile;
-        if Assigned(CurrentPort.Modname)
-          then PModname := string(CurrentPort.Modname)
+        if Assigned(CurrentMemory.Modname)
+          then PModname := string(CurrentMemory.Modname)
           else PModname := '';
-        if Assigned(CurrentPort.Description)
-          then PDescription := string(CurrentPort.Description)
+        if Assigned(CurrentMemory.Description)
+          then PDescription := string(CurrentMemory.Description)
           else PDescription := '';
-        PAddressRangeSize := CurrentPort.AddressRangeSize;
-        PEnabled := CurrentPort.Enabled;
-        PHasGUI := CurrentPort.HasGUI;
-        PInNegation := CurrentPort.InNegation;
-        PLatchedOutput := CurrentPort.LatchedOutput;
-        POutNegation := CurrentPort.OutNegation;
-        PPortMode := CurrentPort.PortMode;
-        PReadBackOutput := CurrentPort.ReadBackOutput;
-        PSelNegation := CurrentPort.SelNegation;
-        // set a property
-        CurrentPort.Title := 'MyIO';
+        PAddressRangeSize := CurrentMemory.AddressRangeSize;
+        PEnabled := CurrentMemory.Enabled;
+        PMemoryMode := CurrentMemory.MemoryMode;
       end;
       // show properties
       with ValueListEditor1 do
@@ -187,13 +149,7 @@ begin
         InsertRow('Description', LoadedPlugin.PDescription, true);
         InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
         InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'Yes', 'No'), true);
-        InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI, 'Yes', 'No'), true);
-        InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'Yes', 'No'), true);
-        InsertRow('PortMode', PortModeNames[LoadedPlugin.PPortMode], true);
-        InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'Yes', 'No'), true);
-        InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'Yes', 'No'), true);
-        InsertRow('InNegation', BoolToStr(LoadedPlugin.PInNegation, 'Yes', 'No'), true);
-        InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'Yes', 'No'), true);
+        InsertRow('MemoryMode', MemoryModeNames[LoadedPlugin.PMemoryMode], true);
         AutoSizeColumn(0);
       end;
       // preset address/data table
@@ -203,29 +159,14 @@ begin
         ValueListEditor2.InsertRow('BA+' + b.ToString, '', true);
         ValueListEditor2.Cells[1,b + 1] := '0';
       end;
-      if LoadedPlugin.PPortMode = pmWriteOnly
-        then Button1.Enabled := false
-        else Button1.Enabled := true;
-      if LoadedPlugin.PReadBackOutput
-        then Button1.Enabled := true
-        else Button1.Enabled := true;
-      if LoadedPlugin.PPortMode = pmReadOnly
+      if LoadedPlugin.PMemoryMode = pmReadOnly
         then Button2.Enabled := false
         else Button2.Enabled := true;
       ValueListEditor2.Enabled := true;
-      // show UI
-      if LoadedPlugin.PHasGUI and
-        Assigned(CreatePanel) and Assigned(ShowPanel) and
-        Assigned(HidePanel) and Assigned(FreePanel) and
-        Assigned(SetSizePosPanel) then
-      begin
-        CreatePanel(CurrentPort);
-        ShowPanel;
-      end;
       Form1.Caption := Application.Title + ' - ' + ShellListView1.Selected.Caption;
     end else
     begin
-      ShowMessage(ER + 'It is not a CoreLAB IOPort module!');
+      ShowMessage(ER + 'It is not a CoreLAB Memory module!');
       ValueListEditor1.Clear;
       ValueListEditor2.Clear;
       UnloadLibrary(LibHandle);
@@ -243,10 +184,10 @@ var
   InAddr, InData: byte;
 begin
   InAddr := ValueListEditor2.Row - 1;
-  if Assigned(CurrentPort) then
+  if Assigned(CurrentMemory) then
   begin
-    CurrentPort.Enabled := True;
-    InData := CurrentPort.ReadPort(InAddr);
+    CurrentMemory.Enabled := True;
+    InData := CurrentMemory.ReadMemory(InAddr);
     ShowMessage(IntToHex(InData, 2) + 'H read from port ' + IntToHex(InAddr, 2) + 'H.');
   end;
   ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToHex(InData, 2);
@@ -261,10 +202,10 @@ begin
   OutData := 0;
   if TryStrToInt('$' + ValueListEditor2.Cells[1, ValueListEditor2.Row], OutData) then
   begin
-    if Assigned(CurrentPort) then
+    if Assigned(CurrentMemory) then
     begin
-      CurrentPort.Enabled := True;
-      CurrentPort.WritePort(OutAddr, OutData);
+      CurrentMemory.Enabled := True;
+      CurrentMemory.WriteMemory(OutAddr, OutData);
       ShowMessage('The ' + IntToHex(OutData, 2) + 'H is written to port ' + IntToHex(OutAddr, 2) + 'H.');
     end;
   end;
@@ -279,15 +220,10 @@ end;
 // OnCreate event
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  CreatePort := nil;
-  CurrentPort := nil;
-  CreatePort := nil;
-  DestroyPort := nil;
-  CreatePanel := nil;
-  ShowPanel := nil;
-  HidePanel := nil;
-  FreePanel := nil;
-  SetSizePosPanel := nil;
+  CreateMemory := nil;
+  CurrentMemory := nil;
+  CreateMemory := nil;
+  DestroyMemory := nil;
   LibHandle := NilHandle;
   Form1.Caption := Application.Title;
   ValueListEditor2.Cells[0,1] := 'BA+0';
@@ -302,27 +238,18 @@ end;
 // OnDestroy event
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  // UI
-  if LoadedPlugin.PHasGUI and
-    Assigned(CreatePanel) and Assigned(ShowPanel) and
-    Assigned(HidePanel) and Assigned(FreePanel) then FreePanel;
-  // port
-  if Assigned(CurrentPort) then
+  // memory
+  if Assigned(CurrentMemory) then
   begin
-    DestroyPort(CurrentPort);
-    CurrentPort := nil;
+    DestroyMemory(CurrentMemory);
+    CurrentMemory := nil;
   end;
   // module
   if LibHandle <> NilHandle then
   begin
     LibHandle := NilHandle;
-    CreatePort := nil;
-    DestroyPort := nil;
-    CreatePanel := nil;
-    ShowPanel := nil;
-    HidePanel := nil;
-    FreePanel := nil;
-    SetSizePosPanel := nil;
+    CreateMemory := nil;
+    DestroyMemory := nil;
   end;
 end;
 

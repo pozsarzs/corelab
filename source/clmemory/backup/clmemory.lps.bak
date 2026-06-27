@@ -5,7 +5,7 @@
     <BuildModes Active="Default"/>
     <Units>
       <Unit>
-        <Filename Value="clioport.lpr"/>
+        <Filename Value="clmemory.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <CursorPos X="3"/>
@@ -81,7 +81,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="189" TopLine="169"/>
@@ -153,10 +153,6 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="223" TopLine="211"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="2" Column="3" TopLine="4"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>

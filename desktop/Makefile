@@ -16,7 +16,7 @@ files1=`ls $(sourcedir)/*.desktop`
 targetdir2=$(datarootdir)/mime/packages
 files2=`ls $(sourcedir)/*.xml`
 targetdir3=$(datarootdir)/icons/hicolor
-size3=16x16 32x32 48x48 64x64
+size3=16x16 24x24 32x32 48x48 64x64 scalable
 category3=apps mimetypes
 
 all:
@@ -91,7 +91,5 @@ uninstall:
 	  done; \
 	fi;
 	@echo "]"
-
-convert:
 
 createhelp:

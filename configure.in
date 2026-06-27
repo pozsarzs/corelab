@@ -116,12 +116,12 @@ AC_OUTPUT
 echo "
 Summary:
   application version       v$version
-  library vwersion          v$libversion
+  library version           v$libversion
   target op. system         $os
   target processor          $architecture
   target directory          $prefix
-  Application compilation   $app
-  Plugins compilation       $lib
+  application compilation   $app
+  plugins compilation       $lib
   LHelp compilation         $lhelp
 
 Notes:
@@ -133,6 +133,5 @@ Notes:
   compile program                       make
   install program                       make install
   remove program                        make uninstall
-  convert files for DOS                 make convert
   create CHM help file                  make createhelp
 "

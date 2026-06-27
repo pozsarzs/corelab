@@ -6,29 +6,78 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TIOPort base class
 
+TIOPort is the base class for input and output (I/O) ports. It provides a generic
+interface for data communication between the simulated processor and peripherals.
+It manages the direction of data flow, logical states, and provides an abstract
+basis for implementing hardware-specific ports.
+
+### Own data types
+
+|name     |type                                  |description              |
+|---------|--------------------------------------|-------------------------|
+|TLineMode|(lmDirect, lmBCD)                     |Data line decoding mode  |
+|TPortMode|(pmReadOnly, pmWriteOnly, pmReadWrite)|Port operation mode      |
+|TResponse|(rp00, rpFF)                          |Response of the null port|
+
+### Protected fields
+
+|name             |type     |C|description                          |default    |
+|-----------------|:-------:|-|-------------------------------------|:---------:|
+|FAddressRangeSize|Byte     | |Address range size                   |1          |
+|FDataInMode      |TLineMode| |Decoding input data lines            |lmBCD      |
+|FDataInNegation  |Boolean  | |Negation of databit (port -> CPU)    |false      |
+|FDataOutMode     |TLineMode| |Decoding output data lines           |lmBCD      |
+|FDataOutNegation |Boolean  | |Negation of databit (CPU -> port)    |false      |
+|FDescription     |PChar    | |Short description                    |           |
+|FEnabled         |Boolean  | |Disable port without detach from bus |false      |
+|FHasGUI          |Boolean  | |Does the implementation have a GUI?  |false      |
+|FLatchedOutput   |Boolean  | |Latched output                       |false      |
+|FModName         |PChar    | |Module name                          |           |
+|FPortMode        |TPortMode| |Port operation mode                  |pmReadWrite|
+|FReadBackOutput  |Boolean  | |Output port with read-back capability|false      |
+|FResponse        |TResponse| |Null device response mode            |rp00       |
+|FSelMode         |TLineMode| |Decoding matrix selector lines       |lmBCD      |
+|FSelNegation     |Boolean  | |Negation matrix selector bits        |false      |
+|FTitle           |PChar    | |Form title                           |= FModName |
+
+**Note**:  
+- _C_: means 'constant'.
+
 ### Public properties
 
-|name            |type     |description                            |
-|----------------|---------|---------------------------------------|
-|AddressRangeSize|byte     |Address range size                     |
-|Description     |PChar    |Short description                      |
-|Enabled         |boolean  |Enable port without detach from bus    |
-|HasGUI          |boolean  |Does the implementation have a GUI?    |
-|LatchedOutput   |boolean  |Latched output                         |
-|Modname         |PChar    |Module name                            |
-|OutNegation     |boolean  |Negation of matrix output bits         |
-|PortMode        |TPortMode|Port operation mode                    |
-|ReadBackOutput  |boolean  |Output port with read-back capability  |
-|Response        |TResponse|Response type of the null device       |
-|SelNegation     |boolean  |Negation of matrix selector bits       |
-|Title           |PChar    |Form title                             |
+|name            |type     |R|W|description        |default|
+|----------------|:-------:|-|-|-------------------|:-----:|
+|AddressRangeSize|Byte     |x| |= FAddressRangeSize|       |
+|DataInMode	 |TLineMode|x| |= FDataInMode      |       |
+|DataInNegation  |Boolean  |x|x|= FDataInNegation  |       |
+|DataOutMode	 |TLineMode|x| |= FDataOutMode     |       |
+|DataOutNegation |Boolean  |x|x|= FDataOutNegation |       |
+|Description     |PChar    |x| |= FDescription     |       |
+|Enabled         |Boolean  |x|x|= FEnabled         |       |
+|HasGUI          |Boolean  |x| |= FHasGUI          |       |
+|LatchedOutput   |Boolean  |x| |= FLatchedOutput   |       |
+|ModName         |PChar    |x| |= FModName         |       |
+|PortMode        |TPortMode|x| |= FPortMode        |       |
+|ReadBackOutput  |Boolean  |x| |= FReadBackOutput  |       |
+|Response        |TResponse|x|x|= FResponse        |       |
+|SelMode	 |TLineMode|x| |= FSelMode         |       |
+|SelNegation     |Boolean  |x|x|= FSelNegation     |       |
+|Title           |PChar    |x|x|= FTitle           |       |
+
+**Note**:  
+- _R_: means 'read',
+- _W_: means 'write'.
 
 ### Public methods
 
-|name                                           |description                                |
-|-----------------------------------------------|-------------------------------------------|
-|`constructor Create;`                          |Sets the initial values for the new object.|
-|`destructor Destroy;`                          |Frees the object's resources.              |
-|`function ReadPort(Port: byte): byte;`         |Read virtual port.                         |
-|`procedure Reset;`                             |Reset virtual port.                        |
-|`procedure WritePort(Port: byte; Value: byte);`|Write virtual port.                        |
+|name                                           |V|A|description                               |
+|-----------------------------------------------|-|-|------------------------------------------|
+|`constructor Create;`                          |x| |Sets the initial values for the new object|
+|`destructor Destroy;`                          |x| |Frees the object's resources              |
+|`function ReadPort(Port: Byte): Byte;`         |x|x|Read virtual port                         |
+|`procedure Reset;`                             |x|x|Reset virtual port                        |
+|`procedure WritePort(Port: Byte; Value: Byte);`|x|x|Write virtual port                        |
+
+**Note**:  
+- _V_: means 'virtual' method,
+- _A_: means 'abstract' method.
