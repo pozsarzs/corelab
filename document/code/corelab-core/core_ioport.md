@@ -48,9 +48,9 @@ basis for implementing hardware-specific ports.
 |name            |type     |R|W|description        |default|
 |----------------|:-------:|-|-|-------------------|:-----:|
 |AddressRangeSize|Byte     |x| |= FAddressRangeSize|       |
-|DataInMode	 |TLineMode|x| |= FDataInMode      |       |
+|DataInMode	 |TLineMode|x|x|= FDataInMode      |       |
 |DataInNegation  |Boolean  |x|x|= FDataInNegation  |       |
-|DataOutMode	 |TLineMode|x| |= FDataOutMode     |       |
+|DataOutMode	 |TLineMode|x|x|= FDataOutMode     |       |
 |DataOutNegation |Boolean  |x|x|= FDataOutNegation |       |
 |Description     |PChar    |x| |= FDescription     |       |
 |Enabled         |Boolean  |x|x|= FEnabled         |       |
@@ -60,7 +60,7 @@ basis for implementing hardware-specific ports.
 |PortMode        |TPortMode|x| |= FPortMode        |       |
 |ReadBackOutput  |Boolean  |x| |= FReadBackOutput  |       |
 |Response        |TResponse|x|x|= FResponse        |       |
-|SelMode	 |TLineMode|x| |= FSelMode         |       |
+|SelMode	 |TLineMode|x|x|= FSelMode         |       |
 |SelNegation     |Boolean  |x|x|= FSelNegation     |       |
 |Title           |PChar    |x|x|= FTitle           |       |
 

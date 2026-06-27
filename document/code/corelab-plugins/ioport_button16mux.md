@@ -4,13 +4,14 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TButton8 class
+## TButton16Mux class
 
-TButton8 is a module that simulates a read-only input peripheral derived from
-the TIOPort abstract base class. It has its own graphical user interface that
-displays a row of 8 push-buttons. The buttons represent individual bits of a
-byte: the framework queries the state of the buttons during the read operation
-and then releases them immediately.
+TButton16Mux is a module that simulates a read-only input peripheral derived
+from the abstract base class TIOPort. It has its own graphical user interface,
+which displays a matrix of 16 push buttons. The column to be read can be selected
+directly by an active bit (up to 8 lines) or by specifying the line BCD (up to
+16 lines). The active bit can be high or low). The output returns the button
+status and then releases them immediately.
 
 ### New default value of the protected fields
 
@@ -19,7 +20,7 @@ and then releases them immediately.
 |FDescription|PChar    | |Short description  |short text      |
 |FHasGUI     |Boolean  | |Has UI             |true            |
 |FPortMode   |TPortMode| |Port operation mode|pmReadOnly      |
-|FModName    |PChar    | |Module name        |'8-button input'|
+|FModName    |PChar    | |Module name        |short text      |
 
 **Note**:  
 - _C_: means 'constant'.

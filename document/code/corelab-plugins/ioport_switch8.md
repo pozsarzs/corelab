@@ -4,9 +4,9 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TSwitch8Port class
+## TSwitch8 class
 
-TSwitch8Port is a module that simulates a read-only input peripheral derived
+TSwitch8 is a module that simulates a read-only input peripheral derived
 from the TIOPort abstract base class. It has its own graphical user interface
 that displays a row of 8 push-switches. The switches represent individual bits
 of a byte: the framework queries the state of the buttons during the read
@@ -19,7 +19,7 @@ operation and then does not release them.
 |FDescription|PChar    | |Short description  |short text      |
 |FHasGUI     |Boolean  | |Has UI             |true            |
 |FPortMode   |TPortMode| |Port operation mode|pmReadOnly      |
-|FModName    |PChar    | |Module name        |'8-switch input'|
+|FModName    |PChar    | |Module name        |'8-button input'|
 
 **Note**:  
 - _C_: means 'constant'.

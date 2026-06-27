@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_switch8.pas                                                       | }
-{ | 8-switch input implementation module                                     | }
+{ | ioport_button16bcd.pas                                                   | }
+{ | 4x4 button input implementation module                                   | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,15 +11,15 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_switch8;
+library ioport_button16bcd;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
-  // 8-switch input implementation
-  TSwitch8Port = class(TIOPort)
+  // 4x4 button input implementation
+  TButton16BCD = class(TIOPort)
   protected
-    procedure AllRelease(mx: byte);
+    procedure AllRelease(mx, my: byte);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -28,68 +28,67 @@ type
     procedure Reset;  override;
   end;
   const
-    MAXX = 7;                             // Index of the last button in the row
+    MAXX = 3;                             // Index of the last button in the row
+    MAXY = 3;                          // Index of the last button in the column
   var
     PanelForm: TForm = nil;
-    SB: array[0..MAXX] of TSpeedButton;
+    SB: array[0..MAXX, 0..MAXY] of TSpeedButton;
 
 // Release all buttons
-procedure TSwitch8Port.AllRelease(mx: byte);
+procedure TButton16BCD.AllRelease(mx, my: byte);
 var
-  x: byte;
+  x, y: byte;
 begin
   for x := 0 to mx do
-    SB[x].Down := false;
+    for y := 0 to my do
+      SB[x, y].Down := false;
 end;
   
 // Create TIOPort instance
-constructor TSwitch8Port.Create;
+constructor TButton16BCD.Create;
 var
   s: string;
 begin
   inherited Create;
-  s := (IntToStr(MAXX + 1)) + '-switch input';
+  s := (IntToStr(MAXX + 1)) + 'x' + PChar(IntToStr(MAXY + 1)) + '-button with BCD output';
   FModname := PChar(s);
-  s :=  'This is an ' + (IntToStr(MAXX + 1)) + '-switch input, each switch controls a specific bit within a byte.';
-  FDescription := PChar(s);
+  FDescription := 'One button can be pressed at a time, the value of which can be read in BCD format.';
   FHasGUI := true;
   FPortMode := pmReadOnly;
 end;
 
 // Destroy TIOPort instance
-destructor TSwitch8Port.Destroy;
+destructor TButton16BCD.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TSwitch8Port.ReadPort(Port: byte): byte;
+function TButton16BCD.ReadPort(Port: byte): byte;
 var
-  x: byte;
-  Value: integer;
+  x, y: byte;
 begin
-  Value := 0;
   for x := 0 to MAXX do
-    if SB[x].Down then Value := Value + (1 shl x);
-  if FOutNegation then Value := not Value;
-  Result := Value;
+    for y := 0 to MAXY do
+      if SB[x, y].Down then Result := y * 4 + x;
+  AllRelease(MAXX, MAXY);
 end;
 
 // Write virtual port
-procedure TSwitch8Port.WritePort(Port: byte; Value: byte);
+procedure TButton16BCD.WritePort(Port: byte; Value: byte);
 begin
 end;
 
 // Reset virtual port
-procedure TSwitch8Port.Reset;
+procedure TButton16BCD.Reset;
 begin
-  AllRelease(MAXX)
+  AllRelease(MAXX, MAXY);
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TSwitch8Port.Create;
+  Result := TButton16BCD.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -110,25 +109,26 @@ begin
   PanelForm.Position := poDefaultPosOnly;
   PanelForm.BorderIcons := [biSystemMenu, biMinimize];
   x := MAXX + 1;
-  y := 1;
+  y := MAXY + 1;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
   PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
-
+  
   for x := 0 to MAXX do
-  begin
-    SB[x] := TSpeedButton.Create(PanelForm);
-    with SB[x] do
+    for y := 0 to MAXY do
     begin
-      Parent := PanelForm;
-      Caption := IntToStr(x);
-      AllowAllUp := True;
-      GroupIndex := x + 1;
-      Top := 8;
-      if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
-      Height := 34;
-      Width := Height;
+      SB[x, y] := TSpeedButton.Create(PanelForm);
+      with SB[x, y] do
+      begin
+        Parent := PanelForm;
+        Caption := IntToHex(y * 4 + x, 1);
+        AllowAllUp := True;
+        GroupIndex := 1;
+        if y = 0 then Top := 8 else Top := (4 * (y + 1) + y * 34) + 4;
+        if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
+        Height := 34;
+        Width := Height;
+      end;
     end;
-  end;
 
   PanelForm.Constraints.MinWidth := PanelForm.Width;
   PanelForm.Constraints.MaxWidth := PanelForm.Width;
@@ -151,14 +151,16 @@ end;
 // Exportable function for destroy UI panel
 procedure FreePanel; cdecl; export;
 var
-  x: byte;
+  x, y: byte;
 begin
 if Assigned(PanelForm) then
   begin
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for x := 0 to 7 do SB[x] := nil;
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
+        SB[x, y] := nil;
   end;
 end;
 

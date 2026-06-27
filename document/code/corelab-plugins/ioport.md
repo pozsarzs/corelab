@@ -35,8 +35,10 @@ libraries (DLL/SO).
 |ioport_realraw     |TRealRaw     |I/O| - | +++++| +++| ++-----|redirect to real I/O port                                      |
 |ioport_terminal    |TMiniTerminal|I/O| + | +++++| +++| +++++++|minimal text terminal                                          |
 |ioport_button8     |TButton8     | I | + | +++++| +++| +++++++|8-button input                                                 |
-|ioport_button16mux |TButton16Mux | I | + | +++++| +++| +++++++|4x4 button matrix with BCD output                              |
+|ioport_button16bcd |TButton16BCD | I | + | +++++| +++| +++++++|4x4 button matrix with BCD output                              |
+|ioport_button16mux |TButton16Mux | I | + | +++++| +++| +++++++|4x4 button matrix                                              |
 |ioport_switch8     |TSwitch8     | I | + | +++++| +++| +++++++|8-switch input                                                 |
+|ioport_switch16bcd |TSwitch16BCD | I | + | +++++| +++| +++++++|4x4 switch matrix                                              |
 |ioport_switch16mux |TSwitch16Mux | I | + | +++++| +++| +++++++|4x4 switch matrix with BCD output                              |
 |ioport_led8        |TLED8        | O | + | +++++| +++| +++++++|8 LED with direct and BCD input                                |
 |ioport_led16matrix |TLED16Matrix | O | + | +++++| +++| +++++++|4x4 LED matrix with direct and BCD input                       |

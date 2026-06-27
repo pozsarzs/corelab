@@ -4,13 +4,12 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TButton8 class
+## TSwitch16BCD class
 
-TButton8 is a module that simulates a read-only input peripheral derived from
-the TIOPort abstract base class. It has its own graphical user interface that
-displays a row of 8 push-buttons. The buttons represent individual bits of a
-byte: the framework queries the state of the buttons during the read operation
-and then releases them immediately.
+TSwitch16BCD is a module that simulates a read-only input peripheral derived
+from the abstract base class TIOPort. It has its own graphical user interface,
+which displays a matrix of 16 push buttons. Only one button can be pressed at a
+time. The output returns the number of the pressed button.
 
 ### New default value of the protected fields
 
@@ -19,7 +18,7 @@ and then releases them immediately.
 |FDescription|PChar    | |Short description  |short text      |
 |FHasGUI     |Boolean  | |Has UI             |true            |
 |FPortMode   |TPortMode| |Port operation mode|pmReadOnly      |
-|FModName    |PChar    | |Module name        |'8-button input'|
+|FModName    |PChar    | |Module name        |short text      |
 
 **Note**:  
 - _C_: means 'constant'.

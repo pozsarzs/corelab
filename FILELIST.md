@@ -66,19 +66,28 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [ ] document/code/corelab/frmvirtualsysmonitor.md
  - [ ] document/code/corelab/frmscripteditor.md
  - [ ] document/code/corelab/frmrunlogger.md
-
  - [x] document/code/corelab-core/core_bus.md
  - [x] document/code/corelab-core/core_cpu.md
  - [x] document/code/corelab-core/core_display.md
  - [x] document/code/corelab-core/core_ioport.md
  - [x] document/code/corelab-core/core_memory.md
+ - [x] document/code/corelab-parts/display_til302.md
+ - [x] document/code/corelab-parts/display_til311.md
+ - [x] document/code/corelab-plugins/bus.md
+ - [x] document/code/corelab-plugins/cpu.md
+ - [x] document/code/corelab-plugins/ioport_bell.md
+ - [x] document/code/corelab-plugins/ioport_button16bcd.md
+ - [x] document/code/corelab-plugins/ioport_button16mux.md
+ - [x] document/code/corelab-plugins/ioport_button8.md
+ - [x] document/code/corelab-plugins/ioport.md
+ - [x] document/code/corelab-plugins/ioport_null.md
+ - [x] document/code/corelab-plugins/ioport_standard.md
+ - [x] document/code/corelab-plugins/ioport_switch16bcd.md
+ - [x] document/code/corelab-plugins/ioport_switch16mux.md
+ - [x] document/code/corelab-plugins/ioport_switch8.md
  - [x] document/code/corelab-plugins/memory.md
-
- - [ ] document/code/corelab-plugins/cpu.md
- - [ ] document/code/corelab-plugins/bus.md
- - [ ] document/code/corelab-plugins/ioport.md
+ - [x] document/code/corelab-plugins/memory_standard.md
  - [x] document/code/README.md
-
  - [x] document/AUTHORS
  - [ ] document/changelog
  - [x] document/copyright
@@ -90,8 +99,6 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ### `help` directory
 
-
-
  - [ ] help/en/corelab.hhc
  - [ ] help/en/corelab.hhk
  - [ ] help/en/corelab.hhp
@@ -102,21 +109,20 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
  - [x] help/createhhk
  - [x] help/Makefile
 
- - [x] library/inpout32/inpout32.dll
- - [x] library/inpout32/inpout32.h
- - [x] library/inpout32/inpout32.lib
- - [x] library/inpout32/inpoutx64.dll
- - [x] library/inpout32/inpoutx64.lib
- - [x] library/inpout32/InstallDriver.exe
- - [x] library/inpout32/license.txt
- - [x] library/inpout32/ReadMe.txt
+### `library` directory
+
+ - [x] library/inpout32/*
  - [x] library/README.md
+
+### `manual` directory
 
  - [ ] manual/clcpu.1
  - [ ] manual/clioport.1
  - [ ] manual/clmemory.1
  - [ ] manual/corelab.1
  - [x] manual/Makefile
+
+### `message` directory
 
  - [ ] message/corelab.pot
  - [x] message/lhelp.pot

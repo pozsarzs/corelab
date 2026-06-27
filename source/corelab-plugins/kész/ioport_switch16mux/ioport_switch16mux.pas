@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_switch16mtx.pas                                                   | }
+{ | ioport_switch16mux.pas                                                   | }
 { | 4x4 switch matrix input implementation module                            | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
@@ -11,13 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_switch16mtx;
+library ioport_switch16mux;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
   // 4x4 switch matrix input implementation
-  TSwitch16Mtx = class(TIOPort)
+  TSwitch16Mux = class(TIOPort)
   protected
     procedure AllRelease(mx, my: byte);
   public
@@ -31,13 +31,12 @@ type
     MAXX = 3;
     MAXY = 3;
   var
-    CurrentPort: TSwitch16Mtx = nil;    
     PanelForm: TForm = nil;
     SB: array[0..MAXX, 0..MAXY] of TSpeedButton;
     SelLine: integer;
 
 // Release all buttons
-procedure TSwitch16Mtx.AllRelease(mx, my: byte);
+procedure TSwitch16Mux.AllRelease(mx, my: byte);
 var
   x, y: byte;
 begin
@@ -47,7 +46,7 @@ begin
 end;
   
 // Create TIOPort instance
-constructor TSwitch16Mtx.Create;
+constructor TSwitch16Mux.Create;
 var
   s: string;
 begin
@@ -61,13 +60,13 @@ begin
 end;
 
 // Destroy TIOPort instance
-destructor TSwitch16Mtx.Destroy;
+destructor TSwitch16Mux.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TSwitch16Mtx.ReadPort(Port: byte): byte;
+function TSwitch16Mux.ReadPort(Port: byte): byte;
 var
   Value: byte;
   x, y: byte;
@@ -78,33 +77,39 @@ begin
   x := SelLine;
   for y := 0 to MAXY do
     if SB[x, y].Down then Value := Value + (1 shl y);
-
-  if FOutNegation then Value := not Value;
+  if FDataOutNegation then Value := not Value;
   Result := Value;
 end;
 
 // Write virtual port
-procedure TSwitch16Mtx.WritePort(Port: byte; Value: byte);
+procedure TSwitch16Mux.WritePort(Port: byte; Value: byte);
 var
   i: integer;
 begin
-  if FSelNegation then Value := not Value;
-  if Value = 0 then
-  begin
-    SelLine := -1;
-    exit;
-  end;
-  i := 0;
-  while Value > 1 do
-  begin
-    Value := Value shr 1;
-    Inc(i);
+  i := -1;
+  case FSelMode of
+    lmDirect: begin
+                if FSelNegation then Value := not Value;
+                if Value = 0 then
+                begin
+                  i := -1;
+                end else
+                begin
+                  i := 0;
+                  while Value > 1 do
+                  begin
+                    Value := Value shr 1;
+                    Inc(i);
+                  end;
+                end;
+              end;
+    lmBCD:    if Value <= MAXY then i := Value;
   end;
   SelLine := i;
 end;
 
 // Reset virtual port
-procedure TSwitch16Mtx.Reset;
+procedure TSwitch16Mux.Reset;
 begin
   SelLine := 0;
   AllRelease(MAXX, MAXY);
@@ -113,7 +118,7 @@ end;
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TSwitch16Mtx.Create;
+  Result := TSwitch16Mux.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -159,8 +164,6 @@ begin
   PanelForm.Constraints.MaxWidth := PanelForm.Width;
   PanelForm.Constraints.MinHeight := PanelForm.Height;
   PanelForm.Constraints.MaxHeight := PanelForm.Height;
-
-  CurrentPort := TSwitch16Mtx(Port);
 end;
 
 // Exportable function for show UI panel
