@@ -70,14 +70,15 @@ basis for implementing hardware-specific ports.
 
 ### Public methods
 
-|name                                           |V|A|description                               |
-|-----------------------------------------------|-|-|------------------------------------------|
-|`constructor Create;`                          |x| |Sets the initial values for the new object|
-|`destructor Destroy;`                          |x| |Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         |x|x|Read virtual port                         |
-|`procedure Reset;`                             |x|x|Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`|x|x|Write virtual port                        |
+|name                                           |V|A|O|description                               |
+|-----------------------------------------------|-|-|-|------------------------------------------|
+|`constructor Create;`                          |x| | |Sets the initial values for the new object|
+|`destructor Destroy;`                          | | |x|Frees the object's resources              |
+|`function ReadPort(Port: Byte): Byte;`         |x|x| |Read virtual port                         |
+|`procedure Reset;`                             |x|x| |Reset virtual port                        |
+|`procedure WritePort(Port: Byte; Value: Byte);`|x|x| |Write virtual port                        |
 
 **Note**:  
 - _V_: means 'virtual' method,
-- _A_: means 'abstract' method.
+- _A_: means 'abstract' method,
+- _O_: means 'override' method.

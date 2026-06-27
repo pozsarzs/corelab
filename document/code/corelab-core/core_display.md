@@ -43,9 +43,9 @@ the color settings responsible for the retro-style display.
 
 |name       |type   |R|W|description   |default|
 |-----------|:-----:|-|-|--------------|:-----:|
-|ModName    |PChar  |x| |= FModName    |       |
 |Description|PChar  |x| |= FDescription|       |
 |Enabled    |Boolean|x|x|= FEnabled    |       |
+|ModName    |PChar  |x| |= FModName    |       |
 
 **Note**:  
 - _R_: means 'read',
@@ -53,19 +53,20 @@ the color settings responsible for the retro-style display.
 
 ### Public methods
 
-|name                                                       |V|A|description                               |
-|-----------------------------------------------------------|-|-|------------------------------------------|
-|`constructor Create;`                                      |x| |Sets the initial values for the new object|
-|`destructor Destroy;`                                      |x| |Frees the object's resources              |
-|`procedure Reset;`                                         |x| |Reset display                             |
-|`procedure SetBlank(Status: Boolean);`                     |x| |Blank display                             |
-|`procedure SetLeftDot(Status: Boolean);`                   |x| |Set left decimal point status             |
-|`procedure SetRightDot(Status: Boolean);`                  |x| |Set right decimal point status            |
-|`procedure SetValue(Value: Byte);`                         |x| |Set input BCD value                       |
-|`procedure SetSegments(Value: Byte);`                      |x| |Set input segment data                    |
-|`procedure DrawToBuffer(InputData: TDisplayedData);`       |x|x|Draw displayed data to internal buffer    |
-|`procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer);`|x|x|Drawing to canvas of the target object    |
+|name                                                       |V|A|O|description                               |
+|-----------------------------------------------------------|-|-|-|------------------------------------------|
+|`constructor Create;`                                      |x| | |Sets the initial values for the new object|
+|`destructor Destroy;`                                      |x| | |Frees the object's resources              |
+|`procedure Reset;`                                         |x| | |Reset display                             |
+|`procedure SetBlank(Status: Boolean);`                     |x| | |Blank display                             |
+|`procedure SetLeftDot(Status: Boolean);`                   |x| | |Set left decimal point status             |
+|`procedure SetRightDot(Status: Boolean);`                  |x| | |Set right decimal point status            |
+|`procedure SetValue(Value: Byte);`                         |x| | |Set input BCD value                       |
+|`procedure SetSegments(Value: Byte);`                      |x| | |Set input segment data                    |
+|`procedure DrawToBuffer(InputData: TDisplayedData);`       |x|x| |Draw displayed data to internal buffer    |
+|`procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer);`|x|x| |Drawing to canvas of the target object    |
 
 **Note**:  
 - _V_: means 'virtual' method,
-- _A_: means 'abstract' method.
+- _A_: means 'abstract' method,
+- _O_: means 'override' method.

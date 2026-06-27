@@ -40,8 +40,8 @@ begin
   inherited Create;
   FModname := 'TIL302';
   FDescription := 'Texas Instruments TIL302 LED display (1971)';
-  Buffer.Width := 104 + FrameX;
-  Buffer.Height := 94 + FrameY;
+  FBuffer.Width := 104 + FrameX;
+  FBuffer.Height := 94 + FrameY;
   Reset;
 end;
 
@@ -58,14 +58,14 @@ begin
   y := y + FrameY div 2;
   if Status then
   begin
-    Buffer.Canvas.Brush.Color := RETRO_RED_ON;
-    Buffer.Canvas.Pen.Color := RETRO_RED_GLOW;
+    FBuffer.Canvas.Brush.Color := RETRO_RED_ON;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_GLOW;
   end else
   begin
-    Buffer.Canvas.Brush.Color := RETRO_RED_OFF;
-    Buffer.Canvas.Pen.Color := RETRO_RED_OFF;
+    FBuffer.Canvas.Brush.Color := RETRO_RED_OFF;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_OFF;
   end;
-  Buffer.Canvas.Ellipse(x - 2, y - 2, x + 2, y + 2);
+  FBuffer.Canvas.Ellipse(x - 2, y - 2, x + 2, y + 2);
 end;
 
 // Draw line
@@ -86,8 +86,8 @@ begin
   y2 := y2 + FrameY div 2;
   if Status then
   begin
-    Buffer.Canvas.Pen.Color := RETRO_RED_ON;
-    Buffer.Canvas.Pen.Width := 4;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_ON;
+    FBuffer.Canvas.Pen.Width := 4;
     l1 := 5.0;                                              // 5 pixels size gap
     dx := x2 - x1;
     dy := y2 - y1;
@@ -107,7 +107,7 @@ begin
       // drawing segment to internal buffer
       for i := 1 to n do
       begin
-        Buffer.Canvas.Line(Round(cx), Round(cy), Round(cx + dx_seg), Round(cy + dy_seg));
+        FBuffer.Canvas.Line(Round(cx), Round(cy), Round(cx + dx_seg), Round(cy + dy_seg));
         // next position
         cx := cx + dx_seg + dx_gap;
         cy := cy + dy_seg + dy_gap;
@@ -116,7 +116,7 @@ begin
     else
     begin
       // non-dashed segment
-      Buffer.Canvas.Line(x1, y1, x2, y2);
+      FBuffer.Canvas.Line(x1, y1, x2, y2);
     end;
   end;
 end;
@@ -125,8 +125,8 @@ end;
 procedure TDisplayTIL302.DrawToBuffer(InputData: TDisplayedData);
 begin
   // background
-  Buffer.Canvas.Brush.Color := RETRO_RED_BG;
-  Buffer.Canvas.FillRect(0, 0, Buffer.Width, Buffer.Height);
+  FBuffer.Canvas.Brush.Color := RETRO_RED_BG;
+  FBuffer.Canvas.FillRect(0, 0, FBuffer.Width, FBuffer.Height);
   if InputData.Blank then exit;
   // segments
   DrawLine((InputData.Segments and $01 = $01), 43, 05, 85, 05);
@@ -144,7 +144,7 @@ end;
 // Drawing to canvas of the target object
 procedure TDisplayTIL302.RenderTo(TargetCanvas: TCanvas; x, y: integer);
 begin
-  TargetCanvas.Draw(x, y, Buffer);
+  TargetCanvas.Draw(x, y, FBuffer);
 end;
 
 end.

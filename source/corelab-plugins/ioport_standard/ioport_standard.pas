@@ -27,7 +27,6 @@ type
     procedure Reset;  override;
   end;
   var
-    CurrentPort: TStandardPort = nil;    
     EditRx: TEdit = nil;
     EditTx: TEdit = nil;
     PanelForm: TForm = nil;
@@ -135,8 +134,6 @@ begin
   PanelForm.Constraints.MaxWidth := PanelForm.Width;
   PanelForm.Constraints.MinHeight := PanelForm.Height;
   PanelForm.Constraints.MaxHeight := PanelForm.Height;
-
-  CurrentPort := TStandardPort(Port);
 end;
 
 // Exportable function for show UI panel

@@ -95,22 +95,23 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 
 ### Public methods
 
-|name                                                        |V|A|description                               |
-|------------------------------------------------------------|-|-|------------------------------------------|
-|`constructor Create;`                                       |x| |Sets the initial values for the new object|
-|`destructor Destroy;`                                       |x| |Frees the object's resources              |
-|`function CheckInterrupts: Boolean;`                        |x| |Interrupt handler                         |
-|`function GetCurrentInstruction: PChar;`                    |x|x|Get last instruction (mnemonic)           |
-|`function GetRegister(const RegName: PChar): QWord;`        |x|x|Get register content                      |
-|`procedure ConnectBus(const Bus: ICPUBus);`                 |x| |Connect CPU to external system bus        |
-|`procedure IRQ;`                                            |x| |Signal maskable interrupt                 |
-|`procedure NMI;`                                            |x| |Signal non-maskable interrupt             |
-|`procedure Reset;`                                          |x|x|Reset CPU                                 |
-|`procedure Run;`                                            |x| |Start CPU execution                       |
-|`procedure SetRegister(const RegName: PChar; Value: QWord);`|x|x|Set register content                      |
-|`procedure Step;`                                           |x| |Execute single instruction                |
-|`procedure Stop;`                                           |x| |Stop CPU execution                        |
+|name                                                        |V|A|O|description                               |
+|------------------------------------------------------------|-|-|-|------------------------------------------|
+|`constructor Create;`                                       |x| | |Sets the initial values for the new object|
+|`destructor Destroy;`                                       |x| | |Frees the object's resources              |
+|`function CheckInterrupts: Boolean;`                        |x| | |Interrupt handler                         |
+|`function GetCurrentInstruction: PChar;`                    |x|x| |Get last instruction (mnemonic)           |
+|`function GetRegister(const RegName: PChar): QWord;`        |x|x| |Get register content                      |
+|`procedure ConnectBus(const Bus: ICPUBus);`                 |x| | |Connect CPU to external system bus        |
+|`procedure IRQ;`                                            |x| | |Signal maskable interrupt                 |
+|`procedure NMI;`                                            |x| | |Signal non-maskable interrupt             |
+|`procedure Reset;`                                          |x|x| |Reset CPU                                 |
+|`procedure Run;`                                            |x| | |Start CPU execution                       |
+|`procedure SetRegister(const RegName: PChar; Value: QWord);`|x|x| |Set register content                      |
+|`procedure Step;`                                           |x| | |Execute single instruction                |
+|`procedure Stop;`                                           |x| | |Stop CPU execution                        |
 
 **Note**:  
 - _V_: means 'virtual' method,
-- _A_: means 'abstract' method.
+- _A_: means 'abstract' method,
+- _O_: means 'override' method.

@@ -64,7 +64,6 @@ type
     // Execution statistics
     FCycles: qword;                                              // Total cycles
     FInstructions: qword;                         // Total executed instructions
-  protected
     var FRegPtr: array of ^qword;
     procedure EmitEvent(Event: TCPUEvent); virtual;
     procedure DoInterrupt(Event: TCPUEvent); virtual;

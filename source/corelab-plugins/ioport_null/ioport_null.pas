@@ -32,7 +32,7 @@ constructor TNULLPort.Create;
 begin
   inherited Create;
   FModname := 'NULL device';
-  FDescription := 'It absorbs everything, returns 00h, FFh, or the port address.';
+  FDescription := 'It absorbs everything, returns 00h or FFh.';
   FHasGUI := false;
   FPortMode := pmReadWrite;
   Reset;
@@ -52,7 +52,6 @@ begin
     case FResponse of
       rp00: result := $00;
       rpFF: result := $FF;
-      rpAd: result := byte(Port);
     end;   
 end;
 

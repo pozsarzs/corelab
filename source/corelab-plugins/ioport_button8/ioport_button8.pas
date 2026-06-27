@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_switch8.pas                                                       | }
-{ | 8-switch input implementation module                                     | }
+{ | ioport_button8.pas                                                       | }
+{ | 8-button input implementation module                                     | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,13 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_switch8;
+library ioport_button8;
 {$mode objfpc}{$H+}
 uses
   Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
-  // 8-switch input implementation
-  TSwitch8Port = class(TIOPort)
+  // 8-button input implementation
+  TButton8Port = class(TIOPort)
   protected
     procedure AllRelease(mx: byte);
   public
@@ -30,12 +30,11 @@ type
   const
     MAXX = 7;                             // Index of the last button in the row
   var
-    CurrentPort: TSwitch8Port = nil;    
     PanelForm: TForm = nil;
     SB: array[0..MAXX] of TSpeedButton;
 
 // Release all buttons
-procedure TSwitch8Port.AllRelease(mx: byte);
+procedure TButton8Port.AllRelease(mx: byte);
 var
   x: byte;
 begin
@@ -44,27 +43,27 @@ begin
 end;
   
 // Create TIOPort instance
-constructor TSwitch8Port.Create;
+constructor TButton8Port.Create;
 var
   s: string;
 begin
   inherited Create;
-  s := (IntToStr(MAXX + 1)) + '-switch input';
+  s := (IntToStr(MAXX + 1)) + '-button input';
   FModname := PChar(s);
-  s :=  'This is an ' + (IntToStr(MAXX + 1)) + '-switch input, each switch controls a specific bit within a byte.';
+  s :=  'This is an ' + (IntToStr(MAXX + 1)) + '-button input, each button controls a specific bit within a byte.';
   FDescription := PChar(s);
   FHasGUI := true;
   FPortMode := pmReadOnly;
 end;
 
 // Destroy TIOPort instance
-destructor TSwitch8Port.Destroy;
+destructor TButton8Port.Destroy;
 begin
   inherited Destroy;
 end;
 
 // Read virtual port
-function TSwitch8Port.ReadPort(Port: byte): byte;
+function TButton8Port.ReadPort(Port: byte): byte;
 var
   x: byte;
   Value: integer;
@@ -74,23 +73,24 @@ begin
     if SB[x].Down then Value := Value + (1 shl x);
   if FOutNegation then Value := not Value;
   Result := Value;
+  AllRelease(MAXX);
 end;
 
 // Write virtual port
-procedure TSwitch8Port.WritePort(Port: byte; Value: byte);
+procedure TButton8Port.WritePort(Port: byte; Value: byte);
 begin
 end;
 
 // Reset virtual port
-procedure TSwitch8Port.Reset;
+procedure TButton8Port.Reset;
 begin
-  AllRelease(MAXX)
+  AllRelease(MAXX);
 end;
 
 // Exportable function for create TIOPort instance
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TSwitch8Port.Create;
+  result := TButton8Port.Create;
 end;
 
 // Exportable function for destroy TIOPort instance
@@ -114,7 +114,7 @@ begin
   y := 1;
   PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
   PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
-
+  
   for x := 0 to MAXX do
   begin
     SB[x] := TSpeedButton.Create(PanelForm);
@@ -135,8 +135,6 @@ begin
   PanelForm.Constraints.MaxWidth := PanelForm.Width;
   PanelForm.Constraints.MinHeight := PanelForm.Height;
   PanelForm.Constraints.MaxHeight := PanelForm.Height;
-
-  CurrentPort := TSwitch8Port(Port);
 end;
 
 // Exportable function for show UI panel
@@ -161,7 +159,7 @@ if Assigned(PanelForm) then
     PanelForm.Close;
     PanelForm.Free;
     PanelForm := nil;
-    for x := 0 to 7 do SB[x] := nil;
+    for x := 0 to MAXX do SB[x] := nil;
   end;
 end;
 

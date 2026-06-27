@@ -51,6 +51,7 @@ fpcargs		= -T@os@ \
                   -ve \
                   -Fu../_ext/* \
                   -Fu../corelab-core/ \
+                  -Fu../corelab-parts/ \
                   -Fu. \
                   -Fu../_lib/@architecture@-@os@/ \
                   -Fu@lcldir@/../components/chmhelp/packages/help/ \

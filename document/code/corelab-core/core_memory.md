@@ -29,11 +29,11 @@ for implementing hardware-specific memory types.
 
 |name            |type       |R|W|description        |default|
 |----------------|:---------:|-|-|-------------------|:-----:|
-|ModName         |PChar      |x|x|= FModName         |       |
+|AddressRangeSize|Byte       |x|x|= FAddressRangeSize|       |
 |Description     |PChar      |x|x|= FDescription     |       |
 |Enabled         |Boolean    |x|x|= FEnabled         |       |
-|AddressRangeSize|Byte       |x|x|= FAddressRangeSize|       |
 |MemoryMode      |TMemoryMode|x|x|= FMemoryMode      |       |
+|ModName         |PChar      |x|x|= FModName         |       |
 
 **Note**:  
 - _R_: means 'read',
@@ -41,16 +41,17 @@ for implementing hardware-specific memory types.
 
 ### Public methods
 
-|name                                                               |V|A|description                               |
-|-------------------------------------------------------------------|-|-|------------------------------------------|
-|`constructor Create;`                                              |x| |Sets the initial values for the new object|
-|`destructor Destroy;`                                              |x| |Frees the object's resources              |
-|`function ReadMemory(Address: DWord): Byte;`                       |x| |Read virtual memory                       |
-|`procedure Reset;`                                                 |x| |Reset virtual memory                      |
-|`procedure WriteMemory(Address: DWord; Value: Byte);`              |x| |Write virtual memory                      |
-|`procedure LoadFromStream(Stream: TStream; Address, Count: DWord);`|x| |Load memory content from stream           |
-|`procedure SaveToStream(Stream: TStream; Address, Count: DWord);`  |x| |Save memory content to stream             |
+|name                                                               |V|A|O|description                               |
+|-------------------------------------------------------------------|-|-|-|------------------------------------------|
+|`constructor Create;`                                              |x| | |Sets the initial values for the new object|
+|`destructor Destroy;`                                              | | |x|Frees the object's resources              |
+|`function ReadMemory(Address: DWord): Byte;`                       |x| | |Read virtual memory                       |
+|`procedure LoadFromStream(Stream: TStream; Address, Count: DWord);`|x| | |Load memory content from stream           |
+|`procedure Reset;`                                                 |x| | |Reset virtual memory                      |
+|`procedure SaveToStream(Stream: TStream; Address, Count: DWord);`  |x| | |Save memory content to stream             |
+|`procedure WriteMemory(Address: DWord; Value: Byte);`              |x| | |Write virtual memory                      |
 
 **Note**:  
 - _V_: means 'virtual' method,
-- _A_: means 'abstract' method.
+- _A_: means 'abstract' method,
+- _O_: means 'override' method.

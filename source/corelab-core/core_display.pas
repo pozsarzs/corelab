@@ -31,8 +31,8 @@ type
     FModname: PChar;                                              // Module name
     FDescription: PChar;                                    // Short description
     FEnabled: boolean;                                      // Enable displaying
-    Buffer: TBitmap;                                          // Internal buffer
-    DisplayedData: TDisplayedData;        // Displayed value, dots, and segments
+    FBuffer: TBitmap;                                         // Internal buffer
+    FDisplayedData: TDisplayedData;       // Displayed value, dots, and segments
     const RETRO_RED_GLOW: TColor = $003333FF;        // Retro red display colors
     const RETRO_RED_ON:   TColor = $000000FF;
     const RETRO_RED_OFF:  TColor = $00000040;
@@ -41,18 +41,18 @@ type
     // Public methods
     constructor Create; virtual;
     destructor Destroy; virtual;
+    procedure DrawToBuffer(InputData: TDisplayedData); virtual; abstract;
+    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); virtual; abstract;
     procedure Reset; virtual;
     procedure SetBlank(Status: boolean); virtual;
     procedure SetLeftDot(Status: boolean); virtual;
     procedure SetRightDot(Status: boolean); virtual;
-    procedure SetValue(Value: byte); virtual;
     procedure SetSegments(Value: byte); virtual;
-    procedure DrawToBuffer(InputData: TDisplayedData); virtual; abstract;
-    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); virtual; abstract;
+    procedure SetValue(Value: byte); virtual;
     // Public properties
-    property ModName: PChar read FModname;
     property Description: PChar read FDescription;
     property Enabled: boolean read FEnabled write FEnabled;
+    property ModName: PChar read FModname;
   end;
     
 implementation
@@ -61,7 +61,7 @@ implementation
 constructor TDisplay.Create;
 begin
   inherited Create;
-  Buffer := TBitmap.Create;
+  FBuffer := TBitmap.Create;
 end;
 
 // Destroy TDisplay instance

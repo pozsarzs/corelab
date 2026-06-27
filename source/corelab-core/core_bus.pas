@@ -27,17 +27,17 @@ type
     constructor Create; virtual;
     destructor Destroy; virtual;
     // Simulator side methods
-    function  MemRead(Address: uint64): byte; virtual;
-    procedure MemWrite(Address: uint64; Value: byte); virtual;
     function  CodeRead(Address: uint64): byte; virtual;
-    procedure CodeWrite(Address: uint64; Value: byte); virtual;
     function  IORead(Port: uint64): byte; virtual;
+    function  MemRead(Address: uint64): byte; virtual;
+    procedure CodeWrite(Address: uint64; Value: byte); virtual;
     procedure IOWrite(Port: uint64; Value: byte); virtual;
+    procedure MemWrite(Address: uint64; Value: byte); virtual;
     // Host side methods
-    procedure AttachMemory(AMemory: TMemory); virtual;
-    procedure AttachDataMemory(AMemory: TMemory); virtual;
     procedure AttachCodeMemory(AMemory: TMemory); virtual;
+    procedure AttachDataMemory(AMemory: TMemory); virtual;
     procedure AttachIOPorts(APorts: TIOPort); virtual;
+    procedure AttachMemory(AMemory: TMemory); virtual;
     procedure Reset; virtual;
     // Public properties
     property CodeMemory: TMemory read FCodeMemory;
@@ -66,28 +66,28 @@ end;
 function TBus.MemRead(Address: uint64): byte;
 begin
   if Assigned(FDataMemory)
-    then Result := FDataMemory.ReadByte(Address)
+    then Result := FDataMemory.ReadMemory(Address)
     else Result := $FF;
 end;
 
 // Writing (data) memory based on absolute address
 procedure TBus.MemWrite(Address: uint64; Value: byte);
 begin
-  if Assigned(FDataMemory) then FDataMemory.WriteByte(Address, Value);
+  if Assigned(FDataMemory) then FDataMemory.WriteMemory(Address, Value);
 end;
 
 // Reading code memory based on absolute address
 function TBus.CodeRead(Address: uint64): byte;
 begin
   if Assigned(FCodeMemory)
-    then Result := FCodeMemory.ReadByte(Address)
+    then Result := FCodeMemory.ReadMemory(Address)
     else Result := $FF;
 end;
 
 // Writing code memory based on absolute address
 procedure TBus.CodeWrite(Address: uint64; Value: byte);
 begin
-  if Assigned(FCodeMemory) then FCodeMemory.WriteByte(Address, Value);
+  if Assigned(FCodeMemory) then FCodeMemory.WriteMemory(Address, Value);
 end;
 
 // Reading I/O port based on absolute address

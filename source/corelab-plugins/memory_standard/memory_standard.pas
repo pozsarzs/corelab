@@ -31,7 +31,7 @@ begin
   inherited Create;
   FModname := 'Standard memory';
   FDescription := 'Up to 16MB RAM/ROM';
-  FMemoryMode := pmReadWrite;
+  FMemoryMode := mmRAM;
   Reset;
 end;
 

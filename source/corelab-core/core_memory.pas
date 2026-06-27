@@ -18,31 +18,31 @@ uses
   Classes;
 type
   // Operation mode
-  TMemoryMode = (mmReadOnly, mmReadWrite);
+  TMemoryMode = (mmRAM, mmROM);
   // Abstract base I/O port class
   TMemory = class
   protected
-    FModname: PChar;                                              // Module name
-    FDescription: PChar;                                    // Short description
     FAddressRangeSize: dword;                              // Address range size
+    FDescription: PChar;                                    // Short description
     FEnabled: boolean;                  // Enable memory without detach from bus
     FMemoryMode: TMemoryMode;                            //Memory operation mode
-    MemCells: array of byte;                                     // Memory cells
+    FModname: PChar;                                              // Module name
+    FMemCells: array of byte;                                    // Memory cells
   public
     // Public methods
     constructor Create; virtual;
-    destructor Destroy; virtual;
+    destructor Destroy; override;
     function ReadMemory(Address: dword): byte; virtual;
-    procedure WriteMemory(Address: dword; Value: byte); virtual;
-    procedure Reset; virtual;
     procedure LoadFromStream(Stream: TStream; Address, Count: dword); virtual;
+    procedure Reset; virtual;
     procedure SaveToStream(Stream: TStream; Address, Count: dword); virtual;
+    procedure WriteMemory(Address: dword; Value: byte); virtual;
     // Public properties
     property AddressRangeSize: dword read FAddressRangeSize write FAddressRangeSize;
     property Description: PChar read FDescription write FDescription;
     property Enabled: boolean read FEnabled write FEnabled;
-    property ModName: PChar read FModname write FModname;
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
+    property ModName: PChar read FModname write FModname;
   end;
 
 implementation
@@ -54,7 +54,7 @@ begin
   // Initial state
   FAddressRangeSize := 1024;
   FEnabled := false;
-  FMemoryMode := mmReadWrite;
+  FMemoryMode := mmRAM;
   FModname := 'RAM';
 end;
 
@@ -77,7 +77,7 @@ end;
 // Write virtual memory
 procedure TMemory.WriteMemory(Address: dword; Value: byte);
 begin
-  if FEnabled and (FMemoryMode = pmReadWrite) then
+  if FEnabled and (FMemoryMode = mmRAM) then
     if Address < FAddressRangeSize then FMemCells[Address] := Value;
 end;
 

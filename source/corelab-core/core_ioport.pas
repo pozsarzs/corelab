@@ -21,14 +21,14 @@ type
   // Abstract base memory class
   TIOPort = class
   protected
-    FModname: PChar;                                              // Module name
-    FDescription: PChar;                                    // Short description
     FAddressRangeSize: byte;                               // Address range size
+    FDescription: PChar;                                    // Short description
     FEnabled: boolean;                    // Enable port without detach from bus
     FHasGUI: boolean;                     // Does the implementation have a GUI?
-    FLatchedOutput: boolean;                                   // Latched output
-    FOutNegation: boolean;             // Negation of buttons matrix output bits
     FInNegation: boolean;               // Negation of display matrix input bits
+    FLatchedOutput: boolean;                                   // Latched output
+    FModname: PChar;                                              // Module name
+    FOutNegation: boolean;             // Negation of buttons matrix output bits
     FPortMode: TPortMode;                                 // Port operation mode
     FReadBackOutput: boolean;           // Output port with read-back capability
     FResponse: TResponse;                    // Response type of the null device
@@ -37,10 +37,10 @@ type
   public
     // Public methods
     constructor Create; virtual;
-    destructor Destroy; virtual;
+    destructor Destroy; override;
     function ReadPort(Port: byte): byte; virtual; abstract;
-    procedure WritePort(Port: byte; Value: byte); virtual; abstract;
     procedure Reset; virtual; abstract;
+    procedure WritePort(Port: byte; Value: byte); virtual; abstract;
     // Public properties
     property AddressRangeSize: byte read FAddressRangeSize;
     property Description: PChar read FDescription;
