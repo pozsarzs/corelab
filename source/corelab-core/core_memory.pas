@@ -13,6 +13,7 @@
 
 unit core_memory;
 {$mode objfpc}{$H+}
+{$modeswitch typehelpers}
 interface
 uses
   Classes;

@@ -16,8 +16,7 @@ unit frmmain;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
-  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids, Menus,
-  RTTIGrids;
+  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids, Menus;
 type
   TPluginAttributes = record
     PFilename: string;                                 // Filename of the module
@@ -38,6 +37,7 @@ type
     PSelNegation: boolean;                   // Negation of matrix selector bits
     PTitle: string;                                                // Form title
   end;
+  TRPDirection = (rdVar2List, rdList2Var);
   // port
   TCreatePortFunc = function: TIOPort; cdecl;
   TDestroyPortProc = procedure(Port: TIOPort); cdecl;
@@ -83,7 +83,7 @@ type
     // module
     LibHandle: TLibHandle;                        // handle of the loaded module
     LoadedPlugin: TPluginAttributes;          // properties of the loaded module
-    procedure RefreshProperties;
+    procedure RefreshProperties(Direction: TRPDirection);
   public
   end;
 var
@@ -97,55 +97,63 @@ implementation
 { TForm1 }
 
 // Refresh properties list
-procedure TForm1.RefreshProperties;
+procedure TForm1.RefreshProperties(Direction: TRPDirection);
 var
   lm: TLineMode;
   rp: TResponse;
 begin
-  with ValueListEditor1 do
+  if Direction = rdVar2List then
   begin
-    Clear;
-    InsertRow('Filename', LoadedPlugin.PFilename, true);
-    ItemProps['Filename'].ReadOnly := true;
-    InsertRow('Modname',  LoadedPlugin.PModname, true);
-    ItemProps['Modname'].ReadOnly := true;
-    InsertRow('Title',  LoadedPlugin.PTitle, true);
-    ItemProps['Title'].ReadOnly := true;
-    InsertRow('Description', LoadedPlugin.PDescription, true);
-    ItemProps['Description'].ReadOnly := true;
-    InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI,'true','false'), true);
-    ItemProps['HasGUI'].ReadOnly := true;
-    InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), true);
-    ItemProps['Enabled'].PickList.CommaText := 'true,false';
-    InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
-    ItemProps['AddressRangeSize'].EditMask := '000;1; ';
-    ItemProps['AddressRangeSize'].MaxLength := 3;
-    InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), true);
-    ItemProps['LatchedOutput'].ReadOnly := true;
-    InsertRow('PortMode', LoadedPlugin.PPortMode.ToString, true);
-    ItemProps['PortMode'].ReadOnly := true;
-    InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'true', 'false'), true);
-    ItemProps['ReadBackOutput'].ReadOnly := true;
-    InsertRow('DataInMode', LoadedPlugin.PDataInMode.ToString, true);
-    for lm := Low(TLineMode) to High(TLineMode) do
-      ItemProps['DataInMode'].PickList.Add(lm.ToString);
-    InsertRow('DataInNegation', BoolToStr(LoadedPlugin.PDataInNegation, 'true', 'false'), true);
-    ItemProps['DataInNegation'].PickList.CommaText := 'true,false';
-    InsertRow('DataOutMode', LoadedPlugin.PDataOutMode.ToString, true);
-    for lm := Low(TLineMode) to High(TLineMode) do
-      ItemProps['DataOutMode'].PickList.Add(lm.ToString);
-    InsertRow('DataOutNegation', BoolToStr(LoadedPlugin.PDataOutNegation, 'true', 'false'), true);
-    ItemProps['DataOutNegation'].PickList.CommaText := 'true,false';
-     InsertRow('SelMode', LoadedPlugin.PSelMode.ToString, true);
-    for lm := Low(TLineMode) to High(TLineMode) do
-      ItemProps['SelMode'].PickList.Add(lm.ToString);
-    InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'true', 'false'), true);
-    ItemProps['SelNegation'].PickList.CommaText := 'true,false';
-    InsertRow('Response', LoadedPlugin.PResponse.ToString, true);
-    for rp := Low(TResponse) to High(TResponse) do
-      ItemProps['Response'].PickList.Add(rp.ToString);
-    AutoSizeColumn(0);
-    Row := 1;
+    // Variables to ValueListEditor1
+    with ValueListEditor1 do
+    begin
+      Clear;
+      InsertRow('Filename', LoadedPlugin.PFilename, true);
+      ItemProps['Filename'].ReadOnly := true;
+      InsertRow('Modname',  LoadedPlugin.PModname, true);
+      ItemProps['Modname'].ReadOnly := true;
+      InsertRow('Title',  LoadedPlugin.PTitle, true);
+      ItemProps['Title'].ReadOnly := true;
+      InsertRow('Description', LoadedPlugin.PDescription, true);
+      ItemProps['Description'].ReadOnly := true;
+      InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI,'true','false'), true);
+      ItemProps['HasGUI'].ReadOnly := true;
+      InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), true);
+      ItemProps['Enabled'].PickList.CommaText := 'true,false';
+      InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
+      ItemProps['AddressRangeSize'].EditMask := '000;1; ';
+      ItemProps['AddressRangeSize'].MaxLength := 3;
+      InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), true);
+      ItemProps['LatchedOutput'].ReadOnly := true;
+      InsertRow('PortMode', LoadedPlugin.PPortMode.ToString, true);
+      ItemProps['PortMode'].ReadOnly := true;
+      InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'true', 'false'), true);
+      ItemProps['ReadBackOutput'].ReadOnly := true;
+      InsertRow('DataInMode', LoadedPlugin.PDataInMode.ToString, true);
+      for lm := Low(TLineMode) to High(TLineMode) do
+        ItemProps['DataInMode'].PickList.Add(lm.ToString);
+      InsertRow('DataInNegation', BoolToStr(LoadedPlugin.PDataInNegation, 'true', 'false'), true);
+      ItemProps['DataInNegation'].PickList.CommaText := 'true,false';
+      InsertRow('DataOutMode', LoadedPlugin.PDataOutMode.ToString, true);
+      for lm := Low(TLineMode) to High(TLineMode) do
+        ItemProps['DataOutMode'].PickList.Add(lm.ToString);
+      InsertRow('DataOutNegation', BoolToStr(LoadedPlugin.PDataOutNegation, 'true', 'false'), true);
+      ItemProps['DataOutNegation'].PickList.CommaText := 'true,false';
+       InsertRow('SelMode', LoadedPlugin.PSelMode.ToString, true);
+      for lm := Low(TLineMode) to High(TLineMode) do
+        ItemProps['SelMode'].PickList.Add(lm.ToString);
+      InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'true', 'false'), true);
+      ItemProps['SelNegation'].PickList.CommaText := 'true,false';
+      InsertRow('Response', LoadedPlugin.PResponse.ToString, true);
+      for rp := Low(TResponse) to High(TResponse) do
+        ItemProps['Response'].PickList.Add(rp.ToString);
+      AutoSizeColumn(0);
+      Row := 1;
+    end else
+    begin
+      // ValueListEditor1 to variables
+
+    end;
   end;
 end;
 
@@ -216,9 +224,9 @@ begin
     if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
     begin
       CurrentPort := CreatePort();
+      // get properties
       with LoadedPlugin do
       begin
-        // get properties
         PFilename := SelectedFile;
         if Assigned(CurrentPort.Modname)
           then PModname := string(CurrentPort.Modname)
@@ -242,7 +250,7 @@ begin
         PTitle := string(CurrentPort.Title);
       end;
       // show properties
-      RefreshProperties;
+      RefreshProperties(rdVar2List);
       // preset address/data table
       ValueListEditor2.Clear;
       for b := 0 to LoadedPlugin.PAddressRangeSize - 1 do

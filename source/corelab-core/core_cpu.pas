@@ -13,6 +13,7 @@
 
 unit core_cpu;
 {$mode objfpc}{$H+}
+{$modeswitch typehelpers}
 interface
 uses
   Classes, SysUtils;
