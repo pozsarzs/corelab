@@ -13,11 +13,24 @@
 
 unit core_ioport;
 {$mode objfpc}{$H+}
+{$modeswitch typehelpers}
 interface
 type
-  TLineMode = (lmDirect, lmBCD); // Operation mode
-  TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);  // Operation mode
-  TResponse = (rp00, rpFF, rpAd); // Operation mode
+  // Data mode
+  TLineMode = (lmDirect, lmBCD);
+  TLineModeHelper = type helper for TLineMode
+    function ToString: string;
+  end;
+  // Operation mode
+  TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
+  TPortModeHelper = type helper for TPortMode
+    function ToString: string;
+  end;
+  // Null port response mode
+  TResponse = (rp00, rpFF);
+  TResponseHelper = type helper for TResponse
+    function ToString: string;
+  end;
   // Abstract base memory class
   TIOPort = class
   protected
@@ -65,6 +78,22 @@ type
 
 implementation
 
+// Helper for own types
+function TLineModeHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
+
+function TPortModeHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
+
+function TResponseHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
+
 // Create TIOPort instance
 constructor TIOPort.Create;
 begin
@@ -78,6 +107,7 @@ begin
   FEnabled := false;
   FHasGUI := false;
   FLatchedOutput := false;
+  FModname := 'MyIO';
   FPortMode := pmReadWrite;
   FReadBackOutput := false;
   FResponse := rp00;

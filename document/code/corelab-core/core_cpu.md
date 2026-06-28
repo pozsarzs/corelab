@@ -13,12 +13,18 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 
 ### Own data types
 
-|name            |type                                                     |description                     |
-|----------------|---------------------------------------------------------|--------------------------------|
-|TArchitecture   |(arHarvard,arNeumann)                                    |Type of architecture            |
-|TEndianness     |(enLittle, enBig)                                        |CPU byte order                  |
-|TCPUEvent       |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
-|TCPUEventHandler|`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
+|name                |type                                                     |description                     |
+|--------------------|---------------------------------------------------------|--------------------------------|
+|TArchitecture       |(arHarvard,arNeumann)                                    |Type of architecture            |
+|TTArchitectureHelper|type helper for TArchitecture                            |Helper                          |
+|.ToString           |String                                                   |Convert Enum -> String          |
+|TEndianness         |(enLittle, enBig)                                        |CPU byte order                  |
+|TEndiannessHelper   |type helper for TEndianness                              |Helper                          |
+|.ToString           |String                                                   |Convert Enum -> String          |
+|TCPUEvent           |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
+|TCPUEventHelper     |type helper for TCPUEvent                                |Helper                          |
+|.ToString           |String                                                   |Convert Enum -> String          |
+|TCPUEventHandler    |`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
 
 ### Own interfaces
 

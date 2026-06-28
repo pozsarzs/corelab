@@ -19,10 +19,19 @@ uses
 type
   // Defines type of architecture
   TArchitecture = (arHarvad,arNeumann);
+  TArchitectureHelper = type helper for TArchitecture
+    function ToString: string;
+  end;
   // Defines CPU byte order
   TEndianness = (enLittle, enBig);
+  TEndiannessHelper = type helper for TEndianness
+    function ToString: string;
+  end;
   // Generic CPU events used by debugger and trace systems
   TCPUEvent = (ceInstructionBoundary, ceInterrupt, ceHalt, ceReset);
+  TCPUEventHelper = type helper for TCPUEvent
+    function ToString: string;
+  end;
   // Event callback type
   TCPUEventHandler = procedure(Sender: TObject; Event: TCPUEvent) of object;
   // Generic CPU bus interface
@@ -102,6 +111,22 @@ type
   end;
 
 implementation
+
+// Helper for own types
+function TArchitectureHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
+
+function TEndiannessHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
+
+function TCPUEventHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
 
 // Create CPU instance
 constructor TCPU.Create;

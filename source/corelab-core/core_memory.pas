@@ -19,6 +19,9 @@ uses
 type
   // Operation mode
   TMemoryMode = (mmRAM, mmROM);
+  TMemoryModeHelper = type helper for TMemoryMode
+    function ToString: string;
+  end;
   // Abstract base I/O port class
   TMemory = class
   protected
@@ -46,6 +49,12 @@ type
   end;
 
 implementation
+
+// Helper for own types
+function TMemoryModeHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
 
 // Create TMemory instance
 constructor TMemory.Create;

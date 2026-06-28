@@ -16,21 +16,27 @@ unit frmmain;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
-  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport;
+  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids, Menus,
+  RTTIGrids;
 type
   TPluginAttributes = record
     PFilename: string;                                 // Filename of the module
-    PModname: string;                                             // Module name
-    PDescription: string;                                   // Short description
     PAddressRangeSize: byte;                               // Address range size
+    PDataInMode: TLineMode;                         // Decoding input data lines
+    PDataInNegation: boolean;               // Negation of databit (port -> CPU)
+    PDataOutMode: TLineMode;                       // Decoding output data lines
+    PDataOutNegation: boolean;              // Negation of databit (CPU -> port)
+    PDescription: string;                                   // Short description
     PEnabled: boolean;                    // Enable port without detach from bus
     PHasGUI: boolean;                     // Does the implementation have a GUI?
     PLatchedOutput: boolean;                                   // Latched output
-    PInNegation: boolean;                       // Negation of matrix input bits
-    POutNegation: boolean;                     // Negation of matrix output bits
+    PModname: string;                                            // Module name
     PPortMode: TPortMode;                                 // Port operation mode
     PReadBackOutput: boolean;           // Output port with read-back capability
+    PResponse: TResponse;                    // Response type of the null device
+    PSelMode: TLineMode;                       // Decoding matrix selector lines
     PSelNegation: boolean;                   // Negation of matrix selector bits
+    PTitle: string;                                                // Form title
   end;
   // port
   TCreatePortFunc = function: TIOPort; cdecl;
@@ -49,6 +55,7 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
     DirectoryEdit1: TDirectoryEdit;
     Panel1: TPanel;
     ShellListView1: TShellListView;
@@ -76,18 +83,71 @@ type
     // module
     LibHandle: TLibHandle;                        // handle of the loaded module
     LoadedPlugin: TPluginAttributes;          // properties of the loaded module
+    procedure RefreshProperties;
   public
   end;
 var
   Form1: TForm1;
 const
   ER = 'ERROR: ';
-  PortModeNames: array[TPortMode] of string = ('Read only', 'Write only', 'Read/write');
 
 implementation
 
 {$R *.lfm}
 { TForm1 }
+
+// Refresh properties list
+procedure TForm1.RefreshProperties;
+var
+  lm: TLineMode;
+  rp: TResponse;
+begin
+  with ValueListEditor1 do
+  begin
+    Clear;
+    InsertRow('Filename', LoadedPlugin.PFilename, true);
+    ItemProps['Filename'].ReadOnly := true;
+    InsertRow('Modname',  LoadedPlugin.PModname, true);
+    ItemProps['Modname'].ReadOnly := true;
+    InsertRow('Title',  LoadedPlugin.PTitle, true);
+    ItemProps['Title'].ReadOnly := true;
+    InsertRow('Description', LoadedPlugin.PDescription, true);
+    ItemProps['Description'].ReadOnly := true;
+    InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI,'true','false'), true);
+    ItemProps['HasGUI'].ReadOnly := true;
+    InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), true);
+    ItemProps['Enabled'].PickList.CommaText := 'true,false';
+    InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
+    ItemProps['AddressRangeSize'].EditMask := '000;1; ';
+    ItemProps['AddressRangeSize'].MaxLength := 3;
+    InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), true);
+    ItemProps['LatchedOutput'].ReadOnly := true;
+    InsertRow('PortMode', LoadedPlugin.PPortMode.ToString, true);
+    ItemProps['PortMode'].ReadOnly := true;
+    InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'true', 'false'), true);
+    ItemProps['ReadBackOutput'].ReadOnly := true;
+    InsertRow('DataInMode', LoadedPlugin.PDataInMode.ToString, true);
+    for lm := Low(TLineMode) to High(TLineMode) do
+      ItemProps['DataInMode'].PickList.Add(lm.ToString);
+    InsertRow('DataInNegation', BoolToStr(LoadedPlugin.PDataInNegation, 'true', 'false'), true);
+    ItemProps['DataInNegation'].PickList.CommaText := 'true,false';
+    InsertRow('DataOutMode', LoadedPlugin.PDataOutMode.ToString, true);
+    for lm := Low(TLineMode) to High(TLineMode) do
+      ItemProps['DataOutMode'].PickList.Add(lm.ToString);
+    InsertRow('DataOutNegation', BoolToStr(LoadedPlugin.PDataOutNegation, 'true', 'false'), true);
+    ItemProps['DataOutNegation'].PickList.CommaText := 'true,false';
+     InsertRow('SelMode', LoadedPlugin.PSelMode.ToString, true);
+    for lm := Low(TLineMode) to High(TLineMode) do
+      ItemProps['SelMode'].PickList.Add(lm.ToString);
+    InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'true', 'false'), true);
+    ItemProps['SelNegation'].PickList.CommaText := 'true,false';
+    InsertRow('Response', LoadedPlugin.PResponse.ToString, true);
+    for rp := Low(TResponse) to High(TResponse) do
+      ItemProps['Response'].PickList.Add(rp.ToString);
+    AutoSizeColumn(0);
+    Row := 1;
+  end;
+end;
 
 // Refresh plugin list
 procedure TForm1.Button4Click(Sender: TObject);
@@ -167,35 +227,22 @@ begin
           then PDescription := string(CurrentPort.Description)
           else PDescription := '';
         PAddressRangeSize := CurrentPort.AddressRangeSize;
+        PDataInMode := CurrentPort.DataInMode;
+        PDataInNegation := CurrentPort.DataInNegation;
+        PDataOutMode := CurrentPort.DataOutMode;
+        PDataOutNegation := CurrentPort.DataOutNegation;
         PEnabled := CurrentPort.Enabled;
         PHasGUI := CurrentPort.HasGUI;
-        PInNegation := CurrentPort.InNegation;
         PLatchedOutput := CurrentPort.LatchedOutput;
-        POutNegation := CurrentPort.OutNegation;
         PPortMode := CurrentPort.PortMode;
         PReadBackOutput := CurrentPort.ReadBackOutput;
+        PResponse := CurrentPort.Response;
+        PSelMode := CurrentPort.SelMode;
         PSelNegation := CurrentPort.SelNegation;
-        // set a property
-        CurrentPort.Title := 'MyIO';
+        PTitle := string(CurrentPort.Title);
       end;
       // show properties
-      with ValueListEditor1 do
-      begin
-        Clear;
-        InsertRow('Filename', LoadedPlugin.PFilename,true);
-        InsertRow('Modname',  LoadedPlugin.PModname, true);
-        InsertRow('Description', LoadedPlugin.PDescription, true);
-        InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
-        InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'Yes', 'No'), true);
-        InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI, 'Yes', 'No'), true);
-        InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'Yes', 'No'), true);
-        InsertRow('PortMode', PortModeNames[LoadedPlugin.PPortMode], true);
-        InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'Yes', 'No'), true);
-        InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'Yes', 'No'), true);
-        InsertRow('InNegation', BoolToStr(LoadedPlugin.PInNegation, 'Yes', 'No'), true);
-        InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'Yes', 'No'), true);
-        AutoSizeColumn(0);
-      end;
+      RefreshProperties;
       // preset address/data table
       ValueListEditor2.Clear;
       for b := 0 to LoadedPlugin.PAddressRangeSize - 1 do

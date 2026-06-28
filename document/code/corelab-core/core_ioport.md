@@ -13,11 +13,17 @@ basis for implementing hardware-specific ports.
 
 ### Own data types
 
-|name     |type                                  |description              |
-|---------|--------------------------------------|-------------------------|
-|TLineMode|(lmDirect, lmBCD)                     |Data line decoding mode  |
-|TPortMode|(pmReadOnly, pmWriteOnly, pmReadWrite)|Port operation mode      |
-|TResponse|(rp00, rpFF)                          |Response of the null port|
+|name           |type                                  |description              |
+|---------------|--------------------------------------|-------------------------|
+|TLineMode      |(lmDirect, lmBCD)                     |Data line decoding mode  |
+|TLineModeHelper|type helper for TLineMode             |Helper                   |
+|.ToString      |String                                |Convert Enum -> String   |
+|TPortMode      |(pmReadOnly, pmWriteOnly, pmReadWrite)|Port operation mode      |
+|TPortModeHelper|type helper for TPortMode             |Helper                   |
+|.ToString      |String                                |Convert Enum -> String   |
+|TResponse      |(rp00, rpFF)                          |Response of the null port|
+|TResponseHelper|type helper for TResponse             |Helper                   |
+|.ToString      |String                                |Convert Enum -> String   |
 
 ### Protected fields
 

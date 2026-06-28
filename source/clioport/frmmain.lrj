@@ -7,5 +7,6 @@
 {"hash":44709525,"name":"tform1.button5.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
 {"hash":113232937,"name":"tform1.directoryedit1.buttonhint","sourcebytes":[80,108,117,103,105,110,32,100,105,114,101,99,116,111,114,121],"value":"Plugin directory"},
 {"hash":46,"name":"tform1.directoryedit1.text","sourcebytes":[46],"value":"."},
-{"hash":90721265,"name":"tform1.panel1.caption","sourcebytes":[80,97,110,101,108,49],"value":"Panel1"}
+{"hash":90721265,"name":"tform1.panel1.caption","sourcebytes":[80,97,110,101,108,49],"value":"Panel1"},
+{"hash":2800388,"name":"tform1.button6.caption","sourcebytes":[38,69,100,105,116],"value":"&Edit"}
 ]}
