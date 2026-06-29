@@ -22,16 +22,19 @@ type
   TArchitecture = (arHarvad,arNeumann);
   TArchitectureHelper = type helper for TArchitecture
     function ToString: string;
+    function FromString(const AValue: string): TArchitecture;
   end;
   // Defines CPU byte order
   TEndianness = (enLittle, enBig);
   TEndiannessHelper = type helper for TEndianness
     function ToString: string;
+    function FromString(const AValue: string): TEndianness;
   end;
   // Generic CPU events used by debugger and trace systems
   TCPUEvent = (ceInstructionBoundary, ceInterrupt, ceHalt, ceReset);
   TCPUEventHelper = type helper for TCPUEvent
     function ToString: string;
+    function FromString(const AValue: string): TCPUEvent;
   end;
   // Event callback type
   TCPUEventHandler = procedure(Sender: TObject; Event: TCPUEvent) of object;
@@ -119,14 +122,29 @@ begin
   WriteStr(Result, Self);
 end;
 
+function TArchitectureHelper.FromString(const AValue: string):  TArchitecture;
+begin
+  Result :=  TArchitecture(GetEnumValue(TypeInfo( TArchitecture), AValue));
+end;
+
 function TEndiannessHelper.ToString: string;
 begin
   WriteStr(Result, Self);
 end;
 
+function TEndiannessHelper.FromString(const AValue: string): TEndianness;
+begin
+  Result := TEndianness(GetEnumValue(TypeInfo(TEndianness), AValue));
+end;
+
 function TCPUEventHelper.ToString: string;
 begin
   WriteStr(Result, Self);
+end;
+
+function TCPUEventHelper.FromString(const AValue: string): TCPUEvent;
+begin
+  Result := TCPUEvent(GetEnumValue(TypeInfo(TCPUEvent), AValue));
 end;
 
 // Create CPU instance

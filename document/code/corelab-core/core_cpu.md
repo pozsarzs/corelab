@@ -13,18 +13,21 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 
 ### Own data types
 
-|name                |type                                                     |description                     |
-|--------------------|---------------------------------------------------------|--------------------------------|
-|TArchitecture       |(arHarvard,arNeumann)                                    |Type of architecture            |
-|TTArchitectureHelper|type helper for TArchitecture                            |Helper                          |
-|.ToString           |String                                                   |Convert Enum -> String          |
-|TEndianness         |(enLittle, enBig)                                        |CPU byte order                  |
-|TEndiannessHelper   |type helper for TEndianness                              |Helper                          |
-|.ToString           |String                                                   |Convert Enum -> String          |
-|TCPUEvent           |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
-|TCPUEventHelper     |type helper for TCPUEvent                                |Helper                          |
-|.ToString           |String                                                   |Convert Enum -> String          |
-|TCPUEventHandler    |`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
+|name                             |type                                                     |description                     |
+|---------------------------------|---------------------------------------------------------|--------------------------------|
+|TArchitecture                    |(arHarvard,arNeumann)                                    |Type of architecture            |
+|TTArchitectureHelper             |type helper for TArchitecture                            |Helper                          |
+|.ToString                        |String                                                   |Convert Enum -> String          |
+|.FromString(const AValue: string)|TArchitecture                                            |Convert String -> Enum          |
+|TEndianness                      |(enLittle, enBig)                                        |CPU byte order                  |
+|TEndiannessHelper                |type helper for TEndianness                              |Helper                          |
+|.ToString                        |String                                                   |Convert Enum -> String          |
+|.FromString(const AValue: string)|TEndianness                                              |Convert String -> Enum          |
+|TCPUEvent                        |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
+|TCPUEventHelper                  |type helper for TCPUEvent                                |Helper                          |
+|.ToString                        |String                                                   |Convert Enum -> String          |
+|.FromString(const AValue: string)|TCPUEvent                                                |Convert String -> Enum          |
+|TCPUEventHandler                 |`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
 
 ### Own interfaces
 

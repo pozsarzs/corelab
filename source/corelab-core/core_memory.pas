@@ -22,6 +22,7 @@ type
   TMemoryMode = (mmRAM, mmROM);
   TMemoryModeHelper = type helper for TMemoryMode
     function ToString: string;
+    function FromString(const AValue: string): TMemoryMode;
   end;
   // Abstract base I/O port class
   TMemory = class
@@ -55,6 +56,11 @@ implementation
 function TMemoryModeHelper.ToString: string;
 begin
   WriteStr(Result, Self);
+end;
+
+function TMemoryModeHelper.FromString(const AValue: string): TMemoryMode;
+begin
+  Result := TMemoryMode(GetEnumValue(TypeInfo(TMemoryMode), AValue));
 end;
 
 // Create TMemory instance

@@ -11,11 +11,12 @@ for implementing hardware-specific memory types.
 
 ### Own data types
 
-|name             |type                       |description           |
-|-----------------|---------------------------|----------------------|
-|TMemoryMode      |(mmRAM, mmROM)             |Memory operation mode |
-|TMemoryModeHelper|type helper for TMemoryMode|Helper                |
-|.ToString        |String                     |Convert Enum -> String|
+|name                             |type                       |description           |
+|---------------------------------|---------------------------|----------------------|
+|TMemoryMode                      |(mmRAM, mmROM)             |Memory operation mode |
+|TMemoryModeHelper                |type helper for TMemoryMode|Helper                |
+|.ToString                        |String                     |Convert Enum -> String|
+|.FromString(const AValue: string)|TMemoryMode                |Convert String -> Enum|
 
 ### Protected fields
 

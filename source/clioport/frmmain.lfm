@@ -564,10 +564,12 @@ object Form1: TForm1
       Top = 118
       Width = 440
       Align = alClient
+      DefaultRowHeight = 30
       ExtendedSelect = False
       FixedCols = 0
       RowCount = 2
       TabOrder = 2
+      OnDrawCell = ValueListEditor1DrawCell
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking]
       Strings.Strings = (
         ''

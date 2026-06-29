@@ -13,17 +13,20 @@ basis for implementing hardware-specific ports.
 
 ### Own data types
 
-|name           |type                                  |description              |
-|---------------|--------------------------------------|-------------------------|
-|TLineMode      |(lmDirect, lmBCD)                     |Data line decoding mode  |
-|TLineModeHelper|type helper for TLineMode             |Helper                   |
-|.ToString      |String                                |Convert Enum -> String   |
-|TPortMode      |(pmReadOnly, pmWriteOnly, pmReadWrite)|Port operation mode      |
-|TPortModeHelper|type helper for TPortMode             |Helper                   |
-|.ToString      |String                                |Convert Enum -> String   |
-|TResponse      |(rp00, rpFF)                          |Response of the null port|
-|TResponseHelper|type helper for TResponse             |Helper                   |
-|.ToString      |String                                |Convert Enum -> String   |
+|name                             |type                                  |description              |
+|---------------------------------|--------------------------------------|-------------------------|
+|TLineMode                        |(lmDirect, lmBCD)                     |Data line decoding mode  |
+|TLineModeHelper                  |type helper for TLineMode             |Helper                   |
+|.ToString                        |String                                |Convert Enum -> String   |
+|.FromString(const AValue: string)|TLineMode                             |Convert String -> Enum   |
+|TPortMode                        |(pmReadOnly, pmWriteOnly, pmReadWrite)|Port operation mode      |
+|TPortModeHelper                  |type helper for TPortMode             |Helper                   |
+|.ToString                        |String                                |Convert Enum -> String   |
+|.FromString(const AValue: string)|TPortMode                             |Convert String -> Enum   |
+|TResponse                        |(rp00, rpFF)                          |Response of the null port|
+|TResponseHelper                  |type helper for TResponse             |Helper                   |
+|.ToString                        |String                                |Convert Enum -> String   |
+|.FromString(const AValue: string)|TResponse                             |Convert String -> Enum   |
 
 ### Protected fields
 

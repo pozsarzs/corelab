@@ -16,7 +16,8 @@ unit frmmain;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
-  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids, Menus;
+  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids, Menus,
+  Types;
 type
   TPluginAttributes = record
     PFilename: string;                                 // Filename of the module
@@ -29,7 +30,7 @@ type
     PEnabled: boolean;                    // Enable port without detach from bus
     PHasGUI: boolean;                     // Does the implementation have a GUI?
     PLatchedOutput: boolean;                                   // Latched output
-    PModname: string;                                            // Module name
+    PModname: string;                                             // Module name
     PPortMode: TPortMode;                                 // Port operation mode
     PReadBackOutput: boolean;           // Output port with read-back capability
     PResponse: TResponse;                    // Response type of the null device
@@ -37,7 +38,8 @@ type
     PSelNegation: boolean;                   // Negation of matrix selector bits
     PTitle: string;                                                // Form title
   end;
-  TRPDirection = (rdVar2List, rdList2Var);
+  // Direction pairs for data moving procedures
+  TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // port
   TCreatePortFunc = function: TIOPort; cdecl;
   TDestroyPortProc = procedure(Port: TIOPort); cdecl;
@@ -69,6 +71,8 @@ type
     procedure Button5Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer;
+      aRect: TRect; aState: TGridDrawState);
   private
     // port
     CreatePort: TCreatePortFunc;
@@ -83,7 +87,7 @@ type
     // module
     LibHandle: TLibHandle;                        // handle of the loaded module
     LoadedPlugin: TPluginAttributes;          // properties of the loaded module
-    procedure RefreshProperties(Direction: TRPDirection);
+    procedure RefreshProperties(Direction: TOpDirection);
   public
   end;
 var
@@ -97,62 +101,135 @@ implementation
 { TForm1 }
 
 // Refresh properties list
-procedure TForm1.RefreshProperties(Direction: TRPDirection);
+procedure TForm1.RefreshProperties(Direction: TOpDirection);
 var
   lm: TLineMode;
   rp: TResponse;
 begin
-  if Direction = rdVar2List then
+  if Direction = opVar2List then
   begin
     // Variables to ValueListEditor1
     with ValueListEditor1 do
     begin
       Clear;
+      DefaultRowHeight := 30;
       InsertRow('Filename', LoadedPlugin.PFilename, true);
       ItemProps['Filename'].ReadOnly := true;
+
       InsertRow('Modname',  LoadedPlugin.PModname, true);
       ItemProps['Modname'].ReadOnly := true;
+
       InsertRow('Title',  LoadedPlugin.PTitle, true);
       ItemProps['Title'].ReadOnly := true;
+
       InsertRow('Description', LoadedPlugin.PDescription, true);
       ItemProps['Description'].ReadOnly := true;
+
       InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI,'true','false'), true);
       ItemProps['HasGUI'].ReadOnly := true;
+
       InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), true);
-      ItemProps['Enabled'].PickList.CommaText := 'true,false';
+      with ItemProps['Enabled'] do
+      begin
+        EditStyle := esPickList;
+        PickList.CommaText := 'true,false';
+        ReadOnly := true;
+      end;
+
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
       ItemProps['AddressRangeSize'].EditMask := '000;1; ';
       ItemProps['AddressRangeSize'].MaxLength := 3;
+
       InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), true);
       ItemProps['LatchedOutput'].ReadOnly := true;
+
       InsertRow('PortMode', LoadedPlugin.PPortMode.ToString, true);
       ItemProps['PortMode'].ReadOnly := true;
+
       InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'true', 'false'), true);
       ItemProps['ReadBackOutput'].ReadOnly := true;
+
       InsertRow('DataInMode', LoadedPlugin.PDataInMode.ToString, true);
-      for lm := Low(TLineMode) to High(TLineMode) do
-        ItemProps['DataInMode'].PickList.Add(lm.ToString);
+      with ItemProps['DataInMode'] do
+      begin
+        EditStyle := esPickList;
+        for lm := Low(TLineMode) to High(TLineMode) do PickList.Add(lm.ToString);
+        ReadOnly := true;
+      end;
+
       InsertRow('DataInNegation', BoolToStr(LoadedPlugin.PDataInNegation, 'true', 'false'), true);
-      ItemProps['DataInNegation'].PickList.CommaText := 'true,false';
+      with ItemProps['DataInNegation'] do
+      begin
+        EditStyle := esPickList;
+        PickList.CommaText := 'true,false';
+        ReadOnly := true;
+      end;
+
       InsertRow('DataOutMode', LoadedPlugin.PDataOutMode.ToString, true);
-      for lm := Low(TLineMode) to High(TLineMode) do
-        ItemProps['DataOutMode'].PickList.Add(lm.ToString);
+      with ItemProps['DataOutMode'] do
+      begin
+        EditStyle := esPickList;
+        for lm := Low(TLineMode) to High(TLineMode) do PickList.Add(lm.ToString);
+        ReadOnly := true;
+      end;
+
       InsertRow('DataOutNegation', BoolToStr(LoadedPlugin.PDataOutNegation, 'true', 'false'), true);
-      ItemProps['DataOutNegation'].PickList.CommaText := 'true,false';
-       InsertRow('SelMode', LoadedPlugin.PSelMode.ToString, true);
-      for lm := Low(TLineMode) to High(TLineMode) do
-        ItemProps['SelMode'].PickList.Add(lm.ToString);
+      with ItemProps['DataOutNegation'] do
+      begin
+        EditStyle := esPickList;
+        PickList.CommaText := 'true,false';
+        ReadOnly := true;
+      end;
+
+      InsertRow('SelMode', LoadedPlugin.PSelMode.ToString, true);
+      with ItemProps['SelMode'] do
+      begin
+        EditStyle := esPickList;
+        for lm := Low(TLineMode) to High(TLineMode) do PickList.Add(lm.ToString);
+        ReadOnly := true;
+      end;
+
       InsertRow('SelNegation', BoolToStr(LoadedPlugin.PSelNegation, 'true', 'false'), true);
-      ItemProps['SelNegation'].PickList.CommaText := 'true,false';
+      with ItemProps['SelNegation'] do
+      begin
+        EditStyle := esPickList;
+        PickList.CommaText := 'true,false';
+        ReadOnly := true;
+      end;
+
       InsertRow('Response', LoadedPlugin.PResponse.ToString, true);
-      for rp := Low(TResponse) to High(TResponse) do
-        ItemProps['Response'].PickList.Add(rp.ToString);
+      with ItemProps['Response'] do
+      begin
+        EditStyle := esPickList;
+        for rp := Low(TResponse) to High(TResponse) do ItemProps['Response'].PickList.Add(rp.ToString);
+        ReadOnly := true;
+      end;
+
       AutoSizeColumn(0);
       Row := 1;
-    end else
+    end;
+  end;
+  if Direction = opList2Var then
+  begin
+    // ValueListEditor1 to variables
+    with ValueListEditor1 do
     begin
-      // ValueListEditor1 to variables
-
+      try
+        with LoadedPlugin do
+        begin
+          PEnabled := StrToBool(ItemProps['Enabled'].ToString);
+          // ItemProps['AddressRangeSize'] ..
+          PDataInMode :=  lm.fromString(ItemProps['DataInMode'].toString);
+          PDataInNegation := StrToBool(ItemProps['DataInNegation'].ToString);
+          PDataOutMode :=  lm.fromString(ItemProps['DataOutMode'].toString);
+          PDataOutNegation := StrToBool(ItemProps['DataOutNegation'].ToString);
+          PSelMode :=  lm.fromString(ItemProps['SelMode'].toString);
+          PSelNegation := StrToBool(ItemProps['SelNegation'].ToString);
+          PResponse :=  rp.fromString(ItemProps['Response'].toString);
+        end;
+      except
+        ShowMessage('hiba');
+      end;
     end;
   end;
 end;
@@ -250,7 +327,7 @@ begin
         PTitle := string(CurrentPort.Title);
       end;
       // show properties
-      RefreshProperties(rdVar2List);
+      RefreshProperties(opVar2List);
       // preset address/data table
       ValueListEditor2.Clear;
       for b := 0 to LoadedPlugin.PAddressRangeSize - 1 do
@@ -329,6 +406,27 @@ end;
 procedure TForm1.Button5Click(Sender: TObject);
 begin
   Form1.Close;
+end;
+
+// Coloring read-only properties
+procedure TForm1.ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
+var
+  Grid: TValueListEditor;
+begin
+  Grid := TValueListEditor(Sender);
+  if (aRow > 0) and
+     (aRow < Grid.RowCount-1) and
+     (Grid.ItemProps[Grid.Keys[aRow]].ReadOnly) and
+     (not (Grid.ItemProps[Grid.Keys[aRow]].EditStyle = esPickList)) and
+     (aCol = 0)  then
+    with Grid.Canvas do
+    begin
+      Brush.Color := clBtnFace;
+      Font.Color := clGrayText;
+      Font.Style := [fsItalic];
+      FillRect(aRect);
+      TextRect(aRect, aRect.Left + 4, aRect.Top + 6, Grid.Cells[ACol, ARow]);
+    end;
 end;
 
 // OnCreate event

@@ -15,21 +15,25 @@ unit core_ioport;
 {$mode objfpc}{$H+}
 {$modeswitch typehelpers}
 interface
+uses TypInfo;
 type
   // Data mode
   TLineMode = (lmDirect, lmBCD);
   TLineModeHelper = type helper for TLineMode
     function ToString: string;
+    function FromString(const AValue: string): TLineMode;
   end;
   // Operation mode
   TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
   TPortModeHelper = type helper for TPortMode
     function ToString: string;
+    function FromString(const AValue: string): TPortMode;
   end;
   // Null port response mode
   TResponse = (rp00, rpFF);
   TResponseHelper = type helper for TResponse
     function ToString: string;
+    function FromString(const AValue: string): TResponse;
   end;
   // Abstract base memory class
   TIOPort = class
@@ -84,14 +88,29 @@ begin
   WriteStr(Result, Self);
 end;
 
+function TLineModeHelper.FromString(const AValue: string): TLineMode;
+begin
+  Result := TLineMode(GetEnumValue(TypeInfo(TLineMode), AValue));
+end;
+
 function TPortModeHelper.ToString: string;
 begin
   WriteStr(Result, Self);
 end;
 
+function TPortModeHelper.FromString(const AValue: string): TPortMode;
+begin
+  Result := TPortMode(GetEnumValue(TypeInfo(TPortMode), AValue));
+end;
+
 function TResponseHelper.ToString: string;
 begin
   WriteStr(Result, Self);
+end;
+
+function TResponseHelper.FromString(const AValue: string): TResponse;
+begin
+  Result := TResponse(GetEnumValue(TypeInfo(TResponse), AValue));
 end;
 
 // Create TIOPort instance
