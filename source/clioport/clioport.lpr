@@ -14,7 +14,7 @@
 program clioport;
 {$mode objfpc}{$H+}
 uses
-  Interfaces, Forms, runtimetypeinfocontrols, frmmain;
+  cmem, Interfaces, Forms, runtimetypeinfocontrols, frmmain;
 
 {$R *.res}
 

@@ -14,7 +14,7 @@
 library ioport_bell;
 {$mode objfpc}{$H+}
 uses
-  SysUtils, core_ioport;
+  cmem, SysUtils, core_ioport;
 type
   // BELL device implementation
   TBELLPort = class(TIOPort)

@@ -15,9 +15,9 @@ unit frmmain;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
-  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids, Menus,
-  Types;
+  cmem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Buttons, ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, core_ioport, Grids,
+  Menus, ComCtrls, Types;
 type
   TPluginAttributes = record
     PFilename: string;                                 // Filename of the module
@@ -40,7 +40,7 @@ type
   end;
   // Direction pairs for data moving procedures
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
-  // port
+  // Port
   TCreatePortFunc = function: TIOPort; cdecl;
   TDestroyPortProc = procedure(Port: TIOPort); cdecl;
   // UI
@@ -51,17 +51,15 @@ type
   TSetSizePosPanelProc = procedure(Left, Top, Width, Height: integer); cdecl;
   { TForm1 }
   TForm1 = class(TForm)
-    Bevel1: TBevel;
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
-    Button5: TButton;
-    Button6: TButton;
     DirectoryEdit1: TDirectoryEdit;
     Panel1: TPanel;
     ShellListView1: TShellListView;
     Splitter1: TSplitter;
+    StatusBar1: TStatusBar;
     ValueListEditor1: TValueListEditor;
     ValueListEditor2: TValueListEditor;
     procedure Button1Click(Sender: TObject);
@@ -73,34 +71,93 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer;
       aRect: TRect; aState: TGridDrawState);
+    procedure ValueListEditor1EditingDone(Sender: TObject);
   private
-    // port
+    // Port
     CreatePort: TCreatePortFunc;
     DestroyPort: TDestroyPortProc;
-    CurrentPort: TIOPort;                     // created object of TIOPort class
+    CurrentPort: TIOPort;                     // Created object of TIOPort class
     // UI
     CreatePanel: TCreatePanelProc;
     ShowPanel: TShowPanelProc;
     HidePanel: THidePanelProc;
     FreePanel: TFreePanelProc;
     SetSizePosPanel: TSetSizePosPanelProc;
-    // module
-    LibHandle: TLibHandle;                        // handle of the loaded module
-    LoadedPlugin: TPluginAttributes;          // properties of the loaded module
+    // Module
+    LibHandle: TLibHandle;                        // Handle of the loaded module
+    LoadedPlugin: TPluginAttributes;          // Properties of the loaded module
     procedure RefreshProperties(Direction: TOpDirection);
+    procedure ImpExpProperties(Direction: TOpDirection);
   public
   end;
 var
   Form1: TForm1;
-const
-  ER = 'ERROR: ';
+  LoadCounter: byte = 0;              // Number of the succesfull load procedure
 
 implementation
 
 {$R *.lfm}
 { TForm1 }
 
-// Refresh properties list
+Resourcestring
+  MSG01 = 'ERROR: ';
+  MSG02 = '';
+  MSG03 = '';
+  MSG04 = '';
+  MSG05 = '';
+  MSG06 = '';
+
+// Import/export properties
+procedure TForm1.ImpExpProperties(Direction: TOpDirection);
+begin
+  // Import from plugin to variables
+  if Direction = opPlugin2Var then
+  begin
+    // Check and read Modname and Description
+    with LoadedPlugin do
+    begin
+      if Assigned(CurrentPort.Modname)
+        then PModname := string(CurrentPort.Modname)
+        else PModname := '';
+      if Assigned(CurrentPort.Description)
+        then PDescription := string(CurrentPort.Description)
+        else PDescription := '';
+      // Read other properties
+      PAddressRangeSize := CurrentPort.AddressRangeSize;
+      PDataInMode := CurrentPort.DataInMode;
+      PDataInNegation := CurrentPort.DataInNegation;
+      PDataOutMode := CurrentPort.DataOutMode;
+      PDataOutNegation := CurrentPort.DataOutNegation;
+      PEnabled := CurrentPort.Enabled;
+      PHasGUI := CurrentPort.HasGUI;
+      PLatchedOutput := CurrentPort.LatchedOutput;
+      PPortMode := CurrentPort.PortMode;
+      PReadBackOutput := CurrentPort.ReadBackOutput;
+      PResponse := CurrentPort.Response;
+      PSelMode := CurrentPort.SelMode;
+      PSelNegation := CurrentPort.SelNegation;
+      PTitle := string(CurrentPort.Title);
+    end;
+  end;
+  // Export from variables to plugin
+  if Direction = opVar2Plugin then
+  begin
+    with LoadedPlugin do
+    begin
+      CurrentPort.DataInMode := PDataInMode;
+      CurrentPort.DataInNegation := PDataInNegation;
+      CurrentPort.DataOutMode := PDataOutMode;
+      CurrentPort.DataOutNegation := PDataOutNegation;
+      CurrentPort.Enabled := PEnabled;
+      CurrentPort.Response := PResponse;
+      CurrentPort.SelMode := PSelMode;
+      CurrentPort.SelNegation := PSelNegation;
+      CurrentPort.Title := PChar(PTitle);
+    end;
+  end;
+end;
+
+// Refresh property list
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
 var
   lm: TLineMode;
@@ -137,8 +194,7 @@ begin
       end;
 
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, true);
-      ItemProps['AddressRangeSize'].EditMask := '000;1; ';
-      ItemProps['AddressRangeSize'].MaxLength := 3;
+      ItemProps['AddressRangeSize'].ReadOnly := true;
 
       InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), true);
       ItemProps['LatchedOutput'].ReadOnly := true;
@@ -215,18 +271,14 @@ begin
     with ValueListEditor1 do
     begin
       try
-        with LoadedPlugin do
-        begin
-          PEnabled := StrToBool(ItemProps['Enabled'].ToString);
-          // ItemProps['AddressRangeSize'] ..
-          PDataInMode :=  lm.fromString(ItemProps['DataInMode'].toString);
-          PDataInNegation := StrToBool(ItemProps['DataInNegation'].ToString);
-          PDataOutMode :=  lm.fromString(ItemProps['DataOutMode'].toString);
-          PDataOutNegation := StrToBool(ItemProps['DataOutNegation'].ToString);
-          PSelMode :=  lm.fromString(ItemProps['SelMode'].toString);
-          PSelNegation := StrToBool(ItemProps['SelNegation'].ToString);
-          PResponse :=  rp.fromString(ItemProps['Response'].toString);
-        end;
+        LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
+        LoadedPlugin.PDataInMode :=  lm.fromString(ItemProps['DataInMode'].toString);
+        LoadedPlugin.PDataInNegation := StrToBool(Values['DataInNegation']);
+        LoadedPlugin.PDataOutMode :=  lm.fromString(ItemProps['DataOutMode'].toString);
+        LoadedPlugin.PDataOutNegation := StrToBool(Values['DataOutNegation']);
+        LoadedPlugin.PSelMode :=  lm.fromString(ItemProps['SelMode'].toString);
+        LoadedPlugin.PSelNegation := StrToBool(Values['SelNegation']);
+        LoadedPlugin.PResponse :=  rp.fromString(ItemProps['Response'].toString);
       except
         ShowMessage('hiba');
       end;
@@ -263,7 +315,12 @@ begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
     // remove previous loaded module
     // UI
-    if Assigned(FreePanel) then FreePanel;
+    if Assigned(FreePanel) then
+    begin
+      HidePanel;
+      FreePanel;
+      Application.ProcessMessages;
+    end;
     // port
     if Assigned(CurrentPort) then
     begin
@@ -273,7 +330,7 @@ begin
     // module
     if LibHandle <> NilHandle then
     begin
-      UnloadLibrary(LibHandle);
+//      UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
       CreatePort := nil;
       DestroyPort := nil;
@@ -301,31 +358,9 @@ begin
     if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
     begin
       CurrentPort := CreatePort();
+      LoadedPlugin.PFilename := SelectedFile;
       // get properties
-      with LoadedPlugin do
-      begin
-        PFilename := SelectedFile;
-        if Assigned(CurrentPort.Modname)
-          then PModname := string(CurrentPort.Modname)
-          else PModname := '';
-        if Assigned(CurrentPort.Description)
-          then PDescription := string(CurrentPort.Description)
-          else PDescription := '';
-        PAddressRangeSize := CurrentPort.AddressRangeSize;
-        PDataInMode := CurrentPort.DataInMode;
-        PDataInNegation := CurrentPort.DataInNegation;
-        PDataOutMode := CurrentPort.DataOutMode;
-        PDataOutNegation := CurrentPort.DataOutNegation;
-        PEnabled := CurrentPort.Enabled;
-        PHasGUI := CurrentPort.HasGUI;
-        PLatchedOutput := CurrentPort.LatchedOutput;
-        PPortMode := CurrentPort.PortMode;
-        PReadBackOutput := CurrentPort.ReadBackOutput;
-        PResponse := CurrentPort.Response;
-        PSelMode := CurrentPort.SelMode;
-        PSelNegation := CurrentPort.SelNegation;
-        PTitle := string(CurrentPort.Title);
-      end;
+      ImpExpProperties(opPlugin2Var);
       // show properties
       RefreshProperties(opVar2List);
       // preset address/data table
@@ -335,15 +370,18 @@ begin
         ValueListEditor2.InsertRow('BA+' + b.ToString, '', true);
         ValueListEditor2.Cells[1,b + 1] := '0';
       end;
-      if LoadedPlugin.PPortMode = pmWriteOnly
-        then Button1.Enabled := false
-        else Button1.Enabled := true;
+      if LoadedPlugin.PPortMode = pmWriteOnly then
+      begin
+        Button1.Enabled := false; // read
+        Button2.Enabled := true;  // write
+      end;
       if LoadedPlugin.PReadBackOutput
-        then Button1.Enabled := true
-        else Button1.Enabled := true;
-      if LoadedPlugin.PPortMode = pmReadOnly
-        then Button2.Enabled := false
-        else Button2.Enabled := true;
+        then Button1.Enabled := true; // read
+      if LoadedPlugin.PPortMode = pmReadOnly then
+      begin
+        Button1.Enabled := true; // read
+        Button2.Enabled := false;  // write
+      end;
       ValueListEditor2.Enabled := true;
       // show UI
       if LoadedPlugin.PHasGUI and
@@ -354,7 +392,16 @@ begin
         CreatePanel(CurrentPort);
         ShowPanel;
       end;
-      Form1.Caption := Application.Title + ' - ' + ShellListView1.Selected.Caption;
+      ValueListEditor1.Enabled := true;
+      // show info
+      Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
+      Inc(LoadCounter);
+      with StatusBar1.Panels do
+      begin
+        Items[0].Text := LoadCounter.ToString + ' ';
+        Items[1].Text := ' ' + ShellListView1.Selected.Caption;
+        Items[2].Text := '';
+      end;
     end else
     begin
       ShowMessage(ER + 'It is not a CoreLAB IOPort module!');
@@ -362,6 +409,7 @@ begin
       ValueListEditor2.Clear;
       UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
+      ValueListEditor1.Enabled := false;
       ValueListEditor2.Enabled := false;
       Button1.Enabled := false;
       Button2.Enabled := false;
@@ -374,14 +422,14 @@ procedure TForm1.Button1Click(Sender: TObject);
 var
   InAddr, InData: byte;
 begin
+  InData := 0;
   InAddr := ValueListEditor2.Row - 1;
   if Assigned(CurrentPort) then
   begin
-    CurrentPort.Enabled := True;
     InData := CurrentPort.ReadPort(InAddr);
-    ShowMessage(IntToHex(InData, 2) + 'H read from port ' + IntToHex(InAddr, 2) + 'H.');
+    StatusBar1.Panels.Items[2].Text := ' ' + IntToHex(InData, 2) + 'h read from port ' + IntToHex(InAddr, 2) + 'h.';
   end;
-  ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToHex(InData, 2);
+  ValueListEditor2.Cells[2, ValueListEditor2.Row] := IntToHex(InData, 2);
 end;
 
 // Write data to port
@@ -395,9 +443,8 @@ begin
   begin
     if Assigned(CurrentPort) then
     begin
-      CurrentPort.Enabled := True;
       CurrentPort.WritePort(OutAddr, OutData);
-      ShowMessage('The ' + IntToHex(OutData, 2) + 'H is written to port ' + IntToHex(OutAddr, 2) + 'H.');
+      StatusBar1.Panels.Items[2].Text := ' The ' + IntToHex(OutData, 2) + 'h is written to port ' + IntToHex(OutAddr, 2) + 'h.'
     end;
   end;
 end;
@@ -409,7 +456,8 @@ begin
 end;
 
 // Coloring read-only properties
-procedure TForm1.ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
+procedure TForm1.ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer;
+  aRect: TRect; aState: TGridDrawState);
 var
   Grid: TValueListEditor;
 begin
@@ -427,6 +475,13 @@ begin
       FillRect(aRect);
       TextRect(aRect, aRect.Left + 4, aRect.Top + 6, Grid.Cells[ACol, ARow]);
     end;
+end;
+
+// Refresh P... variables
+procedure TForm1.ValueListEditor1EditingDone(Sender: TObject);
+begin
+  RefreshProperties(opList2Var);
+  ImpExpProperties(opVar2Plugin);
 end;
 
 // OnCreate event
@@ -468,6 +523,7 @@ begin
   // module
   if LibHandle <> NilHandle then
   begin
+    UnloadLibrary(LibHandle);
     LibHandle := NilHandle;
     CreatePort := nil;
     DestroyPort := nil;

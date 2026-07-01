@@ -16,7 +16,7 @@ unit core_cpu;
 {$modeswitch typehelpers}
 interface
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, TypInfo;
 type
   // Defines type of architecture
   TArchitecture = (arHarvad,arNeumann);

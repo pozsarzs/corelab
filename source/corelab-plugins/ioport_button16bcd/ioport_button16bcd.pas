@@ -14,7 +14,7 @@
 library ioport_button16bcd;
 {$mode objfpc}{$H+}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
+  cmem, Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
 type
   // 4x4 button input implementation
   TButton16BCD = class(TIOPort)
@@ -50,8 +50,7 @@ var
   s: string;
 begin
   inherited Create;
-  s := (IntToStr(MAXX + 1)) + 'x' + PChar(IntToStr(MAXY + 1)) + '-button with BCD output';
-  FModname := PChar(s);
+  FModname := 'Some buttons with BCD output';
   FDescription := 'One button can be pressed at a time, the value of which can be read in BCD format.';
   FHasGUI := true;
   FPortMode := pmReadOnly;
@@ -155,12 +154,15 @@ var
 begin
 if Assigned(PanelForm) then
   begin
-    PanelForm.Close;
-    PanelForm.Free;
-    PanelForm := nil;
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
+        SB[x, y].Free;
     for x := 0 to MAXX do
       for y := 0 to MAXY do
         SB[x, y] := nil;
+    PanelForm.Close;
+    PanelForm.Release;
+    PanelForm := nil;
   end;
 end;
 

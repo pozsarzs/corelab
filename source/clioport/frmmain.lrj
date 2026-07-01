@@ -2,11 +2,9 @@
 {"hash":5073153,"name":"tform1.caption","sourcebytes":[70,111,114,109,49],"value":"Form1"},
 {"hash":2853748,"name":"tform1.button1.caption","sourcebytes":[38,82,101,97,100],"value":"&Read"},
 {"hash":46043301,"name":"tform1.button2.caption","sourcebytes":[38,87,114,105,116,101],"value":"&Write"},
-{"hash":194784132,"name":"tform1.button3.caption","sourcebytes":[38,83,101,108,101,99,116],"value":"&Select"},
-{"hash":130910488,"name":"tform1.button4.caption","sourcebytes":[82,101,38,102,114,101,115,104],"value":"Re&fresh"},
-{"hash":44709525,"name":"tform1.button5.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
+{"hash":96503806,"name":"tform1.button3.caption","sourcebytes":[38,76,111,97,100,47,99,104,97,110,103,101,32,112,108,117,103,105,110],"value":"&Load/change plugin"},
+{"hash":62628452,"name":"tform1.button4.caption","sourcebytes":[82,101,38,102,114,101,115,104,32,112,108,117,103,105,110,32,108,105,115,116],"value":"Re&fresh plugin list"},
 {"hash":113232937,"name":"tform1.directoryedit1.buttonhint","sourcebytes":[80,108,117,103,105,110,32,100,105,114,101,99,116,111,114,121],"value":"Plugin directory"},
 {"hash":46,"name":"tform1.directoryedit1.text","sourcebytes":[46],"value":"."},
-{"hash":90721265,"name":"tform1.panel1.caption","sourcebytes":[80,97,110,101,108,49],"value":"Panel1"},
-{"hash":2800388,"name":"tform1.button6.caption","sourcebytes":[38,69,100,105,116],"value":"&Edit"}
+{"hash":90721265,"name":"tform1.panel1.caption","sourcebytes":[80,97,110,101,108,49],"value":"Panel1"}
 ]}

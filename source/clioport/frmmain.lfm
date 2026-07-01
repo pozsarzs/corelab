@@ -378,7 +378,7 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 456
     Height = 33
-    Top = 389
+    Top = 412
     Width = 80
     Anchors = [akTop, akLeft, akBottom]
     Caption = '&Read'
@@ -394,7 +394,7 @@ object Form1: TForm1
     AnchorSideBottom.Side = asrBottom
     Left = 552
     Height = 33
-    Top = 389
+    Top = 412
     Width = 80
     Anchors = [akTop, akRight, akBottom]
     Caption = '&Write'
@@ -408,26 +408,28 @@ object Form1: TForm1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button4
     AnchorSideBottom.Side = asrBottom
-    Left = 368
+    Left = 306
     Height = 33
-    Top = 389
-    Width = 80
+    Top = 412
+    Width = 142
     Anchors = [akTop, akRight, akBottom]
-    Caption = '&Select'
+    AutoSize = True
+    Caption = '&Load/change plugin'
     Enabled = False
     OnClick = Button3Click
     TabOrder = 2
   end
   object Button4: TButton
     AnchorSideLeft.Control = DirectoryEdit1
-    AnchorSideBottom.Control = Bevel1
+    AnchorSideBottom.Control = StatusBar1
     Left = 8
     Height = 33
-    Top = 389
-    Width = 80
+    Top = 412
+    Width = 134
     Anchors = [akLeft, akBottom]
-    BorderSpacing.Bottom = 8
-    Caption = 'Re&fresh'
+    AutoSize = True
+    BorderSpacing.Bottom = 16
+    Caption = 'Re&fresh plugin list'
     OnClick = Button4Click
     TabOrder = 0
   end
@@ -439,13 +441,14 @@ object Form1: TForm1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button2
     Left = 456
-    Height = 331
+    Height = 354
     Top = 50
     Width = 176
     Anchors = [akTop, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
+    DefaultRowHeight = 30
     Enabled = False
     FixedCols = 0
     RowCount = 2
@@ -459,22 +462,6 @@ object Form1: TForm1
       64
       110
     )
-  end
-  object Button5: TButton
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 548
-    Height = 33
-    Top = 439
-    Width = 80
-    Anchors = [akRight, akBottom]
-    BorderSpacing.Right = 12
-    BorderSpacing.Bottom = 8
-    Caption = '&Close'
-    OnClick = Button5Click
-    TabOrder = 7
   end
   object DirectoryEdit1: TDirectoryEdit
     AnchorSideLeft.Control = Owner
@@ -498,21 +485,6 @@ object Form1: TForm1
     OnEditingDone = Button4Click
     Text = '.'
   end
-  object Bevel1: TBevel
-    AnchorSideLeft.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Button5
-    Left = 8
-    Height = 5
-    Top = 430
-    Width = 624
-    Anchors = [akLeft, akRight, akBottom]
-    BorderSpacing.Left = 8
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 4
-    Shape = bsTopLine
-  end
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = DirectoryEdit1
@@ -520,7 +492,7 @@ object Form1: TForm1
     AnchorSideRight.Control = ValueListEditor2
     AnchorSideBottom.Control = Button4
     Left = 8
-    Height = 331
+    Height = 354
     Top = 50
     Width = 440
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -530,7 +502,7 @@ object Form1: TForm1
     BorderSpacing.Bottom = 8
     BevelOuter = bvNone
     Caption = 'Panel1'
-    ClientHeight = 331
+    ClientHeight = 354
     ClientWidth = 440
     TabOrder = 3
     object ShellListView1: TShellListView
@@ -560,16 +532,18 @@ object Form1: TForm1
     end
     object ValueListEditor1: TValueListEditor
       Left = 0
-      Height = 213
+      Height = 236
       Top = 118
       Width = 440
       Align = alClient
       DefaultRowHeight = 30
+      Enabled = False
       ExtendedSelect = False
       FixedCols = 0
       RowCount = 2
       TabOrder = 2
       OnDrawCell = ValueListEditor1DrawCell
+      OnEditingDone = ValueListEditor1EditingDone
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking]
       Strings.Strings = (
         ''
@@ -584,18 +558,22 @@ object Form1: TForm1
       )
     end
   end
-  object Button6: TButton
-    AnchorSideTop.Control = Button3
-    AnchorSideRight.Control = Button3
-    AnchorSideBottom.Control = Button3
-    AnchorSideBottom.Side = asrBottom
-    Left = 285
-    Height = 33
-    Top = 389
-    Width = 75
-    Anchors = [akTop, akRight, akBottom]
-    BorderSpacing.Right = 8
-    Caption = '&Edit'
-    TabOrder = 8
+  object StatusBar1: TStatusBar
+    Left = 0
+    Height = 19
+    Top = 461
+    Width = 640
+    Panels = <    
+      item
+        Alignment = taRightJustify
+        Width = 30
+      end    
+      item
+        Width = 200
+      end    
+      item
+        Width = 50
+      end>
+    SimplePanel = False
   end
 end

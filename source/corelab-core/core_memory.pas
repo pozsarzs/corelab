@@ -16,7 +16,7 @@ unit core_memory;
 {$modeswitch typehelpers}
 interface
 uses
-  Classes;
+  Classes, TypInfo;
 type
   // Operation mode
   TMemoryMode = (mmRAM, mmROM);

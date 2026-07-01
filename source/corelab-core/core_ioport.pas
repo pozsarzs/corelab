@@ -15,7 +15,8 @@ unit core_ioport;
 {$mode objfpc}{$H+}
 {$modeswitch typehelpers}
 interface
-uses TypInfo;
+uses
+  TypInfo;
 type
   // Data mode
   TLineMode = (lmDirect, lmBCD);
