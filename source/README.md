@@ -9,6 +9,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |name           |description                            |
 |---------------|---------------------------------------|
 |_ext           |External components                    |
+|_inc           |Pascal include files                   |
 |_lib           |Target libraries for build             |
 |_png           |Images used in the programs            |
 |_po            |GNU Gettext files destination directory|

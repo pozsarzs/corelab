@@ -17,7 +17,6 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="4"/>
         <UsageCount Value="216"/>
@@ -30,6 +29,7 @@
         <ComponentName Value="Form2"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <CursorPos X="8" Y="2"/>
         <UsageCount Value="78"/>
@@ -60,7 +60,7 @@
         <UsageCount Value="7"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="660" Column="26" TopLine="660"/>
@@ -168,6 +168,10 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="454" Column="27" TopLine="440"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="629" Column="4" TopLine="670"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
