@@ -1,8 +1,9 @@
 object Form2: TForm2
-  Left = 344
+  Left = 407
   Height = 272
-  Top = 166
+  Top = 269
   Width = 380
+  AutoSize = True
   BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 272
@@ -367,6 +368,16 @@ object Form2: TForm2
   OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '2.2.6.0'
+  object Bevel1: TBevel
+    AnchorSideBottom.Control = Button1
+    Left = 8
+    Height = 220
+    Top = 8
+    Width = 364
+    Align = alTop
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 8
+  end
   object Button1: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
@@ -382,59 +393,57 @@ object Form2: TForm2
     ModalResult = 11
     TabOrder = 0
   end
-  object PageControl1: TPageControl
-    AnchorSideBottom.Control = Button1
-    Left = 0
-    Height = 228
-    Top = 0
-    Width = 380
-    ActivePage = TabSheet1
-    Align = alTop
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Bottom = 8
-    TabIndex = 0
-    TabOrder = 1
-    object TabSheet1: TTabSheet
-      Caption = 'About'
-      ClientHeight = 197
-      ClientWidth = 370
-      object Memo1: TMemo
-        Left = 0
-        Height = 197
-        Top = 0
-        Width = 370
-        Align = alClient
-        Anchors = []
-        Lines.Strings = (
-          'Memo1'
-        )
-        ReadOnly = True
-        ScrollBars = ssAutoBoth
-        TabOrder = 0
-      end
-    end
-    object TabSheet2: TTabSheet
-      Caption = 'Licence'
-      ClientHeight = 197
-      ClientWidth = 370
-      object Memo2: TMemo
-        Left = 0
-        Height = 197
-        Top = 0
-        Width = 370
-        Align = alClient
-        Anchors = []
-        Lines.Strings = (
-          'Copyright (C) 2026 Pozsar Zsolt'
-          ''
-          'This program is free software: you can redistribute it and/or modify it under the terms of the European Union Public License 1.2 version.'
-          ''
-          'This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS   FOR A PARTICULAR PURPOSE.'
-        )
-        ReadOnly = True
-        ScrollBars = ssAutoBoth
-        TabOrder = 0
-      end
-    end
+  object Label1: TLabel
+    AnchorSideLeft.Control = Bevel1
+    AnchorSideTop.Control = Bevel1
+    Left = 16
+    Height = 17
+    Top = 20
+    Width = 51
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 12
+    Caption = 'Label1'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Bevel1
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 17
+    Top = 45
+    Width = 43
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Label2'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    AnchorSideLeft.Control = Bevel1
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 17
+    Top = 70
+    Width = 43
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Label3'
+    ParentColor = False
+  end
+  object Label4: TLabel
+    AnchorSideLeft.Control = Bevel1
+    AnchorSideTop.Control = Label3
+    AnchorSideTop.Side = asrBottom
+    Left = 16
+    Height = 17
+    Top = 103
+    Width = 43
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 16
+    Caption = 'Label4'
+    ParentColor = False
   end
 end

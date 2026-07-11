@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 326
+  Left = 340
   Height = 480
-  Top = 140
+  Top = 133
   Width = 640
   Caption = 'Form1'
   ClientHeight = 455
@@ -392,6 +392,8 @@ object Form1: TForm1
     FixedCols = 0
     RowCount = 2
     TabOrder = 2
+    OnEditingDone = ValueListEditor2EditingDone
+    OnValidateEntry = ValueListEditor2ValidateEntry
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking]
     TitleCaptions.Strings = (
       'Address'
@@ -637,6 +639,15 @@ object Form1: TForm1
       object MenuItem20: TMenuItem
         Action = ShowPluginWindow
       end
+      object Separator5: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem22: TMenuItem
+        Action = SetPluginWindowCaption
+      end
+      object MenuItem23: TMenuItem
+        Action = SetPluginWindowSizePosition
+      end
     end
     object MenuItem4: TMenuItem
       Caption = '&Operation'
@@ -822,9 +833,18 @@ object Form1: TForm1
       ImageIndex = 4
       OnExecute = ShowPluginWindowExecute
     end
+    object SetPluginWindowCaption: TAction
+      Caption = 'Set plugin window caption'
+      Enabled = False
+      OnExecute = SetPluginWindowCaptionExecute
+    end
+    object SetPluginWindowSizePosition: TAction
+      Caption = 'Set plugin window size/position'
+      Enabled = False
+      OnExecute = SetPluginWindowSizePositionExecute
+    end
     object ReadAByte: TAction
       Caption = '&Read a byte'
-      Enabled = False
       Hint = 'Read a byte'
       ImageIndex = 5
       OnExecute = ReadAByteExecute
@@ -832,7 +852,6 @@ object Form1: TForm1
     end
     object WriteAByte: TAction
       Caption = '&Write a byte'
-      Enabled = False
       Hint = 'Write a byte'
       ImageIndex = 6
       OnExecute = WriteAByteExecute

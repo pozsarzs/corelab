@@ -15,9 +15,9 @@ unit frmmain;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Buttons, ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus,
-  ComCtrls, ActnList, Types, core_ioport, frmabout;
+  CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
+  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls,
+  ActnList, Types, core_ioport, core_gioport, frmabout, frmsizepos;
 type
   TPluginAttributes = record
     PFilename:         String;                         // Filename of the module
@@ -28,82 +28,91 @@ type
     PDataOutNegation:  Boolean;             // Negation of databit (CPU -> port)
     PDescription:      String;                              // Short description
     PEnabled:          Boolean;           // Enable port without detach from bus
-    PHasGUI:           Boolean;           // Does the implementation have a GUI?
+    PHasPanel:         Boolean;           // Does the implementation have a GUI?
     PLatchedOutput:    Boolean;                                // Latched output
     PModname:          String;                                    // Module name
-    PPortMode:         TPortMode;                         // Port operation mode
+    PPanelCaption:     PChar;                                   // Panel caption
+    PPanelHeight:      Integer;                                  // Panel height
+    PPanelLeft:        Integer;                           // Panel left position
+    PPanelTop:         Integer;                            // Panel top position
+    PPanelWidth:       Integer;                                   // Panel width
     PReadBackOutput:   Boolean;         // Output port with read-back capability
-    PResponse:         TResponse;            // Response type of the null device
     PSelMode:          TLineMode;              // Decoding matrix selector lines
     PSelNegation:      Boolean;              // Negation of matrix selector bits
-    PTitle:            String;                                     // Form title
   end;
   // Direction pairs for data moving procedures
   TOpDirection    = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
-  // Port
-  TCreatePortFunc = function: TIOPort; CDECL;
-  TDestroyPortProc = procedure(Port: TIOPort); CDECL;
-  // UI
-  TCreatePanelProc = procedure(Port: TIOPort); CDECL;
-  TShowPanelProc = procedure; CDECL;
-  THidePanelProc = procedure; CDECL;
-  TFreePanelProc = procedure; CDECL;
-  TSetSizePosPanelProc = procedure(Left, Top, Width, Height: Integer); CDECL;
+  // - port
+  TCreatePortFunc = function: TIOPort; cdecl;
+  TDestroyPortProc = procedure(Port: TIOPort); cdecl;
+  // - panel
+  TCreatePanelProc = procedure(Port: TIOPort); cdecl;
+  TShowPanelProc = procedure(Port: TIOPort); cdecl;
+  THidePanelProc = procedure(Port: TIOPort); cdecl;
+  TFreePanelProc = procedure(Port: TIOPort); cdecl;
+  TMovePanelProc = function(Port: TIOPort; Left, Top: Integer): Boolean; cdecl;
+  TRenamePanelProc = procedure(Port: TIOPort; Caption: PChar); cdecl;
+  TResizePanelProc = function(Port: TIOPort; Width, Height: Integer): Boolean; cdecl;
   { TForm1 }
   TForm1 = class(TForm)
-    Quit: TAction;
-    SelectPluginDirectory: TAction;
-    RestartApplication: TAction;
-    ShowPluginWindow: TAction;
-    ReadAByte: TAction;
-    WriteAByte: TAction;
-    Help: TAction;
-    About: TAction;
-    LoadChangePlugin: TAction;
-    RefreshPluginList: TAction;
-    ActionList1: TActionList;
-    DirectoryEdit1:   TDirectoryEdit;
-    ImageList1:       TImageList;
-    MainMenu1:        TMainMenu;
-    MenuItem1:        TMenuItem;
-    MenuItem10:       TMenuItem;
-    MenuItem11:       TMenuItem;
-    MenuItem13:       TMenuItem;
-    MenuItem14:       TMenuItem;
-    MenuItem15:       TMenuItem;
-    MenuItem16:       TMenuItem;
-    MenuItem17:       TMenuItem;
-    MenuItem18:       TMenuItem;
-    MenuItem19: TMenuItem;
-    MenuItem20: TMenuItem;
-    Separator4:       TMenuItem;
-    Separator3:       TMenuItem;
-    MenuItem12:       TMenuItem;
-    Separator2:       TMenuItem;
-    MenuItem2:        TMenuItem;
-    MenuItem3:        TMenuItem;
-    MenuItem4:        TMenuItem;
-    MenuItem5:        TMenuItem;
-    MenuItem6:        TMenuItem;
-    MenuItem7:        TMenuItem;
-    MenuItem9:        TMenuItem;
-    Separator1:       TMenuItem;
-    MenuItem8:        TMenuItem;
-    Panel1:           TPanel;
-    ShellListView1:   TShellListView;
-    Splitter1:        TSplitter;
-    StatusBar1:       TStatusBar;
-    Timer1:           TTimer;
-    ToolBar1:         TToolBar;
-    ToolButton1:      TToolButton;
-    ToolButton2:      TToolButton;
-    ToolButton3:      TToolButton;
-    ToolButton4:      TToolButton;
-    ToolButton5:      TToolButton;
-    ToolButton6:      TToolButton;
-    ToolButton7:      TToolButton;
-    ValueListEditor1: TValueListEditor;
-    ValueListEditor2: TValueListEditor;
+    About:                       TAction;
+    ActionList1:                 TActionList;
+    DirectoryEdit1:              TDirectoryEdit;
+    Help:                        TAction;
+    ImageList1:                  TImageList;
+    LoadChangePlugin:            TAction;
+    MainMenu1:                   TMainMenu;
+    MenuItem1:                   TMenuItem;
+    MenuItem10:                  TMenuItem;
+    MenuItem11:                  TMenuItem;
+    MenuItem12:                  TMenuItem;
+    MenuItem13:                  TMenuItem;
+    MenuItem14:                  TMenuItem;
+    MenuItem15:                  TMenuItem;
+    MenuItem16:                  TMenuItem;
+    MenuItem17:                  TMenuItem;
+    MenuItem18:                  TMenuItem;
+    MenuItem19:                  TMenuItem;
+    MenuItem2:                   TMenuItem;
+    MenuItem20:                  TMenuItem;
+    MenuItem22:                  TMenuItem;
+    MenuItem23:                  TMenuItem;
+    MenuItem3:                   TMenuItem;
+    MenuItem4:                   TMenuItem;
+    MenuItem5:                   TMenuItem;
+    MenuItem6:                   TMenuItem;
+    MenuItem7:                   TMenuItem;
+    MenuItem8:                   TMenuItem;
+    MenuItem9:                   TMenuItem;
+    Panel1:                      TPanel;
+    Quit:                        TAction;
+    ReadAByte:                   TAction;
+    RefreshPluginList:           TAction;
+    RestartApplication:          TAction;
+    SelectPluginDirectory:       TAction;
+    Separator1:                  TMenuItem;
+    Separator2:                  TMenuItem;
+    Separator3:                  TMenuItem;
+    Separator4:                  TMenuItem;
+    Separator5:                  TMenuItem;
+    SetPluginWindowCaption:      TAction;
+    SetPluginWindowSizePosition: TAction;
+    ShellListView1:              TShellListView;
+    ShowPluginWindow:            TAction;
+    Splitter1:                   TSplitter;
+    StatusBar1:                  TStatusBar;
+    Timer1:                      TTimer;
+    ToolBar1:                    TToolBar;
+    ToolButton1:                 TToolButton;
+    ToolButton2:                 TToolButton;
+    ToolButton3:                 TToolButton;
+    ToolButton4:                 TToolButton;
+    ToolButton5:                 TToolButton;
+    ToolButton6:                 TToolButton;
+    ToolButton7:                 TToolButton;
+    ValueListEditor1:            TValueListEditor;
+    ValueListEditor2:            TValueListEditor;
+    WriteAByte:                  TAction;
     procedure AboutExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -119,23 +128,30 @@ type
     procedure RefreshPluginListExecute(Sender: TObject);
     procedure RestartApplicationExecute(Sender: TObject);
     procedure SelectPluginDirectoryExecute(Sender: TObject);
+    procedure SetPluginWindowCaptionExecute(Sender: TObject);
+    procedure SetPluginWindowSizePositionExecute(Sender: TObject);
     procedure ShowPluginWindowExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
+    procedure ValueListEditor2EditingDone(Sender: TObject);
+    procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol,
+      aRow: Integer; const OldValue: string; var NewValue: String);
     procedure WriteAByteExecute(Sender: TObject);
   private
-    // Port
+    // - port
     CreatePort:      TCreatePortFunc;
     DestroyPort:     TDestroyPortProc;
     CurrentPort:     TIOPort;                 // Created object of TIOPort class
-    // UI
+    // - panel
     CreatePanel:     TCreatePanelProc;
     ShowPanel:       TShowPanelProc;
     HidePanel:       THidePanelProc;
     FreePanel:       TFreePanelProc;
-    SetSizePosPanel: TSetSizePosPanelProc;
-    // Module
+    MovePanel:       TMovePanelProc;
+    RenamePanel:     TRenamePanelProc;
+    ResizePanel:     TResizePanelProc;
+    // - module
     LibHandle:       TLibHandle;                  // Handle of the loaded module
     LoadedPlugin:    TPluginAttributes;       // Properties of the loaded module
     procedure RefreshProperties(Direction: TOpDirection);
@@ -143,8 +159,8 @@ type
   public
   end;
 var
-  Form1:       TForm1;
-  LoadCounter: Byte = 0;              // Number of the succesfull LoadChangePlugin procedure
+  Form1:           TForm1;
+  LoadCounter:     Byte = 0;                    // Number of the succesfull Load
   PluginDirectory: string = '.';
 
 implementation
@@ -164,11 +180,11 @@ resourcestring
   MSG09 = 'Property';
   MSG10 = 'Value';
   MSG11 = 'Address';
-  MSG12 = 'Data';
+  MSG12 = 'Data (Hex)';
   MSG13 = ' %sh read from port %sh.';
   MSG14 = ' %sh write to port %sh.';
-  MSG15 = '';
-  MSG16 = '';
+  MSG15 = 'Only 8-bit hexadecimal values can be entered (00 - FF)!';
+  MSG16 = 'Caption';
   MSG17 = '';
   MSG18 = '';
   MSG19 = '';
@@ -177,10 +193,10 @@ resourcestring
 // IMPORT/EXPORT PROPERTIES
 procedure TForm1.ImpExpProperties(Direction: TOpDirection);
 begin
-  // Import from plugin to variables
+  // import from plugin to variables
   if Direction = opPlugin2Var then
   begin
-    // Check and read Modname and Description
+    // check and read Modname and Description
     with LoadedPlugin do
     begin
       if Assigned(CurrentPort.Modname)
@@ -189,50 +205,61 @@ begin
       if Assigned(CurrentPort.Description)
         then PDescription := String(CurrentPort.Description)
         else PDescription := '';
-      // Read other properties
+      // read port properties
       PAddressRangeSize := CurrentPort.AddressRangeSize;
       PDataInMode := CurrentPort.DataInMode;
       PDataInNegation := CurrentPort.DataInNegation;
       PDataOutMode := CurrentPort.DataOutMode;
       PDataOutNegation := CurrentPort.DataOutNegation;
       PEnabled := CurrentPort.Enabled;
-      PHasGUI := CurrentPort.HasGUI;
+      PHasPanel := CurrentPort.HasPanel;
       PLatchedOutput := CurrentPort.LatchedOutput;
-      PPortMode := CurrentPort.PortMode;
       PReadBackOutput := CurrentPort.ReadBackOutput;
-      PResponse := CurrentPort.Response;
       PSelMode := CurrentPort.SelMode;
       PSelNegation := CurrentPort.SelNegation;
-      PTitle := String(CurrentPort.Title);
+      // read UI properties
+      if PHasPanel and (CurrentPort is TGIOPort) then
+      begin
+        PPanelCaption := TGIOPort(CurrentPort).PanelCaption;
+        PPanelHeight  := TGIOPort(CurrentPort).PanelHeight;
+        PPanelLeft    := TGIOPort(CurrentPort).PanelLeft;
+        PPanelTop     := TGIOPort(CurrentPort).PanelTop;
+        PPanelWidth   := TGIOPort(CurrentPort).PanelWidth;
+      end else
+      begin
+        PPanelCaption := nil;
+        PPanelHeight  := 0;
+        PPanelLeft    := 0;
+        PPanelTop     := 0;
+        PPanelWidth   := 0;
+      end;
     end;
   end;
-  // Export from variables to plugin
+  // export from variables to plugin
   if Direction = opVar2Plugin then
   begin
     with LoadedPlugin do
     begin
+      // only writeable properties
       CurrentPort.DataInMode := PDataInMode;
       CurrentPort.DataInNegation := PDataInNegation;
       CurrentPort.DataOutMode := PDataOutMode;
       CurrentPort.DataOutNegation := PDataOutNegation;
       CurrentPort.Enabled := PEnabled;
-      CurrentPort.Response := PResponse;
       CurrentPort.SelMode := PSelMode;
       CurrentPort.SelNegation := PSelNegation;
-      CurrentPort.Title := PChar(PTitle);
     end;
   end;
 end;
 
-// RefreshPluginList PROPERTY LIST
+// REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
 var
   lm: TLineMode;
-  rp: TResponse;
 begin
   if Direction = opVar2List then
   begin
-    // Variables to ValueListEditor1
+    // variables to ValueListEditor1
     with ValueListEditor1 do
     begin
       Clear;
@@ -241,12 +268,10 @@ begin
       ItemProps['Filename'].ReadOnly := True;
       InsertRow('Modname', LoadedPlugin.PModname, True);
       ItemProps['Modname'].ReadOnly := True;
-      InsertRow('Title', LoadedPlugin.PTitle, True);
-//      ItemProps['Title'].ReadOnly := true;
       InsertRow('Description', LoadedPlugin.PDescription, True);
       ItemProps['Description'].ReadOnly := True;
-      InsertRow('HasGUI', BoolToStr(LoadedPlugin.PHasGUI, 'true', 'false'), True);
-      ItemProps['HasGUI'].ReadOnly := True;
+      InsertRow('HasPanel', BoolToStr(LoadedPlugin.PHasPanel, 'true', 'false'), True);
+      ItemProps['HasPanel'].ReadOnly := True;
       InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), True);
       with ItemProps['Enabled'] do
       begin
@@ -258,8 +283,6 @@ begin
       ItemProps['AddressRangeSize'].ReadOnly := True;
       InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), True);
       ItemProps['LatchedOutput'].ReadOnly := True;
-      InsertRow('PortMode', LoadedPlugin.PPortMode.ToString, True);
-      ItemProps['PortMode'].ReadOnly := True;
       InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'true', 'false'), True);
       ItemProps['ReadBackOutput'].ReadOnly := True;
       InsertRow('DataInMode', LoadedPlugin.PDataInMode.ToString, True);
@@ -304,13 +327,6 @@ begin
         PickList.CommaText := 'true,false';
         ReadOnly := True;
       end;
-      InsertRow('Response', LoadedPlugin.PResponse.ToString, True);
-      with ItemProps['Response'] do
-      begin
-        EditStyle := esPickList;
-        for rp := Low(TResponse) to High(TResponse) do ItemProps['Response'].PickList.Add(rp.ToString);
-        ReadOnly := True;
-      end;
       AutoSizeColumn(0);
       Row := 1;
     end;
@@ -328,8 +344,6 @@ begin
         LoadedPlugin.PDataOutNegation := StrToBool(Values['DataOutNegation']);
         LoadedPlugin.PSelMode := lm.fromString(ItemProps['SelMode'].toString);
         LoadedPlugin.PSelNegation := StrToBool(Values['SelNegation']);
-        LoadedPlugin.PResponse := rp.fromString(ItemProps['Response'].toString);
-        LoadedPlugin.PTitle := Values['Title'];
       except
         ShowMessage(MSG01 + MSG02);
       end;
@@ -365,11 +379,36 @@ begin
     end;
 end;
 
-// RefreshPluginList P... VARIABLES
+// REFRESH P... VARIABLES
 procedure TForm1.ValueListEditor1EditingDone(Sender: TObject);
 begin
   RefreshProperties(opList2Var);
   ImpExpProperties(opVar2Plugin);
+end;
+
+// VALIDATE DATA
+procedure TForm1.ValueListEditor2ValidateEntry(Sender: TObject; aCol,
+  aRow: Integer; const OldValue: string; var NewValue: String);
+var
+  Val: Integer;
+begin
+  if aCol = 1 then
+  begin
+    NewValue := Trim(NewValue);
+    if NewValue = '' then NewValue := '00';
+    // validating hexa value
+    if not TryStrToInt('$' + NewValue, Val) or (Val < 0) or (Val > 255) then
+    begin
+      ShowMessage(MSG01 + MSG15);
+      NewValue := OldValue;
+    end else NewValue := IntToHex(Val, 2);
+  end;
+end;
+
+// WRITE TO PORT
+procedure TForm1.ValueListEditor2EditingDone(Sender: TObject);
+begin
+  WriteAByte.Execute;
 end;
 
 // --- MAIN MENU ---
@@ -447,20 +486,20 @@ begin
   begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
     // remove previous loaded module
-    // UI
+    // - panel
     if Assigned(FreePanel) then
     begin
-      HidePanel;
-      FreePanel;
+      if Assigned(HidePanel) then HidePanel(CurrentPort);
+      FreePanel(CurrentPort);
       Application.ProcessMessages;
     end;
-    // port
+    // - port
     if Assigned(CurrentPort) then
     begin
       DestroyPort(CurrentPort);
       CurrentPort := nil;
     end;
-    // module
+    // - module
     if LibHandle <> NilHandle then
     begin
       // UnloadLibrary(LibHandle);
@@ -471,9 +510,11 @@ begin
       ShowPanel := nil;
       HidePanel := nil;
       FreePanel := nil;
-      SetSizePosPanel := nil;
+      MovePanel := nil;
+      RenamePanel := nil;
+      ResizePanel := nil;
     end;
-    // LoadChangePlugin module
+    // load new module
     LibHandle := LoadLibrary(SelectedFile);
     if LibHandle = NilHandle then
     begin
@@ -481,13 +522,18 @@ begin
       exit;
     end;
     // search exported function and instantiation
+    // - port
     Pointer(CreatePort) := GetProcedureAddress(LibHandle, 'ioport_create');
     Pointer(DestroyPort) := GetProcedureAddress(LibHandle, 'ioport_destroy');
+    // - panel
     Pointer(CreatePanel) := GetProcedureAddress(LibHandle, 'ioport_createpanel');
     Pointer(ShowPanel) := GetProcedureAddress(LibHandle, 'ioport_showpanel');
     Pointer(HidePanel) := GetProcedureAddress(LibHandle, 'ioport_hidepanel');
     Pointer(FreePanel) := GetProcedureAddress(LibHandle, 'ioport_freepanel');
-    Pointer(SetSizePosPanel) := GetProcedureAddress(LibHandle, 'ioport_setsizepospanel');
+    Pointer(MovePanel) := GetProcedureAddress(LibHandle, 'ioport_movepanel');
+    Pointer(RenamePanel) := GetProcedureAddress(LibHandle, 'ioport_renamepanel');
+    Pointer(ResizePanel) := GetProcedureAddress(LibHandle, 'ioport_resizepanel');
+    // load data
     if (Assigned(CreatePort)) and (Assigned(DestroyPort)) then
     begin
       CurrentPort := CreatePort();
@@ -503,28 +549,18 @@ begin
         ValueListEditor2.InsertRow('BA+' + b.ToString, '', True);
         ValueListEditor2.Cells[1, b + 1] := '0';
       end;
-      if LoadedPlugin.PPortMode = pmWriteOnly then
-      begin
-        ReadAByte.Enabled := False;
-        WriteAByte.Enabled := True;
-      end;
-      if LoadedPlugin.PReadBackOutput then MenuItem7.Enabled := True; // read a byte
-      if LoadedPlugin.PPortMode = pmReadOnly then
-      begin
-        ReadAByte.Enabled := True;
-        WriteAByte.Enabled := False;
-      end;
       ValueListEditor2.Enabled := True;
-      // show UI
-      if LoadedPlugin.PHasGUI and
+      // show panel
+      if LoadedPlugin.PHasPanel and
         Assigned(CreatePanel) and Assigned(ShowPanel) and
-        Assigned(HidePanel) and Assigned(FreePanel) and
-        Assigned(SetSizePosPanel) then
+        Assigned(HidePanel) and Assigned(FreePanel) then
       begin
         CreatePanel(CurrentPort);
-        ShowPanel;
+        ShowPanel(CurrentPort);
       end;
       ValueListEditor1.Enabled := True;
+      ReadAByte.Enabled := True;
+      WriteAByte.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(LoadCounter);
@@ -534,9 +570,12 @@ begin
         Items[1].Text := ' ' + ShellListView1.Selected.Caption;
         Items[2].Text := '';
       end;
-    end
-    else
+      ShowPluginWindow.Enabled := LoadedPlugin.PHasPanel;
+      SetPluginWindowCaption.Enabled := LoadedPlugin.PHasPanel;
+      SetPluginWindowSizePosition.Enabled := LoadedPlugin.PHasPanel;
+    end else
     begin
+      // loading error
       ShowMessage(MSG01 + MSG05);
       ValueListEditor1.Clear;
       ValueListEditor2.Clear;
@@ -546,6 +585,9 @@ begin
       ValueListEditor2.Enabled := False;
       ReadAByte.Enabled := False;
       WriteAByte.Enabled := False;
+      ShowPluginWindow.Enabled := False;
+      SetPluginWindowCaption.Enabled := False;
+      SetPluginWindowSizePosition.Enabled := False;
     end;
   end;
 end;
@@ -565,7 +607,27 @@ end;
 // SHOW PLUGIN WINDOW
 procedure TForm1.ShowPluginWindowExecute(Sender: TObject);
 begin
+  if LoadedPlugin.PHasPanel and
+     Assigned(CreatePanel) and Assigned(ShowPanel) and
+     Assigned(HidePanel) and Assigned(FreePanel) then
+  begin
+    ShowPanel(CurrentPort);
+  end;
+end;
 
+procedure TForm1.SetPluginWindowCaptionExecute(Sender: TObject);
+begin
+  if LoadedPlugin.PHasPanel and
+     Assigned(CreatePanel) and Assigned(ShowPanel) and
+     Assigned(HidePanel) and Assigned(FreePanel) then
+  begin
+    RenamePanel(CurrentPort, PChar(InputBox(SetPluginWindowCaption.Caption,MSG16,'')));
+  end;
+end;
+
+procedure TForm1.SetPluginWindowSizePositionExecute(Sender: TObject);
+begin
+  Form4.ShowModal;
 end;
 
 // READ A BYTE
@@ -605,7 +667,6 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
-
 end;
 
 // ABOUT
@@ -613,8 +674,6 @@ procedure TForm1.AboutExecute(Sender: TObject);
 begin
   Form2.ShowModal;
 end;
-
-// -----------------
 
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
@@ -627,11 +686,13 @@ begin
   ShowPanel := nil;
   HidePanel := nil;
   FreePanel := nil;
-  SetSizePosPanel := nil;
+  MovePanel := nil;
+  RenamePanel := nil;
+  ResizePanel := nil;
   LibHandle := NilHandle;
   Form1.Caption := Application.Title;
   DirectoryEdit1.Directory := PluginDirectory;
-  // Set headers
+  // set headers
   with ShellListView1 do
   begin
     Columns[0].Caption := MSG06;
@@ -652,7 +713,7 @@ begin
     Cells[1, 1] := '0';
     Enabled := False;
   end;
-  // Enable/disable menuitems
+  // enable/disable menuitems
   if DirectoryExists(MenuItem15.Caption, True) then MenuItem15.Enabled := True;
   if DirectoryExists(MenuItem16.Caption, True) then MenuItem16.Enabled := True;
   if DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Enabled := True;
@@ -660,24 +721,24 @@ begin
   LoadChangePlugin.Enabled := False;
   ReadAByte.Enabled := False;
   WriteAByte.Enabled := False;
-  // RefreshPluginList plugin list
+  // refresh plugin list
   RefreshPluginList.Execute;
 end;
 
 // ONDESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  // UI
-  if LoadedPlugin.PHasGUI and
+  // - panel
+  if LoadedPlugin.PHasPanel and
     Assigned(CreatePanel) and Assigned(ShowPanel) and
-    Assigned(HidePanel) and Assigned(FreePanel) then FreePanel;
-  // port
+    Assigned(HidePanel) and Assigned(FreePanel) then FreePanel(CurrentPort);
+  // - port
   if Assigned(CurrentPort) then
   begin
     DestroyPort(CurrentPort);
     CurrentPort := nil;
   end;
-  // module
+  // - module
   if LibHandle <> NilHandle then
   begin
     UnloadLibrary(LibHandle);
@@ -688,7 +749,9 @@ begin
     ShowPanel := nil;
     HidePanel := nil;
     FreePanel := nil;
-    SetSizePosPanel := nil;
+    MovePanel := nil;
+    RenamePanel := nil;
+    ResizePanel := nil;
   end;
 end;
 

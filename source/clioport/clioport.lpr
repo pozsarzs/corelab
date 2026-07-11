@@ -15,7 +15,7 @@ program clioport;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls, crt,
-  frmabout, frmmain;
+  frmabout, frmmain, frmsizepos;
 const
   PRGCOPY = '(C) 2026 Pozsar Zsolt <http://www.pozsarzs.hu>';
   PRGNAME = 'CLIOPort';
@@ -137,6 +137,7 @@ begin
     Application.Initialize;
     Application.CreateForm(TForm1, Form1);
     Application.CreateForm(TForm2, Form2);
+    Application.CreateForm(TForm4, Form4);
     Application.Run;
   end;
 end.

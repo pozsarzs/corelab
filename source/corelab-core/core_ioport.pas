@@ -2,7 +2,7 @@
 { | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | core_ioport.pas                                                          | }
-{ | I/O port abstraction module                                              | }
+{ | I/O port (device) abstraction module                                     | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -12,78 +12,78 @@
   FOR A PARTICULAR PURPOSE. }
 
 unit core_ioport;
-{$mode objfpc}{$H+}
-{$modeswitch typehelpers}
+{$MODE OBJFPC}{$H+}
+{$MODESWITCH TYPEHELPERS}
 interface
 uses
-  TypInfo;
+  SysUtils, TypInfo;
 type
+  TIOPort = class;
   // Data mode
   TLineMode = (lmDirect, lmBCD);
   TLineModeHelper = type helper for TLineMode
     function ToString: string;
     function FromString(const AValue: string): TLineMode;
   end;
-  // Operation mode
-  TPortMode = (pmReadOnly, pmWriteOnly, pmReadWrite);
-  TPortModeHelper = type helper for TPortMode
-    function ToString: string;
-    function FromString(const AValue: string): TPortMode;
+  // Version info
+  TSemanticVersion = record
+    Major: Integer;
+    Minor: Integer;
+    Patch: Integer;
   end;
-  // Null port response mode
-  TResponse = (rp00, rpFF);
-  TResponseHelper = type helper for TResponse
+  TSemanticVersionHelper = type helper for TSemanticVersion
     function ToString: string;
-    function FromString(const AValue: string): TResponse;
+    function Compare(Other: TSemanticVersion): Integer;
   end;
-  // Abstract base memory class
+  // Callback procedure for interrupt
+  type TInterruptCallback = procedure(Sender: TIOPort; Vector: Byte) of object;
+  // I/O port (device) base class
   TIOPort = class
   protected
-    FAddressRangeSize: byte;                               // Address range size
-    FDataInMode: TLineMode;                         // Decoding input data lines
-    FDataInNegation: boolean;               // Negation of databit (port -> CPU)
-    FDataOutMode: TLineMode;                       // Decoding output data lines
-    FDataOutNegation: boolean;              // Negation of databit (CPU -> port)
-    FDescription: PChar;                                    // Short description
-    FEnabled: boolean;                    // Enable port without detach from bus
-    FHasGUI: boolean;                     // Does the implementation have a GUI?
-    FLatchedOutput: boolean;                                   // Latched output
-    FModname: PChar;                                              // Module name
-    FPortMode: TPortMode;                                 // Port operation mode
-    FReadBackOutput: boolean;           // Output port with read-back capability
-    FResponse: TResponse;                    // Response type of the null device
-    FSelMode: TLineMode;                       // Decoding matrix selector lines
-    FSelNegation: boolean;                   // Negation of matrix selector bits
-    FTitle: PChar;                                                 // Form title
+    FAddressRangeSize: Byte;                               // Address range size
+    FDataInMode:       TLineMode;                   // Decoding input data lines
+    FDataInNegation:   Boolean;             // Negation of databit (port -> CPU)
+    FDataOutMode:      TLineMode;                  // Decoding output data lines
+    FDataOutNegation:  Boolean;             // Negation of databit (CPU -> port)
+    FDescription:      PChar;                               // Short description
+    FEnabled:          Boolean;           // Enable port without detach from bus
+    FHasPanel:         Boolean;           // Does the implementation have a GUI?
+    FLatchedOutput:    Boolean;                                // Latched output
+    FModname:          PChar;                                     // Module name
+    FReadBackOutput:   Boolean;         // Output port with read-back capability
+    FSelMode:          TLineMode;              // Decoding matrix selector lines
+    FSelNegation:      Boolean;              // Negation of matrix selector bits
+    FVersion:          TSemanticVersion;                       // Module version
+    FIntVector:        Byte;                                 // Interrupt vector
+    FOnInterrupt:      TInterruptCallback;   // Callback procedure for interrupt
+    procedure RequestInterrupt; virtual;    
   public
-    // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
-    function ReadPort(Port: byte): byte; virtual; abstract;
+    function ReadPort(Port: Byte): Byte; virtual; abstract;
     procedure Reset; virtual; abstract;
-    procedure WritePort(Port: byte; Value: byte); virtual; abstract;
-    // Public properties
-    property AddressRangeSize: byte read FAddressRangeSize;
+    procedure WritePort(Port: Byte; Value: Byte); virtual; abstract;
+    property AddressRangeSize: Byte read FAddressRangeSize;
     property DataInMode: TLineMode read FDataInMode write FDataInMode;
-    property DataInNegation: boolean read FDataInNegation write FDataInNegation;
+    property DataInNegation: Boolean read FDataInNegation write FDataInNegation;
     property DataOutMode: TLineMode read FDataOutMode write FDataOutMode;
-    property DataOutNegation: boolean read FDataOutNegation write FDataOutNegation;
+    property DataOutNegation: Boolean read FDataOutNegation write FDataOutNegation;
     property Description: PChar read FDescription;
-    property Enabled: boolean read FEnabled write FEnabled;
-    property HasGUI: boolean read FHasGUI;
-    property LatchedOutput: boolean read FLatchedOutput;
+    property Enabled: Boolean read FEnabled write FEnabled;
+    property HasPanel: Boolean read FHasPanel;
+    property IntVector: Byte read FIntVector write FIntVector;
+    property LatchedOutput: Boolean read FLatchedOutput;
     property ModName: PChar read FModname;
-    property PortMode: TPortMode read FPortMode;
-    property ReadBackOutput: boolean read FReadBackOutput;
-    property Response: TResponse read FResponse write FResponse;
+    property OnInterrupt: TInterruptCallback read FOnInterrupt write FOnInterrupt;
+    property ReadBackOutput: Boolean read FReadBackOutput;
     property SelMode: TLineMode read FSelMode write FSelMode;
-    property SelNegation: boolean read FSelNegation write FSelNegation;
-    property Title: PChar read FTitle write FTitle;
+    property SelNegation: Boolean read FSelNegation write FSelNegation;
+    property Version: TSemanticVersion read FVersion;
   end;
 
 implementation
 
-// Helper for own types
+// HELPER FOR OWN TYPES
 function TLineModeHelper.ToString: string;
 begin
   WriteStr(Result, Self);
@@ -94,27 +94,32 @@ begin
   Result := TLineMode(GetEnumValue(TypeInfo(TLineMode), AValue));
 end;
 
-function TPortModeHelper.ToString: string;
+function TSemanticVersionHelper.ToString: string;
 begin
-  WriteStr(Result, Self);
+  Result := Format('%d.%d.%d', [Major, Minor, Patch]);
 end;
 
-function TPortModeHelper.FromString(const AValue: string): TPortMode;
+function TSemanticVersionHelper.Compare(Other: TSemanticVersion): Integer;
 begin
-  Result := TPortMode(GetEnumValue(TypeInfo(TPortMode), AValue));
+  Result := 0;
+  if Other.Major > Major then Result := -1 else
+    if Other.Major < Major then Result := 1;
+  if Result = 0 then
+    if Other.Minor > Minor then Result := -1 else
+      if Other.Minor < Minor then Result := 1;
+  if Result = 0 then
+    if Other.Patch > Patch then Result := -1 else
+      if Other.Patch < Patch then Result := 1;
 end;
 
-function TResponseHelper.ToString: string;
+// REQUEST INTERRUPT
+procedure TIOPort.RequestInterrupt;
 begin
-  WriteStr(Result, Self);
+  if FEnabled and Assigned(FOnInterrupt) then
+    FOnInterrupt(Self, FIntVector);
 end;
 
-function TResponseHelper.FromString(const AValue: string): TResponse;
-begin
-  Result := TResponse(GetEnumValue(TypeInfo(TResponse), AValue));
-end;
-
-// Create TIOPort instance
+// CREATE TIOPORT INSTANCE
 constructor TIOPort.Create;
 begin
   inherited Create;
@@ -125,18 +130,21 @@ begin
   FDataOutMode := lmBCD;
   FDataOutNegation := false;
   FEnabled := false;
-  FHasGUI := false;
+  FHasPanel := false;
   FLatchedOutput := false;
   FModname := 'MyIO';
-  FPortMode := pmReadWrite;
   FReadBackOutput := false;
-  FResponse := rp00;
   FSelMode := lmBCD;
   FSelNegation := false;
-  FTitle := FModname;
+  with FVersion do
+  begin
+    Major := 0;
+    Minor := 1;
+    Patch := 0;
+  end; 
 end;
 
-// Destroy TIOPort instance
+// DESTROY TIOPORT INSTANCE
 destructor TIOPort.Destroy;
 begin
   inherited Destroy;

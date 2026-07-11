@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":5073156,"name":"tform4.caption","sourcebytes":[70,111,114,109,52],"value":"Form4"},
+{"hash":178628,"name":"tform4.button1.caption","sourcebytes":[38,83,101,116],"value":"&Set"},
+{"hash":177752476,"name":"tform4.button2.caption","sourcebytes":[38,67,97,110,99,101,108],"value":"&Cancel"}
+]}

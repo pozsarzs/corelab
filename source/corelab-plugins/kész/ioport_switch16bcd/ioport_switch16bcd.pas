@@ -12,113 +12,103 @@
   FOR A PARTICULAR PURPOSE. }
 
 library ioport_switch16bcd;
-{$mode objfpc}{$H+}
+{$MODE OBJFPC}{$H+}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport;
+  CMem, Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport,
+  core_gioport;
+const
+  MAXX = 3;                               // Index of the last switch in the row
+  MAXY = 3;                            // Index of the last switch in the column
 type
-  // 4x4 switch input implementation
-  TSwitch16BCD = class(TIOPort)
+  // 4x4 switch input class
+  TSwitch16BCD = class(TGIOPort)
   protected
+    FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                    // switches
     procedure AllRelease(mx, my: byte);
   public
+    // - port
     constructor Create; override;
     destructor Destroy; override;
     function ReadPort(Port: byte): byte; override;
+    procedure Reset; override;
     procedure WritePort(Port: byte; Value: byte); override;
-    procedure Reset;  override;
+    // - panel
+    procedure CreatePanel; override;
   end;
-  const
-    MAXX = 3;                             // Index of the last button in the row
-    MAXY = 3;                          // Index of the last button in the column
-  var
-    PanelForm: TForm = nil;
-    SB: array[0..MAXX, 0..MAXY] of TSpeedButton;
 
-// Release all buttons
+// RELEASE ALL SWITCHES
 procedure TSwitch16BCD.AllRelease(mx, my: byte);
 var
   x, y: byte;
 begin
   for x := 0 to mx do
     for y := 0 to my do
-      SB[x, y].Down := false;
+      FSB[x, y].Down := false;
 end;
   
-// Create TIOPort instance
+// CREATE TSWITCH16BCD INSTANCE
 constructor TSwitch16BCD.Create;
-var
-  s: string;
 begin
   inherited Create;
-  s := (IntToStr(MAXX + 1)) + 'x' + PChar(IntToStr(MAXY + 1)) + '-switch with BCD output';
-  FModname := PChar(s);
+  FModname := 'Some switchs with BCD output';
   FDescription := 'One switch can be pressed at a time, the value of which can be read in BCD format.';
-  FHasGUI := true;
-  FPortMode := pmReadOnly;
+  FHasPanel := true;
 end;
 
-// Destroy TIOPort instance
+// DESTROY TSWITCH16BCD INSTANCE
 destructor TSwitch16BCD.Destroy;
 begin
+  FreePanel;
   inherited Destroy;
 end;
 
-// Read virtual port
+// READ VIRTUAL PORT
 function TSwitch16BCD.ReadPort(Port: byte): byte;
 var
   x, y: byte;
 begin
-  for x := 0 to MAXX do
-    for y := 0 to MAXY do
-      if SB[x, y].Down then Result := y * 4 + x;
+  if FEnabled then
+  begin
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
+        if FSB[x, y].Down then Result := y * 4 + x;
+  end else Result := $FF;
 end;
 
-// Write virtual port
-procedure TSwitch16BCD.WritePort(Port: byte; Value: byte);
-begin
-end;
-
-// Reset virtual port
+// RESET VIRTUAL PORT
 procedure TSwitch16BCD.Reset;
 begin
   AllRelease(MAXX, MAXY);
 end;
 
-// Exportable function for create TIOPort instance
-function CreatePort: TIOPort; cdecl; export;
+// WRITE VIRTUAL PORT
+procedure TSwitch16BCD.WritePort(Port: byte; Value: byte);
 begin
-  Result := TSwitch16BCD.Create;
 end;
 
-// Exportable function for destroy TIOPort instance
-procedure DestroyPort(Port: TIOPort); cdecl; export;
-begin
-  if Assigned(Port) then Port.Free;
-end;
-
-// Exportable function for create UI panel
-procedure CreatePanel(Port: TIOPort); cdecl; export;
+// CREATE PANEL
+procedure TSwitch16BCD.CreatePanel;
 var
   x, y: byte;
 begin
-  if Assigned(PanelForm) then exit;
+  if Assigned(FPanelForm) then exit;
 
-  PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.Title;
-  PanelForm.Position := poDefaultPosOnly;
-  PanelForm.BorderIcons := [biSystemMenu, biMinimize];
+  FPanelForm := TForm.Create(nil);
+  FPanelForm.Caption := StrPas(FPanelCaption);
+  FPanelForm.Position := poDefaultPosOnly;
+  FPanelForm.BorderIcons := [biSystemMenu, biMinimize];
   x := MAXX + 1;
   y := MAXY + 1;
-  PanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
-  PanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
+  FPanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
+  FPanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
   
   for x := 0 to MAXX do
     for y := 0 to MAXY do
     begin
-      SB[x, y] := TSpeedButton.Create(PanelForm);
-      with SB[x, y] do
+      FSB[x, y] := TSpeedButton.Create(FPanelForm);
+      with FSB[x, y] do
       begin
-        Parent := PanelForm;
+        Parent := FPanelForm;
         Caption := IntToHex(y * 4 + x, 1);
         AllowAllUp := True;
         GroupIndex := 1;
@@ -129,60 +119,79 @@ begin
       end;
     end;
 
-  PanelForm.Constraints.MinWidth := PanelForm.Width;
-  PanelForm.Constraints.MaxWidth := PanelForm.Width;
-  PanelForm.Constraints.MinHeight := PanelForm.Height;
-  PanelForm.Constraints.MaxHeight := PanelForm.Height;
+  FPanelForm.Constraints.MinWidth := FPanelForm.Width;
+  FPanelForm.Constraints.MaxWidth := FPanelForm.Width;
+  FPanelForm.Constraints.MinHeight := FPanelForm.Height;
+  FPanelForm.Constraints.MaxHeight := FPanelForm.Height;
 end;
 
-// Exportable function for show UI panel
-procedure ShowPanel; cdecl; export;
+// EXPORTABLE FUNCTIONS AND PROCEDURES
+function CreatePort: TIOPort; cdecl; export;
 begin
-  if Assigned(PanelForm) then PanelForm.Show;
+  Result := TSwitch16BCD.Create;
 end;
 
-// Exportable function for hide UI panel
-procedure HidePanel; cdecl; export;
+procedure DestroyPort(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(PanelForm) then PanelForm.Hide;
+  if Assigned(Port) then Port.Free;
 end;
 
-// Exportable function for destroy UI panel
-procedure FreePanel; cdecl; export;
-var
-  x, y: byte;
+procedure CreatePanel(Port: TIOPort); cdecl; export;
 begin
-if Assigned(PanelForm) then
-  begin
-    PanelForm.Close;
-    PanelForm.Free;
-    PanelForm := nil;
-    for x := 0 to MAXX do
-      for y := 0 to MAXY do
-        SB[x, y] := nil;
-  end;
+  if Assigned(Port) and (Port is TSwitch16BCD) then
+    TSwitch16BCD(Port).CreatePanel;
 end;
 
-// Exportable function for move and resize UI panel
-procedure SetSizePosPanel(Left, Top, Width, Height: integer); cdecl; export;
+procedure FreePanel(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(PanelForm) then
-  begin
-    PanelForm.Left := Left;
-    PanelForm.Top := Top;
-    PanelForm.Width := Width;
-    PanelForm.Height := Height;
-  end;
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).FreePanel;
 end;
 
-// Exported functions and procedures
+procedure HidePanel(Port: TIOPort); cdecl; export;
+begin
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).HidePanel;
+end;
+
+function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean; cdecl; export;
+begin
+  Result := False;
+  if Assigned(Port) and (Port is TGIOPort) then
+    Result := TGIOPort(Port).MovePanel(Left, Top);
+end;
+
+procedure RenamePanel(Port: TIOPort; Caption: PChar); cdecl; export;
+begin
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).RenamePanel(Caption);
+end;
+
+function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean; cdecl; export;
+begin
+  Result := False;
+  if Assigned(Port) and (Port is TGIOPort) then
+    Result := TGIOPort(Port).ResizePanel(Width, Height);
+end;
+
+procedure ShowPanel(Port: TIOPort); cdecl; export;
+begin
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).ShowPanel;
+end;
+
+// EXPORTED FUNCTIONS AND PROCEDURES
+// - port
 exports CreatePort name 'ioport_create';
 exports DestroyPort name 'ioport_destroy';
+// - panel
 exports CreatePanel name 'ioport_createpanel';
-exports ShowPanel name 'ioport_showpanel';
-exports HidePanel name 'ioport_hidepanel';
 exports FreePanel name 'ioport_freepanel';
-exports SetSizePosPanel name  'ioport_setsizepospanel';
+exports HidePanel name 'ioport_hidepanel';
+exports MovePanel name 'ioport_setpanel';
+exports RenamePanel name 'ioport_renamepanel';
+exports ResizePanel name 'ioport_resizepanel';
+exports ShowPanel name 'ioport_showpanel';
 
 begin
 end.

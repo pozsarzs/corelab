@@ -12,110 +12,109 @@
   FOR A PARTICULAR PURPOSE. }
 
 unit core_display;
-{$mode objfpc}{$H+}
+{$MODE OBJFPC}{$H+}
 interface
 uses
   Classes, Graphics;
 type
   // Displayed value with decimal points and blank status
   TDisplayedData = record
-    Blank: boolean;
-    LeftDot: boolean;
-    RightDot: boolean;
-    Segments: byte; { bits 0-6 }
-    Value: byte; { bits 0-3 }
+    Blank:    Boolean;
+    LeftDot:  Boolean;
+    RightDot: Boolean;
+    Segments: Byte; { bits 0-6 }
+    Value:    Byte; { bits 0-3 }
   end;
-  // Abstract base display class
+  // Display base class
   TDisplay = class
   protected  
-    FModname: PChar;                                              // Module name
-    FDescription: PChar;                                    // Short description
-    FEnabled: boolean;                                      // Enable displaying
-    FBuffer: TBitmap;                                         // Internal buffer
-    FDisplayedData: TDisplayedData;       // Displayed value, dots, and segments
-    const RETRO_RED_GLOW: TColor = $003333FF;        // Retro red display colors
+    FModname:             PChar;                                  // Module name
+    FDescription:         PChar;                            // Short description
+    FEnabled:             Boolean;                          // Enable displaying
+    FBuffer:              TBitmap;                            // Internal buffer
+    FDisplayedData:       TDisplayedData; // Displayed value, dots, and segments
+    // Retro red display colors
+    const RETRO_RED_GLOW: TColor = $003333FF;
     const RETRO_RED_ON:   TColor = $000000FF;
     const RETRO_RED_OFF:  TColor = $00000040;
     const RETRO_RED_BG:   TColor = $00000015;
   public
-    // Public methods
     constructor Create; virtual;
     destructor Destroy; virtual;
     procedure DrawToBuffer(InputData: TDisplayedData); virtual; abstract;
-    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); virtual; abstract;
+    procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer); virtual; abstract;
     procedure Reset; virtual;
-    procedure SetBlank(Status: boolean); virtual;
-    procedure SetLeftDot(Status: boolean); virtual;
-    procedure SetRightDot(Status: boolean); virtual;
-    procedure SetSegments(Value: byte); virtual;
-    procedure SetValue(Value: byte); virtual;
-    // Public properties
+    procedure SetBlank(Status: Boolean); virtual;
+    procedure SetLeftDot(Status: Boolean); virtual;
+    procedure SetRightDot(Status: Boolean); virtual;
+    procedure SetSegments(Value: Byte); virtual;
+    procedure SetValue(Value: Byte); virtual;
     property Description: PChar read FDescription;
-    property Enabled: boolean read FEnabled write FEnabled;
+    property Enabled: Boolean read FEnabled write FEnabled;
     property ModName: PChar read FModname;
   end;
     
 implementation
 
-// Create TDisplay instance
+// CREATE TDISPLAY INSTANCE
 constructor TDisplay.Create;
 begin
   inherited Create;
   FBuffer := TBitmap.Create;
 end;
 
-// Destroy TDisplay instance
+// DESTROY TDISPLAY INSTANCE
 destructor TDisplay.Destroy;
 begin
   Buffer.Free;
-  Buffer := nil;
+  Buffer := Nil;
   inherited Destroy;
 end;
 
-// Reset display
+// RESET DISPLAY
 procedure TDisplay.Reset;
 begin
   with DisplayedData do
   begin
-    Blank := false;
-    RightDot := false;
-    LeftDot := false;
+    Blank := False;
+    RightDot := False;
+    LeftDot := False;
     Segments := 0;
     Value := 0;
   end;
   DrawToBuffer(DisplayedData);
 end;
 
-// Blank display
-procedure TDisplay.SetBlank(Status: boolean);
+// BLANK DISPLAY
+procedure TDisplay.SetBlank(Status: Boolean);
 begin
   DisplayedData.Blank := Status;
   DrawToBuffer(DisplayedData);
 end;
 
-// Set left decimal point status
-procedure TDisplay.SetLeftDot(Status: boolean);
+// SET LEFT DECIMAL POINT STATUS
+procedure TDisplay.SetLeftDot(Status: Boolean);
 begin
   DisplayedData.LeftDot := Status;
   DrawToBuffer(DisplayedData);
 end;
 
-// Set right decimal point status
-procedure TDisplay.SetRightDot(Status: boolean);
+// SET RIGHT DECIMAL POINT STATUS
+procedure TDisplay.SetRightDot(Status: Boolean);
 begin
   DisplayedData.RightDot := Status;
   DrawToBuffer(DisplayedData);
 end;
 
-// Set input BCD value
-procedure TDisplay.SetValue(Value: byte);
+// SET INPUT BCD VALUE
+procedure TDisplay.SetValue(Value: Byte);
 begin
   DisplayedData.Value := Value and $0F;
   DrawToBuffer(DisplayedData);
 end;
 
-// Set input segment data
-procedure TDisplay.SetSegments(Value: byte);
+// SET INPUT SEGMENT DATA
+procedure TDisplay.SetSegments(Value: Byte);
 begin
   DisplayedData.Segments := Value;
   DrawToBuffer(DisplayedData);

@@ -27,6 +27,8 @@
 {"hash":9850078,"name":"tform1.quit.hint","sourcebytes":[69,120,105,116,32,102,114,111,109,32,97,112,112,108,105,99,97,116,105,111,110],"value":"Exit from application"},
 {"hash":53280327,"name":"tform1.showpluginwindow.caption","sourcebytes":[83,38,104,111,119,32,112,108,117,103,105,110,32,119,105,110,100,111,119],"value":"S&how plugin window"},
 {"hash":58523159,"name":"tform1.showpluginwindow.hint","sourcebytes":[83,104,111,119,32,112,108,117,103,105,110,32,119,105,110,100,111,119],"value":"Show plugin window"},
+{"hash":131512206,"name":"tform1.setpluginwindowcaption.caption","sourcebytes":[83,101,116,32,112,108,117,103,105,110,32,119,105,110,100,111,119,32,99,97,112,116,105,111,110],"value":"Set plugin window caption"},
+{"hash":251777518,"name":"tform1.setpluginwindowsizeposition.caption","sourcebytes":[83,101,116,32,112,108,117,103,105,110,32,119,105,110,100,111,119,32,115,105,122,101,47,112,111,115,105,116,105,111,110],"value":"Set plugin window size/position"},
 {"hash":76429253,"name":"tform1.readabyte.caption","sourcebytes":[38,82,101,97,100,32,97,32,98,121,116,101],"value":"&Read a byte"},
 {"hash":107886533,"name":"tform1.readabyte.hint","sourcebytes":[82,101,97,100,32,97,32,98,121,116,101],"value":"Read a byte"},
 {"hash":232762101,"name":"tform1.writeabyte.caption","sourcebytes":[38,87,114,105,116,101,32,97,32,98,121,116,101],"value":"&Write a byte"},

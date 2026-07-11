@@ -1,24 +1,122 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: tform1.button1.caption
-msgid "&Read"
+#: clioport.msg01
+msgid "CoreLAB I/O plugin tester"
 msgstr ""
 
-#: tform1.button2.caption
-msgid "&Write"
+#: clioport.msg02
+msgid "Build date:  "
 msgstr ""
 
-#: tform1.button3.caption
-msgid "&Select"
+#: clioport.msg03
+msgid "Builder:     "
 msgstr ""
 
-#: tform1.button4.caption
-msgid "Re&fresh"
+#: clioport.msg04
+msgid "FPC version: "
 msgstr ""
 
-#: tform1.button5.caption
-msgid "&Close"
+#: clioport.msg05
+msgid "Target OS:   "
+msgstr ""
+
+#: clioport.msg06
+msgid "Target CPU:  "
+msgstr ""
+
+#: clioport.msg07
+msgid "There are one or more bad arguments in command line."
+msgstr ""
+
+#: clioport.msg08
+msgid "Usage"
+msgstr ""
+
+#: clioport.msg09
+msgid "[argument]"
+msgstr ""
+
+#: clioport.msg10
+msgctxt "clioport.msg10"
+msgid "[directory]"
+msgstr ""
+
+#: clioport.msg11
+msgctxt "clioport.msg11"
+msgid "arguments:"
+msgstr ""
+
+#: frmmain.msg01
+msgid "ERROR: "
+msgstr ""
+
+#: frmmain.msg02
+msgid "Data type conversion error!"
+msgstr ""
+
+#: frmmain.msg03
+#, object-pascal-format
+msgid "Directory '%s' does not exist."
+msgstr ""
+
+#: frmmain.msg04
+#, object-pascal-format
+msgid "Cannot load '%s' plugin: "
+msgstr ""
+
+#: frmmain.msg05
+msgid "It is not a CoreLAB IOPort plugin!"
+msgstr ""
+
+#: frmmain.msg06
+msgid "Filename"
+msgstr ""
+
+#: frmmain.msg07
+msgid "Size"
+msgstr ""
+
+#: frmmain.msg08
+msgid "Type"
+msgstr ""
+
+#: frmmain.msg09
+msgid "Property"
+msgstr ""
+
+#: frmmain.msg10
+msgid "Value"
+msgstr ""
+
+#: frmmain.msg11
+msgid "Address"
+msgstr ""
+
+#: frmmain.msg12
+msgid "Data (Hex)"
+msgstr ""
+
+#: frmmain.msg13
+#, object-pascal-format
+msgid " %sh read from port %sh."
+msgstr ""
+
+#: frmmain.msg14
+#, object-pascal-format
+msgid " %sh write to port %sh."
+msgstr ""
+
+#: frmmain.msg15
+msgid "Only 8-bit hexadecimal values can be entered (00 - FF)!"
+msgstr ""
+
+#: frmmain.msg16
+msgid "Caption"
+msgstr ""
+
+#: tform1.about.caption
+msgid "&About"
 msgstr ""
 
 #: tform1.caption
@@ -26,14 +124,214 @@ msgid "Form1"
 msgstr ""
 
 #: tform1.directoryedit1.buttonhint
-msgid "Plugin directory"
+msgctxt "tform1.directoryedit1.buttonhint"
+msgid "Select plugin directory"
 msgstr ""
 
-#: tform1.directoryedit1.text
-msgid "."
+#: tform1.help.caption
+msgctxt "tform1.help.caption"
+msgid "&Help"
+msgstr ""
+
+#: tform1.loadchangeplugin.caption
+msgctxt "tform1.loadchangeplugin.caption"
+msgid "Load/change p&lugin"
+msgstr ""
+
+#: tform1.loadchangeplugin.hint
+msgctxt "tform1.loadchangeplugin.hint"
+msgid "Load/change plugin"
+msgstr ""
+
+#: tform1.menuitem1.caption
+msgid "&File"
+msgstr ""
+
+#: tform1.menuitem11.caption
+msgid "Us&ual places"
+msgstr ""
+
+#: tform1.menuitem14.caption
+msgid "./"
+msgstr ""
+
+#: tform1.menuitem15.caption
+msgid "/usr/lib/corelab/"
+msgstr ""
+
+#: tform1.menuitem16.caption
+msgid "./plugins/"
+msgstr ""
+
+#: tform1.menuitem17.caption
+msgid "/usr/local/lib/corelab/"
+msgstr ""
+
+#: tform1.menuitem18.caption
+msgid "~/.local/lib/corelab/"
+msgstr ""
+
+#: tform1.menuitem19.caption
+msgid "&View"
+msgstr ""
+
+#: tform1.menuitem4.caption
+msgid "&Operation"
+msgstr ""
+
+#: tform1.menuitem5.caption
+msgctxt "tform1.menuitem5.caption"
+msgid "&Help"
 msgstr ""
 
 #: tform1.panel1.caption
+msgctxt "tform1.panel1.caption"
+msgid "Panel1"
+msgstr ""
+
+#: tform1.quit.caption
+msgctxt "tform1.quit.caption"
+msgid "E&xit"
+msgstr ""
+
+#: tform1.quit.hint
+msgid "Exit from application"
+msgstr ""
+
+#: tform1.readabyte.caption
+msgctxt "tform1.readabyte.caption"
+msgid "&Read a byte"
+msgstr ""
+
+#: tform1.readabyte.hint
+msgid "Read a byte"
+msgstr ""
+
+#: tform1.refreshpluginlist.caption
+msgctxt "tform1.refreshpluginlist.caption"
+msgid "Re&fresh plugin list"
+msgstr ""
+
+#: tform1.refreshpluginlist.hint
+msgctxt "tform1.refreshpluginlist.hint"
+msgid "Refresh plugin list"
+msgstr ""
+
+#: tform1.restartapplication.caption
+msgctxt "tform1.restartapplication.caption"
+msgid "Restart &application"
+msgstr ""
+
+#: tform1.restartapplication.hint
+msgid "Restart application"
+msgstr ""
+
+#: tform1.selectplugindirectory.caption
+msgctxt "tform1.selectplugindirectory.caption"
+msgid "Select plugin &directory..."
+msgstr ""
+
+#: tform1.selectplugindirectory.hint
+msgctxt "tform1.selectplugindirectory.hint"
+msgid "Select plugin directory"
+msgstr ""
+
+#: tform1.setpluginwindowcaption.caption
+msgid "Set plugin window caption"
+msgstr ""
+
+#: tform1.setpluginwindowsizeposition.caption
+msgid "Set plugin window size/position"
+msgstr ""
+
+#: tform1.showpluginwindow.caption
+msgid "S&how plugin window"
+msgstr ""
+
+#: tform1.showpluginwindow.hint
+msgid "Show plugin window"
+msgstr ""
+
+#: tform1.toolbar1.caption
+msgid "ToolBar1"
+msgstr ""
+
+#: tform1.toolbutton3.caption
+msgid "ToolButton3"
+msgstr ""
+
+#: tform1.toolbutton6.caption
+msgid "ToolButton6"
+msgstr ""
+
+#: tform1.writeabyte.caption
+msgctxt "tform1.writeabyte.caption"
+msgid "&Write a byte"
+msgstr ""
+
+#: tform1.writeabyte.hint
+msgid "Write a byte"
+msgstr ""
+
+#: tform2.button1.caption
+msgid "&Close"
+msgstr ""
+
+#: tform2.caption
+msgctxt "tform2.caption"
+msgid "Help"
+msgstr ""
+
+#: tform4.button1.caption
+msgid "&Set"
+msgstr ""
+
+#: tform4.button2.caption
+msgid "&Cancel"
+msgstr ""
+
+#: tform4.caption
+msgid "Form4"
+msgstr ""
+
+#: tform4.labelededit1.editlabel.caption
+msgid "Left"
+msgstr ""
+
+#: tform4.labelededit1.text
+msgctxt "tform4.labelededit1.text"
+msgid "0"
+msgstr ""
+
+#: tform4.labelededit2.editlabel.caption
+msgid "Top"
+msgstr ""
+
+#: tform4.labelededit2.text
+msgctxt "tform4.labelededit2.text"
+msgid "0"
+msgstr ""
+
+#: tform4.labelededit3.editlabel.caption
+msgid "Height"
+msgstr ""
+
+#: tform4.labelededit3.text
+msgctxt "tform4.labelededit3.text"
+msgid "0"
+msgstr ""
+
+#: tform4.labelededit4.editlabel.caption
+msgid "Width"
+msgstr ""
+
+#: tform4.labelededit4.text
+msgctxt "tform4.labelededit4.text"
+msgid "0"
+msgstr ""
+
+#: tform4.panel1.caption
+msgctxt "tform4.panel1.caption"
 msgid "Panel1"
 msgstr ""
 

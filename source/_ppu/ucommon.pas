@@ -17,12 +17,9 @@ unit ucommon;
 {$MODE OBJFPC} {$H+} {$MACRO ON}
 interface
 uses
-  {$IFDEF WINDOWS} Windows, {$ENDIF}
-  SysUtils,
-  crt,
-  dos;
+  {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils, crt, dos;
 const
-  CRC16TABLE: array[0..255] of word = (
+  CRC16TABLE: array[0..255] of Word = (
     $0000, $C0C1, $C181, $0140, $C301, $03C0, $0280, $C241,
     $C601, $06C0, $0780, $C741, $0500, $C5C1, $C481, $0440,
     $CC01, $0CC0, $0D80, $CD41, $0F00, $CFC1, $CE81, $0E40,
@@ -61,23 +58,23 @@ const
   {$ENDIF}
   {$IFDEF WINDOWS}
 var
-    buffer: array[0..MAX_PATH] of char;
+    Buffer: array[0..MAX_PATH] of Char;
   {$ENDIF}
 
 {$DEFINE SLASH := DirectorySeparator}
 
-function addzero(v: word): string;
-function addsomezero(n: byte; s: string): string;
-function checkcrc16(s: string; l: word): boolean;
-function checkipaddress(address: string): boolean;
-function checklrc(s: string; l: word): boolean;
-function crc16(s: string): word;
-function hex1(n: byte; w: word): string;
-function hex2(s: string): string;
-function getexedir: string;
-function getlang: string;
-function getuserdir: string;
-function lrc(s: string): word;
+Function AddZero(v: Word): string;
+Function AddSomeZero(n: Byte; s: string): string;
+Function CheckCRC16(s: string; l: Word): Boolean;
+Function CheckIPAddress(address: string): Boolean;
+Function CheckLRC(s: string; l: Word): Boolean;
+Function CRC16(s: string): Word;
+Function Hex1(n: byte; w: Word): string;
+Function Hex2(s: string): string;
+Function GetExeDir: string;
+Function GetLang: string;
+Function GetUserDir: string;
+Function LRC(s: string): Word;
 
 implementation
 
@@ -86,188 +83,188 @@ implementation
            dwFlags: DWORD; pszPath: LPTSTR): HRESULT; stdcall;
            external 'Shell32.dll' name 'SHGetFolderPathA';
 
-  function getuserprofile: string;
+  function GetUserProfile: string;
   begin
-    fillchar(buffer, sizeof(buffer), 0);
+    FillChar(Buffer, SizeOf(Buffer), 0);
     ShGetFolderPath(0, CSIDL_PROFILE, 0, SHGFP_TYPE_CURRENT, buffer);
     Result := string(PChar(@buffer));
   end;
 {$ENDIF}
 
 // INSERT ZERO BEFORE [0-9]
-function addzero(v: word): string;
+function AddZero(v: Word): string;
 var
   u: string;
 begin
-  str(v:0, u);
-  if length(u) = 1 then u := '0' + u;
-   addzero := u;
+  Str(v:0, u);
+  if Length(u) = 1 then u := '0' + u;
+   AddZero := u;
 end;
 
 // INSERT SOME ZERO BEFORE STRING
-function addsomezero(n: byte; s: string): string;
+function AddSomeZero(n: Byte; s: string): string;
 begin
-  while length(s) <> n do
+  while Length(s) <> n do
     s := '0' + s;
-  result := s;
+  Result := s;
 end;
 
 // CONVERT A BYTE/WORD NUMBER TO 2/4 DIGIT HEX NUMBER AS STRING
-function hex1(n: byte; w: word): string;
+function Hex1(n: Byte; w: Word): string;
 var
-  b:         byte;
-  remainder: word;
-  res:       string;
+  b:         Byte;
+  Remainder: Word;
+  Res:       string;
 begin
-  res := '';
+  Res := '';
   for b := 1 to n do
   begin
-    remainder := w mod 16;
+    Remainder := w mod 16;
     w := w div 16;
-    if remainder <= 9 then
-      res := chr (remainder + 48) + res
+    if Remainder <= 9 then
+      Res := Chr(Remainder + 48) + Res
     else
-      res := chr (remainder + 87) + res;
+      Res := Chr(Remainder + 87) + Res;
   end;
-  result := res;
+  Result := Res;
 end;
 
 // CONVERT A STRING OF ASCII CODED HEXA BYTES TO STRING OF HEXA BYTES }
-function hex2(s: string): string;
+function Hex2(s: string): string;
 var
-  b: byte;
-  d: integer;
-  res: string;
+  b:   Byte;
+  d:   Integer;
+  Res: string;
 begin
   b := 1;
-  res := '';
+  Res := '';
   repeat
-    d := strtoint('$' + s[b] + s[b + 1]);
-    res := res + char(d);
+    d := StrToInt('$' + s[b] + s[b + 1]);
+    Res := Res + Char(d);
     b:= b + 2;
-  until b >= length(s);
-  result := res;
+  until b >= Length(s);
+  Result := Res;
 end;
 
 // CREATE CYCLIC REDUNDANCY CHECK (CRC16/MODBUS) VALUE
-function crc16(s: string): word;
+function CRC16(s: string): Word;
 var
-  i: integer;
-  idx: byte = 0;
-  crc: word = $FFFF;
+  i:   Integer;
+  idx: Byte = 0;
+  crc: Word = $FFFF;
 begin
-  for i := 1 to length(s) do
+  for i := 1 to Length(s) do
   begin
-    idx := ord(s[i]) xor crc;
+    idx := Ord(s[i]) xor crc;
     crc := crc shr 8;
     crc := crc xor CRC16TABLE[idx];
   end;
-  result := crc;
+  Result := crc;
 end;
 
 // CHECK CRC OF A STRING
-function checkcrc16(s: string; l: word): boolean;
+function CheckCRC16(s: string; l: Word): Boolean;
 begin
-  if l = crc16(s)
-    then result := true
-    else result := false;
+  if l = CRC16(s)
+    then Result := True
+    else Result := False;
 end;
 
 // CREATE LONGITUDINAL REDUNDANCY CHECK (LRC) VALUE
-function lrc(s: string): word;
+function LRC(s: string): Word;
 var
-   b: byte;
-   res: word;
+   b:   Byte;
+   Res: Word;
 begin
-  s := hex2(s);
-  res := 0;
-  for b := 1 to length(s) do
-    res := res + ord(s[b]) and $FF;
-  res := (((res xor $FF) + 1) and $FF);
-  result := res;
+  s := Hex2(s);
+  Res := 0;
+  for b := 1 to Length(s) do
+    Res := Res + Ord(s[b]) and $FF;
+  Res := (((Res xor $FF) + 1) and $FF);
+  Result := Res;
 end;
 
 // CHECK LRC OF A STRING
-function checklrc(s: string; l: word): boolean;
+function CheckLRC(s: string; l: Word): Boolean;
 begin
-  if l = lrc(s)
-    then result := true
-    else result := false;
+  if l = LRC(s)
+    then Result := True
+    else Result := False;
 end;
 
 // CHECK IP ADDRESS
-function checkipaddress(address: string): boolean;
+function CheckIPAddress(Address: string): Boolean;
 var
-  b, c: byte;
-  s: array[0..3] of string;
+  b, c: Byte;
+  s:    array[0..3] of string;
 
 begin
   for b := 0 to 3 do s[b] := '';
   c := 0;
-  for b := 1 to length(address) do
-    if address[b] <> '.'
+  for b := 1 to Length(Address) do
+    if Address[b] <> '.'
     then
-      s[c] := s[c] + address[b]
+      s[c] := s[c] + Address[b]
     else
-      if c < 3 then inc(c);
+      if c < 3 then Inc(c);
   c := 0;
   for b := 0 to 3 do
-    if (strtointdef(s[b], -1) < 0) or (strtointdef(s[b], -1) > 255) then inc(c);
-  if (c > 0) then result := false else result := true;
+    if (StrToIntDef(s[b], -1) < 0) or (StrToIntDef(s[b], -1) > 255) then Inc(c);
+  if (c > 0) then Result := False else Result := True;
 end;
 
 // GET SYSTEM LANGUAGE
-function getlang: string;
+function GetLang: string;
 var
   {$IFDEF WINDOWS}
-    buffer: PChar;
-    size: integer;
+    Buffer: PChar;
+    Size:   Integer;
   {$ENDIF}
   s: string;
 begin
   {$IFDEF GO32V2}
-    s := getenvironmentvariable('LANG');
+    s := GetEnvironmentVariable('LANG');
   {$ELSE}
     {$IFDEF WINDOWS}
-      size := getlocaleinfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, nil, 0);
-      getmem(buffer, size);
+      Size := GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, Nil, 0);
+      GetMem(Buffer, Size);
       try
-        getlocaleinfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, buffer, size);
-        s := string(buffer);
+        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, Buffer, Size);
+        s := string(Buffer);
       finally
-        freemem(buffer);
+        FreeMem(Buffer);
       end;
     {$ELSE}
       {$IFDEF UNIX}
-        s := getenvironmentvariable('LANG');
+        s := GetEnvironmentVariable('LANG');
       {$ELSE}
         {$FATAL Not supported operation system!}
       {$ENDIF}
     {$ENDIF}
   {$ENDIF} 
-  if length(s) = 0 then
+  if Length(s) = 0 then
     s := 'en';
-  s := lowercase(s[1..2]);
-  getlang := s;
+  s := LowerCase(s[1..2]);
+  GetLang := s;
 end;
 
 // GET PATH OF THE EXECUTABLE FILE;
-function getexedir: string;
+function GetExeDir: string;
 begin
-  result := ExtractFilePath(ParamStr(0));
+  Result := ExtractFilePath(ParamStr(0));
 end;
 
 // GET USER'S DIRECTORY
-function getuserdir: string;
+function GetUserDir: string;
 begin
   {$IFDEF GO32V2}
-    result := getexedir;
+    Result := GetExeDir;
   {$ELSE}
     {$IFDEF WINDOWS}
-      result := getuserprofile + SLASH;
+      Result := GetUserProfile + SLASH;
     {$ELSE}
       {$IFDEF UNIX}
-        result := getenvironmentvariable('HOME') + SLASH;
+        Result := GetEnvironmentVariable('HOME') + SLASH;
       {$ELSE}
         {$FATAL Not supported operation system!}
       {$ENDIF}

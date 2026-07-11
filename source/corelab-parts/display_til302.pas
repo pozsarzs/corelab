@@ -12,29 +12,29 @@
   FOR A PARTICULAR PURPOSE. }
 
 unit display_til302;
-{$mode objfpc}{$H+}
+{$MODE OBJFPC}{$H+}
 interface
 uses
   Graphics, core_display;
 type
-  // TIL302 display implementation
+  // TIL302 display class
   TDisplayTIL302 = class(TDisplay)
   protected
-    procedure DrawDot(Status: boolean; x, y: byte);
-    procedure DrawLine(Status: boolean; x1, y1, x2, y2: byte);
+    procedure DrawDot(Status: Boolean; x, y: Byte);
+    procedure DrawLine(Status: Boolean; x1, y1, x2, y2: Byte);
   public
     constructor Create; override;
     destructor Destroy; override;
     procedure DrawToBuffer(InputData: TDisplayedData); override;
-    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); override;
+    procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer); override;
   end;
 var
-  FrameX: byte = 14;
-  FrameY: byte = 28;
+  FrameX: Byte = 14;
+  FrameY: Byte = 28;
     
 implementation
 
-// Create TDisplay instance
+// CREATE TDISPLAYTIL302 INSTANCE
 constructor TDisplayTIL302.Create;
 begin
   inherited Create;
@@ -45,14 +45,14 @@ begin
   Reset;
 end;
 
-// Destroy TDisplay instance
+// DESTROY TDISPLATIL302Y INSTANCE
 destructor TDisplayTIL302.Destroy;
 begin
   inherited Destroy;
 end;
 
-// Draw a dot
-procedure TDisplayTIL302.DrawDot(Status: boolean; x, y: byte);
+// DRAW A DOT
+procedure TDisplayTIL302.DrawDot(Status: Boolean; x, y: Byte);
 begin
   x := x + FrameX div 2;
   y := y + FrameY div 2;
@@ -68,8 +68,8 @@ begin
   FBuffer.Canvas.Ellipse(x - 2, y - 2, x + 2, y + 2);
 end;
 
-// Draw line
-procedure TDisplayTIL302.DrawLine(Status: boolean; x1, y1, x2, y2: byte);
+// DRAW LINE
+procedure TDisplayTIL302.DrawLine(Status: Boolean; x1, y1, x2, y2: Byte);
 var
   cx, cy: Double;
   d: Double;                                                // length of segment
@@ -121,7 +121,7 @@ begin
   end;
 end;
 
-// Draw displayed data to internal buffer
+// DRAW DISPLAYED DATA TO INTERNAL BUFFER
 procedure TDisplayTIL302.DrawToBuffer(InputData: TDisplayedData);
 begin
   // background
@@ -141,8 +141,8 @@ begin
   DrawDot(InputData.RightDot, 101, 91);
 end;
 
-// Drawing to canvas of the target object
-procedure TDisplayTIL302.RenderTo(TargetCanvas: TCanvas; x, y: integer);
+// DRAWING TO CANVAS OF THE TARGET OBJECT
+procedure TDisplayTIL302.RenderTo(TargetCanvas: TCanvas; x, y: Integer);
 begin
   TargetCanvas.Draw(x, y, FBuffer);
 end;

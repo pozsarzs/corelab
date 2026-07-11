@@ -2,7 +2,7 @@
 { | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | bcd7seg_7447.pas                                                         | }
-{ | BCD to 7 segment decoder (SN7447N-type signs)                            | }
+{ | BCD to 7-segment decoder (SN7447N-type signs)                            | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -12,7 +12,7 @@
   FOR A PARTICULAR PURPOSE. }
 
 const
-  BCD7seg_7447: array[0..15] of byte = (
+  BCD7seg_7447: array[0..15] of Byte = (
     {         GFEDCBA}
     { '0' } %00111111,
     { '1' } %00000110,

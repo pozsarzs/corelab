@@ -59,8 +59,8 @@ in mind:
 |**project type**          |Functional CPU/uP/MCU simulator                                                  |
 |**actual version**        |v0.1                                                                             |
 |**licence**               |EUPL v1.2                                                                        |
-|**language**              |en                                                                               |
-|**architecture**          |amd64, armhf, x86_64                                                             |
+|**language**              |en, hu                                                                           |
+|**architecture**          |amd64, armhf, i386, x86_64                                                       |
 |**operation system**      |FreeBSD, Linux, Windows                                                          |
 |**user interface**        |Graphical User Interface (GUI) with scriptable command-line control              |
 |**running modes**         |Normal or interpreter                                                            |
@@ -91,6 +91,8 @@ in mind:
 
 ### Plug-in modules
 
+(**Pontosítandó!**)
+
 |Features                 |Specification / Description                                           |
 |-------------------------|----------------------------------------------------------------------|
 |**8-digit Hex Display**  |Virtual multiplexed 7-segment hex display mapped to port addresses    |
@@ -110,17 +112,17 @@ in mind:
 
 ## IV. Used external libraries and programs
 
- - _Convert - Bin/Oct/Dec/Hex number converter_  
-   Unit for Turbo Pascal v3.0  
-   Public Domain, Copyright (C) 1993 Tom Wellige  
+ - _Fugue Icons_
+   (C) 2013 Yusuke Kamiyamane
+   CCA v3.0
  - _InpOut32 v1.0.07 Driver Interface DLL_ [^1]  
    Windows Dynamic Link Library (DLL)  
+   (C) 2003-2015 Phil Gibbons  
+   (C) 2000 <logix4u.net>  
    Open source/freeware  
-   Copyright (C) 2003-2015 Phil Gibbons  
-   Copyright (C) 2000 <logix4u.net>  
  - _LHelp v2021-02-12 CHM help viewer_  
-   Application  
-   GNU GPL v2.0 or later, Copyright (C) 2005-2014 Andrew Haines, Lazarus contributors  
+   (C) 2005-2014 Andrew Haines, Lazarus contributors  
+   GNU GPL v2.0 or later
 
 ## V. About the program
 

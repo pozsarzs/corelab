@@ -25,16 +25,16 @@
 }
 
 unit display_til311;
-{$mode objfpc}{$H+}
+{$MODE OBJFPC}{$H+}
 interface
 uses
   Graphics, core_display;
 type
-  // TIL311 display implementation
+  // TIL311 display class
   TDisplayTIL311 = class(TDisplay)
   protected
-    procedure DrawDot(Status: boolean; x, y: byte);
-    const CHARMAP_TIL311: array[0..15, 0..6] of byte = (
+    procedure DrawDot(Status: Boolean; x, y: Byte);
+    const CHARMAP_TIL311: array[0..15, 0..6] of Byte = (
       { '0' } (%0110, %1001, %1001, %1001, %1001, %1001, %0110),
       { '1' } (%0001, %0001, %0001, %0001, %0001, %0001, %0001),
       { '2' } (%1110, %0001, %0001, %0110, %1000, %1000, %1111),
@@ -56,15 +56,15 @@ type
     constructor Create; override;
     destructor Destroy; override;
     procedure DrawToBuffer(InputData: TDisplayedData); override;
-    procedure RenderTo(TargetCanvas: TCanvas; x, y: integer); override;
+    procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer); override;
   end;
 var
-  FrameX: byte = 14;
-  FrameY: byte = 28;
+  FrameX: Byte = 14;
+  FrameY: Byte = 28;
     
 implementation
 
-// Create TDisplay instance
+// CREATE TDISPLAYTIL311 INSTANCE
 constructor TDisplayTIL311.Create;
 begin
   inherited Create;
@@ -75,14 +75,14 @@ begin
   Reset;
 end;
 
-// Destroy TDisplay instance
+// DESTROY TDISPLAYTIL311 INSTANCE
 destructor TDisplayTIL311.Destroy;
 begin
   inherited Destroy;
 end;
 
-// Draw a dot
-procedure TDisplayTIL311.DrawDot(Status: boolean; x, y: byte);
+// DRAW A DOT
+procedure TDisplayTIL311.DrawDot(Status: Boolean; x, y: Byte);
 begin
   x := x + FrameX div 2;
   y := y + FrameY div 2;
@@ -98,10 +98,10 @@ begin
   Buffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
 end;
 
-// Draw displayed data to internal buffer
+// DRAW DISPLAYED DATA TO INTERNAL BUFFER
 procedure TDisplayTIL311.DrawToBuffer(InputData: TDisplayedData);
 var
-  b, bit, line: byte;
+  b, Bit, Line: Byte;
 begin
   // background
   Buffer.Canvas.Brush.Color := RETRO_RED_BG;
@@ -110,19 +110,19 @@ begin
   // sign
   for b := 0 to 6 do
   begin
-    line := CHARMAP_TIL311[InputData.Value, b];
-    for bit := 0 to 3 do
+    Line := CHARMAP_TIL311[InputData.Value, b];
+    for Bit := 0 to 3 do
       if not(((b = 1) or (b = 2) or (b = 4) or (b = 5)) and
-             ((bit = 1) or (bit = 2))) then
-        DrawDot(((line and (1 shl bit)) <> 0), 79 - (bit * 14) - b, 5 + (b * 14));
+             ((Bit = 1) or (Bit = 2))) then
+        DrawDot(((Line and (1 shl Bit)) <> 0), 79 - (Bit * 14) - b, 5 + (b * 14));
   end;
   // decimal points
   DrawDot(InputData.LeftDot, 3, 91);
   DrawDot(InputData.RightDot, 101, 91);
 end;
 
-// Drawing to canvas of the target object
-procedure TDisplayTIL311.RenderTo(TargetCanvas: TCanvas; x, y: integer);
+// DRAWING TO CANVAS OF THE TARGET OBJECT
+procedure TDisplayTIL311.RenderTo(TargetCanvas: TCanvas; x, y: Integer);
 begin
   TargetCanvas.Draw(x, y, Buffer);
 end;

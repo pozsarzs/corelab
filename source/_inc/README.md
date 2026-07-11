@@ -10,4 +10,3 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |-------------------|----------------------------------|
 |define.pas         |definitions of symbol names       |
 |handleinpoutdll.pas|DLL handler                       |
-|version.pas        |show version and build information|

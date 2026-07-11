@@ -14,173 +14,191 @@
 library ioport_standard;
 {$mode objfpc}{$H+}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, core_ioport;
+  Interfaces, Forms, StdCtrls, SysUtils, core_ioport,
+  core_gioport;
 type
-  // Standard port implementation
-  TStandardPort = class(TIOPort)
+  // Standard port class
+  TStandardPort = class(TGIOPort)
   protected
+    FEditRx: TEdit;
+    FEditTx: TEdit;
   public
     constructor Create; override;
     destructor Destroy; override;
+    // - port
     function ReadPort(Port: byte): byte; override;
-    procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset;  override;
+    procedure WritePort(Port: byte; Value: byte); override;
+    // - panel
+    procedure CreatePanel; override;
+
   end;
-  var
-    EditRx: TEdit = nil;
-    EditTx: TEdit = nil;
-    PanelForm: TForm = nil;
   
-// Create TIOPort instance
+// CREATE TSTANDARDPORT INSTANCE
 constructor TStandardPort.Create;
 begin
   inherited Create;
   FModname := 'Standard I/O port';
   FDescription := 'It reads the entered value and displays the output value.';
-  FHasGUI := true;
-  FPortMode := pmReadWrite;
+  FHasPanel := true;
   FLatchedOutput := true;
   Reset;
 end;
 
-// Destroy TIOPort instance
+// DESTROY TSTANDARDPORT INSTANCE
 destructor TStandardPort.Destroy;
 begin
+  FreePanel;
   inherited Destroy;
 end;
 
-// Read virtual port
+// READ VIRTUAL PORT
 function TStandardPort.ReadPort(Port: byte): byte;
 var
   Value: integer;
 begin
   Result := 0;
-  if Assigned(EditRx) then
+  if FEnabled and (Port = 0) then
   begin
-    if TryStrToInt('$' + EditRx.Text, Value) then 
+    if Assigned(FEditRx) then
     begin
-      Result := Value;
-      EditRx.Clear;
+      if TryStrToInt('$' + FEditRx.Text, Value) then 
+      begin
+        Result := Value;
+        FEditRx.Clear;
+      end;
     end;
+  end else Result := $FF;
+end;
+
+// RESET VIRTUAL PORT
+procedure TStandardPort.Reset;
+begin
+  if Assigned(FEditRx) then FEditRx.Clear;
+  if Assigned(FEditTx) then FEditTx.Clear;
+end;
+
+// WRITE VIRTUAL PORT
+procedure TStandardPort.WritePort(Port: byte; Value: byte);
+begin
+  if FEnabled and (Port = 0) then
+  begin
+    if Assigned(FEditTx) then FEditTx.Text := IntToHex(Value, 2);
   end;
 end;
 
-// Write virtual port
-procedure TStandardPort.WritePort(Port: byte; Value: byte);
+// CREATE PANEL
+procedure TStandardPort.CreatePanel;
+var
+  L1, L2: TLabel;
 begin
-  if Assigned(EditTx) then EditTx.Text := IntToHex(Value, 2);
+  if Assigned(FPanelForm) then exit;
+
+  FPanelForm := TForm.Create(nil);
+  FPanelForm.Caption := FPanelCaption;
+  FPanelForm.Position := poDefaultPosOnly;
+  FPanelForm.BorderIcons := [biSystemMenu, biMinimize];
+  FPanelForm.ClientWidth := 258;
+  FPanelForm.ClientHeight := 80;
+
+  L1 := TLabel.Create(FPanelForm);
+  L1.Parent := FPanelForm;
+  L1.Caption := 'Received (hex):';
+  L1.Left := 10;
+  L1.Top := 12;
+
+  FEditTx := TEdit.Create(FPanelForm);
+  FEditTx.Parent := FPanelForm;
+  FEditTx.Left := 150;
+  FEditTx.Top := 8;
+  FEditTx.Width := 100;
+  FEditTx.ReadOnly := True;
+
+  L2 := TLabel.Create(FPanelForm);
+  L2.Parent := FPanelForm;
+  L2.Caption := 'To be sent (hex):';
+  L2.Left := 10;
+  L2.Top := 44;
+
+  FEditRx := TEdit.Create(FPanelForm);
+  FEditRx.Parent := FPanelForm;
+  FEditRx.MaxLength := 2;
+  FEditRx.Left := 150;
+  FEditRx.Top := 40;
+  FEditRx.Width := 100;
+
+  FPanelForm.Constraints.MinWidth := FPanelForm.Width;
+  FPanelForm.Constraints.MaxWidth := FPanelForm.Width;
+  FPanelForm.Constraints.MinHeight := FPanelForm.Height;
+  FPanelForm.Constraints.MaxHeight := FPanelForm.Height;
 end;
 
-// Reset virtual port
-procedure TStandardPort.Reset;
-begin
-  if Assigned(EditRx) then EditRx.Clear;
-  if Assigned(EditTx) then EditTx.Clear;
-end;
-
-// Exportable function for create TIOPort instance
+// EXPORTABLE FUNCTIONS AND PROCEDURES
 function CreatePort: TIOPort; cdecl; export;
 begin
   Result := TStandardPort.Create;
 end;
 
-// Exportable function for destroy TIOPort instance
 procedure DestroyPort(Port: TIOPort); cdecl; export;
 begin
   if Assigned(Port) then Port.Free;
 end;
 
-// Exportable function for create UI panel
 procedure CreatePanel(Port: TIOPort); cdecl; export;
-var
-  L1, L2: TLabel;
 begin
-  if Assigned(PanelForm) then exit;
-
-  PanelForm := TForm.Create(nil);
-  PanelForm.Caption := Port.Title;
-  PanelForm.Position := poDefaultPosOnly;
-  PanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  PanelForm.ClientWidth := 258;
-  PanelForm.ClientHeight := 80;
-
-  L1 := TLabel.Create(PanelForm);
-  L1.Parent := PanelForm;
-  L1.Caption := 'Received (hex):';
-  L1.Left := 10;
-  L1.Top := 12;
-
-  EditTx := TEdit.Create(PanelForm);
-  EditTx.Parent := PanelForm;
-  EditTx.Left := 150;
-  EditTx.Top := 8;
-  EditTx.Width := 100;
-  EditTx.ReadOnly := True;
-
-  L2 := TLabel.Create(PanelForm);
-  L2.Parent := PanelForm;
-  L2.Caption := 'To be sent (hex):';
-  L2.Left := 10;
-  L2.Top := 44;
-
-  EditRx := TEdit.Create(PanelForm);
-  EditRx.Parent := PanelForm;
-  EditRx.MaxLength := 2;
-  EditRx.Left := 150;
-  EditRx.Top := 40;
-  EditRx.Width := 100;
-
-  PanelForm.Constraints.MinWidth := PanelForm.Width;
-  PanelForm.Constraints.MaxWidth := PanelForm.Width;
-  PanelForm.Constraints.MinHeight := PanelForm.Height;
-  PanelForm.Constraints.MaxHeight := PanelForm.Height;
+  if Assigned(Port) and (Port is TStandardPort) then
+    TStandardPort(Port).CreatePanel;
+end;
+procedure FreePanel(Port: TIOPort); cdecl; export;
+begin
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).FreePanel;
 end;
 
-// Exportable function for show UI panel
-procedure ShowPanel; cdecl; export;
+procedure HidePanel(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(PanelForm) then PanelForm.Show;
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).HidePanel;
 end;
 
-// Exportable function for hide UI panel
-procedure HidePanel; cdecl; export;
+function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean; cdecl; export;
 begin
-  if Assigned(PanelForm) then PanelForm.Hide;
+  Result := False;
+  if Assigned(Port) and (Port is TGIOPort) then
+    Result := TGIOPort(Port).MovePanel(Left, Top);
 end;
 
-// Exportable function for destroy UI panel
-procedure FreePanel; cdecl; export;
+procedure RenamePanel(Port: TIOPort; Caption: PChar); cdecl; export;
 begin
-if Assigned(PanelForm) then
-  begin
-    PanelForm.Close;
-    PanelForm.Free;
-    PanelForm := nil;
-    EditRx := nil;
-    EditTx := nil;
-  end;
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).RenamePanel(Caption);
 end;
 
-// Exportable function for move and resize UI panel
-procedure SetSizePosPanel(Left, Top, Width, Height: integer); cdecl; export;
+function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean; cdecl; export;
 begin
-  if Assigned(PanelForm) then
-  begin
-    PanelForm.Left := Left;
-    PanelForm.Top := Top;
-    PanelForm.Width := Width;
-    PanelForm.Height := Height;
-  end;
+  Result := False;
+  if Assigned(Port) and (Port is TGIOPort) then
+    Result := TGIOPort(Port).ResizePanel(Width, Height);
 end;
 
-// Exported functions and procedures
+procedure ShowPanel(Port: TIOPort); cdecl; export;
+begin
+  if Assigned(Port) and (Port is TGIOPort) then
+    TGIOPort(Port).ShowPanel;
+end;
+
+// EXPORTED FUNCTIONS AND PROCEDURES
+// - port
 exports CreatePort name 'ioport_create';
 exports DestroyPort name 'ioport_destroy';
+// - panel
 exports CreatePanel name 'ioport_createpanel';
-exports ShowPanel name 'ioport_showpanel';
-exports HidePanel name 'ioport_hidepanel';
 exports FreePanel name 'ioport_freepanel';
-exports SetSizePosPanel name  'ioport_setsizepospanel';
+exports HidePanel name 'ioport_hidepanel';
+exports MovePanel name 'ioport_setpanel';
+exports RenamePanel name 'ioport_renamepanel';
+exports ResizePanel name 'ioport_resizepanel';
+exports ShowPanel name 'ioport_showpanel';
 
 begin
 end.

@@ -49,7 +49,10 @@ fpcargs		= -T@os@ \
                   -Scgi \
                   -O1 \
                   -ve \
+                  -Fi../_inc/ \
+                  -Fi../_inc/* \
                   -Fu../_ext/* \
+                  -Fu../_ppu/* \
                   -Fu../corelab-core/ \
                   -Fu../corelab-parts/ \
                   -Fu. \

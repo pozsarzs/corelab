@@ -8,7 +8,6 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 |directory            |description           |copyright                                         |licence                      |
 |---------------------|----------------------|--------------------------------------------------|-----------------------------|
-|convert*             |Number converter unit |(C) 1993 by Tom Wellige                           |Public Domain                |
 |fugue-icons          |Fugue Icons           |(C) 2013 Yusuke Kamiyamane                        |CCA v3.0                     |
 |inpout32             |Driver Interface DLL  |(C) 2003-2015 Phil Gibbons, (C) 2000 <logix4u.net>|Open Source/freeware         |
 |modlcltranslator*    |LCLTranslator unit    |(C) 2004 V.I.Volchenko and Lazarus Developers Team|GPL v2.0 or later            |

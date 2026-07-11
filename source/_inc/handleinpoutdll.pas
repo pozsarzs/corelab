@@ -14,35 +14,35 @@
 }
 
 // LOAD 'inpout32.dll'
-function loadinpout32dll: boolean;
+function LoadInpout32dll: Boolean;
 {$IFDEF WINDOWS}
   var
-    libdir: string;
+    LibDir: string;
   const
     {$IFDEF WIN32}
-      filename: string = 'inpout32.dll';
+      Filename: string = 'inpout32.dll';
     {$ENDIF}
     {$IFDEF WIN64}
-      filename: string = 'inpoutx64.dll';
+      Filename: string = 'inpoutx64.dll';
     {$ENDIF}
 {$ENDIF}
 begin
-  result := true;
+  Result := True;
   {$IFDEF WINDOWS}
-    libdir := 'library' + SLASH + 'inpout32' + SLASH;
-    if fileexists(libdir + filename)
-      then inpout32 := loadlibrary(pchar(libdir + filename))
-      else inpout32 := loadlibrary(pchar(filename));
-    if (inpout32 <> 0) then
+    LibDir := 'library' + SLASH + 'inpout32' + SLASH;
+    if FileExists(LibDir + Filename)
+      then Inpout32 := LoadLibrary(PChar(LibDir + Filename))
+      else Inpout32 := LoadLibrary(PChar(Filename));
+    if (Inpout32 <> 0) then
     begin
-     inp32 := tinp32(getprocaddress(inpout32, 'inp32'));
-     if (@inp32 = nil) then result := false;
-     out32 := tout32(getprocaddress(inpout32, 'out32'));
-     if (@out32 = nil) then result := false;
+     Inp32 := TInp32(GetProcAddress(Inpout32, 'inp32'));
+     if (@inp32 = nil) then Result := False;
+     Out32 := TOut32(GetProcAddress(Inpout32, 'out32'));
+     if (@Out32 = Nil) then Result := False;
    end
-   else result := false;
+   else Result := False;
   {$ELSE}
-    result := false;
+    Result := False;
   {$ENDIF}
 end;
 
