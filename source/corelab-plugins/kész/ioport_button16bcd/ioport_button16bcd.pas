@@ -50,7 +50,7 @@ end;
 constructor TButton16BCD.Create;
 begin
   inherited Create;
-  FModname := 'Some buttons with BCD output';
+  FModname := '4x4 button matrix input with BCD output';
   FDescription := 'One button can be pressed at a time, the value of which can be read in BCD format.';
   FHasPanel := true;
 end;
@@ -67,7 +67,7 @@ function TButton16BCD.ReadPort(Port: byte): byte;
 var
   x, y: byte;
 begin
-  if FEnabled then
+  if FEnabled and (Port = 0) then
   begin
     for x := 0 to MAXX do
       for y := 0 to MAXY do
@@ -189,7 +189,7 @@ exports DestroyPort name 'ioport_destroy';
 exports CreatePanel name 'ioport_createpanel';
 exports FreePanel name 'ioport_freepanel';
 exports HidePanel name 'ioport_hidepanel';
-exports MovePanel name 'ioport_setpanel';
+exports MovePanel name 'ioport_movepanel';
 exports RenamePanel name 'ioport_renamepanel';
 exports ResizePanel name 'ioport_resizepanel';
 exports ShowPanel name 'ioport_showpanel';

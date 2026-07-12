@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_standard.pas                                                      | }
-{ | Standard port implementation module                                      | }
+{ | ioport_button16mux.pas                                                   | }
+{ | 4x4 button matrix input implementation module                            | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,86 +11,122 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_standard;
-{$mode objfpc}{$H+}
+library ioport_button16mux;
+{$MODE OBJFPC}{$H+}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, core_ioport,
+  Cmem, Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport,
   core_gioport;
+const
+  MAXX = 3;
+  MAXY = 3;
 type
-  // Standard port class
-  TStandardPort = class(TGIOPort)
+  // 4x4 button matrix input class
+  TButton16MUX = class(TGIOPort)
   protected
-    FEditRx: TEdit;
-    FEditTx: TEdit;
+    FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                     // Buttons
+    SelLine: integer;
+    procedure AllRelease(mx, my: byte);
   public
+    // - port
     constructor Create; override;
     destructor Destroy; override;
-    // - port
     function ReadPort(Port: byte): byte; override;
     procedure Reset;  override;
     procedure WritePort(Port: byte; Value: byte); override;
     // - panel
     procedure CreatePanel; override;
-
   end;
-  
-// CREATE TSTANDARDPORT INSTANCE
-constructor TStandardPort.Create;
+
+// RELEASE ALL BUTTONS
+procedure TButton16MUX.AllRelease(mx, my: byte);
+var
+  x, y: byte;
 begin
-  inherited Create;
-  FModname := 'Standard I/O port';
-  FDescription := 'It reads the entered value and displays the output value.';
-  FHasPanel := true;
-  FLatchedOutput := true;
-  Reset;
+  for x := 0 to mx do
+    for y := 0 to my do
+      FSB[x, y].Down := false;
 end;
 
-// DESTROY TSTANDARDPORT INSTANCE
-destructor TStandardPort.Destroy;
+// CREATE TBUTTON16MUX INSTANCE
+constructor TButton16MUX.Create;
+begin
+  inherited Create;
+  FModname := '4x4 button matrix input';
+  FDescription := 'Select the column and read the row status..';
+  FHasPanel := true;
+  FAddressRangeSize := 2;
+  FLatchedOutput := true;
+  SelLine := 0;
+end;
+
+// DESTROY TBUTTON16MUX INSTANCE
+destructor TButton16MUX.Destroy;
 begin
   FreePanel;
   inherited Destroy;
 end;
 
 // READ VIRTUAL PORT
-function TStandardPort.ReadPort(Port: byte): byte;
+function TButton16MUX.ReadPort(Port: byte): byte;
 var
-  Value: integer;
+  Value: byte;
+  x, y: byte;
 begin
-  Result := 0;
-  if FEnabled and (Port = 0) then
+  Result := $FF;
+  if FEnabled then
   begin
-    if Assigned(FEditRx) then
-    begin
-      if TryStrToInt('$' + FEditRx.Text, Value) then 
+    if (SelLine < 0) or (SelLine > MAXX) then exit;
+    x := SelLine;
+    Value := 0;
+    for y := 0 to MAXY do
+      if FSB[x, y].Down then
       begin
-        Result := Value;
-        FEditRx.Clear;
+        Value := Value + (1 shl y);
+        FSB[x, y].Down := false;
       end;
-    end;
-  end else Result := $FF;
+    if FDataInNegation then Value := not Value;
+    Result := Value;
+  end;
 end;
 
 // RESET VIRTUAL PORT
-procedure TStandardPort.Reset;
+procedure TButton16MUX.Reset;
 begin
-  if Assigned(FEditRx) then FEditRx.Clear;
-  if Assigned(FEditTx) then FEditTx.Clear;
+  SelLine := 0;
+  AllRelease(MAXX, MAXY);
 end;
 
 // WRITE VIRTUAL PORT
-procedure TStandardPort.WritePort(Port: byte; Value: byte);
+procedure TButton16MUX.WritePort(Port: byte; Value: byte);
+var
+  i: integer;
 begin
-  if FEnabled and (Port = 0) then
+  if FEnabled then
   begin
-    if Assigned(FEditTx) then FEditTx.Text := IntToHex(Value, 2);
+    i := -1;
+    case FSelMode of
+      lmDirect: begin
+                  if FSelNegation then Value := not Value;
+                  if Value = 0 then i := -1 else
+                  begin
+                    i := 0;
+                    while Value > 1 do
+                    begin
+                      Value := Value shr 1;
+                      Inc(i);
+                    end;
+                  end;
+                end;
+      lmBCD:    if Value <= MAXY then i := Value;
+    end;
+    SelLine := i;
   end;
 end;
 
 // CREATE PANEL
-procedure TStandardPort.CreatePanel;
+procedure TButton16MUX.CreatePanel;
 var
-  L1, L2: TLabel;
+  x, y: byte;
 begin
   if Assigned(FPanelForm) then exit;
 
@@ -98,34 +134,27 @@ begin
   FPanelForm.Caption := FPanelCaption;
   FPanelForm.Position := poDefaultPosOnly;
   FPanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  FPanelForm.ClientWidth := 258;
-  FPanelForm.ClientHeight := 80;
-
-  L1 := TLabel.Create(FPanelForm);
-  L1.Parent := FPanelForm;
-  L1.Caption := 'Received (hex):';
-  L1.Left := 10;
-  L1.Top := 12;
-
-  FEditTx := TEdit.Create(FPanelForm);
-  FEditTx.Parent := FPanelForm;
-  FEditTx.Left := 150;
-  FEditTx.Top := 8;
-  FEditTx.Width := 100;
-  FEditTx.ReadOnly := True;
-
-  L2 := TLabel.Create(FPanelForm);
-  L2.Parent := FPanelForm;
-  L2.Caption := 'To be sent (hex):';
-  L2.Left := 10;
-  L2.Top := 44;
-
-  FEditRx := TEdit.Create(FPanelForm);
-  FEditRx.Parent := FPanelForm;
-  FEditRx.MaxLength := 2;
-  FEditRx.Left := 150;
-  FEditRx.Top := 40;
-  FEditRx.Width := 100;
+  x := MAXX + 1;
+  y := MAXY + 1;
+  FPanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
+  FPanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
+  
+  for x := 0 to MAXX do
+    for y := 0 to MAXY do
+    begin
+      FSB[x, y] := TSpeedButton.Create(FPanelForm);
+      with FSB[x, y] do
+      begin
+        Parent := FPanelForm;
+        Caption := IntToHex(x, 1) + IntToHex(y, 1);
+        AllowAllUp := True;
+        GroupIndex := y * 4 + x + 1;
+        if y = 0 then Top := 8 else Top := (4 * (y + 1) + y * 34) + 4;
+        if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
+        Height := 34;
+        Width := Height;
+      end;
+    end;
 
   FPanelForm.Constraints.MinWidth := FPanelForm.Width;
   FPanelForm.Constraints.MaxWidth := FPanelForm.Width;
@@ -136,7 +165,7 @@ end;
 // EXPORTABLE FUNCTIONS AND PROCEDURES
 function CreatePort: TIOPort; cdecl; export;
 begin
-  Result := TStandardPort.Create;
+  Result := TButton16MUX.Create;
 end;
 
 procedure DestroyPort(Port: TIOPort); cdecl; export;
@@ -146,9 +175,10 @@ end;
 
 procedure CreatePanel(Port: TIOPort); cdecl; export;
 begin
-  if Assigned(Port) and (Port is TStandardPort) then
-    TStandardPort(Port).CreatePanel;
+  if Assigned(Port) and (Port is TButton16MUX) then
+    TButton16MUX(Port).CreatePanel;
 end;
+
 procedure FreePanel(Port: TIOPort); cdecl; export;
 begin
   if Assigned(Port) and (Port is TGIOPort) then

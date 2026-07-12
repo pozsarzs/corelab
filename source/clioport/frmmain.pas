@@ -338,11 +338,11 @@ begin
     begin
       try
         LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
-        LoadedPlugin.PDataInMode := lm.fromString(ItemProps['DataInMode'].toString);
+        LoadedPlugin.PDataInMode := lm.fromString(Values['DataInMode']);
         LoadedPlugin.PDataInNegation := StrToBool(Values['DataInNegation']);
-        LoadedPlugin.PDataOutMode := lm.fromString(ItemProps['DataOutMode'].toString);
+        LoadedPlugin.PDataOutMode := lm.fromString(Values['DataOutMode']);
         LoadedPlugin.PDataOutNegation := StrToBool(Values['DataOutNegation']);
-        LoadedPlugin.PSelMode := lm.fromString(ItemProps['SelMode'].toString);
+        LoadedPlugin.PSelMode := lm.fromString(Values['SelMode']);
         LoadedPlugin.PSelNegation := StrToBool(Values['SelNegation']);
       except
         ShowMessage(MSG01 + MSG02);
@@ -642,8 +642,8 @@ begin
     InData := CurrentPort.ReadPort(InAddr);
     StatusBar1.Panels.Items[2].Text := Format(MSG13, [IntToHex(InData, 2), IntToHex(InAddr, 2)]);
     Timer1.Enabled := True;
+    ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToHex(InData, 2);
   end;
-  ValueListEditor2.Cells[2, ValueListEditor2.Row] := IntToHex(InData, 2);
 end;
 
 // WRITE A BYTE

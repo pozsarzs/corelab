@@ -46,14 +46,10 @@ end;
   
 // CREATE TBUTTON8 INSTANCE
 constructor TButton8.Create;
-var
-  s: string;
 begin
   inherited Create;
-  s := (IntToStr(MAXX + 1)) + '-button input';
-  FModname := PChar(s);
-  s :=  'This is an ' + (IntToStr(MAXX + 1)) + '-button input, each button controls a specific bit within a byte.';
-  FDescription := PChar(s);
+  FModname := '8-button input';
+  FDescription := 'This is an 8-button input, each button controls a specific bit within a byte.';
   FHasPanel := true;
 end;
 
@@ -192,7 +188,7 @@ exports DestroyPort name 'ioport_destroy';
 exports CreatePanel name 'ioport_createpanel';
 exports FreePanel name 'ioport_freepanel';
 exports HidePanel name 'ioport_hidepanel';
-exports MovePanel name 'ioport_setpanel';
+exports MovePanel name 'ioport_movepanel';
 exports RenamePanel name 'ioport_renamepanel';
 exports ResizePanel name 'ioport_resizepanel';
 exports ShowPanel name 'ioport_showpanel';
