@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TBus base class
+## TSysBus base class
 
 TBus is an abstract base class for buses in a simulated system. This component is
 responsible for establishing the physical or logical connection between the
