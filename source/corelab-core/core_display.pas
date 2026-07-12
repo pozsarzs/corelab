@@ -66,15 +66,15 @@ end;
 // DESTROY TDISPLAY INSTANCE
 destructor TDisplay.Destroy;
 begin
-  Buffer.Free;
-  Buffer := Nil;
+  FBuffer.Free;
+  FBuffer := Nil;
   inherited Destroy;
 end;
 
 // RESET DISPLAY
 procedure TDisplay.Reset;
 begin
-  with DisplayedData do
+  with FDisplayedData do
   begin
     Blank := False;
     RightDot := False;
@@ -82,42 +82,42 @@ begin
     Segments := 0;
     Value := 0;
   end;
-  DrawToBuffer(DisplayedData);
+  DrawToBuffer(FDisplayedData);
 end;
 
 // BLANK DISPLAY
 procedure TDisplay.SetBlank(Status: Boolean);
 begin
-  DisplayedData.Blank := Status;
-  DrawToBuffer(DisplayedData);
+  FDisplayedData.Blank := Status;
+  DrawToBuffer(FDisplayedData);
 end;
 
 // SET LEFT DECIMAL POINT STATUS
 procedure TDisplay.SetLeftDot(Status: Boolean);
 begin
-  DisplayedData.LeftDot := Status;
-  DrawToBuffer(DisplayedData);
+  FDisplayedData.LeftDot := Status;
+  DrawToBuffer(FDisplayedData);
 end;
 
 // SET RIGHT DECIMAL POINT STATUS
 procedure TDisplay.SetRightDot(Status: Boolean);
 begin
-  DisplayedData.RightDot := Status;
-  DrawToBuffer(DisplayedData);
+  FDisplayedData.RightDot := Status;
+  DrawToBuffer(FDisplayedData);
 end;
 
 // SET INPUT BCD VALUE
 procedure TDisplay.SetValue(Value: Byte);
 begin
-  DisplayedData.Value := Value and $0F;
-  DrawToBuffer(DisplayedData);
+  FDisplayedData.Value := Value and $0F;
+  DrawToBuffer(FDisplayedData);
 end;
 
 // SET INPUT SEGMENT DATA
 procedure TDisplay.SetSegments(Value: Byte);
 begin
-  DisplayedData.Segments := Value;
-  DrawToBuffer(DisplayedData);
+  FDisplayedData.Segments := Value;
+  DrawToBuffer(FDisplayedData);
 end;
 
 end.

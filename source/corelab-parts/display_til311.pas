@@ -70,8 +70,8 @@ begin
   inherited Create;
   FModname := 'TIL311';
   FDescription := 'Texas Instruments TIL311 LED display (1972)';
-  Buffer.Width := 104 + FrameX;
-  Buffer.Height := 94 + FrameY;
+  FBuffer.Width := 104 + FrameX;
+  FBuffer.Height := 94 + FrameY;
   Reset;
 end;
 
@@ -88,14 +88,14 @@ begin
   y := y + FrameY div 2;
   if Status then
   begin
-    Buffer.Canvas.Brush.Color := RETRO_RED_ON;
-    Buffer.Canvas.Pen.Color := RETRO_RED_GLOW;
+    FBuffer.Canvas.Brush.Color := RETRO_RED_ON;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_GLOW;
   end else
   begin
-    Buffer.Canvas.Brush.Color := RETRO_RED_OFF;
-    Buffer.Canvas.Pen.Color := RETRO_RED_OFF;
+    FBuffer.Canvas.Brush.Color := RETRO_RED_OFF;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_OFF;
   end;
-  Buffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
+  FBuffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
 end;
 
 // DRAW DISPLAYED DATA TO INTERNAL BUFFER
@@ -104,8 +104,8 @@ var
   b, Bit, Line: Byte;
 begin
   // background
-  Buffer.Canvas.Brush.Color := RETRO_RED_BG;
-  Buffer.Canvas.FillRect(0, 0, Buffer.Width, Buffer.Height);
+  FBuffer.Canvas.Brush.Color := RETRO_RED_BG;
+  FBuffer.Canvas.FillRect(0, 0, FBuffer.Width, FBuffer.Height);
   if InputData.Blank then exit;
   // sign
   for b := 0 to 6 do
@@ -124,7 +124,7 @@ end;
 // DRAWING TO CANVAS OF THE TARGET OBJECT
 procedure TDisplayTIL311.RenderTo(TargetCanvas: TCanvas; x, y: Integer);
 begin
-  TargetCanvas.Draw(x, y, Buffer);
+  TargetCanvas.Draw(x, y, FBuffer);
 end;
 
 end.

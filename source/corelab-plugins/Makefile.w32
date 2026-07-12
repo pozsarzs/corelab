@@ -18,6 +18,7 @@ fpcargs = -T$(os) \
           -v0 \
           -Fi../_inc/ \
           -Fi../_inc/* \
+          -Fi../corelab-parts/ \
           -Fu../_ext/* \
           -Fu../_ppu/* \
           -Fu../corelab-core/ \

@@ -51,6 +51,7 @@ fpcargs		= -T@os@ \
                   -ve \
                   -Fi../_inc/ \
                   -Fi../_inc/* \
+                  -Fi../corelab-parts/ \
                   -Fu../_ext/* \
                   -Fu../_ppu/* \
                   -Fu../corelab-core/ \
