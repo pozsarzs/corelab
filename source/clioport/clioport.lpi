@@ -36,6 +36,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+      <Item>
         <PackageName Value="TurboPowerIPro"/>
       </Item>
       <Item>
@@ -58,9 +61,9 @@
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="frmsizepos.pas"/>
+        <Filename Value="frmcaption.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form4"/>
+        <ComponentName Value="Form3"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
@@ -69,6 +72,12 @@
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form2"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmsizepos.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>

@@ -107,8 +107,12 @@ begin
   with FPanelForm do
   begin
     Caption := StrPas(FPanelCaption);
-    Position := poDefaultPosOnly;
+    Position := poDesigned;
     BorderIcons := [biSystemMenu, biMinimize];
+    FPanelLeft := Left;
+    FPanelTop := Top;
+    FPanelHeight := Height;
+    FPanelWidth := Width;
   end;
 
   FPanel := TPanel.Create(FPanelForm);

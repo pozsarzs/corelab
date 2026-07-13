@@ -271,5 +271,30 @@ begin
     {$ENDIF}
   {$ENDIF}
 end;
+// Run browser application
+procedure runbrowser(url: string);
+begin
+  Form1.Process1.CommandLine:=browserapp+' '+url;
+  try
+    Form1.Process1.Execute;
+  except
+    ShowMessage(MESSAGE03);
+  end;
+end;
+
+// Run mailer application
+procedure runmailer(adr: string);
+begin
+  Form1.Process2.CommandLine:=mailerapp+' '+adr;
+  try
+    Form1.Process2.Execute;
+  except
+    ShowMessage(MESSAGE04);
+  end;
+end;
+
+
+
+
 
 end.

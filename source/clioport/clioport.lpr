@@ -15,9 +15,11 @@ program clioport;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls, crt,
-  frmabout, frmmain, frmsizepos;
+  frmabout, frmmain, frmcaption, frmsizepos;
 const
-  PRGCOPY = '(C) 2026 Pozsar Zsolt <http://www.pozsarzs.hu>';
+  PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
+  PRGHOME = 'http://www.pozsarzs.hu';
+  AUTMAIL = 'pozsarzs@gail.com';
   PRGNAME = 'CLIOPort';
   PRGVERS = '0.1';
   PARAMS: array[1..3, 1..3] of string =
@@ -27,9 +29,10 @@ const
     ('-v', '--version', 'show version and build information')
     );
 var
-  b:      Byte;
-  FN:     string;
-  OpMode: Byte;
+  AboutLabels: TAboutLabels;
+  b:           Byte;
+  FN:          string;
+  OpMode:      Byte;
 
 {$R *.res}
 
@@ -85,7 +88,7 @@ var
   {$ENDIF}
 begin
   Message := PRGNAME + ' v' + PRGVERS + ' * ' + MSG01 + LineEnding;
-  Message := PRGCOPY + LineEnding + LineEnding;
+  Message := PRGCOPY + '<' + PRGHOME + '>' + LineEnding + LineEnding;
   Message := Message +  MSG02 + {$I %DATE%} + ' ' + {$I %TIME%} + LineEnding;
   if Length(Username) > 0 then
   begin
@@ -137,6 +140,17 @@ begin
     Application.Initialize;
     Application.CreateForm(TForm1, Form1);
     Application.CreateForm(TForm2, Form2);
+    with AboutLabels do
+    begin
+      Copyright := PRGCOPY;
+      Description := MSG01;
+      Email := AUTMAIL;
+      Homepage := PRGHOME;
+      Name := PRGNAME;
+      Version := PRGVERS;
+    end;
+    Form2.SetAboutLabels(AboutLabels);
+    Application.CreateForm(TForm3, Form3);
     Application.CreateForm(TForm4, Form4);
     Application.Run;
   end;

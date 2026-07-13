@@ -1,0 +1,6 @@
+{"version":1,"strings":[
+{"hash":263903310,"name":"tform3.caption","sourcebytes":[83,101,116,32,112,97,110,101,108,32,99,97,112,116,105,111,110],"value":"Set panel caption"},
+{"hash":178628,"name":"tform3.button1.caption","sourcebytes":[38,83,101,116],"value":"&Set"},
+{"hash":177752476,"name":"tform3.button2.caption","sourcebytes":[38,67,97,110,99,101,108],"value":"&Cancel"},
+{"hash":159887390,"name":"tform3.groupbox1.caption","sourcebytes":[67,97,112,116,105,111,110],"value":"Caption"}
+]}

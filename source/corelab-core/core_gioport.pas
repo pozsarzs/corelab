@@ -51,10 +51,10 @@ constructor TGIOPort.Create;
 begin
   inherited Create;
   // Initial state
-  FPanelLeft := 16;
-  FPanelTop := 16;
-  FPanelHeight := 100;
-  FPanelWidth := 100;
+  FPanelLeft := 0;
+  FPanelTop := 0;
+  FPanelHeight := 0;
+  FPanelWidth := 0;
   FPanelCaption := 'MyIO';
 end;
 
@@ -75,10 +75,9 @@ begin
     FPanelTop := Top;
     if Assigned(FPanelForm) then
     begin
-      FPanelForm.Left := FPanelLeft;
-      FPanelForm.Top := FPanelTop;
-      FPanelForm.Invalidate;
-      FPanelForm.Update;
+      FPanelForm.Hide;
+      FPanelForm.SetBounds(FPanelLeft, FPanelTop, FPanelWidth, FPanelHeight);
+      FPanelForm.Show;
       Result := True;
     end;
   end;
@@ -94,10 +93,7 @@ begin
     FPanelWidth := Width;
     if Assigned(FPanelForm) then
     begin
-      FPanelForm.Height := FPanelHeight;
-      FPanelForm.Width := FPanelWidth;
-      FPanelForm.Invalidate;
-      FPanelForm.Update;
+      FPanelForm.SetBounds(FPanelLeft, FPanelTop, FPanelWidth, FPanelHeight);
       Result := True;
     end;
   end;

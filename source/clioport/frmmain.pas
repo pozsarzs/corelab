@@ -17,7 +17,7 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
   ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls,
-  ActnList, Types, core_ioport, core_gioport, frmabout, frmsizepos;
+  ActnList, Types, core_ioport, core_gioport, frmabout, frmcaption, frmsizepos;
 type
   TPluginAttributes = record
     PFilename:         String;                         // Filename of the module
@@ -31,11 +31,6 @@ type
     PHasPanel:         Boolean;           // Does the implementation have a GUI?
     PLatchedOutput:    Boolean;                                // Latched output
     PModname:          String;                                    // Module name
-    PPanelCaption:     PChar;                                   // Panel caption
-    PPanelHeight:      Integer;                                  // Panel height
-    PPanelLeft:        Integer;                           // Panel left position
-    PPanelTop:         Integer;                            // Panel top position
-    PPanelWidth:       Integer;                                   // Panel width
     PReadBackOutput:   Boolean;         // Output port with read-back capability
     PSelMode:          TLineMode;              // Decoding matrix selector lines
     PSelNegation:      Boolean;              // Negation of matrix selector bits
@@ -185,7 +180,7 @@ resourcestring
   MSG14 = ' %sh write to port %sh.';
   MSG15 = 'Only 8-bit hexadecimal values can be entered (00 - FF)!';
   MSG16 = 'Caption';
-  MSG17 = '';
+  MSG17 = 'This is not a graphics plugin.';
   MSG18 = '';
   MSG19 = '';
   MSG20 = '';
@@ -217,22 +212,6 @@ begin
       PReadBackOutput := CurrentPort.ReadBackOutput;
       PSelMode := CurrentPort.SelMode;
       PSelNegation := CurrentPort.SelNegation;
-      // read UI properties
-      if PHasPanel and (CurrentPort is TGIOPort) then
-      begin
-        PPanelCaption := TGIOPort(CurrentPort).PanelCaption;
-        PPanelHeight  := TGIOPort(CurrentPort).PanelHeight;
-        PPanelLeft    := TGIOPort(CurrentPort).PanelLeft;
-        PPanelTop     := TGIOPort(CurrentPort).PanelTop;
-        PPanelWidth   := TGIOPort(CurrentPort).PanelWidth;
-      end else
-      begin
-        PPanelCaption := nil;
-        PPanelHeight  := 0;
-        PPanelLeft    := 0;
-        PPanelTop     := 0;
-        PPanelWidth   := 0;
-      end;
     end;
   end;
   // export from variables to plugin
@@ -615,19 +594,42 @@ begin
   end;
 end;
 
+// SET PANEL CAPTION
 procedure TForm1.SetPluginWindowCaptionExecute(Sender: TObject);
 begin
   if LoadedPlugin.PHasPanel and
      Assigned(CreatePanel) and Assigned(ShowPanel) and
      Assigned(HidePanel) and Assigned(FreePanel) then
   begin
-    RenamePanel(CurrentPort, PChar(InputBox(SetPluginWindowCaption.Caption,MSG16,'')));
-  end;
+    with Form3 do
+    begin
+      PanelCaption := TGIOPort(CurrentPort).PanelCaption;
+      if ShowModal =  mrOK then
+        RenamePanel(CurrentPort, PChar(PanelCaption));
+    end;
+  end else ShowMessage(MSG01 + MSG17);
 end;
 
+// MOVE AND RESIZE PANEL
 procedure TForm1.SetPluginWindowSizePositionExecute(Sender: TObject);
 begin
-  Form4.ShowModal;
+  if LoadedPlugin.PHasPanel and
+     Assigned(CreatePanel) and Assigned(ShowPanel) and
+     Assigned(HidePanel) and Assigned(FreePanel) then
+  begin
+    with Form4 do
+    begin
+      PanelHeight := TGIOPort(CurrentPort).PanelHeight;
+      PanelLeft := TGIOPort(CurrentPort).PanelLeft;
+      PanelTop := TGIOPort(CurrentPort).PanelTop;
+      PanelWidth := TGIOPort(CurrentPort).PanelWidth;
+      if ShowModal =  mrOK then
+      begin
+        ResizePanel(CurrentPort, PanelWidth, PanelHeight);
+        MovePanel(CurrentPort, PanelLeft, PanelTop);
+      end;
+    end;
+  end else ShowMessage(MSG01 + MSG17);
 end;
 
 // READ A BYTE
