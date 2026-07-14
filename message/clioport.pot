@@ -38,13 +38,15 @@ msgid "[argument]"
 msgstr ""
 
 #: clioport.msg10
-msgctxt "clioport.msg10"
 msgid "[directory]"
 msgstr ""
 
 #: clioport.msg11
-msgctxt "clioport.msg11"
 msgid "arguments:"
+msgstr ""
+
+#: frmabout.msg01
+msgid "Cannot open URL."
 msgstr ""
 
 #: frmmain.msg01
@@ -74,6 +76,7 @@ msgid "Filename"
 msgstr ""
 
 #: frmmain.msg07
+msgctxt "frmmain.msg07"
 msgid "Size"
 msgstr ""
 
@@ -112,7 +115,12 @@ msgid "Only 8-bit hexadecimal values can be entered (00 - FF)!"
 msgstr ""
 
 #: frmmain.msg16
+msgctxt "frmmain.msg16"
 msgid "Caption"
+msgstr ""
+
+#: frmmain.msg17
+msgid "This is not a graphics plugin."
 msgstr ""
 
 #: tform1.about.caption
@@ -134,12 +142,10 @@ msgid "&Help"
 msgstr ""
 
 #: tform1.loadchangeplugin.caption
-msgctxt "tform1.loadchangeplugin.caption"
 msgid "Load/change p&lugin"
 msgstr ""
 
 #: tform1.loadchangeplugin.hint
-msgctxt "tform1.loadchangeplugin.hint"
 msgid "Load/change plugin"
 msgstr ""
 
@@ -185,12 +191,10 @@ msgid "&Help"
 msgstr ""
 
 #: tform1.panel1.caption
-msgctxt "tform1.panel1.caption"
 msgid "Panel1"
 msgstr ""
 
 #: tform1.quit.caption
-msgctxt "tform1.quit.caption"
 msgid "E&xit"
 msgstr ""
 
@@ -199,7 +203,6 @@ msgid "Exit from application"
 msgstr ""
 
 #: tform1.readabyte.caption
-msgctxt "tform1.readabyte.caption"
 msgid "&Read a byte"
 msgstr ""
 
@@ -208,17 +211,14 @@ msgid "Read a byte"
 msgstr ""
 
 #: tform1.refreshpluginlist.caption
-msgctxt "tform1.refreshpluginlist.caption"
 msgid "Re&fresh plugin list"
 msgstr ""
 
 #: tform1.refreshpluginlist.hint
-msgctxt "tform1.refreshpluginlist.hint"
 msgid "Refresh plugin list"
 msgstr ""
 
 #: tform1.restartapplication.caption
-msgctxt "tform1.restartapplication.caption"
 msgid "Restart &application"
 msgstr ""
 
@@ -227,7 +227,6 @@ msgid "Restart application"
 msgstr ""
 
 #: tform1.selectplugindirectory.caption
-msgctxt "tform1.selectplugindirectory.caption"
 msgid "Select plugin &directory..."
 msgstr ""
 
@@ -265,7 +264,6 @@ msgid "ToolButton6"
 msgstr ""
 
 #: tform1.writeabyte.caption
-msgctxt "tform1.writeabyte.caption"
 msgid "&Write a byte"
 msgstr ""
 
@@ -278,60 +276,96 @@ msgid "&Close"
 msgstr ""
 
 #: tform2.caption
-msgctxt "tform2.caption"
-msgid "Help"
+msgid "About"
+msgstr ""
+
+#: tform2.label1.caption
+msgid "Label1"
+msgstr ""
+
+#: tform2.label2.caption
+msgid "Label2"
+msgstr ""
+
+#: tform2.label3.caption
+msgid "Label3"
+msgstr ""
+
+#: tform2.label4.caption
+msgid "Label4"
+msgstr ""
+
+#: tform2.label5.caption
+msgid "Label5"
+msgstr ""
+
+#: tform2.label6.caption
+msgid "Homepage:"
+msgstr ""
+
+#: tform2.label7.caption
+msgid "E-mail:"
+msgstr ""
+
+#: tform2.label8.caption
+msgid "Label8"
+msgstr ""
+
+#: tform3.button1.caption
+msgctxt "tform3.button1.caption"
+msgid "&Set"
+msgstr ""
+
+#: tform3.button2.caption
+msgctxt "tform3.button2.caption"
+msgid "&Cancel"
+msgstr ""
+
+#: tform3.caption
+msgid "Set panel caption"
+msgstr ""
+
+#: tform3.groupbox1.caption
+msgctxt "tform3.groupbox1.caption"
+msgid "Caption"
 msgstr ""
 
 #: tform4.button1.caption
+msgctxt "tform4.button1.caption"
 msgid "&Set"
 msgstr ""
 
 #: tform4.button2.caption
+msgctxt "tform4.button2.caption"
 msgid "&Cancel"
 msgstr ""
 
 #: tform4.caption
-msgid "Form4"
+msgid "Set panel size and position"
 msgstr ""
 
-#: tform4.labelededit1.editlabel.caption
-msgid "Left"
+#: tform4.groupbox1.caption
+msgctxt "tform4.groupbox1.caption"
+msgid "Size"
 msgstr ""
 
-#: tform4.labelededit1.text
-msgctxt "tform4.labelededit1.text"
-msgid "0"
+#: tform4.groupbox2.caption
+msgid "Position"
 msgstr ""
 
-#: tform4.labelededit2.editlabel.caption
-msgid "Top"
-msgstr ""
-
-#: tform4.labelededit2.text
-msgctxt "tform4.labelededit2.text"
-msgid "0"
-msgstr ""
-
-#: tform4.labelededit3.editlabel.caption
-msgid "Height"
-msgstr ""
-
-#: tform4.labelededit3.text
-msgctxt "tform4.labelededit3.text"
-msgid "0"
-msgstr ""
-
-#: tform4.labelededit4.editlabel.caption
+#: tform4.label1.caption
 msgid "Width"
 msgstr ""
 
-#: tform4.labelededit4.text
-msgctxt "tform4.labelededit4.text"
-msgid "0"
+#: tform4.label2.caption
+msgid "Height"
 msgstr ""
 
-#: tform4.panel1.caption
-msgctxt "tform4.panel1.caption"
-msgid "Panel1"
+#: tform4.label3.caption
+msgid "Left"
+msgstr ""
+
+#: tform4.label4.caption
+msgid "Top"
 msgstr ""
 

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="clioport.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="135"/>
+        <CursorPos X="39" Y="153"/>
+        <UsageCount Value="216"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmmain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos Y="215"/>
+        <UsageCount Value="216"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmcaption.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="5" Y="2"/>
+        <UsageCount Value="82"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmabout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form2"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="81" Y="5"/>
+        <UsageCount Value="104"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmsizepos.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="4"/>
+        <CursorPos Y="6"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmhelp.pas"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="38" Y="6"/>
+        <UsageCount Value="135"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../_inc/version.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="9"/>
+        <CursorPos Y="45"/>
+        <UsageCount Value="22"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmcaption.lfm"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="31" Y="7"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="644" TopLine="618"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="767" Column="25" TopLine="705"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="58" Column="16" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="57" Column="22" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="63" Column="16" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="62" Column="27" TopLine="52"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="5" Column="12"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="17" Column="27" TopLine="2"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="31" Column="39" TopLine="17"/>
+      </Position>
+      <Position>
+        <Filename Value="frmsizepos.pas"/>
+        <Caret Line="6"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="10" Column="23"/>
+      </Position>
+      <Position>
+        <Filename Value="clioport.lpr"/>
+        <Caret Line="153" Column="36" TopLine="135"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="59" TopLine="15"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="58" TopLine="36"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="57" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="56" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="55" TopLine="33"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="54" TopLine="32"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="53" TopLine="31"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="52" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="51" TopLine="29"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="52" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="51" TopLine="29"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Column="3"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="3" Column="6"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="630" TopLine="621"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="20" Column="69"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="44" Column="17" TopLine="28"/>
+      </Position>
+      <Position>
+        <Filename Value="frmcaption.pas"/>
+        <Caret Line="42" TopLine="28"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode="default">
+        <Mode Name="default"/>
+      </Modes>
+    </RunParams>
+    <HistoryLists>
+      <List Name="LaunchingApplication" Type="File" Count="1">
+        <Item1 Value="/usr/bin/xterm -T &apos;Lazarus Run Output&apos; -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </List>
+      <List Name="CommandLineParameters" Count="1">
+        <Item1 Value="-v"/>
+      </List>
+    </HistoryLists>
+  </ProjectSession>
+</CONFIG>

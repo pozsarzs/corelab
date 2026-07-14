@@ -91,26 +91,23 @@ in mind:
 
 ### Plug-in modules
 
-(**Pontosítandó!**)
-
-|Features                 |Specification / Description                                           |
-|-------------------------|----------------------------------------------------------------------|
-|**8-digit Hex Display**  |Virtual multiplexed 7-segment hex display mapped to port addresses    |
-|**8 LED Array**          |Output peripheral displaying the bit-state of a specific virtual port |
-|**8 Switches / Buttons** |Input peripheral providing manual binary data to a virtual port       |
-|**CPU Extension**        |Dynamically loadable processor cores with unique instruction sets     |
-|**File Redirector**      |Module to pipe virtual port I/O streams directly into standard files  |
-|**Matrix LED Display**   |8x8 or 16x16 LED dot-matrix display for visual coordinate-based output|
-|**Memory (ROM/RAM)**     |Configurable memory blocks with custom size, speed, and mapping       |
-|**Pipe Redirector**      |Module to route virtual port I/O through system IPC pipes             |
-|**Real Port Redirector** |Bridges virtual port I/O to actual hardware ports of the host machine |
-|**Virtual Keypad**       |4x4 matrix keypad or ASCII keyboard stream buffer for character input |
+|Features                               |Specification / Description                                                                  |
+|---------------------------------------|---------------------------------------------------------------------------------------------|
+|**Virtual CPU, uP, and MCU**           |Emulated processor, microprocessor, and microcontroller cores with custom architectures.     |
+|**Virtual Memory (RAM/ROM)**           |Configurable volatile and non-volatile memory blocks with custom sizing and address mapping. |
+|**Virtual 7-Segment Display**          |Single and multiplexed 7-segment display arrays for numerical and basic character output.    |
+|**Virtual Hexadecimal Display**        |Single and multiplexed hex display arrays mapped to virtual port addresses.                  |
+|**Virtual LED Array and Matrix**       |Linear LED bars and dot-matrix displays for visual bit-state and coordinate-based output.    |
+|**Virtual Pushbutton Array and Matrix**|Linear and matrix-arranged momentary pushbuttons for interactive binary input.               |
+|**Virtual Switch Array and Matrix**    |Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.|
+|**Real Port Redirection**              |Bridges virtual port I/O streams directly to the physical hardware ports of the host machine.|
+|**Simple Serial Terminal**             |Basic text-based serial console for communication and data stream monitoring.                |
 
 ## III. Screenshots
 
 (...)
 
-## IV. Used external libraries and programs
+## IV. Used external libraries, programs and others
 
  - _Fugue Icons_
    (C) 2013 Yusuke Kamiyamane

@@ -11,6 +11,8 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{$MACRO ON}
+
 {$DEFINE BASENAME := lowercase(PRGNAME)}
 {$DEFINE COMMENT := #35}
 
@@ -44,11 +46,16 @@
   {$DEFINE DIR_LOCK := '/var/lock'}
 {$ENDIF}
 
-{$DEFINE SLASH := DirectorySeparator}
-
 {$IFDEF UNIX}
   {$DEFINE BROWSER := 'xdg-open'}
 {$ENDIF}
 {$IFDEF WINDOWS}
   {$DEFINE BROWSER := 'rundll32.exe url.dll,FileProtocolHandler'}
 {$ENDIF}
+
+{$IFDEF WINDOWS}
+  {$DEFINE CALLTYPE := stdcall}
+{$ELSE}
+  {$DEFINE CALLTYPE := cdecl}
+{$ENDIF}
+

@@ -95,13 +95,20 @@ begin
   if Assigned(FPanelForm) then exit;
 
   FPanelForm := TForm.Create(nil);
-  FPanelForm.Caption := StrPas(FPanelCaption);
-  FPanelForm.Position := poDefaultPosOnly;
-  FPanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  x := MAXX + 1;
-  y := 1;
-  FPanelForm.ClientWidth := (4 * (x + 1) + x * 34) + 8;
-  FPanelForm.ClientHeight := (4 * (y + 1) + y * 34) + 8;
+  with FPanelForm do
+  begin
+    Caption := StrPas(FPanelCaption);
+    Position := poDesigned;
+    BorderIcons := [biSystemMenu, biMinimize];
+    FPanelLeft := Left;
+    FPanelTop := Top;
+    FPanelHeight := Height;
+    FPanelWidth := Width;
+    x := MAXX + 1;
+    y := 1;
+    ClientWidth := (4 * (x + 1) + x * 34) + 8;
+    ClientHeight := (4 * (y + 1) + y * 34) + 8;
+  end;
   
   for x := 0 to MAXX do
   begin
@@ -119,10 +126,13 @@ begin
     end;
   end;
 
-  FPanelForm.Constraints.MinWidth := FPanelForm.Width;
-  FPanelForm.Constraints.MaxWidth := FPanelForm.Width;
-  FPanelForm.Constraints.MinHeight := FPanelForm.Height;
-  FPanelForm.Constraints.MaxHeight := FPanelForm.Height;
+  with FPanelForm do
+  begin
+    Constraints.MinWidth := Width;
+    Constraints.MaxWidth := Width;
+    Constraints.MinHeight := Height;
+    Constraints.MaxHeight := Height;
+  end;
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES

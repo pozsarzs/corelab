@@ -97,8 +97,12 @@ begin
   with FPanelForm do
   begin
     Caption := StrPas(FPanelCaption);
-    Position := poDefaultPosOnly;
+    Position := poDesigned;
     BorderIcons := [biSystemMenu, biMinimize];
+    FPanelLeft := Left;
+    FPanelTop := Top;
+    FPanelHeight := Height;
+    FPanelWidth := Width;
   end;
 
   FPanel := TPanel.Create(FPanelForm);
@@ -114,9 +118,12 @@ begin
   end;
 
   FPaintBox := TPaintBox.Create(FPanelForm);
-  FPaintBox.Parent := FPanel;
-  FPaintBox.Align := alClient;
-  FPaintBox.OnPaint := @PaintBoxPaint;
+  with FPaintBox do
+  begin
+    Parent := FPanel;
+    Align := alClient;
+    OnPaint := @PaintBoxPaint;
+  end;
   
   with FPanelForm do
   begin

@@ -13,6 +13,7 @@
 
 library ioport_bell;
 {$MODE OBJFPC}{$H+}
+{$I DEFINE.PAS}
 uses
   CMem, SysUtils, core_ioport;
 type

@@ -95,42 +95,63 @@ begin
   if Assigned(FPanelForm) then exit;
 
   FPanelForm := TForm.Create(nil);
-  FPanelForm.Caption := FPanelCaption;
-  FPanelForm.Position := poDefaultPosOnly;
-  FPanelForm.BorderIcons := [biSystemMenu, biMinimize];
-  FPanelForm.ClientWidth := 258;
-  FPanelForm.ClientHeight := 80;
+  with FPanelForm do
+  begin
+    Caption := StrPas(FPanelCaption);
+    Position := poDesigned;
+    BorderIcons := [biSystemMenu, biMinimize];
+    FPanelLeft := Left;
+    FPanelTop := Top;
+    FPanelHeight := Height;
+    FPanelWidth := Width;
+    ClientWidth := 258;
+    ClientHeight := 80;
+  end;
 
   L1 := TLabel.Create(FPanelForm);
-  L1.Parent := FPanelForm;
-  L1.Caption := 'Received (hex):';
-  L1.Left := 10;
-  L1.Top := 12;
+  with L1 do
+  begin
+    Parent := FPanelForm;
+    Caption := 'Received (hex):';
+    Left := 10;
+    Top := 12;
+  end;
 
   FEditTx := TEdit.Create(FPanelForm);
-  FEditTx.Parent := FPanelForm;
-  FEditTx.Left := 150;
-  FEditTx.Top := 8;
-  FEditTx.Width := 100;
-  FEditTx.ReadOnly := True;
+  with FEditTx do
+  begin
+    Parent := FPanelForm;
+    Left := 150;
+    Top := 8;
+    Width := 100;
+    ReadOnly := True;
+  end;
 
   L2 := TLabel.Create(FPanelForm);
-  L2.Parent := FPanelForm;
-  L2.Caption := 'To be sent (hex):';
-  L2.Left := 10;
-  L2.Top := 44;
+  with L2 do
+  begin
+    Parent := FPanelForm;
+    Caption := 'To be sent (hex):';
+    Left := 10;
+    Top := 44;
+  end;
 
   FEditRx := TEdit.Create(FPanelForm);
-  FEditRx.Parent := FPanelForm;
-  FEditRx.MaxLength := 2;
-  FEditRx.Left := 150;
-  FEditRx.Top := 40;
-  FEditRx.Width := 100;
+  with FEditRx do
+  begin
+    Parent := FPanelForm;
+    MaxLength := 2;
+    Left := 150;
+    Top := 40;
+    Width := 100;
+  end;
 
-  FPanelForm.Constraints.MinWidth := FPanelForm.Width;
-  FPanelForm.Constraints.MaxWidth := FPanelForm.Width;
-  FPanelForm.Constraints.MinHeight := FPanelForm.Height;
-  FPanelForm.Constraints.MaxHeight := FPanelForm.Height;
+  with FPanelForm do
+  begin
+    Constraints.MinWidth := Width;
+    Constraints.MaxWidth := Width;
+    Constraints.MinHeight := Height;
+    Constraints.MaxHeight := Height;
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES
