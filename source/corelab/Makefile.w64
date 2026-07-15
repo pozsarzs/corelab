@@ -5,12 +5,12 @@
 # | Makefile for 64 bit Windows                                                |
 # +----------------------------------------------------------------------------+
 
-name = corelab
+name = $(shell dir /B /A:D | findstr /V /I "Makefile Makefile.w32 Makefile.w64")
 architecture = x86_64
 os = win64
 fpc = ppcx64
 lcldir = c:\lazarus\lcl
-outdir = ..\_lib\$(architecture)-$(os)
+outdir = ..\..\_lib\$(architecture)-$(os)
 fpcargs = -T$(os) \
           -MObjFPC \
           -Scgi \
@@ -18,6 +18,7 @@ fpcargs = -T$(os) \
           -v0 \
           -Fi../_inc/ \
           -Fi../_inc/* \
+          -Fi../corelab-parts/ \
           -Fu../_ext/* \
           -Fu../_ppu/* \
           -Fu../corelab-core/ \
@@ -37,8 +38,9 @@ fpcargs = -T$(os) \
 all:
 	@if not exist ..\_lib\nul md ..\_lib
 	@if not exist $(outdir)\nul md $(outdir)
-	@$(fpc) $(fpcargs) $(name).lpr
-	@copy $(outdir)\$(name).exe ..\..
+	  for %%x in ($(name)) do \
+	    $(fpc) $(fpcargs) %%x/%%x.pas \
+	@copy $(outdir)\*.dll ..\..
 
 clean:
 	@erase $(outdir)\*.*

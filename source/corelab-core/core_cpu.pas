@@ -128,7 +128,7 @@ type
 
 implementation
 
-// Helper for own types
+// HELPER FOR OWN TYPES
 function TArchitectureHelper.ToString: string;
 begin
   WriteStr(Result, Self);
@@ -177,7 +177,7 @@ begin
       if Other.Patch < Patch then Result := 1;
 end;
 
-// Create CPU instance
+// CREATE CPU INSTANCE
 constructor TCPU.Create;
 begin
   inherited Create;
@@ -199,45 +199,45 @@ begin
   end; 
 end;
 
-// Destroy TCPU instance
+// DESTROY TCPU INSTANCE
 destructor TCPU.Destroy;
 begin
   inherited Destroy;
 end;
 
-// Sends a CPU event to the host application
+// SENDS A CPU EVENT TO THE HOST APPLICATION
 procedure TCPU.EmitEvent(Event: TCPUEvent);
 begin
   if Assigned(FOnEvent) then FOnEvent(Self, Event);
 end;
 
-// Start CPU execution
+// START CPU EXECUTION
 procedure TCPU.Run;
 begin
   FRunning := true;
 end;
 
-// Stop CPU execution
+// STOP CPU EXECUTION
 procedure TCPU.Stop;
 begin
   FRunning := false;
 end;
 
-// Signal maskable interrupt
+// SIGNAL MASKABLE INTERRUPT
 procedure TCPU.IRQ;
 begin
   FIRQPending := true;                                   // Set pending IRQ flag
   EmitEvent(ceInterrupt);                             // Notify host application
 end;
 
-// Signal non-maskable interrupt
+// SIGNAL NON-MASKABLE INTERRUPT
 procedure TCPU.NMI;
 begin
   FNMIPending := true;                                   // Set pending NMI flag
   EmitEvent(ceInterrupt);                             // Notify host application
 end;
 
-// Check pending interrupt
+// CHECK PENDING INTERRUPT
 function TCPU.CheckInterrupts: Boolean;
 begin
   Result := false;
@@ -258,13 +258,13 @@ begin
   end;
 end;
 
-// Interrupt handler
+// INTERRUPT HANDLER
 procedure TCPU.DoInterrupt(Event: TCPUEvent);
 begin
   EmitEvent(Event); 
 end;
 
-// Connect CPU to external system bus
+// CONNECT CPU TO EXTERNAL SYSTEM BUS
 procedure TCPU.ConnectBus(const Bus: ICPUBus);
 begin
   FBus := Bus;                                   // Store external bus reference

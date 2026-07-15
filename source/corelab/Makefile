@@ -8,21 +8,16 @@
 include ../../Makefile.global
 
 outdir=../_lib/$(architecture)-$(os)
-podir=../_po
-project=corelab
+project=`ls | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
 
 all:
 	@mkdir -p $(outdir)/
-	@if [ -f $(project).lpr ]; then \
-	    $(fpc) $(fpcargs) $(project).lpr; \
+	@for x in $(project); do \
+	  if [ -f $$x/$$x.pas ]; then \
+	    $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
 	  echo ""; \
-	fi
-	@if [ -f $(outdir)/$(project)strconsts.rsj ]; then \
-	  $(rstconv) -f po -p utf-8 -i $(outdir)/$(project)strconsts.rsj -o ../../message/$(project).pot; \
-	fi
-	@if [ -f $(podir)/$(project).pot ]; then \
-	  mv $(podir)/$(project).pot  ../../message/; \
-	fi
+	  fi; \
+	done
 
 clean:
 

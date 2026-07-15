@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ucommon.pas                                                              | }
+{ | common.pas                                                               | }
 { | common procedures and functions                                          | }
 { +--------------------------------------------------------------------------+ }
 { 
@@ -13,7 +13,7 @@
   FOR A PARTICULAR PURPOSE.
 }
 
-unit ucommon;
+unit common;
 {$MODE OBJFPC} {$H+} {$MACRO ON}
 interface
 uses

@@ -66,7 +66,7 @@ type
 
 implementation
 
-// Helper for own types
+// HELPER FOR OWN TYPES
 function TMemoryModeHelper.ToString: string;
 begin
   WriteStr(Result, Self);
@@ -95,7 +95,7 @@ begin
       if Other.Patch < Patch then Result := 1;
 end;
 
-// Create TMemory instance
+// CREATE TMEMORY INSTANCE
 constructor TMemory.Create;
 begin
   inherited Create;
@@ -112,13 +112,13 @@ begin
   end; 
 end;
 
-// Destroy TMemory instance
+// DESTROY TMEMORY INSTANCE
 destructor TMemory.Destroy;
 begin
   inherited Destroy;
 end;
 
-// Read virtual memory
+// READ VIRTUAL MEMORY
 function TMemory.ReadMemory(Address: dword): Byte;
 begin
   Result := 0;
@@ -128,14 +128,14 @@ begin
       else Result := 0;
 end;
 
-// Write virtual memory
+// WRITE VIRTUAL MEMORY
 procedure TMemory.WriteMemory(Address: dword; Value: Byte);
 begin
   if FEnabled and (FMemoryMode = mmRAM) then
     if Address < FAddressRangeSize then FMemCells[Address] := Value;
 end;
 
-// Set size and reset cells
+// SET SIZE AND RESET CELLS
 procedure TMemory.Reset;
 var
   dw: dword;
@@ -146,7 +146,7 @@ begin
   if FAddressRangeSize > 0 then FillByte(FMemCells[0], FAddressRangeSize, 0);
 end;
 
-// Load memory content from stream
+// LOAD MEMORY CONTENT FROM STREAM
 procedure TMemory.LoadFromStream(Stream: TStream; Address, Count: dword);
 begin
   if not FEnabled then exit;
@@ -154,7 +154,7 @@ begin
   if Count > 0 then Stream.ReadBuffer(FMemCells[Address], Count);
 end;
 
-// Save memory content to stream
+// SAVE MEMORY CONTENT TO STREAM
 procedure TMemory.SaveToStream(Stream: TStream; Address, Count: dword);
 begin
   if not FEnabled then exit;
