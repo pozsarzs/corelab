@@ -24,8 +24,8 @@ type
     FActionList: TActionList;
     FContext: TCommandContext;
     FLastExitCode: integer;
-    FRegistry: TCommandRegistry;
     FParser: TCommandParser;
+    FRegistry: TCommandRegistry;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -39,17 +39,19 @@ implementation
 constructor TCommandEngine.Create;
 begin
   inherited Create;
+  FActionList := TActionList.Create(nil);
   FContext := TCommandContext.Create;
-  FRegistry := TCommandRegistry.Create;
   FParser := TCommandParser.Create;
+  FRegistry := TCommandRegistry.Create;
 end;
 
 // DESTROY TCOMMANDENGINE INSTANCE
 destructor TCommandEngine.Destroy;
 begin
+  FActionList.Free;
+  FContext.Free;
   FParser.Free;
   FRegistry.Free;
-  FContext.Free;
   inherited Destroy;
 end;
 
@@ -63,13 +65,13 @@ begin
   if (Trim(ALine) = '') or (ALine[1] = '#') then Exit;
   Tokens := FParser.Tokenize(ALine, FContext);
   try
-    if Tokens.Count = 0 then Exit;
-    CommandName := LowerCase(Tokens[0].RawText);
-    if FRegistry.TryGetCommand(CommandName, Command) then
-    begin
-      Result := Command.Execute(Tokens, FContext);
-    end
-    else Result := -1;
+//    if Tokens.Count = 0 then Exit;
+//    CommandName := LowerCase(Tokens[0].RawText);
+//    if FRegistry.TryGetCommand(CommandName, Command) then
+//    begin
+//      Result := Command.Execute(Tokens, FContext);
+//    end
+//    else Result := -1;
   finally
     Tokens.Free;
   end;

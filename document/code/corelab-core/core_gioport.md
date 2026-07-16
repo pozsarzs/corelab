@@ -14,7 +14,7 @@ methods that can handle the graphical interface of the port or device.
 |name             |type     |C|description                          |default|
 |-----------------|:-------:|-|-------------------------------------|:-----:|
 |FPanelForm       |TForm    | |GUI panel for port or device         |       |
-|FPanelCaption    |PChar    | |Panel caption                        |'MyIO  |
+|FPanelCaption    |PChar    | |Panel caption                        |'MyIO' |
 |FPanelHeight     |Integer  | |Panel height                         |100    |
 |FPanelLeft       |Integer  | |Panel left position                  |16     |
 |FPanelTop        |Integer  | |Panel top position                   |16     |

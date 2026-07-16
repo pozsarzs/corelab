@@ -4,14 +4,20 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TButton16Mux class
+## TDisp17seg class
 
-TButton16Mux is a module that simulates a read-only input peripheral derived
-from the class TGIOPort. It has its own graphical user interface, which displays
-a matrix of 16 push buttons. The column to be read can be selected directly by
-an active bit (up to 8 lines) or by specifying the line BCD (up to 16 lines).
-The active bit can be high or low). The output returns the button status and
-then releases them immediately.
+TDisp17seg is a module that simulates a display peripheral derived from the
+class TGIOPort and TDisplayTIL302. It has its own graphical user interface,
+which contents a 1-digit 7 segment TIL302 style display with direct inversable
+and BCD input (bits: a-g, dp or low nibble: BCD input, high nibble: rdp-000).
+
+### Protected fields
+
+|name     |type          |C|description                      |default|
+|---------|:------------:|-|---------------------------------|:-----:|
+|FPanel   |TPanel        | |GUI container panel              |nil    |
+|FPaintBox|TPaintBox     | |PaintBox for display rendering   |nil    |
+|FDP      |TDisplayTIL302| |TIL302 display component instance|nil    |
 
 ### Modified inherited protected fields
 
@@ -26,9 +32,9 @@ then releases them immediately.
 
 ### Own protected methods
 
-|name                             |V|A|O|description       |
-|---------------------------------|-|-|-|------------------|
-|`procedure AllRelease(mx: byte);`| | | |Release all button|
+|name                                       |V|A|O|description                                             |
+|-------------------------------------------|-|-|-|--------------------------------------------------------|
+|`procedure PaintBoxPaint(Sender: TObject);`| | | |PaintBox OnPaint event handler for rendering the display|
 
 **Note**:  
 - _V_: means 'virtual' method,

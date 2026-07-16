@@ -7,19 +7,19 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 ## TStandardPort class
 
 TStandardPort is a module implementing general-purpose input and output
-operations from the TIOPort abstract base class. It has its own graphical
-interface, which in a simple window provides the possibility to display the
-(output) values sent to the port in hexadecimal format, as well as to manually
-specify the (input) values​to be read from it.
+operations from the TGIOPort class. It has its own graphical interface, which
+in a simple window provides the possibility to display the (output) values sent
+to the port in hexadecimal format, as well as to manually specify the (input)
+values​to be read from it.
 
-### New default value of the protected fields
+### Modified inherited protected fields
 
-|name          |type   |C|description                  |default            |
-|--------------|:-----:|-|-----------------------------|:-----------------:|
-|FDescription  |PChar  | |Short description            |short text         |
-|FHasGUI       |Boolean| |Has UI                       |true               |
-|FLatchedOutput|Boolean| |Storing value written to port|true               |
-|FModName      |PChar  | |Module name                  |'Standard I/O port'|
+|name          |type   |C|description      |value|
+|--------------|:-----:|-|-----------------|:---:|
+|FDescription  |PChar  | |Short description|     |
+|FHasPanel     |Boolean| |Has GUI panel    |true |
+|FLatchedOutput|Boolean| |Store output data|true |
+|FModName      |PChar  | |Module name      |     |
 
 **Note**:  
 - _C_: means 'constant'.
@@ -38,3 +38,22 @@ specify the (input) values​to be read from it.
 - _V_: means 'virtual' method,
 - _A_: means 'abstract' method,
 - _O_: means 'override' method.
+
+### Exported functions and procedures
+
+**Calling mode:**  
+
+- on Windows: `stdcall`,
+- on Unix-like OS: `cdecl`.
+
+|name                                                                   |exported name     |description      |
+|-----------------------------------------------------------------------|------------------|-----------------|
+|`function CreatePort: TIOPort;`                                        |ioport_create     |Create port      |
+|`procedure DestroyPort(Port: TIOPort));`                               |ioport_destroy    |Destroy port     |
+|`function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean;`      |ioport_movepanel  |Move GUI panel   |
+|`function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean;`|ioport_resizepanel|Resize GUI panel |
+|`procedure CreatePanel(Port: TIOPort);`                                |ioport_createpanel|Create GUI panel |
+|`procedure FreePanel(Port: TIOPort);`                                  |ioport_freepanel  |Destroy GUI panel|
+|`procedure HidePanel(Port: TIOPort);`                                  |ioport_hidepanel  |Hide GUI panel   |
+|`procedure RenamePanel(Port: TIOPort; Caption: PChar);`                |ioport_renamepanel|Rename GUI panel |
+|`procedure ShowPanel(Port: TIOPort);`                                  |ioport_showpanel  |Show GUI panel   |

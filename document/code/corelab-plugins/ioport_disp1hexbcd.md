@@ -4,14 +4,20 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TButton16Mux class
+## TDisp1HexBCD class
 
-TButton16Mux is a module that simulates a read-only input peripheral derived
-from the class TGIOPort. It has its own graphical user interface, which displays
-a matrix of 16 push buttons. The column to be read can be selected directly by
-an active bit (up to 8 lines) or by specifying the line BCD (up to 16 lines).
-The active bit can be high or low). The output returns the button status and
-then releases them immediately.
+TDisp1HexBCD is a module that simulates a display peripheral derived from the
+class TGIOPort and TDisplayTIL311. It has its own graphical user interface,
+which contents a 1-digit hexadecimal TIL311 style display with BCD input
+(low nibble: BCD input, high nibble: 0-blank-ldp-rdp).
+
+### Protected fields
+
+|name     |type          |C|description                      |default|
+|---------|:------------:|-|---------------------------------|:-----:|
+|FPanel   |TPanel        | |GUI container panel              |nil    |
+|FPaintBox|TPaintBox     | |PaintBox for display rendering   |nil    |
+|FDP      |TDisplayTIL311| |TIL311 display component instance|nil    |
 
 ### Modified inherited protected fields
 
@@ -26,9 +32,9 @@ then releases them immediately.
 
 ### Own protected methods
 
-|name                             |V|A|O|description       |
-|---------------------------------|-|-|-|------------------|
-|`procedure AllRelease(mx: byte);`| | | |Release all button|
+|name                                       |V|A|O|description                                             |
+|-------------------------------------------|-|-|-|--------------------------------------------------------|
+|`procedure PaintBoxPaint(Sender: TObject);`| | | |PaintBox OnPaint event handler for rendering the display|
 
 **Note**:  
 - _V_: means 'virtual' method,

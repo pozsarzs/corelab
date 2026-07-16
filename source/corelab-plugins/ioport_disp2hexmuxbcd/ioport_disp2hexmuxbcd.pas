@@ -12,7 +12,7 @@
   FOR A PARTICULAR PURPOSE. }
 
 library ioport_disp2hexmuxbcd;
-{$mode objfpc}{$H+}
+{$MODE OBJFPC}{$H+}
 uses
   Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils, Buttons,
   core_ioport, core_gioport, display_til311;

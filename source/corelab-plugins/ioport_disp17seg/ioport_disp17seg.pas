@@ -48,7 +48,7 @@ constructor TDisp17seg.Create;
 begin
   inherited Create;
   FModname := '7 segments display';
-  FDescription := 'TIL302 style display with direct inversable input.';
+  FDescription := 'TIL302 style display with direct inversable and BCD input.';
   FHasPanel := true;
   FLatchedOutput := true;
   FDP := TDisplayTIL302.Create;

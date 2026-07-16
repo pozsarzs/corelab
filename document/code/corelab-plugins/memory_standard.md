@@ -9,12 +9,12 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 TStandardMemory is a generic RAM/ROM implementation module derived from the
 TMemory abstract base class.
 
-### New default value of the protected fields
+### Modified inherited protected fields
 
-|name        |type |C|description      |default          |
-|------------|:---:|-|-----------------|:---------------:|
-|FDescription|PChar| |Short description|short text       |
-|FModName    |PChar| |Module name      |'Standard memory'|
+|name        |type   |C|description      |value|
+|------------|:-----:|-|-----------------|:---:|
+|FDescription|PChar  | |Short description|     |
+|FModName    |PChar  | |Module name      |     |
 
 **Note**:  
 - _C_: means 'constant'.
@@ -30,3 +30,15 @@ TMemory abstract base class.
 - _V_: means 'virtual' method,
 - _A_: means 'abstract' method,
 - _O_: means 'override' method.
+
+### Exported functions and procedures
+
+**Calling mode:**  
+
+- on Windows: `stdcall`,
+- on Unix-like OS: `cdecl`.
+
+|name                                       |exported name |description   |
+|-------------------------------------------|--------------|--------------|
+|`function CreateMemory: TMemory;`          |memory_create |Create memory |
+|`procedure DestroyMemory(Memory: TMemory);`|memory_destroy|Destroy memory|
