@@ -16,6 +16,7 @@ all:
 	  if [ -f $$x/$$x.pas ]; then \
 	    $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
 	  echo ""; \
+	    $(fpc) $(fpcargs) -Cg -FE$(outdir) $$x/chk$$x.pas; \
 	  fi; \
 	done
 
