@@ -13,7 +13,6 @@
 
 unit token;
 {$MODE OBJFPC}{$H+}
-{$MODESWITCH TYPEHELPERS}
 interface
 uses
    Generics.Collections;

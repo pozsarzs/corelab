@@ -13,6 +13,7 @@
 
 library cpu_8080;
 {$MODE OBJFPC}{$H+}
+{$I DEFINE.PAS}
 uses
   Classes, SysUtils, core_cpu;
 type
@@ -181,7 +182,7 @@ begin
 end;
 
 // Creating a CPU instance 
-function CreateCPU: TCPU; {$IFDEF UNIX} cdecl; {$ELSE} stdcall; {$ENDIF} export;
+function CreateCPU: TCPU; CALLTYPE; export;
 begin
   Result := T8080CPU.Create;
 end;

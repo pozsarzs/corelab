@@ -13,7 +13,6 @@
 
 unit commandparser;
 {$MODE OBJFPC}{$H+}
-//{$MODESWITCH TYPEHELPERS}
 interface
 uses
    commandcontext, token;
@@ -24,7 +23,7 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    function Tokenize(ALine: string; AContext: TCommandContext): TTokenList; virtual;
+    function Tokenize(const ALine: string; AContext: TCommandContext): TTokenList; virtual;
   end;
 
 implementation
@@ -41,8 +40,69 @@ begin
   inherited Destroy;
 end;
 
-function TCommandParser.Tokenize(ALine: string; AContext: TCommandContext): TTokenList;
+function TCommandParser.Tokenize(const ALine: string; AContext: TCommandContext): TTokenList;
+var
+  CurrentChar, InQuoteChar: Char;
+  CurrentTokenStr:          string;
+  i, Len: Integer;
+  InQuote:                  Boolean;
+  NewToken:                 TToken;
 begin
+  Result := TTokenList.Create;
+  Len := Length(ALine);
+  if Len = 0 then exit;
+
+  CurrentTokenStr := '';
+  InQuote := False;
+  InQuoteChar := #0;
+
+  for i := 1 to Len do
+  begin
+    CurrentChar := ALine[i];
+
+    if InQuote then
+    begin
+      // Ha idézőjelben vagyunk, keressük a záró idézőjelt
+      if CurrentChar = InQuoteChar then
+      begin
+        InQuote := False;
+        InQuoteChar := #0;
+      end
+      else
+        CurrentTokenStr := CurrentTokenStr + CurrentChar;
+    end
+    else
+    begin
+      // Idézőjel kezdete (' vagy ")
+      if (CurrentChar = '''') or (CurrentChar = '"') then
+      begin
+        InQuote := True;
+        InQuoteChar := CurrentChar;
+      end
+      // Szóközök és tabulátorok elválasztóként működnek
+      else if (CurrentChar = ' ') or (CurrentChar = #9) then
+      begin
+        if Length(CurrentTokenStr) > 0 then
+        begin
+          // Itt hívható meg a változó-behelyettesítés:
+          // CurrentTokenStr := AContext.ExpandVariables(CurrentTokenStr);
+          
+          NewToken := TToken.Create(CurrentTokenStr);
+          Result.Add(NewToken);
+          CurrentTokenStr := '';
+        end;
+      end
+      else
+        CurrentTokenStr := CurrentTokenStr + CurrentChar;
+    end;
+  end;
+
+  // A sor végén maradt utolsó token hozzáadása
+  if Length(CurrentTokenStr) > 0 then
+  begin
+    NewToken := TToken.Create(CurrentTokenStr);
+    Result.Add(NewToken);
+  end;
 end;
 
 begin

@@ -12,7 +12,8 @@
   FOR A PARTICULAR PURPOSE. }
 
 library ioport_null;
-{$mode objfpc}{$H+}
+{$MODE OBJFPC}{$H+}
+{$I DEFINE.PAS}
 uses
   CMem, core_ioport;
 type
@@ -60,12 +61,12 @@ begin
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES
-function CreatePort: TIOPort; cdecl; export;
+function CreatePort: TIOPort; CALLTYPE; export;
 begin
   Result := TNULLPort.Create;
 end;
 
-procedure DestroyPort(Port: TIOPort); cdecl; export;
+procedure DestroyPort(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) then Port.Free;
 end;

@@ -21,16 +21,18 @@ type
   // Abstract command engine class
   TCommandEngine = class
   protected
-    FActionList: TActionList;
-    FContext: TCommandContext;
+    FActionList:   TActionList;
+    FContext:      TCommandContext;
     FLastExitCode: integer;
-    FParser: TCommandParser;
-    FRegistry: TCommandRegistry;
+    FParser:       TCommandParser;
+    FRegistry:     TCommandRegistry;
   public
     constructor Create; virtual;
     destructor Destroy; override;
     function ExecuteLine(const ALine: string): Integer;  virtual;
     property LastExitCode: integer read FLastExitCode;
+    property Registry: TCommandRegistry read FRegistry write FRegistry;
+    property ActionList: TActionList read FActionList write FActionList;
   end;
 
 implementation
@@ -39,42 +41,53 @@ implementation
 constructor TCommandEngine.Create;
 begin
   inherited Create;
-  FActionList := TActionList.Create(nil);
   FContext := TCommandContext.Create;
   FParser := TCommandParser.Create;
-  FRegistry := TCommandRegistry.Create;
 end;
 
 // DESTROY TCOMMANDENGINE INSTANCE
 destructor TCommandEngine.Destroy;
 begin
-  FActionList.Free;
   FContext.Free;
   FParser.Free;
-  FRegistry.Free;
   inherited Destroy;
 end;
 
 function TCommandEngine.ExecuteLine(const ALine: string): Integer;
 var
-  Tokens: TTokenList;
-  CommandName: string;
-  Command: TCommand;
+  Command:      TCommand;  
+  CommandClass: TCommandClass;
+  CommandName:  string;
+  Tokens:       TTokenList;
 begin
   Result := 0;
-  if (Trim(ALine) = '') or (ALine[1] = '#') then Exit;
+  // If ALine is empty line or comment
+  if (Trim(ALine) = '') or (ALine[1] = '#') then exit;
+  // Create TokenList instance
   Tokens := FParser.Tokenize(ALine, FContext);
   try
-//    if Tokens.Count = 0 then Exit;
-//    CommandName := LowerCase(Tokens[0].RawText);
-//    if FRegistry.TryGetCommand(CommandName, Command) then
-//    begin
-//      Result := Command.Execute(Tokens, FContext);
-//    end
-//    else Result := -1;
+    // If no any token
+    if Tokens.Count = 0 then exit;
+    // Get name of command
+    CommandName := LowerCase(Tokens[0].RawText);
+    // Get command class with command name from CommandRegistry
+    if FRegistry.TryGetCommand(CommandName, CommandClass) then
+    begin
+      // Create, execute and destroy command instance
+      Command := CommandClass.Create;
+      try
+        Result := Command.Execute(Tokens, FContext);
+      finally
+        Command.Free;
+      end;  
+    end else
+      // Unknown command
+      Result := -1;
   finally
+    // Destroy TokenList instance
     Tokens.Free;
   end;
+  FLastExitCode := Result;
 end;
 
 begin

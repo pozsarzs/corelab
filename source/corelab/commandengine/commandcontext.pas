@@ -19,7 +19,7 @@ uses
 type
   // Data storing type
   TContextValue = record
-    RawValue: string;
+    RawValue:   string;
     IsReadOnly: Boolean;
   end;
   // Abstract command context class

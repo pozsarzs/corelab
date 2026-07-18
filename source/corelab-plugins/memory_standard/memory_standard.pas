@@ -13,6 +13,7 @@
 
 library memory_standard;
 {$MODE OBJFPC}{$H+}
+{$I DEFINE.PAS}
 uses
    core_memory;
 type
@@ -41,12 +42,12 @@ begin
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES
-function CreateMemory: TMemory; cdecl; export;
+function CreateMemory: TMemory; CALLTYPE; export;
 begin
   Result := TStandardMemory.Create;
 end;
 
-procedure DestroyMemory(Memory: TMemory); cdecl; export;
+procedure DestroyMemory(Memory: TMemory); CALLTYPE; export;
 begin
   if Assigned(Memory) then Memory.Free;
 end;

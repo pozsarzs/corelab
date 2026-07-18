@@ -17,16 +17,19 @@ interface
 uses
   Generics.Collections, SysUtils, command;
 type
-  TCommandDict = specialize TObjectDictionary<string, TCommand>;
+  // Class-reference type for registration
+  TCommandClass = class of TCommand;  
+  // Dictionary with <command name, command class> elements
+  TCommandDict = specialize TDictionary<string, TCommandClass>;
   // Abstract command registry class
   TCommandRegistry = class
   protected
-    FCommands: TCommandDict;
+    FCommands: TCommandDict;                // Dictionary of registered commands
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    function TryGetCommand(const CommandName: string; var Command: TCommand): Boolean; virtual;
-    procedure RegisterCommand(const AName: string; ACommand: TCommand); virtual;
+    function TryGetCommand(const AName: string; var ACommandClass: TCommandClass): Boolean; virtual;
+    procedure RegisterCommand(const AName: string; ACommandClass: TCommandClass); virtual;
   end;
 
 implementation
@@ -35,20 +38,29 @@ implementation
 constructor TCommandRegistry.Create;
 begin
   inherited Create;
+  FCommands := TCommandDict.Create;
 end;
 
 // DESTROY TCOMMANDREGISTRY INSTANCE
 destructor TCommandRegistry.Destroy;
 begin
+  FCommands.Free;
   inherited Destroy;
 end;
 
-function TCommandRegistry.TryGetCommand(const CommandName: string; var Command: TCommand): Boolean;
+// TRY TO GET THE COMMAND CLASS FROM COMMAND NAME
+function TCommandRegistry.TryGetCommand(const AName: string; var ACommandClass: TCommandClass): Boolean;
 begin
+  Result := FCommands.TryGetValue(LowerCase(AName), ACommandClass);
+  if not Result then ACommandClass := nil; 
 end;
 
-procedure TCommandRegistry.RegisterCommand(const AName: string; ACommand: TCommand);
+// ADD COMMAND TO REGISTRY
+procedure TCommandRegistry.RegisterCommand(const AName: string; ACommandClass: TCommandClass);
 begin
+  if (Length(AName) = 0) or (ACommandClass = nil)
+    then exit
+    else FCommands.AddOrSetValue(AName, ACommandClass);
 end;
 
 begin

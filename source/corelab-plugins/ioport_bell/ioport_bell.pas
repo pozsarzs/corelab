@@ -63,12 +63,12 @@ begin
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES
-function CreatePort: TIOPort; cdecl; export;
+function CreatePort: TIOPort; CALLTYPE; export;
 begin
   result := TBELLPort.Create;
 end;
 
-procedure DestroyPort(Port: TIOPort); cdecl; export;
+procedure DestroyPort(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) then Port.Free;
 end;

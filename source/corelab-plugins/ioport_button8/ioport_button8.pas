@@ -13,6 +13,7 @@
 
 library ioport_button8;
 {$MODE OBJFPC}{$H+}
+{$I DEFINE.PAS}
 uses
   CMem, Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport,
   core_gioport;
@@ -137,54 +138,54 @@ begin
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES
-function CreatePort: TIOPort; cdecl; export;
+function CreatePort: TIOPort; CALLTYPE; export;
 begin
   result := TButton8.Create;
 end;
 
-procedure DestroyPort(Port: TIOPort); cdecl; export;
+procedure DestroyPort(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) then Port.Free;
 end;
 
-procedure CreatePanel(Port: TIOPort); cdecl; export;
+procedure CreatePanel(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) and (Port is TButton8) then
     TButton8(Port).CreatePanel;
 end;
-procedure FreePanel(Port: TIOPort); cdecl; export;
+procedure FreePanel(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) and (Port is TGIOPort) then
     TGIOPort(Port).FreePanel;
 end;
 
-procedure HidePanel(Port: TIOPort); cdecl; export;
+procedure HidePanel(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) and (Port is TGIOPort) then
     TGIOPort(Port).HidePanel;
 end;
 
-function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean; cdecl; export;
+function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean; CALLTYPE; export;
 begin
   Result := False;
   if Assigned(Port) and (Port is TGIOPort) then
     Result := TGIOPort(Port).MovePanel(Left, Top);
 end;
 
-procedure RenamePanel(Port: TIOPort; Caption: PChar); cdecl; export;
+procedure RenamePanel(Port: TIOPort; Caption: PChar); CALLTYPE; export;
 begin
   if Assigned(Port) and (Port is TGIOPort) then
     TGIOPort(Port).RenamePanel(Caption);
 end;
 
-function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean; cdecl; export;
+function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean; CALLTYPE; export;
 begin
   Result := False;
   if Assigned(Port) and (Port is TGIOPort) then
     Result := TGIOPort(Port).ResizePanel(Width, Height);
 end;
 
-procedure ShowPanel(Port: TIOPort); cdecl; export;
+procedure ShowPanel(Port: TIOPort); CALLTYPE; export;
 begin
   if Assigned(Port) and (Port is TGIOPort) then
     TGIOPort(Port).ShowPanel;
