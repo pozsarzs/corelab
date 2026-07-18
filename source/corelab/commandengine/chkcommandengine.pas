@@ -41,7 +41,7 @@ const
 procedure TActionHandler.DoActionExecute(Sender: TObject);
 begin
   if Sender is TAction then
-    writeln('Command executed: ', TAction(Sender).Name, ' [', TAction(Sender).Caption, ']');
+    writeln('Action: ', TAction(Sender).Name, ' [', TAction(Sender).Caption, ']');
 end;
 
 begin
@@ -71,6 +71,7 @@ begin
 
   // Create and set TCommandEngine instance
   TestEngine := TCommandEngine.Create;
+  TestEngine.RunningMode := csInteractiveOnly;
   TestEngine.ActionList := TestActionList;
   TestEngine.Registry := TestRegistry;
   

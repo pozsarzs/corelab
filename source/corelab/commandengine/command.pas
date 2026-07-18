@@ -15,15 +15,28 @@ unit command;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-   token, commandcontext;
+   Math, token, commandcontext;
 type
+  // Command scope type
+  TCommandScope = (csEverywhere, csScriptOnly, csInteractiveOnly);
   // Abstract command class
   TCommand = class
   protected
+    FActionName:    string;
+    FMinParamCount: Byte;
+    FMaxParamCount: Byte;
+    FParamCount:    Byte;
+    FCommandScope:  TCommandScope;
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    function Execute(Tokens: TTokenList; AContext: TCommandContext): integer; virtual;
+    function Execute(Tokens: TTokenList; AContext: TCommandContext): Integer; virtual; abstract;
+    procedure SetParamCount(ACount: Byte);
+    property ActionName: string read FActionName;
+    property MinParamCount: Byte read FMinParamCount;
+    property MaxParamCount: Byte read FMaxParamCount;
+    property ParamCount: Byte read FParamCount write SetParamCount;
+    property CommandScope: TCommandScope read FCommandScope;
   end;
 
 implementation
@@ -32,6 +45,11 @@ implementation
 constructor TCommand.Create;
 begin
   inherited Create;
+  FActionName := '';
+  FCommandScope := csEverywhere;
+  FMinParamCount := 0;
+  FMaxParamCount := 0;
+  FParamCount := 0;
 end;
 
 // DESTROY TCOMMAND INSTANCE
@@ -40,8 +58,10 @@ begin
   inherited Destroy;
 end;
 
-function TCommand.Execute(Tokens: TTokenList; AContext: TCommandContext): integer;
+// SET PARAMCOUNT PROPERTY
+procedure TCommand.SetParamCount(ACount: byte);
 begin
+  FParamCount := EnsureRange(ACount, 0, 255);
 end;
 
 begin

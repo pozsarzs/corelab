@@ -82,6 +82,7 @@ function TCmd_teststart.Execute(ATokens: TTokenList; AContext: TCommandContext):
 begin
   Result := 0;
   try
+    FActionName := 'actStart';
     writeln('Execute command "teststart."');
   except
     Result := -1;
@@ -92,6 +93,7 @@ function TCmd_teststop.Execute(ATokens: TTokenList; AContext: TCommandContext): 
 begin
   Result := 0;
   try
+    FActionName := 'actStop';
     writeln('Execute command "teststop."');
   except
     Result := -1;
@@ -102,6 +104,7 @@ function TCmd_teststatus.Execute(ATokens: TTokenList; AContext: TCommandContext)
 begin
   Result := 0;
   try
+    FActionName := 'actStatus';
     writeln('Execute command "teststatus."');
   except
     Result := -1;

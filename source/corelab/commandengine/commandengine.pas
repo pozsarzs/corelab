@@ -26,12 +26,15 @@ type
     FLastExitCode: integer;
     FParser:       TCommandParser;
     FRegistry:     TCommandRegistry;
+    FRunningMode:  TCommandScope;
   public
     constructor Create; virtual;
     destructor Destroy; override;
+    function ExecuteAction(const AName: string): Boolean; virtual;
     function ExecuteLine(const ALine: string): Integer;  virtual;
     property LastExitCode: integer read FLastExitCode;
     property Registry: TCommandRegistry read FRegistry write FRegistry;
+    property RunningMode: TCommandScope read FRunningMode write FRunningMode;
     property ActionList: TActionList read FActionList write FActionList;
   end;
 
@@ -53,6 +56,24 @@ begin
   inherited Destroy;
 end;
 
+// EXECUTE ACTION
+function TCommandEngine.ExecuteAction(const AName: string): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  if FActionList = nil then Exit;
+  for i := 0 to FActionList.ActionCount - 1 do
+  begin
+    if SameText(FActionList.Actions[i].Name, AName) then
+    begin
+      FActionList.Actions[i].Execute;
+      exit(True);
+    end;
+  end;
+end;
+
+// EXECUTE COMMAND WITH PARAMETERS
 function TCommandEngine.ExecuteLine(const ALine: string): Integer;
 var
   Command:      TCommand;  
@@ -63,7 +84,7 @@ begin
   Result := 0;
   // If ALine is empty line or comment
   if (Trim(ALine) = '') or (ALine[1] = '#') then exit;
-  // Create TokenList instance
+  // Get tokens to a TTokenList instance
   Tokens := FParser.Tokenize(ALine, FContext);
   try
     // If no any token
@@ -76,7 +97,12 @@ begin
       // Create, execute and destroy command instance
       Command := CommandClass.Create;
       try
-        Result := Command.Execute(Tokens, FContext);
+        if (Command.CommandScope = FRunningMode) then
+        begin
+          Command.ParamCount := Tokens.Count - 1;
+          Result := Command.Execute(Tokens, FContext);
+          ExecuteAction(Command.ActionName);
+        end;
       finally
         Command.Free;
       end;  

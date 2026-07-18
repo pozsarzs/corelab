@@ -50,6 +50,8 @@ end;
 
 // TRY TO GET THE COMMAND CLASS FROM COMMAND NAME
 function TCommandRegistry.TryGetCommand(const AName: string; var ACommandClass: TCommandClass): Boolean;
+var
+  Key: string;
 begin
   Result := FCommands.TryGetValue(LowerCase(AName), ACommandClass);
   if not Result then ACommandClass := nil; 
@@ -60,7 +62,7 @@ procedure TCommandRegistry.RegisterCommand(const AName: string; ACommandClass: T
 begin
   if (Length(AName) = 0) or (ACommandClass = nil)
     then exit
-    else FCommands.AddOrSetValue(AName, ACommandClass);
+    else FCommands.AddOrSetValue(LowerCase(AName), ACommandClass);
 end;
 
 begin

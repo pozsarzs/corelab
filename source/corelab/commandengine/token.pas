@@ -35,6 +35,7 @@ implementation
 constructor TToken.Create(const ARawText: string);
 begin
   inherited Create;
+  FRawText := ARawText;
 end;
 
 // DESTROY TTOKEN INSTANCE
