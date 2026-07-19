@@ -15,7 +15,7 @@ unit command;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-   Math, token, commandcontext;
+  Math, token, commandcontext;
 type
   // Command scope type
   TCommandScope = (csEverywhere, csScriptOnly, csInteractiveOnly);
@@ -23,6 +23,7 @@ type
   TCommand = class
   protected
     FActionName:    string;
+    FExitRequested:  Boolean;
     FMinParamCount: Byte;
     FMaxParamCount: Byte;
     FParamCount:    Byte;
@@ -33,6 +34,7 @@ type
     function Execute(Tokens: TTokenList; AContext: TCommandContext): Integer; virtual; abstract;
     procedure SetParamCount(ACount: Byte);
     property ActionName: string read FActionName;
+    property ExitRequested: Boolean read FExitRequested;
     property MinParamCount: Byte read FMinParamCount;
     property MaxParamCount: Byte read FMaxParamCount;
     property ParamCount: Byte read FParamCount write SetParamCount;
@@ -46,6 +48,7 @@ constructor TCommand.Create;
 begin
   inherited Create;
   FActionName := '';
+  FExitRequested := false;
   FCommandScope := csEverywhere;
   FMinParamCount := 0;
   FMaxParamCount := 0;

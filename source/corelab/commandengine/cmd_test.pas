@@ -42,6 +42,13 @@ type
     destructor Destroy; override;
     function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
   end;
+  TCmd_bye = class(TCommand)
+  protected
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
 
 implementation
 
@@ -57,6 +64,11 @@ begin
 end;
 
 constructor TCmd_teststatus.Create;
+begin
+  inherited Create;
+end;
+
+constructor TCmd_bye.Create;
 begin
   inherited Create;
 end;
@@ -77,13 +89,19 @@ begin
   inherited Destroy;
 end;
 
+destructor TCmd_bye.Destroy;
+begin
+  inherited Destroy;
+end;
+
 // EXECUTE OPERATION
 function TCmd_teststart.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
 begin
   Result := 0;
   try
+    FCommandScope := csEverywhere;
     FActionName := 'actStart';
-    writeln('Execute command "teststart."');
+    AContext.WriteOutput('Execute command "teststart."');
   except
     Result := -1;
   end;
@@ -94,7 +112,7 @@ begin
   Result := 0;
   try
     FActionName := 'actStop';
-    writeln('Execute command "teststop."');
+    AContext.WriteOutput('Execute command "teststop."');
   except
     Result := -1;
   end;
@@ -105,10 +123,17 @@ begin
   Result := 0;
   try
     FActionName := 'actStatus';
-    writeln('Execute command "teststatus."');
+    AContext.WriteOutput('Execute command "teststatus."');
   except
     Result := -1;
   end;
+end;
+
+function TCmd_bye.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  FExitRequested := True;
+  AContext.WriteOutput('Execute command "bye".');
+  Result := 0;
 end;
 
 begin

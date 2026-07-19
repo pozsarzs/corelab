@@ -24,7 +24,7 @@ type
   // Abstract command registry class
   TCommandRegistry = class
   protected
-    FCommands: TCommandDict;                // Dictionary of registered commands
+    FCommands: TCommandDict;             // Dictionary of commands (name, class)
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -50,8 +50,6 @@ end;
 
 // TRY TO GET THE COMMAND CLASS FROM COMMAND NAME
 function TCommandRegistry.TryGetCommand(const AName: string; var ACommandClass: TCommandClass): Boolean;
-var
-  Key: string;
 begin
   Result := FCommands.TryGetValue(LowerCase(AName), ACommandClass);
   if not Result then ACommandClass := nil; 

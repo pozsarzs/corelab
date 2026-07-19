@@ -84,10 +84,7 @@ begin
       begin
         if Length(CurrentTokenStr) > 0 then
         begin
-
-          // változó-behelyettesítés:
           // CurrentTokenStr := AContext.ExpandVariables(CurrentTokenStr);
-          
           NewToken := TToken.Create(CurrentTokenStr);
           Result.Add(NewToken);
           CurrentTokenStr := '';

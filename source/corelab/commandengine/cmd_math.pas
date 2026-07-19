@@ -13,6 +13,50 @@
 
 { Commands:
     abs, add, conv, dec, div idiv, imod, inc, mul, sub. }
+
+**Arithmetic**
+abs
+everywhere
+abs  - Replace target value with its absolute value in-place (e.g., abs rA).
+
+add
+everywhere
+add   - Add value to target in-place (e.g., add rA 0x10).
+
+conv
+interactive
+conv  [to <BIN|DEC|HEX|OCT>] - Convert and print number in different base formats (useful for debugging).
+
+dec
+everywhere
+dec  [count] - Decrement integer target by 1 or by count in-place (e.g., dec rB).
+
+div
+everywhere
+div   - Perform floating-point division on target in-place (e.g., div var1 2.5).
+
+idiv
+everywhere
+idiv   - Perform integer division on target in-place (e.g., idiv rA 4).
+
+imod
+everywhere
+imod   - Calculate integer division remainder and store in target (e.g., imod rA 10).
+
+inc
+everywhere
+inc  [count] - Increment integer target by 1 or by count in-place (e.g., inc rB).
+
+mul
+everywhere
+mul   - Multiply target by value in-place (e.g., mul rA 2).
+
+sub
+everywhere
+sub   - Subtract value from target in-place (e.g., sub rA 0x05).
+
+
+
  
 unit cmd_math;
 {$MODE OBJFPC}{$H+}

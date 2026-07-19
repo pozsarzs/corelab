@@ -21,21 +21,23 @@ type
   // Abstract command engine class
   TCommandEngine = class
   protected
-    FActionList:   TActionList;
-    FContext:      TCommandContext;
-    FLastExitCode: integer;
-    FParser:       TCommandParser;
-    FRegistry:     TCommandRegistry;
-    FRunningMode:  TCommandScope;
+    FActionList:    TActionList;
+    FContext:       TCommandContext;
+    FExitRequested: Boolean;
+    FLastExitCode:  Integer;
+    FParser:        TCommandParser;
+    FRegistry:      TCommandRegistry;
+    FRunningMode:   TCommandScope;
   public
     constructor Create; virtual;
     destructor Destroy; override;
     function ExecuteAction(const AName: string): Boolean; virtual;
     function ExecuteLine(const ALine: string): Integer;  virtual;
-    property LastExitCode: integer read FLastExitCode;
-    property Registry: TCommandRegistry read FRegistry write FRegistry;
-    property RunningMode: TCommandScope read FRunningMode write FRunningMode;
+    property ExitRequested: Boolean read FExitRequested;
     property ActionList: TActionList read FActionList write FActionList;
+    property Registry: TCommandRegistry read FRegistry write FRegistry;
+    property LastExitCode: Integer read FLastExitCode;
+    property RunningMode: TCommandScope read FRunningMode write FRunningMode;
   end;
 
 implementation
@@ -97,12 +99,16 @@ begin
       // Create, execute and destroy command instance
       Command := CommandClass.Create;
       try
-        if (Command.CommandScope = FRunningMode) then
+        if ((Command.CommandScope = RunningMode) or
+           (Command.CommandScope = csEveryWhere)) then
         begin
           Command.ParamCount := Tokens.Count - 1;
           Result := Command.Execute(Tokens, FContext);
           ExecuteAction(Command.ActionName);
-        end;
+          FExitRequested := Command.ExitRequested;
+        end else 
+          // Cannot be used in this running mode
+          Result := -2;
       finally
         Command.Free;
       end;  
@@ -116,5 +122,4 @@ begin
   FLastExitCode := Result;
 end;
 
-begin
 end.

@@ -67,13 +67,17 @@ begin
     RegisterCommand('teststart', TCmd_teststart);
     RegisterCommand('teststop',  TCmd_teststop);
     RegisterCommand('teststatus', TCmd_teststatus);
+    RegisterCommand('bye', TCmd_bye);
   end;
 
   // Create and set TCommandEngine instance
   TestEngine := TCommandEngine.Create;
-  TestEngine.RunningMode := csInteractiveOnly;
-  TestEngine.ActionList := TestActionList;
-  TestEngine.Registry := TestRegistry;
+  with TestEngine do
+  begin
+    RunningMode := csInteractiveOnly;
+    TestEngine.ActionList := TestActionList;
+    TestEngine.Registry := TestRegistry;
+  end;
   
   // Doing main operation
   with TestEngine do
@@ -82,7 +86,7 @@ begin
       readln(cmd);
       ExitCode := ExecuteLine(cmd);
       writeln('(Exitcode: ', ExitCode, ')');
-    until LowerCase(cmd) = 'bye';
+    until TestEngine.ExitRequested;
 
   // Destroy all instances
   TestActionHandler.Free;

@@ -6,97 +6,125 @@
 # | Running the same procedure on two different processors                     |
 # +----------------------------------------------------------------------------+
 
-	title		"RUNNING THE SAME PROCEDURE ON TWO DIFFERENT PROCESSORS"
-	project		"z80-8080.clprj"
+	SETV	$Title	"RUNNING THE SAME PROCEDURE ON TWO DIFFERENT PROCESSORS"
 
-# MAIN PROGRAM
-	start
-	print		$TITLE
-	print		""
+	DEFP	($Title)
+	PRNT	"%v"
 
-# create and initialize variables
-	create	TVar	i
-	create	TArray	indata 8
-	create	TArray	outdata 8
-	create	TArray	messages 6
+; Create and initialize variables
 
-	let		$messages[0] "Starting Z80 simulation..."
-	let		$messages[1] "Switching processor to i8080"
-	let		$messages[2] "Starting 8080 simulation..."
-	let		$messages[3] "- Simulation finished. Results:"
-	let		$messages[4] "- Index\tInput\tOutput"
-	let		$messages[5] "- Executed instructions: "
+	SETV	$messages[0]		"Starting Z80 simulation..."
+	SETV	$messages[1]		"Switching processor to i8080"
+	SETV	$messages[2]		"Starting 8080 simulation..."
+	SETV	$messages[3]		"- Simulation finished. Results:"
+	SETV	$messages[4]		"- Index\tInput\tOutput"
+	SETV	$messages[5]		"- Executed instructions: "
 
-	let		$i 0
-loop1:	let		$indata[$i] $BRND
-	inc		$i
-	goto		loop1 $i<8 
+	SETV	$i			0
+LOOP1:
+	SETV	$indata[$i]		$BRND		; random byte value
+	INCR	$i
+	COMP	$i			8
+	JPLT	LOOP1
 
-	let		$i 0
-loop2:	let		$outdata[$i] 0
-	inc		$i
-	goto		loop2 $i<8 
+	SETV	$i			0
+LOOP2:
+	SETV	$outdata[$i]		0
+	INCR	$i
+	COMP	$i			8
+	JPLT	LOOP2
 
-# create simulation environment	and attach to system bus
-	create	TZ80CPU	myZ80
-	create	T8080CPU my8080
-	create	TMemory	myROM 4096 RO
-	create	TMemory	myRAM 61440
-	create	TLED8	myLEDs
-	attach	myZ80
-	attach	myROM	0
-	attach	myRAM	1000h
-	attach	myLEDs	14h
+; Create simulation environment	and attach to system bus
 
-# simulations
-	load	myROM	"z80-8080.hex" 100h           # load test program to ROM
-	print		$messages[0]
-	call		sim
-	print		$messages[1]
-	reset	myRAM
-	detach	myZ80	                                      # change processor
-	attach	my8080
-	print		$messages[2]
-	call		sim
+	CRTE	$ProcZ80		TZ80CPU		; processor objects
+	SETP	$ProcZ80.Enabled	true
+	ATTH	$ProcZ80
 
-# detach component from system bus and destroy
-	detach	my8080
-	detach	myLEDs
-	detach	myRAM
-	detach	myROM
-	destroy	my8080
-	destroy	myLEDs
-	destroy	myRAM
-	destroy	myROM
+	CRTE	$Proc8080		T8080CPU
+	SETP	$Proc8080.Enabled	false
 
-# destroy variables
-	destroy	i
-	destroy	indata
-	destroy	outdata
-	destroy	messages
+	CRTE	$ROM			TMemory		; system ROM object
+	SETP	$ROM.AddressRangeSize	4096
+	SETP	$ROM.MemoryMode		mmROM
+	SETP	$ROM.Enabled		true
+	ATTH	$ROM			0h		; first address = 0h
 
-	exit 0
-	end
+	CRTE	$RAM			TMemory		; system RAM object
+	SETP	$RAM.AddressRangeSize	61440
+	SETP	$RAM.MemoryMode		mmRAM
+	SETP	$RAM.Enabled		true
+	ATTH	$RAM			1000h		; first address = 1000h
 
-# SIMULATION SUBROUTINE
-sim:	let		$i 0                            # load input data to RAM
-	create	TVar 	addr
-	let		$addr 4096
-loop3:	set		myRAM[$addr] $indata[$i]
-	inc		$addr
-	inc		$i
-	goto		loop3 $i<8	
-	run                                                     # run simulation
-	let		$i 0
-	let		$addr 4104
-	print		$messages[3]
-	print		$messages[4]
-loop4:	get		myRAM[$addr] $outdata[$i]
-	print		$i "\t" $indata[$i] "\t" $outdata[$i]
-	inc		$addr
-	inc		$i
-	goto		loop4 $i<8	
-	destroy	addr
-	print		$messages[5] $ICNT
-	print		""
-	return
+	CRTE	$OutDev			TLED8		; output device object
+	SETP	$OutDev.Enabled		true
+	ATTH	$OutDev			14h		; address = 14h
+
+; Running a sample program on both processors
+
+	DEFP	("z80-8080.hex", 100h, 0)		; count is not determinated
+	CALM	$ROM.LoadFromStream			; load test program to ROM
+
+	DEFP	($messages[0])				; run simulation
+	PRNT	"%v"
+	CALL	SIM
+	DEFP	($messages[1])
+	PRNT	"%v"
+
+	CALM	$RAM.Reset				; change processor
+	DETH	$ProcZ80
+	ATTH	$Proc8080
+	DEFP	($messages[2])
+	PRNT	"%v"
+	CALL	SIM
+
+; Detach and destroy simulation environment
+
+	DETH	$OutDev					; detach  objects
+	DETH	$RAM
+	DETH	$ROM
+	DETH	$Proc8080
+
+	DEST	$OutDev					; destroy objects
+	DEST	$RAM
+	DEST	$ROM
+	DEST	$Proc8080
+	DEST	$ProcZ80
+
+	EXIT
+	END
+
+;--------------------------------------------------------------------------------
+; SIMULATION SUBROUTINE
+;--------------------------------------------------------------------------------
+SIM:
+	SETV	$i			0
+	SETV	$addr			4096
+LOOP3:							; load input data to RAM
+	DEFP	($addr, $indata[$i])
+	CALM	$RAM.WriteMemory
+	INCR	$addr
+	INCR	$i
+	COMP	$i			8
+	JPLT	LOOP3
+	SRUN						; run simulation
+	SETV	$i			0
+	SETV	$addr			4104
+	DEFP	($messages[3])
+	PRNT	"%v"
+	DEFP	($messages[4])
+	PRNT	"%v"
+	SETV	$i			0
+LOOP4:
+	DEFP	($addr)
+	CALM	$outdata[$i]		$RAM.ReadMemory
+	DEFP	($i, $indata[$i], $outdata[$i])
+	PRNT	"%v \t %v \t %v"
+	INCR	$addr
+	INCR	$i
+	COMP	$i			8
+	JPLT	LOOP4
+	SSTP						; stop simulation
+	DEFP	($messages[5], $ICNT)			; instruction counter value
+	PRNT	"%v %v"
+	RETURN
+;--------------------------------------------------------------------------------

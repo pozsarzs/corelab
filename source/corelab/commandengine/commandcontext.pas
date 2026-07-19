@@ -15,25 +15,29 @@ unit commandcontext;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Generics.Collections;
+  Generics.Collections, Classes;
 type
   // Data storing type
   TContextValue = record
     RawValue:   string;
     IsReadOnly: Boolean;
   end;
+  TContextDict = specialize TDictionary<string, TContextValue>;
   // Abstract command context class
   TCommandContext = class
   protected
-    FVariables: specialize TDictionary<string, TContextValue>;
+    FOutput: TStrings;
+    FVariables: TContextDict;
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    function DeleteVariable(const AName: string): Boolean; virtual;
-    function TryGetValue(const AName: string; out AValue: string): Boolean; virtual;
-    function IsReadOnly(const AName: string): Boolean; virtual;
-    function SetValue(const AName, AValue: string; AReadOnly: Boolean = False): Boolean; virtual;
+    function GetConst(const AName: string): string; virtual;
+    function GetVar(const AName: string): string; virtual;
+    function SetConst(const AName, AValue: string): Boolean; virtual;
+    function SetVar(const AName, AValue: string): Boolean; virtual;
     procedure Clear; virtual;
+    procedure WriteOutput(const AText: string);
+    property Output: TStrings read FOutput write FOutput;
    end;
 
 implementation
@@ -42,32 +46,65 @@ implementation
 constructor TCommandContext.Create;
 begin
   inherited Create;
+  FOutPut := nil;
+  FVariables := TContextDict.Create;
 end;
 
 // DESTROY TCOMMANDCONTEXT INSTANCE
 destructor TCommandContext.Destroy;
 begin
+  FVariables.Free;
   inherited Destroy;
 end;
 
-function TCommandContext.DeleteVariable(const AName: string): Boolean;
+// GET VALUE OF CONSTANT
+function TCommandContext.GetConst(const AName: string): string;
 begin
 end;
 
-function TCommandContext.TryGetValue(const AName: string; out AValue: string): Boolean;
+// GET VALUE OF VARIABLE
+function TCommandContext.GetVar(const AName: string): string;
 begin
 end;
 
-function TCommandContext.IsReadOnly(const AName: string): Boolean;
+// CREATE AND/OR SET VALUE OF CONSTANT
+function TCommandContext.SetConst(const AName, AValue: string): Boolean;
+var
+  CValue: TContextValue;
 begin
+  if Length(AName) > 0 then
+  begin
+    CValue.RawValue := AValue;
+    CValue.IsReadOnly := true;
+    FVariables.AddOrSetValue(LowerCase(AName), CValue);
+  end;
 end;
 
-function TCommandContext.SetValue(const AName, AValue: string; AReadOnly: Boolean = False): Boolean;
+// CREATE AND/OR GET VALUE OF VARIABLE
+function TCommandContext.SetVar(const AName, AValue: string): Boolean;
+var
+  CValue: TContextValue;
 begin
+  if Length(AName) > 0 then
+  begin
+    CValue.RawValue := AValue;
+    CValue.IsReadOnly := false;
+    FVariables.AddOrSetValue(LowerCase(AName), CValue);
+  end;
 end;
 
+// CLEAR ALL VARIABLES AND CONSTANTS
 procedure TCommandContext.Clear;
 begin
+  FVariables.Clear;
+end;
+
+// WRITE TEXT TO OUTPUT OBJECT
+procedure TCommandContext.WriteOutput(const AText: string);
+begin
+  if Assigned(FOutput)
+    then FOutput.Add(AText)
+    else writeln(AText);
 end;
 
 begin

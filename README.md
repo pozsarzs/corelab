@@ -192,7 +192,6 @@ to be used with other development tools or transferred to real hardware.
 
 |command  |category           |description                                                       |
 |:-------:|:-----------------:|------------------------------------------------------------------|
-|`cls`    |General            |Clear the command line screen                                     |
 |`date`   |General            |Show system date and time                                         |
 |`exit`   |General            |Terminate the shell or simulation environment                     |
 |`goto`   |General            |Jump to a defined label, optionally conditional upon an expression|
@@ -226,8 +225,8 @@ to be used with other development tools or transferred to real hardware.
 |`inc`    |Arithmetic         |Increment an integer value                                        |
 |`mul`    |Arithmetic         |Perform multiplication                                            |
 |`sub`    |Arithmetic         |Perform subtraction                                               |
+|`inrange`|Arithmetic         |Check if a value falls within a specified range                   |
 |`and`    |Logic              |Bitwise / Logical AND operation                                   |
-|`inrange`|Logic              |Check if a value falls within a specified range                   |
 |`not`    |Logic              |Bitwise / Logical NOT operation                                   |
 |`or`     |Logic              |Bitwise / Logical OR operation                                    |
 |`shl`    |Logic              |Bitwise / Logical bit shift to the left                           |
@@ -262,7 +261,8 @@ to be used with other development tools or transferred to real hardware.
 |`$PRJDIR` |directory of the actual project                           |
 |`$PRJNAME`|name of the actual project                                |
 |`$WRND`   |gives a random word                                       |
-
+$DATE
+$TIME
 ## VIII. Documentation and Help  
 
 CoreLAB features built-in help and comprehensive documentation, accessible
