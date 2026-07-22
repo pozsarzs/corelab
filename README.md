@@ -75,7 +75,7 @@ in mind:
 |**program loading**       |Via keyboard entry or from binary/Intel HEX files                                |
 |**state saving**          |Saving and restoring CPU and full environment state                              |
 
-### Integrated modules
+### Integrated modules (pontosítandó!)
 
 |Features                       |Specification / Description                                        |
 |-------------------------------|-------------------------------------------------------------------|
@@ -190,62 +190,76 @@ to be used with other development tools or transferred to real hardware.
 
 ## VI. Implemented commands  
 
-|command  |category           |description                                                       |
-|:-------:|:-----------------:|------------------------------------------------------------------|
-|`date`   |General            |Show system date and time                                         |
-|`exit`   |General            |Terminate the shell or simulation environment                     |
-|`goto`   |General            |Jump to a defined label, optionally conditional upon an expression|
-|`help`   |General            |Show description or usage of the commands                         |
-|`input`  |General            |Read user input into a variable from console                      |
-|`pause`  |General            |Waits for a keystroke or specified time                           |
-|`print`  |General            |Output a message or value to the console                          |
-|`ver`    |General            |Display version and build information                             |
-|`chr`    |Data Management    |Convert byte to char                                              |
-|`clear`  |Data Management    |Clear content of an array                                         |
-|`fill`   |Data Management    |Fill an array with a character                                    |
-|`let`    |Data Management    |Assign a value to a variable or array element                     |
-|`ord`    |Data Management    |Convert char to byte                                              |
-|`swp`    |Data Management    |Swap the values of two targets                                    |
-|`concat` |String Handler     |Concatenate strings                                               |
-|`length` |String Handler     |Length of string                                                  |
-|`lowcase`|String Handler     |Conversion to lowercase                                           |
-|`strdel` |String Handler     |Delete specified element(s) of the string                         |
-|`strfind`|String Handler     |Find specified element in the string                              |
-|`strins` |String Handler     |Insert element into string                                        |
-|`stritem`|String Handler     |Specified element of the string                                   |
-|`strrepl`|String Handler     |Replace element in the string                                     |
-|`upcase` |String Handler     |Conversion to uppercase                                           | 
-|`abs`    |Arithmetic         |Calculate absolute value                                          |
-|`add`    |Arithmetic         |Perform addition                                                  |
-|`conv`   |Arithmetic         |Convert numbers between BIN, DEC, HEX, and OCT formats            |
-|`dec`    |Arithmetic         |Decrement an integer value                                        |
-|`div`    |Arithmetic         |Perform floating-point division                                   |
-|`idiv`   |Arithmetic         |Perform integer division                                          |
-|`imod`   |Arithmetic         |Calculate modulus (remainder of integer division)                 |
-|`inc`    |Arithmetic         |Increment an integer value                                        |
-|`mul`    |Arithmetic         |Perform multiplication                                            |
-|`sub`    |Arithmetic         |Perform subtraction                                               |
-|`inrange`|Arithmetic         |Check if a value falls within a specified range                   |
-|`and`    |Logic              |Bitwise / Logical AND operation                                   |
-|`not`    |Logic              |Bitwise / Logical NOT operation                                   |
-|`or`     |Logic              |Bitwise / Logical OR operation                                    |
-|`shl`    |Logic              |Bitwise / Logical bit shift to the left                           |
-|`shr`    |Logic              |Bitwise / Logical bit shift to the right                          |
-|`xor`    |Logic              |Bitwise / Logical XOR operation                                   |
-|`create` |Object Management  |Instantiate a hardware module, variable or array                  |
-|`destroy`|Object Management  |Delete an object and free its memory                              |
-|`attach` |Object Management  |Connect a hardware module to the bus                              |
-|`detach` |Object Management  |Disconnect a module from the bus                                  |
-|`set`    |Object Management  |Write a value to an internal state, register or memory cell       |
-|`get`    |Object Management  |Read an internal state, register or memory cell into a variable   |
-|`reset`  |Object Management  |Clear data or restore a hardware module to default state          |
-|`load`   |Object Management  |Load binary data or state into an object from a file              |
-|`save`   |Object Management  |Save an object's current state or memory dump to a file           |
-|`info`   |Object Management  |Display metadata and general status of an object                  |
-|`show`   |Object Management  |List all existing objects and the current topology                |
-|`run`    |Simulation Control |Start the continuous functional execution of a CPU                |
-|`step`   |Simulation Control |Execute a single or a specific number of instructions on a CPU    |
-|`stop`   |Simulation Control |Halt the execution of a running CPU                               |
+|name  |description                                                                       |
+|:----:|----------------------------------------------------------------------------------|
+|`ABS` |Replace target value with its absolute value in-place.                            |
+|`ADD` |Add value to target in-place.                                                     |
+|`AND` |Bitwise/logical AND in-place.                                                     |
+|`APPX`|Terminate simulation environment.                                                 |
+|`ASCI`|Convert ASCII character to its byte value.                                        |
+|`ATTH`|Connect a hardware module to the bus.                                             |
+|`BIT` |Check the specified bit.                                                          |
+|`CALL`|Call subroutine.                                                                  |
+|`CALM`|Call object's method.                                                             |
+|`CHAR`|Convert byte size value to its ASCII character representation.                    |
+|`COMP`|Compare target with value by subtraction.                                         |
+|`CONV`|Convert number in different numeral systems in-place.                             |
+|`CRTE`|Instantiate a hardware module or debug form.                                      |
+|`DEC` |Decrement integer target by 1 or by count in-place.                               |
+|`DEPO`|Deposit (write) a value directly into memory, register or bus address.            |
+|`DEST`|Delete an object and free its memory.                                             |
+|`DETH`|Disconnect a module from the bus.                                                 |
+|`END` |End of script.                                                                     |
+|`EXAM`|Examine (read) a value from memory, register or bus address into a variable.      |
+|`EXIT`|Terminate the script.                                                             |
+|`FILL`|Fill an array with a specific byte value.                                         |
+|`GETP`|Get object's property.                                                            |
+|`HELP`|Display general help overview or detailed usage for a specific command.           |
+|`IDV` |Perform integer division on target in-place.                                      |
+|`IMD` |Perform integer division remainder on target in-place.                            |
+|`INC` |Increment integer target by 1 or by count in-place.                               |
+|`INDX`|Search for a value in an array and then return it with its index in the exit code.|
+|`INPW`|Show prompt window and read user input into a variable.                           |
+|`INRG`|Check if value is between min and max.                                            |
+|`JPEQ`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPGE`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPGT`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPLE`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPLT`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPNE`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPNZ`|Jump to the specified label, based on the result of the previous CMP.             |
+|`JPZR`|Jump to the specified label, based on the result of the previous CMP.             |
+|`MSGW`|Show modal message window.                                                        |
+|`MUL` |Multiply target by value in-place in-place.                                       |
+|`NOT` |Bitwise/logical NOT in-place.                                                     |
+|`OR`  |Bitwise/logical OR in-place.                                                      |
+|`PAUS`|Pause the running simulation without resetting state.                             |
+|`POPA`|Retrieve an result from the argument stack after return from subroutine.          |
+|`PRNT`|Write text to console.                                                            |
+|`PSHA`|Store an argument to the argument stack for next `CALL` or `CALM` instruction.    |
+|`RDV` |Perform floating-point division on target in-place.                               |
+|`RSET`|Reset the simulation and all connected hardware modules to initial state.         |
+|`RTRN`|Return from subroutine.                                                           |
+|`SAPP`|Append value or variable to the end of target string in-place.                    |
+|`SDEL`|Delete characters from target starting at index in-place.                         |
+|`SETP`|Set object's property.                                                            |
+|`SETV`|Create variable and/or assign value to variable or array element.                 |
+|`SFND`|Find index of substring in target and store 0-based result.                       |
+|`SHL` |Shift target bits left by count in-place.                                         |
+|`SHR` |Shift target bits right by count in-place.                                        |
+|`SINS`|Insert substring into target at specified index in-place.                         |
+|`SLEN`|Store the character count of target string into a variable.                       |
+|`SLOW`|Convert target string to lowercase in-place.                                      |
+|`SREP`|Replace occurrences of old substring with new substring in target in-place.       |
+|`SSUB`|Extract a substring from target starting at index into result variable.           |
+|`STEP`|Execute a single clock cycle or instruction step in the simulation.               |
+|`STOP`|Halt the simulation and terminate current execution loop.                         |
+|`STRT`|Start or resume simulation execution continuous mode.                             |
+|`SUB` |Subtract value from target in-place.                                              |
+|`SUPP`|Convert target string to uppercase in-place.                                      |
+|`SWAP`|Swap the values of two variables.                                                 |
+|`WAIT`|Wait specified ms.                                                                |
+|`XOR` |Bitwise/logical XOR in-place.                                                     |
 
 ## VII. Command exit codes
 

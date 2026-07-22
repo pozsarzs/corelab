@@ -1,0 +1,49 @@
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | corelab.yaml                                                               |
+# | syntax highlighting file for Micro text editor                             |
+# +----------------------------------------------------------------------------+
+
+filetype: corelab-scriptembly
+detect:
+  header: "^#!.*/(env +)?corelab|@corelab.exe"
+rules:
+
+  ## 1. System állandók (group #1)
+  - constant: "(?i)\\$(ARG|ARGCNT|DATE|FC|FZ|HOME|INSCNT|PRJDIR|RNDB|RNDI|RNDW|TIME|VER)\\b"
+
+  ## 2. Pontot tartalmazó változók ($valami.mas)
+  #- identifier: "\\$\\w+\\.\\w+"
+
+  ## 3. Egyéb $ változók ($valami)
+  - identifier: "\\$\\w+"  
+  
+  ## group #2
+  - statement: "\\b(ABS|ADD|AND|APPX|ASCI|ATTH|BIT|CALL|CALM|CHAR|COMP|CONV|CRTE|DEC|DEPO|DEST|DETH|END|EXAM|EXIT|FILL|GETP|HELP|IDV|IMD|INC|INDX|INPW|INRG|JPEQ|JPGE|JPGT|JPLE|JPLT|JPNE|JPNZ|JPZR|MSGW|MUL|NOT|OR|PAUS|POPA|PRNT|PSHA|RDV|RSET|RTRN|SAPP|SDEL|SETP|SETV|SFND|SHL|SHR|SINS|SLEN|SLOW|SREP|SSUB|STEP|STOP|STRT|SUB|SUPP|SWAP|WAIT|XOR)\\b"
+
+  - constant.string:
+      start: "\""
+      end: "\""
+      skip: "\\\\."
+      rules: []
+
+  - preproc.shebang:
+      start: "^#!.*/(env +)?corelab|@corelab.exe"
+      end: "$"
+      rules: []
+
+  - preproc.shebang:
+      start: "(^|\\s)@goto"
+      end: "$"
+      rules: []
+
+  - preproc.shebang:
+      start: "(^|\\s):eof"
+      end: "$"
+      rules: []
+
+  - comment:
+      start: "(^|\\s);"
+      end: "$"
+      rules: []

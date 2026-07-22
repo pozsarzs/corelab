@@ -47,6 +47,16 @@
   scope:	csEveryWhere
   syntax:	FILL $array value|$source
 
+  name: 	POPA
+  description:	Retrieve an result from argument stack.
+  scope:	csEveryWhere
+  syntax:	POPA $target
+
+  name: 	PSHA
+  description:	Store an argument to the argument stack.
+  scope:	csEveryWhere
+  syntax:	PSHA value|$source
+
   name: 	SETV
   description:	Create variable and/or assign value to variable or array element.
   scope:	csEveryWhere
@@ -100,6 +110,18 @@ type
     function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
   end;
   TCmd_FILL = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_POPA = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_PSHA = class(TCommand)
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -163,6 +185,18 @@ begin
   FCommandScope := csEveryWhere;
 end;
 
+constructor TCmd_POPA.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_PSHA.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
 constructor TCmd_SETV.Create;
 begin
   inherited Create;
@@ -188,7 +222,8 @@ destructor TCmd_COMP.Destroy; begin inherited Destroy; end;
 destructor TCmd_CONV.Destroy; begin inherited Destroy; end;
 destructor TCmd_INRG.Destroy; begin inherited Destroy; end;
 destructor TCmd_FILL.Destroy; begin inherited Destroy; end;
-destructor TCmd_SETV.Destroy; begin inherited Destroy; end;
+destructor TCmd_POPA.Destroy; begin inherited Destroy; end;
+destructor TCmd_PSHA.Destroy; begin inherited Destroy; end;
 destructor TCmd_SWAP.Destroy; begin inherited Destroy; end;
 destructor TCmd_INDX.Destroy; begin inherited Destroy; end;
 
@@ -244,6 +279,26 @@ begin
 end;
 
 function TCmd_FILL.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+    // Implementáció helye
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_POPA.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+    // Implementáció helye
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_PSHA.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
 begin
   Result := 0;
   try

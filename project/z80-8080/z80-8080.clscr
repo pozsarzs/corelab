@@ -6,10 +6,11 @@
 ; | Running the same procedure on two different processors                     |
 ; +----------------------------------------------------------------------------+
 
-	SETV	$Title	"RUNNING THE SAME PROCEDURE ON TWO DIFFERENT PROCESSORS"
+	SETV	$Title "RUNNING THE SAME PROCEDURE ON TWO DIFFERENT PROCESSORS"
 
 	PSHA	$Title					; 1st arg.: title
 	PRNT	"%v"
+        SETV	 $FC 
 
 ; Create and initialize variables
 
@@ -134,3 +135,4 @@ LOOP4:
 	PRNT	"%v %v"
 	RTRN
 ;--------------------------------------------------------------------------------
+$INSCNT
