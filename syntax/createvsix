@@ -1,7 +1,6 @@
 #!/bin/bash
-#
-# create vsix file
-#
+
+# Create .vsix file
 
 cd corelab-script
 vsce package

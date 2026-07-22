@@ -1,5 +1,6 @@
 @echo off
-rem create vsix file
+
+rem Create .vsix file
 
 cd corelab-script
 vsce package

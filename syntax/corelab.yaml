@@ -7,43 +7,28 @@
 
 filetype: corelab-scriptembly
 detect:
-  header: "^#!.*/(env +)?corelab|@corelab.exe"
+  header: '^#!.*/(env +)?corelab|@corelab\.exe'
 rules:
+  # parent classes:
+  - type: '\bT[A-Z,0-9]\w*\b'
 
-  ## 1. System állandók (group #1)
-  - constant: "(?i)\\$(ARG|ARGCNT|DATE|FC|FZ|HOME|INSCNT|PRJDIR|RNDB|RNDI|RNDW|TIME|VER)\\b"
+  # strings:
+  - constant.string: '"(\\.|[^"])*"'
 
-  ## 2. Pontot tartalmazó változók ($valami.mas)
-  #- identifier: "\\$\\w+\\.\\w+"
+  # preprocessor commands:
+  - preproc.shebang: '^#!.*/(env +)?corelab|@corelab\.exe.*'
+  - preproc.shebang: '(?i)(^|\s)@goto.*'
+  - preproc.shebang: '(?i)(^|\s):eof.*'
 
-  ## 3. Egyéb $ változók ($valami)
-  - identifier: "\\$\\w+"  
-  
-  ## group #2
-  - statement: "\\b(ABS|ADD|AND|APPX|ASCI|ATTH|BIT|CALL|CALM|CHAR|COMP|CONV|CRTE|DEC|DEPO|DEST|DETH|END|EXAM|EXIT|FILL|GETP|HELP|IDV|IMD|INC|INDX|INPW|INRG|JPEQ|JPGE|JPGT|JPLE|JPLT|JPNE|JPNZ|JPZR|MSGW|MUL|NOT|OR|PAUS|POPA|PRNT|PSHA|RDV|RSET|RTRN|SAPP|SDEL|SETP|SETV|SFND|SHL|SHR|SINS|SLEN|SLOW|SREP|SSUB|STEP|STOP|STRT|SUB|SUPP|SWAP|WAIT|XOR)\\b"
+  # instructions:
+  - statement: '(?i)\b(ABS|ADD|AND|APPX|ASCI|ATTH|BIT|CALL|CALM|CHAR|COMP|CONV|CRTE|DEC|DEPO|DEST|DETH|END|EXAM|EXIT|FILL|GETP|HELP|IDV|IMD|INC|INDX|INPW|INRG|JPEQ|JPGE|JPGT|JPLE|JPLT|JPNE|JPNZ|JPZR|MSGW|MUL|NOT|OR|PAUS|POPA|PRNT|PSHA|RDV|RSET|RTRN|SAPP|SDEL|SETP|SETV|SFND|SHL|SHR|SINS|SLEN|SLOW|SREP|SSUB|STEP|STOP|STRT|SUB|SUPP|SWAP|WAIT|XOR)\b'
 
-  - constant.string:
-      start: "\""
-      end: "\""
-      skip: "\\\\."
-      rules: []
+  # constants, variables, classes, objects:
+  - identifier: '(?i)\$\w+(?:\.\w+)*\b'
 
-  - preproc.shebang:
-      start: "^#!.*/(env +)?corelab|@corelab.exe"
-      end: "$"
-      rules: []
+  # system constants:
+  - symbol: '\$\?'
+  - symbol: '(?i)\$(?:ARG|ARGCNT|DATE|FC|FZ|HOME|INSCNT|PRJDIR|RNDB|RNDI|RNDW|TIME|VER)\b'
 
-  - preproc.shebang:
-      start: "(^|\\s)@goto"
-      end: "$"
-      rules: []
-
-  - preproc.shebang:
-      start: "(^|\\s):eof"
-      end: "$"
-      rules: []
-
-  - comment:
-      start: "(^|\\s);"
-      end: "$"
-      rules: []
+  # one-line comments:
+  - comment: '(^|\s);.*'
