@@ -2,7 +2,7 @@
 { | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | cmd_math.pas                                                             | }
-{ | Arithmetical command classes                                             | }
+{ | Arithmetical commands                                                    | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,62 +11,120 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-{ Commands:
-    abs, add, conv, dec, div idiv, imod, inc, mul, sub. }
+{ Arithmetical operation commands:
 
-**Arithmetic**
-abs
-everywhere
-abs  - Replace target value with its absolute value in-place (e.g., abs rA).
+  The success of the operations in the ExitCode.
 
-add
-everywhere
-add   - Add value to target in-place (e.g., add rA 0x10).
+  name: 	ABS
+  description:	Replace target value with its absolute value in-place.
+  scope:	csEveryWhere
+  syntax:	ABS $target
+  note:		The operation modifies the $FZ and $FC flags.
 
-conv
-interactive
-conv  [to <BIN|DEC|HEX|OCT>] - Convert and print number in different base formats (useful for debugging).
+  name: 	ADD
+  description:	Add value to target in-place.
+  scope:	csEveryWhere
+  syntax:	ADD $target value|$variable
+  note:		The operation modifies the $FZ and $FC flags.
 
-dec
-everywhere
-dec  [count] - Decrement integer target by 1 or by count in-place (e.g., dec rB).
+  name: 	DEC
+  description:	Decrement integer target by 1 or by count in-place.
+  scope:	csEveryWhere
+  syntax:	DEC $target [count|$variable]
+  note:		The operation modifies the $FZ and $FC flags.
 
-div
-everywhere
-div   - Perform floating-point division on target in-place (e.g., div var1 2.5).
+  name: 	IDV
+  description:	Perform integer division on target in-place.
+  scope:	csEveryWhere
+  syntax:	IDV $target value|$variable
+  note:		The operation modifies the $FZ and $FC flags.
 
-idiv
-everywhere
-idiv   - Perform integer division on target in-place (e.g., idiv rA 4).
+  name: 	IMD
+  description:	Perform integer division remainder on target in-place.
+  scope:	csEveryWhere
+  syntax:	IMD $target value|$variable
+  note:		The operation modifies the $FZ and $FC flags.
 
-imod
-everywhere
-imod   - Calculate integer division remainder and store in target (e.g., imod rA 10).
+  name: 	INC
+  description:	Increment integer target by 1 or by count in-place.
+  scope:	csEveryWhere
+  syntax:	INC $target [count|$variable]
+  note:		The operation modifies the $FZ and $FC flags.
 
-inc
-everywhere
-inc  [count] - Increment integer target by 1 or by count in-place (e.g., inc rB).
+  name: 	RDV
+  description:	Perform floating-point division on target in-place.
+  scope:	csEveryWhere
+  syntax:	RDV $target value|$variable
+  note:		The operation modifies the $FZ and $FC flags.
 
-mul
-everywhere
-mul   - Multiply target by value in-place (e.g., mul rA 2).
+  name: 	MUL
+  description:	Multiply target by value in-place in-place.
+  scope:	csEveryWhere
+  syntax:	MUL $target value|$variable
+  note:		The operation modifies the $FZ and $FC flags.
 
-sub
-everywhere
-sub   - Subtract value from target in-place (e.g., sub rA 0x05).
+  name: 	SUB
+  description:	Subtract value from target in-place.
+  scope:	csEveryWhere
+  syntax:	SUB $target value|$variable
+  note:		The operation modifies the $FZ and $FC flags.
+}
 
-
-
- 
 unit cmd_math;
 {$MODE OBJFPC}{$H+}
 interface
 uses
    command, commandcontext, token;
 type
-  // Abstract command class
-  TCmd_abs = class(TCommand)
-  protected
+  TCmd_ABS = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_ADD = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_DEC = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_IDV = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_IMD = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_INC = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_RDV = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_MUL = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_SUB = class(TCommand)
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -74,27 +132,150 @@ type
   end;
 
 implementation
-uses
-  Math, SysUtils;
 
-// CREATE TCMD_ABS INSTANCE
-constructor TCmd_abs.Create;
+// CREATE INSTANCES
+constructor TCmd_ABS.Create;
 begin
   inherited Create;
+  FCommandScope := csEveryWhere;
 end;
 
-// DESTROY TCMD_ABS INSTANCE
-destructor TCmd_abs.Destroy;
+constructor TCmd_ADD.Create;
 begin
-  inherited Destroy;
+  inherited Create;
+  FCommandScope := csEveryWhere;
 end;
+
+constructor TCmd_DEC.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_IDV.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_IMD.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_INC.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_RDV.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_MUL.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+constructor TCmd_SUB.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
+
+// DESTROY INSTANCES
+destructor TCmd_ABS.Destroy; begin inherited Destroy; end;
+destructor TCmd_ADD.Destroy; begin inherited Destroy; end;
+destructor TCmd_DEC.Destroy; begin inherited Destroy; end;
+destructor TCmd_IDV.Destroy; begin inherited Destroy; end;
+destructor TCmd_IMD.Destroy; begin inherited Destroy; end;
+destructor TCmd_INC.Destroy; begin inherited Destroy; end;
+destructor TCmd_RDV.Destroy; begin inherited Destroy; end;
+destructor TCmd_MUL.Destroy; begin inherited Destroy; end;
+destructor TCmd_SUB.Destroy; begin inherited Destroy; end;
 
 // EXECUTE OPERATION
-function TCmd_abs.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+function TCmd_ABS.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
 begin
   Result := 0;
   try
+  except
+    Result := -1;
+  end;
+end;
 
+function TCmd_ADD.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_DEC.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_IDV.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_IMD.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_INC.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_RDV.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_MUL.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
+
+function TCmd_SUB.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
   except
     Result := -1;
   end;

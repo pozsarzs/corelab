@@ -1,14 +1,14 @@
 #!/usr/bin/corelab -r
-# +----------------------------------------------------------------------------+
-# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
-# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-# | z80-8080.clscr                                                             |
-# | Running the same procedure on two different processors                     |
-# +----------------------------------------------------------------------------+
+; +----------------------------------------------------------------------------+
+; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+; | z80-8080.clscr                                                             |
+; | Running the same procedure on two different processors                     |
+; +----------------------------------------------------------------------------+
 
 	SETV	$Title	"RUNNING THE SAME PROCEDURE ON TWO DIFFERENT PROCESSORS"
 
-	DEFP	($Title)
+	PSHA	$Title					; 1st arg.: title
 	PRNT	"%v"
 
 ; Create and initialize variables
@@ -23,14 +23,14 @@
 	SETV	$i			0
 LOOP1:
 	SETV	$indata[$i]		$BRND		; random byte value
-	INCR	$i
+	INC	$i
 	COMP	$i			8
 	JPLT	LOOP1
 
 	SETV	$i			0
 LOOP2:
 	SETV	$outdata[$i]		0
-	INCR	$i
+	INC	$i
 	COMP	$i			8
 	JPLT	LOOP2
 
@@ -61,19 +61,21 @@ LOOP2:
 
 ; Running a sample program on both processors
 
-	DEFP	("z80-8080.hex", 100h, 0)		; count is not determinated
+	PSHA	"z80-8080.hex"				; 1st arg.: filename
+	PSHA	100h					; 2nd arg.: start address
+	PSHA	0					; 3rd arg.: byte count
 	CALM	$ROM.LoadFromStream			; load test program to ROM
 
-	DEFP	($messages[0])				; run simulation
+	PSHA	$messages[0]				; 1st arg.: message
 	PRNT	"%v"
-	CALL	SIM
-	DEFP	($messages[1])
+	CALL	SIM					; call subroutine
+	PSHA	$messages[1]				; 1st arg.: message
 	PRNT	"%v"
 
 	CALM	$RAM.Reset				; change processor
 	DETH	$ProcZ80
 	ATTH	$Proc8080
-	DEFP	($messages[2])
+	PSHA	$messages[2]				; 1st arg.: message
 	PRNT	"%v"
 	CALL	SIM
 
@@ -100,31 +102,35 @@ SIM:
 	SETV	$i			0
 	SETV	$addr			4096
 LOOP3:							; load input data to RAM
-	DEFP	($addr, $indata[$i])
-	CALM	$RAM.WriteMemory
-	INCR	$addr
-	INCR	$i
+	PSHA	$addr					; 1st arg.: address
+	PSHA	$indata[$i]				; 2nd arg.: data
+	CALM	$RAM.WriteMemory			; write data to memory
+	INC	$addr
+	INC	$i
 	COMP	$i			8
 	JPLT	LOOP3
-	SRUN						; run simulation
+	STRT						; run simulation
 	SETV	$i			0
 	SETV	$addr			4104
-	DEFP	($messages[3])
+	PSHA	$messages[3]				; 1st arg.: message
 	PRNT	"%v"
-	DEFP	($messages[4])
+	PSHA	$messages[4]				; 1st arg.: message
 	PRNT	"%v"
 	SETV	$i			0
 LOOP4:
-	DEFP	($addr)
+	PSHA	$addr
 	CALM	$outdata[$i]		$RAM.ReadMemory
-	DEFP	($i, $indata[$i], $outdata[$i])
+	PSHA	$i
+	PSHA	$indata[$i]
+	PSHA	$outdata[$i]
 	PRNT	"%v \t %v \t %v"
 	INCR	$addr
 	INCR	$i
 	COMP	$i			8
 	JPLT	LOOP4
-	SSTP						; stop simulation
-	DEFP	($messages[5], $ICNT)			; instruction counter value
+	STOP						; stop simulation
+	PSHA	$messages[5]				; 1st arg.: message
+	PSHA	$INSCNT					; 2nd arg.: instruction counter value
 	PRNT	"%v %v"
-	RETURN
+	RTRN
 ;--------------------------------------------------------------------------------

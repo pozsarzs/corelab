@@ -247,23 +247,45 @@ to be used with other development tools or transferred to real hardware.
 |`step`   |Simulation Control |Execute a single or a specific number of instructions on a CPU    |
 |`stop`   |Simulation Control |Halt the execution of a running CPU                               |
 
-## VII. Predefined (virtual) constants  
+## VII. Command exit codes
 
-|name      |value                                                     |
-|:---------|:---------------------------------------------------------|
-|`$?`      |exit value of the commands                                |
-|`$ARGCNT` |number of the OS command line arguments (interpreter mode)|
-|`$ARGx`   |OS command line arguments (interpreter mode)              |
-|`$BRND`   |gives a random byte                                       |
-|`$HOME`   |user's home directory                                     |
-|`$ICNT`   |total number of executed CPU instructions                 |
-|`$IRND`   |gives a random integer                                    |
-|`$PRJDIR` |directory of the actual project                           |
-|`$PRJNAME`|name of the actual project                                |
-|`$WRND`   |gives a random word                                       |
-$DATE
-$TIME
-## VIII. Documentation and Help  
+| v.|category        |description                 |
+|:-:|:---------------|----------------------------|
+| 0 |                |Sucess                      |
+| 1 |General error   |General error               |
+| 2 |General error   |Wrong parameter number      |
+| 3 |General error   |Invalid syntax              |
+|10 |Data error      |Variable not found          |
+|11 |Data error      |Type error                  |
+|12 |Data error      |Read-only target            |
+|13 |Data error      |Index error / array boundary|
+|14 |Data error      |Class not found             |
+|15 |Data error      |Object not found            |
+|16 |Data error      |Property not found          |
+|17 |Data error      |Method not found            |
+|20 |Simulation error|General error               |
+|21 |Simulation error|Attach/Detach error         |
+
+## VIII. System constants  
+
+|name     |value                                    |
+|:--------|:----------------------------------------|
+|`$?`     |exit value of the commands               |
+|`$ARGCNT`|number of the OS command line arguments  |
+|`$ARG[n]`|OS command line arguments                |
+|`$DATE`  |date                                     |
+|`$FC`    |carry flag                               |
+|`$FZ`    |zero flag                                |
+|`$HOME`  |user's home directory                    |
+|`$INSCNT`|total number of executed CPU instructions|
+|`$PRJDIR`|directory of the actual project          |
+|`$RNDB`  |gives a random byte                      |
+|`$RNDI`  |gives a random integer                   |
+|`$RNDW`  |gives a random word                      |
+|`$TIME`  |time                                     |
+|`$VER`   |application version                      |
+
+## IX. Documentation and Help  
 
 CoreLAB features built-in help and comprehensive documentation, accessible
 through the following channels:
@@ -278,14 +300,14 @@ through the following channels:
 - Additionally, you can view the manual page from *nix shell (_man corelab_) or
   _corelab.txt_ on other systems.  
 
-## IX. Contributing  
+## X. Contributing  
 
 If you find any bugs, please report them! I am also happy to accept pull
 requests from anyone. You can use the GitHub issue tracker to report bugs, ask
 questions, or suggest new features. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 for details.  
 
-## X. Links  
+## XI. Links  
 
  - [Homepage](https://www.pozsarzs.hu/60_myprogcom/corelab/)  
  - [GitHub repository](https://github.com/pozsarzs/corelab)  

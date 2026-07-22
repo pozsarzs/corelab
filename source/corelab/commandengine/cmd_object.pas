@@ -1,116 +1,170 @@
-{ Object Management Commands:
+{ +--------------------------------------------------------------------------+ }
+{ | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
+{ | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
+{ | cmd_objets.pas                                                           | }
+{ | Object management commands                                               | }
+{ +--------------------------------------------------------------------------+ }
+{ This program is free software: you can redistribute it and/or modify it
+  under the terms of the European Union Public License 1.2 version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE. }
+
+{ Object management commands:
+
+  The success of the operations in the ExitCode.
+
+  name: 	CALM
+  description:	Call object's method.
+  scope:	csEveryWhere
+  syntax:	PSHA $parameter
+  		CALM [$target] $object.method
 
   name: 	CRTE
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CRTE $target type
-  example:	CRTE	$MY8008	TCPU
-
+  description:	Instantiate a hardware module or debug form.
+  scope:	csEveryWhere
+  syntax:	CRTE $object class|$variable
+  
   name: 	DEST
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
-
-  name: 	ATTH
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
-
-  name: 	DETH
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
+  description:	Delete an object and free its memory.
+  scope:	csEveryWhere
+  syntax:	DEST $object
 
   name: 	GETP
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
-  example:	GETP	$target	$MY8008.HasPanel
+  description:	Get object's property.
+  scope:	csEveryWhere
+  syntax:	GETP $target $object.property
+  note:		The operation modifies the $FZ flag.
 
   name: 	SETP
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
-  example:	SETP	$source	$MY8008.PanelTitle
+  description:	Set object's property.
+  scope:	csEveryWhere
+  syntax:	SETP $object.property value|$variable
+ }
 
-  name: 	RSET
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
+unit cmd_object;
+{$MODE OBJFPC}{$H+}
+interface
+uses
+   command, commandcontext, token;
+type
+  TCmd_CALM = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_CRTE = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_DEST = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_GETP = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
+  TCmd_SETP = class(TCommand)
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+    function Execute(ATokens: TTokenList; AContext: TCommandContext): integer; override;
+  end;
 
-  name: 	LDST
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
+implementation
 
-  name: 	SVST
-  description:	Convert byte size value to its ASCII character representation.
-  scope:	csScriptOnly
-  flags:	
-  exitcode:	always zero
-  syntax:	CHR $target|$target[n] value|$source|$source[n]
+// CREATE INSTANCES
+constructor TCmd_CALM.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
 
+constructor TCmd_CRTE.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
 
+constructor TCmd_DEST.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
 
+constructor TCmd_GETP.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
 
-create
-scriptonly
-create   [params...] - Instantiate a hardware module, variable, or array.
+constructor TCmd_SETP.Create;
+begin
+  inherited Create;
+  FCommandScope := csEveryWhere;
+end;
 
-destroy
-everywhere
-destroy  - Delete an object and free its memory.
+// DESTROY INSTANCES
+destructor TCmd_CALM.Destroy; begin inherited Destroy; end;
+destructor TCmd_CRTE.Destroy; begin inherited Destroy; end;
+destructor TCmd_DEST.Destroy; begin inherited Destroy; end;
+destructor TCmd_GETP.Destroy; begin inherited Destroy; end;
+destructor TCmd_SETP.Destroy; begin inherited Destroy; end;
 
-attach
-scriptonly
-attach  to <bus|cpu> [at ] - Connect a hardware module to the bus.
+// EXECUTE OPERATION
+function TCmd_CALM.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
 
-detach
-everywhere
-detach  - Disconnect a module from the bus.
+function TCmd_CRTE.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
 
-set
-everywhere
-set   - Write a value to a state, register, memory cell, or variable.
+function TCmd_DEST.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
 
-get
-everywhere
+function TCmd_GETP.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
 
-get  [into ] - Read a state, register, or memory cell.
+function TCmd_SETP.Execute(ATokens: TTokenList; AContext: TCommandContext): integer;
+begin
+  Result := 0;
+  try
+  except
+    Result := -1;
+  end;
+end;
 
-reset
-everywhere
-reset [target] - Restore a hardware module or the whole system to default state.
-
-load
-everywhere
-load  into  [at ] - Load binary data or state from a file.
-
-save
-everywhere
-save  to  [from  size ] - Save state or memory dump to a file.
-
-info
-everywhere
-info [target] - Display metadata of an object, or list all objects if no target is given.
-
-show
-interactive
-show <topology|modules|memory> - Display system overview or object lists.
-
+begin
+end.
