@@ -1,0 +1,42 @@
+{
+  "name": "corelab-scriptembly",
+  "displayName": "CoreLAB scriptembly",
+  "description": "Control language for CoreLAB application",
+  "version": "0.0.1",
+  "icon": "images/corelab-orange.png",
+  "author": "Pozsar Zsolt",
+  "publisher": "pozsarzs",
+  "license": "MIT",
+  "homepage": "https://www.pozsarzs.hu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pozsarzs/corelab-scriptembly.git"
+    },
+  "engines": {
+    "vscode": "^1.97.0"
+  },
+  "galleryBanner": {
+        "color": "#261d45",
+        "theme": "dark"
+    },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "mdsscript",
+      "aliases": ["CoreLAB scriptembly", "clse"],
+      "extensions": [""],
+      "configuration": "./language-configuration.json"
+    }],
+    "snippets": [{
+      "language": "clse",
+      "path": "./snippets/clse.json"
+    }],
+    "grammars": [{
+      "language": "clse",
+      "scopeName": "source.clse",
+      "path": "./syntaxes/clse.tmLanguage.json"
+    }]
+  }
+}

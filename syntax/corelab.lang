@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<language id="corelab" _name="CoreLAB" version="2.0" _section="Script">
+<language id="corelab" _name="CoreLAB scriptembly" version="2.0" _section="Script">
   <metadata>
     <property name="line-comment-start">;</property>
   </metadata>

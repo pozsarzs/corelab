@@ -1,0 +1,34 @@
+## +---------------------------------------------------------------------------+
+## | CoreLAB v0.1 - Modular Processor Simulation Framework                     |
+## | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                      |
+## | corelab.yaml                                                              |
+## | syntax highlighting file for Nano text editor                             |
+## +---------------------------------------------------------------------------+
+
+syntax "corelab"
+header "^#!.*/(env +)?corelab*( |$)"
+header "@corelab*"
+magic "CoreLAB scriptembly"
+comment ";"
+
+icolor brightcyan "\<(.*)\>"
+
+## parent classes:
+icolor brightblue "\<(\bT[A-Z,0-9]\w*\b)\>"
+
+## instructions:
+icolor brightwhite "\<(ABS|ADD|AND|APPX|ASCI|ATTH|BIT|CALL|CALM|CHAR|COMP|CONV|CRTE|DEC|DEPO|DEST|DETH|END|EXAM|EXIT|FILL|GETP|HELP|IDV|IMD|INC|INDX|INPW|INRG|JPEQ|JPGE|JPGT|JPLE|JPLT|JPNE|JPNZ|JPZR|MSGW|MUL|NOT|OR|PAUS|POPA|PRNT|PSHA|RDV|RSET|RTRN|SAPP|SDEL|SETP|SETV|SFND|SHL|SHR|SINS|SLEN|SLOW|SREP|SSUB|STEP|STOP|STRT|SUB|SUPP|SWAP|WAIT|XOR)\>"
+
+## system colors:
+icolor brightred "\<$(?|ARG|ARGCNT|DATE|FC|FZ|HOME|INSCNT|PRJDIR|RNDB|RNDI|RNDW|TIME|VER)\>"
+
+## strings:
+color brightyellow "["][^"]*[^\\]["]"
+
+## comments:
+icolor brightgreen "^;.*|[[:space:]];.*$"
+
+# preprocessor commands:
+icolor brightcyan "^#!/.*|[[:space:]]#.*$"
+icolor brightcyan "^@.*|[[:space:]]#.*$"
+icolor brightcyan "^:.*|[[:space:]]#.*$"

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-  <mime-type type="application/x-corelab-green">
-    <comment>CoreLab Snapshot</comment>
-    <glob pattern="*.clsht"/>
-  </mime-type>
   <mime-type type="application/x-corelab-red">
+    <comment>CoreLab Snapshot</comment>
+    <glob pattern="*.clst"/>
+  </mime-type>
+  <mime-type type="application/x-corelab-orange">
     <comment>CoreLab Script</comment>
-    <glob pattern="*.clscr"/>
+    <glob pattern="*.clce"/>
   </mime-type>
 </mime-info>

@@ -17,7 +17,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |Nano              |corelab.nanorc           |copy file into /usr/share/nano/                                           |
 |Notepad++         |corelab.xml              |copy file into %USERPROFILE%\AppData\Roaming\\Notepad++\\userDefineLangs\ |
 |(Neo)Vim          |corelab.vim              |copy file into ~/.config/vim/syntax/                                      |
-|                  |scripts.vim              |copy file into ~/.config/vim/                                             |
+|                  |scripts.vim              |insert file content into  ~/.config/vim/                                  |
 |Visual Studio Code|corelab-script           |copy directory to ~/.vscode/extensions/                                   |
 |Visual Studio Code|corelab-script-0.0.1.vsix|Install with Visual Studio Code application                               |
 
@@ -28,19 +28,3 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 > You can install VSCode extension from Marketplace from
 > https://marketplace.visualstudio.com/items?itemName=pozsarzs.corelab-script
 > URL.  
-
-### Synopsis
-
- - case: insensitivity  
- - comment: after `#`  
- - start line:  
-     `#!\....`  
-     `@corelab.exe...`  
-     `@goto eof`  
-     `@:eof`
- - text: between `""`  
- - words:
-   - (...)
-   - (...)
-   - (...)
-   - (...)

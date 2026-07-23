@@ -1,0 +1,2 @@
+file ..\*\\.(bat|)$ CoreLAB\sscriptembly ^#!.\*([\s/]corelab|corelab.exe)
+include corelab.syntax
