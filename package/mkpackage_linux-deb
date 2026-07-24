@@ -21,9 +21,3 @@ VERSION="0.1"
 RELEASE='1'
 
 createpackage
-
-NAME="corelab-plugins"
-VERSION="0.1"
-RELEASE='1'
-
-createpackage
