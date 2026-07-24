@@ -94,13 +94,12 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 #### 'document/code/corelab' directory
 
-[ ] document/code/corelab/commandengine/cmd_test.md
-[ ] document/code/corelab/commandengine/commandcontext.md
-[ ] document/code/corelab/commandengine/commandengine.md
-[ ] document/code/corelab/commandengine/command.md
-[ ] document/code/corelab/commandengine/commandparser.md
-[ ] document/code/corelab/commandengine/commandregistry.md
-[ ] document/code/corelab/commandengine/token.md
+[x] document/code/corelab/commandengine/command.md
+[x] document/code/corelab/commandengine/commandcontext.md
+[x] document/code/corelab/commandengine/commandengine.md
+[x] document/code/corelab/commandengine/commandparser.md
+[x] document/code/corelab/commandengine/commandregistry.md
+[x] document/code/corelab/commandengine/token.md
 [ ] document/code/corelab/frminterruptviewer/
 [ ] document/code/corelab/frmhexeditor/
 [ ] document/code/corelab/frmbreakpoints/

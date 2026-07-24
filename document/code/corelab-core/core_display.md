@@ -25,7 +25,7 @@ the color settings responsible for the retro-style display.
 ### Protected fields
 
 |name          |type          |C|description              |default  |
-|--------------|:------------:|-|-------------------------|:-------:|
+|--------------|--------------|-|-------------------------|:-------:|
 |FModname      |PChar         | |Module name              |         |
 |FDescription  |PChar         | |Short description        |         |
 |FEnabled      |Boolean       | |Enable displaying        |         |
@@ -42,7 +42,7 @@ the color settings responsible for the retro-style display.
 ### Public properties
 
 |name       |type   |R|W|description   |default|
-|-----------|:-----:|-|-|--------------|:-----:|
+|-----------|-------|-|-|--------------|:-----:|
 |Description|PChar  |x| |= FDescription|       |
 |Enabled    |Boolean|x|x|= FEnabled    |       |
 |ModName    |PChar  |x| |= FModName    |       |

@@ -12,10 +12,10 @@ internal graphics buffer, which it then renders on the target canvas.
 
 ### New default value of the protected fields
 
-|name        |type     |C|description        |default   |
-|------------|:-------:|-|-------------------|:--------:|
-|FDescription|PChar    | |Short description  |short text|
-|FModName    |PChar    | |Module name        |'TIL302'  |
+|name        |type |C|description      |default |
+|------------|-----|-|-----------------|:------:|
+|FDescription|PChar| |Short description|        |
+|FModName    |PChar| |Module name      |'TIL302'|
 
 **Note**:  
 - _C_: means 'constant'.

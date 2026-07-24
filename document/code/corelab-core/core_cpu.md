@@ -44,7 +44,7 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 ### Protected fields
 
 |name             |type            |C|description                            |default|
-|-----------------|:--------------:|-|---------------------------------------|:-----:|
+|-----------------|----------------|-|---------------------------------------|:-----:|
 |FAddressWidth    |Byte            | |Address bus width in bits              |       |
 |FArchitecture    |TArchitecture   | |Type of architecture                   |       |
 |FBitWidth        |Byte            | |Main processor word size in bits       |       |

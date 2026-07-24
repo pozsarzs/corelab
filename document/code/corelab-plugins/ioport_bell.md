@@ -14,7 +14,7 @@ generates a beep.
 ### Modified inherited protected fields
 
 |name        |type |C|description      |value|
-|------------|:---:|-|-----------------|:---:|
+|------------|-----|-|-----------------|:---:|
 |FDescription|PChar| |Short description|     |
 |FModName    |PChar| |Module name      |     |
 

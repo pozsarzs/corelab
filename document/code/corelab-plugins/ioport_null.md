@@ -13,7 +13,7 @@ purposes. It returns a constant `00h` to read operations.
 ### Modified inherited protected fields
 
 |name        |type |C|description      |value|
-|------------|:---:|-|-----------------|:---:|
+|------------|-----|-|-----------------|:---:|
 |FDescription|PChar| |Short description|     |
 |FModName    |PChar| |Module name      |     |
 

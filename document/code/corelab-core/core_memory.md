@@ -21,7 +21,7 @@ for implementing hardware-specific memory types.
 ### Protected fields
 
 |name             |type       |C|description                           |default|
-|-----------------|:---------:|-|--------------------------------------|:-----:|
+|-----------------|-----------|-|--------------------------------------|:-----:|
 |FAddressRangeSize|Byte       | |Address range size (max. 2^24 byte)   |1024   |
 |FDescription     |PChar      | |Short description                     |       |
 |FEnabled         |Boolean    | |Disable memory without detach from bus|false  |
@@ -31,7 +31,7 @@ for implementing hardware-specific memory types.
 ### Public properties
 
 |name            |type       |R|W|description        |default|
-|----------------|:---------:|-|-|-------------------|:-----:|
+|----------------|-----------|-|-|-------------------|:-----:|
 |AddressRangeSize|Byte       |x|x|= FAddressRangeSize|       |
 |Description     |PChar      |x|x|= FDescription     |       |
 |Enabled         |Boolean    |x|x|= FEnabled         |       |

@@ -11,10 +11,10 @@ TMemory abstract base class.
 
 ### Modified inherited protected fields
 
-|name        |type   |C|description      |value|
-|------------|:-----:|-|-----------------|:---:|
-|FDescription|PChar  | |Short description|     |
-|FModName    |PChar  | |Module name      |     |
+|name        |type |C|description      |value|
+|------------|-----|-|-----------------|:---:|
+|FDescription|PChar| |Short description|     |
+|FModName    |PChar| |Module name      |     |
 
 **Note**:  
 - _C_: means 'constant'.

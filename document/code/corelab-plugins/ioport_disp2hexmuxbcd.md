@@ -15,7 +15,7 @@ select a digit).
 ### Protected fields
 
 |name     |type                   |C|description                      |default|
-|---------|:---------------------:|-|---------------------------------|:-----:|
+|---------|-----------------------|-|---------------------------------|:-----:|
 |FPanel   |TPanel                 | |GUI container panel              |nil    |
 |FPaintBox|TPaintBox              | |PaintBox for display rendering   |nil    |
 |FDP      |array of TDisplayTIL311| |TIL311 display component instance|nil    |
@@ -24,7 +24,7 @@ select a digit).
 ### Modified inherited protected fields
 
 |name        |type   |C|description      |value|
-|------------|:-----:|-|-----------------|:---:|
+|------------|-------|-|-----------------|:---:|
 |FDescription|PChar  | |Short description|     |
 |FHasPanel   |Boolean| |Has GUI panel    |true |
 |FModName    |PChar  | |Module name      |     |

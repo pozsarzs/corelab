@@ -14,7 +14,7 @@ which contents a 1-digit hexadecimal TIL311 style display with BCD input
 ### Protected fields
 
 |name     |type          |C|description                      |default|
-|---------|:------------:|-|---------------------------------|:-----:|
+|---------|--------------|-|---------------------------------|:-----:|
 |FPanel   |TPanel        | |GUI container panel              |nil    |
 |FPaintBox|TPaintBox     | |PaintBox for display rendering   |nil    |
 |FDP      |TDisplayTIL311| |TIL311 display component instance|nil    |
@@ -22,7 +22,7 @@ which contents a 1-digit hexadecimal TIL311 style display with BCD input
 ### Modified inherited protected fields
 
 |name        |type   |C|description      |value|
-|------------|:-----:|-|-----------------|:---:|
+|------------|-------|-|-----------------|:---:|
 |FDescription|PChar  | |Short description|     |
 |FHasPanel   |Boolean| |Has GUI panel    |true |
 |FModName    |PChar  | |Module name      |     |

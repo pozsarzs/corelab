@@ -15,7 +15,7 @@ supporting both Neumann and Harvard architectures.
 ### Protected fields
 
 |name       |type   |C|description                   |default|
-|-----------|:-----:|-|------------------------------|:-----:|
+|-----------|-------|-|------------------------------|:-----:|
 |FCodeMemory|TMemory| |Connected code memory module  |nil    |
 |FDataMemory|TMemory| |Connected (data) memory module|nil    |
 |FIOPorts   |TIOPort| |Connected I/O module          |nil    |
@@ -26,7 +26,7 @@ supporting both Neumann and Harvard architectures.
 ### Public properties
 
 |name      |type   |R|W|description  |default|
-|----------|:-----:|-|-|-------------|:-----:|
+|----------|-------|-|-|-------------|:-----:|
 |CodeMemory|TMemory|x| |= FCodeMemory|       |
 |DataMemory|TMemory|x| |= FDataMemory|       |
 |IOPorts   |TIOPort|x| |= FIOPorts   |       |

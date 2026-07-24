@@ -14,7 +14,7 @@ and BCD input (bits: a-g, dp or low nibble: BCD input, high nibble: rdp-000).
 ### Protected fields
 
 |name     |type          |C|description                      |default|
-|---------|:------------:|-|---------------------------------|:-----:|
+|---------|--------------|-|---------------------------------|:-----:|
 |FPanel   |TPanel        | |GUI container panel              |nil    |
 |FPaintBox|TPaintBox     | |PaintBox for display rendering   |nil    |
 |FDP      |TDisplayTIL302| |TIL302 display component instance|nil    |
@@ -22,7 +22,7 @@ and BCD input (bits: a-g, dp or low nibble: BCD input, high nibble: rdp-000).
 ### Modified inherited protected fields
 
 |name        |type   |C|description      |value|
-|------------|:-----:|-|-----------------|:---:|
+|------------|-------|-|-----------------|:---:|
 |FDescription|PChar  | |Short description|     |
 |FHasPanel   |Boolean| |Has GUI panel    |true |
 |FModName    |PChar  | |Module name      |     |

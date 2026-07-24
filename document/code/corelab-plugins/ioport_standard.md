@@ -15,7 +15,7 @@ values​to be read from it.
 ### Modified inherited protected fields
 
 |name          |type   |C|description      |value|
-|--------------|:-----:|-|-----------------|:---:|
+|--------------|-------|-|-----------------|:---:|
 |FDescription  |PChar  | |Short description|     |
 |FHasPanel     |Boolean| |Has GUI panel    |true |
 |FLatchedOutput|Boolean| |Store output data|true |

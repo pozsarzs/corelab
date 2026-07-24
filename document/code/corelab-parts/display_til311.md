@@ -13,10 +13,10 @@ numbers and letters to be displayed in the memory buffer from dots (dot matrix).
 
 ### New default value of the protected fields
 
-|name          |type         |C|description              |default   |
-|--------------|:-----------:|-|-------------------------|:--------:|
-|FDescription  |PChar        | |Short description        |short text|
-|FModName      |PChar        | |Module name              |'TIL311'  |
+|name        |type |C|description      |default |
+|------------|-----|-|-----------------|:------:|
+|FDescription|PChar| |Short description|        |
+|FModName    |PChar| |Module name      |'TIL311'|
 
 **Note**:  
 - _C_: means 'constant'.
@@ -24,7 +24,7 @@ numbers and letters to be displayed in the memory buffer from dots (dot matrix).
 ### Own protected fields
 
 |name          |type         |C|description        |default|
-|--------------|:-----------:|-|-------------------|:-----:|
+|--------------|-------------|-|-------------------|:-----:|
 |CHARMAP_TIL311|array of Byte|x|Character map [0-F]|       |
 
 **Note**:  
@@ -32,9 +32,9 @@ numbers and letters to be displayed in the memory buffer from dots (dot matrix).
 
 ### Own protected methods
 
-|name                                                        |V|A|O|description                  |
-|------------------------------------------------------------|-|-|-|-----------------------------|
-|`procedure DrawDot(Status: Boolean; x, y: byte);`           | | | |Drawing dot on buffer canvas |
+|name                                             |V|A|O|description                 |
+|-------------------------------------------------|-|-|-|----------------------------|
+|`procedure DrawDot(Status: Boolean; x, y: byte);`| | | |Drawing dot on buffer canvas|
 
 **Note**:  
 - _V_: means 'virtual' method,

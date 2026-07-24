@@ -15,7 +15,7 @@ does not release them.
 ### Modified inherited protected fields
 
 |name        |type   |C|description      |value|
-|------------|:-----:|-|-----------------|:---:|
+|------------|-------|-|-----------------|:---:|
 |FDescription|PChar  | |Short description|     |
 |FHasPanel   |Boolean| |Has GUI panel    |true |
 |FModName    |PChar  | |Module name      |     |

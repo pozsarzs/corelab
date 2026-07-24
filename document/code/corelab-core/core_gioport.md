@@ -11,14 +11,14 @@ methods that can handle the graphical interface of the port or device.
 
 ### Protected fields
 
-|name             |type     |C|description                          |default|
-|-----------------|:-------:|-|-------------------------------------|:-----:|
-|FPanelForm       |TForm    | |GUI panel for port or device         |       |
-|FPanelCaption    |PChar    | |Panel caption                        |'MyIO' |
-|FPanelHeight     |Integer  | |Panel height                         |100    |
-|FPanelLeft       |Integer  | |Panel left position                  |16     |
-|FPanelTop        |Integer  | |Panel top position                   |16     |
-|FPanelWidth      |Integer  | |Panel width                          |100    |
+|name         |type   |C|description                 |default|
+|-------------|-------|-|----------------------------|:-----:|
+|FPanelForm   |TForm  | |GUI panel for port or device|       |
+|FPanelCaption|PChar  | |Panel caption               |'MyIO' |
+|FPanelHeight |Integer| |Panel height                |100    |
+|FPanelLeft   |Integer| |Panel left position         |16     |
+|FPanelTop    |Integer| |Panel top position          |16     |
+|FPanelWidth  |Integer| |Panel width                 |100    |
 
 **Note**:  
 - _C_: means 'constant'.
@@ -26,7 +26,7 @@ methods that can handle the graphical interface of the port or device.
 ### Public properties
 
 |name        |type   |R|W|description    |default|
-|------------|:-----:|-|-|---------------|:-----:|
+|------------|-------|-|-|---------------|:-----:|
 |PanelCaption|PChar  |x| |= FPanelCaption|       |
 |PanelHeight |integer|x| |= FPanelHeight |       |
 |PanelLeft   |integer|x| |= FPanelLeft   |       |

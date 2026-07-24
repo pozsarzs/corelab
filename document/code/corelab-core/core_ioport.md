@@ -13,22 +13,22 @@ basis for implementing hardware-specific ports.
 
 ### Own data types
 
-|name                             |type                                  |description               |
-|---------------------------------|--------------------------------------|--------------------------|
-|TLineMode                        |(lmDirect, lmBCD)                     |Data line decoding mode   |
-|TLineModeHelper                  |type helper for TLineMode             |Helper                    |
-|.ToString                        |String                                |Convert Enum -> String    |
-|.FromString(const AValue: string)|TLineMode                             |Convert String -> Enum    |
-|TSemanticVersion                 |Record                                |Semantic version          |
-|TSemanticVersionHelper           |type helper for TSemanticVersion      |Helper                    |
-|.ToString                        |String                                |Convert Record -> String  |
-|.Compare(Other: TSemanticVersion)|Integer                               |Compare with other version|
-|TInterruptCallback               |procedure of object                   |Callback procedure for IRQ|
+|name                             |type                            |description               |
+|---------------------------------|--------------------------------|--------------------------|
+|TLineMode                        |(lmDirect, lmBCD)               |Data line decoding mode   |
+|TLineModeHelper                  |type helper for TLineMode       |Helper                    |
+|.ToString                        |String                          |Convert Enum -> String    |
+|.FromString(const AValue: string)|TLineMode                       |Convert String -> Enum    |
+|TSemanticVersion                 |Record                          |Semantic version          |
+|TSemanticVersionHelper           |type helper for TSemanticVersion|Helper                    |
+|.ToString                        |String                          |Convert Record -> String  |
+|.Compare(Other: TSemanticVersion)|Integer                         |Compare with other version|
+|TInterruptCallback               |procedure of object             |Callback procedure for IRQ|
 
 ### Protected fields
 
 |name             |type     |C|description                          |default|
-|-----------------|:-------:|-|-------------------------------------|:-----:|
+|-----------------|---------|-|-------------------------------------|:-----:|
 |FAddressRangeSize|Byte     | |Address range size                   |1      |
 |FDataInMode      |TLineMode| |Decoding input data lines            |lmBCD  |
 |FDataInNegation  |Boolean  | |Negation of databit (port -> CPU)    |false  |
@@ -49,7 +49,7 @@ basis for implementing hardware-specific ports.
 ### Public properties
 
 |name            |type     |R|W|description        |default|
-|----------------|:-------:|-|-|-------------------|:-----:|
+|----------------|---------|-|-|-------------------|:-----:|
 |AddressRangeSize|Byte     |x| |= FAddressRangeSize|       |
 |DataInMode	 |TLineMode|x|x|= FDataInMode      |       |
 |DataInNegation  |Boolean  |x|x|= FDataInNegation  |       |

@@ -11,7 +11,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 ### Own data types
 
 |name|type|description|
-|----|:--:|-----------|
+|----|----|-----------|
 |    |    |           |
 
 ### Own interfaces
@@ -23,7 +23,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 ### Protected fields
 
 |name|type|C|description|default|
-|----|:--:|-|-----------|:-----:|
+|----|----|-|-----------|:-----:|
 |    |    | |           |       |
 
 **Note**:  
@@ -38,7 +38,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 ### Public properties
 
 |name|type|R|W|description|default|
-|----|:--:|-|-|-----------|-------|
+|----|----|-|-|-----------|-------|
 |    |    | | |=          |       |
 
 **Note**:  
