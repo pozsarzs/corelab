@@ -10,7 +10,7 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
-        <TextName Value="PozsarZsolt.CoreLAB.IOPort"/>
+        <TextName Value="PozsarZsolt.CoreLAB.CLIOPort"/>
         <TextDesc Value="CoreLAB | I/O plug-in tester"/>
       </XPManifest>
       <Icon Value="0"/>
@@ -22,7 +22,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="1"/>
-      <StringTable Comments="Development program" CompanyName="Pozsar Zsolt" FileDescription="I/O plugin tester" LegalCopyright="(C)2026 Pozsar Zsolt" OriginalFilename="ioport" ProductName="CoreLAB - IOPort" ProductVersion="0.1"/>
+      <StringTable Comments="Development program" CompanyName="Pozsar Zsolt" FileDescription="I/O plugin tester" LegalCopyright="(C)2026 Pozsar Zsolt" OriginalFilename="clioport" ProductName="CoreLAB - CLIOPort" ProductVersion="0.1"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
@@ -35,6 +35,9 @@
       <FormatVersion Value="2"/>
     </RunParams>
     <RequiredPackages>
+      <Item>
+        <PackageName Value="lhelpcontrolpkg"/>
+      </Item>
       <Item>
         <PackageName Value="FCL"/>
       </Item>
@@ -89,7 +92,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
-      <OtherUnitFiles Value="../corelab-core;../_ext/modlcltranslator"/>
+      <OtherUnitFiles Value="../corelab-core;../_ext/modlcltranslator;../_ppu"/>
       <UnitOutputDirectory Value="../_lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

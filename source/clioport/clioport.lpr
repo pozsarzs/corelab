@@ -14,25 +14,28 @@
 program clioport;
 {$MODE OBJFPC}{$H+}
 uses
-  CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls, crt,
-  frmabout, frmmain, frmcaption, frmsizepos;
+  CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
+  lhelpcontrolpkg, crt, frmabout, frmmain, frmcaption, frmsizepos;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
   AUTMAIL = 'pozsarzs@gail.com';
   PRGNAME = 'CLIOPort';
   PRGVERS = '0.1';
-  PARAMS: array[1..3, 1..3] of string =
+  PARAMS: array[1..4, 1..3] of string =
     (
-    ('-d', '--dir', 'set plugin directory'),
     ('-h', '--help', 'show help'),
-    ('-v', '--version', 'show version and build information')
+    ('-v', '--version', 'show version and build information'),
+    ('-d', '--dir', 'set plugin directory'),
+    ('-i', '--ignore-help', 'ignore missing help file or viewer')
     );
 var
   AboutLabels: TAboutLabels;
-  b:           Byte;
-  FN:          string;
-  OpMode:      Byte;
+  i:           Byte;
+  ExeName:     string;
+  IgnoreHelp:  Boolean;
+  InvalidArg:  Boolean;
+  PluginDir:   string;
 
 {$R *.res}
 
@@ -57,21 +60,20 @@ var
   Message: string;
 begin
   Caption := MSG08;
-  Message := MSG07;
-  if Mode then Application.MessageBox(PChar(Message), PChar(Caption)) else
+  if Mode then Message := MSG07 else
   begin
     Message := MSG08 + ':' + #13 + #10;
-    Message := Message + ' ' + FN + MSG09 + ' ' + MSG10 + #13 + #10 + #13 + #10;
+    Message := Message + ' ' + ExeName + MSG09 + ' ' + MSG10 + #13 + #10 + #13 + #10;
     Message := Message + MSG11;
-    for b := 1 to 3 do
+    for b := 1 to 4 do
       Message := Message + #13 + #10 + '  ' +
                  PARAMS[b, 1] + ', ' + PARAMS[b, 2] + ': ' + PARAMS[b, 3];
-    {$IFDEF UNIX}
-      writeln(Message);
-    {$ELSE}
-      Application.MessageBox(PChar(Message), PChar(Caption));
-    {$ENDIF}
   end;
+  {$IFDEF UNIX}
+    writeln(Message);
+  {$ELSE}
+    Application.MessageBox(PChar(Message), PChar(Caption));
+  {$ENDIF}
 end;
 
 // SHOW VERSION AND BUILD INFORMATION
@@ -108,50 +110,77 @@ begin
 end;
 
 begin
-  FN := ExtractFilename(ParamStr(0));
-  OpMode := 0;
-  if ParamCount = 0 then OpMode := 1 else
+  // default values
+  IgnoreHelp := false;
+  PluginDir := '.';
+  ExeName := ExtractFilename(ParamStr(0));
+  // arguments and operation modes
+  if ParamCount > 0 then
   begin
-    for b := 1 to 3 do
-      if ParamStr(1) = PARAMS[b, 1] then OpMode := 10 * b;
-    for b := 1 to 3 do
-      if ParamStr(1) = PARAMS[b, 2] then OpMode := 10 * b;
-  end;
-  WriteLn(OpMode);
-  case OpMode of
-    0: help(True);
-    10: begin
-          if ParamCount > 1 then
-          begin
-            frmmain.PluginDirectory := ParamStr(2);
-            if not DirectoryExists(frmmain.PluginDirectory, True)
-              then frmmain.PluginDirectory := '.';
-          end;
-          WriteLn(frmmain.PluginDirectory);
-        end;
-    20: help(False);
-    30: version;
-  end;
-  if (OpMode = 1) or (OpMode = 10) then
-  begin
-    RequireDerivedFormResource := True;
-    Application.Title := MSG01;
-    Application.Scaled := True;
-    Application.Initialize;
-    Application.CreateForm(TForm1, Form1);
-    Application.CreateForm(TForm2, Form2);
-    with AboutLabels do
+    InvalidArg := true;
+    for i := 1 to ParamCount do
     begin
-      Copyright := PRGCOPY;
-      Description := MSG01;
-      Email := AUTMAIL;
-      Homepage := PRGHOME;
-      Name := PRGNAME;
-      Version := PRGVERS;
+      if (ParamStr(i) = PARAMS[1, 1]) or (ParamStr(i) = PARAMS[1, 2]) then
+      begin
+        // show help and halt
+        InvalidArg := false;
+        Help(False);
+        Halt(0);
+      end;
+      if (ParamStr(i) = PARAMS[2, 1]) or (ParamStr(i) = PARAMS[2, 2]) then
+      begin
+        // show help and halt
+        InvalidArg := false;
+        Version;
+        Halt(0);
+      end;
+      if (ParamStr(i) = PARAMS[3, 1]) or (ParamStr(i) = PARAMS[3, 2]) then
+      begin
+        if i < ParamCount then
+        begin
+          // set plugin directory
+          InvalidArg := false;
+          if DirectoryExists(ParamStr(i + 1), true) then PluginDir := ParamStr(i + 1);
+        end;
+      end;
+      if (ParamStr(i) = PARAMS[4, 1]) or (ParamStr(i) = PARAMS[4, 2]) then
+      begin
+        // set IgnoreHelp variable
+        InvalidArg := false;
+        IgnoreHelp := true;
+      end;
     end;
-    Form2.SetAboutLabels(AboutLabels);
-    Application.CreateForm(TForm3, Form3);
-    Application.CreateForm(TForm4, Form4);
-    Application.Run;
+    if InvalidArg then
+    begin
+      // show error message and halt
+      Help(True);
+      Halt(0);
+    end;
   end;
+  // start application
+  RequireDerivedFormResource := True;
+  with AboutLabels do
+  begin
+    Copyright := PRGCOPY;
+    Description := MSG01;
+    Email := AUTMAIL;
+    Homepage := PRGHOME;
+    Name := PRGNAME;
+    Version := PRGVERS;
+  end;
+  with Application do
+  begin
+    Title:='CoreLAB | I/O plug-in tester';
+    Scaled:=True;
+    Initialize;
+    CreateForm(TForm1, Form1);
+    CreateForm(TForm2, Form2);
+    CreateForm(TForm3, Form3);
+    CreateForm(TForm4, Form4);
+  end;
+  Form2.SetAboutLabels(AboutLabels);
+  Form1.PluginDirectory := PluginDir;
+  Form1.IgnoreHelp := IgnoreHelp;
+  Application.ProcessMessages;
+  Application.Run;
 end.

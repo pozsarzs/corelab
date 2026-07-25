@@ -1,0 +1,108 @@
+{ +--------------------------------------------------------------------------+ }
+{ | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
+{ | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
+{ | ucommon.pas                                                              | }
+{ | Common procedures and functions                                          | }
+{ +--------------------------------------------------------------------------+ }
+{ This program is free software: you can redistribute it and/or modify it
+  under the terms of the European Union Public License 1.2 version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE. }
+
+unit ucommon;
+{$MODE OBJFPC} {$H+} {$MACRO ON}
+interface
+uses
+  {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils;
+  {$IFDEF WINDOWS}
+    CSIDL_PROFILE = 40;
+    SHGFP_TYPE_CURRENT = 0;
+  {$ENDIF}
+  {$IFDEF WINDOWS}
+var
+    Buffer: array[0..MAX_PATH] of Char;
+  {$ENDIF}
+
+{$DEFINE SLASH := DirectorySeparator}
+
+function GetLang: string;
+function GetExeDir: string;
+function GetUserDir: string;
+
+implementation
+
+{$IFDEF WINDOWS}
+  function SHGetFolderPath(hwndOwner: HWND; nFolder: Integer; hToken: THandle;
+           dwFlags: DWORD; pszPath: LPTSTR): HRESULT; stdcall;
+           external 'Shell32.dll' name 'SHGetFolderPathA';
+
+  function GetUserProfile: string;
+  begin
+    FillChar(Buffer, SizeOf(Buffer), 0);
+    ShGetFolderPath(0, CSIDL_PROFILE, 0, SHGFP_TYPE_CURRENT, buffer);
+    Result := string(PChar(@buffer));
+  end;
+{$ENDIF}
+
+// GET SYSTEM LANGUAGE
+function GetLang: string;
+var
+  {$IFDEF WINDOWS}
+    Buffer: PChar;
+    Size:   Integer;
+  {$ENDIF}
+  s: string;
+begin
+  {$IFDEF GO32V2}
+    s := GetEnvironmentVariable('LANG');
+  {$ELSE}
+    {$IFDEF WINDOWS}
+      Size := GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, Nil, 0);
+      GetMem(Buffer, Size);
+      try
+        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, Buffer, Size);
+        s := string(Buffer);
+      finally
+        FreeMem(Buffer);
+      end;
+    {$ELSE}
+      {$IFDEF UNIX}
+        s := GetEnvironmentVariable('LANG');
+      {$ELSE}
+        {$FATAL Not supported operation system!}
+      {$ENDIF}
+    {$ENDIF}
+  {$ENDIF} 
+  if Length(s) = 0 then
+    s := 'en';
+  s := LowerCase(s[1..2]);
+  GetLang := s;
+end;
+
+// GET DIRECTORY OF THE EXECUTABLE FILE;
+function GetExeDir: string;
+begin
+  Result := ExtractFilePath(ParamStr(0));
+end;
+
+// GET USER'S DIRECTORY
+function GetUserDir: string;
+begin
+  {$IFDEF GO32V2}
+    Result := GetExeDir;
+  {$ELSE}
+    {$IFDEF WINDOWS}
+      Result := GetUserProfile + SLASH;
+    {$ELSE}
+      {$IFDEF UNIX}
+        Result := GetEnvironmentVariable('HOME') + SLASH;
+      {$ELSE}
+        {$FATAL Not supported operation system!}
+      {$ENDIF}
+    {$ENDIF}
+  {$ENDIF}
+end;
+
+end.

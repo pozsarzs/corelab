@@ -288,7 +288,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 [x] source/\_lib/x86\_64-win64/.gitignore
 [x] source/\_png/\*
 [x] source/\_po/.gitignore
-[x] source/\_ppu/common.pas
+[x] source/\_ppu/ucommon.pas
 [x] source/\_ppu/README.md
 
 #### 'source/clcpu' directory
@@ -299,26 +299,26 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 #### 'source/clioport' directory
 
-[ ] source/clioport/clioport.ico
-[ ] source/clioport/clioport.lpi
-[ ] source/clioport/clioport.lpr
-[ ] source/clioport/clioport.lps
-[ ] source/clioport/clioport.res
-[ ] source/clioport/frmabout.lfm
-[ ] source/clioport/frmabout.lrj
-[ ] source/clioport/frmabout.pas
-[ ] source/clioport/frmcaption.lfm
-[ ] source/clioport/frmcaption.lrj
-[ ] source/clioport/frmcaption.pas
-[ ] source/clioport/frmhelp.lfm
-[ ] source/clioport/frmhelp.lrj
-[ ] source/clioport/frmhelp.pas
-[ ] source/clioport/frmmain.lfm
-[ ] source/clioport/frmmain.lrj
-[ ] source/clioport/frmmain.pas
-[ ] source/clioport/frmsizepos.lfm
-[ ] source/clioport/frmsizepos.lrj
-[ ] source/clioport/frmsizepos.pas
+[x] source/clioport/clioport.ico
+[x] source/clioport/clioport.lpi
+[x] source/clioport/clioport.lpr
+[x] source/clioport/clioport.lps
+[x] source/clioport/clioport.res
+[x] source/clioport/frmabout.lfm
+[x] source/clioport/frmabout.lrj
+[x] source/clioport/frmabout.pas
+[x] source/clioport/frmcaption.lfm
+[x] source/clioport/frmcaption.lrj
+[x] source/clioport/frmcaption.pas
+[x] source/clioport/frmhelp.lfm
+[x] source/clioport/frmhelp.lrj
+[x] source/clioport/frmhelp.pas
+[x] source/clioport/frmmain.lfm
+[x] source/clioport/frmmain.lrj
+[x] source/clioport/frmmain.pas
+[x] source/clioport/frmsizepos.lfm
+[x] source/clioport/frmsizepos.lrj
+[x] source/clioport/frmsizepos.pas
 [x] source/clioport/Makefile
 [x] source/clioport/Makefile.w32
 [x] source/clioport/Makefile.w64

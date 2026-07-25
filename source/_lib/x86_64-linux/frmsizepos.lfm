@@ -1,0 +1,178 @@
+object Form4: TForm4
+  Left = 521
+  Height = 157
+  Top = 373
+  Width = 304
+  BorderStyle = bsDialog
+  Caption = 'Set panel size and position'
+  ClientHeight = 157
+  ClientWidth = 304
+  Position = poDefault
+  LCLVersion = '2.2.6.0'
+  object Button1: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 221
+    Height = 28
+    Top = 121
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Around = 8
+    Caption = '&Set'
+    ModalResult = 1
+    TabOrder = 2
+  end
+  object Button2: TButton
+    AnchorSideRight.Control = Button1
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 138
+    Height = 28
+    Top = 121
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Around = 8
+    Caption = '&Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 104
+    Top = 8
+    Width = 140
+    BorderSpacing.Around = 8
+    Caption = 'Size'
+    ClientHeight = 86
+    ClientWidth = 138
+    TabOrder = 0
+    object Label1: TLabel
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = SpinEdit1
+      AnchorSideTop.Side = asrCenter
+      Left = 8
+      Height = 17
+      Top = 9
+      Width = 38
+      BorderSpacing.Around = 8
+      Caption = 'Width'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = Label1
+      AnchorSideTop.Control = SpinEdit2
+      AnchorSideTop.Side = asrCenter
+      Left = 8
+      Height = 17
+      Top = 51
+      Width = 43
+      Caption = 'Height'
+      ParentColor = False
+    end
+    object SpinEdit1: TSpinEdit
+      AnchorSideTop.Control = GroupBox1
+      AnchorSideRight.Control = GroupBox1
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 34
+      Top = 0
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      MaxValue = 1000
+      MinValue = 100
+      TabOrder = 0
+      Value = 100
+    end
+    object SpinEdit2: TSpinEdit
+      AnchorSideTop.Control = SpinEdit1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GroupBox1
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 34
+      Top = 42
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      MaxValue = 1000
+      MinValue = 100
+      TabOrder = 1
+      Value = 100
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 156
+    Height = 104
+    Top = 8
+    Width = 140
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    Caption = 'Position'
+    ClientHeight = 86
+    ClientWidth = 138
+    TabOrder = 1
+    object Label3: TLabel
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = SpinEdit3
+      AnchorSideTop.Side = asrCenter
+      Left = 8
+      Height = 17
+      Top = 9
+      Width = 24
+      BorderSpacing.Around = 8
+      Caption = 'Left'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Label3
+      AnchorSideTop.Control = SpinEdit4
+      AnchorSideTop.Side = asrCenter
+      Left = 8
+      Height = 17
+      Top = 51
+      Width = 22
+      Caption = 'Top'
+      ParentColor = False
+    end
+    object SpinEdit3: TSpinEdit
+      AnchorSideTop.Control = GroupBox2
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 34
+      Top = 0
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 8
+      MaxValue = 2047
+      TabOrder = 0
+    end
+    object SpinEdit4: TSpinEdit
+      AnchorSideTop.Control = SpinEdit3
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = GroupBox2
+      AnchorSideRight.Side = asrBottom
+      Left = 70
+      Height = 34
+      Top = 42
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 8
+      BorderSpacing.Right = 8
+      MaxValue = 2047
+      TabOrder = 1
+    end
+  end
+end

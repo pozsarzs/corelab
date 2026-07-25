@@ -17,7 +17,8 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
   ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls,
-  ActnList, Types, core_ioport, core_gioport, frmabout, frmcaption, frmsizepos;
+  ActnList, Types, process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_ioport,
+  core_gioport, frmabout, frmcaption, frmsizepos, ucommon;
 type
   TPluginAttributes = record
     PFilename:         String;                         // Filename of the module
@@ -52,9 +53,11 @@ type
   TForm1 = class(TForm)
     About:                       TAction;
     ActionList1:                 TActionList;
+    CHMHelpDatabase1:            TCHMHelpDatabase;
     DirectoryEdit1:              TDirectoryEdit;
     Help:                        TAction;
     ImageList1:                  TImageList;
+    LHelpConnector1:             TLHelpConnector;
     LoadChangePlugin:            TAction;
     MainMenu1:                   TMainMenu;
     MenuItem1:                   TMenuItem;
@@ -134,11 +137,11 @@ type
       aRow: Integer; const OldValue: string; var NewValue: String);
     procedure WriteAByteExecute(Sender: TObject);
   private
-    // - port
+    // port
     CreatePort:      TCreatePortFunc;
     DestroyPort:     TDestroyPortProc;
     CurrentPort:     TIOPort;                 // Created object of TIOPort class
-    // - panel
+    // panel
     CreatePanel:     TCreatePanelProc;
     ShowPanel:       TShowPanelProc;
     HidePanel:       THidePanelProc;
@@ -146,17 +149,29 @@ type
     MovePanel:       TMovePanelProc;
     RenamePanel:     TRenamePanelProc;
     ResizePanel:     TResizePanelProc;
-    // - module
+    // module
     LibHandle:       TLibHandle;                  // Handle of the loaded module
     LoadedPlugin:    TPluginAttributes;       // Properties of the loaded module
+    // general
+    FIgnoreHelp:      Boolean;
+    FLoadCounter:     Integer;
+    FEXEDirectory:    string;
+    FPluginDirectory: string;
+    FSystemLanguage:  string;
+    FUserDirectory:   string;
     procedure RefreshProperties(Direction: TOpDirection);
     procedure ImpExpProperties(Direction: TOpDirection);
+    procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
+    procedure SetPluginDirectory(APluginDirectory: string);
   public
+    property IgnoreHelp: Boolean read FIgnoreHelp write SetIgnoreHelp;
+    property EXEDirectory: string read FEXEDirectory;
+    property PluginDirectory: string read FPluginDirectory write SetPluginDirectory;
+    property SystemLanguage: string read FSystemLanguage;
+    property UserDirectory: string read FUserDirectory;
   end;
 var
   Form1:           TForm1;
-  LoadCounter:     Byte = 0;                    // Number of the succesfull Load
-  PluginDirectory: string = '.';
 
 implementation
 
@@ -165,10 +180,10 @@ implementation
 
 resourcestring
   MSG01 = 'ERROR: ';
-  MSG02 = 'Data type conversion error!';
+  MSG02 = 'Data type conversion error.';
   MSG03 = 'Directory ''%s'' does not exist.';
-  MSG04 = 'Cannot load ''%s'' plugin: ';
-  MSG05 = 'It is not a CoreLAB IOPort plugin!';
+  MSG04 = 'Cannot load ''%s'' plugin%s(%s).';
+  MSG05 = 'It is not a CoreLAB IOPort plugin.';
   MSG06 = 'Filename';
   MSG07 = 'Size';
   MSG08 = 'Type';
@@ -181,9 +196,8 @@ resourcestring
   MSG15 = 'Only 8-bit hexadecimal values can be entered (00 - FF)!';
   MSG16 = 'Caption';
   MSG17 = 'This is not a graphics plugin.';
-  MSG18 = '';
-  MSG19 = '';
-  MSG20 = '';
+  MSG18 = 'Missing help file.';
+  MSG19 = 'Missing help viewer.';
 
 // IMPORT/EXPORT PROPERTIES
 procedure TForm1.ImpExpProperties(Direction: TOpDirection);
@@ -328,6 +342,66 @@ begin
       end;
     end;
   end;
+end;
+
+// SET HELP SYSTEM
+procedure TForm1.SetIgnoreHelp(AIgnoreHelp: Boolean);
+var
+  CHMFile, CHMViewer: string;
+  CHMFileExists, CHMViewerExists: boolean;
+begin
+  FIgnoreHelp := AIgnoreHelp;
+  if not FIgnoreHelp then
+  begin
+  // - search help file
+  {$IFDEF UNIX}
+    CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm',
+      './:./help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
+    if Length(CHMFile) = 0 then
+      CHMFile := FileSearch('corelab_en.chm',
+        './:./help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
+  {$ELSE}
+    CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm','.\;.\help\');
+    if Length(CHMFile) = 0 then
+      CHMFile := FileSearch('modshell_en.chm','.\;.\help\');
+  {$ENDIF}
+  // - search LHelp application
+  {$IFDEF UNIX}
+    CHMViewer := FileSearch('lhelp', GetEnvironmentVariable('PATH'));
+  {$ELSE}
+    CHMViewer := FileSearch('lhelp.exe', GetEnvironmentVariable('PATH'));
+  {$ENDIF}
+    CHMFileExists := FileExists(CHMFile);
+    CHMViewerExists := FileExists(CHMFile);
+    if CHMFileExists and CHMViewerExists then
+    begin
+      CreateLCLHelpSystem;
+      with CHMHelpDatabase1 do
+      begin
+        Autoregister := true;
+        Filename := CHMFile;
+        KeywordPrefix := 'html'
+      end;
+      with LHelpConnector1 do
+      begin
+        Autoregister := true;
+        LHelpPath := CHMViewer;
+      end;
+    end else
+    begin
+      if not CHMFileExists then ShowMessage(MSG01 + MSG18);
+      if not CHMViewerExists then ShowMessage(MSG01 + MSG19);
+    end;
+  end;
+  Help.Enabled := CHMFileExists and CHMViewerExists and not FIgnoreHelp;
+end;
+
+// SET PLUGIN DIRECTORY
+procedure TForm1.SetPluginDirectory(APluginDirectory: string);
+begin
+  FPluginDirectory := APluginDirectory;
+  DirectoryEdit1.Directory := FPluginDirectory;
+  RefreshPluginList.Execute;
 end;
 
 // TIMED STATUS MESSAGE CLEARING
@@ -497,7 +571,7 @@ begin
     LibHandle := LoadLibrary(SelectedFile);
     if LibHandle = NilHandle then
     begin
-      ShowMessage(MSG01 + Format(MSG04, [SelectedFile]));
+      ShowMessage(MSG01 + Format(MSG04, [SelectedFile, LineEnding, GetLoadErrorStr]));
       exit;
     end;
     // search exported function and instantiation
@@ -542,10 +616,10 @@ begin
       WriteAByte.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
-      Inc(LoadCounter);
+      Inc(FLoadCounter);
       with StatusBar1.Panels do
       begin
-        Items[0].Text := LoadCounter.ToString + ' ';
+        Items[0].Text := '#' + FLoadCounter.ToString + ' ';
         Items[1].Text := ' ' + ShellListView1.Selected.Caption;
         Items[2].Text := '';
       end;
@@ -573,8 +647,17 @@ end;
 
 // RESTART APPLICATION
 procedure TForm1.RestartApplicationExecute(Sender: TObject);
+var
+  NewProcess: TProcess;
 begin
-
+  NewProcess := TProcess.Create(nil);
+  try
+    NewProcess.Executable := ParamStr(0);
+    NewProcess.Execute;
+  finally
+    NewProcess.Free;
+  end;
+  Application.Terminate;
 end;
 
 // EXIT
@@ -669,6 +752,7 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
+  ShowHelpOrErrorForKeyword('','html/clioport.htm');
 end;
 
 // ABOUT
@@ -680,10 +764,12 @@ end;
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  // port
   CreatePort := nil;
   CurrentPort := nil;
   CreatePort := nil;
   DestroyPort := nil;
+  // panel
   CreatePanel := nil;
   ShowPanel := nil;
   HidePanel := nil;
@@ -691,9 +777,17 @@ begin
   MovePanel := nil;
   RenamePanel := nil;
   ResizePanel := nil;
+  // module
   LibHandle := NilHandle;
+  // general
+  FIgnoreHelp := false;
+  FLoadCounter := 0;
+  FEXEDirectory := GetExeDir;
+  FPluginDirectory := '.';
+  FSystemLanguage := GetLang;
+  FUserDirectory := GetUserDir;
   Form1.Caption := Application.Title;
-  DirectoryEdit1.Directory := PluginDirectory;
+  DirectoryEdit1.Directory := FPluginDirectory;
   // set headers
   with ShellListView1 do
   begin
@@ -730,17 +824,17 @@ end;
 // ONDESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  // - panel
+  // panel
   if LoadedPlugin.PHasPanel and
     Assigned(CreatePanel) and Assigned(ShowPanel) and
     Assigned(HidePanel) and Assigned(FreePanel) then FreePanel(CurrentPort);
-  // - port
+  // port
   if Assigned(CurrentPort) then
   begin
     DestroyPort(CurrentPort);
     CurrentPort := nil;
   end;
-  // - module
+  // module
   if LibHandle <> NilHandle then
   begin
     UnloadLibrary(LibHandle);
