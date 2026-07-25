@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | clioport.lpr                                                             | }
-{ | I/O plugin tester application                                            | }
+{ | clmemory.lpr                                                             | }
+{ | Memory plugin tester application                                         | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,7 +11,7 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-program clioport;
+program clmemory;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
@@ -20,7 +20,7 @@ const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
   AUTMAIL = 'pozsarzs@gail.com';
-  PRGNAME = 'CLIOPort';
+  PRGNAME = 'CLMemory';
   PRGVERS = '0.1';
   PARAMS: array[1..4, 1..3] of string =
     (
@@ -40,7 +40,7 @@ var
 {$R *.res}
 
 resourcestring
-  MSG01 = 'CoreLAB I/O plugin tester';
+  MSG01 = 'CoreLAB memory plugin tester';
   MSG02 = 'Build date:  ';
   MSG03 = 'Builder:     ';
   MSG04 = 'FPC version: ';
@@ -170,7 +170,7 @@ begin
   end;
   with Application do
   begin
-    Title:='CoreLAB | I/O plugin tester';
+    Title:='CoreLAB | Memory plugin tester';
     Scaled:=True;
     Initialize;
     CreateForm(TForm1, Form1);

@@ -564,8 +564,11 @@ object Form1: TForm1
     end
     object ToolButton7: TToolButton
       Left = 103
+      Hint = 'Show plugin window'
       Top = 2
-      Action = ShowPluginWindow
+      Caption = 'S&how plugin window'
+      Enabled = False
+      ImageIndex = 4
     end
   end
   object Timer1: TTimer
@@ -631,21 +634,6 @@ object Form1: TForm1
       end
       object MenuItem12: TMenuItem
         Action = Quit
-      end
-    end
-    object MenuItem19: TMenuItem
-      Caption = '&View'
-      object MenuItem20: TMenuItem
-        Action = ShowPluginWindow
-      end
-      object Separator5: TMenuItem
-        Caption = '-'
-      end
-      object MenuItem22: TMenuItem
-        Action = SetPluginWindowCaption
-      end
-      object MenuItem23: TMenuItem
-        Action = SetPluginWindowSizePosition
       end
     end
     object MenuItem4: TMenuItem
@@ -824,23 +812,6 @@ object Form1: TForm1
       Caption = 'E&xit'
       Hint = 'Exit from application'
       OnExecute = QuitExecute
-    end
-    object ShowPluginWindow: TAction
-      Caption = 'S&how plugin window'
-      Enabled = False
-      Hint = 'Show plugin window'
-      ImageIndex = 4
-      OnExecute = ShowPluginWindowExecute
-    end
-    object SetPluginWindowCaption: TAction
-      Caption = 'Set plugin window caption'
-      Enabled = False
-      OnExecute = SetPluginWindowCaptionExecute
-    end
-    object SetPluginWindowSizePosition: TAction
-      Caption = 'Set plugin window size/position'
-      Enabled = False
-      OnExecute = SetPluginWindowSizePositionExecute
     end
     object ReadAByte: TAction
       Caption = '&Read a byte'
