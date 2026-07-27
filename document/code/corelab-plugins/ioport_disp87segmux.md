@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TDisp87segMUX class
+## TDisp87segMUX from TDisplay class in ioport_disp87segmux unit
 
 TDisp87segMUX is a module that simulates a display peripheral derived from the
 class TGIOPort and TDisplayTIL302. It has its own graphical user interface,
@@ -12,51 +12,50 @@ which contents a 8-digit 7 segment TIL302 style multiplexed display with direct
 inversable and BCD input (Address 0: bits: a-g, dp or low nibble: BCD input, high nibble:
 rdp-000, Address 1: select a digit).
 
+### UML diagram
+
+![Class diagram](../diagrams/_png/ioport.png "IOPort plugin class diagram")
+
+### Abbreviations
+
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
+
 ### Protected fields
 
-|name     |type                   |C|description                      |default|
-|---------|-----------------------|-|---------------------------------|:-----:|
-|FPanel   |TPanel                 | |GUI container panel              |nil    |
-|FPaintBox|TPaintBox              | |PaintBox for display rendering   |nil    |
-|FDP      |array of TDisplayTIL302| |TIL302 display component instance|nil    |
-|FSelLine |byte                   | |Selected display                 |0      |
+|name        |type                   |flags|description                      |default|
+|------------|-----------------------|:---:|---------------------------------|-------|
+|FPanel      |TPanel                 |     |GUI container panel              |nil    |
+|FPaintBox   |TPaintBox              |     |PaintBox for display rendering   |nil    |
+|FDP         |array of TDisplayTIL302|     |TIL302 display component instance|nil    |
+|FSelLine    |byte                   |     |Selected display                 |0      |
+|FDescription|PChar                  |     |Short description                |       |
+|FHasPanel   |Boolean                |     |Has GUI panel                    |true   |
+|FModName    |PChar                  |     |Module name                      |       |
 
-### Modified inherited protected fields
+### Protected methods
 
-|name        |type   |C|description      |value|
-|------------|-------|-|-----------------|:---:|
-|FDescription|PChar  | |Short description|     |
-|FHasPanel   |Boolean| |Has GUI panel    |true |
-|FModName    |PChar  | |Module name      |     |
+|name                                       |flags|description                                             |
+|-------------------------------------------|:---:|--------------------------------------------------------|
+|`procedure PaintBoxPaint(Sender: TObject);`|     |PaintBox OnPaint event handler for rendering the display|
 
-**Note**:  
-- _C_: means 'constant'.
+### Public methods
 
-### Own protected methods
-
-|name                                       |V|A|O|description                                             |
-|-------------------------------------------|-|-|-|--------------------------------------------------------|
-|`procedure PaintBoxPaint(Sender: TObject);`| | | |PaintBox OnPaint event handler for rendering the display|
-
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
-
-### Own public methods
-
-|name                                           |V|A|O|description                               |
-|-----------------------------------------------|-|-|-|------------------------------------------|
-|`constructor Create;`                          | | |x|Sets the initial values for the new object|
-|`destructor Destroy;`                          | | |x|Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         | | |x|Read virtual port                         |
-|`procedure Reset;`                             | | |x|Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`| | |x|Write virtual port                        |
-
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+|name                                           |flags|description                               |
+|-----------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                          |Or   |Sets the initial values for the new object|
+|`destructor Destroy;`                          |Or   |Frees the object's resources              |
+|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
+|`procedure Reset;`                             |Or   |Reset virtual port                        |
+|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
 
 ### Exported functions and procedures
 

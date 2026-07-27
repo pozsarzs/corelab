@@ -1,0 +1,150 @@
+' +----------------------------------------------------------------------------+
+' | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+' | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+' | clioport.puml                                                              |
+' | PlantUML source file                                                       |
+' +----------------------------------------------------------------------------+
+
+@startuml
+
+title CLIOPort application
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+skinparam nodesep 10
+skinparam ranksep 10
+
+class TAboutLabels <<record>> {
+  + Copyright: string[32]
+  + Description: string[32]
+  + Email: string[32]
+  + Homepage: string[32]
+  + Name: string[32]
+  + Version: string[32]
+}
+
+class TForm2 {
+  + SetAboutLabels(Labels: TAboutLabels)
+}
+
+class TForm3 {
+  - GetCaption(): string
+  - SetCaption(Title: string)
+  + PanelCaption: string
+}
+
+class TForm4 {
+  - GetLeftValue(): integer
+  - GetHeightValue(): integer
+  - GetTopValue(): integer
+  - GetWidthValue(): integer
+  - SetLeftValue(Value: integer)
+  - SetHeightValue(Value: integer)
+  - SetTopValue(Value: integer)
+  - SetWidthValue(Value: integer)
+  + PanelLeft: integer
+  + PanelHeight: integer
+  + PanelTop: integer
+  + PanelWidth: integer
+}
+
+enum TLineMode {
+}
+
+class TPluginAttributes <<record>> {
+  + PFilename: String
+  + PAddressRangeSize: Byte
+  + PDataInMode: TLineMode
+  + PDataInNegation: Boolean
+  + PDataOutMode: TLineMode
+  + PDataOutNegation: Boolean
+  + PDescription: String
+  + PEnabled: Boolean
+  + PHasPanel: Boolean
+  + PLatchedOutput: Boolean
+  + PModname: String
+  + PReadBackOutput: Boolean
+  + PSelMode: TLineMode
+  + PSelNegation: Boolean
+}
+
+enum TOpDirection {
+  opPlugin2Var
+  opVar2List
+  opList2Var
+  opVar2Plugin
+}
+
+class TIOPort {
+  + Modname: PChar
+  + Description: PChar
+  + AddressRangeSize: Byte
+  + DataInMode: TLineMode
+  + DataInNegation: Boolean
+  + DataOutMode: TLineMode
+  + DataOutNegation: Boolean
+  + Enabled: Boolean
+  + HasPanel: Boolean
+  + LatchedOutput: Boolean
+  + ReadBackOutput: Boolean
+  + SelMode: TLineMode
+  + SelNegation: Boolean
+  + ReadPort(InAddr: Byte): Byte
+  + WritePort(OutAddr: Integer, OutData: Integer)
+}
+
+class TGIOPort {
+  + PanelCaption: string
+  + PanelHeight: integer
+  + PanelLeft: integer
+  + PanelTop: integer
+  + PanelWidth: integer
+}
+
+TIOPort <|-- TGIOPort
+
+package "Plugin API" {
+  class TCreatePortFunc <<delegate>>
+  class TDestroyPortProc <<delegate>>
+  class TCreatePanelProc <<delegate>>
+  class TShowPanelProc <<delegate>>
+  class THidePanelProc <<delegate>>
+  class TFreePanelProc <<delegate>>
+  class TMovePanelProc <<delegate>>
+  class TRenamePanelProc <<delegate>>
+  class TResizePanelProc <<delegate>>
+}
+
+class TForm1 {
+  - CurrentPort: TIOPort
+  - LoadedPlugin: TPluginAttributes
+  - FIgnoreHelp: Boolean
+  - FLoadCounter: Integer
+  - FEXEDirectory: string
+  - FPluginDirectory: string
+  - FSystemLanguage: string
+  - FUserDirectory: string
+  - RefreshProperties(Direction: TOpDirection)
+  - ImpExpProperties(Direction: TOpDirection)
+  - SetIgnoreHelp(AIgnoreHelp: Boolean)
+  - SetPluginDirectory(APluginDirectory: string)
+  + IgnoreHelp: Boolean
+  + EXEDirectory: string
+  + PluginDirectory: string
+  + SystemLanguage: string
+  + UserDirectory: string
+}
+
+TForm2 .up.> TAboutLabels : uses
+TForm1 .up.> TPluginAttributes : uses
+TForm1 .up.> TOpDirection : uses
+TForm1 --> TForm2 : opens
+TForm1 --> TForm3 : opens
+TForm1 --> TForm4 : opens
+TForm1 o--> TIOPort : CurrentPort
+TPluginAttributes --> TLineMode : uses
+TForm1 ..> TGIOPort : casts
+TForm1 ..> TCreatePortFunc : uses
+
+@enduml

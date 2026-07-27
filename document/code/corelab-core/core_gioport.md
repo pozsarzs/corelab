@@ -4,54 +4,55 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TGIOPort class
+## TGIOPort from TIOPort class in core_gioport unit
 
 The TGIOPort class complements the TIOPort parent class with properties and
 methods that can handle the graphical interface of the port or device.
 
+### Abbreviations
+
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
+
 ### Protected fields
 
-|name         |type   |C|description                 |default|
-|-------------|-------|-|----------------------------|:-----:|
-|FPanelForm   |TForm  | |GUI panel for port or device|       |
-|FPanelCaption|PChar  | |Panel caption               |'MyIO' |
-|FPanelHeight |Integer| |Panel height                |100    |
-|FPanelLeft   |Integer| |Panel left position         |16     |
-|FPanelTop    |Integer| |Panel top position          |16     |
-|FPanelWidth  |Integer| |Panel width                 |100    |
-
-**Note**:  
-- _C_: means 'constant'.
+|name         |type   |flags|description                 |default|
+|-------------|-------|:---:|----------------------------|-------|
+|FPanelForm   |TForm  |     |GUI panel for port or device|       |
+|FPanelCaption|PChar  |     |Panel caption               |'MyIO' |
+|FPanelHeight |Integer|     |Panel height                |100    |
+|FPanelLeft   |Integer|     |Panel left position         |16     |
+|FPanelTop    |Integer|     |Panel top position          |16     |
+|FPanelWidth  |Integer|     |Panel width                 |100    |
 
 ### Public properties
 
-|name        |type   |R|W|description    |default|
-|------------|-------|-|-|---------------|:-----:|
-|PanelCaption|PChar  |x| |= FPanelCaption|       |
-|PanelHeight |integer|x| |= FPanelHeight |       |
-|PanelLeft   |integer|x| |= FPanelLeft   |       |
-|PanelTop    |integer|x| |= FPanelTop    |       |
-|PanelWidth  |integer|x| |= FPanelWidth  |       |
-
-**Note**:  
-- _R_: means 'read',
-- _W_: means 'write'.
+|name        |type   |flags|description    |default|
+|------------|-------|:---:|---------------|-------|
+|PanelCaption|PChar  |Re   |= FPanelCaption|       |
+|PanelHeight |Integer|Re   |= FPanelHeight |       |
+|PanelLeft   |Integer|Re   |= FPanelLeft   |       |
+|PanelTop    |Integer|Re   |= FPanelTop    |       |
+|PanelWidth  |Integer|Re   |= FPanelWidth  |       |
 
 ### Public methods
 
-|name                                                    |V|A|O|description                               |
-|--------------------------------------------------------|-|-|-|------------------------------------------|
-|`constructor Create;`                                   |x| | |Sets the initial values for the new object|
-|`destructor Destroy;`                                   | | |x|Frees the object's resources              |
-|`function MovePanel(Left, Top: Integer): Boolean;`      |x| | |Move panel                                |
-|`function ResizePanel(Width, Height: Integer): Boolean;`|x| | |Resize panel                              |
-|`procedure CreatePanel;`                                |x|x| |Create panel                              |
-|`procedure FreePanel;`                                  |x| | |Destroy panel                             |
-|`procedure HidePanel;`                                  |x| | |Hide panel                                |
-|`procedure RenamePanel(Caption: PChar);`                |x| | |Rename panel                              |
-|`procedure ShowPanel;`                                  |x| | |Show panel                                |
-
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+|name                                                    |flags |description                               |
+|--------------------------------------------------------|:----:|------------------------------------------|
+|`constructor Create;`                                   |Vi    |Sets the initial values for the new object|
+|`destructor Destroy;`                                   |Or    |Frees the object's resources              |
+|`function MovePanel(Left, Top: Integer): Boolean;`      |Vi    |Move panel                                |
+|`function ResizePanel(Width, Height: Integer): Boolean;`|Vi    |Resize panel                              |
+|`procedure CreatePanel;`                                |Vi, Ab|Create panel                              |
+|`procedure FreePanel;`                                  |Vi    |Destroy panel                             |
+|`procedure HidePanel;`                                  |Vi    |Hide panel                                |
+|`procedure RenamePanel(Caption: PChar);`                |Vi    |Rename panel                              |
+|`procedure ShowPanel;`                                  |Vi    |Show panel                                |

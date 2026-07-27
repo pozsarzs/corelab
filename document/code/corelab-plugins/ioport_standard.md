@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TStandardPort class
+## TStandardPort from TGIOPort class in ioport_standard unit
 
 TStandardPort is a module implementing general-purpose input and output
 operations from the TGIOPort class. It has its own graphical interface, which
@@ -12,32 +12,41 @@ in a simple window provides the possibility to display the (output) values sent
 to the port in hexadecimal format, as well as to manually specify the (input)
 values​to be read from it.
 
-### Modified inherited protected fields
+### UML diagram
 
-|name          |type   |C|description      |value|
-|--------------|-------|-|-----------------|:---:|
-|FDescription  |PChar  | |Short description|     |
-|FHasPanel     |Boolean| |Has GUI panel    |true |
-|FLatchedOutput|Boolean| |Store output data|true |
-|FModName      |PChar  | |Module name      |     |
+![Class diagram](../diagrams/_png/ioport.png "IOPort plugin class diagram")
 
-**Note**:  
-- _C_: means 'constant'.
+### Abbreviations
 
-### Own public methods
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
 
-|name                                           |V|A|O|description                               |
-|-----------------------------------------------|-|-|-|------------------------------------------|
-|`constructor Create;`                          | | |x|Sets the initial values for the new object|
-|`destructor Destroy;`                          | | |x|Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         | | |x|Read virtual port                         |
-|`procedure Reset;`                             | | |x|Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`| | |x|Write virtual port                        |
+### Protected fields
 
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+|name          |type   |flags|description      |default|
+|--------------|-------|:---:|-----------------|-------|
+|FDescription  |PChar  |     |Short description|       |
+|FHasPanel     |Boolean|     |Has GUI panel    |true   |
+|FLatchedOutput|Boolean|     |Store output data|true   |
+|FModName      |PChar  |     |Module name      |       |
+
+### Public methods
+
+|name                                           |flags|description                               |
+|-----------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                          |Or   |Sets the initial values for the new object|
+|`destructor Destroy;`                          |Or   |Frees the object's resources              |
+|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
+|`procedure Reset;`                             |Or   |Reset virtual port                        |
+|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
 
 ### Exported functions and procedures
 

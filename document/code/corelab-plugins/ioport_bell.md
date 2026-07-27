@@ -4,37 +4,46 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TBELLPort class
+## TBELLPort from TIOPort class in ioport_bell unit
 
 TBELLPort is an I/O port that simulates a simple, write-only output peripheral
 derived from the TIOPort abstract base class. Its function is to trigger beeps:
 if the value written to the virtual port is greater than zero, the framework
 generates a beep.
 
-### Modified inherited protected fields
+### UML diagram
 
-|name        |type |C|description      |value|
-|------------|-----|-|-----------------|:---:|
-|FDescription|PChar| |Short description|     |
-|FModName    |PChar| |Module name      |     |
+![Class diagram](../diagrams/_png/ioport.png "IOPort plugin class diagram")
 
-**Note**:  
-- _C_: means 'constant'.
+### Abbreviations
 
-### Own public methods
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
 
-|name                                           |V|A|O|description                               |
-|-----------------------------------------------|-|-|-|------------------------------------------|
-|`constructor Create;`                          | | |x|Sets the initial values for the new object|
-|`destructor Destroy;`                          | | |x|Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         | | |x|Read virtual port                         |
-|`procedure Reset;`                             | | |x|Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`| | |x|Write virtual port                        |
+### Protected fields
 
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+|name        |type |flags|description      |default|
+|------------|-----|:---:|-----------------|-------|
+|FDescription|PChar|     |Short description|       |
+|FModName    |PChar|     |Module name      |       |
+
+### Public methods
+
+|name                                           |flags|description                               |
+|-----------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                          |Or   |Sets the initial values for the new object|
+|`destructor Destroy;`                          |Or   |Frees the object's resources              |
+|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
+|`procedure Reset;`                             |Or   |Reset virtual port                        |
+|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
 
 ### Exported functions and procedures
 
@@ -43,7 +52,7 @@ generates a beep.
 - on Windows: `stdcall`,
 - on Unix-like OS: `cdecl`.
 
-|name                                    |exported name |description     |
-|----------------------------------------|--------------|----------------|
-|`function CreatePort: TIOPort;`         |ioport_create |Create instance |
-|`procedure DestroyPort(Port: TIOPort));`|ioport_destroy|Destroy instance|
+|name                                    |exported name |description |
+|----------------------------------------|--------------|------------|
+|`function CreatePort: TIOPort;`         |ioport_create |Create port |
+|`procedure DestroyPort(Port: TIOPort));`|ioport_destroy|Destroy port|

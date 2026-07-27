@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | createpic                                                                  |
+# | Create UML diagram picture                                                 |
+# +----------------------------------------------------------------------------+
+
+format='png svg'
+project=`ls`
+
+if command -v plantuml >/dev/null 2>&1; then
+  for y in $project; do
+    for x in $format; do
+      if [ -f $y/$y.puml ]; then
+        echo "$y.puml -> .$x"
+        plantuml -t"$x" -o"../_$x" "$y/$y.puml"
+      fi
+    done
+  done
+else
+  echo "ERROR: The PlantUML is not installed."
+fi

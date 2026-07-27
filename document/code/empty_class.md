@@ -4,9 +4,28 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## ... base class
+## ... base class in ... unit
+
+## ... from ... class in ... unit
 
 (...)
+
+### UML diagram
+
+![Alternate Text](image_path "Optional tooltip title")
+
+### Abbreviations
+
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
 
 ### Own data types
 
@@ -22,37 +41,37 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ### Protected fields
 
-|name|type|C|description|default|
-|----|----|-|-----------|:-----:|
-|    |    | |           |       |
-
-**Note**:  
-- _C_: means 'constant'.
+|name|type|flags|description|default|
+|----|----|:---:|-----------|-------|
+|    |    |     |           |       |
 
 ### Protected methods
 
-|name |V|A|description|
-|-----|-|-|-----------|
-|` `  | | |           |
+|name |flags|description|
+|-----|:---:|-----------|
+|` `  |     |           |
 
 ### Public properties
 
-|name|type|R|W|description|default|
-|----|----|-|-|-----------|-------|
-|    |    | | |=          |       |
-
-**Note**:  
-- _R_: means 'read',
-- _W_: means 'write'.
+|name|type|flags|description|default|
+|----|----|:---:|-----------|-------|
+|    |    |     |=          |       |
 
 ### Public methods
 
-|name                 |V|A|O|description                               |
-|---------------------|-|-|-|------------------------------------------|
-|`constructor Create;`|x| | |Sets the initial values for the new object|
-|`destructor Destroy;`|x| | |Frees the object's resources              |
+|name                 |flags|description                               |
+|---------------------|:---:|------------------------------------------|
+|`constructor Create;`|Vi   |Sets the initial values for the new object|
+|`destructor Destroy;`|Or   |Frees the object's resources              |
 
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+### Exported functions and procedures
+
+**Calling mode:**  
+
+- on Windows: `stdcall`,
+- on Unix-like OS: `cdecl`.
+
+|name                                    |exported name |description |
+|----------------------------------------|--------------|------------|
+|`function CreatePort: TIOPort;`         |ioport_create |Create port |
+|`procedure DestroyPort(Port: TIOPort));`|ioport_destroy|Destroy port|

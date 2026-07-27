@@ -4,45 +4,50 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TToken base class
+## TToken base class in Token unit
 
 TToken is a fundamental data structure in the CoreLAB parsing system. It
 represents a single lexical unit, such as a keyword, identifier, or symbol,
 extracted from the input command line during the tokenization process.
 
+### UML diagram
+
+![Class diagram](../diagrams/_png/commandengine.png "CoreLAB CommandEngine class diagram")
+
+### Abbreviations
+
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
+
 ### Own data types
 
-|name      |type                          |description   |
-|----------|------------------------------|--------------|
-|TTokenList|specialize TObjectList<TToken>|TokenList type| 
+|name      |type                            |description   |
+|----------|--------------------------------|--------------|
+|TTokenList|specialize TObjectList\<TToken\>|TokenList type| 
 
 ### Protected fields
 
-|name    |type  |C|description             |default|
-|--------|------|-|------------------------|:-----:|
-|FRawText|string| |Token in raw text format|       |                                       |       |
-
-**Note**:  
-- _C_: means 'constant'.
+|name    |type  |flags|description             |default|
+|--------|------|:---:|------------------------|-------|
+|FRawText|string|     |Token in raw text format|       |
 
 ### Public properties
 
-|name            |type            |R|W|description        |default|
-|----------------|----------------|-|-|-------------------|-------|
-|RawText         |                |x| |= FRawText         |       |
-
-**Note**:  
-- _R_: means 'read',
-- _W_: means 'write'.
+|name   |type  |flags|description|default|
+|-------|------|:---:|-----------|-------|
+|RawText|string|Re   |= FRawText |       |
 
 ### Public methods
 
-|name                                                      |V|A|O|description                               |
-|----------------------------------------------------------|-|-|-|------------------------------------------|
-|`constructor Create(const ARawText: string); reintroduce;`|x| | |Sets the initial values for the new object|
-|`destructor Destroy;`                                     | | |x|Frees the object's resources              |
-
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+|name                                         |flags |description                               |
+|---------------------------------------------|:----:|------------------------------------------|
+|`constructor Create(const ARawText: string);`|Vi, Re|Sets the initial values for the new object|
+|`destructor Destroy;`                        |Or    |Frees the object's resources              |

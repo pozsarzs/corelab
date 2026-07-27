@@ -4,11 +4,28 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## TCommandContext base class
+## TCommandContext base class in CommandContext unit
 
 TCommandContext is the base class that provides the context for executing
 commands. It manages the variables and constants used during the simulator's
 execution (TContextDict), as well as the text output buffer (FOutput).
+
+### UML diagram
+
+![Class diagram](../diagrams/_png/commandengine.png "CoreLAB CommandEngine class diagram")
+
+### Abbreviations
+
+- _Ab_: means 'abstract',
+- _Co_: means 'constant',
+- _Il_: means 'inline',
+- _Ol_: means 'overload',
+- _Or_: means 'override',
+- _Re_: means 'read',
+- _Ri_: means 'reintroduce',
+- _St_: means 'static',
+- _Vi_: means 'virtual',
+- _Wr_: means 'write'.
 
 ### Own data types
 
@@ -21,38 +38,27 @@ execution (TContextDict), as well as the text output buffer (FOutput).
 
 ### Protected fields
 
-|name      |type        |C|description                                              |default|
-|----------|------------|-|---------------------------------------------------------|:-----:|
-|FOutput   |TStrings    | |Buffer for command execution output strings              |       |
-|FVariables|TContextDict| |Dictionary containing the context variables and constants|       |
+|name      |type        |flags|description                                              |default|
+|----------|------------|:---:|---------------------------------------------------------|-------|
+|FOutput   |TStrings    |     |Buffer for command execution output strings              |       |
+|FVariables|TContextDict|     |Dictionary containing the context variables and constants|       |
 
-**Note**:  
-- _C_: means 'constant'.
 
 ### Public properties
 
-|name  |type    |R|W|description|default|
-|------|--------|-|-|-----------|-------|
-|Output|TStrings|x|x|= FOutput  |       |
-
-**Note**:  
-- _R_: means 'read',
-- _W_: means 'write'.
+|name  |type    |flags |description|default|
+|------|--------|:----:|-----------|-------|
+|Output|TStrings|Re, Wr|= FOutput  |       |
 
 ### Public methods
 
-|name                                                      |V|A|O|description                                       |
-|----------------------------------------------------------|-|-|-|--------------------------------------------------|
-|`constructor Create;`                                     |x| | |Sets the initial values for the new object        |
-|`destructor Destroy;`                                     | | |x|Frees the object's resources                      |
-|`function GetConst(const AName: string): string;`         |x| | |Retrieves the value of a constant by its name     |
-|`function GetVar(const AName: string): string;`           |x| | |Retrieves the value of a variable by its name     |
-|`function SetConst(const AName, AValue: string): Boolean;`|x| | |Sets a new constant or updates its value          |
-|`function SetVar(const AName, AValue: string): Boolean;`  |x| | |Sets a new variable or updates its value          |
-|`procedure Clear;`                                        |x| | |Clears all context variables and the output buffer|
-|`procedure WriteOutput(const AText: string);`             |x| | |Appends a text string to the output buffer        |
-
-**Note**:  
-- _V_: means 'virtual' method,
-- _A_: means 'abstract' method,
-- _O_: means 'override' method.
+|name                                                      |flags|description                                       |
+|----------------------------------------------------------|:---:|--------------------------------------------------|
+|`constructor Create;`                                     |Vi   |Sets the initial values for the new object        |
+|`destructor Destroy;`                                     |Or   |x|Frees the object's resources                    |
+|`function GetConst(const AName: string): string;`         |Vi   |Retrieves the value of a constant by its name     |
+|`function GetVar(const AName: string): string;`           |Vi   |Retrieves the value of a variable by its name     |
+|`function SetConst(const AName, AValue: string): Boolean;`|Vi   |Sets a new constant or updates its value          |
+|`function SetVar(const AName, AValue: string): Boolean;`  |Vi   |Sets a new variable or updates its value          |
+|`procedure Clear;`                                        |Vi   |Clears all context variables and the output buffer|
+|`procedure WriteOutput(const AText: string);`             |Vi   |Appends a text string to the output buffer        |
