@@ -15,7 +15,7 @@ library ioport_switch16mux;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-  Cmem, Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport,
+  CMem, Classes, Interfaces, Forms, StdCtrls, SysUtils, Buttons, core_ioport,
   core_gioport;
 const
   MAXX = 3;
@@ -25,28 +25,39 @@ type
   TSwitch16MUX = class(TGIOPort)
   protected
     FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                    // Switches
-    SelLine: integer;
-    procedure AllRelease(mx, my: byte);
+    SelLine: Integer;
+    procedure AllRelease(mx, my: Byte);
+    procedure FSBOnClick(Sender: TObject);
   public
     constructor Create; override;
     destructor Destroy; override;
-    // - port
-    function ReadPort(Port: byte): byte; override;
-    procedure Reset;  override;
-    procedure WritePort(Port: byte; Value: byte); override;
-    // - panel
+    procedure Reset; override;
+    function ReadPort(APort: Word): Byte; override;
+    procedure WritePort(APort: Word; Value: Byte); override;
+    function LoadState(AStream: TStream): Boolean; override;
+    function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
 
+// ---- PROTECTED METHODS ----
+
 // RELEASE ALL SWITCHES
-procedure TSwitch16MUX.AllRelease(mx, my: byte);
+procedure TSwitch16MUX.AllRelease(mx, my: Byte);
 var
-  x, y: byte;
+  x, y: Byte;
 begin
   for x := 0 to mx do
     for y := 0 to my do
       FSB[x, y].Down := false;
 end;
+
+// COMMON ONCLICK EVENT
+procedure TSwitch16MUX.FSBOnClick(Sender: TObject);
+begin
+  RequestInterrupt;
+end;
+
+// ---- PUBLIC METHODS ----
 
 // CREATE TSWITCH16MUX INSTANCE
 constructor TSwitch16MUX.Create;
@@ -67,14 +78,21 @@ begin
   inherited Destroy;
 end;
 
+// RESET VIRTUAL PORT
+procedure TSwitch16MUX.Reset;
+begin
+  SelLine := 0;
+  AllRelease(MAXX, MAXY);
+end;
+
 // READ VIRTUAL PORT
-function TSwitch16MUX.ReadPort(Port: byte): byte;
+function TSwitch16MUX.ReadPort(APort: Word): Byte;
 var
-  Value: byte;
-  x, y: byte;
+  Value: Byte;
+  x, y: Byte;
 begin
   Result := $FF;
-  if FEnabled and (Port = 0) then
+  if FEnabled and (APort = 0) then
   begin
     if (SelLine < 0) or (SelLine > MAXX) then exit;
     x := SelLine;
@@ -86,19 +104,12 @@ begin
   end;
 end;
 
-// RESET VIRTUAL PORT
-procedure TSwitch16MUX.Reset;
-begin
-  SelLine := 0;
-  AllRelease(MAXX, MAXY);
-end;
-
 // WRITE VIRTUAL PORT
-procedure TSwitch16MUX.WritePort(Port: byte; Value: byte);
+procedure TSwitch16MUX.WritePort(APort: Word; Value: Byte);
 var
-  i: integer;
+  i: Integer;
 begin
-  if FEnabled and (Port = 1) then
+  if FEnabled and (APort = 1) then
   begin
     i := -1;
     case FSelMode of
@@ -120,17 +131,55 @@ begin
   end;
 end;
 
+// LOAD SAVED STATE
+function TSwitch16MUX.LoadState(AStream: TStream): Boolean;
+var
+  x, y: Byte;
+  o:    Boolean;
+begin
+  Result := inherited LoadState(AStream);
+  if Result then
+    try
+      // button status
+      for x := 0 to MAXX do
+        for y := 0 to MAXY do
+        begin
+          AStream.ReadBuffer(o, SizeOf(o));
+          FSB[x, y].Down := o;
+        end;
+    except
+      Result := false;
+    end;
+end;
+
+// SAVE ACTUAL STATE
+function TSwitch16MUX.SaveState(AStream: TStream): Boolean;
+var
+  x, y: Byte;
+  o:    Boolean;
+begin
+  Result := inherited SaveState(AStream);
+  if Result then
+    // button status
+    for x := 0 to MAXX do
+      for y := 0 to MAXY do
+      begin
+        o := FSB[x, y].Down;
+        AStream.WriteBuffer(o, SizeOf(o));
+      end;
+end;
+
 // CREATE PANEL
 procedure TSwitch16MUX.CreatePanel;
 var
-  x, y: byte;
+  x, y: Byte;
 begin
   if Assigned(FPanelForm) then exit;
 
   FPanelForm := TForm.Create(nil);
   with FPanelForm do
   begin
-    Caption := FPanelCaption;
+    Caption := StrPas(FPanelCaption);
     Position := poDesigned;
     BorderIcons := [biSystemMenu, biMinimize];
     FPanelLeft := Left;
@@ -157,6 +206,7 @@ begin
         if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
         Height := 34;
         Width := Height;
+        OnClick := @FSBOnClick;
       end;
     end;
 
@@ -169,73 +219,99 @@ begin
   end;
 end;
 
-// EXPORTABLE FUNCTIONS AND PROCEDURES
+// ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
+
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
   Result := TSwitch16MUX.Create;
 end;
 
-procedure DestroyPort(Port: TIOPort); CALLTYPE; export;
+procedure DestroyPort(APort: TIOPort); CALLTYPE; export;
 begin
-  if Assigned(Port) then Port.Free;
+  if Assigned(APort) then APort.Free;
 end;
 
-procedure CreatePanel(Port: TIOPort); CALLTYPE; export;
+procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte); CALLTYPE; export;
 begin
-  if Assigned(Port) and (Port is TSwitch16MUX) then
-    TSwitch16MUX(Port).CreatePanel;
+  if Assigned(APort) then
+  begin
+    APort.OnInterrupt := AIntProc;
+    APort.IntVector := AIntVect;
+  end;
 end;
 
-procedure FreePanel(Port: TIOPort); CALLTYPE; export;
+function LoadState(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE; export;
 begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).FreePanel;
+  if Assigned(APort)
+    then Result := APort.LoadState(AStream)
+    else Result := false;
 end;
 
-procedure HidePanel(Port: TIOPort); CALLTYPE; export;
+function SaveState(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE; export;
 begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).HidePanel;
+  if Assigned(APort)
+    then Result := APort.SaveState(AStream)
+    else Result := false;
 end;
 
-function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean; CALLTYPE; export;
+procedure CreatePanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TSwitch16MUX)
+    then TSwitch16MUX(APort).CreatePanel;
+end;
+
+procedure FreePanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).FreePanel;
+end;
+
+procedure ShowPanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).ShowPanel;
+end;
+
+procedure HidePanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).HidePanel;
+end;
+
+procedure RenamePanel(APort: TIOPort; ACaption: PChar); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).RenamePanel(ACaption);
+end;
+
+function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean; CALLTYPE; export;
 begin
   Result := False;
-  if Assigned(Port) and (Port is TGIOPort) then
-    Result := TGIOPort(Port).MovePanel(Left, Top);
+  if Assigned(APort) and (APort is TGIOPort)
+    then Result := TGIOPort(APort).ResizePanel(AWidth, AHeight);
 end;
 
-procedure RenamePanel(Port: TIOPort; Caption: PChar); CALLTYPE; export;
-begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).RenamePanel(Caption);
-end;
-
-function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean; CALLTYPE; export;
+function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean; CALLTYPE; export;
 begin
   Result := False;
-  if Assigned(Port) and (Port is TGIOPort) then
-    Result := TGIOPort(Port).ResizePanel(Width, Height);
+  if Assigned(APort) and (APort is TGIOPort)
+    then Result := TGIOPort(APort).MovePanel(ALeft, ATop);
 end;
 
-procedure ShowPanel(Port: TIOPort); CALLTYPE; export;
-begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).ShowPanel;
-end;
+// ---- EXPORTED FUNCTIONS AND PROCEDURES ----
 
-// EXPORTED FUNCTIONS AND PROCEDURES
-// - port
 exports CreatePort name 'ioport_create';
 exports DestroyPort name 'ioport_destroy';
-// - panel
+exports SetIntHandler name 'ioport_setinthandler';
+exports LoadState name 'ioport_loadstate';
+exports SaveState name 'ioport_savestate';
 exports CreatePanel name 'ioport_createpanel';
 exports FreePanel name 'ioport_freepanel';
 exports HidePanel name 'ioport_hidepanel';
-exports MovePanel name 'ioport_movepanel';
+exports ShowPanel name 'ioport_showpanel';
 exports RenamePanel name 'ioport_renamepanel';
 exports ResizePanel name 'ioport_resizepanel';
-exports ShowPanel name 'ioport_showpanel';
+exports MovePanel name 'ioport_movepanel';
 
 begin
 end.

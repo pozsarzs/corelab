@@ -63,17 +63,17 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 |name                                                     |flags|description|
 |---------------------------------------------------------|:---:|-----------| 
-|`procedure ImpExpProperties(Direction: TOpDirection);`   |     |           |
-|`procedure RefreshProperties(Direction: TOpDirection);`  |     |           |
-|`procedure SetIgnoreHelp(AIgnoreHelp: Boolean);`         |     |           |
-|`procedure SetPluginDirectory(APluginDirectory: string);`|     |           |
+|`procedure ImpExpProperties(aDirection: TOpDirection);`  |     |           |
+|`procedure RefreshProperties(aDirection: TOpDirection);` |     |           |
+|`procedure SetIgnoreHelp(aIgnoreHelp: Boolean);`         |     |           |
+|`procedure SetPluginDirectory(aPluginDirectory: string);`|     |           |
 
 ### Public properties
 
-|name           |type   |flags |description                            |default|
-|---------------|-------|:----:|---------------------------------------|-------|
-|IgnoreHelp     |Boolean|Re, Wr|= FIgnoreHelp / SetIgnoreHelp          |       |
-|EXEDirectory   |string |Re    |= FEXEDirectory                        |       |
-|PluginDirectory|string |Re, Wr|= FPluginDirectory / SetPluginDirectory|       |
-|SystemLanguage |string |Re    |= FSystemLanguage                      |       |
-|UserDirectory  |string |Re    |= FUserDirectory                       |       |
+|name           |type   |flags |description                          |default|
+|---------------|-------|:----:|-------------------------------------|-------|
+|IgnoreHelp     |Boolean|Re, Wr|= FIgnoreHelp/SetIgnoreHelp          |       |
+|EXEDirectory   |string |Re    |= FEXEDirectory                      |       |
+|PluginDirectory|string |Re, Wr|= FPluginDirectory/SetPluginDirectory|       |
+|SystemLanguage |string |Re    |= FSystemLanguage                    |       |
+|UserDirectory  |string |Re    |= FUserDirectory                     |       |

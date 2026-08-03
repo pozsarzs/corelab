@@ -26,33 +26,40 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 
 ### Own data types
 
-|name                             |type                                                     |description                     |
-|---------------------------------|---------------------------------------------------------|--------------------------------|
-|TArchitecture                    |(arHarvard,arNeumann)                                    |Type of architecture            |
-|TTArchitectureHelper             |type helper for TArchitecture                            |Helper                          |
-|.ToString                        |String                                                   |Convert Enum -> String          |
-|.FromString(const AValue: string)|TArchitecture                                            |Convert String -> Enum          |
-|TEndianness                      |(enLittle, enBig)                                        |CPU byte order                  |
-|TEndiannessHelper                |type helper for TEndianness                              |Helper                          |
-|.ToString                        |string                                                   |Convert Enum -> String          |
-|.FromString(const AValue: string)|TEndianness                                              |Convert String -> Enum          |
-|TCPUEvent                        |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
-|TCPUEventHelper                  |type helper for TCPUEvent                                |Helper                          |
-|.ToString                        |string                                                   |Convert Enum -> String          |
-|.FromString(const AValue: string)|TCPUEvent                                                |Convert String -> Enum          |
-|TCPUEventHandler                 |`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
+|name                              |type                                                     |description                     |
+|----------------------------------|---------------------------------------------------------|--------------------------------|
+|TArchitecture                     |(arHarvard,arNeumann)                                    |Type of architecture            |
+|TTArchitectureHelper              |type helper for TArchitecture                            |Helper                          |
+|.ToString                         |string                                                   |Convert Enum -> String          |
+|.FromString(const Value: string)  |TArchitecture                                            |Convert String -> Enum          |
+|TEndianness                       |(enLittle, enBig)                                        |CPU byte order                  |
+|TEndiannessHelper                 |type helper for TEndianness                              |Helper                          |
+|.ToString                         |string                                                   |Convert Enum -> String          |
+|.FromString(const Value: string)  |TEndianness                                              |Convert String -> Enum          |
+|TCPUEvent                         |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
+|TCPUEventHelper                   |type helper for TCPUEvent                                |Helper                          |
+|.ToString                         |string                                                   |Convert Enum -> String          |
+|.FromString(const Value: string)  |TCPUEvent                                                |Convert String -> Enum          |
+|TCPUEventHandler                  |`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
+|TSemanticVersion                  |record                                                   |
+|.Major                            |Integer                                                  |
+|.Minor                            |Integer                                                  |
+|.Patch                            |Integer                                                  |
+|TSemanticVersionHelper            |type helper for TSemanticVersion                         |
+|.ToString                         |string                                                   |
+|.Compare(AOther: TSemanticVersion)|Integer                                                  |
 
 ### Own interfaces
 
-|name                                                |description                   |
-|----------------------------------------------------|------------------------------|
-|ICPUBus                                             |Generic CPU bus interface     |
-|`function CodeRead(Address: UInt64): Byte;`         |Read a byte from code memory  |
-|`function IORead(Port: UInt64): Byte;`              |Read a byte from I/O port     |
-|`function MemRead(Address: UInt64): Byte;`          |Read a byte from (data) memory|
-|`procedure CodeWrite(Address: UInt64; Value: Byte);`|Write a byte to code memory   |
-|`procedure IOWrite(Port: UInt64; Value: Byte);`     |Write a byte to I/O port      |
-|`procedure MemWrite(Address: UInt64; Value: Byte);` |Write a byte to (data) memory |
+|name                                                 |description                   |
+|-----------------------------------------------------|------------------------------|
+|ICPUBus                                              |Generic CPU bus interface     |
+|`function CodeRead(AAddress: UInt64): Byte;`         |Read a byte from code memory  |
+|`function IORead(APort: UInt64): Byte;`              |Read a byte from I/O port     |
+|`function MemRead(AAddress: UInt64): Byte;`          |Read a byte from (data) memory|
+|`procedure CodeWrite(AAddress: UInt64; Value: Byte);`|Write a byte to code memory   |
+|`procedure IOWrite(APort: UInt64; Value: Byte);`     |Write a byte to I/O port      |
+|`procedure MemWrite(AAddress: UInt64; Value: Byte);` |Write a byte to (data) memory |
 
 ### Protected fields
 
@@ -77,6 +84,13 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 |FOnEvent         |TCPUEventHandler|     |Event callback                         |       |
 |FRunning         |Boolean         |     |CPU execution state                    |false  |
 |FRegPtr          |array of ^QWord |     |Pointers to registers                  |       |
+
+### Protected methods
+
+|name                                                        |flags |description                               |
+|------------------------------------------------------------|:----:|------------------------------------------|
+|`procedure EmitEvent(AEvent: TCPUEvent);`                   |Vi    |
+|`procedure DoInterrupt(AEvent: TCPUEvent);`                 |Vi    |
 
 ### Public properties
 
@@ -115,6 +129,6 @@ I/O), and internal states, supporting both Neumann and Harvard architectures.
 |`procedure NMI;`                                            |Vi    |Signal non-maskable interrupt             |
 |`procedure Reset;`                                          |Vi, Ab|Reset CPU                                 |
 |`procedure Run;`                                            |Vi    |Start CPU execution                       |
-|`procedure SetRegister(const RegName: PChar; Value: QWord);`|Vi, Ab|Set register content                      |
+|`procedure SetRegister(const RegName: PChar; AValue: QWord);`|Vi, Ab|Set register content                      |
 |`procedure Step;`                                           |Vi    |Execute single instruction                |
 |`procedure Stop;`                                           |Vi    |Stop CPU execution                        |

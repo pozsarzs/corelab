@@ -41,14 +41,14 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; virtual;
-    procedure DrawToBuffer(InputData: TDisplayedData); virtual; abstract;
-    procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer); virtual; abstract;
     procedure Reset; virtual;
-    procedure SetBlank(Status: Boolean); virtual;
-    procedure SetLeftDot(Status: Boolean); virtual;
-    procedure SetRightDot(Status: Boolean); virtual;
-    procedure SetSegments(Value: Byte); virtual;
-    procedure SetValue(Value: Byte); virtual;
+    procedure DrawToBuffer(AInputData: TDisplayedData); virtual; abstract;
+    procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer); virtual; abstract;
+    procedure SetBlank(AStatus: Boolean); virtual;
+    procedure SetLeftDot(AStatus: Boolean); virtual;
+    procedure SetRightDot(AStatus: Boolean); virtual;
+    procedure SetSegments(AValue: Byte); virtual;
+    procedure SetValue(AValue: Byte); virtual;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
     property ModName: PChar read FModname;
@@ -86,37 +86,37 @@ begin
 end;
 
 // BLANK DISPLAY
-procedure TDisplay.SetBlank(Status: Boolean);
+procedure TDisplay.SetBlank(AStatus: Boolean);
 begin
-  FDisplayedData.Blank := Status;
+  FDisplayedData.Blank := AStatus;
   DrawToBuffer(FDisplayedData);
 end;
 
 // SET LEFT DECIMAL POINT STATUS
-procedure TDisplay.SetLeftDot(Status: Boolean);
+procedure TDisplay.SetLeftDot(AStatus: Boolean);
 begin
-  FDisplayedData.LeftDot := Status;
+  FDisplayedData.LeftDot := AStatus;
   DrawToBuffer(FDisplayedData);
 end;
 
 // SET RIGHT DECIMAL POINT STATUS
-procedure TDisplay.SetRightDot(Status: Boolean);
+procedure TDisplay.SetRightDot(AStatus: Boolean);
 begin
-  FDisplayedData.RightDot := Status;
+  FDisplayedData.RightDot := AStatus;
   DrawToBuffer(FDisplayedData);
 end;
 
 // SET INPUT BCD VALUE
-procedure TDisplay.SetValue(Value: Byte);
+procedure TDisplay.SetValue(AValue: Byte);
 begin
-  FDisplayedData.Value := Value and $0F;
+  FDisplayedData.Value := AValue and $0F;
   DrawToBuffer(FDisplayedData);
 end;
 
 // SET INPUT SEGMENT DATA
-procedure TDisplay.SetSegments(Value: Byte);
+procedure TDisplay.SetSegments(AValue: Byte);
 begin
-  FDisplayedData.Segments := Value;
+  FDisplayedData.Segments := AValue;
   DrawToBuffer(FDisplayedData);
 end;
 

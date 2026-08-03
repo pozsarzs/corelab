@@ -45,13 +45,13 @@ active bit can be high or low). The output returns the switches status.
 
 ### Public methods
 
-|name                                           |flags|description                               |
-|-----------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                          |Or   |Sets the initial values for the new object|
-|`destructor Destroy;`                          |Or   |Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
-|`procedure Reset;`                             |Or   |Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
+|name                                             |flags|description                               |
+|-------------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                            |Or   |Sets the initial values for the new object|
+|`destructor Destroy;`                            |Or   |Frees the object's resources              |
+|`function ReadPort(APort: Byte): Byte;`          |Or   |Read virtual port                         |
+|`procedure Reset;`                               |Or   |Reset virtual port                        |
+|`procedure WritePort(APort: Byte; AValue: Byte);`|Or   |Write virtual port                        |
 
 ### Exported functions and procedures
 
@@ -60,14 +60,14 @@ active bit can be high or low). The output returns the switches status.
 - on Windows: `stdcall`,
 - on Unix-like OS: `cdecl`.
 
-|name                                                                   |exported name     |description      |
-|-----------------------------------------------------------------------|------------------|-----------------|
-|`function CreatePort: TIOPort;`                                        |ioport_create     |Create port      |
-|`procedure DestroyPort(Port: TIOPort));`                               |ioport_destroy    |Destroy port     |
-|`function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean;`      |ioport_movepanel  |Move GUI panel   |
-|`function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean;`|ioport_resizepanel|Resize GUI panel |
-|`procedure CreatePanel(Port: TIOPort);`                                |ioport_createpanel|Create GUI panel |
-|`procedure FreePanel(Port: TIOPort);`                                  |ioport_freepanel  |Destroy GUI panel|
-|`procedure HidePanel(Port: TIOPort);`                                  |ioport_hidepanel  |Hide GUI panel   |
-|`procedure RenamePanel(Port: TIOPort; Caption: PChar);`                |ioport_renamepanel|Rename GUI panel |
-|`procedure ShowPanel(Port: TIOPort);`                                  |ioport_showpanel  |Show GUI panel   |
+|name                                                                      |exported name     |description      |
+|--------------------------------------------------------------------------|------------------|-----------------|
+|`function CreatePort: TIOPort;`                                           |ioport_create     |Create port      |
+|`procedure DestroyPort(APort: TIOPort));`                                 |ioport_destroy    |Destroy port     |
+|`function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;`      |ioport_movepanel  |Move GUI panel   |
+|`function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;`|ioport_resizepanel|Resize GUI panel |
+|`procedure CreatePanel(APort: TIOPort);`                                  |ioport_createpanel|Create GUI panel |
+|`procedure FreePanel(APort: TIOPort);`                                    |ioport_freepanel  |Destroy GUI panel|
+|`procedure HidePanel(APort: TIOPort);`                                    |ioport_hidepanel  |Hide GUI panel   |
+|`procedure RenamePanel(APort: TIOPort; ACaption: PChar);`                 |ioport_renamepanel|Rename GUI panel |
+|`procedure ShowPanel(APort: TIOPort);`                                    |ioport_showpanel  |Show GUI panel   |

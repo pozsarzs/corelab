@@ -43,6 +43,6 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ### Public methods
 
-|name                                             |flags|description                               |
-|-------------------------------------------------|:---:|------------------------------------------|
-|`procedure SetAboutLabels(Labels: TAboutLabels);`|     |                                          |
+|name                                              |flags|description                               |
+|--------------------------------------------------|:---:|------------------------------------------|
+|`procedure SetAboutLabels(aLabels: TAboutLabels);`|     |                                          |

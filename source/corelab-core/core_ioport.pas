@@ -16,14 +16,14 @@ unit core_ioport;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  SysUtils, TypInfo;
+  Classes, SysUtils, TypInfo;
 type
   TIOPort = class;
   // Data mode
   TLineMode = (lmDirect, lmBCD);
   TLineModeHelper = type helper for TLineMode
     function ToString: string;
-    function FromString(const AValue: string): TLineMode;
+    function FromString(const Value: string): TLineMode;
   end;
   // Version info
   TSemanticVersion = record
@@ -33,14 +33,14 @@ type
   end;
   TSemanticVersionHelper = type helper for TSemanticVersion
     function ToString: string;
-    function Compare(Other: TSemanticVersion): Integer;
+    function Compare(AOther: TSemanticVersion): Integer;
   end;
   // Callback procedure for interrupt
-  type TInterruptCallback = procedure(Sender: TIOPort; Vector: Byte) of object;
+  TInterruptCallback = procedure(Sender: TIOPort; Vector: Byte) of object;
   // I/O port (device) base class
   TIOPort = class
   protected
-    FAddressRangeSize: Byte;                               // Address range size
+    FAddressRangeSize: Word;                               // Address range size
     FDataInMode:       TLineMode;                   // Decoding input data lines
     FDataInNegation:   Boolean;             // Negation of databit (port -> CPU)
     FDataOutMode:      TLineMode;                  // Decoding output data lines
@@ -48,22 +48,28 @@ type
     FDescription:      PChar;                               // Short description
     FEnabled:          Boolean;           // Enable port without detach from bus
     FHasPanel:         Boolean;           // Does the implementation have a GUI?
+    FInstanceID:       Integer;                            // Module instance ID
+    FIntVector:        Byte;                                 // Interrupt vector
     FLatchedOutput:    Boolean;                                // Latched output
     FModname:          PChar;                                     // Module name
+    FOnInterrupt:      TInterruptCallback;   // Callback procedure for interrupt
     FReadBackOutput:   Boolean;         // Output port with read-back capability
     FSelMode:          TLineMode;              // Decoding matrix selector lines
     FSelNegation:      Boolean;              // Negation of matrix selector bits
     FVersion:          TSemanticVersion;                       // Module version
-    FIntVector:        Byte;                                 // Interrupt vector
-    FOnInterrupt:      TInterruptCallback;   // Callback procedure for interrupt
     procedure RequestInterrupt; virtual;    
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    function ReadPort(Port: Byte): Byte; virtual; abstract;
+    // SysBus side methods
     procedure Reset; virtual; abstract;
-    procedure WritePort(Port: Byte; Value: Byte); virtual; abstract;
-    property AddressRangeSize: Byte read FAddressRangeSize;
+    function ReadPort(APort: Word): Byte; virtual; abstract;
+    procedure WritePort(APort: Word; AValue: Byte); virtual; abstract;
+    // SrvBus side methods
+    function LoadState(AStream: TStream): Boolean; virtual;
+    function SaveState(AStream: TStream): Boolean; virtual;
+    // Properties
+    property AddressRangeSize: Word read FAddressRangeSize;
     property DataInMode: TLineMode read FDataInMode write FDataInMode;
     property DataInNegation: Boolean read FDataInNegation write FDataInNegation;
     property DataOutMode: TLineMode read FDataOutMode write FDataOutMode;
@@ -72,6 +78,7 @@ type
     property Enabled: Boolean read FEnabled write FEnabled;
     property HasPanel: Boolean read FHasPanel;
     property IntVector: Byte read FIntVector write FIntVector;
+    property InstanceID: Integer read FInstanceID write FInstanceID;
     property LatchedOutput: Boolean read FLatchedOutput;
     property ModName: PChar read FModname;
     property OnInterrupt: TInterruptCallback read FOnInterrupt write FOnInterrupt;
@@ -83,15 +90,16 @@ type
 
 implementation
 
-// HELPER FOR OWN TYPES
+// --- HELPER FOR OWN TYPES ---
+
 function TLineModeHelper.ToString: string;
 begin
   WriteStr(Result, Self);
 end;
 
-function TLineModeHelper.FromString(const AValue: string): TLineMode;
+function TLineModeHelper.FromString(const Value: string): TLineMode;
 begin
-  Result := TLineMode(GetEnumValue(TypeInfo(TLineMode), AValue));
+  Result := TLineMode(GetEnumValue(TypeInfo(TLineMode), Value));
 end;
 
 function TSemanticVersionHelper.ToString: string;
@@ -99,18 +107,20 @@ begin
   Result := Format('%d.%d.%d', [Major, Minor, Patch]);
 end;
 
-function TSemanticVersionHelper.Compare(Other: TSemanticVersion): Integer;
+function TSemanticVersionHelper.Compare(AOther: TSemanticVersion): Integer;
 begin
   Result := 0;
-  if Other.Major > Major then Result := -1 else
-    if Other.Major < Major then Result := 1;
+  if AOther.Major > Major then Result := -1 else
+    if AOther.Major < Major then Result := 1;
   if Result = 0 then
-    if Other.Minor > Minor then Result := -1 else
-      if Other.Minor < Minor then Result := 1;
+    if AOther.Minor > Minor then Result := -1 else
+      if AOther.Minor < Minor then Result := 1;
   if Result = 0 then
-    if Other.Patch > Patch then Result := -1 else
-      if Other.Patch < Patch then Result := 1;
+    if AOther.Patch > Patch then Result := -1 else
+      if AOther.Patch < Patch then Result := 1;
 end;
+
+// ---- PROTECTED METHODS ----
 
 // REQUEST INTERRUPT
 procedure TIOPort.RequestInterrupt;
@@ -118,6 +128,8 @@ begin
   if FEnabled and Assigned(FOnInterrupt) then
     FOnInterrupt(Self, FIntVector);
 end;
+
+// ---- PUBLIC METHODS ----
 
 // CREATE TIOPORT INSTANCE
 constructor TIOPort.Create;
@@ -131,6 +143,8 @@ begin
   FDataOutNegation := false;
   FEnabled := false;
   FHasPanel := false;
+  FInstanceID := -1;
+  FIntVector := 0;
   FLatchedOutput := false;
   FModname := 'MyIO';
   FReadBackOutput := false;
@@ -148,6 +162,49 @@ end;
 destructor TIOPort.Destroy;
 begin
   inherited Destroy;
+end;
+
+// LOAD SAVED STATE
+function TIOPort.LoadState(AStream: TStream): Boolean;
+begin
+  Result := true;
+  with AStream do
+    try
+      // common fields
+      ReadBuffer(FEnabled, SizeOf(FEnabled));
+      // common fields related to IOPort
+      ReadBuffer(FDataInMode, SizeOf(FDataInMode));
+      ReadBuffer(FDataInNegation, SizeOf(FDataInNegation));
+      ReadBuffer(FDataOutMode, SizeOf(FDataOutMode));
+      ReadBuffer(FDataOutNegation, SizeOf(FDataOutNegation));
+      ReadBuffer(FSelMode, SizeOf(FSelMode));
+      ReadBuffer(FSelNegation, SizeOf(FSelNegation));
+      ReadBuffer(FIntVector, SizeOf(FIntVector));
+    except
+      Result := false;
+    end;
+end;
+
+// SAVE ACTUAL STATE
+function TIOPort.SaveState(AStream: TStream): Boolean;
+begin
+  Result := false;
+  if FInstanceID > -1 then
+    with AStream do
+    begin
+      // common fields
+      WriteBuffer(FEnabled, SizeOf(FEnabled));
+      // common fields related to IOPort
+      WriteBuffer(FDataInMode, SizeOf(FDataInMode));
+      WriteBuffer(FDataInNegation, SizeOf(FDataInNegation));
+      WriteBuffer(FDataOutMode, SizeOf(FDataOutMode));
+      WriteBuffer(FDataOutNegation, SizeOf(FDataOutNegation));
+      WriteBuffer(FSelMode, SizeOf(FSelMode));
+      WriteBuffer(FSelNegation, SizeOf(FSelNegation));
+      WriteBuffer(FIntVector, SizeOf(FIntVector));
+      // The FOnInterrupt method pointer cannot be saved, it must be set!
+      Result := true;
+    end;
 end;
 
 end.

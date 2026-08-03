@@ -36,25 +36,25 @@ required to run the instruction.
 
 ### Protected fields
 
-|name          |type         |flags|description                                                |default|
-|--------------|-------------|:---:|-----------------------------------------------------------|-------|
-|FActionName   |string       |     |Internal action name of the command                        |       |
-|FExitRequested|Boolean      | |Indicates whether the command requested to terminate the engine|       |
-|FMinParamCount|Byte         | |Minimum number of required parameters                          |       |
-|FMaxParamCount|Byte         | |Maximum number of allowed parameters                           |       |
-|FParamCount   |Byte         | |Actual number of parameters passed                             |       |
-|FCommandScope |TCommandScope| |Permitted execution scope for the command                      |       |
+|name          |type         |flags|description                                                    |default|
+|--------------|-------------|:---:|---------------------------------------------------------------|-------|
+|FActionName   |string       |     |Internal action name of the command                            |       |
+|FExitRequested|Boolean      |     |Indicates whether the command requested to terminate the engine|       |
+|FMinParamCount|Byte         |     |Minimum number of required parameters                          |       |
+|FMaxParamCount|Byte         |     |Maximum number of allowed parameters                           |       |
+|FParamCount   |Byte         |     |Actual number of parameters passed                             |       |
+|FCommandScope |TCommandScope|     |Permitted execution scope for the command                      |       |
 
 ### Public properties
 
-|name         |type         |flags |description                    |default|
-|-------------|-------------|:----:|-------------------------------|-------|
-|ActionName   |string       |Re    |= FActionName                  |       |
-|CommandScope |TCommandScope|Re    |= FCommandScope                |       |
-|ExitRequested|Boolean      |Re    |= read FExitRequested          |       |
-|MinParamCount|Byte         |Re    |= FMinParamCount               |       |
-|MaxParamCount|Byte         |Re    |= FMaxParamCount               |       |
-|ParamCount   |Byte         |Re, Wr|x|= FParamCount / SetParamCount|       |
+|name         |type         |flags |description                  |default|
+|-------------|-------------|:----:|-----------------------------|-------|
+|ActionName   |string       |Re    |= FActionName                |       |
+|CommandScope |TCommandScope|Re    |= FCommandScope              |       |
+|ExitRequested|Boolean      |Re    |= read FExitRequested        |       |
+|MinParamCount|Byte         |Re    |= FMinParamCount             |       |
+|MaxParamCount|Byte         |Re    |= FMaxParamCount             |       |
+|ParamCount   |Byte         |Re, Wr|x|= FParamCount/SetParamCount|       |
 
 ### Public methods
 

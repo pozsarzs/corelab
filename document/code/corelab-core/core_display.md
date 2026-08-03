@@ -59,15 +59,15 @@ the color settings responsible for the retro-style display.
 
 ### Public methods
 
-|name                                                       |flags |description                               |
-|-----------------------------------------------------------|:----:|------------------------------------------|
-|`constructor Create;`                                      |Vi    |Sets the initial values for the new object|
-|`destructor Destroy;`                                      |Vi    |Frees the object's resources              |
-|`procedure Reset;`                                         |Vi    |Reset display                             |
-|`procedure SetBlank(Status: Boolean);`                     |Vi    |Blank display                             |
-|`procedure SetLeftDot(Status: Boolean);`                   |Vi    |Set left decimal point status             |
-|`procedure SetRightDot(Status: Boolean);`                  |Vi    |Set right decimal point status            |
-|`procedure SetValue(Value: Byte);`                         |Vi    |Set input BCD value                       |
-|`procedure SetSegments(Value: Byte);`                      |Vi    |Set input segment data                    |
-|`procedure DrawToBuffer(InputData: TDisplayedData);`       |Vi, Ab|Draw displayed data to internal buffer    |
-|`procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer);`|Vi, Ab|Drawing to canvas of the target object    |
+|name                                                        |flags |description                               |
+|------------------------------------------------------------|:----:|------------------------------------------|
+|`constructor Create;`                                       |Vi    |Sets the initial values for the new object|
+|`destructor Destroy;`                                       |Vi    |Frees the object's resources              |
+|`procedure Reset;`                                          |Vi    |Reset display                             |
+|`procedure SetBlank(AStatus: Boolean);`                     |Vi    |Blank display                             |
+|`procedure SetLeftDot(AStatus: Boolean);`                   |Vi    |Set left decimal point status             |
+|`procedure SetRightDot(AStatus: Boolean);`                  |Vi    |Set right decimal point status            |
+|`procedure SetValue(AValue: Byte);`                         |Vi    |Set input BCD value                       |
+|`procedure SetSegments(AValue: Byte);`                      |Vi    |Set input segment data                    |
+|`procedure DrawToBuffer(AInputData: TDisplayedData);`       |Vi, Ab|Draw displayed data to internal buffer    |
+|`procedure RenderTo(ATargetCanvas: TCanvas; x, y: Integer);`|Vi, Ab|Drawing to canvas of the target object    |

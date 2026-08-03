@@ -15,7 +15,7 @@ library ioport_null;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-  CMem, core_ioport;
+  CMem, Classes, core_ioport;
 type
   // NULL device class
   TNULLPort = class(TIOPort)
@@ -23,10 +23,12 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
-    function ReadPort(Port: byte): byte; override;
-    procedure WritePort(Port: byte; Value: byte); override;
     procedure Reset; override;
+    function ReadPort(APort: Word): Byte; override;
+    procedure WritePort(APort: Word; AValue: Byte); override;
   end;
+
+// ---- PUBLIC METHODS ----
   
 // CREATE TNULLPORT INSTANCE
 constructor TNULLPort.Create;
@@ -44,36 +46,66 @@ begin
   inherited Destroy;
 end;
 
-// READ VIRTUAL PORT
-function TNULLPort.ReadPort(Port: byte): byte;
-begin
-  if FEnabled and (Port = 0) then Result := $00 else Result := $FF;
-end;
-
-// WRITE VIRTUAL PORT
-procedure TNULLPort.WritePort(Port: byte; Value: byte);
-begin
-end;
-
 // RESET VIRTUAL PORT
 procedure TNULLPort.Reset;
 begin
 end;
 
-// EXPORTABLE FUNCTIONS AND PROCEDURES
+// READ VIRTUAL PORT
+function TNULLPort.ReadPort(APort: Word): Byte;
+begin
+  if FEnabled and (APort = 0)
+    then Result := $00
+    else Result := $FF;
+end;
+
+// WRITE VIRTUAL PORT
+procedure TNULLPort.WritePort(APort: Word; AValue: Byte);
+begin
+end;
+
+// ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
+
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
   Result := TNULLPort.Create;
 end;
 
-procedure DestroyPort(Port: TIOPort); CALLTYPE; export;
+procedure DestroyPort(APort: TIOPort); CALLTYPE; export;
 begin
-  if Assigned(Port) then Port.Free;
+  if Assigned(APort) then APort.Free;
 end;
 
-// EXPORTED FUNCTIONS AND PROCEDURES
+procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte); CALLTYPE; export;
+begin
+  if Assigned(APort) then
+  begin
+    APort.OnInterrupt := AIntProc;
+    APort.IntVector := AIntVect;
+  end;
+end;
+
+function LoadState(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE; export;
+begin
+  if Assigned(APort)
+    then Result := APort.LoadState(AStream)
+    else Result := false;
+end;
+
+function SaveState(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE; export;
+begin
+  if Assigned(APort)
+    then Result := APort.SaveState(AStream)
+    else Result := false;
+end;
+
+// ---- EXPORTED FUNCTIONS AND PROCEDURES ----
+
 exports CreatePort name 'ioport_create';
 exports DestroyPort name 'ioport_destroy';
+exports SetIntHandler name 'ioport_setinthandler';
+exports LoadState name 'ioport_loadstate';
+exports SaveState name 'ioport_savestate';
 
 begin
 end.

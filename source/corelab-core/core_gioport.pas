@@ -16,10 +16,12 @@ unit core_gioport;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  Forms, SysUtils, TypInfo, core_ioport;
+  Classes, Forms, SysUtils, TypInfo, core_ioport;
 type
   // Graphical I/O port (device) class
   TGIOPort = class(TIOPort)
+  private
+    SPanelCaption: String;                // Internal variable for panel caption
   protected
     FPanelForm:    TForm;                                               // Panel
     FPanelCaption: PChar;                                       // Panel caption
@@ -28,15 +30,19 @@ type
     FPanelTop:     Integer;                                // Panel top position
     FPanelWidth:   Integer;                                       // Panel width
   public
-    constructor Create; virtual;
+    constructor Create; override;
     destructor Destroy; override;
-    function MovePanel(Left, Top: Integer): Boolean; virtual;
-    function ResizePanel(Width, Height: Integer): Boolean; virtual;
+    // SrvBus side methods
     procedure CreatePanel; virtual; abstract;
     procedure FreePanel; virtual;
-    procedure HidePanel; virtual;
-    procedure RenamePanel(Caption: PChar); virtual;
     procedure ShowPanel; virtual;
+    procedure HidePanel; virtual;
+    procedure RenamePanel(ACaption: PChar); virtual;
+    function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
+    function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
+    function LoadState(AStream: TStream): Boolean; override;
+    function SaveState(AStream: TStream): Boolean; override;
+    // Properties
     property PanelCaption: PChar read FPanelCaption;
     property PanelHeight: integer read FPanelHeight;
     property PanelLeft: integer read FPanelLeft;
@@ -46,16 +52,19 @@ type
 
 implementation
 
+// ---- PUBLIC METHODS ----
+
 // CREATE TGIOPORT INSTANCE
 constructor TGIOPort.Create;
 begin
   inherited Create;
   // Initial state
+  SPanelCaption := 'MyIO';
   FPanelLeft := 0;
   FPanelTop := 0;
   FPanelHeight := 0;
   FPanelWidth := 0;
-  FPanelCaption := 'MyIO';
+  FPanelCaption := PChar(SPanelCaption);
 end;
 
 // DESTROY TGIOPORT INSTANCE
@@ -65,38 +74,58 @@ begin
   inherited Destroy;
 end;
 
-// MOVE PANEL
-function TGIOPort.MovePanel(Left, Top: Integer): Boolean;
+// LOAD SAVED STATE
+function TGIOPort.LoadState(AStream: TStream): Boolean;
+var
+  l: Byte;
 begin
-  Result := False;
-  if (Left >= 0) and (Top >= 0) then
-  begin
-    FPanelLeft := Left;
-    FPanelTop := Top;
-    if Assigned(FPanelForm) then
-    begin
-      FPanelForm.Hide;
-      FPanelForm.SetBounds(FPanelLeft, FPanelTop, FPanelWidth, FPanelHeight);
-      FPanelForm.Show;
-      Result := True;
-    end;
-  end;
+  Result := inherited LoadState(AStream);
+  if Result then
+    with AStream do
+      try
+        ReadBuffer(l, 1);
+        SetLength(SPanelCaption, l);
+        if l > 0 then 
+          ReadBuffer(SPanelCaption[1], l);
+        FPanelCaption := PChar(SPanelCaption);
+
+        ReadBuffer(FPanelHeight, SizeOf(FPanelHeight));
+        ReadBuffer(FPanelLeft, SizeOf(FPanelLeft));
+        ReadBuffer(FPanelTop, SizeOf(FPanelTop));
+        ReadBuffer(FPanelWidth, SizeOf(FPanelWidth));
+
+        RenamePanel(FPanelCaption);
+        ResizePanel(FPanelWidth, FPanelHeight);
+        MovePanel(FPanelLeft, FPanelTop);
+      except
+        Result := false;
+      end;
 end;
 
-// RESIZE PANEL
-function TGIOPort.ResizePanel(Width, Height: Integer): Boolean;
+// SAVE ACTUAL STATE
+function TGIOPort.SaveState(AStream: TStream): Boolean;
+var
+  l: Byte;
 begin
-  Result := False;
-  if (Width >= 0) and (Height >= 0) then
-  begin
-    FPanelHeight := Height;
-    FPanelWidth := Width;
-    if Assigned(FPanelForm) then
+  Result := inherited SaveState(AStream);
+  if Result then
+    with AStream do
     begin
-      FPanelForm.SetBounds(FPanelLeft, FPanelTop, FPanelWidth, FPanelHeight);
-      Result := True;
+      // common fields
+      l := Length(SPanelCaption);
+      if l = 0 then
+      begin
+        SPanelCaption := 'MyIO';
+        l := Length(SPanelCaption);
+      end;
+      WriteBuffer(l, 1);
+      WriteBuffer(SPanelCaption[1], l);
+
+      WriteBuffer(FPanelHeight, SizeOf(FPanelHeight));
+      WriteBuffer(FPanelLeft, SizeOf(FPanelLeft));
+      WriteBuffer(FPanelTop, SizeOf(FPanelTop));
+      WriteBuffer(FPanelWidth, SizeOf(FPanelWidth));
     end;
-  end;
 end;
 
 // DESTROY PANEL
@@ -109,6 +138,12 @@ begin
   end;
 end;
 
+// SHOW PANEL
+procedure TGIOPort.ShowPanel;
+begin
+  if Assigned(FPanelForm) then FPanelForm.Show;
+end;
+
 // HIDE PANEL
 procedure TGIOPort.HidePanel;
 begin
@@ -116,21 +151,50 @@ begin
 end;
 
 // RENAME PANEL
-procedure TGIOPort.RenamePanel(Caption: PChar);
+procedure TGIOPort.RenamePanel(ACaption: PChar);
 begin
-  FPanelCaption := Caption;
+  SPanelCaption := StrPas(ACaption);
+  FPanelCaption := PChar(SPanelCaption);
   if Assigned(FPanelForm) then
   begin
-    FPanelForm.Caption := StrPas(FPanelCaption);
+    FPanelForm.Caption := SPanelCaption;
     FPanelForm.Invalidate;
     FPanelForm.Update;
   end;
 end;
 
-// SHOW PANEL
-procedure TGIOPort.ShowPanel;
+// RESIZE PANEL
+function TGIOPort.ResizePanel(AWidth, AHeight: Integer): Boolean;
 begin
-  if Assigned(FPanelForm) then FPanelForm.Show;
+  Result := False;
+  if (AWidth >= 0) and (AHeight >= 0) then
+  begin
+    FPanelHeight := AHeight;
+    FPanelWidth := AWidth;
+    if Assigned(FPanelForm) then
+    begin
+      FPanelForm.SetBounds(FPanelLeft, FPanelTop, FPanelWidth, FPanelHeight);
+      Result := True;
+    end;
+  end;
+end;
+
+// MOVE PANEL
+function TGIOPort.MovePanel(ALeft, ATop: Integer): Boolean;
+begin
+  Result := False;
+  if (ALeft >= 0) and (ATop >= 0) then
+  begin
+    FPanelLeft := ALeft;
+    FPanelTop := ATop;
+    if Assigned(FPanelForm) then
+    begin
+      FPanelForm.Hide;
+      FPanelForm.SetBounds(FPanelLeft, FPanelTop, FPanelWidth, FPanelHeight);
+      FPanelForm.Show;
+      Result := True;
+    end;
+  end;
 end;
 
 end.

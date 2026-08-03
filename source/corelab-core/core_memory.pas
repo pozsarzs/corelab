@@ -22,7 +22,7 @@ type
   TMemoryMode = (mmRAM, mmROM);
   TMemoryModeHelper = type helper for TMemoryMode
     function ToString: string;
-    function FromString(const AValue: string): TMemoryMode;
+    function FromString(const Value: string): TMemoryMode;
   end;
   // Version info
   TSemanticVersion = record
@@ -32,31 +32,31 @@ type
   end;
   TSemanticVersionHelper = type helper for TSemanticVersion
     function ToString: string;
-    function Compare(Other: TSemanticVersion): Integer;
+    function Compare(AOther: TSemanticVersion): Integer;
   end;
   // Abstract base I/O port class
   TMemory = class
   protected
-    FAddressRangeSize: dword;                              // Address range size
-    FDescription: PChar;                                    // Short description
-    FEnabled: Boolean;                  // Enable memory without detach from bus
-    FMemoryMode: TMemoryMode;                            //Memory operation mode
-    FMemCells: array of Byte;                                    // Memory cells
-    FModname: PChar;                                              // Module name
-    FVersion: TSemanticVersion;                                // Module version
+    FAddressRangeSize: DWord;                              // Address range size
+    FDescription:      PChar;                               // Short description
+    FEnabled:          Boolean;         // Enable memory without detach from bus
+    FMemoryMode:       TMemoryMode;                      //Memory operation mode
+    FMemCells:         array of Byte;                            // Memory cells
+    FModname:          PChar;                                     // Module name
+    FVersion:          TSemanticVersion;                       // Module version
   public
     // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
     // system bus side
-    function ReadMemory(Address: dword): Byte; virtual;
+    function ReadMemory(AAddress: DWord): Byte; virtual;
     procedure Reset; virtual;
-    procedure WriteMemory(Address: dword; Value: Byte); virtual;
+    procedure WriteMemory(AAddress: DWord; AValue: Byte); virtual;
     // service bus side
-    procedure LoadFromStream(Stream: TStream; Address, Count: dword); virtual;
-    procedure SaveToStream(Stream: TStream; Address, Count: dword); virtual;
+    procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;
+    procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     // Public properties
-    property AddressRangeSize: dword read FAddressRangeSize write FAddressRangeSize;
+    property AddressRangeSize: DWord read FAddressRangeSize write FAddressRangeSize;
     property Description: PChar read FDescription write FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
@@ -72,9 +72,9 @@ begin
   WriteStr(Result, Self);
 end;
 
-function TMemoryModeHelper.FromString(const AValue: string): TMemoryMode;
+function TMemoryModeHelper.FromString(const Value: string): TMemoryMode;
 begin
-  Result := TMemoryMode(GetEnumValue(TypeInfo(TMemoryMode), AValue));
+  Result := TMemoryMode(GetEnumValue(TypeInfo(TMemoryMode), Value));
 end;
 
 function TSemanticVersionHelper.ToString: string;
@@ -82,17 +82,17 @@ begin
   Result := Format('%d.%d.%d', [Major, Minor, Patch]);
 end;
 
-function TSemanticVersionHelper.Compare(Other: TSemanticVersion): Integer;
+function TSemanticVersionHelper.Compare(AOther: TSemanticVersion): Integer;
 begin
   Result := 0;
-  if Other.Major > Major then Result := -1 else
-    if Other.Major < Major then Result := 1;
+  if AOther.Major > Major then Result := -1 else
+    if AOther.Major < Major then Result := 1;
   if Result = 0 then
-    if Other.Minor > Minor then Result := -1 else
-      if Other.Minor < Minor then Result := 1;
+    if AOther.Minor > Minor then Result := -1 else
+      if AOther.Minor < Minor then Result := 1;
   if Result = 0 then
-    if Other.Patch > Patch then Result := -1 else
-      if Other.Patch < Patch then Result := 1;
+    if AOther.Patch > Patch then Result := -1 else
+      if AOther.Patch < Patch then Result := 1;
 end;
 
 // CREATE TMEMORY INSTANCE
@@ -119,26 +119,26 @@ begin
 end;
 
 // READ VIRTUAL MEMORY
-function TMemory.ReadMemory(Address: dword): Byte;
+function TMemory.ReadMemory(AAddress: DWord): Byte;
 begin
   Result := 0;
   if FEnabled then
-    if Address < FAddressRangeSize
-      then Result := FMemCells[Address]
+    if AAddress < FAddressRangeSize
+      then Result := FMemCells[AAddress]
       else Result := 0;
 end;
 
 // WRITE VIRTUAL MEMORY
-procedure TMemory.WriteMemory(Address: dword; Value: Byte);
+procedure TMemory.WriteMemory(AAddress: DWord; AValue: Byte);
 begin
   if FEnabled and (FMemoryMode = mmRAM) then
-    if Address < FAddressRangeSize then FMemCells[Address] := Value;
+    if AAddress < FAddressRangeSize then FMemCells[AAddress] := AValue;
 end;
 
 // SET SIZE AND RESET CELLS
 procedure TMemory.Reset;
 var
-  dw: dword;
+  dw: DWord;
 begin
   dw := 1 shl 24;
   if FAddressRangeSize > dw then FAddressRangeSize := dw;
@@ -147,19 +147,19 @@ begin
 end;
 
 // LOAD MEMORY CONTENT FROM STREAM
-procedure TMemory.LoadFromStream(Stream: TStream; Address, Count: dword);
+procedure TMemory.LoadFromStream(AStream: TStream; AAddress, ACount: DWord);
 begin
   if not FEnabled then exit;
-  if (Address + Count > FAddressRangeSize) or (Stream.Size - Stream.Position < Count) then exit;
-  if Count > 0 then Stream.ReadBuffer(FMemCells[Address], Count);
+  if (AAddress + ACount > FAddressRangeSize) or (AStream.Size - AStream.Position < ACount) then exit;
+  if ACount > 0 then AStream.ReadBuffer(FMemCells[AAddress], ACount);
 end;
 
 // SAVE MEMORY CONTENT TO STREAM
-procedure TMemory.SaveToStream(Stream: TStream; Address, Count: dword);
+procedure TMemory.SaveToStream(AStream: TStream; AAddress, ACount: DWord);
 begin
   if not FEnabled then exit;
-  if Address + Count > FAddressRangeSize then exit;
-  if Count > 0 then Stream.WriteBuffer(FMemCells[Address], Count);
+  if AAddress + ACount > FAddressRangeSize then exit;
+  if ACount > 0 then AStream.WriteBuffer(FMemCells[AAddress], ACount);
 end;
 
 end.

@@ -15,7 +15,7 @@ library ioport_standard;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-  Interfaces, Forms, StdCtrls, SysUtils, core_ioport,
+  CMem, Classes, Interfaces, Forms, StdCtrls, SysUtils, core_ioport,
   core_gioport;
 type
   // Standard port class
@@ -26,14 +26,13 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
-    // - port
-    function ReadPort(Port: byte): byte; override;
-    procedure Reset;  override;
-    procedure WritePort(Port: byte; Value: byte); override;
-    // - panel
+    procedure Reset; override;
+    function ReadPort(APort: Word): Byte; override;
+    procedure WritePort(APort: Word; AValue: Byte); override;
     procedure CreatePanel; override;
-
   end;
+
+// ---- PUBLIC METHODS ----
   
 // CREATE TSTANDARDPORT INSTANCE
 constructor TStandardPort.Create;
@@ -53,13 +52,20 @@ begin
   inherited Destroy;
 end;
 
+// RESET VIRTUAL PORT
+procedure TStandardPort.Reset;
+begin
+  if Assigned(FEditRx) then FEditRx.Clear;
+  if Assigned(FEditTx) then FEditTx.Clear;
+end;
+
 // READ VIRTUAL PORT
-function TStandardPort.ReadPort(Port: byte): byte;
+function TStandardPort.ReadPort(APort: Word): Byte;
 var
-  Value: integer;
+  Value: Integer;
 begin
   Result := 0;
-  if FEnabled and (Port = 0) then
+  if FEnabled and (APort = 0) then
   begin
     if Assigned(FEditRx) then
     begin
@@ -72,19 +78,12 @@ begin
   end else Result := $FF;
 end;
 
-// RESET VIRTUAL PORT
-procedure TStandardPort.Reset;
-begin
-  if Assigned(FEditRx) then FEditRx.Clear;
-  if Assigned(FEditTx) then FEditTx.Clear;
-end;
-
 // WRITE VIRTUAL PORT
-procedure TStandardPort.WritePort(Port: byte; Value: byte);
+procedure TStandardPort.WritePort(APort: Word; AValue: Byte);
 begin
-  if FEnabled and (Port = 0) then
+  if FEnabled and (APort = 0) then
   begin
-    if Assigned(FEditTx) then FEditTx.Text := IntToHex(Value, 2);
+    if Assigned(FEditTx) then FEditTx.Text := IntToHex(AValue, 2);
   end;
 end;
 
@@ -153,6 +152,7 @@ begin
     Constraints.MaxWidth := Width;
     Constraints.MinHeight := Height;
     Constraints.MaxHeight := Height;
+  end;
 end;
 
 // EXPORTABLE FUNCTIONS AND PROCEDURES
@@ -161,66 +161,92 @@ begin
   Result := TStandardPort.Create;
 end;
 
-procedure DestroyPort(Port: TIOPort); CALLTYPE; export;
+procedure DestroyPort(APort: TIOPort); CALLTYPE; export;
 begin
-  if Assigned(Port) then Port.Free;
+  if Assigned(APort) then APort.Free;
 end;
 
-procedure CreatePanel(Port: TIOPort); CALLTYPE; export;
+procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte); CALLTYPE; export;
 begin
-  if Assigned(Port) and (Port is TStandardPort) then
-    TStandardPort(Port).CreatePanel;
-end;
-procedure FreePanel(Port: TIOPort); CALLTYPE; export;
-begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).FreePanel;
+  if Assigned(APort) then
+  begin
+    APort.OnInterrupt := AIntProc;
+    APort.IntVector := AIntVect;
+  end;
 end;
 
-procedure HidePanel(Port: TIOPort); CALLTYPE; export;
+function LoadState(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE; export;
 begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).HidePanel;
+  if Assigned(APort)
+    then Result := APort.LoadState(AStream)
+    else Result := false;
 end;
 
-function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean; CALLTYPE; export;
+function SaveState(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE; export;
+begin
+  if Assigned(APort)
+    then Result := APort.SaveState(AStream)
+    else Result := false;
+end;
+
+procedure CreatePanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TStandardPort)
+    then TStandardPort(APort).CreatePanel;
+end;
+
+procedure FreePanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).FreePanel;
+end;
+
+procedure ShowPanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).ShowPanel;
+end;
+
+procedure HidePanel(APort: TIOPort); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).HidePanel;
+end;
+
+procedure RenamePanel(APort: TIOPort; ACaption: PChar); CALLTYPE; export;
+begin
+  if Assigned(APort) and (APort is TGIOPort)
+    then TGIOPort(APort).RenamePanel(ACaption);
+end;
+
+function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean; CALLTYPE; export;
 begin
   Result := False;
-  if Assigned(Port) and (Port is TGIOPort) then
-    Result := TGIOPort(Port).MovePanel(Left, Top);
+  if Assigned(APort) and (APort is TGIOPort)
+    then Result := TGIOPort(APort).ResizePanel(AWidth, AHeight);
 end;
 
-procedure RenamePanel(Port: TIOPort; Caption: PChar); CALLTYPE; export;
-begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).RenamePanel(Caption);
-end;
-
-function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean; CALLTYPE; export;
+function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean; CALLTYPE; export;
 begin
   Result := False;
-  if Assigned(Port) and (Port is TGIOPort) then
-    Result := TGIOPort(Port).ResizePanel(Width, Height);
+  if Assigned(APort) and (APort is TGIOPort)
+    then Result := TGIOPort(APort).MovePanel(ALeft, ATop);
 end;
 
-procedure ShowPanel(Port: TIOPort); CALLTYPE; export;
-begin
-  if Assigned(Port) and (Port is TGIOPort) then
-    TGIOPort(Port).ShowPanel;
-end;
+// ---- EXPORTED FUNCTIONS AND PROCEDURES ----
 
-// EXPORTED FUNCTIONS AND PROCEDURES
-// - port
 exports CreatePort name 'ioport_create';
 exports DestroyPort name 'ioport_destroy';
-// - panel
+exports SetIntHandler name 'ioport_setinthandler';
+exports LoadState name 'ioport_loadstate';
+exports SaveState name 'ioport_savestate';
 exports CreatePanel name 'ioport_createpanel';
 exports FreePanel name 'ioport_freepanel';
 exports HidePanel name 'ioport_hidepanel';
-exports MovePanel name 'ioport_movepanel';
+exports ShowPanel name 'ioport_showpanel';
 exports RenamePanel name 'ioport_renamepanel';
 exports ResizePanel name 'ioport_resizepanel';
-exports ShowPanel name 'ioport_showpanel';
+exports MovePanel name 'ioport_movepanel';
 
 begin
 end.

@@ -38,7 +38,11 @@ implementation
 
 {$R *.lfm}
 
-// ---- PRIVATE METHODS ----
+// EDITINGDONE EVENT
+procedure TForm3.Edit1EditingDone(Sender: TObject);
+begin
+  Button1.Click;
+end;
 
 // GET VALUES
 function TForm3.GetCaption: string;
@@ -50,14 +54,6 @@ end;
 procedure TForm3.SetCaption(Title: string);
 begin
   Edit1.Text := Title;
-end;
-
-// ---- EVENT HANDLER METHODS ----
-
-// EDITINGDONE EVENT
-procedure TForm3.Edit1EditingDone(Sender: TObject);
-begin
-  Button1.Click;
 end;
 
 end.

@@ -22,19 +22,19 @@ type
   TArchitecture = (arHarvad,arNeumann);
   TArchitectureHelper = type helper for TArchitecture
     function ToString: string;
-    function FromString(const AValue: string): TArchitecture;
+    function FromString(const Value: string): TArchitecture;
   end;
   // Defines CPU Byte order
   TEndianness = (enLittle, enBig);
   TEndiannessHelper = type helper for TEndianness
     function ToString: string;
-    function FromString(const AValue: string): TEndianness;
+    function FromString(const Value: string): TEndianness;
   end;
   // Generic CPU events used by debugger and trace systems
   TCPUEvent = (ceInstructionBoundary, ceInterrupt, ceHalt, ceReset);
   TCPUEventHelper = type helper for TCPUEvent
     function ToString: string;
-    function FromString(const AValue: string): TCPUEvent;
+    function FromString(const Value: string): TCPUEvent;
   end;
   // Event callback type
   TCPUEventHandler = procedure(Sender: TObject; Event: TCPUEvent) of object;
@@ -42,14 +42,14 @@ type
   ICPUBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
     // read/write a Byte from/to (data) memory
-    function  MemRead(Address: uint64): Byte;
-    procedure MemWrite(Address: uint64; Value: Byte);
+    function  MemRead(AAddress: UInt64): Byte;
+    procedure MemWrite(AAddress: UInt64; AValue: Byte);
     // read/write a Byte from/to code memory (only Harvard architecture)
-    function  CodeRead(Address: uint64): Byte;
-    procedure CodeWrite(Address: uint64; Value: Byte);
+    function  CodeRead(AAddress: UInt64): Byte;
+    procedure CodeWrite(AAddress: UInt64; AValue: Byte);
     // read/write a Byte from/to I/O port
-    function  IORead(Port: uint64): Byte;
-    procedure IOWrite(Port: uint64; Value: Byte);
+    function  IORead(APort: UInt64): Byte;
+    procedure IOWrite(APort: UInt64; AValue: Byte);
   end;
   // Version info
   TSemanticVersion = record
@@ -59,44 +59,44 @@ type
   end;
   TSemanticVersionHelper = type helper for TSemanticVersion
     function ToString: string;
-    function Compare(Other: TSemanticVersion): Integer;
+    function Compare(AOther: TSemanticVersion): Integer;
   end;
   // Abstract base CPU class
   TCPU = class
   protected
-    FBus: ICPUBus;                                     // Connected external bus
-    FOnEvent: TCPUEventHandler;                                // Event callback
+    FBus:              ICPUBus;                        // Connected external bus
+    FOnEvent:          TCPUEventHandler;                       // Event callback
     // CPU identity information
-    FModname: PChar;
-    FDescription: PChar;                                    // Short description
-    FVersion: TSemanticVersion;                                // Module version
+    FModname:          PChar;
+    FDescription:      PChar;                               // Short description
+    FVersion:          TSemanticVersion;                       // Module version
     // CPU features
-    FArchitecture: TArchitecture;                        // Type of architecture
-    FBitWidth: Byte;                         // Main processor word size in bits
-    FAddressWidth: Byte;                            // Address bus width in bits
-    FEndianness: TEndianness;                                      // Byte order
-    FMaxMemAddress: qword;                  // The highest (data) memory address
-    FMaxCodeAddress: qword;                   // The highest code memory address
-    FMaxIOPortAddress: qword;                    // The highest I/O port address
+    FArchitecture:     TArchitecture;                    // Type of architecture
+    FBitWidth:         Byte;                 // Main processor word size in bits
+    FAddressWidth:     Byte;                        // Address bus width in bits
+    FEndianness:       TEndianness;                                // Byte order
+    FMaxMemAddress:    QWord;               // The highest (data) memory address
+    FMaxCodeAddress:   QWord;                 // The highest code memory address
+    FMaxIOPortAddress: QWord;                    // The highest I/O port address
     FHasSeparateIOBus: Boolean;       // Indicates separate memory and I/O buses
     // Runtime state
-    FRunning: Boolean;                                    // CPU execution state
-    FHalted: Boolean;                                          // CPU HALT state
+    FRunning:          Boolean;                           // CPU execution state
+    FHalted:           Boolean;                                // CPU HALT state
     FInterruptEnabled: Boolean;                  // Global interrupt enable flag
-    FIRQPending: Boolean;                          // Pending maskable interrupt
-    FNMIPending: Boolean;                      // Pending non-maskable interrupt
+    FIRQPending:       Boolean;                    // Pending maskable interrupt
+    FNMIPending:       Boolean;                // Pending non-maskable interrupt
     // Execution statistics
-    FCycles: qword;                                              // Total cycles
-    FInstructions: qword;                         // Total executed instructions
-    var FRegPtr: array of ^qword;
-    procedure EmitEvent(Event: TCPUEvent); virtual;
-    procedure DoInterrupt(Event: TCPUEvent); virtual;
+    FCycles:           QWord;                                    // Total cycles
+    FInstructions:     QWord;                     // Total executed instructions
+    var FRegPtr:       array of ^QWord;
+    procedure EmitEvent(AEvent: TCPUEvent); virtual;
+    procedure DoInterrupt(AEvent: TCPUEvent); virtual;
   public
     // Public methods
     constructor Create; virtual;
     destructor Destroy; virtual;
-    procedure SetRegister(const RegName: PChar; Value: qword); virtual; abstract;
-    function  GetRegister(const RegName: PChar): qword; virtual; abstract;
+    procedure SetRegister(const RegName: PChar; AValue: QWord); virtual; abstract;
+    function  GetRegister(const RegName: PChar): QWord; virtual; abstract;
     procedure Reset; virtual; abstract;
     procedure Run; virtual;
     procedure Step; virtual; abstract;
@@ -113,15 +113,15 @@ type
     property BitWidth: Byte read FBitWidth;
     property AddressWidth: Byte read FAddressWidth;
     property Endianness: TEndianness read FEndianness;
-    property MaxMemAddress: qword read FMaxMemAddress;
-    property MaxCodeAddress: qword read FMaxCodeAddress;
-    property MaxIOPortAddress: qword read FMaxIOPortAddress;
+    property MaxMemAddress: QWord read FMaxMemAddress;
+    property MaxCodeAddress: QWord read FMaxCodeAddress;
+    property MaxIOPortAddress: QWord read FMaxIOPortAddress;
     property HasSeparateIOBus: Boolean read FHasSeparateIOBus;
     property Running: Boolean read FRunning;
     property Halted: Boolean read FHalted;
     property InterruptEnabled: Boolean read FInterruptEnabled;
-    property Cycles: qword read FCycles;
-    property Instructions: qword read FInstructions;
+    property Cycles: QWord read FCycles;
+    property Instructions: QWord read FInstructions;
     property OnEvent: TCPUEventHandler read FOnEvent write FOnEvent;
     property Version: TSemanticVersion read FVersion;
   end;
@@ -134,9 +134,9 @@ begin
   WriteStr(Result, Self);
 end;
 
-function TArchitectureHelper.FromString(const AValue: string):  TArchitecture;
+function TArchitectureHelper.FromString(const Value: string):  TArchitecture;
 begin
-  Result :=  TArchitecture(GetEnumValue(TypeInfo( TArchitecture), AValue));
+  Result :=  TArchitecture(GetEnumValue(TypeInfo(TArchitecture), Value));
 end;
 
 function TEndiannessHelper.ToString: string;
@@ -144,9 +144,9 @@ begin
   WriteStr(Result, Self);
 end;
 
-function TEndiannessHelper.FromString(const AValue: string): TEndianness;
+function TEndiannessHelper.FromString(const Value: string): TEndianness;
 begin
-  Result := TEndianness(GetEnumValue(TypeInfo(TEndianness), AValue));
+  Result := TEndianness(GetEnumValue(TypeInfo(TEndianness), Value));
 end;
 
 function TCPUEventHelper.ToString: string;
@@ -154,9 +154,9 @@ begin
   WriteStr(Result, Self);
 end;
 
-function TCPUEventHelper.FromString(const AValue: string): TCPUEvent;
+function TCPUEventHelper.FromString(const Value: string): TCPUEvent;
 begin
-  Result := TCPUEvent(GetEnumValue(TypeInfo(TCPUEvent), AValue));
+  Result := TCPUEvent(GetEnumValue(TypeInfo(TCPUEvent), Value));
 end;
 
 function TSemanticVersionHelper.ToString: string;
@@ -164,17 +164,17 @@ begin
   Result := Format('%d.%d.%d', [Major, Minor, Patch]);
 end;
 
-function TSemanticVersionHelper.Compare(Other: TSemanticVersion): Integer;
+function TSemanticVersionHelper.Compare(AOther: TSemanticVersion): Integer;
 begin
   Result := 0;
-  if Other.Major > Major then Result := -1 else
-    if Other.Major < Major then Result := 1;
+  if AOther.Major > Major then Result := -1 else
+    if AOther.Major < Major then Result := 1;
   if Result = 0 then
-    if Other.Minor > Minor then Result := -1 else
-      if Other.Minor < Minor then Result := 1;
+    if AOther.Minor > Minor then Result := -1 else
+      if AOther.Minor < Minor then Result := 1;
   if Result = 0 then
-    if Other.Patch > Patch then Result := -1 else
-      if Other.Patch < Patch then Result := 1;
+    if AOther.Patch > Patch then Result := -1 else
+      if AOther.Patch < Patch then Result := 1;
 end;
 
 // CREATE CPU INSTANCE
@@ -206,9 +206,9 @@ begin
 end;
 
 // SENDS A CPU EVENT TO THE HOST APPLICATION
-procedure TCPU.EmitEvent(Event: TCPUEvent);
+procedure TCPU.EmitEvent(AEvent: TCPUEvent);
 begin
-  if Assigned(FOnEvent) then FOnEvent(Self, Event);
+  if Assigned(FOnEvent) then FOnEvent(Self, AEvent);
 end;
 
 // START CPU EXECUTION
@@ -259,9 +259,9 @@ begin
 end;
 
 // INTERRUPT HANDLER
-procedure TCPU.DoInterrupt(Event: TCPUEvent);
+procedure TCPU.DoInterrupt(AEvent: TCPUEvent);
 begin
-  EmitEvent(Event); 
+  EmitEvent(AEvent); 
 end;
 
 // CONNECT CPU TO EXTERNAL SYSTEM BUS

@@ -43,18 +43,18 @@ supporting both Neumann and Harvard architectures.
 
 ### Public methods
 
-|name                                                |flags|description                                       |
-|----------------------------------------------------|:---:|--------------------------------------------------|
-|`constructor Create;`                               |Vi   |Sets the initial values for the new object        |
-|`destructor Destroy;`                               |Vi   |Frees the object's resources                      |
-|`function CodeRead(Address: UInt64): Byte;`         |Vi   |Reading code memory based on absolute address     |
-|`function IORead(Port: UInt64): Byte;`              |Vi   |Reading I/O port based on absolute address        |
-|`function MemRead(Address: UInt64): Byte;`          |Vi   |Reading (data) memory based on absolute address   |
-|`procedure AttachCodeMemory(AMemory: TMemory);`     |Vi   |Connecting code memory (Harvard)                  |
-|`procedure AttachDataMemory(AMemory: TMemory);`     |Vi   |Connecting data memory (Harvard)                  |
-|`procedure AttachIOPorts(APorts: TIOPort);`         |Vi   |Connecting I/O ports                              |
-|`procedure AttachMemory(AMemory: TMemory);`         |Vi   |Connecting memory (Neumann)                       |
-|`procedure CodeWrite(Address: UInt64; Value: Byte);`|Vi   |Writing code memory based on absolute address     |
-|`procedure IOWrite(Port: UInt64; Value: Byte);`     |Vi   |Writing I/O port based on absolute address        |
-|`procedure MemWrite(Address: UInt64; Value: Byte);` |Vi   |Writing (data) memory based on absolute address   |
-|`procedure Reset;`                                  |Vi   |Reset all hardware components connected to the bus| 
+|name                                                  |flags|description                                       |
+|------------------------------------------------------|:---:|--------------------------------------------------|
+|`constructor Create;`                                 |Vi   |Sets the initial values for the new object        |
+|`destructor Destroy;`                                 |Vi   |Frees the object's resources                      |
+|`function CodeRead(AAddress: UInt64): Byte;`          |Vi   |Reading code memory based on absolute address     |
+|`function IORead(APort: UInt64): Byte;`               |Vi   |Reading I/O port based on absolute address        |
+|`function MemRead(AAddress: UInt64): Byte;`           |Vi   |Reading (data) memory based on absolute address   |
+|`procedure AttachCodeMemory(AMemory: TMemory);`       |Vi   |Connecting code memory (Harvard)                  |
+|`procedure AttachDataMemory(AMemory: TMemory);`       |Vi   |Connecting data memory (Harvard)                  |
+|`procedure AttachIOPorts(APorts: TIOPort);`           |Vi   |Connecting I/O ports                              |
+|`procedure AttachMemory(AMemory: TMemory);`           |Vi   |Connecting memory (Neumann)                       |
+|`procedure CodeWrite(AAddress: UInt64; AValue: Byte);`|Vi   |Writing code memory based on absolute address     |
+|`procedure IOWrite(APort: UInt64; AValue: Byte);`     |Vi   |Writing I/O port based on absolute address        |
+|`procedure MemWrite(AAddress: UInt64; AValue: Byte);` |Vi   |Writing (data) memory based on absolute address   |
+|`procedure Reset;`                                    |Vi   |Reset all hardware components connected to the bus| 

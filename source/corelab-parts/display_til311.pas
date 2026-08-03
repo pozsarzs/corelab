@@ -33,7 +33,7 @@ type
   // TIL311 display class
   TDisplayTIL311 = class(TDisplay)
   protected
-    procedure DrawDot(Status: Boolean; x, y: Byte);
+    procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);
     const CHARMAP_TIL311: array[0..15, 0..6] of Byte = (
       { '0' } (%0110, %1001, %1001, %1001, %1001, %1001, %0110),
       { '1' } (%0001, %0001, %0001, %0001, %0001, %0001, %0001),
@@ -55,14 +55,35 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
-    procedure DrawToBuffer(InputData: TDisplayedData); override;
-    procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer); override;
+    procedure DrawToBuffer(AInputData: TDisplayedData); override;
+    procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer); override;
   end;
 var
   FrameX: Byte = 14;
   FrameY: Byte = 28;
     
 implementation
+
+// ---- PROTECTED METHODS ----
+
+// DRAW A DOT
+procedure TDisplayTIL311.DrawDot(AStatus: Boolean; Ax, Ay: Byte);
+begin
+  Ax := Ax + FrameX div 2;
+  Ay := Ay + FrameY div 2;
+  if Status then
+  begin
+    FBuffer.Canvas.Brush.Color := RETRO_RED_ON;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_GLOW;
+  end else
+  begin
+    FBuffer.Canvas.Brush.Color := RETRO_RED_OFF;
+    FBuffer.Canvas.Pen.Color := RETRO_RED_OFF;
+  end;
+  FBuffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
+end;
+
+// ---- PUBLIC METHODS ----
 
 // CREATE TDISPLAYTIL311 INSTANCE
 constructor TDisplayTIL311.Create;
@@ -81,50 +102,33 @@ begin
   inherited Destroy;
 end;
 
-// DRAW A DOT
-procedure TDisplayTIL311.DrawDot(Status: Boolean; x, y: Byte);
-begin
-  x := x + FrameX div 2;
-  y := y + FrameY div 2;
-  if Status then
-  begin
-    FBuffer.Canvas.Brush.Color := RETRO_RED_ON;
-    FBuffer.Canvas.Pen.Color := RETRO_RED_GLOW;
-  end else
-  begin
-    FBuffer.Canvas.Brush.Color := RETRO_RED_OFF;
-    FBuffer.Canvas.Pen.Color := RETRO_RED_OFF;
-  end;
-  FBuffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
-end;
-
 // DRAW DISPLAYED DATA TO INTERNAL BUFFER
-procedure TDisplayTIL311.DrawToBuffer(InputData: TDisplayedData);
+procedure TDisplayTIL311.DrawToBuffer(AInputData: TDisplayedData);
 var
   b, Bit, Line: Byte;
 begin
   // background
   FBuffer.Canvas.Brush.Color := RETRO_RED_BG;
   FBuffer.Canvas.FillRect(0, 0, FBuffer.Width, FBuffer.Height);
-  if InputData.Blank then exit;
+  if AInputData.Blank then exit;
   // sign
   for b := 0 to 6 do
   begin
-    Line := CHARMAP_TIL311[InputData.Value, b];
+    Line := CHARMAP_TIL311[AInputData.Value, b];
     for Bit := 0 to 3 do
       if not(((b = 1) or (b = 2) or (b = 4) or (b = 5)) and
              ((Bit = 1) or (Bit = 2))) then
         DrawDot(((Line and (1 shl Bit)) <> 0), 79 - (Bit * 14) - b, 5 + (b * 14));
   end;
   // decimal points
-  DrawDot(InputData.LeftDot, 3, 91);
-  DrawDot(InputData.RightDot, 101, 91);
+  DrawDot(AInputData.LeftDot, 3, 91);
+  DrawDot(AInputData.RightDot, 101, 91);
 end;
 
 // DRAWING TO CANVAS OF THE TARGET OBJECT
-procedure TDisplayTIL311.RenderTo(TargetCanvas: TCanvas; x, y: Integer);
+procedure TDisplayTIL311.RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);
 begin
-  TargetCanvas.Draw(x, y, FBuffer);
+  ATargetCanvas.Draw(Ax, Ay, FBuffer);
 end;
 
 end.

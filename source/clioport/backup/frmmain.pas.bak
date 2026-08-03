@@ -919,7 +919,7 @@ begin
     Enabled := False;
   end;
   // enable/disable menuitems
-  if not DirectoryExists(MenuItem15.Caption, True) then MenuItem15.Free;
+  if not DirectoryExists(MenuItem15.Caption, True) then MenuItem11.Free;
   if not DirectoryExists(MenuItem16.Caption, True) then MenuItem16.Free;
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;

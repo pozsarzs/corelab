@@ -40,9 +40,9 @@ numbers and letters to be displayed in the memory buffer from dots (dot matrix).
 
 ### Public methods
 
-|name                                                       |flags|description                               |
-|-----------------------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                                      |Or   |Sets the initial values for the new object|
-|`destructor Destroy;`                                      |Or   |Frees the object's resources              |
-|`procedure DrawToBuffer(InputData: TDisplayedData);`       |Or   |Draw displayed data to internal buffer    |
-|`procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer);`|Or   |Drawing to canvas of the target object    |
+|name                        -                               |flags|description                               |
+|------------------------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                                       |Or   |Sets the initial values for the new object|
+|`destructor Destroy;`                                       |Or   |Frees the object's resources              |
+|`procedure DrawToBuffer(AInputData: TDisplayedData);`       |Or   |Draw displayed data to internal buffer    |
+|`procedure RenderTo(ATargetCanvas: TCanvas; x, y: Integer);`|Or   |Drawing to canvas of the target object    |

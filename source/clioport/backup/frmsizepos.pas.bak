@@ -33,12 +33,12 @@ type
     SpinEdit3: TSpinEdit;
     SpinEdit4: TSpinEdit;
   private
-    function GetHeightValue: integer;
     function GetLeftValue: integer;
+    function GetHeightValue: integer;
     function GetTopValue: integer;
     function GetWidthValue: integer;
-    procedure SetHeightValue(Value: integer);
     procedure SetLeftValue(Value: integer);
+    procedure SetHeightValue(Value: integer);
     procedure SetTopValue(Value: integer);
     procedure SetWidthValue(Value: integer);
   public
@@ -53,8 +53,6 @@ var
 implementation
 
 {$R *.lfm}
-
-// -- PRIVATE METHODS ---
 
 // GET VALUES
 function TForm4.GetHeightValue: integer;

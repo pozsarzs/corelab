@@ -45,14 +45,14 @@ methods that can handle the graphical interface of the port or device.
 
 ### Public methods
 
-|name                                                    |flags |description                               |
-|--------------------------------------------------------|:----:|------------------------------------------|
-|`constructor Create;`                                   |Vi    |Sets the initial values for the new object|
-|`destructor Destroy;`                                   |Or    |Frees the object's resources              |
-|`function MovePanel(Left, Top: Integer): Boolean;`      |Vi    |Move panel                                |
-|`function ResizePanel(Width, Height: Integer): Boolean;`|Vi    |Resize panel                              |
-|`procedure CreatePanel;`                                |Vi, Ab|Create panel                              |
-|`procedure FreePanel;`                                  |Vi    |Destroy panel                             |
-|`procedure HidePanel;`                                  |Vi    |Hide panel                                |
-|`procedure RenamePanel(Caption: PChar);`                |Vi    |Rename panel                              |
-|`procedure ShowPanel;`                                  |Vi    |Show panel                                |
+|name                                                      |flags |description                               |
+|----------------------------------------------------------|:----:|------------------------------------------|
+|`constructor Create;`                                     |Vi    |Sets the initial values for the new object|
+|`destructor Destroy;`                                     |Or    |Frees the object's resources              |
+|`function MovePanel(ALeft, ATop: Integer): Boolean;`      |Vi    |Move panel                                |
+|`function ResizePanel(AWidth, AHeight: Integer): Boolean;`|Vi    |Resize panel                              |
+|`procedure CreatePanel;`                                  |Vi, Ab|Create panel                              |
+|`procedure FreePanel;`                                    |Vi    |Destroy panel                             |
+|`procedure HidePanel;`                                    |Vi    |Hide panel                                |
+|`procedure RenamePanel(ACaption: PChar);`                 |Vi    |Rename panel                              |
+|`procedure ShowPanel;`                                    |Vi    |Show panel                                |

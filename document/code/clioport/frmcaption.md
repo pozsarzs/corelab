@@ -31,13 +31,13 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ### Private methods
 
-|name                                  |flags|description|
-|--------------------------------------|:---:|-----------|
-|`function GetCaption: string;`        |     |           |
-|`procedure SetCaption(Title: string);`|     |           |
+|name                                   |flags|description|
+|---------------------------------------|:---:|-----------|
+|`function GetCaption: string;`         |     |           |
+|`procedure SetCaption(aTitle: string);`|     |           |
 
 ### Public properties
 
-|name        |type  |flags|description              |default|
-|------------|------|:---:|-------------------------|-------|
-|PanelCaption|string|     |= GetCaption / SetCaption|       |
+|name        |type  |flags|description            |default|
+|------------|------|:---:|-----------------------|-------|
+|PanelCaption|string|     |= GetCaption/SetCaption|       |

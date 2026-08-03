@@ -27,12 +27,12 @@ type
     constructor Create; virtual;
     destructor Destroy; virtual;
     // Simulator side methods
-    function CodeRead(Address: uint64): Byte; virtual;
-    function IORead(Port: uint64): Byte; virtual;
-    function MemRead(Address: uint64): Byte; virtual;
-    procedure CodeWrite(Address: uint64; Value: Byte); virtual;
-    procedure IOWrite(Port: uint64; Value: Byte); virtual;
-    procedure MemWrite(Address: uint64; Value: Byte); virtual;
+    function CodeRead(AAddress: UInt64): Byte; virtual;
+    function IORead(APort: UInt64): Byte; virtual;
+    function MemRead(AAddress: UInt64): Byte; virtual;
+    procedure CodeWrite(AAddress: UInt64; AValue: Byte); virtual;
+    procedure IOWrite(APort: UInt64; AValue: Byte); virtual;
+    procedure MemWrite(AAddress: UInt64; AValue: Byte); virtual;
     // Host side methods
     procedure AttachCodeMemory(AMemory: TMemory); virtual;
     procedure AttachDataMemory(AMemory: TMemory); virtual;
@@ -63,45 +63,45 @@ begin
 end;
 
 // READING (DATA) MEMORY BASED ON ABSOLUTE ADDRESS
-function TSysBus.MemRead(Address: uint64): Byte;
+function TSysBus.MemRead(AAddress: UInt64): Byte;
 begin
   if Assigned(FDataMemory)
-    then Result := FDataMemory.ReadMemory(Address)
+    then Result := FDataMemory.ReadMemory(AAddress)
     else Result := $FF;
 end;
 
 // WRITING (DATA) MEMORY BASED ON ABSOLUTE ADDRESS
-procedure TSysBus.MemWrite(Address: uint64; Value: Byte);
+procedure TSysBus.MemWrite(AAddress: UInt64; AValue: Byte);
 begin
-  if Assigned(FDataMemory) then FDataMemory.WriteMemory(Address, Value);
+  if Assigned(FDataMemory) then FDataMemory.WriteMemory(AAddress, AValue);
 end;
 
 // READING CODE MEMORY BASED ON ABSOLUTE ADDRESS
-function TSysBus.CodeRead(Address: uint64): Byte;
+function TSysBus.CodeRead(AAddress: UInt64): Byte;
 begin
   if Assigned(FCodeMemory)
-    then Result := FCodeMemory.ReadMemory(Address)
+    then Result := FCodeMemory.ReadMemory(AAddress)
     else Result := $FF;
 end;
 
 // WRITING CODE MEMORY BASED ON ABSOLUTE ADDRESS
-procedure TSysBus.CodeWrite(Address: uint64; Value: Byte);
+procedure TSysBus.CodeWrite(AAddress: UInt64; AValue: Byte);
 begin
-  if Assigned(FCodeMemory) then FCodeMemory.WriteMemory(Address, Value);
+  if Assigned(FCodeMemory) then FCodeMemory.WriteMemory(AAddress, AValue);
 end;
 
 // READING I/O PORT BASED ON ABSOLUTE ADDRESS
-function TSysBus.IORead(Port: uint64): Byte;
+function TSysBus.IORead(APort: UInt64): Byte;
 begin
   if Assigned(FIOPorts)
-    then Result := FIOPorts.ReadPort(Port)
+    then Result := FIOPorts.ReadPort(APort)
     else Result := $FF;
 end;
 
 // WRITING I/O PORT BASED ON ABSOLUTE ADDRESS
-procedure TSysBus.IOWrite(Port: uint64; Value: Byte);
+procedure TSysBus.IOWrite(APort: UInt64; AValue: Byte);
 begin
-  if Assigned(FIOPorts) then FIOPorts.WritePort(Port, Value);
+  if Assigned(FIOPorts) then FIOPorts.WritePort(APort, AValue);
 end;
 
 // CONNECTING MEMORY (NEUMANN)

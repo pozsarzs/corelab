@@ -32,16 +32,16 @@ internal graphics buffer, which it then renders on the target canvas.
 
 ### Protected methods
 
-|name                                                        |flags|description                  |
-|------------------------------------------------------------|:---:|-----------------------------|
-|`procedure DrawDot(Status: Boolean; x, y: Byte);`           |     |Drawing dot on buffer canvas |
-|`procedure DrawLine(Status: Boolean; x1, y1, x2, y2: Byte);`|     |Drawing line to buffer canvas|
+|name                                                         |flags|description                  |
+|-------------------------------------------------------------|:---:|-----------------------------|
+|`procedure DrawDot(AStatus: Boolean; x, y: Byte);`           |     |Drawing dot on buffer canvas |
+|`procedure DrawLine(AStatus: Boolean; x1, y1, x2, y2: Byte);`|     |Drawing line to buffer canvas|
 
 ### Public methods
 
-|name                                                       |flags|description                               |
-|-----------------------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                                      |Or   |Sets the initial values for the new object|
-|`destructor Destroy;`                                      |Or   |Frees the object's resources              |
-|`procedure DrawToBuffer(InputData: TDisplayedData);`       |Or   |Draw displayed data to internal buffer    |
-|`procedure RenderTo(TargetCanvas: TCanvas; x, y: Integer);`|Or   |Drawing to canvas of the target object    |
+|name                                                        |flags|description                               |
+|------------------------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                                       |Or   |Sets the initial values for the new object|
+|`destructor Destroy;`                                       |Or   |Frees the object's resources              |
+|`procedure DrawToBuffer(AInputData: TDisplayedData);`       |Or   |Draw displayed data to internal buffer    |
+|`procedure RenderTo(ATargetCanvas: TCanvas; x, y: Integer);`|Or   |Drawing to canvas of the target object    |

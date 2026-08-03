@@ -24,12 +24,12 @@ for implementing hardware-specific memory types.
 
 ### Own data types
 
-|name                             |type                       |description           |
-|---------------------------------|---------------------------|----------------------|
-|TMemoryMode                      |(mmRAM, mmROM)             |Memory operation mode |
-|TMemoryModeHelper                |type helper for TMemoryMode|Helper                |
-|.ToString                        |String                     |Convert Enum -> String|
-|.FromString(const AValue: string)|TMemoryMode                |Convert String -> Enum|
+|name                            |type                       |description           |
+|--------------------------------|---------------------------|----------------------|
+|TMemoryMode                     |(mmRAM, mmROM)             |Memory operation mode |
+|TMemoryModeHelper               |type helper for TMemoryMode|Helper                |
+|.ToString                       |String                     |Convert Enum -> String|
+|.FromString(const Value: string)|TMemoryMode                |Convert String -> Enum|
 
 ### Protected fields
 
@@ -53,12 +53,12 @@ for implementing hardware-specific memory types.
 
 ### Public methods
 
-|name                                                               |flags|description                               |
-|-------------------------------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                                              |Vi   |Sets the initial values for the new object|
-|`destructor Destroy;`                                              |Or   |Frees the object's resources              |
-|`function ReadMemory(Address: DWord): Byte;`                       |Vi   |Read virtual memory                       |
-|`procedure LoadFromStream(Stream: TStream; Address, Count: DWord);`|Vi   |Load memory content from stream           |
-|`procedure Reset;`                                                 |Vi   |Reset virtual memory                      |
-|`procedure SaveToStream(Stream: TStream; Address, Count: DWord);`  |Vi   |Save memory content to stream             |
-|`procedure WriteMemory(Address: DWord; Value: Byte);`              |Vi   |Write virtual memory                      |
+|name                                                                  |flags|description                               |
+|----------------------------------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                                                 |Vi   |Sets the initial values for the new object|
+|`destructor Destroy;`                                                 |Or   |Frees the object's resources              |
+|`function ReadMemory(AAddress: DWord): Byte;`                         |Vi   |Read virtual memory                       |
+|`procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);`|Vi   |Load memory content from stream           |
+|`procedure Reset;`                                                    |Vi   |Reset virtual memory                      |
+|`procedure SaveToStream(Stream: TStream; Address, ACount: DWord);`    |Vi   |Save memory content to stream             |
+|`procedure WriteMemory(Address: DWord; Value: Byte);`                 |Vi   |Write virtual memory                      |
