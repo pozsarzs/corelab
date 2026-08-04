@@ -71,7 +71,7 @@ procedure TDisplayTIL311.DrawDot(AStatus: Boolean; Ax, Ay: Byte);
 begin
   Ax := Ax + FrameX div 2;
   Ay := Ay + FrameY div 2;
-  if Status then
+  if AStatus then
   begin
     FBuffer.Canvas.Brush.Color := RETRO_RED_ON;
     FBuffer.Canvas.Pen.Color := RETRO_RED_GLOW;
@@ -80,7 +80,7 @@ begin
     FBuffer.Canvas.Brush.Color := RETRO_RED_OFF;
     FBuffer.Canvas.Pen.Color := RETRO_RED_OFF;
   end;
-  FBuffer.Canvas.Ellipse(x - 3, y - 3, x + 4, y + 4);
+  FBuffer.Canvas.Ellipse(Ax - 3, Ay - 3, Ax + 4, Ay + 4);
 end;
 
 // ---- PUBLIC METHODS ----

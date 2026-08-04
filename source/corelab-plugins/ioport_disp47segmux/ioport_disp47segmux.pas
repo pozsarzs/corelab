@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_disp17segbcd.pas                                                  | }
+{ | ioport_disp47segmux.pas                                                  | }
 { | 7 segments display output implementation module                          | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
@@ -11,22 +11,24 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_disp17seg;
+library ioport_disp47segmux;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
   CMem, Classes, Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils,
   Buttons, core_ioport, core_gioport, display_til302;
+const
+  MAXX = 3;
 type
-  // 7 segments display output class
-  TDisp17seg = class(TGIOPort)
+  // 7 segment display output class
+  TDisp47segMUX = class(TGIOPort)
   private
-    FPort:      Word;
-    FValue:     Byte;
+    FValue:    array[0..MAXX] of Byte;
   protected
-    FPanel:     TPanel;
-    FPaintBox:  TPaintBox;
-    FDP:        TDisplayTIL302;
+    FPanel:    TPanel;
+    FPaintBox: TPaintBox;
+    FDP:       array[0..MAXX] of TDisplayTIL302;
+    FSelLine:  Byte;
     procedure PaintBoxPaint(Sender: TObject);
   public
     constructor Create; override;
@@ -44,101 +46,119 @@ type
 // ---- PROTECTED METHODS ----
 
 // PAINTBOX ONPAINT EVENT
-procedure TDisp17seg.PaintBoxPaint(Sender: TObject);
+procedure TDisp47segMUX.PaintBoxPaint(Sender: TObject);
+var
+  b: Byte;
 begin
-    FDP.RenderTo(FPaintBox.Canvas, 1, 1);
+  for b := 0 to MAXX do FDP[b].RenderTo(FPaintBox.Canvas, 1 + (112 * b), 1);
 end;
 
 // ---- PUBLIC METHODS ----
 
-// CREATE TDISP17SEG INSTANCE
-constructor TDisp17seg.Create;
+// CREATE TDISP47SEGMUX INSTANCE
+constructor TDisp47segMUX.Create;
+var
+  b: Byte;
 begin
   inherited Create;
-  FModname := '7 segments display';
-  FDescription := 'TIL302 style display with direct inversable and BCD input.';
+  FModname := '4-digit 7 segments multiplexed display';
+  FDescription := 'TIL302 style display; A0: direct inversable input, A1: select.';
+  FAddressRangeSize:= 2;
   FHasPanel := true;
   FLatchedOutput := true;
-  FDP := TDisplayTIL302.Create;
-  FDP.Reset;
+  FSelLine := 0;
+  for b := 0 to MAXX do
+  begin
+    FDP[b] := TDisplayTIL302.Create;
+    FDP[b].Reset;
+  end;
 end;
 
-// DESTROY TDISP17SEG INSTANCE
-destructor TDisp17seg.Destroy;
+// DESTROY TDISP47SEGMUX INSTANCE
+destructor TDisp47segMUX.Destroy;
+var
+  b: Byte;
 begin
-  FDP.Free;
+  for b := 0 to MAXX do FDP[b].Free;
   FreePanel;
   inherited Destroy;
 end;
 
 // RESET VIRTUAL PORT
-procedure TDisp17seg.Reset;
+procedure TDisp47segMUX.Reset;
+var
+  b: Byte;
 begin
-  FDP.Reset;
+  for b := 0 to MAXX do FDP[b].Reset;
   FPaintBox.Invalidate;
 end;
 
 // READ VIRTUAL PORT
-function TDisp17seg.ReadPort(APort: Word): Byte;
+function TDisp47segMUX.ReadPort(APort: Word): Byte;
 begin
-  if FEnabled and (APort = 0) then Result := 0 else Result := $FF;
+  if FEnabled then Result := 0 else Result := $FF;
 end;
 
 // WRITE VIRTUAL PORT
-procedure TDisp17seg.WritePort(APort: Word; AValue: Byte);
+procedure TDisp47segMUX.WritePort(APort: Word; AValue: Byte);
 begin
-  if FEnabled and (APort = 0) then
-  begin 
-    FPort := APort;
-    FValue := AValue;
-    with FDP do
-    begin
-      case FDataOutMode of
-        lmDirect: begin
-                    if FDataOutNegation then AValue := not AValue;
-                    SetRightDot((AValue and $80) > 0);
-                    SetSegments(AValue and $7F);
-                    FPaintBox.Invalidate;
-                  end;
-        lmBCD:    begin
-                    SetRightDot((AValue and $80) > 0);
-                    SetSegments(BCD7seg_7447[AValue and $7F]);
-                    FPaintBox.Invalidate;
-                  end;
-       end;           
+  if FEnabled then 
+  case APort of
+    0: begin
+         FValue[FSelLine] := AValue;
+         with FDP[FSelLine] do
+           case FDataOutMode of
+             lmDirect: begin
+                         if FDataOutNegation then AValue := not AValue;
+                         SetRightDot((AValue and $80) > 0);
+                         SetSegments(AValue and $7F);
+                         FPaintBox.Invalidate;
+                       end;
+             lmBCD:    begin
+                         SetRightDot((AValue and $80) > 0);
+                         SetSegments(BCD7seg_7447[AValue and $7F]);
+                         FPaintBox.Invalidate;
+                       end;
+           end;           
+       end;
+    1: if AValue <= MAXX then FSelLine := AValue;
     end;
-  end;
 end;
 
 // LOAD SAVED STATE
-function TDisp17seg.LoadState(AStream: TStream): Boolean;
+function TDisp47segMUX.LoadState(AStream: TStream): Boolean;
+var
+  b: Byte;
 begin
   Result := inherited LoadState(AStream);
   if Result then
     try
       // display status
-      AStream.ReadBuffer(FPort, SizeOf(FPort));
-      AStream.ReadBuffer(FValue, SizeOf(FValue));
-      WritePort(FPort, FValue);
+      for b := 0 to MAXX do
+      begin
+        AStream.ReadBuffer(FValue[b], SizeOf(FValue[b]));
+        WritePort(1, b);
+        WritePort(0, FValue[b]);
+      end;
     except
       Result := false;
     end;
 end;
 
 // SAVE ACTUAL STATE
-function TDisp17seg.SaveState(AStream: TStream): Boolean;
+function TDisp47segMUX.SaveState(AStream: TStream): Boolean;
+var
+  b: Byte;
 begin
   Result := inherited SaveState(AStream);
+  // display status
   if Result then
-  begin
-    // display status
-    AStream.WriteBuffer(FPort, SizeOf(FPort));
-    AStream.WriteBuffer(FValue, SizeOf(FValue));
-  end;
+    for b := 0 to MAXX do
+      AStream.WriteBuffer(FValue[b], SizeOf(FValue[b]));
 end;
 
 // CREATE PANEL
-procedure TDisp17seg.CreatePanel;
+procedure TDisp47segMUX.CreatePanel;
 begin
   if Assigned(FPanelForm) then exit;
 
@@ -160,16 +180,19 @@ begin
     Parent := FPanelForm;
     BevelInner := bvLowered;
     BevelOuter := bvLowered;
-    ClientWidth := 104 + FrameX;
+    ClientWidth := (MAXX + 1) * 112 + FrameX;
     ClientHeight := 94 + FrameY;
     Left := 8;
     Top := 8;
   end;
 
   FPaintBox := TPaintBox.Create(FPanelForm);
-  FPaintBox.Parent := FPanel;
-  FPaintBox.Align := alClient;
-  FPaintBox.OnPaint := @PaintBoxPaint;
+  with FPaintBox do
+  begin
+    Parent := FPanel;
+    Align := alClient;
+    OnPaint := @PaintBoxPaint;
+  end;
   
   with FPanelForm do
   begin
@@ -182,10 +205,11 @@ begin
   end;
 end;
 
-// EXPORTABLE FUNCTIONS AND PROCEDURES
+// ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
+
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
-  Result := TDisp17seg.Create;
+  Result := TDisp47segMUX.Create;
 end;
 
 procedure DestroyPort(APort: TIOPort); CALLTYPE; export;
@@ -218,8 +242,8 @@ end;
 
 procedure CreatePanel(APort: TIOPort); CALLTYPE; export;
 begin
-  if Assigned(APort) and (APort is TDisp17seg)
-    then TDisp17seg(APort).CreatePanel;
+  if Assigned(APort) and (APort is TDisp47segMUX)
+    then TDisp47segMUX(APort).CreatePanel;
 end;
 
 procedure FreePanel(APort: TIOPort); CALLTYPE; export;
