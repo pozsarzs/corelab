@@ -49,9 +49,9 @@ type
     procedure SetRightDot(AStatus: Boolean); virtual;
     procedure SetSegments(AValue: Byte); virtual;
     procedure SetValue(AValue: Byte); virtual;
+    property ModName: PChar read FModname;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
-    property ModName: PChar read FModname;
   end;
     
 implementation
@@ -106,17 +106,17 @@ begin
   DrawToBuffer(FDisplayedData);
 end;
 
-// SET INPUT BCD VALUE
-procedure TDisplay.SetValue(AValue: Byte);
-begin
-  FDisplayedData.Value := AValue and $0F;
-  DrawToBuffer(FDisplayedData);
-end;
-
 // SET INPUT SEGMENT DATA
 procedure TDisplay.SetSegments(AValue: Byte);
 begin
   FDisplayedData.Segments := AValue;
+  DrawToBuffer(FDisplayedData);
+end;
+
+// SET INPUT BCD VALUE
+procedure TDisplay.SetValue(AValue: Byte);
+begin
+  FDisplayedData.Value := AValue and $0F;
   DrawToBuffer(FDisplayedData);
 end;
 
