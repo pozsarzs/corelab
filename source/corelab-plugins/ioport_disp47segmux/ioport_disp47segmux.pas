@@ -90,7 +90,7 @@ var
   b: Byte;
 begin
   for b := 0 to MAXX do FDP[b].Reset;
-  FPaintBox.Invalidate;
+  if Assigned (FPaintBox) then FPaintBox.Invalidate;
 end;
 
 // READ VIRTUAL PORT
@@ -112,12 +112,12 @@ begin
                          if FDataOutNegation then AValue := not AValue;
                          SetRightDot((AValue and $80) > 0);
                          SetSegments(AValue and $7F);
-                         FPaintBox.Invalidate;
+                         if Assigned (FPaintBox) then FPaintBox.Invalidate;
                        end;
              lmBCD:    begin
                          SetRightDot((AValue and $80) > 0);
                          SetSegments(BCD7seg_7447[AValue and $7F]);
-                         FPaintBox.Invalidate;
+                         if Assigned (FPaintBox) then FPaintBox.Invalidate;
                        end;
            end;           
        end;

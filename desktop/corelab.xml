@@ -2,10 +2,14 @@
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-corelab-red">
     <comment>CoreLab Snapshot</comment>
-    <glob pattern="*.clst"/>
+    <glob pattern="*.clsht"/>
   </mime-type>
   <mime-type type="application/x-corelab-orange">
     <comment>CoreLab Script</comment>
-    <glob pattern="*.clce"/>
+    <glob pattern="*.clsce"/>
+  </mime-type>
+  <mime-type type="application/x-corelab-green">
+    <comment>CoreLab Script</comment>
+    <glob pattern="*.clstm"/>
   </mime-type>
 </mime-info>

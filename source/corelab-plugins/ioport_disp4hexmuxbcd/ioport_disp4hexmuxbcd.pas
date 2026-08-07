@@ -88,7 +88,7 @@ var
   b: Byte;
 begin
   for b := 0 to MAXX do FDP[b].Reset;
-  FPaintBox.Invalidate;
+  if Assigned (FPaintBox) then FPaintBox.Invalidate;
 end;
 
 // READ VIRTUAL PORT
@@ -110,7 +110,7 @@ begin
              SetLeftDot((AValue and $20) > 0);
              SetRightDot((AValue and $10) > 0);
              SetValue(AValue and $0F);
-             FPaintBox.Invalidate;
+             if Assigned (FPaintBox) then FPaintBox.Invalidate;
            end;
          end;
       1: if AValue <= MAXX then FSelLine := AValue;

@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_disp8hexmuxbcd.pas                                                | }
-{ | Hexadecimal display output implementation module                         | }
+{ | ioport_ledgreen64mux.pas                                                 | }
+{ | 8-LED output implementation module                                       | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,23 +11,24 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_disp8hexmuxbcd;
+library ioport_ledgreen64mux;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-  CMem, Classes, Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils,
-  Buttons, core_ioport, core_gioport, display_til311;
+  CMem, Classes, Interfaces, Forms, Controls, Graphics, StdCtrls, ExtCtrls, SysUtils,
+  Buttons, core_ioport, core_gioport, core_led, led_square;
 const
   MAXX = 7;
+  MAXY = 7;
 type
-  // Hexadecimal display output class
-  TDisp8HexMUXBCD = class(TGIOPort)
+  // 8x8-LED output class
+  TLEDGreen64MUX = class(TGIOPort)
   private
     FValue:    array[0..MAXX] of Byte;
   protected
     FPanel:    TPanel;
     FPaintBox: TPaintBox;
-    FDP:       array[0..MAXX] of TDisplayTIL311;
+    FLED:      array[0..MAXX, 0..MAXY] of TLEDSquare;
     FSelLine:  Byte;
     procedure PaintBoxPaint(Sender: TObject);
   public
@@ -44,93 +45,105 @@ type
 // ---- PROTECTED METHODS ----
 
 // PAINTBOX ONPAINT EVENT
-procedure TDisp8HexMUXBCD.PaintBoxPaint(Sender: TObject);
+procedure TLEDGreen64MUX.PaintBoxPaint(Sender: TObject);
 var
-  b: Byte;
+  x, y: Byte;
 begin
-  for b := 0 to MAXX do FDP[b].RenderTo(FPaintBox.Canvas, 1 + (112 * b), 1);
+  for x := 0 to MAXX do
+    for y := 0 to MAXY do
+      FLED[x, y].RenderTo(FPaintBox.Canvas, 1 + (16 * x), 1 + (16 * y));
 end;
 
 // ---- PUBLIC METHODS ----
 
-// CREATE TDISP8HEXMUXBCD INSTANCE
-constructor TDisp8HexMUXBCD.Create;
+// CREATE TLEDGREEN64MUX INSTANCE
+constructor TLEDGreen64MUX.Create;
 var
-  b: Byte;
+  x, y: Byte;
 begin
   inherited Create;
-  FModname := '8-digit hexadecimal multiplexed display with BCD input';
-  FDescription := 'TIL311 style display; A0: low nibble: BCD input, high nibble: 0-blank-ldp-rdp., A1: select.';
+  FModname := '8x8-LED output';
+  FDescription := 'Select the column and write the row status..';
   FAddressRangeSize:= 2;
+  FSelLine := 0;
   FHasPanel := true;
   FLatchedOutput := true;
-  FSelLine := 0;
-  for b := 0 to MAXX do
+  for x := 0 to MAXX do
+   for y := 0 to MAXY do
   begin
-    FDP[b] := TDisplayTIL311.Create;
-    FDP[b].Reset;
+    FLED[x, y] := TLEDSquare.Create;
+    with FLED[x, y] do
+    begin
+      Color := RETRO_COLORS[clRetroGreen];
+      BGColor := clBackground;
+      Reset;
+    end;
   end;
 end;
 
-// DESTROY TDISP8HEXMUXBCD INSTANCE
-destructor TDisp8HexMUXBCD.Destroy;
+// DESTROY TLEDGREEN64MUX INSTANCE
+destructor TLEDGreen64MUX.Destroy;
 var
-  b: Byte;
+  x, y: Byte;
 begin
-  for b := 0 to MAXX do FDP[b].Free;
+  for x := 0 to MAXX do
+    for y := 0 to MAXy do
+      FLED[x, y].Free;
   FreePanel;
   inherited Destroy;
 end;
 
 // RESET VIRTUAL PORT
-procedure TDisp8HexMUXBCD.Reset;
+procedure TLEDGreen64MUX.Reset;
 var
-  b: Byte;
+  x, y: Byte;
 begin
-  for b := 0 to MAXX do FDP[b].Reset;
+  for x := 0 to MAXX do
+    for y := 0 to MAXy do
+      FLED[x, y].Reset;
   if Assigned (FPaintBox) then FPaintBox.Invalidate;
 end;
 
 // READ VIRTUAL PORT
-function TDisp8HexMUXBCD.ReadPort(APort: Word): Byte;
+function TLEDGreen64MUX.ReadPort(APort: Word): Byte;
 begin
   if FEnabled then Result := 0 else Result := $FF;
 end;
 
 // WRITE VIRTUAL PORT
-procedure TDisp8HexMUXBCD.WritePort(APort: Word; AValue: Byte);
+procedure TLEDGreen64MUX.WritePort(APort: Word; AValue: Byte);
+var
+  y:     Byte;
+  Value: Byte;
 begin
   if FEnabled then 
-    case APort of
-      0: begin
-           FValue[FSelLine] := AValue;
-           with FDP[FSelLine] do
-           begin
-             SetBlank((AValue and $40) > 0);
-             SetLeftDot((AValue and $20) > 0);
-             SetRightDot((AValue and $10) > 0);
-             SetValue(AValue and $0F);
-             if Assigned (FPaintBox) then FPaintBox.Invalidate;
-           end;
-         end;
-      1: if AValue <= MAXX then FSelLine := AValue;
-      end;
+  case APort of
+    0: begin
+         FValue[FSelLine] := AValue;
+         Value := FValue[FSelLine];
+         if FDataInNegation then Value := not Value;
+         for y := 0 to MAXY do
+           FLED[FSelLine, y].IsOn := (Value and (1 shl y)) <> 0;
+         if Assigned (FPaintBox) then FPaintBox.Invalidate;
+       end;
+    1: if AValue <= MAXX then FSelLine := AValue;
+    end;
 end;
 
 // LOAD SAVED STATE
-function TDisp8HexMUXBCD.LoadState(AStream: TStream): Boolean;
+function TLEDGreen64MUX.LoadState(AStream: TStream): Boolean;
 var
-  b: Byte;
+  x: Byte;
 begin
   Result := inherited LoadState(AStream);
   if Result then
     try
       // display status
-      for b := 0 to MAXX do
+      for x := 0 to MAXX do
       begin
-        AStream.ReadBuffer(FValue[b], SizeOf(FValue[b]));
-        WritePort(1, b);
-        WritePort(0, FValue[b]);
+        AStream.ReadBuffer(FValue[x], SizeOf(FValue[x]));
+        WritePort(1, x);
+        WritePort(0, FValue[x]);
       end;
     except
       Result := false;
@@ -138,19 +151,19 @@ begin
 end;
 
 // SAVE ACTUAL STATE
-function TDisp8HexMUXBCD.SaveState(AStream: TStream): Boolean;
+function TLEDGreen64MUX.SaveState(AStream: TStream): Boolean;
 var
-  b: Byte;
+  x: Byte;
 begin
   Result := inherited SaveState(AStream);
   // display status
   if Result then
-    for b := 0 to MAXX do
-      AStream.WriteBuffer(FValue[b], SizeOf(FValue[b]));
+    for x := 0 to MAXX do
+      AStream.WriteBuffer(FValue[x], SizeOf(FValue[x]));
 end;
 
 // CREATE PANEL
-procedure TDisp8HexMUXBCD.CreatePanel;
+procedure TLEDGreen64MUX.CreatePanel;
 begin
   if Assigned(FPanelForm) then exit;
 
@@ -172,8 +185,8 @@ begin
     Parent := FPanelForm;
     BevelInner := bvLowered;
     BevelOuter := bvLowered;
-    ClientWidth := (MAXX + 1) * 112 + FrameX;
-    ClientHeight := 94 + FrameY;
+    ClientWidth := (MAXX + 1) * 16 + FrameX + 3;
+    ClientHeight := (MAXY + 1) * 16 + FrameY + 3;
     Left := 8;
     Top := 8;
   end;
@@ -201,7 +214,7 @@ end;
 
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
-  Result := TDisp8HexMUXBCD.Create;
+  Result := TLEDGreen64MUX.Create;
 end;
 
 procedure DestroyPort(APort: TIOPort); CALLTYPE; export;
@@ -234,8 +247,8 @@ end;
 
 procedure CreatePanel(APort: TIOPort); CALLTYPE; export;
 begin
-  if Assigned(APort) and (APort is TDisp8HexMUXBCD)
-    then TDisp8HexMUXBCD(APort).CreatePanel;
+  if Assigned(APort) and (APort is TLEDGreen64MUX)
+    then TLEDGreen64MUX(APort).CreatePanel;
 end;
 
 procedure FreePanel(APort: TIOPort); CALLTYPE; export;

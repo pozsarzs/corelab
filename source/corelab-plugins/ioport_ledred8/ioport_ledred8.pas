@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | ioport_disp8hexmuxbcd.pas                                                | }
-{ | Hexadecimal display output implementation module                         | }
+{ | ioport_ledred8.pas                                                       | }
+{ | 8-LED output implementation module                                       | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,24 +11,23 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-library ioport_disp8hexmuxbcd;
+library ioport_ledred8;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-  CMem, Classes, Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils,
-  Buttons, core_ioport, core_gioport, display_til311;
+  CMem, Classes, Interfaces, Forms, Controls, Graphics, StdCtrls, ExtCtrls, SysUtils,
+  Buttons, core_ioport, core_gioport, core_led, led_round;
 const
   MAXX = 7;
 type
-  // Hexadecimal display output class
-  TDisp8HexMUXBCD = class(TGIOPort)
+  // 8-LED output class
+  TLEDRed8 = class(TGIOPort)
   private
-    FValue:    array[0..MAXX] of Byte;
+    FValue:    Byte;
   protected
     FPanel:    TPanel;
     FPaintBox: TPaintBox;
-    FDP:       array[0..MAXX] of TDisplayTIL311;
-    FSelLine:  Byte;
+    FLED:      array[0..MAXX] of TLEDRound;
     procedure PaintBoxPaint(Sender: TObject);
   public
     constructor Create; override;
@@ -44,113 +43,105 @@ type
 // ---- PROTECTED METHODS ----
 
 // PAINTBOX ONPAINT EVENT
-procedure TDisp8HexMUXBCD.PaintBoxPaint(Sender: TObject);
+procedure TLEDRed8.PaintBoxPaint(Sender: TObject);
 var
   b: Byte;
 begin
-  for b := 0 to MAXX do FDP[b].RenderTo(FPaintBox.Canvas, 1 + (112 * b), 1);
+  for b := 0 to MAXX do FLED[b].RenderTo(FPaintBox.Canvas, 1 + (26 * b), 1);
 end;
 
 // ---- PUBLIC METHODS ----
 
-// CREATE TDISP8HEXMUXBCD INSTANCE
-constructor TDisp8HexMUXBCD.Create;
+// CREATE TLEDRED8 INSTANCE
+constructor TLEDRed8.Create;
 var
   b: Byte;
 begin
   inherited Create;
-  FModname := '8-digit hexadecimal multiplexed display with BCD input';
-  FDescription := 'TIL311 style display; A0: low nibble: BCD input, high nibble: 0-blank-ldp-rdp., A1: select.';
-  FAddressRangeSize:= 2;
+  FModname := '8-LED output';
+  FDescription := 'This is an output with red LEDs, each bit controls a specific LED within a Byte.';
+  FAddressRangeSize:= 1;
   FHasPanel := true;
   FLatchedOutput := true;
-  FSelLine := 0;
   for b := 0 to MAXX do
   begin
-    FDP[b] := TDisplayTIL311.Create;
-    FDP[b].Reset;
+    FLED[b] := TLEDRound.Create;
+    with FLED[b] do
+    begin
+      Color := RETRO_COLORS[clRetroRed];
+      BGColor := clBackground;
+      Reset;
+    end;
   end;
 end;
 
-// DESTROY TDISP8HEXMUXBCD INSTANCE
-destructor TDisp8HexMUXBCD.Destroy;
+// DESTROY TLEDRED8 INSTANCE
+destructor TLEDRed8.Destroy;
 var
   b: Byte;
 begin
-  for b := 0 to MAXX do FDP[b].Free;
+  for b := 0 to MAXX do FLED[b].Free;
   FreePanel;
   inherited Destroy;
 end;
 
 // RESET VIRTUAL PORT
-procedure TDisp8HexMUXBCD.Reset;
+procedure TLEDRed8.Reset;
 var
   b: Byte;
 begin
-  for b := 0 to MAXX do FDP[b].Reset;
+  for b := 0 to MAXX do FLED[b].Reset;
   if Assigned (FPaintBox) then FPaintBox.Invalidate;
 end;
 
 // READ VIRTUAL PORT
-function TDisp8HexMUXBCD.ReadPort(APort: Word): Byte;
+function TLEDRed8.ReadPort(APort: Word): Byte;
 begin
   if FEnabled then Result := 0 else Result := $FF;
 end;
 
 // WRITE VIRTUAL PORT
-procedure TDisp8HexMUXBCD.WritePort(APort: Word; AValue: Byte);
+procedure TLEDRed8.WritePort(APort: Word; AValue: Byte);
+var
+  b:     Byte;
+  Value: Byte;
 begin
-  if FEnabled then 
-    case APort of
-      0: begin
-           FValue[FSelLine] := AValue;
-           with FDP[FSelLine] do
-           begin
-             SetBlank((AValue and $40) > 0);
-             SetLeftDot((AValue and $20) > 0);
-             SetRightDot((AValue and $10) > 0);
-             SetValue(AValue and $0F);
-             if Assigned (FPaintBox) then FPaintBox.Invalidate;
-           end;
-         end;
-      1: if AValue <= MAXX then FSelLine := AValue;
-      end;
+  if FEnabled and (APort = 0) then
+  begin   
+    FValue := AValue;
+    Value := FValue;
+    if FDataInNegation then Value := not Value;
+    for b := 0 to MAXX do
+      FLED[b].IsOn := (Value and (1 shl b)) <> 0;
+    if Assigned (FPaintBox) then FPaintBox.Invalidate;
+  end;
 end;
 
 // LOAD SAVED STATE
-function TDisp8HexMUXBCD.LoadState(AStream: TStream): Boolean;
-var
-  b: Byte;
+function TLEDRed8.LoadState(AStream: TStream): Boolean;
 begin
   Result := inherited LoadState(AStream);
   if Result then
     try
       // display status
-      for b := 0 to MAXX do
-      begin
-        AStream.ReadBuffer(FValue[b], SizeOf(FValue[b]));
-        WritePort(1, b);
-        WritePort(0, FValue[b]);
-      end;
+      AStream.ReadBuffer(FValue, SizeOf(FValue));
+      WritePort(0, FValue);
     except
       Result := false;
     end;
 end;
 
 // SAVE ACTUAL STATE
-function TDisp8HexMUXBCD.SaveState(AStream: TStream): Boolean;
-var
-  b: Byte;
+function TLEDRed8.SaveState(AStream: TStream): Boolean;
 begin
   Result := inherited SaveState(AStream);
   // display status
   if Result then
-    for b := 0 to MAXX do
-      AStream.WriteBuffer(FValue[b], SizeOf(FValue[b]));
+    AStream.WriteBuffer(FValue, SizeOf(FValue));
 end;
 
 // CREATE PANEL
-procedure TDisp8HexMUXBCD.CreatePanel;
+procedure TLEDRed8.CreatePanel;
 begin
   if Assigned(FPanelForm) then exit;
 
@@ -172,8 +163,8 @@ begin
     Parent := FPanelForm;
     BevelInner := bvLowered;
     BevelOuter := bvLowered;
-    ClientWidth := (MAXX + 1) * 112 + FrameX;
-    ClientHeight := 94 + FrameY;
+    ClientWidth := (MAXX + 1) * 26 + FrameX;
+    ClientHeight := 26 + FrameY;
     Left := 8;
     Top := 8;
   end;
@@ -201,7 +192,7 @@ end;
 
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
-  Result := TDisp8HexMUXBCD.Create;
+  Result := TLEDRed8.Create;
 end;
 
 procedure DestroyPort(APort: TIOPort); CALLTYPE; export;
@@ -234,8 +225,8 @@ end;
 
 procedure CreatePanel(APort: TIOPort); CALLTYPE; export;
 begin
-  if Assigned(APort) and (APort is TDisp8HexMUXBCD)
-    then TDisp8HexMUXBCD(APort).CreatePanel;
+  if Assigned(APort) and (APort is TLEDRed8)
+    then TLEDRed8(APort).CreatePanel;
 end;
 
 procedure FreePanel(APort: TIOPort); CALLTYPE; export;
