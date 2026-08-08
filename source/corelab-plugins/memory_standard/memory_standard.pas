@@ -15,7 +15,7 @@ library memory_standard;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-   core_memory;
+   CMem, Classes, core_memory;
 type
   // Standard memory class
   TStandardMemory = class(TMemory)
@@ -29,10 +29,9 @@ type
 constructor TStandardMemory.Create;
 begin
   inherited Create;
-  FModname := 'Standard memory';
-  FDescription := 'Up to 16MB RAM/ROM';
+  SetFModname(PChar('Standard memory'));
+  SetFDescription(PChar('Up to 16MB RAM/ROM'));
   FMemoryMode := mmRAM;
-  Reset;
 end;
 
 // DESTROY TSTANDARDMEMORY INSTANCE
@@ -41,20 +40,38 @@ begin
   inherited Destroy;
 end;
 
-// EXPORTABLE FUNCTIONS AND PROCEDURES
+// ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
+
 function CreateMemory: TMemory; CALLTYPE; export;
 begin
   Result := TStandardMemory.Create;
 end;
 
-procedure DestroyMemory(Memory: TMemory); CALLTYPE; export;
+procedure DestroyMemory(AMemory: TMemory); CALLTYPE; export;
 begin
-  if Assigned(Memory) then Memory.Free;
+  if Assigned(AMemory) then AMemory.Free;
 end;
 
-// EXPORTED FUNCTIONS AND PROCEDURES
+function LoadState(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE; export;
+begin
+  if Assigned(AMemory)
+    then Result := AMemory.LoadState(AStream)
+    else Result := false;
+end;
+
+function SaveState(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE; export;
+begin
+  if Assigned(AMemory)
+    then Result := AMemory.SaveState(AStream)
+    else Result := false;
+end;
+
+// ---- EXPORTED FUNCTIONS AND PROCEDURES ----
+
 exports CreateMemory name 'memory_create';
 exports DestroyMemory name 'memory_destroy';
+exports LoadState name 'memory_loadstate';
+exports SaveState name 'memory_savestate';
 
 begin
 end.

@@ -34,39 +34,49 @@ type
     function ToString: string;
     function Compare(AOther: TSemanticVersion): Integer;
   end;
-  // Abstract base I/O port class
+  // Abstract memory class
   TMemory = class
+  private
+    PDescription:      string;
+    PModname:          string;
   protected
     FAddressRangeSize: DWord;                              // Address range size
     FDescription:      PChar;                               // Short description
     FEnabled:          Boolean;         // Enable memory without detach from bus
+    FInstanceID:       Integer;                            // Module instance ID
     FMemoryMode:       TMemoryMode;                      //Memory operation mode
     FMemCells:         array of Byte;                            // Memory cells
     FModname:          PChar;                                     // Module name
     FVersion:          TSemanticVersion;                       // Module version
+    procedure SetFAddressRangeSize(AAddressRangeSize: DWord);
+    procedure SetFDescription(ADescription: PChar);
+    procedure SetFModname(AModname: PChar);
   public
-    // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
-    // system bus side
-    function ReadMemory(AAddress: DWord): Byte; virtual;
+    // SysBus side
     procedure Reset; virtual;
+    function ReadMemory(AAddress: DWord): Byte; virtual;
     procedure WriteMemory(AAddress: DWord; AValue: Byte); virtual;
-    // service bus side
+    // SrvBus side methods
+    function LoadState(AStream: TStream): Boolean; virtual;
+    function SaveState(AStream: TStream): Boolean; virtual;
     procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
-    // Public properties
-    property AddressRangeSize: DWord read FAddressRangeSize write FAddressRangeSize;
-    property Description: PChar read FDescription write FDescription;
+    // Properties
+    property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
+    property Description: PChar read FDescription write SetFDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
+    property InstanceID: Integer read FInstanceID write FInstanceID;
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
-    property ModName: PChar read FModname write FModname;
+    property ModName: PChar read FModname write SetFModname;
     property Version: TSemanticVersion read FVersion;
   end;
 
 implementation
 
-// HELPER FOR OWN TYPES
+// ---- HELPER FOR OWN TYPES ----
+
 function TMemoryModeHelper.ToString: string;
 begin
   WriteStr(Result, Self);
@@ -95,27 +105,67 @@ begin
       if AOther.Patch < Patch then Result := 1;
 end;
 
+// ---- PROTECTED METHODS ----
+
+// SET MEMORY SIZE
+procedure TMemory.SetFAddressRangeSize(AAddressRangeSize: DWord);
+var
+  dw: DWord;
+begin
+  if AAddressRangeSize > 0 then
+  begin
+    FAddressRangeSize := AAddressRangeSize;
+    dw := 1 shl 24;
+    if FAddressRangeSize > dw then FAddressRangeSize := dw;
+    SetLength(FMemCells, FAddressRangeSize);
+  end;
+end;
+
+// SET DESCRIPTION
+procedure TMemory.SetFDescription(ADescription: PChar);
+begin
+  PDescription := StrPas(ADescription);
+  FDescription := PChar(PDescription);
+end;
+
+// SET MODNAME
+procedure TMemory.SetFModname(AModname: PChar);
+begin
+  PModname := StrPas(AModname);
+  FModname := PChar(PModname);
+end;
+
+// ---- PUBLIC METHODS ----
+
 // CREATE TMEMORY INSTANCE
 constructor TMemory.Create;
 begin
   inherited Create;
   // Initial state
-  FAddressRangeSize := 1024;
+  SetFAddressRangeSize(1024);
   FEnabled := false;
   FMemoryMode := mmRAM;
-  FModname := 'RAM';
+  SetFModname(PChar('RAM'));
+  SetFDescription(PChar('Conventional memory.'));
   with FVersion do
   begin
     Major := 0;
     Minor := 1;
     Patch := 0;
   end; 
+  Reset;
 end;
 
 // DESTROY TMEMORY INSTANCE
 destructor TMemory.Destroy;
 begin
   inherited Destroy;
+end;
+
+// FILL MEMORY WITH ZERO
+procedure TMemory.Reset;
+begin
+  if FAddressRangeSize > 0 then FillByte(FMemCells[0], FAddressRangeSize, 0);
 end;
 
 // READ VIRTUAL MEMORY
@@ -135,15 +185,42 @@ begin
     if AAddress < FAddressRangeSize then FMemCells[AAddress] := AValue;
 end;
 
-// SET SIZE AND RESET CELLS
-procedure TMemory.Reset;
-var
-  dw: DWord;
+// LOAD SAVED STATE
+function TMemory.LoadState(AStream: TStream): Boolean;
 begin
-  dw := 1 shl 24;
-  if FAddressRangeSize > dw then FAddressRangeSize := dw;
-  SetLength(FMemCells, FAddressRangeSize);
-  if FAddressRangeSize > 0 then FillByte(FMemCells[0], FAddressRangeSize, 0);
+  Result := true;
+  with AStream do
+    try
+      // common fields
+      ReadBuffer(FEnabled, SizeOf(FEnabled));
+      // common fields related to IOPort
+      ReadBuffer(FMemoryMode, SizeOf(FMemoryMode));
+      ReadBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
+      SetFAddressRangeSize(FAddressRangeSize);
+      Reset;
+      if FAddressRangeSize > 0 then
+        ReadBuffer(FMemCells[0], FAddressRangeSize);
+    except
+      Result := false;
+    end;
+end;
+
+// SAVE ACTUAL STATE
+function TMemory.SaveState(AStream: TStream): Boolean;
+begin
+  Result := false;
+  if FInstanceID > -1 then
+    with AStream do
+    begin
+      // common fields
+      WriteBuffer(FEnabled, SizeOf(FEnabled));
+      // common fields related to IOPort
+      WriteBuffer(FMemoryMode, SizeOf(FMemoryMode));
+      WriteBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
+      if FAddressRangeSize > 0 then
+        WriteBuffer(FMemCells[0], FAddressRangeSize);
+      Result := true;
+    end;
 end;
 
 // LOAD MEMORY CONTENT FROM STREAM

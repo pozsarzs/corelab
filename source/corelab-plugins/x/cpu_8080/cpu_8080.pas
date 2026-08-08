@@ -15,7 +15,7 @@ library cpu_8080;
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
-  Classes, SysUtils, core_cpu;
+  CMem, Classes, SysUtils, core_cpu;
 type
   // Last executed instruction
   TLastInstruction = record
