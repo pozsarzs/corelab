@@ -1,48 +1,38 @@
-> [!NOTE]
-> This documentation does not include fields and methods created by the IDE.
->
-
 # CoreLAB
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TForm2 from TForm class in frmAbout unit
+## TForm2 About Form in frmabout unit
 
-(...)
+`TForm2` is an About dialog form. It displays application identification data supplied through a `TAboutLabels` record and provides clickable homepage and e-mail links.
 
-### UML diagram
+### Types
 
-![Class diagram](../diagrams/_png/clioport.png "CLIOPort class diagram")
-
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
-
-### Own data types
-
-|name        |type      |description|
-|------------|----------|-----------|
-|TAboutLabels|record    |           |
-|.Copyright  |string[32]|           |
-|.Description|string[32]|           |
-|.Email      |string[32]|           |
-|.Homepage:  |string[32]|           |
-|.Name:      |string[32]|           |
-|.Version:   |string[32]|           |
+|name|description|
+|---|---|
+|`TAboutLabels`|Record containing application name, version, description, copyright, homepage and e-mail address.|
 
 ### Public methods
 
-|name                                              |flags|description                               |
-|--------------------------------------------------|:---:|------------------------------------------|
-|`procedure SetAboutLabels(aLabels: TAboutLabels);`|     |                                          |
+|name|description|
+|---|---|
+|`procedure SetAboutLabels(Labels: TAboutLabels);`|Sets the captions of the About dialog from the supplied record.|
+
+### Event handler methods
+
+|name|description|
+|---|---|
+|`procedure Label5Click(Sender: TObject);`|Opens the homepage URL and displays an error message if it cannot be opened.|
+|`procedure Label5MouseEnter(Sender: TObject);`|Underlines the homepage label while the pointer is over it.|
+|`procedure Label5MouseLeave(Sender: TObject);`|Removes the underline from the homepage label.|
+|`procedure Label8Click(Sender: TObject);`|Opens the e-mail address using a `mailto:` URL and displays an error message if it cannot be opened.|
+|`procedure Label8MouseEnter(Sender: TObject);`|Underlines the e-mail label while the pointer is over it.|
+|`procedure Label8MouseLeave(Sender: TObject);`|Removes the underline from the e-mail label.|
+
+### Global variable
+
+|name|type|description|
+|---|---|---|
+|`Form2`|`TForm2`|Global instance of the About form.|

@@ -1,0 +1,189 @@
+@startuml
+
+title CoreLAB I/O port plugin class diagram
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+left to right direction
+
+
+' ---- BASE I/O PORT HIERARCHY ----
+
+package "I/O Port Framework" {
+  abstract class TIOPort <<base class>> {
+    + Create
+    + Destroy
+    + ReadPort
+    + WritePort
+    + Reset
+  }
+
+  abstract class TGIOPort <<base class>> {
+    + Create
+    + Destroy
+    + ReadPort
+    + WritePort
+    + Reset
+  }
+
+  TIOPort <|-- TGIOPort
+}
+
+' ---- VIRTUAL DISPLAY HIERARCHY ----
+
+package "Virtual Displays" {
+  abstract class TDisplay <<virtual component>> {
+    + DrawToBuffer
+    + RenderTo
+    + SetBlank
+    + SetLeftDot
+    + SetRightDot
+    + SetSegments
+    + SetValue
+  }
+
+  class TDisplayTIL302 <<virtual component>> {
+    + DrawToBuffer
+    + RenderTo
+  }
+
+  class TDisplayTIL311 <<virtual component>> {
+    + DrawToBuffer
+    + RenderTo
+  }
+
+  TDisplay <|-- TDisplayTIL302
+  TDisplay <|-- TDisplayTIL311
+}
+
+' ---- VIRTUAL LED HIERARCHY ----
+
+package "Virtual LEDs" {
+  abstract class TLED <<virtual component>> {
+    + DrawToBuffer
+    + RenderTo
+  }
+
+  class TLEDRound <<virtual component>> {
+    + DrawToBuffer
+    + RenderTo
+  }
+
+  class TLEDSquare <<virtual component>> {
+    + DrawToBuffer
+    + RenderTo
+  }
+
+  TLED <|-- TLEDRound
+  TLED <|-- TLEDSquare
+}
+
+' ---- SIMPLE INPUT/OUTPUT PLUGINS ----
+
+package "Basic I/O Plugins" {
+  class TBELLPort <<plugin>>
+  class TNULLPort <<plugin>>
+  class TREALPort <<plugin>>
+  class TStandardPort <<plugin>>
+  class TConsole <<plugin>>
+  class TButton8 <<plugin>>
+  class TButton16BCD <<plugin>>
+  class TButton16MUX <<plugin>>
+  class TSwitch8 <<plugin>>
+  class TSwitch16BCD <<plugin>>
+  class TSwitch16MUX <<plugin>>
+}
+
+TIOPort <|-- TBELLPort
+TIOPort <|-- TNULLPort
+TIOPort <|-- TREALPort
+
+TGIOPort <|-- TStandardPort
+TGIOPort <|-- TConsole
+TGIOPort <|-- TButton8
+TGIOPort <|-- TButton16BCD
+TGIOPort <|-- TButton16MUX
+TGIOPort <|-- TSwitch8
+TGIOPort <|-- TSwitch16BCD
+TGIOPort <|-- TSwitch16MUX
+
+' ---- DISPLAY PLUGINS ----
+
+package "Display Plugins" {
+  class TDisp17seg <<plugin>>
+  class TDisp1HexBCD <<plugin>>
+  class TDisp27segMUX <<plugin>>
+  class TDisp2HexMUXBCD <<plugin>>
+  class TDisp47segMUX <<plugin>>
+  class TDisp4HexMUXBCD <<plugin>>
+  class TDisp87segMUX <<plugin>>
+  class TDisp8HexMUXBCD <<plugin>>
+}
+
+TGIOPort <|-- TDisp17seg
+TGIOPort <|-- TDisp1HexBCD
+TGIOPort <|-- TDisp27segMUX
+TGIOPort <|-- TDisp2HexMUXBCD
+TGIOPort <|-- TDisp47segMUX
+TGIOPort <|-- TDisp4HexMUXBCD
+TGIOPort <|-- TDisp87segMUX
+TGIOPort <|-- TDisp8HexMUXBCD
+
+' TIL302-based display plugins
+TDisp17seg *-- TDisplayTIL302 : FDP
+TDisp27segMUX *-- "1..*" TDisplayTIL302 : FDP[]
+TDisp47segMUX *-- "1..*" TDisplayTIL302 : FDP[]
+TDisp87segMUX *-- "1..*" TDisplayTIL302 : FDP[]
+
+' TIL311-based display plugins
+TDisp1HexBCD *-- TDisplayTIL311 : FDP
+TDisp2HexMUXBCD *-- "1..*" TDisplayTIL311 : FDP[]
+TDisp4HexMUXBCD *-- "1..*" TDisplayTIL311 : FDP[]
+TDisp8HexMUXBCD *-- "1..*" TDisplayTIL311 : FDP[]
+
+' ---- LED PLUGINS ----
+
+package "LED Plugins" {
+  class TLEDGreen8 <<plugin>>
+  class TLEDGreen64MUX <<plugin>>
+  class TLEDGreen512MUX <<plugin>>
+
+  class TLEDRed8 <<plugin>>
+  class TLEDRed64MUX <<plugin>>
+  class TLEDRed512MUX <<plugin>>
+
+  class TLEDYellow8 <<plugin>>
+  class TLEDYellow64MUX <<plugin>>
+  class TLEDYellow512MUX <<plugin>>
+}
+
+TGIOPort <|-- TLEDGreen8
+TGIOPort <|-- TLEDGreen64MUX
+TGIOPort <|-- TLEDGreen512MUX
+TGIOPort <|-- TLEDRed8
+TGIOPort <|-- TLEDRed64MUX
+TGIOPort <|-- TLEDRed512MUX
+TGIOPort <|-- TLEDYellow8
+TGIOPort <|-- TLEDYellow64MUX
+TGIOPort <|-- TLEDYellow512MUX
+
+' Round LED plugins
+TLEDGreen8 *-- "1..*" TLEDRound : FLED[]
+TLEDRed8 *-- "1..*" TLEDRound : FLED[]
+TLEDYellow8 *-- "1..*" TLEDRound : FLED[]
+
+' Square LED matrix plugins
+TLEDGreen64MUX *-- "1..*" TLEDSquare : FLED[][]
+TLEDGreen512MUX *-- "1..*" TLEDSquare : FLED[][]
+TLEDRed64MUX *-- "1..*" TLEDSquare : FLED[][]
+TLEDRed512MUX *-- "1..*" TLEDSquare : FLED[][]
+TLEDYellow64MUX *-- "1..*" TLEDSquare : FLED[][]
+TLEDYellow512MUX *-- "1..*" TLEDSquare : FLED[][]
+
+@enduml

@@ -2,59 +2,52 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TCommandEngine base class in CommandEngine unit
+## TCommandEngine from commandengine unit
 
-TCommandEngine is the base class for the command interpreter and execution of
-CoreLAB. Its task is to parse input command lines, find and execute registered
-actions in the specified context and execution mode. It plays a central role in
-the interactive control of the simulator and the processing of instructions.
-
-### UML diagram
-
-![Class diagram](../diagrams/_png/commandengine.png "CoreLAB CommandEngine class diagram")
-
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
+`TCommandEngine` is the command execution engine. It tokenizes command lines, resolves command names through a command registry, creates command objects, executes them in the current running mode, executes associated actions and stores the resulting exit code.
 
 ### Protected fields
 
-|name          |type            |flags|description                       |default|
-|--------------|----------------|:---:|----------------------------------|-------|
-|FActionList   |TActionList     |     |External TActionList object       |       |
-|FContext      |TCommandContext |     |TCommandContex object             |       |
-|FExitRequested|Boolean         |     |Request to end program execution  |       |
-|FLastExitCode |Integer         |     |The last command is the exit value|       |
-|FParser       |TCommandParser  |     |TCommandParser instance           |       |
-|FRegistry     |TCommandRegistry|     |External TCommandRegistry object  |       |
-|FRunningMode  |TCommandScope   |     |Application running mode          |       |
-
-### Public properties
-
-|name         |type            |flags |description     |default|
-|-------------|----------------|:----:|----------------|-------|
-|ExitRequested|Boolean         |Re    |= FExitRequested|       |
-|ActionList   |TActionList     |Re, Wr|= FActionList   |       |
-|Registry     |TCommandRegistry|Re, Wr|= FRegistry     |       |
-|LastExitCode |Integer         |Re    |= FLastExitCode |       |
-|RunningMode  |TCommandScope   |Re, Wr|= FRunningMode  |       |
+|name|type|description|
+|---|---|---|
+|`FActionList`|`TActionList`|Optional action list used by `ExecuteAction`.|
+|`FContext`|`TCommandContext`|Command execution context created by the constructor.|
+|`FExitRequested`|`Boolean`|Exit state received from the most recently executed command.|
+|`FLastExitCode`|`Integer`|Exit code returned by the most recently executed command-line operation.|
+|`FParser`|`TCommandParser`|Command parser created by the constructor.|
+|`FRegistry`|`TCommandRegistry`|Command registry used for command lookup.|
+|`FRunningMode`|`TCommandScope`|Current execution mode.|
 
 ### Public methods
 
-|name                                                   |flags|description                                                |
-|-------------------------------------------------------|:---:|-----------------------------------------------------------|
-|`constructor Create;`                                  |Vi   |Sets the initial values for the new object                 |
-|`destructor Destroy;`                                  |Vi   |Frees the object's resources                               |
-|`function ExecuteAction(const AName: string): Boolean;`|Vi   |Executes the action specified by AName                     |
-|`function ExecuteLine(const ALine: string): Integer;`  |Or   |Parses and executes a command line and returns an exit code|
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create;`|Vi|Creates the command context and command parser.|
+|`destructor Destroy;`|Or|Frees the command context and parser.|
+|`function ExecuteAction(const AName: string): Boolean;`|Vi|Searches the assigned action list for an action with the specified name and executes it.|
+|`function ExecuteLine(const ALine: string): Integer;`|Vi|Processes and executes one command line.|
+
+### Public properties
+
+|name|type|access|description|
+|---|---|---|---|
+|`ExitRequested`|`Boolean`|read|Exit state set by the executed command.|
+|`ActionList`|`TActionList`|read/write|Action list used for post-command actions.|
+|`Registry`|`TCommandRegistry`|read/write|Registry used to resolve command names.|
+|`LastExitCode`|`Integer`|read|Result of the last `ExecuteLine` call.|
+|`RunningMode`|`TCommandScope`|read/write|Current command execution mode.|
+
+### ExecuteLine result codes
+
+|code|condition|
+|---:|---|
+|`0`|Empty/comment line, no tokens, or successful command execution with return value `0`.|
+|`-1`|Command name is not registered.|
+|`-2`|The command is not permitted in the current running mode.|
+|other|Return value supplied by the command's `Execute` method.|
+
+An empty line or a line whose first character is `#` is ignored. The parser is used to create a token list, and the first token is interpreted as the command name.
+
+The constructor creates `FContext` and `FParser`, but the source does not initialize `FActionList`, `FRegistry`, `FExitRequested`, `FLastExitCode` or `FRunningMode`. These fields therefore retain their language/runtime initialization state unless assigned elsewhere.

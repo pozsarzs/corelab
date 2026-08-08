@@ -2,133 +2,126 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TCPU base class in core_cpu unit
+## TCPU and related types from core_cpu unit
 
-TCPU is an abstract base class for simulating central processing units (CPU),
-microprocessors, and microcontrollers (MCU). It provides unified management of
-instruction execution, interrupt handling, memory bus communication (data, code,
-I/O), and internal states, supporting both Neumann and Harvard architectures.
+`TCPU` is an abstract base class for processor implementations. It defines common CPU identity and architecture information, runtime state, execution statistics, event notification, interrupt handling, and connection to an external `ICPUBus` implementation.
 
-### Abbreviations
+The class does not implement processor-specific register access, reset, single-step execution, or instruction decoding. These operations are left abstract for derived CPU classes.
 
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
+### Related types
 
-### Own data types
+|name |type |description |
+|-----|-----|------------|
+|`TArchitecture`|enumeration|CPU memory architecture: `arHarvad` or `arNeumann`|
+|`TEndianness`|enumeration|CPU byte order: `enLittle` or `enBig`|
+|`TCPUEvent`|enumeration|Generic CPU events: instruction boundary, interrupt, halt, and reset|
+|`TCPUEventHandler`|procedure type|Callback receiving a CPU event|
+|`ICPUBus`|interface|Generic bus interface for data memory, code memory, and I/O access|
+|`TSemanticVersion`|record|Major, minor, and patch version information|
 
-|name                              |type                                                     |description                     |
-|----------------------------------|---------------------------------------------------------|--------------------------------|
-|TArchitecture                     |(arHarvard,arNeumann)                                    |Type of architecture            |
-|TTArchitectureHelper              |type helper for TArchitecture                            |Helper                          |
-|.ToString                         |string                                                   |Convert Enum -> String          |
-|.FromString(const Value: string)  |TArchitecture                                            |Convert String -> Enum          |
-|TEndianness                       |(enLittle, enBig)                                        |CPU byte order                  |
-|TEndiannessHelper                 |type helper for TEndianness                              |Helper                          |
-|.ToString                         |string                                                   |Convert Enum -> String          |
-|.FromString(const Value: string)  |TEndianness                                              |Convert String -> Enum          |
-|TCPUEvent                         |(ceInstructionBoundary, ceInterrupt, ceHalt, ceReset)    |Generic CPU events (for tracing)|
-|TCPUEventHelper                   |type helper for TCPUEvent                                |Helper                          |
-|.ToString                         |string                                                   |Convert Enum -> String          |
-|.FromString(const Value: string)  |TCPUEvent                                                |Convert String -> Enum          |
-|TCPUEventHandler                  |`procedure(Sender: TObject; Event: TCPUEvent) of Object;`|Event callback type             |
-|TSemanticVersion                  |record                                                   |
-|.Major                            |Integer                                                  |
-|.Minor                            |Integer                                                  |
-|.Patch                            |Integer                                                  |
-|TSemanticVersionHelper            |type helper for TSemanticVersion                         |
-|.ToString                         |string                                                   |
-|.Compare(AOther: TSemanticVersion)|Integer                                                  |
+The source defines the architecture member as `arHarvad` (with this spelling).
 
-### Own interfaces
+### Type helpers
 
-|name                                                 |description                   |
-|-----------------------------------------------------|------------------------------|
-|ICPUBus                                              |Generic CPU bus interface     |
-|`function CodeRead(AAddress: UInt64): Byte;`         |Read a byte from code memory  |
-|`function IORead(APort: UInt64): Byte;`              |Read a byte from I/O port     |
-|`function MemRead(AAddress: UInt64): Byte;`          |Read a byte from (data) memory|
-|`procedure CodeWrite(AAddress: UInt64; Value: Byte);`|Write a byte to code memory   |
-|`procedure IOWrite(APort: UInt64; Value: Byte);`     |Write a byte to I/O port      |
-|`procedure MemWrite(AAddress: UInt64; Value: Byte);` |Write a byte to (data) memory |
+|name |description |
+|-----|------------|
+|`TArchitectureHelper.ToString`|Converts an architecture value to its enumeration name|
+|`TArchitectureHelper.FromString`|Converts an enumeration name to `TArchitecture`|
+|`TEndiannessHelper.ToString`|Converts an endianness value to its enumeration name|
+|`TEndiannessHelper.FromString`|Converts an enumeration name to `TEndianness`|
+|`TCPUEventHelper.ToString`|Converts a CPU event value to its enumeration name|
+|`TCPUEventHelper.FromString`|Converts an enumeration name to `TCPUEvent`|
+|`TSemanticVersionHelper.ToString`|Formats a version as `Major.Minor.Patch`|
+|`TSemanticVersionHelper.Compare`|Compares two semantic versions; returns `-1`, `0`, or `1`|
+
+### `ICPUBus` interface
+
+|method |description |
+|-------|------------|
+|`function MemRead(AAddress: UInt64): Byte;`|Read a byte from data memory|
+|`procedure MemWrite(AAddress: UInt64; AValue: Byte);`|Write a byte to data memory|
+|`function CodeRead(AAddress: UInt64): Byte;`|Read a byte from code memory|
+|`procedure CodeWrite(AAddress: UInt64; AValue: Byte);`|Write a byte to code memory|
+|`function IORead(APort: UInt64): Byte;`|Read a byte from an I/O port|
+|`procedure IOWrite(APort: UInt64; AValue: Byte);`|Write a byte to an I/O port|
 
 ### Protected fields
 
-|name             |type            |flags|description                            |default|
-|-----------------|----------------|:---:|---------------------------------------|-------|
-|FAddressWidth    |Byte            |     |Address bus width in bits              |       |
-|FArchitecture    |TArchitecture   |     |Type of architecture                   |       |
-|FBitWidth        |Byte            |     |Main processor word size in bits       |       |
-|FCycles          |QWord           |     |Total cycles                           |0      |
-|FDescription     |PChar           |     |Short description                      |       |
-|FEndianness      |TEndianness     |     |Byte order                             |       |
-|FHalted          |Boolean         |     |CPU HALT state                         |false  |
-|FHasSeparateIOBus|Boolean         |     |Indicates separate memory and I/O buses|       |
-|FInstructions    |QWord           |     |Total executed instructions            |0      |
-|FInterruptEnabled|Boolean         |     |Global interrupt enable flag           |false  |
-|FIRQPending      |Boolean         |     |Pending maskable interrupt             |false  |
-|FMaxCodeAddress  |QWord           |     |The highest code memory address        |       |
-|FMaxIOPortAddress|QWord           |     |The highest I/O port address           |       |
-|FMaxMemAddress   |QWord           |     |The highest (data) memory address      |       |
-|FModname         |PChar           |     |Module name (CPU type)                 |       |
-|FNMIPending      |Boolean         |     |Pending non-maskable interrupt         |false  |
-|FOnEvent         |TCPUEventHandler|     |Event callback                         |       |
-|FRunning         |Boolean         |     |CPU execution state                    |false  |
-|FRegPtr          |array of ^QWord |     |Pointers to registers                  |       |
+|name |type |description |initial value|
+|-----|-----|-------------|-------------|
+|`FBus`|`ICPUBus`|Connected external bus|`nil`|
+|`FOnEvent`|`TCPUEventHandler`|CPU event callback|`nil`|
+|`FModname`|`PChar`|Module name|not initialized here|
+|`FDescription`|`PChar`|Short description|not initialized here|
+|`FVersion`|`TSemanticVersion`|Module version|`0.1.0`|
+|`FArchitecture`|`TArchitecture`|CPU architecture|not initialized here|
+|`FBitWidth`|`Byte`|Processor word size in bits|not initialized here|
+|`FAddressWidth`|`Byte`|Address bus width in bits|not initialized here|
+|`FEndianness`|`TEndianness`|CPU byte order|not initialized here|
+|`FMaxMemAddress`|`QWord`|Highest data-memory address|not initialized here|
+|`FMaxCodeAddress`|`QWord`|Highest code-memory address|not initialized here|
+|`FMaxIOPortAddress`|`QWord`|Highest I/O-port address|not initialized here|
+|`FHasSeparateIOBus`|`Boolean`|Indicates separate memory and I/O buses|not initialized here|
+|`FRunning`|`Boolean`|CPU execution state|`false`|
+|`FHalted`|`Boolean`|CPU HALT state|`false`|
+|`FInterruptEnabled`|`Boolean`|Global maskable-interrupt enable flag|`false`|
+|`FIRQPending`|`Boolean`|Pending maskable interrupt|`false`|
+|`FNMIPending`|`Boolean`|Pending non-maskable interrupt|`false`|
+|`FCycles`|`QWord`|Total CPU cycles|`0`|
+|`FInstructions`|`QWord`|Total executed instructions|`0`|
+|`FRegPtr`|array of `^QWord`|Pointers used by derived CPU implementations for registers|empty|
 
 ### Protected methods
 
-|name                                                        |flags |description                               |
-|------------------------------------------------------------|:----:|------------------------------------------|
-|`procedure EmitEvent(AEvent: TCPUEvent);`                   |Vi    |
-|`procedure DoInterrupt(AEvent: TCPUEvent);`                 |Vi    |
-
-### Public properties
-
-|name            |type            |flags |description        |default|
-|----------------|----------------|:----:|-------------------|-------|
-|AddressWidth    |Byte            |Re    |= FAddressWidth    |       |
-|Architecture    |TArchitecture   |Re    |= FArchitecture    |       |
-|BitWidth        |Byte            |Re    |= FBitWidth        |       |
-|Cycles          |QWord           |Re    |= FCycles          |       |
-|Description     |PChar           |Re    |= FDescription     |       |
-|Endianness      |TEndianness     |Re    |= FEndianness      |       |
-|Halted          |Boolean         |Re    |= FHalted          |       |
-|HasSeparateIOBus|Boolean         |Re    |= FHasSeparateIOBus|       |
-|Instructions    |QWord           |Re    |= FInstructions    |       |
-|InterruptEnabled|Boolean         |Re    |= FInterruptEnabled|       |
-|IRQPending      |Boolean         |Re    |= FIRQPending      |       |
-|MaxCodeAddress  |QWord           |Re    |= FMaxCodeAddress  |       |
-|MaxIOPortAddress|QWord           |Re    |= FMaxIOPortAddress|       |
-|MaxMemAddress   |QWord           |Re    |= FMaxMemAddress   |       |
-|Modname         |PChar           |Re    |= FModname         |       |
-|NMIPending      |Boolean         |Re    |= FNMIPending      |       |
-|OnEvent         |TCPUEventHandler|Re, Wr|= FOnEvent         |       |
-|Running         |Boolean         |Re    |= FRunning         |       |
+|name |flags|description |
+|-----|:---:|------------|
+|`procedure EmitEvent(AEvent: TCPUEvent);`|Vi|Send a CPU event to the registered host callback|
+|`procedure DoInterrupt(AEvent: TCPUEvent);`|Vi|Dispatch an accepted interrupt as a CPU event|
 
 ### Public methods
 
-|name                                                        |flags |description                               |
-|------------------------------------------------------------|:----:|------------------------------------------|
-|`constructor Create;`                                       |Vi    |Sets the initial values for the new object|
-|`destructor Destroy;`                                       |Vi    |Frees the object's resources              |
-|`function CheckInterrupts: Boolean;`                        |Vi, Ab|Interrupt handler                         |
-|`function GetCurrentInstruction: PChar;`                    |Vi, Ab|Get last instruction (mnemonic)           |
-|`function GetRegister(const RegName: PChar): QWord;`        |Vi, Ab|Get register content                      |
-|`procedure ConnectBus(const Bus: ICPUBus);`                 |Vi    |Connect CPU to external system bus        |
-|`procedure IRQ;`                                            |Vi    |Signal maskable interrupt                 |
-|`procedure NMI;`                                            |Vi    |Signal non-maskable interrupt             |
-|`procedure Reset;`                                          |Vi, Ab|Reset CPU                                 |
-|`procedure Run;`                                            |Vi    |Start CPU execution                       |
-|`procedure SetRegister(const RegName: PChar; AValue: QWord);`|Vi, Ab|Set register content                      |
-|`procedure Step;`                                           |Vi    |Execute single instruction                |
-|`procedure Stop;`                                           |Vi    |Stop CPU execution                        |
+|name |flags|description |
+|-----|:---:|------------|
+|`constructor Create;`|Vi|Initialize common CPU execution state, counters, and version|
+|`destructor Destroy;`|Vi|Destroy the CPU instance|
+|`procedure SetRegister(const RegName: PChar; AValue: QWord);`|Ab,Vi|Set a processor register; implementation is supplied by the derived CPU|
+|`function GetRegister(const RegName: PChar): QWord;`|Ab,Vi|Read a processor register; implementation is supplied by the derived CPU|
+|`procedure Reset;`|Ab,Vi|Reset the processor; implementation is supplied by the derived CPU|
+|`procedure Run;`|Vi|Set the CPU running state|
+|`procedure Step;`|Ab,Vi|Execute one processor step; implementation is supplied by the derived CPU|
+|`procedure Stop;`|Vi|Clear the CPU running state|
+|`function GetCurrentInstruction: PChar;`|Ab,Vi|Return the current instruction representation; implementation is supplied by the derived CPU|
+|`procedure IRQ;`|Vi|Set the pending maskable-interrupt flag and emit an interrupt event|
+|`procedure NMI;`|Vi|Set the pending non-maskable-interrupt flag and emit an interrupt event|
+|`function CheckInterrupts: Boolean;`| |Accept and dispatch a pending interrupt when applicable|
+|`procedure ConnectBus(const Bus: ICPUBus);`|Vi|Store the external CPU bus reference|
+
+### Public properties
+
+|name |type |access|description|
+|-----|-----|:----:|-----------|
+|`Modname`|`PChar`|Re|Module name|
+|`Description`|`PChar`|Re|Short description|
+|`Architecture`|`TArchitecture`|Re|CPU architecture|
+|`BitWidth`|`Byte`|Re|Processor word size in bits|
+|`AddressWidth`|`Byte`|Re|Address bus width in bits|
+|`Endianness`|`TEndianness`|Re|CPU byte order|
+|`MaxMemAddress`|`QWord`|Re|Highest data-memory address|
+|`MaxCodeAddress`|`QWord`|Re|Highest code-memory address|
+|`MaxIOPortAddress`|`QWord`|Re|Highest I/O-port address|
+|`HasSeparateIOBus`|`Boolean`|Re|Whether separate memory and I/O buses are supported|
+|`Running`|`Boolean`|Re|Current execution state|
+|`Halted`|`Boolean`|Re|Current HALT state|
+|`InterruptEnabled`|`Boolean`|Re|Global maskable-interrupt enable state|
+|`Cycles`|`QWord`|Re|Total cycle counter|
+|`Instructions`|`QWord`|Re|Total instruction counter|
+|`OnEvent`|`TCPUEventHandler`|Re/Wr|CPU event callback|
+|`Version`|`TSemanticVersion`|Re|Module version|
+
+### Interrupt handling
+
+`IRQ` marks a maskable interrupt as pending. `NMI` marks a non-maskable interrupt as pending. Both methods emit `ceInterrupt`.
+
+`CheckInterrupts` gives priority to NMI. A pending NMI is accepted unconditionally; a pending IRQ is accepted only when `InterruptEnabled` is true. When an interrupt is accepted, the corresponding pending flag is cleared, `Halted` is cleared, `DoInterrupt` is called, and the function returns `true`. Otherwise it returns `false`.

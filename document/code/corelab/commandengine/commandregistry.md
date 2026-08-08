@@ -2,49 +2,36 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TCommandRegistry base class in CommandRegistry unit
+## TCommandRegistry from commandregistry unit
 
-TCommandRegistry is a base class that registers CoreLAB commands, which maps the
-names of the commands to the classes that implement them (TCommandClass) in a
-dictionary (TCommandDict).
+`TCommandRegistry` stores the relationship between command names and their `TCommand` descendant classes. Names are normalized to lowercase, making command lookup case-insensitive.
 
-### UML diagram
+### Type definitions
 
-![Class diagram](../diagrams/_png/commandengine.png "CoreLAB CommandEngine class diagram")
-
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
-
-### Own data types
-
-|name         |type                                         |description                                    |
-|-------------|---------------------------------------------|-----------------------------------------------|
-|TCommandClass|class of TCommand                            |Class-reference type for registration          |
-|TCommandDict |specialize TDictionary<string, TCommandClass>|Dictionary with command name and class elements|
+|name|description|
+|---|---|
+|`TCommandClass`|Class-reference type for `TCommand` descendants.|
+|`TCommandDict`|Dictionary mapping `string` command names to `TCommandClass` references.|
 
 ### Protected fields
 
-|name     |type        |C|description                         |default|
-|---------|------------|-|------------------------------------|-------|
-|FCommands|TCommandDict| |Dictionary of commands (name, class)|       |
+|name|type|description|
+|---|---|---|
+|`FCommands`|`TCommandDict`|Dictionary containing registered command classes.|
 
 ### Public methods
 
-|name                                                                                    |flags|description                                                               |
-|----------------------------------------------------------------------------------------|:---:|--------------------------------------------------------------------------|
-|`constructor Create;`                                                                   |Vi   |Sets the initial values for the new object                                |
-|`destructor Destroy;`                                                                   |Vi   |Frees the object's resources                                              |
-|`function TryGetCommand(const AName: string; var ACommandClass: TCommandClass): Boolean`|Vi   |Attempts to retrieve a registered command class by its name               |
-|`procedure RegisterCommand(const AName: string; ACommandClass: TCommandClass);`         |Or   |Adds a new command name and its associated class reference to the registry|
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create;`|Vi|Creates the command dictionary.|
+|`destructor Destroy;`|Or|Frees the command dictionary.|
+|`function TryGetCommand(const AName: string; var ACommandClass: TCommandClass): Boolean;`|Vi|Looks up a command class by name.|
+|`procedure RegisterCommand(const AName: string; ACommandClass: TCommandClass);`|Vi|Registers or replaces a command class under the specified name.|
+
+### Registration rules
+
+`RegisterCommand` ignores an empty name and a `nil` command class. Valid names are converted to lowercase before insertion. Existing entries are replaced by `AddOrSetValue`.
+
+`TryGetCommand` also converts the requested name to lowercase. If the name is not found, it sets `ACommandClass` to `nil` and returns `False`.

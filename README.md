@@ -101,7 +101,7 @@ in mind:
 |**Virtual Pushbutton Array and Matrix**|Linear and matrix-arranged momentary pushbuttons for interactive binary input.               |
 |**Virtual Switch Array and Matrix**    |Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.|
 |**Real Port Redirection**              |Bridges virtual port I/O streams directly to the physical hardware ports of the host machine.|
-|**Simple Serial Terminal**             |Basic text-based serial console for communication and data stream monitoring.                |
+|**Simple Console**                     |Basic text-based console for data stream monitoring.                                         |
 
 ## III. Screenshots
 

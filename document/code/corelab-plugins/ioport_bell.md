@@ -2,18 +2,19 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TBELLPort from TIOPort class in ioport_bell unit
 
-TBELLPort is an I/O port that simulates a simple, write-only output peripheral
-derived from the TIOPort abstract base class. Its function is to trigger beeps:
-if the value written to the virtual port is greater than zero, the framework
-generates a beep.
+It rings at a value greater than zero.
 
-### UML diagram
+### I/O behaviour
 
-![Class diagram](../diagrams/_png/ioport.png "IOPort plugin class diagram")
+|port|description|
+
+|---|---|
+
+|0|Read returns `00h`; writing a value greater than zero calls `Beep`. Other ports return `FFh`.|
 
 ### Abbreviations
 
@@ -28,22 +29,16 @@ generates a beep.
 - _Vi_: means 'virtual',
 - _Wr_: means 'write'.
 
-### Protected fields
-
-|name        |type |flags|description      |default|
-|------------|-----|:---:|-----------------|-------|
-|FDescription|PChar|     |Short description|       |
-|FModName    |PChar|     |Module name      |       |
 
 ### Public methods
 
-|name                                           |flags|description                               |
-|-----------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                          |Or   |Sets the initial values for the new object|
-|`destructor Destroy;`                          |Or   |Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
-|`procedure Reset;`                             |Or   |Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create; override;`|Or|Initialises the object and its device-specific state.|
+|`destructor Destroy; override;`|Or|Releases the object and its allocated resources.|
+|`procedure Reset;  override;`|Or|Resets the device state.|
+|`function ReadPort(APort: Word): Byte; override;`|Or|Reads the selected virtual I/O port.|
+|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or|Writes the selected virtual I/O port.|
 
 ### Exported functions and procedures
 
@@ -52,7 +47,10 @@ generates a beep.
 - on Windows: `stdcall`,
 - on Unix-like OS: `cdecl`.
 
-|name                                    |exported name |description |
-|----------------------------------------|--------------|------------|
-|`function CreatePort: TIOPort;`         |ioport_create |Create port |
-|`procedure DestroyPort(Port: TIOPort));`|ioport_destroy|Destroy port|
+|name|exported name|description|
+|---|---|---|
+|`function CreatePort: TIOPort;`|ioport_create|Create a new device object.|
+|`procedure DestroyPort(APort: TIOPort);`|ioport_destroy|Destroy the device object.|
+|`procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);`|ioport_setinthandler|Set the interrupt callback and interrupt vector.|
+|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_loadstate|Load the device state from a stream.|
+|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_savestate|Save the device state to a stream.|

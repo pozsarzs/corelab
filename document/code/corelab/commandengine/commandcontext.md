@@ -2,63 +2,49 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TCommandContext base class in CommandContext unit
+## TCommandContext from commandcontext unit
 
-TCommandContext is the base class that provides the context for executing
-commands. It manages the variables and constants used during the simulator's
-execution (TContextDict), as well as the text output buffer (FOutput).
+`TCommandContext` is the base context object used by the command engine to store named constants and variables and to provide command output. Values are stored in a dictionary using case-insensitive keys.
 
-### UML diagram
+### TContextValue
 
-![Class diagram](../diagrams/_png/commandengine.png "CoreLAB CommandEngine class diagram")
+`TContextValue` is a record containing:
 
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
-
-### Own data types
-
-|name         |type                                         |description                                            |
-|-------------|---------------------------------------------|-------------------------------------------------------|
-|TContextValue|record                                       |It storing the value and RO state of a context variable|
-|.RawValue    |string                                       |The string representation of the value                 |
-|.IsReadOnly  |Boolean                                      |Indicates if the value is read-only (constant)         |
-|TContextDict |specialize TDictionary<string, TContextValue>|Dictionary storing context variables by their names    |
+|field|type|description|
+|---|---|---|
+|`RawValue`|`string`|Stored textual value.|
+|`IsReadOnly`|`Boolean`|Indicates whether the stored value is a constant.|
 
 ### Protected fields
 
-|name      |type        |flags|description                                              |default|
-|----------|------------|:---:|---------------------------------------------------------|-------|
-|FOutput   |TStrings    |     |Buffer for command execution output strings              |       |
-|FVariables|TContextDict|     |Dictionary containing the context variables and constants|       |
-
-
-### Public properties
-
-|name  |type    |flags |description|default|
-|------|--------|:----:|-----------|-------|
-|Output|TStrings|Re, Wr|= FOutput  |       |
+|name|type|description|default|
+|---|---|---|---|
+|`FOutput`|`TStrings`|Optional output object.|`nil`|
+|`FVariables`|`TContextDict`|Dictionary containing constants and variables.|new dictionary|
 
 ### Public methods
 
-|name                                                      |flags|description                                       |
-|----------------------------------------------------------|:---:|--------------------------------------------------|
-|`constructor Create;`                                     |Vi   |Sets the initial values for the new object        |
-|`destructor Destroy;`                                     |Or   |x|Frees the object's resources                    |
-|`function GetConst(const AName: string): string;`         |Vi   |Retrieves the value of a constant by its name     |
-|`function GetVar(const AName: string): string;`           |Vi   |Retrieves the value of a variable by its name     |
-|`function SetConst(const AName, AValue: string): Boolean;`|Vi   |Sets a new constant or updates its value          |
-|`function SetVar(const AName, AValue: string): Boolean;`  |Vi   |Sets a new variable or updates its value          |
-|`procedure Clear;`                                        |Vi   |Clears all context variables and the output buffer|
-|`procedure WriteOutput(const AText: string);`             |Vi   |Appends a text string to the output buffer        |
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create;`|Vi|Creates the context and its value dictionary.|
+|`destructor Destroy;`|Or|Frees the value dictionary and destroys the object.|
+|`function GetConst(const AName: string): string;`|Vi|Intended to retrieve a named constant. The current implementation has no executable statement and therefore does not assign a return value.|
+|`function GetVar(const AName: string): string;`|Vi|Intended to retrieve a named variable. The current implementation has no executable statement and therefore does not assign a return value.|
+|`function SetConst(const AName, AValue: string): Boolean;`|Vi|Stores a value as read-only when `AName` is not empty. The current implementation does not explicitly assign the Boolean result.|
+|`function SetVar(const AName, AValue: string): Boolean;`|Vi|Stores a value as writable when `AName` is not empty. The current implementation does not explicitly assign the Boolean result.|
+|`procedure Clear;`|Vi|Removes all constants and variables.|
+|`procedure WriteOutput(const AText: string);`| |Writes text to the assigned output object, or to standard output when no output object is assigned.|
+
+### Public properties
+
+|name|type|access|description|
+|---|---|---|---|
+|`Output`|`TStrings`|read/write|Output object used by `WriteOutput`.|
+
+### Value storage
+
+Both `SetConst` and `SetVar` convert the supplied name to lowercase before storing it. A constant is stored with `IsReadOnly = True`; a variable is stored with `IsReadOnly = False`.
+
+The current implementation does not provide a separate storage dictionary for constants and variables.

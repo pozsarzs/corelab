@@ -2,52 +2,31 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TToken base class in Token unit
+## TToken from token unit
 
-TToken is a fundamental data structure in the CoreLAB parsing system. It
-represents a single lexical unit, such as a keyword, identifier, or symbol,
-extracted from the input command line during the tokenization process.
-
-### UML diagram
-
-![Class diagram](../diagrams/_png/commandengine.png "CoreLAB CommandEngine class diagram")
-
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
-
-### Own data types
-
-|name      |type                            |description   |
-|----------|--------------------------------|--------------|
-|TTokenList|specialize TObjectList\<TToken\>|TokenList type| 
+`TToken` represents one lexical token produced by `TCommandParser`. It stores the original token text without further interpretation.
 
 ### Protected fields
 
-|name    |type  |flags|description             |default|
-|--------|------|:---:|------------------------|-------|
-|FRawText|string|     |Token in raw text format|       |
-
-### Public properties
-
-|name   |type  |flags|description|default|
-|-------|------|:---:|-----------|-------|
-|RawText|string|Re   |= FRawText |       |
+|name|type|description|
+|---|---|---|
+|`FRawText`|`string`|Raw textual content of the token.|
 
 ### Public methods
 
-|name                                         |flags |description                               |
-|---------------------------------------------|:----:|------------------------------------------|
-|`constructor Create(const ARawText: string);`|Vi, Re|Sets the initial values for the new object|
-|`destructor Destroy;`                        |Or    |Frees the object's resources              |
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create(const ARawText: string);`|Ri,Vi|Creates a token and stores the supplied raw text.|
+|`destructor Destroy;`|Or|Destroys the token object.|
+
+### Public properties
+
+|name|type|access|description|
+|---|---|---|---|
+|`RawText`|`string`|read|Text stored in the token.|
+
+### Token list
+
+`TTokenList` is a specialized `TObjectList<TToken>` used to store token objects. As a `TObjectList`, it owns the contained `TToken` instances.

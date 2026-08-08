@@ -1,52 +1,37 @@
-> [!NOTE]
-> This documentation does not include fields and methods created by the IDE.
->
-
 # CoreLAB
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TForm4 from TForm class in frmSizePos unit
+## TForm4 Panel Size and Position Form in frmsizepos unit
 
-(...)
-
-### UML diagram
-
-![Class diagram](../diagrams/_png/clioport.png "CLIOPort class diagram")
-
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
+`TForm4` is a dialog form used to enter the size and position of a plugin GUI panel. Four integer properties expose the values of the corresponding spin-edit controls.
 
 ### Private methods
 
-|name                                       |flags|description|
-|-------------------------------------------|:---:|-----------|
-|`function GetLeftValue: Integer;`          |     |           |
-|`function GetHeightValue: Integer;`        |     |           |
-|`function GetTopValue: Integer;`           |     |           |
-|`function GetWidthValue: Integer;`         |     |           |
-|`procedure SetLeftValue(Value: Integer);`  |     |           |
-|`procedure SetHeightValue(Value: Integer);`|     |           |
-|`procedure SetTopValue(Value: Integer);`   |     |           |
-|`procedure SetWidthValue(Value: Integer);` |     |           |
+|name|description|
+|---|---|
+|`function GetHeightValue: integer;`|Returns the panel height from the first spin-edit control.|
+|`function GetWidthValue: integer;`|Returns the panel width from the second spin-edit control.|
+|`function GetLeftValue: integer;`|Returns the panel left position from the third spin-edit control.|
+|`function GetTopValue: integer;`|Returns the panel top position from the fourth spin-edit control.|
+|`procedure SetHeightValue(Value: integer);`|Sets the panel height in the first spin-edit control.|
+|`procedure SetWidthValue(Value: integer);`|Sets the panel width in the second spin-edit control.|
+|`procedure SetLeftValue(Value: integer);`|Sets the panel left position in the third spin-edit control.|
+|`procedure SetTopValue(Value: integer);`|Sets the panel top position in the fourth spin-edit control.|
 
 ### Public properties
 
-|name       |type   |flags |description                      |default|
-|-----------|-------|:----:|---------------------------------|-------|
-|PanelLeft  |Integer|Re, Wr|= GetLeftValue / SetLeftValue    |       |
-|PanelHeight|Integer|Re, Wr|= GetHeightValue / SetHeightValue|       |
-|PanelTop   |Integer|Re, Wr|= GetTopValue / SetTopValue      |       |
-|PanelWidth |Integer|Re, Wr|= GetWidthValue /SetWidthValue   |       |
+|name|type|description|
+|---|---|---|
+|`PanelLeft`|`integer`|Reads or writes the panel left position.|
+|`PanelHeight`|`integer`|Reads or writes the panel height.|
+|`PanelTop`|`integer`|Reads or writes the panel top position.|
+|`PanelWidth`|`integer`|Reads or writes the panel width.|
+
+### Global variable
+
+|name|type|description|
+|---|---|---|
+|`Form4`|`TForm4`|Global instance of the panel size and position form.|

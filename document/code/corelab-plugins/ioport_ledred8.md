@@ -4,9 +4,9 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TSwitch16MUX from TGIOPort class in ioport_switch16mux unit
+## TLEDRed8 from TGIOPort class in ioport_ledred8 unit
 
-Select the column and read the row status.
+This is an output with red LEDs, each bit controls a specific LED within a Byte.
 
 ### I/O behaviour
 
@@ -14,9 +14,7 @@ Select the column and read the row status.
 
 |---|---|
 
-|0|Returns the bit pattern of the currently selected column; `FDataInNegation` may invert the result.|
-
-|1|Selects a column according to `FSelMode`: direct mode uses the highest set bit after optional negation; BCD mode accepts 0..3.|
+|0|Each input bit controls the corresponding LED; `FDataInNegation` may invert the input. Read returns `00h` while enabled and `FFh` while disabled.|
 
 ### Abbreviations
 
@@ -32,19 +30,25 @@ Select the column and read the row status.
 - _Wr_: means 'write'.
 
 
+### Private fields
+
+|name|type|description|default|
+|---|---|---|---|
+|`FValue`|Byte|Device-specific state or GUI object|0|
+
 ### Protected fields
 
 |name|type|description|default|
 |---|---|---|---|
-|`FSB`|array[0..MAXX, 0..MAXY] of TSpeedButton|Switches||
-|`SelLine`|Integer|Device-specific state or GUI object|0|
+|`FPanel`|TPanel|Device-specific state or GUI object|nil|
+|`FPaintBox`|TPaintBox|Device-specific state or GUI object|nil|
+|`FLED`|array[0..MAXX] of TLEDRound|Device-specific state or GUI object||
 
 ### Protected methods
 
 |name|flags|description|
 |---|:---:|---|
-|`procedure AllRelease(mx, my: Byte);`||Releases all buttons or switches in the specified range.|
-|`procedure FSBOnClick(Sender: TObject);`||Handles a button or switch click and requests an interrupt.|
+|`procedure PaintBoxPaint(Sender: TObject);`||Paints the device representation on the panel.|
 
 ### Public methods
 
@@ -54,7 +58,7 @@ Select the column and read the row status.
 |`destructor Destroy; override;`|Or|Releases the object and its allocated resources.|
 |`procedure Reset; override;`|Or|Resets the device state.|
 |`function ReadPort(APort: Word): Byte; override;`|Or|Reads the selected virtual I/O port.|
-|`procedure WritePort(APort: Word; Value: Byte); override;`|Or|Writes the selected virtual I/O port.|
+|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or|Writes the selected virtual I/O port.|
 |`function LoadState(AStream: TStream): Boolean; override;`|Or|Loads the device state from a stream.|
 |`function SaveState(AStream: TStream): Boolean; override;`|Or|Saves the device state to a stream.|
 |`procedure CreatePanel; override;`|Or|Creates the graphical user-interface panel.|

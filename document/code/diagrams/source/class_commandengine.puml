@@ -1,0 +1,144 @@
+@startuml
+
+title CoreLAB command engine class diagram
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+
+package "Command Engine" {
+
+  enum TCommandScope {
+    csEverywhere
+    csScriptOnly
+    csInteractiveOnly
+  }
+
+  class TCommand {
+    # FActionName : string
+    # FExitRequested : Boolean
+    # FMinParamCount : Byte
+    # FMaxParamCount : Byte
+    # FParamCount : Byte
+    # FCommandScope : TCommandScope
+    --
+    + Create() : TCommand
+    + Destroy()
+    + Execute(Tokens : TTokenList; AContext : TCommandContext) : Integer <<abstract>>
+    + SetParamCount(ACount : Byte)
+    + ActionName : string <<read-only>>
+    + ExitRequested : Boolean <<read-only>>
+    + MinParamCount : Byte <<read-only>>
+    + MaxParamCount : Byte <<read-only>>
+    + ParamCount : Byte <<read/write>>
+    + CommandScope : TCommandScope <<read-only>>
+  }
+
+  class TCommandContext {
+    # FOutput : TStrings
+    # FVariables : TContextDict
+    --
+    + Create() : TCommandContext
+    + Destroy()
+    + GetConst(AName : string) : string
+    + GetVar(AName : string) : string
+    + SetConst(AName, AValue : string) : Boolean
+    + SetVar(AName, AValue : string) : Boolean
+    + Clear()
+    + WriteOutput(AText : string)
+    + Output : TStrings <<read/write>>
+  }
+
+  class TCommandEngine {
+    # FActionList : TActionList
+    # FContext : TCommandContext
+    # FExitRequested : Boolean
+    # FLastExitCode : Integer
+    # FParser : TCommandParser
+    # FRegistry : TCommandRegistry
+    # FRunningMode : TCommandScope
+    --
+    + Create() : TCommandEngine
+    + Destroy()
+    + ExecuteAction(AName : string) : Boolean
+    + ExecuteLine(ALine : string) : Integer
+    + ExitRequested : Boolean <<read-only>>
+    + ActionList : TActionList <<read/write>>
+    + Registry : TCommandRegistry <<read/write>>
+    + LastExitCode : Integer <<read-only>>
+    + RunningMode : TCommandScope <<read/write>>
+  }
+
+  class TCommandParser {
+    --
+    + Create() : TCommandParser
+    + Destroy()
+    + Tokenize(ALine : string; AContext : TCommandContext) : TTokenList
+  }
+
+  class TCommandRegistry {
+    # FCommands : TCommandDict
+    --
+    + Create() : TCommandRegistry
+    + Destroy()
+    + TryGetCommand(AName : string; var ACommandClass : TCommandClass) : Boolean
+    + RegisterCommand(AName : string; ACommandClass : TCommandClass)
+  }
+
+  class TToken {
+    # FRawText : string
+    --
+    + Create(ARawText : string) : TToken
+    + Destroy()
+    + RawText : string <<read-only>>
+  }
+
+  class TTokenList <<specialize TObjectList<TToken>>
+  class TCommandDict <<specialize TDictionary<string,TCommandClass>>
+  class TContextDict <<specialize TDictionary<string,TContextValue>>
+
+  class TContextValue <<record>> {
+    RawValue : string
+    IsReadOnly : Boolean
+  }
+
+  class TCommandClass <<class reference>>
+}
+
+' Ownership / containment established by constructors/destructors in the source
+TCommandEngine *-- TCommandContext : creates / frees
+TCommandEngine *-- TCommandParser : creates / frees
+
+' References assigned or consumed by the engine; not created/freed by TCommandEngine
+TCommandEngine o-- TCommandRegistry : Registry
+TCommandEngine o-- TActionList : ActionList
+TCommandEngine ..> TCommand : creates / executes
+TCommandEngine ..> TTokenList : uses
+
+' Command dependencies
+TCommand ..> TTokenList : parameter
+TCommand ..> TCommandContext : parameter
+TCommand --> TCommandScope
+
+' Parser dependencies
+TCommandParser ..> TCommandContext : parameter
+TCommandParser ..> TTokenList : creates
+
+' Registry and command-class relationship
+TCommandRegistry *-- TCommandDict
+TCommandDict ..> TCommandClass : maps name to class
+TCommandClass ..> TCommand : class of
+
+' Token list owns token objects (TObjectList semantics)
+TTokenList *-- TToken : contains
+
+' Context storage
+TCommandContext *-- TContextDict
+TContextDict ..> TContextValue : maps name to value
+
+@enduml

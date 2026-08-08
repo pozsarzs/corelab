@@ -2,17 +2,19 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TNULLPort from TIOPort class in ioport_null unit
 
-Class TNULLPort is an I/O port that implements an empty or dummy peripheral
-derived from the TIOPort abstract base class, and is primarily used for testing
-purposes. It returns a constant `00h` to read operations.
+It absorbs everything and returns 00h.
 
-### UML diagram
+### I/O behaviour
 
-![Class diagram](../diagrams/_png/ioport.png "IOPort plugin class diagram")
+|port|description|
+
+|---|---|
+
+|0|Read returns `00h`; written data is ignored. Other ports return `FFh`.|
 
 ### Abbreviations
 
@@ -27,24 +29,16 @@ purposes. It returns a constant `00h` to read operations.
 - _Vi_: means 'virtual',
 - _Wr_: means 'write'.
 
-### Protected fields
-
-|name        |type |flags|description      |default|
-|------------|-----|:---:|-----------------|-------|
-|FDescription|PChar|     |Short description|       |
-|FModName    |PChar|     |Module name      |       |
-|FDescription|PChar|     |Short description|       |
-|FModName    |PChar|     |Module name      |       |
 
 ### Public methods
 
-|name                                           |flags|description                               |
-|-----------------------------------------------|-----|------------------------------------------|
-|`constructor Create;`                          |Or   |Sets the initial values for the new object|
-|`destructor Destroy;`                          |Or   |Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
-|`procedure Reset;`                             |Or   |Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create; override;`|Or|Initialises the object and its device-specific state.|
+|`destructor Destroy; override;`|Or|Releases the object and its allocated resources.|
+|`procedure Reset; override;`|Or|Resets the device state.|
+|`function ReadPort(APort: Word): Byte; override;`|Or|Reads the selected virtual I/O port.|
+|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or|Writes the selected virtual I/O port.|
 
 ### Exported functions and procedures
 
@@ -53,7 +47,10 @@ purposes. It returns a constant `00h` to read operations.
 - on Windows: `stdcall`,
 - on Unix-like OS: `cdecl`.
 
-|name                                    |exported name |description |
-|----------------------------------------|--------------|------------|
-|`function CreatePort: TIOPort;`         |ioport_create |Create port |
-|`procedure DestroyPort(Port: TIOPort));`|ioport_destroy|Destroy port|
+|name|exported name|description|
+|---|---|---|
+|`function CreatePort: TIOPort;`|ioport_create|Create a new device object.|
+|`procedure DestroyPort(APort: TIOPort);`|ioport_destroy|Destroy the device object.|
+|`procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);`|ioport_setinthandler|Set the interrupt callback and interrupt vector.|
+|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_loadstate|Load the device state from a stream.|
+|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_savestate|Save the device state to a stream.|

@@ -2,72 +2,68 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TDisplay base class in core_display unit
+## TDisplay from core_display unit
 
-TDisplay is the base class for display modules. It provides a general abstraction
-layer for visual simulation, which uniformly handles the data to be displayed
-(BCD values, raw segment data, decimal points), the internal drawing buffer, and
-the color settings responsible for the retro-style display.
+`TDisplay` is an abstract base class for graphical display implementations. It stores the displayed BCD value, seven-segment data, two decimal-point states, and a blank state. Derived classes provide the actual drawing and rendering operations.
 
-### Abbreviations
+### `TDisplayedData` record
 
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
-
-### Own data types
-
-|name          |type   |description                     |
-|--------------|-------|--------------------------------|
-|TDisplayedData|Record |Displayed value or symbol       |
-|.Blank        |Boolean|Blank display                   |
-|.LeftDot      |Boolean|Left decimal point              |
-|.RightDot     |Boolean|Right decimal point             |
-|.Segments     |Byte   |Segments, bit 0-6 -> segment a-g|
-|.Value        |Byte   |Value in BCD format (low nibble)|
+|field |type |description|
+|-----|-----|-----------|
+|`Blank`|`Boolean`|Blank-display state|
+|`LeftDot`|`Boolean`|Left decimal-point state|
+|`RightDot`|`Boolean`|Right decimal-point state|
+|`Segments`|`Byte`|Seven-segment data; bits 0–6 are used|
+|`Value`|`Byte`|BCD value; bits 0–3 are used|
 
 ### Protected fields
 
-|name          |type          |flags|description              |default  |
-|--------------|--------------|:---:|-------------------------|---------|
-|FModname      |PChar         |     |Module name              |         |
-|FDescription  |PChar         |     |Short description        |         |
-|FEnabled      |Boolean       |     |Enable displaying        |         |
-|FBuffer       |TBitmap       |     |Internal drawing buffer  |         |
-|FDisplayedData|TDisplayedData|     |Displayed value or symbol|         |
-|RETRO_RED_GLOW|TColor        |Co   |Center glow segment color|$003333FF|
-|RETRO_RED_ON  |TColor        |Co   |Glow segment color       |$000000FF|
-|RETRO_RED_OFF |TColor        |Co   |Dark segment color       |$00000040|
-|RETRO_RED_BG  |TColor        |Co   |Background color         |$00000015|
+|name |type |description|
+|-----|-----|-----------|
+|`FModname`|`PChar`|Module name|
+|`FDescription`|`PChar`|Short description|
+|`FEnabled`|`Boolean`|Enable displaying|
+|`FBuffer`|`TBitmap`|Internal drawing buffer|
+|`FDisplayedData`|`TDisplayedData`|Current display data|
 
-### Public properties
+### Protected constants
 
-|name       |type   |flags |description   |default|
-|-----------|-------|:----:|--------------|-------|
-|Description|PChar  |Re    |= FDescription|       |
-|Enabled    |Boolean|Re, Wr|= FEnabled    |       |
-|ModName    |PChar  |Re    |= FModName    |       |
+|name |type |value |description|
+|-----|-----|------|-----------|
+|`RETRO_RED_GLOW`|`TColor`|`$003333FF`|Retro-red LED glow color|
+|`RETRO_RED_ON`|`TColor`|`$000000FF`|Retro-red active color|
+|`RETRO_RED_OFF`|`TColor`|`$00000040`|Retro-red inactive color|
+|`RETRO_RED_BG`|`TColor`|`$00000015`|Retro-red display background color|
 
 ### Public methods
 
-|name                                                        |flags |description                               |
-|------------------------------------------------------------|:----:|------------------------------------------|
-|`constructor Create;`                                       |Vi    |Sets the initial values for the new object|
-|`destructor Destroy;`                                       |Vi    |Frees the object's resources              |
-|`procedure Reset;`                                          |Vi    |Reset display                             |
-|`procedure SetBlank(AStatus: Boolean);`                     |Vi    |Blank display                             |
-|`procedure SetLeftDot(AStatus: Boolean);`                   |Vi    |Set left decimal point status             |
-|`procedure SetRightDot(AStatus: Boolean);`                  |Vi    |Set right decimal point status            |
-|`procedure SetValue(AValue: Byte);`                         |Vi    |Set input BCD value                       |
-|`procedure SetSegments(AValue: Byte);`                      |Vi    |Set input segment data                    |
-|`procedure DrawToBuffer(AInputData: TDisplayedData);`       |Vi, Ab|Draw displayed data to internal buffer    |
-|`procedure RenderTo(ATargetCanvas: TCanvas; x, y: Integer);`|Vi, Ab|Drawing to canvas of the target object    |
+|name |flags|description|
+|-----|:---:|------------|
+|`constructor Create;`|Vi|Create the display and its internal bitmap buffer|
+|`destructor Destroy;`|Vi|Free the internal bitmap buffer|
+|`procedure Reset;`|Vi|Clear blank and decimal-point states and reset segment/value data|
+|`procedure DrawToBuffer(AInputData: TDisplayedData);`|Ab,Vi|Draw the supplied display data into the internal buffer; implemented by a derived class|
+|`procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);`|Ab,Vi|Render the display onto a target canvas; implemented by a derived class|
+|`procedure SetBlank(AStatus: Boolean);`|Vi|Set the blank state and redraw|
+|`procedure SetLeftDot(AStatus: Boolean);`|Vi|Set the left decimal-point state and redraw|
+|`procedure SetRightDot(AStatus: Boolean);`|Vi|Set the right decimal-point state and redraw|
+|`procedure SetSegments(AValue: Byte);`|Vi|Set the seven-segment data and redraw|
+|`procedure SetValue(AValue: Byte);`|Vi|Set the BCD value using the low four bits and redraw|
+
+### Public properties
+
+|name |type |access|description|
+|-----|-----|:----:|-----------|
+|`ModName`|`PChar`|Re|Module name|
+|`Description`|`PChar`|Re|Short description|
+|`Enabled`|`Boolean`|Re/Wr|Enable displaying|
+
+### Display update behavior
+
+All setter methods update the corresponding field of `FDisplayedData` and immediately call `DrawToBuffer`. `SetValue` masks its argument with `$0F`, so only the low four bits are stored.
+
+`Reset` initializes `Blank`, `LeftDot`, and `RightDot` to `False`, and `Segments` and `Value` to zero, then redraws the display.
+
+The constructor creates the bitmap buffer. It does not explicitly initialize the module name, description, enabled state, or display data.

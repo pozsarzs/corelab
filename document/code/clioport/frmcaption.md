@@ -1,43 +1,34 @@
-> [!NOTE]
-> This documentation does not include fields and methods created by the IDE.
->
-
 # CoreLAB
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TForm3 from TForm class in frmCaption unit
+## TForm3 Panel Caption Form in frmcaption unit
 
-(...)
-
-### UML diagram
-
-![Class diagram](../diagrams/_png/clioport.png "CLIOPort class diagram")
-
-### Abbreviations
-
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
+`TForm3` is a dialog form used to enter or edit the caption of a plugin GUI panel. The value is exposed through the `PanelCaption` property.
 
 ### Private methods
 
-|name                                   |flags|description|
-|---------------------------------------|:---:|-----------|
-|`function GetCaption: string;`         |     |           |
-|`procedure SetCaption(aTitle: string);`|     |           |
+|name|description|
+|---|---|
+|`function GetCaption: string;`|Returns the text currently entered in the caption edit control.|
+|`procedure SetCaption(Title: string);`|Sets the text of the caption edit control.|
 
 ### Public properties
 
-|name        |type  |flags|description            |default|
-|------------|------|:---:|-----------------------|-------|
-|PanelCaption|string|     |= GetCaption/SetCaption|       |
+|name|type|description|
+|---|---|---|
+|`PanelCaption`|`string`|Reads or writes the panel caption through `GetCaption` and `SetCaption`.|
+
+### Event handler methods
+
+|name|description|
+|---|---|
+|`procedure Edit1EditingDone(Sender: TObject);`|Activates `Button1` when editing of the caption field is completed.|
+
+### Global variable
+
+|name|type|description|
+|---|---|---|
+|`Form3`|`TForm3`|Global instance of the panel-caption form.|

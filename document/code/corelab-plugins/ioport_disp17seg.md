@@ -2,18 +2,19 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TDisp17seg from TDisplay class in ioport_disp17seg unit
+## TDisp17seg from TGIOPort class in ioport_disp17seg unit
 
-TDisp17seg is a module that simulates a display peripheral derived from the
-class TGIOPort and TDisplayTIL302. It has its own graphical user interface,
-which contents a 1-digit 7 segment TIL302 style display with direct inversable
-and BCD input (bits: a-g, dp or low nibble: BCD input, high nibble: rdp-000).
+TIL302 style display with direct inversable and BCD input.
 
-### UML diagram
+### I/O behaviour
 
-![Class diagram](../diagrams/_png/ioport.png "IOPort plugin class diagram")
+|port|description|
+
+|---|---|
+
+|0|Writes the selected TIL302-style display in direct or BCD mode; bit 7 controls the right decimal point. Read returns `00h`.|
 
 ### Abbreviations
 
@@ -28,32 +29,39 @@ and BCD input (bits: a-g, dp or low nibble: BCD input, high nibble: rdp-000).
 - _Vi_: means 'virtual',
 - _Wr_: means 'write'.
 
+
+### Private fields
+
+|name|type|description|default|
+|---|---|---|---|
+|`FValue`|Byte|Device-specific state or GUI object|0|
+
 ### Protected fields
 
-|name        |type          |flags|description                      |default|
-|------------|--------------|:---:|---------------------------------|-------|
-|FPanel      |TPanel        |     |GUI container panel              |nil    |
-|FPaintBox   |TPaintBox     |     |PaintBox for display rendering   |nil    |
-|FDP         |TDisplayTIL302|     |TIL302 display component instance|nil    |
-|FDescription|PChar         |     |Short description                |       |
-|FHasPanel   |Boolean       |     |Has GUI panel                    |true   |
-|FModName    |PChar         |     |Module name                      |       |
+|name|type|description|default|
+|---|---|---|---|
+|`FPanel`|TPanel|Device-specific state or GUI object|nil|
+|`FPaintBox`|TPaintBox|Device-specific state or GUI object|nil|
+|`FDP`|TDisplayTIL302|Device-specific state or GUI object||
 
 ### Protected methods
 
-|name                                       |flags|description                                             |
-|-------------------------------------------|:---:|--------------------------------------------------------|
-|`procedure PaintBoxPaint(Sender: TObject);`|     |PaintBox OnPaint event handler for rendering the display|
+|name|flags|description|
+|---|:---:|---|
+|`procedure PaintBoxPaint(Sender: TObject);`||Paints the device representation on the panel.|
 
 ### Public methods
 
-|name                                           |flags|description                               |
-|-----------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                          |Or   |Sets the initial values for the new object|
-|`destructor Destroy;`                          |Or   |Frees the object's resources              |
-|`function ReadPort(Port: Byte): Byte;`         |Or   |Read virtual port                         |
-|`procedure Reset;`                             |Or   |Reset virtual port                        |
-|`procedure WritePort(Port: Byte; Value: Byte);`|Or   |Write virtual port                        |
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create; override;`|Or|Initialises the object and its device-specific state.|
+|`destructor Destroy; override;`|Or|Releases the object and its allocated resources.|
+|`procedure Reset; override;`|Or|Resets the device state.|
+|`function ReadPort(APort: Word): Byte; override;`|Or|Reads the selected virtual I/O port.|
+|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or|Writes the selected virtual I/O port.|
+|`function LoadState(AStream: TStream): Boolean; override;`|Or|Loads the device state from a stream.|
+|`function SaveState(AStream: TStream): Boolean; override;`|Or|Saves the device state to a stream.|
+|`procedure CreatePanel; override;`|Or|Creates the graphical user-interface panel.|
 
 ### Exported functions and procedures
 
@@ -62,14 +70,17 @@ and BCD input (bits: a-g, dp or low nibble: BCD input, high nibble: rdp-000).
 - on Windows: `stdcall`,
 - on Unix-like OS: `cdecl`.
 
-|name                                                                   |exported name     |description      |
-|-----------------------------------------------------------------------|------------------|-----------------|
-|`function CreatePort: TIOPort;`                                        |ioport_create     |Create port      |
-|`procedure DestroyPort(Port: TIOPort));`                               |ioport_destroy    |Destroy port     |
-|`function MovePanel(Port: TIOPort; Left, Top: Integer): Boolean;`      |ioport_movepanel  |Move GUI panel   |
-|`function ResizePanel(Port: TIOPort; Width, Height: Integer): Boolean;`|ioport_resizepanel|Resize GUI panel |
-|`procedure CreatePanel(Port: TIOPort);`                                |ioport_createpanel|Create GUI panel |
-|`procedure FreePanel(Port: TIOPort);`                                  |ioport_freepanel  |Destroy GUI panel|
-|`procedure HidePanel(Port: TIOPort);`                                  |ioport_hidepanel  |Hide GUI panel   |
-|`procedure RenamePanel(Port: TIOPort; Caption: PChar);`                |ioport_renamepanel|Rename GUI panel |
-|`procedure ShowPanel(Port: TIOPort);`                                  |ioport_showpanel  |Show GUI panel   |
+|name|exported name|description|
+|---|---|---|
+|`function CreatePort: TIOPort;`|ioport_create|Create a new device object.|
+|`procedure DestroyPort(APort: TIOPort);`|ioport_destroy|Destroy the device object.|
+|`procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);`|ioport_setinthandler|Set the interrupt callback and interrupt vector.|
+|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_loadstate|Load the device state from a stream.|
+|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_savestate|Save the device state to a stream.|
+|`procedure CreatePanel(APort: TIOPort);`|ioport_createpanel|Create the graphical user-interface panel.|
+|`procedure FreePanel(APort: TIOPort);`|ioport_freepanel|Destroy the graphical user-interface panel.|
+|`procedure ShowPanel(APort: TIOPort);`|ioport_showpanel|Show the graphical user-interface panel.|
+|`procedure HidePanel(APort: TIOPort);`|ioport_hidepanel|Hide the graphical user-interface panel.|
+|`procedure RenamePanel(APort: TIOPort; ACaption: PChar);`|ioport_renamepanel|Change the GUI panel caption.|
+|`function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;`|ioport_resizepanel|Resize the GUI panel.|
+|`function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;`|ioport_movepanel|Move the GUI panel.|
