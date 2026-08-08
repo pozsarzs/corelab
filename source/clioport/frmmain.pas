@@ -18,7 +18,7 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_ioport,
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_ioport,
   core_gioport, frmabout, frmcaption, frmsizepos, ucommon;
 type
   TPluginAttributes = record

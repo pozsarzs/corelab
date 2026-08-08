@@ -62,7 +62,7 @@ constructor TButton16MUX.Create;
 begin
   inherited Create;
   FModname := '4x4 button matrix input';
-  FDescription := 'Select the column and read the row status..';
+  FDescription := 'Select the column and read the row status.';
   FHasPanel := true;
   FAddressRangeSize := 2;
   FLatchedOutput := true;

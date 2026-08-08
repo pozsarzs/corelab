@@ -63,7 +63,7 @@ var
 begin
   inherited Create;
   FModname := '8x8-LED output';
-  FDescription := 'Select the column and write the row status..';
+  FDescription := 'Select the column and write the row status.';
   FAddressRangeSize:= 2;
   FSelLine := 0;
   FHasPanel := true;
