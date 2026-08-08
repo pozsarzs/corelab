@@ -67,15 +67,15 @@ in mind:
 |**simulation type**       |Instruction-level operation (not cycle-accurate)                                 |
 |**supported architecture**|Neumann and Harvard architectures                                                |
 |**supported processors**  |Word-based CPUs up to 64-bit, 4–16 bit uPs and 4–8 bit, simple MCUs              |
-|**simulation environment**|Configurable memory space and virtual I/O ports                                  |
-|**modular architecture**  |Dynamically loadable CPUs, peripherals, and devices                              |
+|**simulation environment**|Configurable memory space and virtual I/O ports or devices                       |
+|**modular architecture**  |Dynamically loadable CPUs and peripherals                                        |
 |**dump**                  |Displaying memory and register contents, with export to binary or Intel HEX files|
 |**logging**               |Runtime log exportable to file                                                   |
 |**debug features**        |Breakpoints, memory monitoring, single-stepping, and commentable memory addresses|
 |**program loading**       |Via keyboard entry or from binary/Intel HEX files                                |
-|**state saving**          |Saving and restoring CPU and full environment state                              |
+|**state saving**          |Saving and restoring full environment state                                      |
 
-### Integrated modules (pontosítandó!)
+### Integrated modules
 
 |Features                       |Specification / Description                                        |
 |-------------------------------|-------------------------------------------------------------------|
@@ -104,6 +104,10 @@ in mind:
 |**Simple Console**                     |Basic text-based console for data stream monitoring.                                         |
 
 ## III. Screenshots
+
+### CLIOPort plugin tester application
+
+![CLIOPort plugin tester application](document/screenshots/clioport.png)
 
 (...)
 
