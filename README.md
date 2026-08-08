@@ -129,11 +129,11 @@ in mind:
 
 ### Project Management
 
-CoreLAB uses a project-based workflow. A project contains not only program code
-but also the complete simulation environment, including created CPUs, memories,
-peripherals, their interconnections, and associated files and settings. This
-allows different developments or experiments to be managed independently from one
-another.
+CoreLAB uses a simple directory-based project structure. A project directory can
+contain all related files—such as optional environment setup scripts, saved state
+snapshots, program code, and data streams. The simulation environment can also be
+built manually, meaning none of these files are strictly mandatory. This setup
+keeps experiments independent while fully supporting the use of external files.
 
 ### Modular Architecture
 
@@ -153,8 +153,7 @@ models.
 
 The memory map and I/O address space can be configured freely during simulation.
 Virtual peripherals can be assigned to memory locations or I/O ports in the same
-way as real hardware devices. This makes it possible to model complete systems
-without requiring physical components.
+way as real hardware devices.
 
 ### Debugging Features
 
@@ -164,20 +163,14 @@ register contents, and monitor instruction execution in real time. These feature
 are especially useful for educational purposes and low-level software
 development.
 
-### Bus and System Monitoring
-
-The Bus Monitor and Virtual System Monitor allow users to observe the operation
-of the virtual hardware in real time. Address, data, and control bus activity can
-be monitored, as well as communication between system components. This provides
-visibility into internal system behavior that would often require specialized
-measuring equipment on real hardware.
-
 ### Scripting and Automation
 
-In addition to the graphical interface, the program includes its own command
-interpreter and scripting language. Repetitive tasks, automated tests, and
-measurement procedures can be executed through scripts. This makes it possible to
-reproduce complex hardware configurations and testing environments efficiently.
+The program is primarily operated through its own built-in console command line,
+though a menu is also available. It features a custom command interpreter and
+scripting language. Scripts can be executed directly from the OS shell; when run
+this way, the script automatically builds the execution environment and performs
+all specified operations. This allows for the efficient automation of repetitive
+tasks, tests, and the reproduction of complex hardware configurations.
 
 ### State Saving and Restoration
 
