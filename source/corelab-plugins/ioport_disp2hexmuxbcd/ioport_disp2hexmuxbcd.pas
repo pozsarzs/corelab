@@ -110,7 +110,7 @@ begin
              SetLeftDot((AValue and $20) > 0);
              SetRightDot((AValue and $10) > 0);
              SetValue(AValue and $0F);
-             if Assigned (FPaintBox) then '''FPaintBox.Invalidate;
+             if Assigned (FPaintBox) then FPaintBox.Invalidate;
            end;
          end;
       1: if AValue <= MAXX then FSelLine := AValue;

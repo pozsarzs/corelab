@@ -103,7 +103,7 @@ end;
 // WRITE VIRTUAL PORT
 procedure TLEDGreen8.WritePort(APort: Word; AValue: Byte);
 var
-  b:     Byte;
+  x:     Byte;
   Value: Byte;
 begin
   if FEnabled and (APort = 0) then
@@ -111,8 +111,8 @@ begin
     FValue := AValue;
     Value := FValue;
     if FDataInNegation then Value := not Value;
-    for b := 0 to MAXX do
-      FLED[x].IsOn := (Value and (1 shl b)) <> 0;
+    for x := 0 to MAXX do
+      FLED[x].IsOn := (Value and (1 shl x)) <> 0;
     if Assigned (FPaintBox) then FPaintBox.Invalidate;
   end;
 end;
