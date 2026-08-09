@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=CLCPU
+Name=CLProcessor
 GenericName=CPU plugin tester
 GenericName[hu]=CPU beépülő teszter
-Exec=clcpu
+Exec=clprocessor
 Icon=corelab-green
 Terminal=false
 StartupNotify=true

@@ -549,21 +549,51 @@ object Form1: TForm1
       Style = tbsDivider
     end
     object ToolButton4: TToolButton
-      Left = 52
+      Left = 190
       Top = 2
       Action = Examine
     end
     object ToolButton5: TToolButton
-      Left = 75
+      Left = 213
       Top = 2
       Action = Deposit
     end
     object ToolButton6: TToolButton
-      Left = 98
+      Left = 236
       Height = 22
       Top = 2
       Caption = 'ToolButton6'
       Style = tbsDivider
+    end
+    object ToolButton7: TToolButton
+      Left = 52
+      Top = 2
+      Action = Reset
+    end
+    object ToolButton8: TToolButton
+      Left = 75
+      Top = 2
+      Action = NMI
+    end
+    object ToolButton9: TToolButton
+      Left = 98
+      Top = 2
+      Action = Step
+    end
+    object ToolButton10: TToolButton
+      Left = 121
+      Top = 2
+      Action = Run
+    end
+    object ToolButton11: TToolButton
+      Left = 144
+      Top = 2
+      Action = Pause
+    end
+    object ToolButton12: TToolButton
+      Left = 167
+      Top = 2
+      Action = Stop
     end
   end
   object Timer1: TTimer
@@ -629,6 +659,24 @@ object Form1: TForm1
     end
     object MenuItem4: TMenuItem
       Caption = '&Operation'
+      object MenuItem26: TMenuItem
+        Action = Reset
+      end
+      object MenuItem25: TMenuItem
+        Action = NMI
+      end
+      object MenuItem23: TMenuItem
+        Action = Step
+      end
+      object MenuItem22: TMenuItem
+        Action = Run
+      end
+      object MenuItem20: TMenuItem
+        Action = Pause
+      end
+      object MenuItem19: TMenuItem
+        Action = Stop
+      end
       object MenuItem7: TMenuItem
         Action = Examine
       end
@@ -814,6 +862,24 @@ object Form1: TForm1
       Caption = 'E&xit'
       Hint = 'Exit from application'
       OnExecute = QuitExecute
+    end
+    object Reset: TAction
+      Caption = 'Reset'
+    end
+    object NMI: TAction
+      Caption = 'NMI'
+    end
+    object Step: TAction
+      Caption = 'Step'
+    end
+    object Run: TAction
+      Caption = 'Run'
+    end
+    object Pause: TAction
+      Caption = 'Pause'
+    end
+    object Stop: TAction
+      Caption = 'Stop'
     end
     object Examine: TAction
       Caption = '&Examine'

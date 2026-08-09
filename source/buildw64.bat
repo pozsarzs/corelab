@@ -22,7 +22,7 @@ if %buildapp%==0 goto :end
 cd corelab
 make -f Makefile.w64
 cd ..
-cd clcpu
+cd clprocessor
 make -f Makefile.w64
 cd ..
 cd clioport

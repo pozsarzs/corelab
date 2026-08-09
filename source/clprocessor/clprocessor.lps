@@ -5,10 +5,9 @@
     <BuildModes Active="Default"/>
     <Units>
       <Unit>
-        <Filename Value="clioport.lpr"/>
+        <Filename Value="clprocessor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="6" Y="2"/>
+        <CursorPos X="2"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -18,21 +17,11 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="5" Y="2"/>
+        <TopLine Value="123"/>
+        <CursorPos X="24" Y="133"/>
         <UsageCount Value="216"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="frmcaption.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form3"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="19" Y="4"/>
-        <UsageCount Value="142"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -43,20 +32,27 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="11" Y="34"/>
-        <UsageCount Value="164"/>
+        <UsageCount Value="169"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="frmcaption.pas"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="19" Y="4"/>
+        <UsageCount Value="142"/>
+      </Unit>
+      <Unit>
         <Filename Value="frmsizepos.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form4"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="72"/>
         <CursorPos Y="102"/>
         <UsageCount Value="81"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="frmcaption.lfm"/>
@@ -67,113 +63,132 @@
       </Unit>
       <Unit>
         <Filename Value="../_ppu/ucommon.pas"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="19"/>
-        <CursorPos X="20" Y="32"/>
-        <UsageCount Value="37"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="22" Y="5"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="24">
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="34" Column="71" TopLine="23"/>
+        <Caret Line="550" Column="12" TopLine="530"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="37" Column="78" TopLine="23"/>
+        <Caret Line="2" Column="4"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="54" Column="61" TopLine="35"/>
+        <Caret Line="725" Column="37" TopLine="657"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="167" Column="59" TopLine="149"/>
+        <Caret Line="28" Column="46" TopLine="28"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="178" Column="21" TopLine="161"/>
+        <Caret Line="115" Column="24" TopLine="105"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="253" Column="45" TopLine="235"/>
+        <Caret Line="116" Column="24" TopLine="106"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="34" Column="74" TopLine="23"/>
+        <Caret Line="117" Column="24" TopLine="107"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="37" Column="81" TopLine="23"/>
+        <Caret Line="118" Column="24" TopLine="108"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="54" Column="64" TopLine="35"/>
+        <Caret Line="119" Column="24" TopLine="109"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="167" Column="62" TopLine="149"/>
+        <Caret Line="120" Column="24" TopLine="110"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="178" Column="24" TopLine="161"/>
+        <Caret Line="121" Column="24" TopLine="111"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="224" Column="21" TopLine="205"/>
+        <Caret Line="122" Column="24" TopLine="112"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="254" Column="48" TopLine="236"/>
+        <Caret Line="123" Column="24" TopLine="113"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="255" TopLine="246"/>
+        <Caret Line="124" Column="24" TopLine="114"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="254" Column="48" TopLine="246"/>
+        <Caret Line="123" Column="24" TopLine="113"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="641" Column="44" TopLine="374"/>
+        <Caret Line="122" Column="24" TopLine="112"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="53" Column="14" TopLine="42"/>
+        <Caret Line="121" Column="24" TopLine="111"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="166" Column="34" TopLine="148"/>
+        <Caret Line="122" Column="24" TopLine="112"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="608" Column="17" TopLine="590"/>
+        <Caret Line="123" Column="24" TopLine="113"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="632" Column="80" TopLine="614"/>
+        <Caret Line="124" Column="24" TopLine="114"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="590" TopLine="513"/>
+        <Caret Line="125" Column="24" TopLine="115"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="818" Column="37" TopLine="809"/>
+        <Caret Line="126" Column="24" TopLine="116"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="817" Column="37" TopLine="808"/>
+        <Caret Line="127" Column="24" TopLine="117"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="568" Column="34" TopLine="507"/>
+        <Caret Line="128" Column="24" TopLine="118"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="922" Column="67" TopLine="914"/>
+        <Caret Line="127" Column="24" TopLine="117"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="128" Column="24" TopLine="118"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="129" Column="24" TopLine="119"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="130" Column="24" TopLine="120"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="131" Column="24" TopLine="121"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="132" Column="24" TopLine="122"/>
       </Position>
     </JumpHistory>
     <RunParams>

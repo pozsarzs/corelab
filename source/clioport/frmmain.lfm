@@ -863,6 +863,14 @@ object Form1: TForm1
       OnExecute = WriteAByteExecute
       ShortCut = 16471
     end
+    object LoadStatus: TAction
+      Caption = 'Load status'
+      OnExecute = LoadStatusExecute
+    end
+    object SaveStatus: TAction
+      Caption = 'Save status'
+      OnExecute = SaveStatusExecute
+    end
     object Help: TAction
       Caption = '&Help'
       ImageIndex = 7
@@ -871,14 +879,6 @@ object Form1: TForm1
     object About: TAction
       Caption = '&About'
       OnExecute = AboutExecute
-    end
-    object LoadStatus: TAction
-      Caption = 'Load status'
-      OnExecute = LoadStatusExecute
-    end
-    object SaveStatus: TAction
-      Caption = 'Save status'
-      OnExecute = SaveStatusExecute
     end
   end
   object CHMHelpDatabase1: TCHMHelpDatabase

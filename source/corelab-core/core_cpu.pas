@@ -94,7 +94,7 @@ type
   public
     // Public methods
     constructor Create; virtual;
-    destructor Destroy; virtual;
+    destructor Destroy; override;
     procedure SetRegister(const RegName: PChar; AValue: QWord); virtual; abstract;
     function  GetRegister(const RegName: PChar): QWord; virtual; abstract;
     procedure Reset; virtual; abstract;
@@ -106,6 +106,9 @@ type
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;
     procedure ConnectBus(const Bus: ICPUBus); virtual;
+    // SrvBus side methods
+//    function LoadState(AStream: TStream): Boolean; virtual;
+//    function SaveState(AStream: TStream): Boolean; virtual;
     // Public properties
     property Modname: PChar read FModname;
     property Description: PChar read FDescription;

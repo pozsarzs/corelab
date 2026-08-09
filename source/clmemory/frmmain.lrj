@@ -26,12 +26,12 @@
 {"hash":20607422,"name":"tform1.restartapplication.hint","sourcebytes":[82,101,115,116,97,114,116,32,97,112,112,108,105,99,97,116,105,111,110],"value":"Restart application"},
 {"hash":4710148,"name":"tform1.quit.caption","sourcebytes":[69,38,120,105,116],"value":"E&xit"},
 {"hash":9850078,"name":"tform1.quit.hint","sourcebytes":[69,120,105,116,32,102,114,111,109,32,97,112,112,108,105,99,97,116,105,111,110],"value":"Exit from application"},
-{"hash":216547045,"name":"tform1.readabyte.caption","sourcebytes":[38,69,120,97,109,105,110,101],"value":"&Examine"},
-{"hash":188325196,"name":"tform1.readabyte.hint","sourcebytes":[69,120,97,109,105,110,101,32,99,111,110,116,101,110,116,32,111,102,32,109,101,109,111,114,121,32,99,101,108,108],"value":"Examine content of memory cell"},
-{"hash":180841636,"name":"tform1.writeabyte.caption","sourcebytes":[38,68,101,112,111,115,105,116],"value":"&Deposit"},
-{"hash":69550636,"name":"tform1.writeabyte.hint","sourcebytes":[68,101,112,111,115,105,116,32,100,97,116,97,32,105,110,32,109,101,109,111,114,121,32,99,101,108,108],"value":"Deposit data in memory cell"},
-{"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
-{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"},
+{"hash":216547045,"name":"tform1.examine.caption","sourcebytes":[38,69,120,97,109,105,110,101],"value":"&Examine"},
+{"hash":188325196,"name":"tform1.examine.hint","sourcebytes":[69,120,97,109,105,110,101,32,99,111,110,116,101,110,116,32,111,102,32,109,101,109,111,114,121,32,99,101,108,108],"value":"Examine content of memory cell"},
+{"hash":180841636,"name":"tform1.deposit.caption","sourcebytes":[38,68,101,112,111,115,105,116],"value":"&Deposit"},
+{"hash":69550636,"name":"tform1.deposit.hint","sourcebytes":[68,101,112,111,115,105,116,32,100,97,116,97,32,105,110,32,109,101,109,111,114,121,32,99,101,108,108],"value":"Deposit data in memory cell"},
 {"hash":133815459,"name":"tform1.loadstatus.caption","sourcebytes":[76,111,97,100,32,115,116,97,116,117,115],"value":"Load status"},
-{"hash":133367731,"name":"tform1.savestatus.caption","sourcebytes":[83,97,118,101,32,115,116,97,116,117,115],"value":"Save status"}
+{"hash":133367731,"name":"tform1.savestatus.caption","sourcebytes":[83,97,118,101,32,115,116,97,116,117,115],"value":"Save status"},
+{"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
+{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"}
 ]}

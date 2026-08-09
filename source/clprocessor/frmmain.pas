@@ -18,28 +18,38 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_memory,
-  frmabout, ucommon;
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
+  ucommon;
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
-    PAddressRangeSize: DWord;                              // address range size
     PDescription:      string;                              // short description
-    PEnabled:          Boolean;        // disable memory without detach from bus
+    PEnabled:          Boolean;        // disable processor without detach from bus
     PInstanceID:       Integer;                            // Module instance ID
-    PMemoryMode:       TMemoryMode;                      //Memory operation mode
     PModname:          string;                                    // module name
   end;
   // direction pairs for data moving procedures
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
-  TCreateMemoryFunc = function: TMemory; CALLTYPE;
-  TDestroyMemoryProc = procedure(Memory: TMemory); CALLTYPE;
-  TLoadStateProc  = function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateProc = function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TCreateProcessorFunc = function: TCPU; CALLTYPE;
+  TDestroyProcessorProc = procedure(Processor: TCPU); CALLTYPE;
+  TLoadStateProc  = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateProc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
+    MenuItem19: TMenuItem;
+    MenuItem20: TMenuItem;
+    MenuItem22: TMenuItem;
+    MenuItem23: TMenuItem;
+    MenuItem25: TMenuItem;
+    MenuItem26: TMenuItem;
+    Reset: TAction;
+    NMI: TAction;
+    Step: TAction;
+    Run: TAction;
+    Pause: TAction;
+    Stop: TAction;
     LoadStatus:            TAction;
     OpenDialog1:           TOpenDialog;
     SaveDialog1:           TSaveDialog;
@@ -89,11 +99,17 @@ type
     Timer1:                TTimer;
     ToolBar1:              TToolBar;
     ToolButton1:           TToolButton;
+    ToolButton10: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton12: TToolButton;
     ToolButton2:           TToolButton;
     ToolButton3:           TToolButton;
     ToolButton4:           TToolButton;
     ToolButton5:           TToolButton;
     ToolButton6:           TToolButton;
+    ToolButton7: TToolButton;
+    ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
     ValueListEditor1:      TValueListEditor;
     ValueListEditor2:      TValueListEditor;
     Deposit:            TAction;
@@ -120,12 +136,12 @@ type
     procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
     procedure DepositExecute(Sender: TObject);
   private
-    CurrentMemory:    TMemory;                // created object of TMemory class
+    CurrentProcessor: TCPU;                      // created object of TCPU class
     LibHandle:        TLibHandle;                 // handle of the loaded module
     LoadedPlugin:     TPluginAttributes;      // properties of the loaded module
     // pointers to the plugin entry point
-    CreateMemory:     TCreateMemoryFunc;                 // create plugin memory
-    DestroyMemory:    TDestroyMemoryProc;               // destroy plugin memory
+    CreateProcessor:  TCreateProcessorFunc;           // create plugin processor
+    DestroyProcessor: TDestroyProcessorProc;         // destroy plugin processor
     LoadState:        TLoadStateProc;                       // load plugin state
     SaveState:        TSaveStateProc;                       // save plugin state
     // general variables
@@ -159,7 +175,7 @@ resourcestring
   MSG02 = 'Data type conversion error.';
   MSG03 = 'Directory ''%s'' does not exist.';
   MSG04 = 'Cannot load ''%s'' plugin%s(%s).';
-  MSG05 = 'It is not a CoreLAB memory plugin.';
+  MSG05 = 'It is not a CoreLAB processor plugin.';
   MSG06 = 'Filename';
   MSG07 = 'Size';
   MSG08 = 'Type';
@@ -194,16 +210,15 @@ begin
     // check and read Modname and Description
     with LoadedPlugin do
     begin
-      if Assigned(CurrentMemory.Modname)
-        then PModname := String(CurrentMemory.Modname)
+      if Assigned(CurrentProcessor.Modname)
+        then PModname := String(CurrentProcessor.Modname)
         else PModname := '';
-      if Assigned(CurrentMemory.Description)
-        then PDescription := String(CurrentMemory.Description)
+      if Assigned(CurrentProcessor.Description)
+        then PDescription := String(CurrentProcessor.Description)
         else PDescription := '';
-      // read memory properties
-      PAddressRangeSize := CurrentMemory.AddressRangeSize;
-      PEnabled := CurrentMemory.Enabled;
-      PMemoryMode := CurrentMemory.MemoryMode;
+      // read processor properties
+      PEnabled := CurrentProcessor.Enabled;
+      {...}
     end;
   end;
   // export from variables to plugin
@@ -212,9 +227,8 @@ begin
     with LoadedPlugin do
     begin
       // only writeable properties
-      CurrentMemory.Enabled := PEnabled;
-      CurrentMemory.AddressRangeSize := PAddressRangeSize;
-      CurrentMemory.MemoryMode := PMemoryMode;
+      CurrentProcessor.Enabled := PEnabled;
+      {...}
     end;
   end;
 end;
@@ -222,7 +236,7 @@ end;
 // REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
 var
-  mm: TMemoryMode;
+  mm: TProcessorMode;
 begin
   if Direction = opVar2List then
   begin
@@ -246,15 +260,7 @@ begin
         PickList.CommaText := 'true,false';
         ReadOnly := True;
       end;
-      InsertRow('MemoryMode', LoadedPlugin.PMemoryMode.ToString, True);
-      with ItemProps['MemoryMode'] do
-      begin
-        EditStyle := esPickList;
-        for mm := Low(TMemoryMode) to High(TMemoryMode) do PickList.Add(mm.ToString);
-        ReadOnly := True;
-      end;
-      InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
-      ItemProps['AddressRangeSize'].ReadOnly := False;
+      {...}
     end;
   end;
   if Direction = opList2Var then
@@ -263,9 +269,8 @@ begin
     with ValueListEditor1 do
     begin
       try
-        LoadedPlugin.PAddressRangeSize := StrToInt(Values['AddressRangeSize']);
         LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
-        LoadedPlugin.PMemoryMode := mm.fromString(Values['MemoryMode']);
+        {...}
       except
         ShowMessage(MSG01 + MSG02);
       end;
@@ -453,9 +458,9 @@ begin
   with ShellListView1 do
   begin
     {$IFDEF WINDOWS}
-    Mask := 'memory_*.dll';
+    Mask := 'processor_*.dll';
     {$ELSE}
-    Mask := 'libmemory_*.so';
+    Mask := 'libprocessor_*.so';
     {$ENDIF}
     try
       Root := DirectoryEdit1.Directory;
@@ -479,18 +484,18 @@ begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
     // remove previous loaded module
     // device
-    if Assigned(CurrentMemory) then
+    if Assigned(CurrentProcessor) then
     begin
-      DestroyMemory(CurrentMemory);
-      CurrentMemory := nil;
+      DestroyProcessor(CurrentProcessor);
+      CurrentProcessor := nil;
     end;
     if LibHandle <> NilHandle then
     begin
       // UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
-      // memory
-      CreateMemory := nil;
-      DestroyMemory := nil;
+      // processor
+      CreateProcessor := nil;
+      DestroyProcessor := nil;
       // module
       LoadState := nil;
       SaveState := nil;
@@ -503,19 +508,19 @@ begin
       exit;
     end;
     // search exported function and instantiation
-    // memory
-    Pointer(CreateMemory) := GetProcedureAddress(LibHandle, 'memory_create');
-    Pointer(DestroyMemory) := GetProcedureAddress(LibHandle, 'memory_destroy');
+    // processor
+    Pointer(CreateProcessor) := GetProcedureAddress(LibHandle, 'processor_create');
+    Pointer(DestroyProcessor) := GetProcedureAddress(LibHandle, 'processor_destroy');
     // module
-    Pointer(LoadState) := GetProcedureAddress(LibHandle, 'memory_loadstate');
-    Pointer(SaveState) := GetProcedureAddress(LibHandle, 'memory_savestate');
+    Pointer(LoadState) := GetProcedureAddress(LibHandle, 'processor_loadstate');
+    Pointer(SaveState) := GetProcedureAddress(LibHandle, 'processor_savestate');
     // load data
-    if (Assigned(CreateMemory)) and (Assigned(DestroyMemory)) then
+    if (Assigned(CreateProcessor)) and (Assigned(DestroyProcessor)) then
     begin
-      CurrentMemory := CreateMemory();
+      CurrentProcessor := CreateProcessor();
       LoadedPlugin.PFilename := SelectedFile;
       // set InstanceID
-      CurrentMemory.InstanceID := 0;
+      CurrentProcessor.InstanceID := 0;
       // get properties
       ImpExpProperties(opPlugin2Var);
       // show properties
@@ -584,13 +589,13 @@ begin
   InAddr := 0;
   if TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], InAddr) then
   begin
-    if Assigned(CurrentMemory) then
+    if Assigned(CurrentProcessor) then
     begin
-      InData := CurrentMemory.ReadMemory(InAddr);
+      InData := CurrentProcessor.ReadProcessor(InAddr);
       ValueListEditor2.Cells[1, 2] := IntToHex(InData, 2);
       StatusBar1.Panels[2].Text := Format(MSG13, [IntToHex(InData, 1), IntToHex(InAddr, 2)]);
       // out of address range
-      if InAddr > CurrentMemory.AddressRangeSize then
+      if InAddr > CurrentProcessor.AddressRangeSize then
         StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (' + MSG16 + ')';
       Timer1.Enabled := True;
     end;
@@ -609,12 +614,12 @@ begin
   if (TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], OutAddr)) and
      (TryStrToInt('$' + ValueListEditor2.Cells[1, 2], OutData)) then
   begin
-    if Assigned(CurrentMemory) then
+    if Assigned(CurrentProcessor) then
     begin
-      CurrentMemory.WriteMemory(OutAddr, OutData);
+      CurrentProcessor.WriteProcessor(OutAddr, OutData);
       StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 1), IntToHex(OutAddr, 2)]);
-      OutRange := OutAddr >= CurrentMemory.AddressRangeSize;
-      ReadOnly := CurrentMemory.MemoryMode = mmROM;
+      OutRange := OutAddr >= CurrentProcessor.AddressRangeSize;
+      ReadOnly := CurrentProcessor.ProcessorMode = mmROM;
       // out of address range
       if OutRange or ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (';
       if OutRange then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + MSG16;
@@ -631,7 +636,7 @@ end;
 procedure TForm1.LoadStatusExecute(Sender: TObject);
 var
   Filename: string;
-  LoadStream: TMemoryStream;
+  LoadStream: TProcessorStream;
 begin
   with OpenDialog1 do
   begin
@@ -642,7 +647,7 @@ begin
   if OpenDialog1.Execute then
   begin
     Filename := OpenDialog1.FileName;
-    LoadStream := TMemoryStream.Create;
+    LoadStream := TProcessorStream.Create;
     try
       try
         LoadStream.LoadFromFile(FileName);
@@ -650,7 +655,7 @@ begin
         ShowMessage(MSG01 + Format(MSG24, [FileName]));
         exit;
       end;
-      if not LoadState(CurrentMemory, LoadStream) then ShowMessage(MSG01 + MSG25) else
+      if not LoadState(CurrentProcessor, LoadStream) then ShowMessage(MSG01 + MSG25) else
       begin
         ImpExpProperties(opPlugin2Var);
         RefreshProperties(opVar2List);
@@ -665,7 +670,7 @@ end;
 procedure TForm1.SaveStatusExecute(Sender: TObject);
 var
   Filename: string;
-  SaveStream: TMemoryStream;
+  SaveStream: TProcessorStream;
 begin
   with SaveDialog1 do
   begin
@@ -676,9 +681,9 @@ begin
   if SaveDialog1.Execute then
   begin
     Filename := SaveDialog1.FileName;
-    SaveStream := TMemoryStream.Create;
+    SaveStream := TProcessorStream.Create;
     try
-      if not SaveState(CurrentMemory, SaveStream) then ShowMessage(MSG01 + MSG20) else
+      if not SaveState(CurrentProcessor, SaveStream) then ShowMessage(MSG01 + MSG20) else
         try
           SaveStream.SaveToFile(FileName);
         except
@@ -693,7 +698,7 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/clmemory.htm');
+  ShowHelpOrErrorForKeyword('','html/clprocessor.htm');
 end;
 
 // ABOUT
@@ -705,11 +710,11 @@ end;
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  CurrentMemory := nil;
+  CurrentProcessor := nil;
   LibHandle := NilHandle;
-  // memory
-  CreateMemory := nil;
-  DestroyMemory := nil;
+  // processor
+  CreateProcessor := nil;
+  DestroyProcessor := nil;
   // module
   LoadState := nil;
   SaveState := nil;
@@ -760,20 +765,20 @@ end;
 // ONDESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  // memory
-  if Assigned(CurrentMemory) then
+  // processor
+  if Assigned(CurrentProcessor) then
   begin
-    DestroyMemory(CurrentMemory);
-    CurrentMemory := nil;
+    DestroyProcessor(CurrentProcessor);
+    CurrentProcessor := nil;
   end;
   // module
   if LibHandle <> NilHandle then
   begin
     UnloadLibrary(LibHandle);
     LibHandle := NilHandle;
-    // memory
-    CreateMemory := nil;
-    DestroyMemory := nil;
+    // processor
+    CreateProcessor := nil;
+    DestroyProcessor := nil;
     // module
     LoadState := nil;
     SaveState := nil;

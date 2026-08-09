@@ -9,7 +9,7 @@ include ../../Makefile.global
 
 outdir=../_lib/$(architecture)-$(os)
 podir=../_po
-project=clcpu
+project=clprocessor
 
 all:
 	@mkdir -p $(outdir)/

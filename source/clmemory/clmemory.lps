@@ -68,7 +68,7 @@
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="184" Column="13" TopLine="163"/>
@@ -96,10 +96,6 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="594" Column="66" TopLine="582"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="184" Column="13" TopLine="385"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
@@ -136,10 +132,6 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="621" TopLine="607"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="21" Column="55" TopLine="126"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
