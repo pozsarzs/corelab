@@ -820,7 +820,11 @@ begin
         ShowMessage(MSG01 + Format(MSG24, [FileName]));
         exit;
       end;
-      if not LoadState(CurrentPort, LoadStream) then ShowMessage(MSG01 + MSG25);
+      if not LoadState(CurrentPort, LoadStream) then ShowMessage(MSG01 + MSG25) else
+      begin
+        ImpExpProperties(opPlugin2Var);
+        RefreshProperties(opVar2List);
+      end;
     finally
       LoadStream.Free;
     end;

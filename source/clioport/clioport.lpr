@@ -19,7 +19,7 @@ uses
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
-  AUTMAIL = 'pozsarzs@gail.com';
+  AUTMAIL = 'pozsarzs@gmail.com';
   PRGNAME = 'CLIOPort';
   PRGVERS = '0.1';
   PARAMS: array[1..4, 1..3] of string =

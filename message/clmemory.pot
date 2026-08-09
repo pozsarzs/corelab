@@ -68,7 +68,7 @@ msgid "Cannot load '%s' plugin%s(%s)."
 msgstr ""
 
 #: frmmain.msg05
-msgid "It is not a CoreLAB IOPort plugin."
+msgid "It is not a CoreLAB memory plugin."
 msgstr ""
 
 #: frmmain.msg06
@@ -96,25 +96,29 @@ msgid "Address"
 msgstr ""
 
 #: frmmain.msg12
-msgid "Data (Hex)"
+msgid "Data"
 msgstr ""
 
 #: frmmain.msg13
 #, object-pascal-format
-msgid " %sh read from port %sh."
+msgid " %sh read from address %sh."
 msgstr ""
 
 #: frmmain.msg14
 #, object-pascal-format
-msgid " %sh write to port %sh."
+msgid " %sh write to address %sh."
 msgstr ""
 
 #: frmmain.msg15
-msgid "Only 8-bit hexadecimal values can be entered (00 - FF)!"
+msgid "Only hexadecimal values can be entered!"
 msgstr ""
 
 #: frmmain.msg16
-msgid "Caption"
+msgid "Out of range!"
+msgstr ""
+
+#: frmmain.msg17
+msgid "Value (Hex)"
 msgstr ""
 
 #: frmmain.msg18
@@ -153,6 +157,10 @@ msgstr ""
 
 #: frmmain.msg26
 msgid "CoreLAB stream file|*.clstm|All file|*.*"
+msgstr ""
+
+#: frmmain.msg27
+msgid "Read-only!"
 msgstr ""
 
 #: tform1.about.caption
@@ -243,11 +251,11 @@ msgid "Exit from application"
 msgstr ""
 
 #: tform1.readabyte.caption
-msgid "&Read a byte"
+msgid "&Examine"
 msgstr ""
 
 #: tform1.readabyte.hint
-msgid "Read a byte"
+msgid "Examine content of memory cell"
 msgstr ""
 
 #: tform1.refreshpluginlist.caption
@@ -291,22 +299,12 @@ msgstr ""
 msgid "ToolButton6"
 msgstr ""
 
-#: tform1.toolbutton7.caption
-msgctxt "tform1.toolbutton7.caption"
-msgid "S&how plugin window"
-msgstr ""
-
-#: tform1.toolbutton7.hint
-msgctxt "tform1.toolbutton7.hint"
-msgid "Show plugin window"
-msgstr ""
-
 #: tform1.writeabyte.caption
-msgid "&Write a byte"
+msgid "&Deposit"
 msgstr ""
 
 #: tform1.writeabyte.hint
-msgid "Write a byte"
+msgid "Deposit data in memory cell"
 msgstr ""
 
 #: tform2.button1.caption

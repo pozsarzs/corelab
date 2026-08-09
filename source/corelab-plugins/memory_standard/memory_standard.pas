@@ -29,8 +29,8 @@ type
 constructor TStandardMemory.Create;
 begin
   inherited Create;
-  SetFModname(PChar('Standard memory'));
-  SetFDescription(PChar('Up to 16MB RAM/ROM'));
+  FModname := PChar('Standard memory');
+  FDescription := PChar('Up to 16MB RAM/ROM');
   FMemoryMode := mmRAM;
 end;
 

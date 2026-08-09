@@ -1,0 +1,99 @@
+@startuml
+
+title CoreLAB Memory plugin class diagram
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+left to right direction
+
+abstract class TMemory {
+  # FAddressRangeSize : DWord
+  # FDescription : PChar
+  # FEnabled : Boolean
+  # FInstanceID : Integer
+  # FMemoryMode : TMemoryMode
+  # FMemCells : array of Byte
+  # FModname : PChar
+  # FVersion : TSemanticVersion
+  --
+  # SetFAddressRangeSize(AAddressRangeSize : DWord)
+  --
+  + Create()
+  + Destroy()
+  + Reset()
+  + ReadMemory(AAddress : DWord) : Byte
+  + WriteMemory(AAddress : DWord; AValue : Byte)
+  + LoadState(AStream : TStream) : Boolean
+  + SaveState(AStream : TStream) : Boolean
+  + LoadFromStream(AStream : TStream; AAddress, ACount : DWord)
+  + SaveToStream(AStream : TStream; AAddress, ACount : DWord)
+  --
+  + AddressRangeSize : DWord
+  + Description : PChar
+  + Enabled : Boolean
+  + InstanceID : Integer
+  + MemoryMode : TMemoryMode
+  + ModName : PChar
+  + Version : TSemanticVersion
+}
+
+class TStandardMemory {
+  --
+  + Create()
+  + Destroy()
+}
+
+enum TMemoryMode {
+  mmRAM
+  mmROM
+}
+
+class TSemanticVersion <<record>> {
+  + Major : Integer
+  + Minor : Integer
+  + Patch : Integer
+}
+
+TMemory <|-- TStandardMemory
+
+TMemory ..> TMemoryMode
+TMemory ..> TSemanticVersion
+TMemory ..> TStream
+
+class "memory_standard library" as MemoryStandard <<plugin>> {
+  --
+  + CreateMemory() : TMemory
+  + DestroyMemory(AMemory : TMemory)
+  + LoadState(AMemory : TMemory; AStream : TStream) : Boolean
+  + SaveState(AMemory : TMemory; AStream : TStream) : Boolean
+}
+
+MemoryStandard ..> TStandardMemory : creates
+MemoryStandard ..> TMemory : uses
+
+note right of TStandardMemory
+Module name:
+Standard memory
+
+Description:
+Up to 16MB RAM/ROM
+
+Initial mode:
+mmRAM
+end note
+
+note bottom of MemoryStandard
+Exported names:
+memory_create
+memory_destroy
+memory_loadstate
+memory_savestate
+end note
+
+@enduml

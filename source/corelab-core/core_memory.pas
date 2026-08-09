@@ -36,9 +36,6 @@ type
   end;
   // Abstract memory class
   TMemory = class
-  private
-    PDescription:      string;
-    PModname:          string;
   protected
     FAddressRangeSize: DWord;                              // Address range size
     FDescription:      PChar;                               // Short description
@@ -49,8 +46,6 @@ type
     FModname:          PChar;                                     // Module name
     FVersion:          TSemanticVersion;                       // Module version
     procedure SetFAddressRangeSize(AAddressRangeSize: DWord);
-    procedure SetFDescription(ADescription: PChar);
-    procedure SetFModname(AModname: PChar);
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -65,11 +60,11 @@ type
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     // Properties
     property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
-    property Description: PChar read FDescription write SetFDescription;
+    property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
     property InstanceID: Integer read FInstanceID write FInstanceID;
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
-    property ModName: PChar read FModname write SetFModname;
+    property ModName: PChar read FModname;
     property Version: TSemanticVersion read FVersion;
   end;
 
@@ -121,20 +116,6 @@ begin
   end;
 end;
 
-// SET DESCRIPTION
-procedure TMemory.SetFDescription(ADescription: PChar);
-begin
-  PDescription := StrPas(ADescription);
-  FDescription := PChar(PDescription);
-end;
-
-// SET MODNAME
-procedure TMemory.SetFModname(AModname: PChar);
-begin
-  PModname := StrPas(AModname);
-  FModname := PChar(PModname);
-end;
-
 // ---- PUBLIC METHODS ----
 
 // CREATE TMEMORY INSTANCE
@@ -145,8 +126,8 @@ begin
   SetFAddressRangeSize(1024);
   FEnabled := false;
   FMemoryMode := mmRAM;
-  SetFModname(PChar('RAM'));
-  SetFDescription(PChar('Conventional memory.'));
+  FModname := PChar('RAM');
+  FDescription := PChar('Conventional memory.');
   with FVersion do
   begin
     Major := 0;

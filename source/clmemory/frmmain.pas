@@ -18,15 +18,16 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_memory,
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_memory,
   frmabout, ucommon;
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
-    PAddressRangeSize: Byte;                               // address range size
+    PAddressRangeSize: DWord;                              // address range size
     PDescription:      string;                              // short description
     PEnabled:          Boolean;        // disable memory without detach from bus
     PInstanceID:       Integer;                            // Module instance ID
+    PMemoryMode:       TMemoryMode;                      //Memory operation mode
     PModname:          string;                                    // module name
   end;
   // direction pairs for data moving procedures
@@ -93,7 +94,6 @@ type
     ToolButton4:           TToolButton;
     ToolButton5:           TToolButton;
     ToolButton6:           TToolButton;
-    ToolButton7:           TToolButton;
     ValueListEditor1:      TValueListEditor;
     ValueListEditor2:      TValueListEditor;
     WriteAByte:            TAction;
@@ -117,7 +117,6 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
-    procedure ValueListEditor2EditingDone(Sender: TObject);
     procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
     procedure WriteAByteExecute(Sender: TObject);
   private
@@ -167,12 +166,12 @@ resourcestring
   MSG09 = 'Property';
   MSG10 = 'Value';
   MSG11 = 'Address';
-  MSG12 = 'Data (Hex)';
-  MSG13 = ' %sh read from port %sh.';
-  MSG14 = ' %sh write to port %sh.';
-  MSG15 = 'Only 8-bit hexadecimal values can be entered (00 - FF)!';
-  MSG16 = 'Caption';
-  MSG17 = '';
+  MSG12 = 'Data';
+  MSG13 = ' %sh read from address %sh.';
+  MSG14 = ' %sh write to address %sh.';
+  MSG15 = 'Only hexadecimal values can be entered!';
+  MSG16 = 'Out of range!';
+  MSG17 = 'Value (Hex)';
   MSG18 = 'Missing help file.';
   MSG19 = 'Missing help viewer.';
   MSG20 = 'Cannot read state data from plugin.';
@@ -182,7 +181,7 @@ resourcestring
   MSG24 = 'Cannot load ''%s'' plugin data.';
   MSG25 = 'Cannot write state data to plugin.';
   MSG26 = 'CoreLAB stream file|*.clstm|All file|*.*';
-  MSG27 = '';
+  MSG27 = 'Read-only!';
 
 // ---- PRIVATE METHODS ----
 
@@ -204,6 +203,7 @@ begin
       // read memory properties
       PAddressRangeSize := CurrentMemory.AddressRangeSize;
       PEnabled := CurrentMemory.Enabled;
+      PMemoryMode := CurrentMemory.MemoryMode;
     end;
   end;
   // export from variables to plugin
@@ -213,12 +213,16 @@ begin
     begin
       // only writeable properties
       CurrentMemory.Enabled := PEnabled;
+      CurrentMemory.AddressRangeSize := PAddressRangeSize;
+      CurrentMemory.MemoryMode := PMemoryMode;
     end;
   end;
 end;
 
 // REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
+var
+  mm: TMemoryMode;
 begin
   if Direction = opVar2List then
   begin
@@ -242,8 +246,15 @@ begin
         PickList.CommaText := 'true,false';
         ReadOnly := True;
       end;
+      InsertRow('MemoryMode', LoadedPlugin.PMemoryMode.ToString, True);
+      with ItemProps['MemoryMode'] do
+      begin
+        EditStyle := esPickList;
+        for mm := Low(TMemoryMode) to High(TMemoryMode) do PickList.Add(mm.ToString);
+        ReadOnly := True;
+      end;
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
-      ItemProps['AddressRangeSize'].ReadOnly := True;
+      ItemProps['AddressRangeSize'].ReadOnly := False;
     end;
   end;
   if Direction = opList2Var then
@@ -252,7 +263,9 @@ begin
     with ValueListEditor1 do
     begin
       try
+        LoadedPlugin.PAddressRangeSize := StrToInt(Values['AddressRangeSize']);
         LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
+        LoadedPlugin.PMemoryMode := mm.fromString(Values['MemoryMode']);
       except
         ShowMessage(MSG01 + MSG02);
       end;
@@ -361,25 +374,33 @@ end;
 procedure TForm1.ValueListEditor2ValidateEntry(Sender: TObject; aCol,
   aRow: Integer; const OldValue: string; var NewValue: String);
 var
-  Val: Integer;
+  Val, MaxVal, HexDigits: Integer;
 begin
   if aCol = 1 then
   begin
     NewValue := Trim(NewValue);
-    if NewValue = '' then NewValue := '00';
+    if NewValue = '' then NewValue := '0';
+
+    // maximal value
+    if aRow = 1 then
+    begin
+      MaxVal := 16777215;
+      HexDigits := 6;
+    end
+    else
+    begin
+      MaxVal := 255;
+      HexDigits := 2;
+    end;
+
     // validating hexa value
-    if not TryStrToInt('$' + NewValue, Val) or (Val < 0) or (Val > 255) then
+    if not TryStrToInt('$' + NewValue, Val) or (Val < 0) or (Val > MaxVal) then
     begin
       ShowMessage(MSG01 + MSG15);
       NewValue := OldValue;
-    end else NewValue := IntToHex(Val, 2);
+    end else
+      NewValue := IntToHex(Val, HexDigits);
   end;
-end;
-
-// WRITE TO PORT
-procedure TForm1.ValueListEditor2EditingDone(Sender: TObject);
-begin
-  WriteAByte.Execute;
 end;
 
 // --- MAIN MENU ---
@@ -499,13 +520,6 @@ begin
       ImpExpProperties(opPlugin2Var);
       // show properties
       RefreshProperties(opVar2List);
-      // preset address/data table
-      ValueListEditor2.Clear;
-      for b := 0 to LoadedPlugin.PAddressRangeSize - 1 do
-      begin
-        ValueListEditor2.InsertRow('BA+' + b.ToString, '', True);
-        ValueListEditor2.Cells[1, b + 1] := '0';
-      end;
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
       ReadAByte.Enabled := True;
@@ -524,7 +538,11 @@ begin
       // loading error
       ShowMessage(MSG01 + MSG05);
       ValueListEditor1.Clear;
-      ValueListEditor2.Clear;
+      with ValueListEditor2 do
+      begin
+        Cells[1, 1] := '0';
+        Cells[1, 2] := '0';
+      end;
       UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
       ValueListEditor1.Enabled := False;
@@ -559,32 +577,51 @@ end;
 // READ A BYTE
 procedure TForm1.ReadAByteExecute(Sender: TObject);
 var
-  InAddr, InData: Byte;
+  InAddr: DWord;
+  InData: Byte;
 begin
   InData := 0;
-  InAddr := ValueListEditor2.Row - 1;
-  if Assigned(CurrentMemory) then
+  InAddr := 0;
+  if TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], InAddr) then
   begin
-//    InData := CurrentMemory.ReadPort(InAddr);
-    StatusBar1.Panels.Items[2].Text := Format(MSG13, [IntToHex(InData, 2), IntToHex(InAddr, 2)]);
-    Timer1.Enabled := True;
-    ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToHex(InData, 2);
+    if Assigned(CurrentMemory) then
+    begin
+      InData := CurrentMemory.ReadMemory(InAddr);
+      ValueListEditor2.Cells[1, 2] := IntToHex(InData, 2);
+      StatusBar1.Panels[2].Text := Format(MSG13, [IntToHex(InData, 1), IntToHex(InAddr, 2)]);
+      // out of address range
+      if InAddr > CurrentMemory.AddressRangeSize then
+        StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (' + MSG16 + ')';
+      Timer1.Enabled := True;
+    end;
   end;
 end;
 
 // WRITE A BYTE
 procedure TForm1.WriteAByteExecute(Sender: TObject);
 var
-  OutAddr, OutData: Integer;
+  OutAddr: DWord;
+  OutData: Integer;
+  OutRange, ReadOnly: Boolean;
 begin
-  OutAddr := ValueListEditor2.Row - 1;
   OutData := 0;
-  if TryStrToInt('$' + ValueListEditor2.Cells[1, ValueListEditor2.Row], OutData) then
+  OutAddr := 0;
+  if (TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], OutAddr)) and
+     (TryStrToInt('$' + ValueListEditor2.Cells[1, 2], OutData)) then
   begin
     if Assigned(CurrentMemory) then
     begin
-//      CurrentMemory.WritePort(OutAddr, OutData);
-      StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 2), IntToHex(OutAddr, 2)]);
+      CurrentMemory.WriteMemory(OutAddr, OutData);
+      StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 1), IntToHex(OutAddr, 2)]);
+      OutRange := OutAddr >= CurrentMemory.AddressRangeSize;
+      ReadOnly := CurrentMemory.MemoryMode = mmROM;
+      // out of address range
+      if OutRange or ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (';
+      if OutRange then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + MSG16;
+      if OutRange then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' ';
+      // write ROM
+      if ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + MSG27;
+      if OutRange or ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ')';
       Timer1.Enabled := True;
     end;
   end;
@@ -613,7 +650,11 @@ begin
         ShowMessage(MSG01 + Format(MSG24, [FileName]));
         exit;
       end;
-      if not LoadState(CurrentMemory, LoadStream) then ShowMessage(MSG01 + MSG25);
+      if not LoadState(CurrentMemory, LoadStream) then ShowMessage(MSG01 + MSG25) else
+      begin
+        ImpExpProperties(opPlugin2Var);
+        RefreshProperties(opVar2List);
+      end;
     finally
       LoadStream.Free;
     end;
@@ -696,10 +737,12 @@ begin
   end;
   with ValueListEditor2 do
   begin
-    TitleCaptions.Strings[0] := MSG11;
-    TitleCaptions.Strings[1] := MSG12;
-    Cells[0, 1] := 'BA + 0';
+    TitleCaptions.Strings[0] := '';
+    TitleCaptions.Strings[1] := MSG17;
+    Cells[0, 1] := MSG11;
+    Cells[0, 2] := MSG12;
     Cells[1, 1] := '0';
+    Cells[1, 2] := '0';
     Enabled := False;
   end;
   // enable/disable menuitems

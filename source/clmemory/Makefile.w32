@@ -5,7 +5,7 @@
 # | Makefile for 32 bit Windows                                                |
 # +----------------------------------------------------------------------------+
 
-name = corelab
+name = clmemory
 architecture = i386
 fpc = ppc386
 os = win32

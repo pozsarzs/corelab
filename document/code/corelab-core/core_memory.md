@@ -2,71 +2,107 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
+Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 
-## TMemory from core_memory unit
+## TMemory from TMemory class in core_memory unit
 
-`TMemory` is a base class for simulated memory devices. It manages a byte-array memory space, supports RAM and ROM operation modes, provides byte-level memory access, and can transfer ranges of memory contents to and from streams.
+`TMemory` is the abstract memory component of the CoreLAB framework. It provides a byte-addressable memory array with configurable address-space size, RAM/ROM operation mode, enable state, instance identification and stream-based state persistence.
 
-### Related types
+### TMemoryMode
 
-|name |type |description|
-|-----|-----|-----------|
-|`TMemoryMode`|enumeration|Memory operation mode: `mmRAM` or `mmROM`|
-|`TSemanticVersion`|record|Major, minor, and patch version information|
+`TMemoryMode` defines the memory operation mode:
 
-### Type helpers
+|value|description|
+|---|---|
+|`mmRAM`|Memory contents can be written when the memory is enabled.|
+|`mmROM`|Memory contents are read-only through `WriteMemory`.|
 
-|name |description|
-|-----|------------|
-|`TMemoryModeHelper.ToString`|Converts a memory mode to its enumeration name|
-|`TMemoryModeHelper.FromString`|Converts an enumeration name to `TMemoryMode`|
-|`TSemanticVersionHelper.ToString`|Formats a version as `Major.Minor.Patch`|
-|`TSemanticVersionHelper.Compare`|Compares two semantic versions; returns `-1`, `0`, or `1`|
+### TMemoryModeHelper
+
+|name|description|
+|---|---|
+|`ToString`|Converts the current `TMemoryMode` value to its enumeration name.|
+|`FromString(const Value: string)`|Converts an enumeration name to a `TMemoryMode` value using RTTI.|
+
+### TSemanticVersion
+
+`TSemanticVersion` stores the module version as three integer components.
+
+|field|type|description|
+|---|---|---|
+|`Major`|`Integer`|Major version number.|
+|`Minor`|`Integer`|Minor version number.|
+|`Patch`|`Integer`|Patch version number.|
+
+### TSemanticVersionHelper
+
+|name|description|
+|---|---|
+|`ToString`|Formats the version as `Major.Minor.Patch`.|
+|`Compare(AOther: TSemanticVersion)`|Compares the other version with the current version and returns `-1`, `0` or `1`. The result is negative when `AOther` is newer, positive when it is older, and zero when both versions are equal.|
 
 ### Protected fields
 
-|name |type |description |initial value|
-|-----|-----|-------------|-------------|
-|`FAddressRangeSize`|`DWord`|Address range size|`1024`|
-|`FDescription`|`PChar`|Short description|not initialized here|
-|`FEnabled`|`Boolean`|Enable memory access|`false`|
-|`FMemoryMode`|`TMemoryMode`|Memory operation mode|`mmRAM`|
-|`FMemCells`|array of `Byte`|Memory cells|empty until `Reset`|
-|`FModname`|`PChar`|Module name|`RAM`|
-|`FVersion`|`TSemanticVersion`|Module version|`0.1.0`|
+|name|type|description|default|
+|---|---|---|---|
+|`FAddressRangeSize`|`DWord`|Number of addressable memory cells.|`1024`|
+|`FDescription`|`PChar`|Short module description.|`Conventional memory.`|
+|`FEnabled`|`Boolean`|Enables memory access without detaching the component from the bus.|`False`|
+|`FInstanceID`|`Integer`|Module instance identifier.|not explicitly initialized|
+|`FMemoryMode`|`TMemoryMode`|RAM or ROM operation mode.|`mmRAM`|
+|`FMemCells`|`array of Byte`|Internal byte-addressable memory storage.|1024 bytes initially|
+|`FModname`|`PChar`|Module name.|`RAM`|
+|`FVersion`|`TSemanticVersion`|Module version.|`0.1.0`|
+
+### Protected methods
+
+|name|flags|description|
+|---|:---:|---|
+|`procedure SetFAddressRangeSize(AAddressRangeSize: DWord);`| |Sets the address-space size and resizes the internal memory array. Values above `2^24` are limited to `2^24` bytes. A value of zero is ignored.|
 
 ### Public methods
 
-|name |flags|description|
-|-----|:---:|-----------|
-|`constructor Create;`|Vi|Initialize the default memory configuration|
-|`destructor Destroy;`|Or|Destroy the memory object|
-|`function ReadMemory(AAddress: DWord): Byte;`|Vi|Read a byte when memory is enabled and the address is in range; otherwise return zero|
-|`procedure Reset;`|Vi|Limit the address range to 16 MiB, allocate the memory array, and clear all cells|
-|`procedure WriteMemory(AAddress: DWord; AValue: Byte);`|Vi|Write a byte only when memory is enabled, in RAM mode, and the address is in range|
-|`procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);`|Vi|Load a range of bytes into memory when enabled and the requested range fits|
-|`procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);`|Vi|Save a range of bytes from memory when enabled and the requested range fits|
+|name|flags|description|
+|---|:---:|---|
+|`constructor Create;`|Vi|Initializes a 1024-byte RAM memory module, disables it, sets its module information and clears its memory contents.|
+|`destructor Destroy;`|Or|Destroys the memory object.|
+|`procedure Reset;`|Vi|Fills all allocated memory cells with zero.|
+|`function ReadMemory(AAddress: DWord): Byte;`|Vi|Returns the byte at the specified address when the memory is enabled and the address is inside the configured range. Otherwise returns `0`.|
+|`procedure WriteMemory(AAddress: DWord; AValue: Byte);`|Vi|Writes a byte only when the memory is enabled, the mode is `mmRAM`, and the address is inside the configured range.|
+|`function LoadState(AStream: TStream): Boolean;`|Vi|Loads the enabled state, memory mode, address-range size and complete memory contents from a stream. Returns `False` if a stream read raises an exception.|
+|`function SaveState(AStream: TStream): Boolean;`|Vi|Saves the enabled state, memory mode, address-range size and complete memory contents. Returns `True` only when `InstanceID > -1` and the data is written.|
+|`procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);`|Vi|Loads `ACount` bytes from the current stream position into memory starting at `AAddress`, provided the memory is enabled and both memory and stream bounds are valid.|
+|`procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);`|Vi|Writes `ACount` bytes from memory starting at `AAddress` to the current stream position, provided the memory is enabled and the memory bounds are valid.|
 
 ### Public properties
 
-|name |type |access|description|
-|-----|-----|:----:|-----------|
-|`AddressRangeSize`|`DWord`|Re/Wr|Memory address range size|
-|`Description`|`PChar`|Re/Wr|Short description|
-|`Enabled`|`Boolean`|Re/Wr|Enable memory access|
-|`MemoryMode`|`TMemoryMode`|Re/Wr|RAM or ROM operation mode|
-|`ModName`|`PChar`|Re/Wr|Module name|
-|`Version`|`TSemanticVersion`|Re|Module version|
+|name|type|access|description|
+|---|---|---|---|
+|`AddressRangeSize`|`DWord`|read/write|Configured memory address-space size. The setter also resizes the internal memory array and limits the size to `2^24` bytes.|
+|`Description`|`PChar`|read|Short module description.|
+|`Enabled`|`Boolean`|read/write|Enables or disables memory access.|
+|`InstanceID`|`Integer`|read/write|Module instance identifier.|
+|`MemoryMode`|`TMemoryMode`|read/write|Selects RAM or ROM operation.|
+|`ModName`|`PChar`|read|Module name.|
+|`Version`|`TSemanticVersion`|read|Module version.|
 
-### Memory access behavior
+### Memory operation
 
-`ReadMemory` returns zero when the memory is disabled or the requested address is outside the configured range.
+|condition|`ReadMemory`|`WriteMemory`|
+|---|---|---|
+|`Enabled = False`|returns `0`|no operation|
+|Address outside range|returns `0`|no operation|
+|`MemoryMode = mmRAM`|reads normally|writes normally|
+|`MemoryMode = mmROM`|reads normally|no operation|
 
-`WriteMemory` modifies memory only in `mmRAM` mode. In `mmROM` mode writes are ignored.
+### Module information
 
-`Reset` allocates `FMemCells` to the current address range after limiting that range to at most `1 shl 24` bytes (16 MiB), and clears the allocated cells to zero.
-
-### Stream operations
-
-`LoadFromStream` and `SaveToStream` silently return when memory is disabled or when the requested range is outside the configured memory size. `LoadFromStream` also checks that enough bytes remain in the source stream.
+|item|value|
+|---|---|
+|Module name|`RAM`|
+|Description|`Conventional memory.`|
+|Version|`0.1.0`|
+|Initial address range|1024 bytes|
+|Maximum address range|`2^24` bytes|
+|Initial memory mode|`mmRAM`|
+|Initial enabled state|`False`|

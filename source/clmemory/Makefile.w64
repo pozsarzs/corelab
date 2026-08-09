@@ -5,7 +5,7 @@
 # | Makefile for 64 bit Windows                                                |
 # +----------------------------------------------------------------------------+
 
-name = ioport
+name = clmemory
 architecture = x86_64
 os = win64
 fpc = ppcx64
