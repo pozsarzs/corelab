@@ -15,7 +15,7 @@ program clmemory;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmabout, frmmain, frmcaption, frmsizepos;
+  lhelpcontrolpkg, crt, frmabout, frmmain;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -40,7 +40,7 @@ var
 {$R *.res}
 
 resourcestring
-  MSG01 = 'CoreLAB memory plugin tester';
+  MSG01 = 'CoreLAB Memory plugin tester';
   MSG02 = 'Build date:  ';
   MSG03 = 'Builder:     ';
   MSG04 = 'FPC version: ';
@@ -175,8 +175,6 @@ begin
     Initialize;
     CreateForm(TForm1, Form1);
     CreateForm(TForm2, Form2);
-    CreateForm(TForm3, Form3);
-    CreateForm(TForm4, Form4);
   end;
   Form2.SetAboutLabels(AboutLabels);
   Form1.PluginDirectory := PluginDir;

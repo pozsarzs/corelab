@@ -29,7 +29,7 @@ type
     PDataOutMode:      TLineMode;                  // decoding output data lines
     PDataOutNegation:  Boolean;             // negation of databit (CPU -> port)
     PDescription:      string;                              // short description
-    PEnabled:          Boolean;           // enable port without detach from bus
+    PEnabled:          Boolean;          // disable port without detach from bus
     PHasPanel:         Boolean;           // does the implementation have a GUI?
     PIntVector:        Byte;                          // plugin interrupt vector
     PInstanceID:       Integer;                            // Module instance ID
@@ -40,7 +40,7 @@ type
     PSelNegation:      Boolean;              // negation of matrix selector bits
   end;
   // direction pairs for data moving procedures
-  TOpDirection    = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
+  TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
   TCreatePortFunc = function: TIOPort; CALLTYPE;
   TDestroyPortProc = procedure(Port: TIOPort); CALLTYPE;
@@ -58,8 +58,8 @@ type
   TForm1 = class(TForm)
     About:                       TAction;
     LoadStatus:                  TAction;
-    OpenDialog1: TOpenDialog;
-    SaveDialog1: TSaveDialog;
+    OpenDialog1:                 TOpenDialog;
+    SaveDialog1:                 TSaveDialog;
     SaveStatus:                  TAction;
     ActionList1:                 TActionList;
     CHMHelpDatabase1:            TCHMHelpDatabase;

@@ -60,6 +60,24 @@ resourcestring
 {$R *.lfm}
 { TForm2 }
 
+// ---- PUBLIC METHODS ----
+
+// SET LABELS
+procedure TForm2.SetAboutLabels(Labels: TAboutLabels);
+begin
+  with Labels do
+  begin
+    Label1.Caption := Name;
+    Label2.Caption := 'v' + Version;
+    Label3.Caption := Description;
+    Label4.Caption := Copyright;
+    Label5.Caption := Homepage;
+    Label8.Caption := Email;
+  end;
+end;
+
+// ---- EVENT HANDLER METHODS ----
+
 // UNDERLINING LINKS
 procedure TForm2.Label5MouseEnter(Sender: TObject);
 begin
@@ -92,20 +110,6 @@ procedure TForm2.Label8Click(Sender: TObject);
 begin
   if Length(Label8.Caption) > 0 then
     if not OpenURL('mailto:' + Label8.Caption) then ShowMessage(MSG01);
-end;
-
-// SET LABELS
-procedure TForm2.SetAboutLabels(Labels: TAboutLabels);
-begin
-  with Labels do
-  begin
-    Label1.Caption := Name;
-    Label2.Caption := 'v' + Version;
-    Label3.Caption := Description;
-    Label4.Caption := Copyright;
-    Label5.Caption := Homepage;
-    Label8.Caption := Email;
-  end;
 end;
 
 end.

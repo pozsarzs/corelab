@@ -13,87 +13,96 @@
 
 unit frmmain;
 {$MODE OBJFPC}{$H+}
+{$I define.pas}
 interface
 uses
-  CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
-  ValEdit, ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls,
-  ActnList, Types, process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_memory,
+  CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
+  ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_memory,
   frmabout, ucommon;
 type
   TPluginAttributes = record
-    PFilename:         String;                         // Filename of the module
-    PAddressRangeSize: Byte;                               // Address range size
-    PDescription:      String;                              // Short description
-    PEnabled:          Boolean;           // Enable port without detach from bus
-    PHasPanel:         Boolean;           // Does the implementation have a GUI?
-    PLatchedOutput:    Boolean;                                // Latched output
-    PModname:          String;                                    // Module name
-    PReadBackOutput:   Boolean;         // Output port with read-back capability
+    PFilename:         string;                         // filename of the module
+    PAddressRangeSize: Byte;                               // address range size
+    PDescription:      string;                              // short description
+    PEnabled:          Boolean;        // disable memory without detach from bus
+    PInstanceID:       Integer;                            // Module instance ID
+    PModname:          string;                                    // module name
   end;
-  // Direction pairs for data moving procedures
-  TOpDirection    = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
-  // - port
-  TCreateMemoryFunc = function: TMemory; cdecl;
-  TDestroyMemoryProc = procedure(Memory: TMemory); cdecl;
+  // direction pairs for data moving procedures
+  TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
+  // procedural types pointing to the plugin entry point
+  TCreateMemoryFunc = function: TMemory; CALLTYPE;
+  TDestroyMemoryProc = procedure(Memory: TMemory); CALLTYPE;
+  TLoadStateProc  = function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateProc = function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
-    About:                       TAction;
-    ActionList1:                 TActionList;
-    CHMHelpDatabase1:            TCHMHelpDatabase;
-    DirectoryEdit1:              TDirectoryEdit;
-    Help:                        TAction;
-    ImageList1:                  TImageList;
-    LHelpConnector1:             TLHelpConnector;
-    LoadChangePlugin:            TAction;
-    MainMenu1:                   TMainMenu;
-    MenuItem1:                   TMenuItem;
-    MenuItem10:                  TMenuItem;
-    MenuItem11:                  TMenuItem;
-    MenuItem12:                  TMenuItem;
-    MenuItem13:                  TMenuItem;
-    MenuItem14:                  TMenuItem;
-    MenuItem15:                  TMenuItem;
-    MenuItem16:                  TMenuItem;
-    MenuItem17:                  TMenuItem;
-    MenuItem18:                  TMenuItem;
-    MenuItem2:                   TMenuItem;
-    MenuItem3:                   TMenuItem;
-    MenuItem4:                   TMenuItem;
-    MenuItem5:                   TMenuItem;
-    MenuItem6:                   TMenuItem;
-    MenuItem7:                   TMenuItem;
-    MenuItem8:                   TMenuItem;
-    MenuItem9:                   TMenuItem;
-    Panel1:                      TPanel;
-    Quit:                        TAction;
-    ReadAByte:                   TAction;
-    RefreshPluginList:           TAction;
-    RestartApplication:          TAction;
-    SelectPluginDirectory:       TAction;
-    Separator1:                  TMenuItem;
-    Separator2:                  TMenuItem;
-    Separator3:                  TMenuItem;
-    Separator4:                  TMenuItem;
-    ShellListView1:              TShellListView;
-    Splitter1:                   TSplitter;
-    StatusBar1:                  TStatusBar;
-    Timer1:                      TTimer;
-    ToolBar1:                    TToolBar;
-    ToolButton1:                 TToolButton;
-    ToolButton2:                 TToolButton;
-    ToolButton3:                 TToolButton;
-    ToolButton4:                 TToolButton;
-    ToolButton5:                 TToolButton;
-    ToolButton6:                 TToolButton;
-    ToolButton7:                 TToolButton;
-    ValueListEditor1:            TValueListEditor;
-    ValueListEditor2:            TValueListEditor;
-    WriteAByte:                  TAction;
+    About:                 TAction;
+    LoadStatus:            TAction;
+    OpenDialog1:           TOpenDialog;
+    SaveDialog1:           TSaveDialog;
+    SaveStatus:            TAction;
+    ActionList1:           TActionList;
+    CHMHelpDatabase1:      TCHMHelpDatabase;
+    DirectoryEdit1:        TDirectoryEdit;
+    Help:                  TAction;
+    ImageList1:            TImageList;
+    LHelpConnector1:       TLHelpConnector;
+    LoadChangePlugin:      TAction;
+    MainMenu1:             TMainMenu;
+    MenuItem1:             TMenuItem;
+    MenuItem10:            TMenuItem;
+    MenuItem11:            TMenuItem;
+    MenuItem12:            TMenuItem;
+    MenuItem13:            TMenuItem;
+    MenuItem14:            TMenuItem;
+    MenuItem15:            TMenuItem;
+    MenuItem16:            TMenuItem;
+    MenuItem17:            TMenuItem;
+    MenuItem18:            TMenuItem;
+    MenuItem2:             TMenuItem;
+    MenuItem21:            TMenuItem;
+    MenuItem24:            TMenuItem;
+    MenuItem3:             TMenuItem;
+    MenuItem4:             TMenuItem;
+    MenuItem5:             TMenuItem;
+    MenuItem6:             TMenuItem;
+    MenuItem7:             TMenuItem;
+    MenuItem8:             TMenuItem;
+    MenuItem9:             TMenuItem;
+    Panel1:                TPanel;
+    Quit:                  TAction;
+    ReadAByte:             TAction;
+    RefreshPluginList:     TAction;
+    RestartApplication:    TAction;
+    SelectPluginDirectory: TAction;
+    Separator1:            TMenuItem;
+    Separator2:            TMenuItem;
+    Separator3:            TMenuItem;
+    Separator4:            TMenuItem;
+    Separator6:            TMenuItem;
+    ShellListView1:        TShellListView;
+    Splitter1:             TSplitter;
+    StatusBar1:            TStatusBar;
+    Timer1:                TTimer;
+    ToolBar1:              TToolBar;
+    ToolButton1:           TToolButton;
+    ToolButton2:           TToolButton;
+    ToolButton3:           TToolButton;
+    ToolButton4:           TToolButton;
+    ToolButton5:           TToolButton;
+    ToolButton6:           TToolButton;
+    ToolButton7:           TToolButton;
+    ValueListEditor1:      TValueListEditor;
+    ValueListEditor2:      TValueListEditor;
+    WriteAByte:            TAction;
     procedure AboutExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure HelpExecute(Sender: TObject);
     procedure LoadChangePluginExecute(Sender: TObject);
+    procedure LoadStatusExecute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
     procedure MenuItem15Click(Sender: TObject);
     procedure MenuItem16Click(Sender: TObject);
@@ -103,31 +112,32 @@ type
     procedure ReadAByteExecute(Sender: TObject);
     procedure RefreshPluginListExecute(Sender: TObject);
     procedure RestartApplicationExecute(Sender: TObject);
+    procedure SaveStatusExecute(Sender: TObject);
     procedure SelectPluginDirectoryExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
     procedure ValueListEditor2EditingDone(Sender: TObject);
-    procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol,
-      aRow: Integer; const OldValue: string; var NewValue: String);
+    procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
     procedure WriteAByteExecute(Sender: TObject);
   private
-    // port
-    CreateMemory:      TCreateMemoryFunc;
-    DestroyMemory:     TDestroyMemoryProc;
-    CurrentMemory:     TMemory;                 // Created object of TIOPort class
-    // module
-    LibHandle:       TLibHandle;                  // Handle of the loaded module
-    LoadedPlugin:    TPluginAttributes;       // Properties of the loaded module
-    // general
+    CurrentMemory:    TMemory;                // created object of TMemory class
+    LibHandle:        TLibHandle;                 // handle of the loaded module
+    LoadedPlugin:     TPluginAttributes;      // properties of the loaded module
+    // pointers to the plugin entry point
+    CreateMemory:     TCreateMemoryFunc;                 // create plugin memory
+    DestroyMemory:    TDestroyMemoryProc;               // destroy plugin memory
+    LoadState:        TLoadStateProc;                       // load plugin state
+    SaveState:        TSaveStateProc;                       // save plugin state
+    // general variables
     FIgnoreHelp:      Boolean;
     FLoadCounter:     Integer;
     FEXEDirectory:    string;
     FPluginDirectory: string;
     FSystemLanguage:  string;
     FUserDirectory:   string;
-    procedure RefreshProperties(Direction: TOpDirection);
     procedure ImpExpProperties(Direction: TOpDirection);
+    procedure RefreshProperties(Direction: TOpDirection);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   public
@@ -138,7 +148,7 @@ type
     property UserDirectory: string read FUserDirectory;
   end;
 var
-  Form1:           TForm1;
+  Form1: TForm1;
 
 implementation
 
@@ -150,7 +160,7 @@ resourcestring
   MSG02 = 'Data type conversion error.';
   MSG03 = 'Directory ''%s'' does not exist.';
   MSG04 = 'Cannot load ''%s'' plugin%s(%s).';
-  MSG05 = 'It is not a CoreLAB IOPort plugin.';
+  MSG05 = 'It is not a CoreLAB memory plugin.';
   MSG06 = 'Filename';
   MSG07 = 'Size';
   MSG08 = 'Type';
@@ -162,9 +172,19 @@ resourcestring
   MSG14 = ' %sh write to port %sh.';
   MSG15 = 'Only 8-bit hexadecimal values can be entered (00 - FF)!';
   MSG16 = 'Caption';
-  MSG17 = 'This is not a graphics plugin.';
+  MSG17 = '';
   MSG18 = 'Missing help file.';
   MSG19 = 'Missing help viewer.';
+  MSG20 = 'Cannot read state data from plugin.';
+  MSG21 = 'Save plugin state to file';
+  MSG22 = 'Cannot save ''%s'' plugin data.';
+  MSG23 = 'Load plugin state from file';
+  MSG24 = 'Cannot load ''%s'' plugin data.';
+  MSG25 = 'Cannot write state data to plugin.';
+  MSG26 = 'CoreLAB stream file|*.clstm|All file|*.*';
+  MSG27 = '';
+
+// ---- PRIVATE METHODS ----
 
 // IMPORT/EXPORT PROPERTIES
 procedure TForm1.ImpExpProperties(Direction: TOpDirection);
@@ -181,7 +201,7 @@ begin
       if Assigned(CurrentMemory.Description)
         then PDescription := String(CurrentMemory.Description)
         else PDescription := '';
-      // read port properties
+      // read memory properties
       PAddressRangeSize := CurrentMemory.AddressRangeSize;
       PEnabled := CurrentMemory.Enabled;
     end;
@@ -213,6 +233,8 @@ begin
       ItemProps['Modname'].ReadOnly := True;
       InsertRow('Description', LoadedPlugin.PDescription, True);
       ItemProps['Description'].ReadOnly := True;
+      InsertRow('InstanceID (Hex)', IntToHex(LoadedPlugin.PInstanceID, 2), True);
+      ItemProps['InstanceID (Hex)'].ReadOnly := True;
       InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), True);
       with ItemProps['Enabled'] do
       begin
@@ -222,12 +244,6 @@ begin
       end;
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
       ItemProps['AddressRangeSize'].ReadOnly := True;
-      InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), True);
-      ItemProps['LatchedOutput'].ReadOnly := True;
-      InsertRow('ReadBackOutput', BoolToStr(LoadedPlugin.PReadBackOutput, 'true', 'false'), True);
-      ItemProps['ReadBackOutput'].ReadOnly := True;
-      AutoSizeColumn(0);
-      Row := 1;
     end;
   end;
   if Direction = opList2Var then
@@ -303,6 +319,8 @@ begin
   DirectoryEdit1.Directory := FPluginDirectory;
   RefreshPluginList.Execute;
 end;
+
+// ---- EVENT HANDLER METHODS ----
 
 // TIMED STATUS MESSAGE CLEARING
 procedure TForm1.Timer1Timer(Sender: TObject);
@@ -414,9 +432,9 @@ begin
   with ShellListView1 do
   begin
     {$IFDEF WINDOWS}
-    Mask := 'ioport_*.dll';
+    Mask := 'memory_*.dll';
     {$ELSE}
-    Mask := 'libioport_*.so';
+    Mask := 'libmemory_*.so';
     {$ENDIF}
     try
       Root := DirectoryEdit1.Directory;
@@ -439,19 +457,22 @@ begin
   begin
     SelectedFile := ShellListView1.GetPathFromItem(ShellListView1.Selected);
     // remove previous loaded module
-    // - port
+    // device
     if Assigned(CurrentMemory) then
     begin
       DestroyMemory(CurrentMemory);
       CurrentMemory := nil;
     end;
-    // - module
     if LibHandle <> NilHandle then
     begin
       // UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
+      // memory
       CreateMemory := nil;
       DestroyMemory := nil;
+      // module
+      LoadState := nil;
+      SaveState := nil;
     end;
     // load new module
     LibHandle := LoadLibrary(SelectedFile);
@@ -461,14 +482,19 @@ begin
       exit;
     end;
     // search exported function and instantiation
-    // - port
+    // memory
     Pointer(CreateMemory) := GetProcedureAddress(LibHandle, 'memory_create');
     Pointer(DestroyMemory) := GetProcedureAddress(LibHandle, 'memory_destroy');
+    // module
+    Pointer(LoadState) := GetProcedureAddress(LibHandle, 'memory_loadstate');
+    Pointer(SaveState) := GetProcedureAddress(LibHandle, 'memory_savestate');
     // load data
     if (Assigned(CreateMemory)) and (Assigned(DestroyMemory)) then
     begin
       CurrentMemory := CreateMemory();
       LoadedPlugin.PFilename := SelectedFile;
+      // set InstanceID
+      CurrentMemory.InstanceID := 0;
       // get properties
       ImpExpProperties(opPlugin2Var);
       // show properties
@@ -539,7 +565,7 @@ begin
   InAddr := ValueListEditor2.Row - 1;
   if Assigned(CurrentMemory) then
   begin
-    InData := CurrentMemory.ReadMemory(InAddr);
+//    InData := CurrentMemory.ReadPort(InAddr);
     StatusBar1.Panels.Items[2].Text := Format(MSG13, [IntToHex(InData, 2), IntToHex(InAddr, 2)]);
     Timer1.Enabled := True;
     ValueListEditor2.Cells[1, ValueListEditor2.Row] := IntToHex(InData, 2);
@@ -557,9 +583,68 @@ begin
   begin
     if Assigned(CurrentMemory) then
     begin
-      CurrentMemory.WriteMemory(OutAddr, OutData);
+//      CurrentMemory.WritePort(OutAddr, OutData);
       StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 2), IntToHex(OutAddr, 2)]);
       Timer1.Enabled := True;
+    end;
+  end;
+end;
+
+// LOAD PLUGIN STATUS
+procedure TForm1.LoadStatusExecute(Sender: TObject);
+var
+  Filename: string;
+  LoadStream: TMemoryStream;
+begin
+  with OpenDialog1 do
+  begin
+    InitialDir := GetUserDir;
+    Title := MSG23;
+    Filter := MSG26;
+  end;
+  if OpenDialog1.Execute then
+  begin
+    Filename := OpenDialog1.FileName;
+    LoadStream := TMemoryStream.Create;
+    try
+      try
+        LoadStream.LoadFromFile(FileName);
+      except
+        ShowMessage(MSG01 + Format(MSG24, [FileName]));
+        exit;
+      end;
+      if not LoadState(CurrentMemory, LoadStream) then ShowMessage(MSG01 + MSG25);
+    finally
+      LoadStream.Free;
+    end;
+  end;
+end;
+
+//SAVE PLUGIN STATUS
+procedure TForm1.SaveStatusExecute(Sender: TObject);
+var
+  Filename: string;
+  SaveStream: TMemoryStream;
+begin
+  with SaveDialog1 do
+  begin
+    InitialDir := GetUserDir;
+    Title := MSG21;
+    Filter := MSG26;
+  end;
+  if SaveDialog1.Execute then
+  begin
+    Filename := SaveDialog1.FileName;
+    SaveStream := TMemoryStream.Create;
+    try
+      if not SaveState(CurrentMemory, SaveStream) then ShowMessage(MSG01 + MSG20) else
+        try
+          SaveStream.SaveToFile(FileName);
+        except
+          ShowMessage(MSG01 + Format(MSG22, [FileName]));
+        end;
+    finally
+      SaveStream.Free;
     end;
   end;
 end;
@@ -567,7 +652,7 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/clioport.htm');
+  ShowHelpOrErrorForKeyword('','html/clmemory.htm');
 end;
 
 // ABOUT
@@ -579,12 +664,14 @@ end;
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  // port
-  CreateMemory := nil;
   CurrentMemory := nil;
+  LibHandle := NilHandle;
+  // memory
+  CreateMemory := nil;
   DestroyMemory := nil;
   // module
-  LibHandle := NilHandle;
+  LoadState := nil;
+  SaveState := nil;
   // general
   FIgnoreHelp := false;
   FLoadCounter := 0;
@@ -616,10 +703,10 @@ begin
     Enabled := False;
   end;
   // enable/disable menuitems
-  if DirectoryExists(MenuItem15.Caption, True) then MenuItem15.Enabled := True;
-  if DirectoryExists(MenuItem16.Caption, True) then MenuItem16.Enabled := True;
-  if DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Enabled := True;
-  if DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Enabled := True;
+  if not DirectoryExists(MenuItem15.Caption, True) then MenuItem15.Free;
+  if not DirectoryExists(MenuItem16.Caption, True) then MenuItem16.Free;
+  if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
+  if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
   LoadChangePlugin.Enabled := False;
   ReadAByte.Enabled := False;
   WriteAByte.Enabled := False;
@@ -630,7 +717,7 @@ end;
 // ONDESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  // port
+  // memory
   if Assigned(CurrentMemory) then
   begin
     DestroyMemory(CurrentMemory);
@@ -641,8 +728,12 @@ begin
   begin
     UnloadLibrary(LibHandle);
     LibHandle := NilHandle;
+    // memory
     CreateMemory := nil;
     DestroyMemory := nil;
+    // module
+    LoadState := nil;
+    SaveState := nil;
   end;
 end;
 

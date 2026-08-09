@@ -15,6 +15,8 @@
 {"hash":9681055,"name":"tform1.menuitem15.caption","sourcebytes":[47,117,115,114,47,108,105,98,47,99,111,114,101,108,97,98,47],"value":"/usr/lib/corelab/"},
 {"hash":42471215,"name":"tform1.menuitem17.caption","sourcebytes":[47,117,115,114,47,108,111,99,97,108,47,108,105,98,47,99,111,114,101,108,97,98,47],"value":"/usr/local/lib/corelab/"},
 {"hash":210377278,"name":"tform1.menuitem4.caption","sourcebytes":[38,79,112,101,114,97,116,105,111,110],"value":"&Operation"},
+{"hash":85580963,"name":"tform1.menuitem21.caption","sourcebytes":[38,76,111,97,100,32,115,116,97,116,117,115],"value":"&Load status"},
+{"hash":85133235,"name":"tform1.menuitem24.caption","sourcebytes":[38,83,97,118,101,32,115,116,97,116,117,115],"value":"&Save status"},
 {"hash":2812976,"name":"tform1.menuitem5.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
 {"hash":148829758,"name":"tform1.selectplugindirectory.caption","sourcebytes":[83,101,108,101,99,116,32,112,108,117,103,105,110,32,38,100,105,114,101,99,116,111,114,121,46,46,46],"value":"Select plugin &directory..."},
 {"hash":258247321,"name":"tform1.selectplugindirectory.hint","sourcebytes":[83,101,108,101,99,116,32,112,108,117,103,105,110,32,100,105,114,101,99,116,111,114,121],"value":"Select plugin directory"},
@@ -31,5 +33,7 @@
 {"hash":232762101,"name":"tform1.writeabyte.caption","sourcebytes":[38,87,114,105,116,101,32,97,32,98,121,116,101],"value":"&Write a byte"},
 {"hash":64989909,"name":"tform1.writeabyte.hint","sourcebytes":[87,114,105,116,101,32,97,32,98,121,116,101],"value":"Write a byte"},
 {"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
-{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"}
+{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"},
+{"hash":133815459,"name":"tform1.loadstatus.caption","sourcebytes":[76,111,97,100,32,115,116,97,116,117,115],"value":"Load status"},
+{"hash":133367731,"name":"tform1.savestatus.caption","sourcebytes":[83,97,118,101,32,115,116,97,116,117,115],"value":"Save status"}
 ]}
