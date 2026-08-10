@@ -46,6 +46,7 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 |name|type|description|default|
 |---|---|---|---|
 |`FAddressRangeSize`|`DWord`|Number of addressable memory cells.|`1024`|
+|`PDataWidth`|`Byte`|Data width (4-64 bits).|`8`|
 |`FDescription`|`PChar`|Short module description.|`Conventional memory.`|
 |`FEnabled`|`Boolean`|Enables memory access without detaching the component from the bus.|`False`|
 |`FInstanceID`|`Integer`|Module instance identifier.|not explicitly initialized|
@@ -58,7 +59,8 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 
 |name|flags|description|
 |---|:---:|---|
-|`procedure SetFAddressRangeSize(AAddressRangeSize: DWord);`| |Sets the address-space size and resizes the internal memory array. Values above `2^24` are limited to `2^24` bytes. A value of zero is ignored.|
+|`procedure SetFAddressRangeSize(AAddressRangeSize: DWord);`| |Sets the address-space size and resizes the internal memory array.|
+|`procedure SetFDataWidth(ADataWidth: Byte);`| |Sets data width.|
 
 ### Public methods
 
@@ -79,6 +81,7 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 |name|type|access|description|
 |---|---|---|---|
 |`AddressRangeSize`|`DWord`|read/write|Configured memory address-space size. The setter also resizes the internal memory array and limits the size to `2^24` bytes.|
+|`DataWidth`|`Byte`|Data width (4-64 bits).|
 |`Description`|`PChar`|read|Short module description.|
 |`Enabled`|`Boolean`|read/write|Enables or disables memory access.|
 |`InstanceID`|`Integer`|read/write|Module instance identifier.|
@@ -103,6 +106,6 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 |Description|`Conventional memory.`|
 |Version|`0.1.0`|
 |Initial address range|1024 bytes|
-|Maximum address range|`2^24` bytes|
+|Initial data width|8 bits|
 |Initial memory mode|`mmRAM`|
 |Initial enabled state|`False`|

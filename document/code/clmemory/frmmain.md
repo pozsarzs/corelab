@@ -16,6 +16,7 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 |---|---|---|
 |`PFilename`|`string`|Filename of the loaded module.|
 |`PAddressRangeSize`|`DWord`|Configured memory address range.|
+|`PDataWidth`|`Byte`|Data width (4-64 bits).|
 |`PDescription`|`string`|Short module description.|
 |`PEnabled`|`Boolean`|Enables or disables memory access.|
 |`PInstanceID`|`Integer`|Module instance identifier.|
@@ -84,8 +85,8 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 |Plugin discovery|Searches the selected directory for `memory_*.dll` on Windows or `libmemory_*.so` on Unix-like systems.|
 |Plugin loading|Loads the selected library, resolves `memory_create`, `memory_destroy`, `memory_loadstate` and `memory_savestate`, and creates the memory object.|
 |Property editing|Displays filename, module name, description, instance ID, enabled state, memory mode and address-range size. Only address range size is editable directly; the other displayed plugin properties are read-only or pick-list values.|
-|Byte reading|Reads a byte from the hexadecimal address entered by the user and displays the result as a hexadecimal value.|
-|Byte writing|Writes a hexadecimal byte value to a hexadecimal address and reports out-of-range or ROM conditions.|
+|Examine|Reads data from the hexadecimal address entered by the user and displays the result as a hexadecimal value.|
+|Deposit|Writes a hexadecimal data to a hexadecimal address and reports out-of-range or ROM conditions.|
 |State loading|Loads a `.clstm` stream file and passes it to the plugin's `memory_loadstate` entry point.|
 |State saving|Passes a memory stream to the plugin's `memory_savestate` entry point and saves the resulting data as a `.clstm` file.|
 |Restart|Starts a new instance of the application and terminates the current one.|
@@ -93,14 +94,12 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 
 ### Validation
 
-Address and data values entered into `ValueListEditor2` are interpreted as hexadecimal values.
+|field|minimum|maximum|
+|---|---:|---:|
+|`AddressRangeSize`|16 B |16777216 B|
+|`DataWidth`|4 b|64 b|
 
-|field|maximum|format|
-|---|---:|---|
-|Address|`16777215`|6 hexadecimal digits|
-|Data|`255`|2 hexadecimal digits|
-
-Invalid or out-of-range hexadecimal input is rejected and the previous value is restored.
+Invalid input is rejected and the previous value is restored.
 
 ### Visual components
 

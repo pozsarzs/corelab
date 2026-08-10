@@ -29,9 +29,6 @@ type
 constructor TStandardMemory.Create;
 begin
   inherited Create;
-  FModname := PChar('Standard memory');
-  FDescription := PChar('Up to 16MB RAM/ROM');
-  FMemoryMode := mmRAM;
 end;
 
 // DESTROY TSTANDARDMEMORY INSTANCE

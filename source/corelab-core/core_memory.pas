@@ -36,23 +36,27 @@ type
   end;
   // Abstract memory class
   TMemory = class
+  private
+    DataMask:          QWord;               // Data mask dependent on data width
   protected
     FAddressRangeSize: DWord;                              // Address range size
+    FDataWidth:        Byte;                           // Data width (4-64 bits)
     FDescription:      PChar;                               // Short description
     FEnabled:          Boolean;         // Enable memory without detach from bus
     FInstanceID:       Integer;                            // Module instance ID
     FMemoryMode:       TMemoryMode;                      //Memory operation mode
-    FMemCells:         array of Byte;                            // Memory cells
+    FMemCells:         array of QWord;                           // Memory cells
     FModname:          PChar;                                     // Module name
     FVersion:          TSemanticVersion;                       // Module version
     procedure SetFAddressRangeSize(AAddressRangeSize: DWord);
+    procedure SetFDataWidth(ADataWidth: Byte);
   public
     constructor Create; virtual;
     destructor Destroy; override;
     // SysBus side
     procedure Reset; virtual;
-    function ReadMemory(AAddress: DWord): Byte; virtual;
-    procedure WriteMemory(AAddress: DWord; AValue: Byte); virtual;
+    function ReadMemory(AAddress: DWord): QWord; virtual;
+    procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
     // SrvBus side methods
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
@@ -60,6 +64,7 @@ type
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     // Properties
     property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
+    property DataWidth: Byte read FDataWidth write SetFDataWidth;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
     property InstanceID: Integer read FInstanceID write FInstanceID;
@@ -107,12 +112,24 @@ procedure TMemory.SetFAddressRangeSize(AAddressRangeSize: DWord);
 var
   dw: DWord;
 begin
-  if AAddressRangeSize > 0 then
+  if AAddressRangeSize >= 16 then
   begin
     FAddressRangeSize := AAddressRangeSize;
     dw := 1 shl 24;
     if FAddressRangeSize > dw then FAddressRangeSize := dw;
     SetLength(FMemCells, FAddressRangeSize);
+  end;
+end;
+
+// SET DATA WIDTH
+procedure TMemory.SetFDataWidth(ADataWidth: Byte);
+begin
+  if (ADataWidth >= 4) and (ADataWidth <= 64) then
+  begin
+    if ADataWidth = 64
+      then DataMask := High(QWord)
+      else DataMask := (QWord(1) shl ADataWidth) - 1;
+    FDataWidth := ADataWidth;
   end;
 end;
 
@@ -126,8 +143,9 @@ begin
   SetFAddressRangeSize(1024);
   FEnabled := false;
   FMemoryMode := mmRAM;
-  FModname := PChar('RAM');
-  FDescription := PChar('Conventional memory.');
+  FModname := PChar('RAM/ROM');
+  FDescription := PChar('Standard memory with 4-64 bit data width.');
+  SetFDataWidth(8);
   with FVersion do
   begin
     Major := 0;
@@ -145,25 +163,28 @@ end;
 
 // FILL MEMORY WITH ZERO
 procedure TMemory.Reset;
+var
+  dw: DWord;
 begin
-  if FAddressRangeSize > 0 then FillByte(FMemCells[0], FAddressRangeSize, 0);
+  if FAddressRangeSize > 0 then
+    for dw := 0 to FAddressRangeSize - 1 do FMemCells[dw] := 0;
 end;
 
 // READ VIRTUAL MEMORY
-function TMemory.ReadMemory(AAddress: DWord): Byte;
+function TMemory.ReadMemory(AAddress: DWord): QWord;
 begin
   Result := 0;
   if FEnabled then
     if AAddress < FAddressRangeSize
-      then Result := FMemCells[AAddress]
+      then Result := DataMask and FMemCells[AAddress]
       else Result := 0;
 end;
 
 // WRITE VIRTUAL MEMORY
-procedure TMemory.WriteMemory(AAddress: DWord; AValue: Byte);
+procedure TMemory.WriteMemory(AAddress: DWord; AValue: QWord);
 begin
   if FEnabled and (FMemoryMode = mmRAM) then
-    if AAddress < FAddressRangeSize then FMemCells[AAddress] := AValue;
+    if AAddress < FAddressRangeSize then FMemCells[AAddress] := DataMask and AValue;
 end;
 
 // LOAD SAVED STATE
@@ -178,6 +199,8 @@ begin
       ReadBuffer(FMemoryMode, SizeOf(FMemoryMode));
       ReadBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
       SetFAddressRangeSize(FAddressRangeSize);
+      ReadBuffer(FDataWidth, SizeOf(FDataWidth));
+      SetFDataWidth(FDataWidth);
       Reset;
       if FAddressRangeSize > 0 then
         ReadBuffer(FMemCells[0], FAddressRangeSize);
@@ -198,6 +221,7 @@ begin
       // common fields related to IOPort
       WriteBuffer(FMemoryMode, SizeOf(FMemoryMode));
       WriteBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
+      WriteBuffer(FDataWidth, SizeOf(FDataWidth));
       if FAddressRangeSize > 0 then
         WriteBuffer(FMemCells[0], FAddressRangeSize);
       Result := true;

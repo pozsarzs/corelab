@@ -24,6 +24,7 @@ type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
     PAddressRangeSize: DWord;                              // address range size
+    PDataWidth:        Byte;                           // Data width (4-64 bits)
     PDescription:      string;                              // short description
     PEnabled:          Boolean;        // disable memory without detach from bus
     PInstanceID:       Integer;                            // Module instance ID
@@ -74,7 +75,7 @@ type
     MenuItem9:             TMenuItem;
     Panel1:                TPanel;
     Quit:                  TAction;
-    Examine:             TAction;
+    Examine:               TAction;
     RefreshPluginList:     TAction;
     RestartApplication:    TAction;
     SelectPluginDirectory: TAction;
@@ -96,7 +97,7 @@ type
     ToolButton6:           TToolButton;
     ValueListEditor1:      TValueListEditor;
     ValueListEditor2:      TValueListEditor;
-    Deposit:            TAction;
+    Deposit:               TAction;
     procedure AboutExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -117,6 +118,8 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
+    procedure ValueListEditor1ValidateEntry(Sender: TObject; aCol,
+      aRow: Integer; const OldValue: string; var NewValue: String);
     procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
     procedure DepositExecute(Sender: TObject);
   private
@@ -182,6 +185,8 @@ resourcestring
   MSG25 = 'Cannot write state data to plugin.';
   MSG26 = 'CoreLAB stream file|*.clstm|All file|*.*';
   MSG27 = 'Read-only!';
+  MSG28 = 'The memory size can be 16 B-16 MB';
+  MSG29 = 'The data width can be 4-64 bits.';
 
 // ---- PRIVATE METHODS ----
 
@@ -202,6 +207,7 @@ begin
         else PDescription := '';
       // read memory properties
       PAddressRangeSize := CurrentMemory.AddressRangeSize;
+      PDataWidth := CurrentMemory.DataWidth;
       PEnabled := CurrentMemory.Enabled;
       PMemoryMode := CurrentMemory.MemoryMode;
     end;
@@ -212,8 +218,9 @@ begin
     with LoadedPlugin do
     begin
       // only writeable properties
-      CurrentMemory.Enabled := PEnabled;
       CurrentMemory.AddressRangeSize := PAddressRangeSize;
+      CurrentMemory.DataWidth := PDataWidth;
+      CurrentMemory.Enabled := PEnabled;
       CurrentMemory.MemoryMode := PMemoryMode;
     end;
   end;
@@ -255,6 +262,8 @@ begin
       end;
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
       ItemProps['AddressRangeSize'].ReadOnly := False;
+      InsertRow('DataWidth', LoadedPlugin.PDataWidth.ToString, True);
+      ItemProps['DataWidth'].ReadOnly := False;
     end;
   end;
   if Direction = opList2Var then
@@ -264,6 +273,7 @@ begin
     begin
       try
         LoadedPlugin.PAddressRangeSize := StrToInt(Values['AddressRangeSize']);
+        LoadedPlugin.PDataWidth := StrToInt(Values['DataWidth']);
         LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
         LoadedPlugin.PMemoryMode := mm.fromString(Values['MemoryMode']);
       except
@@ -370,36 +380,61 @@ begin
   ImpExpProperties(opVar2Plugin);
 end;
 
-// VALIDATE DATA
+// VALIDATE ENTERED DATA IN THE PROPERTY TABLE
+procedure TForm1.ValueListEditor1ValidateEntry(Sender: TObject; aCol,
+  aRow: Integer; const OldValue: string; var NewValue: String);
+begin
+  if (aCol = 1) then
+  begin
+    // address range
+    if ValueListEditor1.Keys[aRow] = 'AddressRangeSize' then
+    begin
+      NewValue := Trim(NewValue);
+      if NewValue = '' then NewValue := '0';
+      if (StrToInt(NewValue) < 16) or (StrToInt(NewValue) > (1 shl 24)) then
+      begin
+        ShowMessage(MSG01 + MSG28);
+        NewValue := OldValue;
+      end;
+    end;
+    // data width range
+    if ValueListEditor1.Keys[aRow] = 'DataWidth' then
+    begin
+      NewValue := Trim(NewValue);
+      if NewValue = '' then NewValue := '0';
+      if (StrToInt(NewValue) < 4) or (StrToInt(NewValue) > 64) then
+      begin
+        ShowMessage(MSG01 + MSG29);
+        NewValue := OldValue;
+      end;
+   end;
+  end;
+end;
+
+// VALIDATE ENTERED DATA IN THE LEFT TABLE
 procedure TForm1.ValueListEditor2ValidateEntry(Sender: TObject; aCol,
   aRow: Integer; const OldValue: string; var NewValue: String);
 var
-  Val, MaxVal, HexDigits: Integer;
+  Val, MaxVal: QWord;
 begin
   if aCol = 1 then
   begin
     NewValue := Trim(NewValue);
     if NewValue = '' then NewValue := '0';
-
     // maximal value
-    if aRow = 1 then
+    if aRow = 1 then MaxVal := 16777215 else
     begin
-      MaxVal := 16777215;
-      HexDigits := 6;
-    end
-    else
-    begin
-      MaxVal := 255;
-      HexDigits := 2;
+      if LoadedPlugin.PDataWidth = 64
+        then MaxVal := High(QWord)
+        else MaxVal := (QWord(1) shl LoadedPlugin.PDataWidth) - 1;
     end;
-
     // validating hexa value
-    if not TryStrToInt('$' + NewValue, Val) or (Val < 0) or (Val > MaxVal) then
+    if not TryStrToQWord('$' + NewValue, Val) or (Val > MaxVal) then
     begin
       ShowMessage(MSG01 + MSG15);
       NewValue := OldValue;
     end else
-      NewValue := IntToHex(Val, HexDigits);
+      NewValue := IntToHex(Val, 0);
   end;
 end;
 
@@ -471,7 +506,6 @@ end;
 // LOAD/CHANGE PLUGIN
 procedure TForm1.LoadChangePluginExecute(Sender: TObject);
 var
-  b: Byte;
   SelectedFile: String;
 begin
   if ShellListView1.Selected <> nil then
@@ -578,7 +612,7 @@ end;
 procedure TForm1.ExamineExecute(Sender: TObject);
 var
   InAddr: DWord;
-  InData: Byte;
+  InData: QWord;
 begin
   InData := 0;
   InAddr := 0;
@@ -587,8 +621,8 @@ begin
     if Assigned(CurrentMemory) then
     begin
       InData := CurrentMemory.ReadMemory(InAddr);
-      ValueListEditor2.Cells[1, 2] := IntToHex(InData, 2);
-      StatusBar1.Panels[2].Text := Format(MSG13, [IntToHex(InData, 1), IntToHex(InAddr, 2)]);
+      ValueListEditor2.Cells[1, 2] := IntToHex(InData, 0);
+      StatusBar1.Panels[2].Text := Format(MSG13, [IntToHex(InData, 0), IntToHex(InAddr, 0)]);
       // out of address range
       if InAddr > CurrentMemory.AddressRangeSize then
         StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (' + MSG16 + ')';
@@ -601,18 +635,18 @@ end;
 procedure TForm1.DepositExecute(Sender: TObject);
 var
   OutAddr: DWord;
-  OutData: Integer;
+  OutData: QWord;
   OutRange, ReadOnly: Boolean;
 begin
   OutData := 0;
   OutAddr := 0;
   if (TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], OutAddr)) and
-     (TryStrToInt('$' + ValueListEditor2.Cells[1, 2], OutData)) then
+     (TryStrToQWord('$' + ValueListEditor2.Cells[1, 2], OutData)) then
   begin
     if Assigned(CurrentMemory) then
     begin
       CurrentMemory.WriteMemory(OutAddr, OutData);
-      StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 1), IntToHex(OutAddr, 2)]);
+      StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 0), IntToHex(OutAddr, 0)]);
       OutRange := OutAddr >= CurrentMemory.AddressRangeSize;
       ReadOnly := CurrentMemory.MemoryMode = mmROM;
       // out of address range

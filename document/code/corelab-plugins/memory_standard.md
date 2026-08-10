@@ -26,6 +26,7 @@ The class inherits the complete memory interface from `TMemory`, including:
 |member|description|
 |---|---|
 |`AddressRangeSize`|Configurable memory address-space size.|
+|`DataWidth`|Configurable memory data width.|
 |`Description`|Module description.|
 |`Enabled`|Enables or disables memory access.|
 |`InstanceID`|Module instance identifier.|
@@ -55,7 +56,7 @@ The class inherits the complete memory interface from `TMemory`, including:
 |---|---|
 |Module class|`TStandardMemory`|
 |Base class|`TMemory`|
-|Module name|`Standard memory`|
-|Description|`Up to 16MB RAM/ROM`|
+|Module name|`RAM/ROM`|
+|Description|`Standard memory with 4-64 bit data width.`|
 |Initial memory mode|`mmRAM`|
 |Library|`memory_standard`|
