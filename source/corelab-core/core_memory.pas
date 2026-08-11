@@ -53,11 +53,12 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // SysBus side
+    // Call via SrvBus from TSupevisor
     procedure Reset; virtual;
+    // Calls via SysBus from TCPU
     function ReadMemory(AAddress: DWord): QWord; virtual;
     procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
-    // SrvBus side methods
+    // Direct call from TSupevisor
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
     procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;

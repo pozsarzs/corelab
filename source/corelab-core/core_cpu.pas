@@ -16,7 +16,7 @@ unit core_cpu;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  Classes, SysUtils, TypInfo;
+  CMem, Classes, SysUtils, TypInfo;
 type
   // Defines type of architecture
   TArchitecture = (arHarvad,arNeumann);
@@ -39,7 +39,7 @@ type
   // Event callback type
   TCPUEventHandler = procedure(Sender: TObject; Event: TCPUEvent) of object;
   // Generic CPU bus interface
-  ICPUBus = interface
+  ISysBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
     // read/write a Byte from/to (data) memory
     function  MemRead(AAddress: UInt64): Byte;

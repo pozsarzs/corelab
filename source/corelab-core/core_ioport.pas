@@ -61,11 +61,12 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // SysBus side methods
+    // Calls via SrvBus from TSupevisor class
     procedure Reset; virtual; abstract;
+    // Calls via SysBus from TCPU class
     function ReadPort(APort: Word): Byte; virtual; abstract;
     procedure WritePort(APort: Word; AValue: Byte); virtual; abstract;
-    // SrvBus side methods
+    // Direct calls from TSupevisor class
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
     // Properties

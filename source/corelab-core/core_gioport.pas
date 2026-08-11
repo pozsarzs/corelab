@@ -32,7 +32,7 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
-    // SrvBus side methods
+    // Direct calls from anywhere
     procedure CreatePanel; virtual; abstract;
     procedure FreePanel; virtual;
     procedure ShowPanel; virtual;
@@ -40,6 +40,7 @@ type
     procedure RenamePanel(ACaption: PChar); virtual;
     function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
     function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
+    // Direct calls from TSupevisor class
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
     // Properties
