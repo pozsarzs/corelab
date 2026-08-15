@@ -15,7 +15,8 @@ unit core_bus;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  CMem, Classes, SysUtils, sysbus, srvbus, core_cpu, core_ioport, core_memory;
+  CMem, Classes, SysUtils, sysbus, svcapi, ctlapi, core_cpu, core_ioport,
+  core_memory;
 type
   // Device description record
   TBusDevice = record
@@ -26,26 +27,27 @@ type
     MemoryDevice: TMemory;
     IODevice: TIOPort;
   end;
-  // General bus class
-  TBus = class(TInterfacedObject, ISysBus, ISrvBus)
+  // Bus and API class
+  TBus = class(TInterfacedObject, ISysBus, ISvcAPI, ICtlAPI)
   private
     FDevices: array of TBusDevice;                       // Attached device list
     FNextID: Integer;              // Internal counter for distribute InstanceID
   public
     constructor Create; virtual;
     destructor Destroy; override;
+    // Administration
     function AttachCPU(ACPU: TCPU): Integer; virtual;
     function AttachMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer; virtual;
     function AttachIOPorts(APorts: TIOPort; ABaseAddress: DWord; AAddressRange: DWord): Integer; virtual;
     function DetachCPU(InstanceID: Integer): Boolean; virtual;
     function DetachMemory(InstanceID: Integer): Boolean; virtual;
     function DetachIOPorts(InstanceID: Integer): Boolean; virtual;
-    // SysBus
+    // ISysBus
     function ReadMemory(AAddress: DWord): QWord; virtual;
     procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
     function ReadPort(APort: Word): Byte; virtual;
     procedure WritePort(APort: Word; AValue: Byte); virtual;
-    // SrvBus
+    // ISvcAPI
     procedure Reset; virtual;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
@@ -58,6 +60,16 @@ type
     procedure RenamePanel(ACaption: PChar); virtual;
     function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
     function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
+    // ICtlAPI
+    procedure SetRegister(const RegName: PChar; AValue: QWord); virtual;
+    function  GetRegister(const RegName: PChar): QWord; virtual;
+    procedure Run; virtual;
+    procedure Step; virtual;
+    procedure Stop; virtual;
+    function  GetCurrentInstruction: PChar; virtual;
+    procedure IRQ; virtual;
+    procedure NMI; virtual;
+    function  CheckInterrupts: Boolean; virtual;
   end;
 
 implementation
@@ -127,7 +139,7 @@ procedure TBus.WritePort(APort: Word; AValue: Byte);
 begin
 end;
 
-// SrvBus
+// SvcAPI
 
 procedure TBus.Reset;
 begin
@@ -177,6 +189,48 @@ begin
 end;
 
 function TBus.MovePanel(ALeft, ATop: Integer): Boolean;
+begin
+  Result := false;
+end;
+
+// ICtlAPI
+
+procedure TBus.SetRegister(const RegName: PChar; AValue: QWord);
+begin
+end;
+
+function TBus.GetRegister(const RegName: PChar): QWord;
+begin
+  Result := 0;
+end;
+
+procedure TBus.Run;
+begin
+end;
+
+procedure TBus.Step;
+begin
+end;
+
+procedure TBus.Stop;
+begin
+end;
+
+function TBus.GetCurrentInstruction: PChar;
+begin
+  Result := nil;
+end;
+
+procedure TBus.IRQ;
+begin
+end;
+
+
+procedure TBus.NMI;
+begin
+end;
+
+function TBus.CheckInterrupts: Boolean;
 begin
   Result := false;
 end;
