@@ -7,20 +7,30 @@
 
 include ../../Makefile.global
 
-outdir=../_lib/$(architecture)-$(os)
-project=`ls | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
+project=corelab
 
 all:
 	@mkdir -p $(outdir)/
-	@for x in $(project); do \
-	  if [ -f $$x/$$x.pas ]; then \
-	    $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
+	@if [ -f $(project).lpr ]; then \
+	    $(fpc) $(fpcargs) $(project).lpr; \
 	  echo ""; \
-	    $(fpc) $(fpcargs) -Cg -FE$(outdir) $$x/chk$$x.pas; \
-	  fi; \
-	done
+	fi
+	@mkdir -p $(podir)/
+	@if ls $(outdir)/*.rsj >/dev/null 2>&1; then \
+	  rm -f $(outdir)/*.po; \
+	  for rsj in $(outdir)/*.rsj; do \
+	    $(rstconv) -f po -p utf-8 -i "$$rsj" -o "$${rsj%.rsj}.po"; \
+	  done; \
+	  msgcat $(outdir)/*.po -o $(podir)/$(project).pot; \
+	  rm -f $(outdir)/*.po; \
+	fi
+	@if [ -f $(podir)/$(project).pot ]; then \
+	  cp $(podir)/$(project).pot  ../../message/; \
+	fi
 
 clean:
+	@$(rm) $(outdir)/*
+	@$(rm) $(podir)/*
 
 install:
 

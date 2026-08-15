@@ -10,19 +10,16 @@ architecture = i386
 fpc = ppc386
 os = win32
 lcldir = c:\lazarus\lcl
-outdir = ..\..\_lib\$(architecture)-$(os)
+outdir = .\lib\$(architecture)-$(os)
 fpcargs = -T$(os) \
           -MObjFPC \
           -Scgi \
           -O1 \
           -v0 \
-          -Fi../_inc/ \
-          -Fi../_inc/* \
-          -Fu../_ext/* \
-          -Fu../_ppu/* \
-          -Fu../corelab-core/ \
-          -Fu../corelab-parts/ \
           -Fu. \
+          -Fu../../_ext/* \
+          -Fu../../$(name)-core/ \
+          -Fu../../$(name)-parts/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \
@@ -35,7 +32,7 @@ fpcargs = -T$(os) \
           -WG
 
 all:
-	@if not exist ..\_lib\nul md ..\_lib
+	@if not exist .\lib\nul md .\_lib
 	@if not exist $(outdir)\nul md $(outdir)
 	  for %%x in ($(project)) do \
 	    $(fpc) $(fpcargs) %%x/%%x.pas \

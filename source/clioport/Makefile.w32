@@ -10,7 +10,7 @@ architecture = i386
 fpc = ppc386
 os = win32
 lcldir = c:\lazarus\lcl
-outdir = ..\..\_lib\$(architecture)-$(os)
+outdir = .\lib\$(architecture)-$(os)
 fpcargs = -T$(os) \
           -MObjFPC \
           -Scgi \
@@ -32,7 +32,7 @@ fpcargs = -T$(os) \
           -WG
 
 all:
-	@if not exist ..\_lib\nul md ..\_lib
+	@if not exist .\lib\nul md .\_lib
 	@if not exist $(outdir)\nul md $(outdir)
 	  for %%x in ($(project)) do \
 	    $(fpc) $(fpcargs) %%x/%%x.pas \

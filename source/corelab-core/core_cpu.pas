@@ -63,6 +63,7 @@ type
     FArchitecture:     TArchitecture;                    // Type of architecture
     FBitWidth:         Byte;                 // Main processor word size in bits
     FAddressWidth:     Byte;                        // Address bus width in bits
+    FEnabled:          Boolean;         // Enable device without detach from bus
     FEndianness:       TEndianness;                                // Byte order
     FMaxMemAddress:    QWord;               // The highest (data) memory address
     FMaxCodeAddress:   QWord;                 // The highest code memory address
@@ -105,6 +106,7 @@ type
     property BitWidth: Byte read FBitWidth;
     property Cycles: QWord read FCycles;
     property Description: PChar read FDescription;
+    property Enabled: Boolean read FEnabled write FEnabled;
     property Endianness: TEndianness read FEndianness;
     property Halted: Boolean read FHalted;
     property HasSeparateIOBus: Boolean read FHasSeparateIOBus;
@@ -193,6 +195,7 @@ constructor TCPU.Create;
 begin
   inherited Create;
   FInstanceID := -1;
+  FEnabled := false;
   // Initial execution state
   FRunning := false;
   FHalted := false;

@@ -7,8 +7,6 @@
 
 include ../../Makefile.global
 
-outdir=../_lib/$(architecture)-$(os)
-podir=../_po
 project=lhelp
 
 all:
@@ -17,14 +15,9 @@ all:
 	    $(fpc) $(fpcargs) $(project).lpr; \
 	  echo ""; \
 	fi
-	@if [ -f $(outdir)/$(project)strconsts.rsj ]; then \
-	  $(rstconv) -f po -p utf-8 -i $(outdir)/$(project)strconsts.rsj -o ../../message/$(project).pot; \
-	fi
-	@if [ -f $(podir)/$(project).pot ]; then \
-	  mv $(podir)/$(project).pot  ../message/; \
-	fi
 
 clean:
+	@$(rm) $(outdir)/*
 
 install:
 

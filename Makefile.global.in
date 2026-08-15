@@ -43,6 +43,8 @@ lclunits        = @lclunits@
 app             = @app@
 lib             = @lib@
 lhelp           = @lhelp@
+outdir          = ./lib/@architecture@-@os@/
+podir           = ./po/
 
 fpcargs		= -T@os@ \
                   -MObjFPC \
@@ -58,7 +60,7 @@ fpcargs		= -T@os@ \
                   -Fu../corelab-core/ \
                   -Fu../corelab-parts/ \
                   -Fu. \
-                  -Fu../_lib/@architecture@-@os@/ \
+                  -Fu./lib/@architecture@-@os@/ \
                   -Fu@lcldir@/../components/chmhelp/packages/help/ \
                   -Fu@lcldir@/../components/lazutils/lib/@architecture@-@os@/ \
                   -Fu@lcldir@/../components/turbopower_ipro/ \
@@ -66,6 +68,6 @@ fpcargs		= -T@os@ \
                   -Fu@lcldir@/../packager/units/@architecture@-@os@/ \
                   -Fu@lcldir@/units/@architecture@-@os@/ \
                   -Fu@lcldir@/units/@architecture@-@os@/gtk2/ \
-                  -FE../_lib/@architecture@-@os@/ \
+                  -FE./lib/@architecture@-@os@/ \
                   -dLCL \
                   -dLCLgtk2

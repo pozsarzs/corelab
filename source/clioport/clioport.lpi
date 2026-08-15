@@ -17,7 +17,7 @@
     </General>
     <i18n>
       <EnableI18N Value="True"/>
-      <OutDir Value="../_po"/>
+      <OutDir Value="po"/>
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
@@ -93,7 +93,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
       <OtherUnitFiles Value="../corelab-core;../_ext/modlcltranslator;../_ppu"/>
-      <UnitOutputDirectory Value="../_lib/$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="./lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Options>

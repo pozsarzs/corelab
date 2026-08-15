@@ -1,0 +1,128 @@
+@startuml
+title CoreLAB TBus and API Interfaces
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+left to right direction
+
+package "CoreLAB Bus and APIs" {
+
+  interface ISysBus {
+    + ReadMemory(AAddress: DWord): QWord
+    + WriteMemory(AAddress: DWord; AValue: QWord)
+    + ReadPort(APort: Word): Byte
+    + WritePort(APort: Word; AValue: Byte)
+  }
+
+  interface ISvcAPI {
+    + Reset
+    + LoadState(AStream: TStream): Boolean
+    + SaveState(AStream: TStream): Boolean
+    + LoadFromStream(AStream: TStream; AAddress, ACount: DWord)
+    + SaveToStream(AStream: TStream; AAddress, ACount: DWord)
+    + CreatePanel
+    + FreePanel
+    + ShowPanel
+    + HidePanel
+    + RenamePanel(ACaption: PChar)
+    + ResizePanel(AWidth, AHeight: Integer): Boolean
+    + MovePanel(ALeft, ATop: Integer): Boolean
+  }
+
+  interface ICtlAPI {
+    + SetRegister(RegName: PChar; AValue: QWord)
+    + GetRegister(RegName: PChar): QWord
+    + Reset
+    + Run
+    + Step
+    + Stop
+    + GetCurrentInstruction: PChar
+    + IRQ
+    + NMI
+    + CheckInterrupts: Boolean
+  }
+
+  class TBus {
+    - FDevices: array of TBusDevice
+    - FNextID: Integer
+    --
+    + Create
+    + Destroy
+    --
+    + AttachCPU(ACPU: TCPU): Integer
+    + AttachMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer
+    + AttachIOPorts(APorts: TIOPort; ABaseAddress: DWord; AAddressRange: DWord): Integer
+    + DetachCPU(InstanceID: Integer): Boolean
+    + DetachMemory(InstanceID: Integer): Boolean
+    + DetachIOPorts(InstanceID: Integer): Boolean
+    --
+    + ReadMemory(AAddress: DWord): QWord
+    + WriteMemory(AAddress: DWord; AValue: QWord)
+    + ReadPort(APort: Word): Byte
+    + WritePort(APort: Word; AValue: Byte)
+    --
+    + Reset
+    + LoadState(AStream: TStream): Boolean
+    + SaveState(AStream: TStream): Boolean
+    + LoadFromStream(AStream: TStream; AAddress, ACount: DWord)
+    + SaveToStream(AStream: TStream; AAddress, ACount: DWord)
+    + CreatePanel
+    + FreePanel
+    + ShowPanel
+    + HidePanel
+    + RenamePanel(ACaption: PChar)
+    + ResizePanel(AWidth, AHeight: Integer): Boolean
+    + MovePanel(ALeft, ATop: Integer): Boolean
+    --
+    + SetRegister(RegName: PChar; AValue: QWord)
+    + GetRegister(RegName: PChar): QWord
+    + Run
+    + Step
+    + Stop
+    + GetCurrentInstruction: PChar
+    + IRQ
+    + NMI
+    + CheckInterrupts: Boolean
+  }
+
+  class TBusDevice <<record>> {
+    + InstanceID: Integer
+    + BaseAddress: DWord
+    + AddressRange: DWord
+    + CPUDevice: TCPU
+    + MemoryDevice: TMemory
+    + IODevice: TIOPort
+  }
+
+  ISysBus <|.. TBus
+  ISvcAPI <|.. TBus
+  ICtlAPI <|.. TBus
+
+  TBus *-- "0..*" TBusDevice
+
+  TBusDevice ..> TCPU
+  TBusDevice ..> TMemory
+  TBusDevice ..> TIOPort
+
+  note right of TBus
+    Implements all three CoreLAB APIs:
+
+    ISysBus
+    CPU-side memory and I/O access
+
+    ISvcAPI
+    Service, persistence and panel operations
+
+    ICtlAPI
+    CPU register, execution and
+    interrupt control
+  end note
+}
+
+@enduml

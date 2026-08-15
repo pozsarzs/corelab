@@ -7,19 +7,19 @@
 
 include ../../Makefile.global
 
-outdir=../_lib/$(architecture)-$(os)
 project=`ls | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
 
 all:
 	@mkdir -p $(outdir)/
 	@for x in $(project); do \
-	  if [ -f $$x/$$x.pas ]; then \
-	    $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x/$$x.pas; \
+	  if [ -f $$x ]; then \
+	    $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x; \
 	  echo ""; \
 	  fi; \
 	done
 
 clean:
+	@$(rm) $(outdir)/*
 
 install:
 

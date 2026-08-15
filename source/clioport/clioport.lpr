@@ -15,7 +15,7 @@ program clioport;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmabout, frmmain, frmcaption, frmsizepos;
+  LHelpControlPkg, crt, frmabout, frmmain, frmcaption, frmsizepos;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -168,7 +168,8 @@ begin
     Name := PRGNAME;
     Version := PRGVERS;
   end;
-  with Application do
+  with
+Application do
   begin
     Title:='CoreLAB | I/O plugin tester';
     Scaled:=True;

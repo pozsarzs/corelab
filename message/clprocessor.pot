@@ -1,0 +1,3 @@
+#: frmabout:msg01
+msgid "Cannot open URL."
+msgstr ""

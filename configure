@@ -625,6 +625,7 @@ lhelp
 lclunits
 lcldir
 fpcargs
+outdir
 copyright
 bprefix
 architecture
@@ -2697,6 +2698,7 @@ if test "$stagedir" != ""; then mandir="$prefix/man"; fi
 if (test "$app" = "") || (test $app != "no"); then app="yes"; fi
 if (test "$lib" = "") || (test $lib != "no"); then lib="yes"; fi
 if (test "$lhelp" = "") || (test $lhelp != "no"); then lhelp="yes"; fi
+
 
 
 

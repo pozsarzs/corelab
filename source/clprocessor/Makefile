@@ -7,8 +7,6 @@
 
 include ../../Makefile.global
 
-outdir=../_lib/$(architecture)-$(os)
-podir=../_po
 project=clprocessor
 
 all:
@@ -17,14 +15,22 @@ all:
 	    $(fpc) $(fpcargs) $(project).lpr; \
 	  echo ""; \
 	fi
-	@if [ -f $(outdir)/$(project).rsj ]; then \
-	  $(rstconv) -f po -p utf-8 -i $(outdir)/$(project).rsj -o ../../message/$(project).pot; \
+	@mkdir -p $(podir)/
+	@if ls $(outdir)/*.rsj >/dev/null 2>&1; then \
+	  rm -f $(outdir)/*.po; \
+	  for rsj in $(outdir)/*.rsj; do \
+	    $(rstconv) -f po -p utf-8 -i "$$rsj" -o "$${rsj%.rsj}.po"; \
+	  done; \
+	  msgcat $(outdir)/*.po -o $(podir)/$(project).pot; \
+	  rm -f $(outdir)/*.po; \
 	fi
 	@if [ -f $(podir)/$(project).pot ]; then \
-	  mv $(podir)/$(project).pot  ../../message/; \
+	  cp $(podir)/$(project).pot  ../../message/; \
 	fi
 
 clean:
+	@$(rm) $(outdir)/*
+	@$(rm) $(podir)/*
 
 install:
 
