@@ -61,12 +61,11 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // Calls via SrvBus from TSupevisor class
-    procedure Reset; virtual; abstract;
-    // Calls via SysBus from TCPU class
+    // Used via the ISysBus by TCPU class
     function ReadPort(APort: Word): Byte; virtual; abstract;
     procedure WritePort(APort: Word; AValue: Byte); virtual; abstract;
-    // Direct calls from TSupevisor class
+    // Used via the ISvcAPI by TSupervisor class
+    procedure Reset; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
     // Properties
@@ -164,6 +163,8 @@ destructor TIOPort.Destroy;
 begin
   inherited Destroy;
 end;
+
+// -- ISvcAPI --
 
 // LOAD SAVED STATE
 function TIOPort.LoadState(AStream: TStream): Boolean;

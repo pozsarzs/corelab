@@ -42,12 +42,12 @@ type
     function DetachCPU(InstanceID: Integer): Boolean; virtual;
     function DetachMemory(InstanceID: Integer): Boolean; virtual;
     function DetachIOPorts(InstanceID: Integer): Boolean; virtual;
-    // ISysBus
+    // Used via the ISysBus by TCPU class
     function ReadMemory(AAddress: DWord): QWord; virtual;
     procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
     function ReadPort(APort: Word): Byte; virtual;
     procedure WritePort(APort: Word; AValue: Byte); virtual;
-    // ISvcAPI
+    // Used via the ISvcAPI by TSupervisor class
     procedure Reset; virtual;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
@@ -60,7 +60,7 @@ type
     procedure RenamePanel(ACaption: PChar); virtual;
     function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
     function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
-    // ICtlAPI
+    // Used via the ICtlAPI by TSupervisor class
     procedure SetRegister(const RegName: PChar; AValue: QWord); virtual;
     function  GetRegister(const RegName: PChar): QWord; virtual;
     procedure Run; virtual;
@@ -88,7 +88,7 @@ begin
   inherited Destroy;
 end;
 
-// Administration
+// -- Administration --
 
 function TBus.AttachCPU(ACPU: TCPU): Integer;
 begin
@@ -120,7 +120,7 @@ begin
   Result := false;
 end;
 
-// SysBus
+// -- ISysBus --
 
 function TBus.ReadMemory(AAddress: DWord): QWord;
 begin
@@ -139,7 +139,7 @@ procedure TBus.WritePort(APort: Word; AValue: Byte);
 begin
 end;
 
-// SvcAPI
+// -- ISvcAPI --
 
 procedure TBus.Reset;
 begin
@@ -193,7 +193,7 @@ begin
   Result := false;
 end;
 
-// ICtlAPI
+// -- ICtlAPI --
 
 procedure TBus.SetRegister(const RegName: PChar; AValue: QWord);
 begin

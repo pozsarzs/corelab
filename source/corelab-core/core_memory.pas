@@ -53,12 +53,11 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // Call via SrvBus from TSupevisor
-    procedure Reset; virtual;
-    // Calls via SysBus from TCPU
+    // Used via the ISysBus by TCPU class
     function ReadMemory(AAddress: DWord): QWord; virtual;
     procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
-    // Direct call from TSupevisor
+    // Used via the ISvcAPI by TSupervisor class
+    procedure Reset; virtual;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
     procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;
@@ -162,14 +161,7 @@ begin
   inherited Destroy;
 end;
 
-// FILL MEMORY WITH ZERO
-procedure TMemory.Reset;
-var
-  dw: DWord;
-begin
-  if FAddressRangeSize > 0 then
-    for dw := 0 to FAddressRangeSize - 1 do FMemCells[dw] := 0;
-end;
+// -- ISysBUS --
 
 // READ VIRTUAL MEMORY
 function TMemory.ReadMemory(AAddress: DWord): QWord;
@@ -186,6 +178,17 @@ procedure TMemory.WriteMemory(AAddress: DWord; AValue: QWord);
 begin
   if FEnabled and (FMemoryMode = mmRAM) then
     if AAddress < FAddressRangeSize then FMemCells[AAddress] := DataMask and AValue;
+end;
+
+// -- ISvcAPI --
+
+// FILL MEMORY WITH ZERO
+procedure TMemory.Reset;
+var
+  dw: DWord;
+begin
+  if FAddressRangeSize > 0 then
+    for dw := 0 to FAddressRangeSize - 1 do FMemCells[dw] := 0;
 end;
 
 // LOAD SAVED STATE

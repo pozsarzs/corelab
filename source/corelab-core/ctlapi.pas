@@ -20,7 +20,7 @@ type
   // ICtlAPI (TSupervisor -> TCPU)
   ICtlAPI = interface
     ['{D7A29B3C-1F5E-46A8-B2C4-9D3E8F5A7B1C}']
-    // Only CPU
+    // Implemented only in TCPU class
     procedure SetRegister(const RegName: PChar; AValue: QWord);
     function  GetRegister(const RegName: PChar): QWord;
     procedure Reset;

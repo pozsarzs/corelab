@@ -20,16 +20,16 @@
     $01: begin
            LogRecord.Mnemonic := 'LXI B';
            LogRecord.NumOperand := 1;
-           FRegs.C := FBus.MemRead(FRegs.PC);
+           FRegs.C := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.B := FBus.MemRead(FRegs.PC);
+           FRegs.B := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := Fregs.BC;
          end;
     // STAX B
     $02: begin
            LogRecord.Mnemonic := 'STAX B';
-           FBus.MemWrite(FRegs.BC, FRegs.A);
+           FBus.WriteMemory(FRegs.BC, FRegs.A);
          end;
     // INX B
     $03: begin
@@ -46,7 +46,7 @@
     // LDAX B
     $0A: begin
            LogRecord.Mnemonic:='LDAX B';
-           FRegs.A := FBus.MemRead(FRegs.BC);
+           FRegs.A := FBus.ReadMemory(FRegs.BC);
          end;
     // DCX B
     $0B: begin
@@ -64,16 +64,16 @@
     $11: begin
            LogRecord.Mnemonic := 'LXI D';
            LogRecord.NumOperand := 1;
-           FRegs.E := FBus.MemRead(FRegs.PC);
+           FRegs.E := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.D := FBus.MemRead(FRegs.PC);
+           FRegs.D := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := Fregs.DE;
          end;
     // STAX D
     $12: begin
            LogRecord.Mnemonic := 'STAX D';
-           FBus.MemWrite(FRegs.DE, FRegs.A);
+           FBus.WriteMemory(FRegs.DE, FRegs.A);
          end;
     // INX D
     $13: begin
@@ -91,7 +91,7 @@
     // LDAX D
     $1A: begin
            LogRecord.Mnemonic:='LDAX D';
-           FRegs.A := FBus.MemRead(FRegs.DE);
+           FRegs.A := FBus.ReadMemory(FRegs.DE);
          end;
     // DCX D
     $1B: begin
@@ -110,9 +110,9 @@
     $21: begin
            LogRecord.Mnemonic := 'LXI H';
            LogRecord.NumOperand := 1;
-           FRegs.L := FBus.MemRead(FRegs.PC);
+           FRegs.L := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.H := FBus.MemRead(FRegs.PC);
+           FRegs.H := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := FRegs.HL;
          end;
@@ -120,13 +120,13 @@
     $22: begin
            LogRecord.Mnemonic:='SHLD';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
-           FBus.MemWrite(w1, FRegs.L);
-           FBus.MemWrite(w1 + 1, FRegs.H);
+           FBus.WriteMemory(w1, FRegs.L);
+           FBus.WriteMemory(w1 + 1, FRegs.H);
          end;
     // INX H
     $23: begin
@@ -137,13 +137,13 @@
     $2A: begin
            LogRecord.Mnemonic:='LHLD';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
-           FRegs.L := FBus.MemRead(w1);
-           FRegs.H := FBus.MemRead(w1 + 1);
+           FRegs.L := FBus.ReadMemory(w1);
+           FRegs.H := FBus.ReadMemory(w1 + 1);
          end;
     // DCX H
     $2B: begin
@@ -159,9 +159,9 @@
     $31: begin
            LogRecord.Mnemonic := 'LXI SP';
            LogRecord.NumOperand := 1;
-           FRegs.SPL := FBus.MemRead(FRegs.PC);
+           FRegs.SPL := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.SPH := FBus.MemRead(FRegs.PC);
+           FRegs.SPH := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := Fregs.SP;
          end;
@@ -169,12 +169,12 @@
     $32: begin
            LogRecord.Mnemonic:='STA';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
-           FBus.MemWrite(w1, FRegs.A);
+           FBus.WriteMemory(w1, FRegs.A);
          end;
     // INX SP
     $33: begin
@@ -190,12 +190,12 @@
     $3A: begin
            LogRecord.Mnemonic:='LDA';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
-           FRegs.A := FBus.MemRead(w1);
+           FRegs.A := FBus.ReadMemory(w1);
          end;
     // DCX SP
     $3B: begin
@@ -217,13 +217,13 @@
     $E3: begin
            LogRecord.Mnemonic := 'XTHL';
            // L <-> [SP]
-           b1 := FBus.MemRead(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.L);
+           b1 := FBus.ReadMemory(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.L);
            FRegs.L := b1;
            
            // H <-> [SP + 1]
-           b2 := FBus.MemRead(FRegs.SP + 1);
-           FBus.MemWrite(FRegs.SP + 1, FRegs.H);
+           b2 := FBus.ReadMemory(FRegs.SP + 1);
+           FBus.WriteMemory(FRegs.SP + 1, FRegs.H);
            FRegs.H := b2;
          end;
     // XCHG
@@ -239,9 +239,9 @@
            LogRecord.Mnemonic := 'RNZ';
            if (FRegs.F and $40) = 0 then
            begin
-           w1 := FBus.MemRead(FRegs.SP);
+           w1 := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
            Inc(FRegs.SP);
            FRegs.PC := w1;
            end;
@@ -249,18 +249,18 @@
     // POP B
     $C1: begin
            LogRecord.Mnemonic := 'POP B';
-           FRegs.C := FBus.MemRead(FRegs.SP);
+           FRegs.C := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           FRegs.B := FBus.MemRead(FRegs.SP);
+           FRegs.B := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
          end;
     // JNZ a16
     $C2: begin
            LogRecord.Mnemonic := 'JNZ';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $40) = 0 then FRegs.PC := w1;
@@ -269,9 +269,9 @@
     $C3: begin
            LogRecord.Mnemonic := 'JMP';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            FRegs.PC := w1;
@@ -280,17 +280,17 @@
     $C4: begin
            LogRecord.Mnemonic := 'CNZ';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $40) = 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -298,15 +298,15 @@
     $C5: begin
            LogRecord.Mnemonic := 'PUSH B';
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.B);
+           FBus.WriteMemory(FRegs.SP, FRegs.B);
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.C);
+           FBus.WriteMemory(FRegs.SP, FRegs.C);
          end;
     // ADI d8
     $C6: begin
            LogRecord.Mnemonic := 'ADI';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
            b2 := Fregs.A;
@@ -319,9 +319,9 @@
            LogRecord.Mnemonic := 'RZ';
            if (FRegs.F and $40) > 0 then
            begin
-             w1 := FBus.MemRead(FRegs.SP);
+             w1 := FBus.ReadMemory(FRegs.SP);
              Inc(FRegs.SP);
-             w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+             w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
              Inc(FRegs.SP);
              FRegs.PC := w1;
            end;
@@ -329,19 +329,19 @@
     // RET
     $C9: begin
            LogRecord.Mnemonic := 'RET';
-           w1 := FBus.MemRead(FRegs.SP);
+           w1 := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
            Inc(FRegs.SP);
            FRegs.PC := w1;
          end;
     // JZ a16
     $CA: begin
-           LogRecord.Mnemonic := 'JNZ';
+           LogRecord.Mnemonic := 'JZ';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $40) > 0 then FRegs.PC := w1;
@@ -350,17 +350,17 @@
     $CC: begin
            LogRecord.Mnemonic := 'CZ';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $40) > 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -368,22 +368,22 @@
     $CD: begin
            LogRecord.Mnemonic := 'CALL';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.PCH);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCH);
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.PCL);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCL);
            FRegs.PC := w1;
          end;
     // ACI d8
     $CE: begin
            LogRecord.Mnemonic := 'ACI';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            b1 := FRegs.A;
@@ -397,9 +397,9 @@
            LogRecord.Mnemonic := 'RNC';
            if (FRegs.F and $01) = 0 then
            begin
-           w1 := FBus.MemRead(FRegs.SP);
+           w1 := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
            Inc(FRegs.SP);
            FRegs.PC := w1;
            end;
@@ -407,18 +407,18 @@
     // POP D
     $D1: begin
            LogRecord.Mnemonic := 'POP D';
-           FRegs.E := FBus.MemRead(FRegs.SP);
+           FRegs.E := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           FRegs.D := FBus.MemRead(FRegs.SP);
+           FRegs.D := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
          end;
     // JNC a16
     $D2: begin
            LogRecord.Mnemonic := 'JNC';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $01) = 0 then FRegs.PC := w1;
@@ -427,26 +427,26 @@
     $D3: begin
            LogRecord.Mnemonic := 'OUT';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
-           FBus.IOWrite(b1, Fregs.A);
+           FBus.WritePort(b1, Fregs.A);
          end;
     // CNC a16
     $D4: begin
            LogRecord.Mnemonic := 'CNC';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $01) = 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -454,15 +454,15 @@
     $D5: begin
            LogRecord.Mnemonic := 'PUSH D';
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.D);
+           FBus.WriteMemory(FRegs.SP, FRegs.D);
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.E);
+           FBus.WriteMemory(FRegs.SP, FRegs.E);
          end;
     // SUI d8
     $D6: begin
            LogRecord.Mnemonic := 'SUI';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
            b2 := FRegs.A;
@@ -476,9 +476,9 @@
            LogRecord.Mnemonic := 'RC';
            if (FRegs.F and $01) > 0 then
            begin
-           w1 := FBus.MemRead(FRegs.SP);
+           w1 := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
            Inc(FRegs.SP);
            FRegs.PC := w1;
            end;
@@ -492,9 +492,9 @@
     $DA: begin
            LogRecord.Mnemonic := 'JC';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $01) > 0 then FRegs.PC := w1;
@@ -503,26 +503,26 @@
     $DB: begin
            LogRecord.Mnemonic := 'IN';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
-           FRegs.A := FBus.IORead(b1);
+           FRegs.A := FBus.ReadPort(b1);
          end;
     // CC a16
     $DC: begin
            LogRecord.Mnemonic := 'CC';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $01) > 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -530,7 +530,7 @@
     $DE: begin
            LogRecord.Mnemonic := 'SBI';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            b1 := FRegs.A;
@@ -545,9 +545,9 @@
            LogRecord.Mnemonic := 'RPO';
            if (FRegs.F and $04) = 0 then
            begin
-           w1 := FBus.MemRead(FRegs.SP);
+           w1 := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
            Inc(FRegs.SP);
            FRegs.PC := w1;
            end;
@@ -555,18 +555,18 @@
     // POP H
     $E1: begin
            LogRecord.Mnemonic := 'POP H';
-           FRegs.L := FBus.MemRead(FRegs.SP);
+           FRegs.L := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           FRegs.H := FBus.MemRead(FRegs.SP);
+           FRegs.H := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
          end;
     // JPO a16
     $E2: begin
            LogRecord.Mnemonic := 'JPO';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $04) = 0 then FRegs.PC := w1;
@@ -575,17 +575,17 @@
     $E4: begin
            LogRecord.Mnemonic := 'CPO';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $04) = 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -593,15 +593,15 @@
     $E5: begin
            LogRecord.Mnemonic := 'PUSH H';
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.H);
+           FBus.WriteMemory(FRegs.SP, FRegs.H);
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.L);
+           FBus.WriteMemory(FRegs.SP, FRegs.L);
          end;
     // ANI d8
     $E6: begin
            LogRecord.Mnemonic := 'ANI';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
            b2 := FRegs.A;
@@ -614,9 +614,9 @@
            LogRecord.Mnemonic := 'RPE';
            if (FRegs.F and $04) > 0 then
            begin
-             w1 := FBus.MemRead(FRegs.SP);
+             w1 := FBus.ReadMemory(FRegs.SP);
              Inc(FRegs.SP);
-             w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+             w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
              Inc(FRegs.SP);
              FRegs.PC := w1;
            end;
@@ -625,9 +625,9 @@
     $EA: begin
            LogRecord.Mnemonic := 'JPE';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $04) > 0 then FRegs.PC := w1;
@@ -636,17 +636,17 @@
     $EC: begin
            LogRecord.Mnemonic := 'CPE';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $04) > 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -654,7 +654,7 @@
     $EE: begin
            LogRecord.Mnemonic := 'XRI';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
            b2 := FRegs.A;
@@ -667,9 +667,9 @@
            LogRecord.Mnemonic := 'RP';
            if (FRegs.F and $80) = 0 then
            begin
-           w1 := FBus.MemRead(FRegs.SP);
+           w1 := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
            Inc(FRegs.SP);
            FRegs.PC := w1;
            end;
@@ -677,18 +677,18 @@
     // POP PSW
     $F1: begin
            LogRecord.Mnemonic := 'POP PSW';
-           FRegs.F := FBus.MemRead(FRegs.SP);
+           FRegs.F := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
-           FRegs.A := FBus.MemRead(FRegs.SP);
+           FRegs.A := FBus.ReadMemory(FRegs.SP);
            Inc(FRegs.SP);
          end;
     // JP a16
     $F2: begin
            LogRecord.Mnemonic := 'JP';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $10) = 0 then FRegs.PC := w1;
@@ -702,17 +702,17 @@
     $F4: begin
            LogRecord.Mnemonic := 'CP';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $80) = 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -720,15 +720,15 @@
     $F5: begin
            LogRecord.Mnemonic := 'PUSH PSW';
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.A);
+           FBus.WriteMemory(FRegs.SP, FRegs.A);
            Dec(FRegs.SP);
-           FBus.MemWrite(FRegs.SP, FRegs.F);
+           FBus.WriteMemory(FRegs.SP, FRegs.F);
          end;
     // ORI d8
     $F6: begin
            LogRecord.Mnemonic := 'ORI';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
            b2 := FRegs.A;
@@ -741,9 +741,9 @@
            LogRecord.Mnemonic := 'RM';
            if (FRegs.F and $80) = 0 then
            begin
-             w1 := FBus.MemRead(FRegs.SP);
+             w1 := FBus.ReadMemory(FRegs.SP);
              Inc(FRegs.SP);
-             w1 := w1 + FBus.MemRead(FRegs.SP) * 256;
+             w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
              Inc(FRegs.SP);
              FRegs.PC := w1;
            end;
@@ -757,9 +757,9 @@
     $FA: begin
            LogRecord.Mnemonic := 'JM';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $10) > 0 then FRegs.PC := w1;
@@ -773,17 +773,17 @@
     $FC: begin
            LogRecord.Mnemonic := 'CM';
            LogRecord.NumOperand := 1;
-           w1 := FBus.MemRead(FRegs.PC);
+           w1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
-           w1 := w1 + FBus.MemRead(FRegs.PC) * 256;
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := w1;
            if (FRegs.F and $80) > 0 then
            begin
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCH);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCH);
              Dec(FRegs.SP);
-             FBus.MemWrite(FRegs.SP, FRegs.PCL);
+             FBus.WriteMemory(FRegs.SP, FRegs.PCL);
              FRegs.PC := w1;
            end;
          end;
@@ -791,7 +791,7 @@
     $FE: begin
            LogRecord.Mnemonic := 'CPI';
            LogRecord.NumOperand := 1;
-           b1 := FBus.MemRead(FRegs.PC);
+           b1 := FBus.ReadMemory(FRegs.PC);
            Inc(FRegs.PC);
            LogRecord.Operands[LogRecord.NumOperand] := b1;
            b2 := FRegs.A;
@@ -809,9 +809,9 @@
       if DestRegIndex = 6 then
       begin
         // INR M
-        b2 := FBus.MemRead(FRegs.HL);
+        b2 := FBus.ReadMemory(FRegs.HL);
         w1 := (b2 + 1) and $FF;
-        FBus.MemWrite(FRegs.HL, w1);
+        FBus.WriteMemory(FRegs.HL, w1);
         UpdateFlags(w1, b2, 1);
       end
       else
@@ -833,9 +833,9 @@
       if DestRegIndex = 6 then
       begin
         // DCR M
-        b2 := FBus.MemRead(FRegs.HL);
+        b2 := FBus.ReadMemory(FRegs.HL);
         w1 := (b2 - 1) and $FF;
-        FBus.MemWrite(FRegs.HL, w1);
+        FBus.WriteMemory(FRegs.HL, w1);
         UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
       end
       else
@@ -854,11 +854,11 @@
       DestRegIndex := (OC shr 3) and $07;
       LogRecord.Mnemonic := 'MVI ' + RegNames[DestRegIndex];
       LogRecord.NumOperand := 1;
-      b1 := FBus.MemRead(FRegs.PC);
+      b1 := FBus.ReadMemory(FRegs.PC);
       Inc(FRegs.PC);
       LogRecord.Operands[1] := b1;
       if DestRegIndex = 6 
-        then FBus.MemWrite(FRegs.HL, b1)                           { MVI M, d8 }
+        then FBus.WriteMemory(FRegs.HL, b1)                           { MVI M, d8 }
         else RegPointers[DestRegIndex]^ := b1;                     { MVI r, d8 }
     end;
     // DAD rp
@@ -889,9 +889,9 @@
                             RegNames[SourceRegIndex];
       if (DestRegIndex = 6) and (SourceRegIndex = 6) then {HLT} else
         if DestRegIndex = 6
-          then FBus.MemWrite(FRegs.HL, RegPointers[SourceRegIndex]^) {MOV M, r} else
+          then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {MOV M, r} else
 	  if SourceRegIndex = 6
-            then RegPointers[DestRegIndex]^ := FBus.MemRead(FRegs.HL) {MOV r, M}
+            then RegPointers[DestRegIndex]^ := FBus.ReadMemory(FRegs.HL) {MOV r, M}
             else RegPointers[DestRegIndex]^ := RegPointers[SourceRegIndex]^; {MOV r1, r2}
     end;
     // ADD r
@@ -901,7 +901,7 @@
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'ADD ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then w1 := FBus.MemRead(FRegs.HL) 
+        then w1 := FBus.ReadMemory(FRegs.HL) 
         else w1 := RegPointers[SourceRegIndex]^;
       b1 := FRegs.A;
       w2 := b1 + w1;
@@ -915,7 +915,7 @@
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'ADC ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then w1 := FBus.MemRead(FRegs.HL) 
+        then w1 := FBus.ReadMemory(FRegs.HL) 
         else w1 := RegPointers[SourceRegIndex]^;
       b1 := FRegs.A;
       b2 := FRegs.F and $01;
@@ -930,7 +930,7 @@
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'SUB ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then w1 := FBus.MemRead(FRegs.HL) 
+        then w1 := FBus.ReadMemory(FRegs.HL) 
         else w1 := RegPointers[SourceRegIndex]^;
       b1 := FRegs.A;
       w2 := b1 - w1;
@@ -945,7 +945,7 @@
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'SBB ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then w1 := FBus.MemRead(FRegs.HL) 
+        then w1 := FBus.ReadMemory(FRegs.HL) 
         else w1 := RegPointers[SourceRegIndex]^;
       b1 := FRegs.A;
       b2 := FRegs.F and $01;
@@ -961,7 +961,7 @@
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'ANA ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then b1 := FBus.MemRead(FRegs.HL) 
+        then b1 := FBus.ReadMemory(FRegs.HL) 
         else b1 := RegPointers[SourceRegIndex]^;
       b2 := FRegs.A;
       FRegs.A := FRegs.A and b1;
@@ -975,7 +975,7 @@
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'XRA ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then b1 := FBus.MemRead(FRegs.HL) 
+        then b1 := FBus.ReadMemory(FRegs.HL) 
         else b1 := RegPointers[SourceRegIndex]^;
       b2 := FRegs.A;
       FRegs.A := FRegs.A xor b1;
@@ -984,12 +984,12 @@
     end;
     // ORA r
     // $B0-$B7
-    if (OC >= $A8) and (OC <= $AF) then
+    if (OC >= $B0) and (OC <= $B7) then
     begin
       SourceRegIndex := OC and $07;
       LogRecord.Mnemonic := 'ORA ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then b1 := FBus.MemRead(FRegs.HL) 
+        then b1 := FBus.ReadMemory(FRegs.HL) 
         else b1 := RegPointers[SourceRegIndex]^;
       b2 := FRegs.A;
       FRegs.A := FRegs.A or b1;
@@ -998,12 +998,12 @@
     end;
     // CMP r
     // $B8-$BF
-    if (OC >= $90) and (OC <= $97) then
+    if (OC >= $B8) and (OC <= $BF) then
     begin
       SourceRegIndex := OC and $07;
-      LogRecord.Mnemonic := 'SUB ' + RegNames[SourceRegIndex];
+      LogRecord.Mnemonic := 'CMP ' + RegNames[SourceRegIndex];
       if SourceRegIndex = 6
-        then w1 := FBus.MemRead(FRegs.HL) 
+        then w1 := FBus.ReadMemory(FRegs.HL) 
         else w1 := RegPointers[SourceRegIndex]^;
       b1 := FRegs.A;
       w2 := b1 - w1;
@@ -1017,9 +1017,9 @@
       w1 := (OC shr 3) and $07;
       LogRecord.Mnemonic := 'RST ' + IntToStr(w1);
       Dec(FRegs.SP);
-      FBus.MemWrite(FRegs.SP, FRegs.PCH);
+      FBus.WriteMemory(FRegs.SP, FRegs.PCH);
       Dec(FRegs.SP);
-      FBus.MemWrite(FRegs.SP, FRegs.PCL);
+      FBus.WriteMemory(FRegs.SP, FRegs.PCL);
       FRegs.PC := w1 * 8;
     end;
   end;

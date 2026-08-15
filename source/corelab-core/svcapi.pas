@@ -15,19 +15,19 @@ unit svcapi;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  CMem, Classes, core_cpu, core_memory, core_ioport;
+  CMem, Classes;
 type
   // SvcAPI (TSupervisor -> TCPU, TIOPort, TMemory)
   ISvcAPI = interface
     ['{B6F7E1C4-5B9C-5D7B-9062-9E48C2D92345}']
-    // All device
+    // Implemented in all used class
     procedure Reset;
     function LoadState(AStream: TStream): Boolean;
     function SaveState(AStream: TStream): Boolean;
-    // Only memory device
+    // Implemented only in TMemory class
     procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);
-    // Only with GUI panel
+    // Implemented only in TGIOPort class
     procedure CreatePanel;
     procedure FreePanel;
     procedure ShowPanel;

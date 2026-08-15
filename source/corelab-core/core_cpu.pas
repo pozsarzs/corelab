@@ -53,6 +53,7 @@ type
   TCPU = class
   protected
     FBus:              ISysBus;                        // Connected external bus
+    FInstanceID:       Integer;                            // Module instance ID
     FOnEvent:          TCPUEventHandler;                       // Event callback
     // CPU identity information
     FModname:          PChar;
@@ -80,12 +81,13 @@ type
     procedure EmitEvent(AEvent: TCPUEvent); virtual;
     procedure DoInterrupt(AEvent: TCPUEvent); virtual;
   public
+    procedure ConnectBus(const Bus: ISysBus); virtual;
     // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
+    // Used via the ICtlAPI by TSupervisor class
     procedure SetRegister(const RegName: PChar; AValue: QWord); virtual; abstract;
     function  GetRegister(const RegName: PChar): QWord; virtual; abstract;
-    procedure Reset; virtual; abstract;
     procedure Run; virtual;
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
@@ -93,33 +95,35 @@ type
     procedure IRQ; virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;
-    procedure ConnectBus(const Bus: ISysBus); virtual;
-    // Direct calls from TSupevisor class
-    //function LoadState(AStream: TStream): Boolean; virtual;
-    //function SaveState(AStream: TStream): Boolean; virtual;
+    // Used via the ISvcAPI by TSupervisor class
+    procedure Reset; virtual; abstract;
+    function LoadState(AStream: TStream): Boolean; virtual; abstract;
+    function SaveState(AStream: TStream): Boolean; virtual; abstract;
     // Public properties
-    property Modname: PChar read FModname;
-    property Description: PChar read FDescription;
+    property AddressWidth: Byte read FAddressWidth;
     property Architecture: TArchitecture read FArchitecture;
     property BitWidth: Byte read FBitWidth;
-    property AddressWidth: Byte read FAddressWidth;
+    property Cycles: QWord read FCycles;
+    property Description: PChar read FDescription;
     property Endianness: TEndianness read FEndianness;
-    property MaxMemAddress: QWord read FMaxMemAddress;
+    property Halted: Boolean read FHalted;
+    property HasSeparateIOBus: Boolean read FHasSeparateIOBus;
+    property InstanceID: Integer read FInstanceID write FInstanceID;
+    property Instructions: QWord read FInstructions;
+    property InterruptEnabled: Boolean read FInterruptEnabled;
     property MaxCodeAddress: QWord read FMaxCodeAddress;
     property MaxIOPortAddress: QWord read FMaxIOPortAddress;
-    property HasSeparateIOBus: Boolean read FHasSeparateIOBus;
-    property Running: Boolean read FRunning;
-    property Halted: Boolean read FHalted;
-    property InterruptEnabled: Boolean read FInterruptEnabled;
-    property Cycles: QWord read FCycles;
-    property Instructions: QWord read FInstructions;
+    property MaxMemAddress: QWord read FMaxMemAddress;
+    property Modname: PChar read FModname;
     property OnEvent: TCPUEventHandler read FOnEvent write FOnEvent;
+    property Running: Boolean read FRunning;
     property Version: TSemanticVersion read FVersion;
   end;
 
 implementation
 
-// HELPER FOR OWN TYPES
+// ---- HELPER FOR OWN TYPES ----
+
 function TArchitectureHelper.ToString: string;
 begin
   WriteStr(Result, Self);
@@ -168,10 +172,27 @@ begin
       if AOther.Patch < Patch then Result := 1;
 end;
 
+// ---- PROTECTED METHODS ----
+
+// SENDS A CPU EVENT TO THE HOST APPLICATION
+procedure TCPU.EmitEvent(AEvent: TCPUEvent);
+begin
+  if Assigned(FOnEvent) then FOnEvent(Self, AEvent);
+end;
+
+// INTERRUPT HANDLER
+procedure TCPU.DoInterrupt(AEvent: TCPUEvent);
+begin
+  EmitEvent(AEvent); 
+end;
+
+// ---- PUBLIC METHODS ----
+
 // CREATE CPU INSTANCE
 constructor TCPU.Create;
 begin
   inherited Create;
+  FInstanceID := -1;
   // Initial execution state
   FRunning := false;
   FHalted := false;
@@ -196,11 +217,7 @@ begin
   inherited Destroy;
 end;
 
-// SENDS A CPU EVENT TO THE HOST APPLICATION
-procedure TCPU.EmitEvent(AEvent: TCPUEvent);
-begin
-  if Assigned(FOnEvent) then FOnEvent(Self, AEvent);
-end;
+// -- ICtlAPI --
 
 // START CPU EXECUTION
 procedure TCPU.Run;
@@ -247,12 +264,6 @@ begin
     DoInterrupt(ceInterrupt);                     // Call the instance's handler
     Result := true;
   end;
-end;
-
-// INTERRUPT HANDLER
-procedure TCPU.DoInterrupt(AEvent: TCPUEvent);
-begin
-  EmitEvent(AEvent); 
 end;
 
 // CONNECT CPU TO EXTERNAL SYSTEM BUS
