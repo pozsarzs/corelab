@@ -15,3 +15,5 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |core_ioport.pas |                 |TIOPort |I/O port (device) abstraction module          |
 |core_led.pas    |                 |TLED    |LED abstraction module                        |
 |core_memory.pas |                 |TMemory |RAM/ROM abstraction module                    |
+|srvbus.pas      |                 |ISrvBus |Service bus interface                         |
+|sysbus.pas      |                 |ISysBus |System bus interface                          |

@@ -16,7 +16,7 @@ unit core_cpu;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  CMem, Classes, SysUtils, TypInfo;
+  CMem, Classes, SysUtils, TypInfo, sysbus;
 type
   // Defines type of architecture
   TArchitecture = (arHarvad,arNeumann);
@@ -39,18 +39,6 @@ type
   // Event callback type
   TCPUEventHandler = procedure(Sender: TObject; Event: TCPUEvent) of object;
   // Generic CPU bus interface
-  ISysBus = interface
-    ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
-    // read/write a Byte from/to (data) memory
-    function  MemRead(AAddress: UInt64): Byte;
-    procedure MemWrite(AAddress: UInt64; AValue: Byte);
-    // read/write a Byte from/to code memory (only Harvard architecture)
-    function  CodeRead(AAddress: UInt64): Byte;
-    procedure CodeWrite(AAddress: UInt64; AValue: Byte);
-    // read/write a Byte from/to I/O port
-    function  IORead(APort: UInt64): Byte;
-    procedure IOWrite(APort: UInt64; AValue: Byte);
-  end;
   // Version info
   TSemanticVersion = record
     Major: Integer;
@@ -64,7 +52,7 @@ type
   // Abstract base CPU class
   TCPU = class
   protected
-    FBus:              ICPUBus;                        // Connected external bus
+    FBus:              ISysBus;                        // Connected external bus
     FOnEvent:          TCPUEventHandler;                       // Event callback
     // CPU identity information
     FModname:          PChar;
@@ -105,10 +93,10 @@ type
     procedure IRQ; virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;
-    procedure ConnectBus(const Bus: ICPUBus); virtual;
-    // SrvBus side methods
-//    function LoadState(AStream: TStream): Boolean; virtual;
-//    function SaveState(AStream: TStream): Boolean; virtual;
+    procedure ConnectBus(const Bus: ISysBus); virtual;
+    // Direct calls from TSupevisor class
+    //function LoadState(AStream: TStream): Boolean; virtual;
+    //function SaveState(AStream: TStream): Boolean; virtual;
     // Public properties
     property Modname: PChar read FModname;
     property Description: PChar read FDescription;
@@ -268,7 +256,7 @@ begin
 end;
 
 // CONNECT CPU TO EXTERNAL SYSTEM BUS
-procedure TCPU.ConnectBus(const Bus: ICPUBus);
+procedure TCPU.ConnectBus(const Bus: ISysBus);
 begin
   FBus := Bus;                                   // Store external bus reference
 end;

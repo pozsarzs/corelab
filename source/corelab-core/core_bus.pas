@@ -15,7 +15,7 @@ unit core_bus;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  CMem, Classes, SysUtils, core_cpu, core_memory, core_ioport;
+  CMem, Classes, SysUtils, sysbus, srvbus, core_cpu, core_ioport, core_memory;
 type
   // Device description record
   TBusDevice = record
@@ -26,31 +26,7 @@ type
     MemoryDevice: TMemory;
     IODevice: TIOPort;
   end;
-  // SysBus (TCPU -> device classes)
-  ISysBus = interface
-    ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
-    // 16 B - 16M Bytes memory size, 4 - 64 bits datawidth
-    function MemRead(AAddress: DWord): QWord;
-    procedure MemWrite(AAddress: DWord; AValue: QWord);
-    function CodeRead(AAddress: DWord): QWord;
-    procedure CodeWrite(AAddress: DWord; AValue: QWord);
-    // 1 - 65535 Bytes port size, 8 bits datawidth
-    function IORead(APort: DWord): Byte;
-    procedure IOWrite(APort: DWord; AValue: Byte);
-  end;
-  // SrvBus (TSupervisor -> TCPU and device classes)
-  ISrvBus = interface
-    ['{B6F7E1C4-5B9C-5D7B-9062-9E48C2D92345}']
-    function AttachCPU(ACPU: TCPU): Integer;
-    function AttachCodeMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer;
-    function AttachDataMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer;
-    function AttachIOPorts(APorts: TIOPort; ABaseAddress: DWord; AAddressRange: DWord): Integer;
-    function DetachCPU(InstanceID: Integer): Boolean;
-    function DetachCodeMemory(InstanceID: Integer): Boolean;
-    function DetachDataMemory(InstanceID: Integer): Boolean;
-    function DetachIOPorts(InstanceID: Integer): Boolean;
-    procedure Reset;
-  end;
+  // General bus class
   TBus = class(TInterfacedObject, ISysBus, ISrvBus)
   private
     FDevices: array of TBusDevice;                       // Attached device list
@@ -58,23 +34,30 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // ISysBus implementation
-    function MemRead(AAddress: DWord): QWord; virtual;
-    procedure MemWrite(AAddress: DWord; AValue: QWord); virtual;
-    function CodeRead(AAddress: DWord): QWord; virtual;
-    procedure CodeWrite(AAddress: DWord; AValue: QWord); virtual;
-    function IORead(APort: DWord): Byte; virtual;
-    procedure IOWrite(APort: DWord; AValue: Byte); virtual;
-    // ISrvBus implementation
     function AttachCPU(ACPU: TCPU): Integer; virtual;
-    function AttachCodeMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer; virtual;
-    function AttachDataMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer; virtual;
+    function AttachMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer; virtual;
     function AttachIOPorts(APorts: TIOPort; ABaseAddress: DWord; AAddressRange: DWord): Integer; virtual;
     function DetachCPU(InstanceID: Integer): Boolean; virtual;
-    function DetachCodeMemory(InstanceID: Integer): Boolean; virtual;
-    function DetachDataMemory(InstanceID: Integer): Boolean; virtual;
+    function DetachMemory(InstanceID: Integer): Boolean; virtual;
     function DetachIOPorts(InstanceID: Integer): Boolean; virtual;
+    // SysBus
+    function ReadMemory(AAddress: DWord): QWord; virtual;
+    procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
+    function ReadPort(APort: Word): Byte; virtual;
+    procedure WritePort(APort: Word; AValue: Byte); virtual;
+    // SrvBus
     procedure Reset; virtual;
+    function LoadState(AStream: TStream): Boolean; virtual;
+    function SaveState(AStream: TStream): Boolean; virtual;
+    procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;
+    procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
+    procedure CreatePanel; virtual;
+    procedure FreePanel; virtual;
+    procedure ShowPanel; virtual;
+    procedure HidePanel; virtual;
+    procedure RenamePanel(ACaption: PChar); virtual;
+    function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
+    function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
   end;
 
 implementation
@@ -93,68 +76,109 @@ begin
   inherited Destroy;
 end;
 
-// ---- ISYSBUS IMPLEMENTATION ----
-
-function TBus.MemRead(AAddress: DWord): QWord;
-begin
-end;
-
-procedure TBus.MemWrite(AAddress: DWord; AValue: QWord);
-begin
-end;
-
-function TBus.CodeRead(AAddress: DWord): QWord;
-begin
-end;
-
-procedure TBus.CodeWrite(AAddress: DWord; AValue: QWord);
-begin
-end;
-
-function TBus.IORead(APort: DWord): Byte;
-begin
-end;
-
-procedure TBus.IOWrite(APort: DWord; AValue: Byte);
-begin
-end;
-
-// ---- ISRVBUS IMPLEMENTATION ----
+// Administration
 
 function TBus.AttachCPU(ACPU: TCPU): Integer;
 begin
+  Result := 0;
 end;
 
-function TBus.AttachCodeMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer;
+function TBus.AttachMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer;
 begin
-end;
-
-function TBus.AttachDataMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer;
-begin
+  Result := 0;
 end;
 
 function TBus.AttachIOPorts(APorts: TIOPort; ABaseAddress: DWord; AAddressRange: DWord): Integer;
 begin
+  Result := 0;
 end;
 
 function TBus.DetachCPU(InstanceID: Integer): Boolean;
 begin
-end;
-
-function TBus.DetachCodeMemory(InstanceID: Integer): Boolean;
-begin
-end;
-
-function TBus.DetachDataMemory(InstanceID: Integer): Boolean;
-begin
+  Result := false;
 end;
 
 function TBus.DetachIOPorts(InstanceID: Integer): Boolean;
 begin
+  Result := false;
 end;
+
+function TBus.DetachMemory(InstanceID: Integer): Boolean;
+begin
+  Result := false;
+end;
+
+// SysBus
+
+function TBus.ReadMemory(AAddress: DWord): QWord;
+begin
+  Result := 0;
+end;
+
+procedure TBus.WriteMemory(AAddress: DWord; AValue: QWord);
+begin
+end;
+
+function TBus.ReadPort(APort: Word): Byte;
+begin
+end;
+
+procedure TBus.WritePort(APort: Word; AValue: Byte);
+begin
+end;
+
+// SrvBus
 
 procedure TBus.Reset;
 begin
+end;
+
+function TBus.LoadState(AStream: TStream): Boolean;
+begin
+  Result := false;
+end;
+
+function TBus.SaveState(AStream: TStream): Boolean;
+begin
+  Result := false;
+end;
+
+procedure TBus.LoadFromStream(AStream: TStream; AAddress, ACount: DWord);
+begin
+end;
+
+procedure TBus.SaveToStream(AStream: TStream; AAddress, ACount: DWord);
+begin
+end;
+
+procedure TBus.CreatePanel;
+begin
+end;
+
+procedure TBus.FreePanel;
+begin
+end;
+
+procedure TBus.ShowPanel;
+begin
+end;
+
+procedure TBus.HidePanel;
+begin
+end;
+
+procedure TBus.RenamePanel(ACaption: PChar);
+begin
+end;
+
+function TBus.ResizePanel(AWidth, AHeight: Integer): Boolean;
+begin
+  Result := false;
+end;
+
+function TBus.MovePanel(ALeft, ATop: Integer): Boolean;
+begin
+  Result := false;
 end;
 
 end.
