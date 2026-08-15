@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pozsár Zsolt <pozsarzs@gmail.com>\n"
+"Language-Team: \n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: clioport:msg01
+msgid "CoreLAB I/O plugin tester"
+msgstr "CoreLAB I/O bővítménytesztelő"
+
+#: clioport:msg02
+msgid "Build date:  "
+msgstr "Fordítás dátuma:  "
+
+#: clioport:msg03
+msgid "Builder:     "
+msgstr "Fordító:     "
+
+#: clioport:msg04
+msgid "FPC version: "
+msgstr "FPC verzió: "
+
+#: clioport:msg05
+msgid "Target OS:   "
+msgstr "Cél OS:   "
+
+#: clioport:msg06
+msgid "Target CPU:  "
+msgstr "Cél CPU:  "
+
+#: clioport:msg07
+msgid "There are one or more bad arguments in command line."
+msgstr "Egy vagy több hibás parancssori argumentum van megadva."
+
+#: clioport:msg08
+msgid "Usage"
+msgstr "Használat"
+
+#: clioport:msg09
+msgid "[argument]"
+msgstr "[argumentum]"
+
+#: clioport:msg10
+msgid "[directory]"
+msgstr "[könyvtár]"
+
+#: clioport:msg11
+msgid "arguments:"
+msgstr "argumentumok:"
+
+#: frmabout:msg01
+msgid "Cannot open URL."
+msgstr "Az URL nem nyitható meg."
+
+#: frmmain:msg01
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmmain:msg02
+msgid "Data type conversion error."
+msgstr "Adattípus-konverziós hiba."
+
+#: frmmain:msg03
+msgid "Directory '%s' does not exist."
+msgstr "A(z) „%s” könyvtár nem létezik."
+
+#: frmmain:msg04
+msgid "Cannot load '%s' plugin%s(%s)."
+msgstr "A(z) „%s” bővítmény%s(%s) nem tölthető be."
+
+#: frmmain:msg05
+msgid "It is not a CoreLAB IOPort plugin."
+msgstr "Ez nem CoreLAB IOPort bővítmény."
+
+#: frmmain:msg06
+msgid "Filename"
+msgstr "Fájlnév"
+
+#: frmmain:msg07
+msgid "Size"
+msgstr "Méret"
+
+#: frmmain:msg08
+msgid "Type"
+msgstr "Típus"
+
+#: frmmain:msg09
+msgid "Property"
+msgstr "Tulajdonság"
+
+#: frmmain:msg10
+msgid "Value"
+msgstr "Érték"
+
+#: frmmain:msg11
+msgid "Address"
+msgstr "Cím"
+
+#: frmmain:msg12
+msgid "Data (Hex)"
+msgstr "Adat (hex)"
+
+#: frmmain:msg13
+msgid " %sh read from port %sh."
+msgstr " %sh olvasva a(z) %sh portról."
+
+#: frmmain:msg14
+msgid " %sh write to port %sh."
+msgstr " %sh írva a(z) %sh portra."
+
+#: frmmain:msg15
+msgid "Only 8-bit hexadecimal values can be entered (00 - FF)!"
+msgstr "Csak 8 bites hexadecimális értékek adhatók meg (00 - FF)!"
+
+#: frmmain:msg16
+msgid "Caption"
+msgstr "Felirat"
+
+#: frmmain:msg17
+msgid "This is not a graphics plugin."
+msgstr "Ez nem grafikus bővítmény."
+
+#: frmmain:msg18
+msgid "Missing help file."
+msgstr "Hiányzó súgófájl."
+
+#: frmmain:msg19
+msgid "Missing help viewer."
+msgstr "Hiányzó súgónézegető."
+
+#: frmmain:msg20
+msgid "Cannot read state data from plugin."
+msgstr "A bővítmény állapotadatai nem olvashatók."
+
+#: frmmain:msg21
+msgid "Save plugin state to file"
+msgstr "Bővítmény állapotának mentése fájlba"
+
+#: frmmain:msg22
+msgid "Cannot save '%s' plugin data."
+msgstr "A(z) „%s” bővítmény adatai nem menthetők."
+
+#: frmmain:msg23
+msgid "Load plugin state from file"
+msgstr "Bővítmény állapotának betöltése fájlból"
+
+#: frmmain:msg24
+msgid "Cannot load '%s' plugin data."
+msgstr "A(z) „%s” bővítmény adatai nem tölthetők be."
+
+#: frmmain:msg25
+msgid "Cannot write state data to plugin."
+msgstr "Az állapotadatok nem írhatók a bővítménybe."
+
+#: frmmain:msg26
+msgid "CoreLAB stream file|*.clstm|All file|*.*"
+msgstr "CoreLAB streamfájl|*.clstm|Minden fájl|*.*"
+
+#: frmmain:msg27
+msgid "Interrupt request received with vector %s."
+msgstr "Megszakítási kérelem érkezett a(z) %s vektorral."

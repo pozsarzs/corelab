@@ -1,0 +1,176 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pozsár Zsolt <pozsarzs@gmail.com>\n"
+"Language-Team: \n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: clmemory:msg01
+msgid "CoreLAB Memory plugin tester"
+msgstr "CoreLAB Memory bővítménytesztelő"
+
+#: clmemory:msg02
+msgid "Build date:  "
+msgstr "Fordítás dátuma:  "
+
+#: clmemory:msg03
+msgid "Builder:     "
+msgstr "Fordító:     "
+
+#: clmemory:msg04
+msgid "FPC version: "
+msgstr "FPC verzió: "
+
+#: clmemory:msg05
+msgid "Target OS:   "
+msgstr "Cél OS:   "
+
+#: clmemory:msg06
+msgid "Target CPU:  "
+msgstr "Cél CPU:  "
+
+#: clmemory:msg07
+msgid "There are one or more bad arguments in command line."
+msgstr "Egy vagy több hibás parancssori argumentum van megadva."
+
+#: clmemory:msg08
+msgid "Usage"
+msgstr "Használat"
+
+#: clmemory:msg09
+msgid "[argument]"
+msgstr "[argumentum]"
+
+#: clmemory:msg10
+msgid "[directory]"
+msgstr "[könyvtár]"
+
+#: clmemory:msg11
+msgid "arguments:"
+msgstr "argumentumok:"
+
+#: frmabout:msg01
+msgid "Cannot open URL."
+msgstr "Az URL nem nyitható meg."
+
+#: frmmain:msg01
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmmain:msg02
+msgid "Data type conversion error."
+msgstr "Adattípus-konverziós hiba."
+
+#: frmmain:msg03
+msgid "Directory '%s' does not exist."
+msgstr "A(z) „%s” könyvtár nem létezik."
+
+#: frmmain:msg04
+msgid "Cannot load '%s' plugin%s(%s)."
+msgstr "A(z) „%s” bővítmény%s(%s) nem tölthető be."
+
+#: frmmain:msg05
+msgid "It is not a CoreLAB memory plugin."
+msgstr "Ez nem CoreLAB Memory bővítmény."
+
+#: frmmain:msg06
+msgid "Filename"
+msgstr "Fájlnév"
+
+#: frmmain:msg07
+msgid "Size"
+msgstr "Méret"
+
+#: frmmain:msg08
+msgid "Type"
+msgstr "Típus"
+
+#: frmmain:msg09
+msgid "Property"
+msgstr "Tulajdonság"
+
+#: frmmain:msg10
+msgid "Value"
+msgstr "Érték"
+
+#: frmmain:msg11
+msgid "Address"
+msgstr "Cím"
+
+#: frmmain:msg12
+msgid "Data"
+msgstr "Adat"
+
+#: frmmain:msg13
+msgid " %sh read from address %sh."
+msgstr " %sh olvasva a(z) %sh címről."
+
+#: frmmain:msg14
+msgid " %sh write to address %sh."
+msgstr " %sh írva a(z) %sh címre."
+
+#: frmmain:msg15
+msgid "Only hexadecimal values can be entered!"
+msgstr "Csak hexadecimális értékek adhatók meg!"
+
+#: frmmain:msg16
+msgid "Out of range!"
+msgstr "Tartományon kívül!"
+
+#: frmmain:msg17
+msgid "Value (Hex)"
+msgstr "Érték (hex)"
+
+#: frmmain:msg18
+msgid "Missing help file."
+msgstr "Hiányzó súgófájl."
+
+#: frmmain:msg19
+msgid "Missing help viewer."
+msgstr "Hiányzó súgónézegető."
+
+#: frmmain:msg20
+msgid "Cannot read state data from plugin."
+msgstr "A bővítmény állapotadatai nem olvashatók."
+
+#: frmmain:msg21
+msgid "Save plugin state to file"
+msgstr "Bővítmény állapotának mentése fájlba"
+
+#: frmmain:msg22
+msgid "Cannot save '%s' plugin data."
+msgstr "A(z) „%s” bővítmény adatai nem menthetők."
+
+#: frmmain:msg23
+msgid "Load plugin state from file"
+msgstr "Bővítmény állapotának betöltése fájlból"
+
+#: frmmain:msg24
+msgid "Cannot load '%s' plugin data."
+msgstr "A(z) „%s” bővítmény adatai nem tölthetők be."
+
+#: frmmain:msg25
+msgid "Cannot write state data to plugin."
+msgstr "Az állapotadatok nem írhatók a bővítménybe."
+
+#: frmmain:msg26
+msgid "CoreLAB stream file|*.clstm|All file|*.*"
+msgstr "CoreLAB streamfájl|*.clstm|Minden fájl|*.*"
+
+#: frmmain:msg27
+msgid "Read-only!"
+msgstr "Csak olvasható!"
+
+#: frmmain:msg28
+msgid "The memory size can be 16 B-16 MB"
+msgstr "A memóriaméret 16 B és 16 MB között lehet"
+
+#: frmmain:msg29
+msgid "The data width can be 4-64 bits."
+msgstr "Az adat szélessége 4–64 bit lehet."
