@@ -7,7 +7,8 @@
       <Unit>
         <Filename Value="clprocessor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="2"/>
+        <TopLine Value="61"/>
+        <CursorPos X="45" Y="180"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -17,10 +18,9 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="123"/>
-        <CursorPos X="24" Y="133"/>
+        <TopLine Value="349"/>
+        <CursorPos X="34" Y="363"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -31,8 +31,19 @@
         <ComponentName Value="Form2"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
-        <UsageCount Value="169"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="181"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmsetmemory.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="31"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -43,7 +54,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="19" Y="4"/>
-        <UsageCount Value="142"/>
+        <UsageCount Value="141"/>
       </Unit>
       <Unit>
         <Filename Value="frmsizepos.pas"/>
@@ -52,143 +63,167 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="72"/>
         <CursorPos Y="102"/>
-        <UsageCount Value="81"/>
+        <UsageCount Value="80"/>
       </Unit>
       <Unit>
         <Filename Value="frmcaption.lfm"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="31" Y="7"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
         <Filename Value="../_ppu/ucommon.pas"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="6"/>
         <CursorPos X="22" Y="5"/>
-        <UsageCount Value="39"/>
+        <UsageCount Value="45"/>
         <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmrunlogger.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="4"/>
+        <CursorPos Y="14"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmexdepmemory.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form5"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="40"/>
+        <CursorPos X="42" Y="51"/>
+        <UsageCount Value="31"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="550" Column="12" TopLine="530"/>
+        <Caret Line="281" Column="26" TopLine="262"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="2" Column="4"/>
+        <Caret Line="332" Column="50" TopLine="313"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="725" Column="37" TopLine="657"/>
+        <Caret Line="333" Column="52" TopLine="314"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="28" Column="46" TopLine="28"/>
+        <Caret Line="410" Column="24" TopLine="391"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="120" Column="10" TopLine="104"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="115" Column="24" TopLine="105"/>
+        <Caret Line="196" Column="51" TopLine="158"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="104" Column="24" TopLine="83"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="106" TopLine="92"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="113" TopLine="100"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="176" Column="14" TopLine="166"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="116" Column="24" TopLine="106"/>
+        <Caret Line="11" Column="17"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="98" TopLine="82"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="44" Column="48" TopLine="33"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="99" Column="51" TopLine="88"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="141" Column="10" TopLine="92"/>
+      </Position>
+      <Position>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="102" Column="52" TopLine="63"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="117" Column="24" TopLine="107"/>
+        <Caret Line="170" Column="24" TopLine="154"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="118" Column="24" TopLine="108"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="171" Column="56" TopLine="161"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="119" Column="24" TopLine="109"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="70" TopLine="55"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="120" Column="24" TopLine="110"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="205" Column="20" TopLine="190"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="121" Column="24" TopLine="111"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="18" Column="31" TopLine="13"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="122" Column="24" TopLine="112"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="48" Column="42" TopLine="37"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="123" Column="24" TopLine="113"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="49" Column="42" TopLine="38"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="124" Column="24" TopLine="114"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="48" Column="42" TopLine="37"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="123" Column="24" TopLine="113"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="49" Column="42" TopLine="38"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="122" Column="24" TopLine="112"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="48" Column="42" TopLine="37"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="121" Column="24" TopLine="111"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="49" Column="42" TopLine="38"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="122" Column="24" TopLine="112"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="48" Column="42" TopLine="37"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="123" Column="24" TopLine="113"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="49" Column="42" TopLine="38"/>
       </Position>
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="124" Column="24" TopLine="114"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="125" Column="24" TopLine="115"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="126" Column="24" TopLine="116"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="127" Column="24" TopLine="117"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="128" Column="24" TopLine="118"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="127" Column="24" TopLine="117"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="128" Column="24" TopLine="118"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="129" Column="24" TopLine="119"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="130" Column="24" TopLine="120"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="131" Column="24" TopLine="121"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="132" Column="24" TopLine="122"/>
+        <Filename Value="frmexdepmemory.pas"/>
+        <Caret Line="50" Column="42" TopLine="39"/>
       </Position>
     </JumpHistory>
     <RunParams>

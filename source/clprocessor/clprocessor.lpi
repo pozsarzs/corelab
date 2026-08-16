@@ -17,7 +17,7 @@
     </General>
     <i18n>
       <EnableI18N Value="True"/>
-      <OutDir Value="./po"/>
+      <OutDir Value="po"/>
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
@@ -70,6 +70,25 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
+      <Unit>
+        <Filename Value="frmsetmemory.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form3"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmrunlogger.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form4"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="frmexdepmemory.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form5"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -80,7 +99,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
       <OtherUnitFiles Value="../corelab-core;../_ext/modlcltranslator;../_ppu"/>
-      <UnitOutputDirectory Value="./lib/$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Options>

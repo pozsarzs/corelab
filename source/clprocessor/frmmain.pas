@@ -24,7 +24,7 @@ type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
     PDescription:      string;                              // short description
-    PEnabled:          Boolean;        // disable processor without detach from bus
+    PEnabled:          Boolean;     // disable processor without detach from bus
     PInstanceID:       Integer;                            // Module instance ID
     PModname:          string;                                    // module name
   end;
@@ -38,18 +38,26 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
-    MenuItem19: TMenuItem;
-    MenuItem20: TMenuItem;
-    MenuItem22: TMenuItem;
-    MenuItem23: TMenuItem;
-    MenuItem25: TMenuItem;
-    MenuItem26: TMenuItem;
-    Reset: TAction;
-    NMI: TAction;
-    Step: TAction;
-    Run: TAction;
-    Pause: TAction;
-    Stop: TAction;
+    SetMemory2: TAction;
+    SetMemory1: TAction;
+    MenuItem19:            TMenuItem;
+    MenuItem20:            TMenuItem;
+    MenuItem22:            TMenuItem;
+    MenuItem23:            TMenuItem;
+    MenuItem25:            TMenuItem;
+    MenuItem26:            TMenuItem;
+    MenuItem27: TMenuItem;
+    MenuItem28: TMenuItem;
+    MenuItem29: TMenuItem;
+    MenuItem30: TMenuItem;
+    MenuItem31: TMenuItem;
+    Reset:                 TAction;
+    NMI:                   TAction;
+    Separator5: TMenuItem;
+    Step:                  TAction;
+    Run:                   TAction;
+    Pause:                 TAction;
+    Stop:                  TAction;
     LoadStatus:            TAction;
     OpenDialog1:           TOpenDialog;
     SaveDialog1:           TSaveDialog;
@@ -79,12 +87,10 @@ type
     MenuItem4:             TMenuItem;
     MenuItem5:             TMenuItem;
     MenuItem6:             TMenuItem;
-    MenuItem7:             TMenuItem;
     MenuItem8:             TMenuItem;
-    MenuItem9:             TMenuItem;
     Panel1:                TPanel;
     Quit:                  TAction;
-    Examine:             TAction;
+    Examine:               TAction;
     RefreshPluginList:     TAction;
     RestartApplication:    TAction;
     SelectPluginDirectory: TAction;
@@ -99,17 +105,17 @@ type
     Timer1:                TTimer;
     ToolBar1:              TToolBar;
     ToolButton1:           TToolButton;
-    ToolButton10: TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton12: TToolButton;
+    ToolButton10:          TToolButton;
+    ToolButton11:          TToolButton;
+    ToolButton12:          TToolButton;
     ToolButton2:           TToolButton;
     ToolButton3:           TToolButton;
     ToolButton4:           TToolButton;
     ToolButton5:           TToolButton;
     ToolButton6:           TToolButton;
-    ToolButton7: TToolButton;
-    ToolButton8: TToolButton;
-    ToolButton9: TToolButton;
+    ToolButton7:           TToolButton;
+    ToolButton8:           TToolButton;
+    ToolButton9:           TToolButton;
     ValueListEditor1:      TValueListEditor;
     ValueListEditor2:      TValueListEditor;
     Deposit:            TAction;
@@ -119,6 +125,8 @@ type
     procedure HelpExecute(Sender: TObject);
     procedure LoadChangePluginExecute(Sender: TObject);
     procedure LoadStatusExecute(Sender: TObject);
+    procedure SetMemory1Execute(Sender: TObject);
+    procedure SetMemory2Execute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
     procedure MenuItem15Click(Sender: TObject);
     procedure MenuItem16Click(Sender: TObject);
@@ -151,11 +159,15 @@ type
     FPluginDirectory: string;
     FSystemLanguage:  string;
     FUserDirectory:   string;
+    // emulated memory
+    FMemory:          array[0..1, 0..1023] of QWord;
     procedure ImpExpProperties(Direction: TOpDirection);
     procedure RefreshProperties(Direction: TOpDirection);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   public
+    function GetMemoryCell(ABank: Integer; AAddress: DWord): QWord;
+    procedure SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: QWord);
     property IgnoreHelp: Boolean read FIgnoreHelp write SetIgnoreHelp;
     property EXEDirectory: string read FEXEDirectory;
     property PluginDirectory: string read FPluginDirectory write SetPluginDirectory;
@@ -164,6 +176,7 @@ type
   end;
 var
   Form1: TForm1;
+
 
 implementation
 
@@ -235,8 +248,6 @@ end;
 
 // REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
-var
-  mm: TProcessorMode;
 begin
   if Direction = opVar2List then
   begin
@@ -336,6 +347,21 @@ begin
   FPluginDirectory := APluginDirectory;
   DirectoryEdit1.Directory := FPluginDirectory;
   RefreshPluginList.Execute;
+end;
+
+// ---- PUBLIC METHODS ----
+
+// GET DATA FROM A CELL OF THE EMULATED MEMORY
+function TForm1.GetMemoryCell(ABank: Integer; AAddress: DWord): QWord;
+begin
+  Result := FMemory[ABank, AAddress];
+end;
+
+// SET DATA TO A CELL OF THE EMULATED MEMORY
+procedure TForm1.SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: QWord);
+begin
+  // figyelj az architectúrára!!!
+  FMemory[ABank, AAddress] := AValue;
 end;
 
 // ---- EVENT HANDLER METHODS ----
@@ -585,7 +611,7 @@ var
   InAddr: DWord;
   InData: Byte;
 begin
-  InData := 0;
+{  InData := 0;
   InAddr := 0;
   if TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], InAddr) then
   begin
@@ -599,7 +625,7 @@ begin
         StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (' + MSG16 + ')';
       Timer1.Enabled := True;
     end;
-  end;
+  end;}
 end;
 
 // WRITE A BYTE
@@ -609,7 +635,7 @@ var
   OutData: Integer;
   OutRange, ReadOnly: Boolean;
 begin
-  OutData := 0;
+{  OutData := 0;
   OutAddr := 0;
   if (TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], OutAddr)) and
      (TryStrToInt('$' + ValueListEditor2.Cells[1, 2], OutData)) then
@@ -629,16 +655,16 @@ begin
       if OutRange or ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ')';
       Timer1.Enabled := True;
     end;
-  end;
+  end;}
 end;
 
 // LOAD PLUGIN STATUS
 procedure TForm1.LoadStatusExecute(Sender: TObject);
-var
+{var
   Filename: string;
-  LoadStream: TProcessorStream;
+  LoadStream: TProcessorStream;}
 begin
-  with OpenDialog1 do
+{  with OpenDialog1 do
   begin
     InitialDir := GetUserDir;
     Title := MSG23;
@@ -663,16 +689,26 @@ begin
     finally
       LoadStream.Free;
     end;
-  end;
+  end;}
+end;
+
+procedure TForm1.SetMemory1Execute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SetMemory2Execute(Sender: TObject);
+begin
+
 end;
 
 //SAVE PLUGIN STATUS
 procedure TForm1.SaveStatusExecute(Sender: TObject);
-var
+{var
   Filename: string;
-  SaveStream: TProcessorStream;
+  SaveStream: TProcessorStream;}
 begin
-  with SaveDialog1 do
+{  with SaveDialog1 do
   begin
     InitialDir := GetUserDir;
     Title := MSG21;
@@ -692,7 +728,7 @@ begin
     finally
       SaveStream.Free;
     end;
-  end;
+  end;}
 end;
 
 // HELP

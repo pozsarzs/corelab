@@ -19,7 +19,7 @@ uses
   CMem, Classes, SysUtils, TypInfo, sysbus;
 type
   // Defines type of architecture
-  TArchitecture = (arHarvad,arNeumann);
+  TArchitecture = (arHarvard, arNeumann);
   TArchitectureHelper = type helper for TArchitecture
     function ToString: string;
     function FromString(const Value: string): TArchitecture;

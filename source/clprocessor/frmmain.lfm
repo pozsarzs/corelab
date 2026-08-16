@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 295
+  Left = 407
   Height = 480
-  Top = 122
+  Top = 191
   Width = 640
   Caption = 'Form1'
   ClientHeight = 455
@@ -380,8 +380,8 @@ object Form1: TForm1
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = StatusBar1
     Left = 456
-    Height = 352
-    Top = 76
+    Height = 361
+    Top = 67
     Width = 176
     Anchors = [akTop, akRight, akBottom]
     BorderSpacing.Left = 8
@@ -390,12 +390,11 @@ object Form1: TForm1
     DefaultRowHeight = 30
     Enabled = False
     FixedCols = 0
-    RowCount = 3
+    RowCount = 2
     TabOrder = 2
     OnValidateEntry = ValueListEditor2ValidateEntry
     Strings.Strings = (
-      'Address='
-      'Data='
+      ''
     )
     TitleCaptions.Strings = (
       ''
@@ -413,7 +412,7 @@ object Form1: TForm1
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 8
-    Height = 34
+    Height = 25
     Top = 34
     Width = 624
     DialogTitle = 'Select plugin directory'
@@ -435,8 +434,8 @@ object Form1: TForm1
     AnchorSideRight.Control = ValueListEditor2
     AnchorSideBottom.Control = StatusBar1
     Left = 8
-    Height = 352
-    Top = 76
+    Height = 361
+    Top = 67
     Width = 440
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
@@ -445,7 +444,7 @@ object Form1: TForm1
     BorderSpacing.Bottom = 8
     BevelOuter = bvNone
     Caption = 'Panel1'
-    ClientHeight = 352
+    ClientHeight = 361
     ClientWidth = 440
     TabOrder = 1
     object ShellListView1: TShellListView
@@ -474,7 +473,7 @@ object Form1: TForm1
     end
     object ValueListEditor1: TValueListEditor
       Left = 0
-      Height = 234
+      Height = 243
       Top = 118
       Width = 440
       Align = alClient
@@ -658,7 +657,7 @@ object Form1: TForm1
       end
     end
     object MenuItem4: TMenuItem
-      Caption = '&Operation'
+      Caption = '&Processor'
       object MenuItem26: TMenuItem
         Action = Reset
       end
@@ -677,12 +676,6 @@ object Form1: TForm1
       object MenuItem19: TMenuItem
         Action = Stop
       end
-      object MenuItem7: TMenuItem
-        Action = Examine
-      end
-      object MenuItem9: TMenuItem
-        Action = Deposit
-      end
       object Separator6: TMenuItem
         Caption = '-'
       end
@@ -693,6 +686,24 @@ object Form1: TForm1
       object MenuItem24: TMenuItem
         Caption = '&Save status'
         OnClick = SaveStatusExecute
+      end
+    end
+    object MenuItem27: TMenuItem
+      Caption = '&Memory'
+      object MenuItem28: TMenuItem
+        Action = SetMemory1
+      end
+      object MenuItem29: TMenuItem
+        Action = SetMemory2
+      end
+      object Separator5: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem30: TMenuItem
+        Action = Examine
+      end
+      object MenuItem31: TMenuItem
+        Action = Deposit
       end
     end
     object MenuItem5: TMenuItem
@@ -881,20 +892,6 @@ object Form1: TForm1
     object Stop: TAction
       Caption = 'Stop'
     end
-    object Examine: TAction
-      Caption = '&Examine'
-      Hint = 'Examine content of memory cell'
-      ImageIndex = 5
-      OnExecute = ExamineExecute
-      ShortCut = 16453
-    end
-    object Deposit: TAction
-      Caption = '&Deposit'
-      Hint = 'Deposit data in memory cell'
-      ImageIndex = 6
-      OnExecute = DepositExecute
-      ShortCut = 16452
-    end
     object LoadStatus: TAction
       Caption = 'Load status'
       OnExecute = LoadStatusExecute
@@ -911,6 +908,28 @@ object Form1: TForm1
     object About: TAction
       Caption = '&About'
       OnExecute = AboutExecute
+    end
+    object SetMemory1: TAction
+      Caption = 'Set memory #&1...'
+      OnExecute = SetMemory1Execute
+    end
+    object SetMemory2: TAction
+      Caption = 'Set memory #&2...'
+      OnExecute = SetMemory2Execute
+    end
+    object Examine: TAction
+      Caption = '&Examine...'
+      Hint = 'Examine content of memory cell'
+      ImageIndex = 5
+      OnExecute = ExamineExecute
+      ShortCut = 16453
+    end
+    object Deposit: TAction
+      Caption = '&Deposit...'
+      Hint = 'Deposit data in memory cell'
+      ImageIndex = 6
+      OnExecute = DepositExecute
+      ShortCut = 16452
     end
   end
   object CHMHelpDatabase1: TCHMHelpDatabase
