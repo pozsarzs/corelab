@@ -20,17 +20,18 @@ uses
 type
   { TForm2 }
   TAboutLabels = record
-    Copyright:   string[32];
-    Description: string[32];
-    Email:       string[32];
-    Homepage:    string[32];
-    Name:        string[32];
-    Version:     string[32];
+    Copyright:   string[31];
+    Description: string[31];
+    Email:       string[31];
+    Homepage:    string[31];
+    Name:        string[31];
+    Version:     string[31];
   end;
   TForm2 = class(TForm)
-    Bevel1: TBevel;
+    Bevel1:  TBevel;
+    Bevel2: TBevel;
     Button1: TButton;
-    Image1: TImage;
+    Image1:  TImage;
     Label1:  TLabel;
     Label2:  TLabel;
     Label3:  TLabel;

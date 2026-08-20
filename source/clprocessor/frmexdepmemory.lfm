@@ -1,11 +1,11 @@
 object Form5: TForm5
-  Left = 590
-  Height = 218
-  Top = 307
+  Left = 678
+  Height = 217
+  Top = 327
   Width = 368
   BorderStyle = bsDialog
   Caption = 'Examine/deposit'
-  ClientHeight = 218
+  ClientHeight = 217
   ClientWidth = 368
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
@@ -373,7 +373,7 @@ object Form5: TForm5
     AnchorSideBottom.Control = Button5
     Left = 8
     Height = 4
-    Top = 170
+    Top = 169
     Width = 352
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
@@ -461,7 +461,7 @@ object Form5: TForm5
     AnchorSideBottom.Control = Bevel1
     Left = 8
     Height = 28
-    Top = 134
+    Top = 133
     Width = 75
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 8
@@ -475,7 +475,7 @@ object Form5: TForm5
     AnchorSideBottom.Control = Bevel1
     Left = 181
     Height = 28
-    Top = 134
+    Top = 133
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
@@ -491,7 +491,7 @@ object Form5: TForm5
     AnchorSideBottom.Side = asrBottom
     Left = 285
     Height = 28
-    Top = 182
+    Top = 181
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
@@ -531,7 +531,7 @@ object Form5: TForm5
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 264
-    Height = 91
+    Height = 90
     Hint = 'Select memory type of the Harvard architecture'
     Top = 71
     Width = 96
@@ -547,7 +547,7 @@ object Form5: TForm5
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 73
+    ClientHeight = 72
     ClientWidth = 94
     Enabled = False
     ItemIndex = 0

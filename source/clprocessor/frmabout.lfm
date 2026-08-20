@@ -1,11 +1,11 @@
 object Form2: TForm2
-  Left = 442
-  Height = 204
-  Top = 279
+  Left = 762
+  Height = 220
+  Top = 333
   Width = 324
   BorderStyle = bsDialog
   Caption = 'About'
-  ClientHeight = 204
+  ClientHeight = 220
   ClientWidth = 324
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
@@ -367,9 +367,9 @@ object Form2: TForm2
   Position = poMainFormCenter
   LCLVersion = '2.2.6.0'
   object Bevel1: TBevel
-    AnchorSideBottom.Control = Button1
+    AnchorSideBottom.Control = Bevel2
     Left = 8
-    Height = 152
+    Height = 156
     Top = 8
     Width = 308
     Align = alTop
@@ -384,7 +384,7 @@ object Form2: TForm2
     AnchorSideBottom.Control = Bevel1
     AnchorSideBottom.Side = asrBottom
     Left = 9
-    Height = 150
+    Height = 154
     Top = 9
     Width = 306
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -1135,7 +1135,7 @@ object Form2: TForm2
     AnchorSideBottom.Side = asrBottom
     Left = 241
     Height = 28
-    Top = 168
+    Top = 184
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Around = 8
@@ -1257,5 +1257,18 @@ object Form2: TForm2
     OnClick = Label8Click
     OnMouseEnter = Label8MouseEnter
     OnMouseLeave = Label8MouseLeave
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button1
+    Left = 8
+    Height = 4
+    Top = 172
+    Width = 308
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Around = 8
+    Shape = bsBottomLine
   end
 end

@@ -18,8 +18,8 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
-  ucommon;
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_cpu,
+  frmabout, frmrunlogger, ucommon;
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
@@ -38,37 +38,15 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
-    SetMemory2: TAction;
-    SetMemory1: TAction;
-    MenuItem19:            TMenuItem;
-    MenuItem20:            TMenuItem;
-    MenuItem22:            TMenuItem;
-    MenuItem23:            TMenuItem;
-    MenuItem25:            TMenuItem;
-    MenuItem26:            TMenuItem;
-    MenuItem27: TMenuItem;
-    MenuItem28: TMenuItem;
-    MenuItem29: TMenuItem;
-    MenuItem30: TMenuItem;
-    MenuItem31: TMenuItem;
-    Reset:                 TAction;
-    NMI:                   TAction;
-    Separator5: TMenuItem;
-    Step:                  TAction;
-    Run:                   TAction;
-    Pause:                 TAction;
-    Stop:                  TAction;
-    LoadStatus:            TAction;
-    OpenDialog1:           TOpenDialog;
-    SaveDialog1:           TSaveDialog;
-    SaveStatus:            TAction;
     ActionList1:           TActionList;
     CHMHelpDatabase1:      TCHMHelpDatabase;
     DirectoryEdit1:        TDirectoryEdit;
+    Examine:               TAction;
     Help:                  TAction;
     ImageList1:            TImageList;
     LHelpConnector1:       TLHelpConnector;
     LoadChangePlugin:      TAction;
+    LoadStatus:            TAction;
     MainMenu1:             TMainMenu;
     MenuItem1:             TMenuItem;
     MenuItem10:            TMenuItem;
@@ -80,28 +58,52 @@ type
     MenuItem16:            TMenuItem;
     MenuItem17:            TMenuItem;
     MenuItem18:            TMenuItem;
+    MenuItem19:            TMenuItem;
     MenuItem2:             TMenuItem;
+    MenuItem20:            TMenuItem;
     MenuItem21:            TMenuItem;
+    MenuItem22:            TMenuItem;
+    MenuItem23:            TMenuItem;
     MenuItem24:            TMenuItem;
+    MenuItem25:            TMenuItem;
+    MenuItem26:            TMenuItem;
+    MenuItem27:            TMenuItem;
+    MenuItem28:            TMenuItem;
+    MenuItem29:            TMenuItem;
     MenuItem3:             TMenuItem;
+    MenuItem30:            TMenuItem;
     MenuItem4:             TMenuItem;
     MenuItem5:             TMenuItem;
     MenuItem6:             TMenuItem;
+    MenuItem7:             TMenuItem;
     MenuItem8:             TMenuItem;
+    MenuItem9:             TMenuItem;
+    NMI:                   TAction;
+    OpenDialog1:           TOpenDialog;
     Panel1:                TPanel;
+    Pause:                 TAction;
     Quit:                  TAction;
-    Examine:               TAction;
     RefreshPluginList:     TAction;
+    Reset:                 TAction;
     RestartApplication:    TAction;
+    Run:                   TAction;
+    SaveDialog1:           TSaveDialog;
+    SaveStatus:            TAction;
     SelectPluginDirectory: TAction;
     Separator1:            TMenuItem;
     Separator2:            TMenuItem;
     Separator3:            TMenuItem;
     Separator4:            TMenuItem;
+    Separator5:            TMenuItem;
     Separator6:            TMenuItem;
+    SetMemory1:            TAction;
+    SetMemory2:            TAction;
     ShellListView1:        TShellListView;
+    ShowRunLogger:         TAction;
     Splitter1:             TSplitter;
     StatusBar1:            TStatusBar;
+    Step:                  TAction;
+    Stop:                  TAction;
     Timer1:                TTimer;
     ToolBar1:              TToolBar;
     ToolButton1:           TToolButton;
@@ -111,38 +113,37 @@ type
     ToolButton2:           TToolButton;
     ToolButton3:           TToolButton;
     ToolButton4:           TToolButton;
-    ToolButton5:           TToolButton;
     ToolButton6:           TToolButton;
     ToolButton7:           TToolButton;
     ToolButton8:           TToolButton;
     ToolButton9:           TToolButton;
     ValueListEditor1:      TValueListEditor;
     ValueListEditor2:      TValueListEditor;
-    Deposit:            TAction;
     procedure AboutExecute(Sender: TObject);
+    procedure DepositExecute(Sender: TObject);
+    procedure ExamineExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure HelpExecute(Sender: TObject);
     procedure LoadChangePluginExecute(Sender: TObject);
     procedure LoadStatusExecute(Sender: TObject);
-    procedure SetMemory1Execute(Sender: TObject);
-    procedure SetMemory2Execute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
     procedure MenuItem15Click(Sender: TObject);
     procedure MenuItem16Click(Sender: TObject);
     procedure MenuItem17Click(Sender: TObject);
     procedure MenuItem18Click(Sender: TObject);
     procedure QuitExecute(Sender: TObject);
-    procedure ExamineExecute(Sender: TObject);
     procedure RefreshPluginListExecute(Sender: TObject);
     procedure RestartApplicationExecute(Sender: TObject);
     procedure SaveStatusExecute(Sender: TObject);
     procedure SelectPluginDirectoryExecute(Sender: TObject);
+    procedure SetMemory1Execute(Sender: TObject);
+    procedure SetMemory2Execute(Sender: TObject);
+    procedure ShowRunLoggerExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
     procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
-    procedure DepositExecute(Sender: TObject);
   private
     CurrentProcessor: TCPU;                      // created object of TCPU class
     LibHandle:        TLibHandle;                 // handle of the loaded module
@@ -176,7 +177,6 @@ type
   end;
 var
   Form1: TForm1;
-
 
 implementation
 
@@ -478,6 +478,11 @@ begin
   DirectoryEdit1.RunDialog;
 end;
 
+procedure TForm1.ShowRunLoggerExecute(Sender: TObject);
+begin
+  Form4.Show;
+end;
+
 // REFRESH PLUGIN LIST
 procedure TForm1.RefreshPluginListExecute(Sender: TObject);
 begin
@@ -554,7 +559,6 @@ begin
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
       Examine.Enabled := True;
-      Deposit.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(FLoadCounter);
@@ -579,7 +583,6 @@ begin
       ValueListEditor1.Enabled := False;
       ValueListEditor2.Enabled := False;
       Examine.Enabled := False;
-      Deposit.Enabled := False;
     end;
   end;
 end;
@@ -793,7 +796,6 @@ begin
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
   LoadChangePlugin.Enabled := False;
   Examine.Enabled := False;
-  Deposit.Enabled := False;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;

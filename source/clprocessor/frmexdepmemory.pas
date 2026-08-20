@@ -42,10 +42,10 @@ type
     procedure Edit2EditingDone(Sender: TObject);
   private
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FEndiannes: TEndianness;                      // Bit order (enLittle, enBig)
+    FEndianness: TEndianness;                     // Bit order (enLittle, enBig)
     FMemSize: integer;                                // Size of emulated memory
     function RemoveSpace(AString: string): string;
-    function Mirros(AString: string): string;
+//    function Mirror(AString: string): string;
     function FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
     procedure SetFArchitecture(AArchitecture: TArchitecture);
     procedure SetFEndianness(AEndianness: TEndianness);
@@ -119,7 +119,7 @@ begin
 end;
 
 // SET FENDIANNES FIELD
-procedure TForm5.SetFEndiannes(AEndianness: TEndianness);
+procedure TForm5.SetFEndianness(AEndianness: TEndianness);
 begin
   FEndianness := AEndianness;
 end;

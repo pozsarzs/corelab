@@ -217,6 +217,37 @@ end;
 
 // FORMATTED QUERY FOR THE LAST STATEMENT
 function T8080CPU.GetCurrentInstruction: PChar;
+
+{
+function T8080CPU.GetCurrentInstruction: PChar;
+var
+  RawCode, AsmText: string;
+begin
+  with LogRecord do
+  begin
+    // 1. Nyers gépi kód összeállítása (Opkód + operandusok)
+    RawCode := IntToHex(Opcode, 2);
+    if NumOperand > 0 then 
+      RawCode := RawCode + IntToHex(Operands[1], 2);
+    if NumOperand > 1 then 
+      RawCode := RawCode + IntToHex(Operands[2], 2);
+
+    // 2. Szöveges utasítás összeállítása (Mnemonik + paraméterek)
+    AsmText := Mnemonic;
+    if NumOperand > 0 then 
+      AsmText := AsmText + ' ' + IntToHex(Operands[1], 2);
+    if NumOperand > 1 then 
+      AsmText := AsmText + ', ' + IntToHex(Operands[2], 2);
+
+    // 3. StringGrid-kompatibilis sor összefűzése (Cím + Tab + Nyers kód + Tab + Assembly)
+    s := IntToHex(Address, 4) + #9 + RawCode + #9 + AsmText;
+  end;
+  
+  Result := PChar(s);
+end;
+	
+}
+
 begin
   s := '';
   with LogRecord do
