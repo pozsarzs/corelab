@@ -54,7 +54,7 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     // Used via the ICtlAPI by TSupervisor class
     procedure Step; override;
-    function GetCurrentInstruction: PChar; override;
+    function GetCurrentInstruction: TLogRec; override;
     function GetRegister(const RegName: PChar): qword; override;
     procedure SetRegister(const RegName: PChar; Value: qword); override;
   end;
@@ -137,11 +137,20 @@ end;
 // RESET CPU
 procedure T8080CPU.Reset;
 begin
+  // Initial execution state
+  FRunning := false;
+  FHalted := false;
+  FInterruptEnabled := false;
+  // No pending interrupts
+  FIRQPending := false;
+  FNMIPending := false;
+  // Clear counters
+  FCycles := 0;
+  FInstructions := 0;
+  // Others
   FillChar(FRegs, SizeOf(FRegs), 0);
   FRegs.PC := 0;
   FRegs.SP := $FFFF;
-  FHalted := false;
-  FRunning := false;
   EmitEvent(ceReset);
 end;
 
@@ -215,65 +224,27 @@ begin
   Inc(FInstructions);                           // Increment Instruction Counter
 end;
 
-// FORMATTED QUERY FOR THE LAST STATEMENT
-function T8080CPU.GetCurrentInstruction: PChar;
-
-{
-function T8080CPU.GetCurrentInstruction: PChar;
+// QUERY FOR THE LAST STATEMENT
+function T8080CPU.GetCurrentInstruction: TLogRec;
 var
   RawCode, AsmText: string;
 begin
   with LogRecord do
   begin
-    // 1. Nyers gépi kód összeállítása (Opkód + operandusok)
     RawCode := IntToHex(Opcode, 2);
-    if NumOperand > 0 then 
-      RawCode := RawCode + IntToHex(Operands[1], 2);
-    if NumOperand > 1 then 
-      RawCode := RawCode + IntToHex(Operands[2], 2);
-
-    // 2. Szöveges utasítás összeállítása (Mnemonik + paraméterek)
+    if NumOperand > 0 then RawCode := RawCode + IntToHex(Operands[1], 2);
+    if NumOperand > 1 then RawCode := RawCode + IntToHex(Operands[2], 2);
     AsmText := Mnemonic;
-    if NumOperand > 0 then 
-      AsmText := AsmText + ' ' + IntToHex(Operands[1], 2);
-    if NumOperand > 1 then 
-      AsmText := AsmText + ', ' + IntToHex(Operands[2], 2);
-
-    // 3. StringGrid-kompatibilis sor összefűzése (Cím + Tab + Nyers kód + Tab + Assembly)
-    s := IntToHex(Address, 4) + #9 + RawCode + #9 + AsmText;
+    if NumOperand > 0 then AsmText := AsmText + ' ' + IntToHex(Operands[1], 2);
+    if NumOperand > 1 then AsmText := AsmText + ', ' + IntToHex(Operands[2], 2);
   end;
-  
-  Result := PChar(s);
-end;
-	
-}
-
-begin
-  s := '';
-  with LogRecord do
+  with Result do
   begin
-    // Address
-    s := InttoHex(Address, 4) + #9;
-    // Opcode
-    s := s + InttoHex(Opcode, 2) + #9;
-    // 1st operand
-    if NumOperand > 0
-      then s := s + InttoHex(Operands[1], 2) + ' '
-      else s := s + '   ';
-    // 2st operand
-    if NumOperand > 1
-      then s := s + InttoHex(Operands[2], 2) + #9
-      else s := s + '  ' + #9;
-    // Mnemonic
-    s := s + Mnemonic;
-    // 1st operand
-    if NumOperand > 0
-      then s := s + #9 + InttoHex(Operands[1], 2);
-    // 2st operand
-    if NumOperand > 1
-      then s := s + ', ' + InttoHex(Operands[2], 2);
+    InstCount := FInstructions;
+    Address := IntToHex(LogRecord.Address, 4);
+    Opcode := RawCode;
+    Mnemonic := AsmText;
   end;
-  Result := PChar(s);
 end;
 
 // QUERYING REGISTERS

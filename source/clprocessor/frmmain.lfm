@@ -550,7 +550,7 @@ object Form1: TForm1
     object ToolButton4: TToolButton
       Left = 190
       Top = 2
-      Action = Examine
+      Action = ExamineDeposit
     end
     object ToolButton6: TToolButton
       Left = 213
@@ -701,7 +701,7 @@ object Form1: TForm1
         Caption = '-'
       end
       object MenuItem30: TMenuItem
-        Action = Examine
+        Action = ExamineDeposit
       end
     end
     object MenuItem5: TMenuItem
@@ -947,11 +947,11 @@ object Form1: TForm1
       Caption = 'Set memory #&2...'
       OnExecute = SetMemory2Execute
     end
-    object Examine: TAction
+    object ExamineDeposit: TAction
       Caption = '&Examine/Deposit..'
       Hint = 'Memory content handling'
       ImageIndex = 5
-      OnExecute = ExamineExecute
+      OnExecute = ExamineDepositExecute
       ShortCut = 16461
     end
   end

@@ -15,12 +15,13 @@ unit frmexdepmemory;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   core_cpu;
 type
   { TForm5 }
   TForm5 = class(TForm)
     Bevel1: TBevel;
+    Bevel2: TBevel;
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
@@ -28,30 +29,25 @@ type
     Button5: TButton;
     Edit1: TEdit;
     Edit2: TEdit;
-    GroupBox1: TGroupBox;
     Label1: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
     RadioGroup1: TRadioGroup;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
     procedure Edit1EditingDone(Sender: TObject);
     procedure Edit2EditingDone(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FEndianness: TEndianness;                     // Bit order (enLittle, enBig)
-    FMemSize: integer;                                // Size of emulated memory
+    FMemSize: Integer;                                // Size of emulated memory
     function RemoveSpace(AString: string): string;
-//    function Mirror(AString: string): string;
     function FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
     procedure SetFArchitecture(AArchitecture: TArchitecture);
-    procedure SetFEndianness(AEndianness: TEndianness);
   public
     property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
-    property Endianness: TEndianness read FEndianness write SetFEndianness;
     property MemSize: integer read FMemSize write FMemSize;
   end;
 var
@@ -67,7 +63,7 @@ resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Only hexadecimal values can be entered for address value!';
   MSG03 = 'Only hexadecimal values can be entered for data value!';
-  MSG04 = 'Memory address too high! (> %s Byte)';
+  MSG04 = 'Memory address too high! (> %s)';
 
 // ---- PRIVATE METHODS ----
 
@@ -83,8 +79,8 @@ end;
 // FORMAT HEXADECIMAL VALUE
 function TForm5.FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
 var
-  b: Byte;
-  s: string;
+  b:     Byte;
+  s:     string;
   Valid: Boolean;
 begin
   //
@@ -118,12 +114,6 @@ begin
   RadioGroup1.Enabled := (FArchitecture = arHarvard);
 end;
 
-// SET FENDIANNES FIELD
-procedure TForm5.SetFEndianness(AEndianness: TEndianness);
-begin
-  FEndianness := AEndianness;
-end;
-
 // ---- EVENT HANDLER METHODS ----
 
 // ZEROIZE ADDRESS VALUE
@@ -131,6 +121,7 @@ procedure TForm5.Button1Click(Sender: TObject);
 var
   s: string;
 begin
+  s := '';
   FormatHexValue('0', 6, s);
   Edit1.Text := s;
 end;
@@ -140,29 +131,61 @@ procedure TForm5.Button2Click(Sender: TObject);
 var
   s: string;
 begin
+  s := '';
   FormatHexValue('0', 16, s);
   Edit2.Text := s;
 end;
 
 // GET DATA FROM SPECIFIED MEMORY AND ADDRESS
 procedure TForm5.Button3Click(Sender: TObject);
+var
+  PrevText, NewText: string;
+  Data:              QWord;
+  Address:           DWord;
+  MaxAddress:        Integer;
 begin
+  // set highest address
+  MaxAddress := FMemSize - 1;
+  // validate address
+  PrevText := Edit1.Text;
+  NewText := '';
+  if not FormatHexValue(Edit1.Text, 6, NewText) then
+  begin
+    ShowMessage(MSG01 + MSG02);
+    Edit1.Text := PrevText;
+    Exit;
+  end else
+  begin
+    Edit1.Text := NewText;
+    // convert and store strings
+    Address := StrToDWord('$' + RemoveSpace(Edit1.Text));
+    if Address > MaxAddress then
+    begin
+      ShowMessage(MSG01 + Format(MSG04, [MaxAddress.ToString]));
+      Exit;
+    end;
+    if RadioGroup1.Enabled
+      then Data := Form1.GetMemoryCell(RadioGroup1.ItemIndex, Address)
+      else Data := Form1.GetMemoryCell(0, Address);
+    if FormatHexValue(IntToHex(Data, 16), 16, NewText)
+      then Edit2.Text := NewText
+      else Button2Click(Sender);
+  end;
 end;
 
 // SET DATA TO SPECIFIED MEMORY AND ADDRESS
 procedure TForm5.Button4Click(Sender: TObject);
 var
   PrevText, NewText: string;
-  Data: QWord;
-  Address: DWord;
-  MaxAddress: Integer;
+  Data:              QWord;
+  Address:           DWord;
+  MaxAddress:        Integer;
 begin
   // set highest address
-  if RadioGroup1.Enabled
-    then MaxAddress := FMemSize - 1
-    else MaxAddress := 2 * FMemSize - 1;
+  MaxAddress := FMemSize - 1;
   // validate address
   PrevText := Edit1.Text;
+  NewText := '';
   if not FormatHexValue(Edit1.Text, 6, NewText) then
   begin
     ShowMessage(MSG01 + MSG02);
@@ -181,7 +204,7 @@ begin
     end else
     begin
       Edit2.Text := NewText;
-      // convert and storestrings
+      // convert and store strings
       Address := StrToDWord('$' + RemoveSpace(Edit1.Text));
       Data := StrToQWord('$' + RemoveSpace(Edit2.Text));
       if Address > MaxAddress then
@@ -196,12 +219,18 @@ begin
   end;
 end;
 
+procedure TForm5.Button5Click(Sender: TObject);
+begin
+  Close;
+end;
+
 // VALIDATE ADDRESS VALUE
 procedure TForm5.Edit1EditingDone(Sender: TObject);
 var
   PrevText, NewText: string;
 begin
   PrevText := Edit1.Text;
+  NewText := '';
   if FormatHexValue(Edit1.Text, 6, NewText)
   then Edit1.Text := NewText else
   begin
@@ -216,12 +245,20 @@ var
   PrevText, NewText: string;
 begin
   PrevText := Edit2.Text;
+  NewText := '';
   if FormatHexValue(Edit2.Text, 16, NewText)
   then Edit2.Text := NewText else
   begin
     ShowMessage(MSG01 + MSG03);
     Edit2.Text := PrevText;
   end;
+end;
+
+// ONCREATE
+procedure TForm5.FormCreate(Sender: TObject);
+begin
+  SetFArchitecture(arNeumann);
+  FMemSize := 1024;
 end;
 
 end.

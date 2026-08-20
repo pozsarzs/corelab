@@ -18,8 +18,10 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_cpu,
-  frmabout, frmrunlogger, ucommon;
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
+  frmexdepmemory, frmrunlogger, ucommon;
+const
+  MEM_SIZE = 1024;
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
@@ -41,7 +43,7 @@ type
     ActionList1:           TActionList;
     CHMHelpDatabase1:      TCHMHelpDatabase;
     DirectoryEdit1:        TDirectoryEdit;
-    Examine:               TAction;
+    ExamineDeposit:        TAction;
     Help:                  TAction;
     ImageList1:            TImageList;
     LHelpConnector1:       TLHelpConnector;
@@ -121,7 +123,7 @@ type
     ValueListEditor2:      TValueListEditor;
     procedure AboutExecute(Sender: TObject);
     procedure DepositExecute(Sender: TObject);
-    procedure ExamineExecute(Sender: TObject);
+    procedure ExamineDepositExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure HelpExecute(Sender: TObject);
@@ -161,7 +163,9 @@ type
     FSystemLanguage:  string;
     FUserDirectory:   string;
     // emulated memory
-    FMemory:          array[0..1, 0..1023] of QWord;
+    // - Bank #0: Neumann common memory or Harvard code memory
+    // - Bank #1: Harvard data memory
+    FMemory:          array[0..1, 0..MEM_SIZE - 1] of QWord;
     procedure ImpExpProperties(Direction: TOpDirection);
     procedure RefreshProperties(Direction: TOpDirection);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
@@ -360,7 +364,6 @@ end;
 // SET DATA TO A CELL OF THE EMULATED MEMORY
 procedure TForm1.SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: QWord);
 begin
-  // figyelj az architectúrára!!!
   FMemory[ABank, AAddress] := AValue;
 end;
 
@@ -558,7 +561,7 @@ begin
       RefreshProperties(opVar2List);
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
-      Examine.Enabled := True;
+      ExamineDeposit.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(FLoadCounter);
@@ -582,7 +585,7 @@ begin
       LibHandle := NilHandle;
       ValueListEditor1.Enabled := False;
       ValueListEditor2.Enabled := False;
-      Examine.Enabled := False;
+      ExamineDeposit.Enabled := False;
     end;
   end;
 end;
@@ -608,27 +611,11 @@ begin
   Application.Terminate;
 end;
 
-// READ A BYTE
-procedure TForm1.ExamineExecute(Sender: TObject);
-var
-  InAddr: DWord;
-  InData: Byte;
+// EXAMINE/DEPOSIT
+procedure TForm1.ExamineDepositExecute(Sender: TObject);
 begin
-{  InData := 0;
-  InAddr := 0;
-  if TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], InAddr) then
-  begin
-    if Assigned(CurrentProcessor) then
-    begin
-      InData := CurrentProcessor.ReadProcessor(InAddr);
-      ValueListEditor2.Cells[1, 2] := IntToHex(InData, 2);
-      StatusBar1.Panels[2].Text := Format(MSG13, [IntToHex(InData, 1), IntToHex(InAddr, 2)]);
-      // out of address range
-      if InAddr > CurrentProcessor.AddressRangeSize then
-        StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (' + MSG16 + ')';
-      Timer1.Enabled := True;
-    end;
-  end;}
+  // állítsd be előtte!
+  Form5.ShowModal;
 end;
 
 // WRITE A BYTE
@@ -795,7 +782,7 @@ begin
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
   LoadChangePlugin.Enabled := False;
-  Examine.Enabled := False;
+  ExamineDeposit.Enabled := False;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;

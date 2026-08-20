@@ -16,7 +16,7 @@ program clprocessor;
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
   lhelpcontrolpkg, crt, frmabout, frmmain, frmsetmemory, frmrunlogger,
-frmexdepmemory;
+  frmexdepmemory;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';

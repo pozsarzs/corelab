@@ -38,7 +38,6 @@ type
   end;
   // Event callback type
   TCPUEventHandler = procedure(Sender: TObject; Event: TCPUEvent) of object;
-  // Generic CPU bus interface
   // Version info
   TSemanticVersion = record
     Major: Integer;
@@ -48,6 +47,13 @@ type
   TSemanticVersionHelper = type helper for TSemanticVersion
     function ToString: string;
     function Compare(AOther: TSemanticVersion): Integer;
+  end;
+  // Last executed instruction record for RunLogger
+  TLogRec = record
+    InstCount: Integer;
+    Address:   string[31];
+    OpCode:    string[31];
+    Mnemonic:  string[127];
   end;
   // Abstract base CPU class
   TCPU = class
@@ -92,7 +98,7 @@ type
     procedure Run; virtual;
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
-    function  GetCurrentInstruction: PChar; virtual; abstract;
+    function  GetCurrentInstruction: TLogRec; virtual; abstract;
     procedure IRQ; virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;

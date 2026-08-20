@@ -41,6 +41,6 @@
 {"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"},
 {"hash":27439310,"name":"tform1.setmemory1.caption","sourcebytes":[83,101,116,32,109,101,109,111,114,121,32,35,38,49,46,46,46],"value":"Set memory #&1..."},
 {"hash":27459790,"name":"tform1.setmemory2.caption","sourcebytes":[83,101,116,32,109,101,109,111,114,121,32,35,38,50,46,46,46],"value":"Set memory #&2..."},
-{"hash":159831550,"name":"tform1.examine.caption","sourcebytes":[38,69,120,97,109,105,110,101,47,68,101,112,111,115,105,116,46,46],"value":"&Examine/Deposit.."},
-{"hash":86715543,"name":"tform1.examine.hint","sourcebytes":[77,101,109,111,114,121,32,99,111,110,116,101,110,116,32,104,97,110,100,108,105,110,103],"value":"Memory content handling"}
+{"hash":159831550,"name":"tform1.examinedeposit.caption","sourcebytes":[38,69,120,97,109,105,110,101,47,68,101,112,111,115,105,116,46,46],"value":"&Examine/Deposit.."},
+{"hash":86715543,"name":"tform1.examinedeposit.hint","sourcebytes":[77,101,109,111,114,121,32,99,111,110,116,101,110,116,32,104,97,110,100,108,105,110,103],"value":"Memory content handling"}
 ]}

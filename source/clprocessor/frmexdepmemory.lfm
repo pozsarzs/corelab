@@ -1,12 +1,13 @@
 object Form5: TForm5
   Left = 678
-  Height = 217
+  Height = 206
   Top = 327
-  Width = 368
+  Width = 347
+  ActiveControl = Edit1
   BorderStyle = bsDialog
   Caption = 'Examine/deposit'
-  ClientHeight = 217
-  ClientWidth = 368
+  ClientHeight = 206
+  ClientWidth = 347
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -364,7 +365,8 @@ object Form5: TForm5
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
-  Position = poDefault
+  OnCreate = FormCreate
+  Position = poMainFormCenter
   LCLVersion = '2.2.6.0'
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
@@ -373,8 +375,8 @@ object Form5: TForm5
     AnchorSideBottom.Control = Button5
     Left = 8
     Height = 4
-    Top = 169
-    Width = 352
+    Top = 158
+    Width = 331
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
@@ -402,21 +404,22 @@ object Form5: TForm5
   end
   object Edit2: TEdit
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Label2
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Button2
+    AnchorSideBottom.Control = Bevel1
     Left = 8
     Height = 34
-    Top = 92
+    Top = 116
     Width = 206
     Alignment = taRightJustify
-    Anchors = [akTop, akLeft, akRight]
+    Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Top = 4
     BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     MaxLength = 255
     OnEditingDone = Edit2EditingDone
-    TabOrder = 2
+    TabOrder = 3
     Text = '00 00 00 00 00 00 00 00'
   end
   object Button1: TButton
@@ -446,7 +449,7 @@ object Form5: TForm5
     Left = 222
     Height = 34
     Hint = 'Clear data value'
-    Top = 92
+    Top = 116
     Width = 34
     Anchors = [akTop, akRight, akBottom]
     BorderSpacing.Right = 8
@@ -454,50 +457,53 @@ object Form5: TForm5
     OnClick = Button2Click
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 3
+    TabOrder = 4
   end
   object Button3: TButton
-    AnchorSideLeft.Control = Owner
-    AnchorSideBottom.Control = Bevel1
-    Left = 8
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button4
+    Left = 264
     Height = 28
-    Top = 133
+    Top = 86
     Width = 75
-    Anchors = [akLeft, akBottom]
-    BorderSpacing.Left = 8
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = '&Examine'
     OnClick = Button3Click
-    TabOrder = 4
+    TabOrder = 5
   end
   object Button4: TButton
-    AnchorSideRight.Control = RadioGroup1
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
-    Left = 181
+    Left = 264
     Height = 28
-    Top = 133
+    Top = 122
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = '&Deposit'
     OnClick = Button4Click
-    TabOrder = 5
+    TabOrder = 6
   end
   object Button5: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 285
+    Left = 264
     Height = 28
-    Top = 181
+    Top = 170
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Cancel = True
     Caption = '&Close'
+    OnClick = Button5Click
     TabOrder = 7
   end
   object Label1: TLabel
@@ -514,29 +520,31 @@ object Form5: TForm5
   end
   object Label2: TLabel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Edit1
     AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Edit2
     Left = 8
     Height = 17
-    Top = 71
+    Top = 91
     Width = 31
+    Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 8
-    BorderSpacing.Top = 8
+    BorderSpacing.Bottom = 8
     Caption = 'Data'
     ParentColor = False
   end
   object RadioGroup1: TRadioGroup
-    AnchorSideTop.Control = Label2
+    AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 264
-    Height = 90
+    Height = 72
     Hint = 'Select memory type of the Harvard architecture'
-    Top = 71
-    Width = 96
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Top = 8
+    Width = 75
+    Anchors = [akTop, akLeft, akRight]
     AutoFill = True
+    BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = 'Harvard'
@@ -547,59 +555,32 @@ object Form5: TForm5
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 72
-    ClientWidth = 94
+    ClientHeight = 54
+    ClientWidth = 73
     Enabled = False
     ItemIndex = 0
     Items.Strings = (
-      'Data'
       'Code'
+      'Data'
     )
+    ParentBidiMode = False
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 6
+    TabOrder = 2
   end
-  object GroupBox1: TGroupBox
-    AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Button1
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Edit1
-    AnchorSideBottom.Side = asrBottom
-    Left = 264
-    Height = 55
-    Top = 8
-    Width = 96
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Top = 8
-    BorderSpacing.Right = 8
-    ClientHeight = 53
-    ClientWidth = 94
-    TabOrder = 8
-    object Label3: TLabel
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideTop.Control = GroupBox1
-      Left = 8
-      Height = 17
-      Top = 6
-      Width = 79
-      BorderSpacing.Top = 6
-      Caption = '2048 B RAM'
-      ParentColor = False
-    end
-    object Label4: TLabel
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideLeft.Side = asrCenter
-      AnchorSideBottom.Control = GroupBox1
-      AnchorSideBottom.Side = asrBottom
-      Left = 13
-      Height = 17
-      Top = 30
-      Width = 69
-      Anchors = [akLeft, akBottom]
-      BorderSpacing.Bottom = 6
-      Caption = 'Big endian'
-      ParentColor = False
-    end
+    AnchorSideBottom.Control = Button5
+    Left = 8
+    Height = 4
+    Top = 80
+    Width = 248
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Bottom = 8
+    Shape = bsTopLine
   end
 end
