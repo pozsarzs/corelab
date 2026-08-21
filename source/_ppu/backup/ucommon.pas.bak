@@ -30,8 +30,6 @@ var
 function GetLang: string;
 function GetExeDir: string;
 function GetUserDir: string;
-function RemoveSpace(AString: string): string;
-function FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
 
 implementation
 
@@ -105,47 +103,6 @@ begin
       {$ENDIF}
     {$ENDIF}
   {$ENDIF}
-end;
-
-// REMOVE ALL SPACE
-function RemoveSpace(AString: string): string;
-var
-  b: Byte;
-begin
-  Result := '';
-  for b := 1 to Length(AString) do
-    if (AString[b] <> #32) and (AString[b] <> #9) then Result := Result + UpCase(AString[b]);
-end;
-
-// FORMAT HEXADECIMAL VALUE
-function FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
-var
-  b:     Byte;
-  s:     string;
-  Valid: Boolean;
-begin
-  //
-  if Odd(ADigit) then Inc(ADigit);
-  // remove space and tabulator
-  s := '';
-  Valid := true;
-  s := RemoveSpace(AValue);
-  // check bad characters
-  for b := 1 to Length(s) do
-    if not (s[b] in ['0'..'9', 'A'..'F']) then Valid := false;
-  if Valid then
-  begin
-    // set length
-    if Length(s) > ADigit
-      then Delete(s, 1, Length(s) - ADigit)
-      else for b := Length(s) to ADigit - 1 do s := '0' + s;
-    AResult := '';
-    for b := 1 to ADigit do
-      if (not Odd(b)) and (b < ADigit)
-        then AResult := AResult + s[b] + ' '
-        else AResult := AResult + s[b];
-  end;
-  Result := Valid;
 end;
 
 end.

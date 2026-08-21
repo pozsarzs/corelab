@@ -15,7 +15,7 @@ unit frmrunlogger;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, StrUtils, ExtCtrls,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, EditBtn, Grids, Types;
 const
   MAX_LOG = 1024;
@@ -41,7 +41,6 @@ type
     procedure Button3Click(Sender: TObject);
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
-    procedure EditButton1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -321,19 +320,14 @@ begin
   end;
 end;
 
-procedure TForm4.EditButton1Change(Sender: TObject);
-begin
-
-end;
-
 // CREATE FORM
 procedure TForm4.FormCreate(Sender: TObject);
 begin
   // default colors
   FInstCountColor := $004E8B60;
   FAddressColor := $00AADCDC;
-  FMnemonicColor := $00D4D4D4;
   FOpCodeColor := $00D69C56;
+  FMnemonicColor := $00D4D4D4;
   FLineSelectorColor := $00473523;
   FBGColorOddLines := $001E1E1E;
   FBGColorEvenLines := $00262525;

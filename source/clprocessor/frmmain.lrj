@@ -12,7 +12,6 @@
 {"hash":127026207,"name":"tform1.menuitem18.caption","sourcebytes":[126,47,46,108,111,99,97,108,47,108,105,98,47,99,111,114,101,108,97,98,47],"value":"~/.local/lib/corelab/"},
 {"hash":9681055,"name":"tform1.menuitem15.caption","sourcebytes":[47,117,115,114,47,108,105,98,47,99,111,114,101,108,97,98,47],"value":"/usr/lib/corelab/"},
 {"hash":42471215,"name":"tform1.menuitem17.caption","sourcebytes":[47,117,115,114,47,108,111,99,97,108,47,108,105,98,47,99,111,114,101,108,97,98,47],"value":"/usr/local/lib/corelab/"},
-{"hash":2871239,"name":"tform1.menuitem7.caption","sourcebytes":[38,86,105,101,119],"value":"&View"},
 {"hash":94248946,"name":"tform1.menuitem4.caption","sourcebytes":[38,80,114,111,99,101,115,115,111,114],"value":"&Processor"},
 {"hash":85580963,"name":"tform1.menuitem21.caption","sourcebytes":[38,76,111,97,100,32,115,116,97,116,117,115],"value":"&Load status"},
 {"hash":85133235,"name":"tform1.menuitem24.caption","sourcebytes":[38,83,97,118,101,32,115,116,97,116,117,115],"value":"&Save status"},
@@ -28,6 +27,7 @@
 {"hash":20607422,"name":"tform1.restartapplication.hint","sourcebytes":[82,101,115,116,97,114,116,32,97,112,112,108,105,99,97,116,105,111,110],"value":"Restart application"},
 {"hash":4710148,"name":"tform1.quit.caption","sourcebytes":[69,38,120,105,116],"value":"E&xit"},
 {"hash":9850078,"name":"tform1.quit.hint","sourcebytes":[69,120,105,116,32,102,114,111,109,32,97,112,112,108,105,99,97,116,105,111,110],"value":"Exit from application"},
+{"hash":76892738,"name":"tform1.showcpuregviewer.caption","sourcebytes":[67,80,85,82,101,38,103,86,105,101,119,101,114],"value":"CPURe&gViewer"},
 {"hash":138445918,"name":"tform1.showrunlogger.caption","sourcebytes":[82,117,110,76,111,103,103,101,114,46,46,46],"value":"RunLogger..."},
 {"hash":5818820,"name":"tform1.reset.caption","sourcebytes":[82,101,115,101,116],"value":"Reset"},
 {"hash":21273,"name":"tform1.nmi.caption","sourcebytes":[78,77,73],"value":"NMI"},
@@ -37,10 +37,11 @@
 {"hash":371552,"name":"tform1.stop.caption","sourcebytes":[83,116,111,112],"value":"Stop"},
 {"hash":133815459,"name":"tform1.loadstatus.caption","sourcebytes":[76,111,97,100,32,115,116,97,116,117,115],"value":"Load status"},
 {"hash":133367731,"name":"tform1.savestatus.caption","sourcebytes":[83,97,118,101,32,115,116,97,116,117,115],"value":"Save status"},
-{"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
-{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"},
-{"hash":27439310,"name":"tform1.setmemory1.caption","sourcebytes":[83,101,116,32,109,101,109,111,114,121,32,35,38,49,46,46,46],"value":"Set memory #&1..."},
-{"hash":27459790,"name":"tform1.setmemory2.caption","sourcebytes":[83,101,116,32,109,101,109,111,114,121,32,35,38,50,46,46,46],"value":"Set memory #&2..."},
+{"hash":103853534,"name":"tform1.showhexviewer.caption","sourcebytes":[38,72,101,120,86,105,101,119,101,114,46,46,46],"value":"&HexViewer..."},
+{"hash":90932302,"name":"tform1.loadmemorycontent.caption","sourcebytes":[38,76,111,97,100,32,109,101,109,111,114,121,32,99,111,110,116,101,110,116,46,46,46],"value":"&Load memory content..."},
+{"hash":74181630,"name":"tform1.savememorycontent.caption","sourcebytes":[38,83,97,118,101,32,109,101,109,111,114,121,32,99,111,110,116,101,110,116,46,46,46],"value":"&Save memory content..."},
 {"hash":159831550,"name":"tform1.examinedeposit.caption","sourcebytes":[38,69,120,97,109,105,110,101,47,68,101,112,111,115,105,116,46,46],"value":"&Examine/Deposit.."},
-{"hash":86715543,"name":"tform1.examinedeposit.hint","sourcebytes":[77,101,109,111,114,121,32,99,111,110,116,101,110,116,32,104,97,110,100,108,105,110,103],"value":"Memory content handling"}
+{"hash":86715543,"name":"tform1.examinedeposit.hint","sourcebytes":[77,101,109,111,114,121,32,99,111,110,116,101,110,116,32,104,97,110,100,108,105,110,103],"value":"Memory content handling"},
+{"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
+{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"}
 ]}

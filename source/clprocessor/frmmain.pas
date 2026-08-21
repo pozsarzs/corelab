@@ -19,7 +19,7 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
-  frmexdepmemory, frmrunlogger, ucommon;
+  frmhexviewer, frmrunlogger, frmexdepmemory, frmcpuregviewer, ucommon;
 const
   MEM_SIZE = 1024;
 type
@@ -40,6 +40,8 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
+    MenuItem7: TMenuItem;
+    ShowCPURegViewer: TAction;
     ActionList1:           TActionList;
     CHMHelpDatabase1:      TCHMHelpDatabase;
     DirectoryEdit1:        TDirectoryEdit;
@@ -48,6 +50,7 @@ type
     ImageList1:            TImageList;
     LHelpConnector1:       TLHelpConnector;
     LoadChangePlugin:      TAction;
+    LoadMemoryContent:     TAction;
     LoadStatus:            TAction;
     MainMenu1:             TMainMenu;
     MenuItem1:             TMenuItem;
@@ -74,12 +77,12 @@ type
     MenuItem29:            TMenuItem;
     MenuItem3:             TMenuItem;
     MenuItem30:            TMenuItem;
+    MenuItem32: TMenuItem;
+    MenuItem33: TMenuItem;
     MenuItem4:             TMenuItem;
     MenuItem5:             TMenuItem;
     MenuItem6:             TMenuItem;
-    MenuItem7:             TMenuItem;
     MenuItem8:             TMenuItem;
-    MenuItem9:             TMenuItem;
     NMI:                   TAction;
     OpenDialog1:           TOpenDialog;
     Panel1:                TPanel;
@@ -90,6 +93,7 @@ type
     RestartApplication:    TAction;
     Run:                   TAction;
     SaveDialog1:           TSaveDialog;
+    SaveMemoryContent:     TAction;
     SaveStatus:            TAction;
     SelectPluginDirectory: TAction;
     Separator1:            TMenuItem;
@@ -98,9 +102,10 @@ type
     Separator4:            TMenuItem;
     Separator5:            TMenuItem;
     Separator6:            TMenuItem;
-    SetMemory1:            TAction;
-    SetMemory2:            TAction;
+    Separator7: TMenuItem;
+    Separator8: TMenuItem;
     ShellListView1:        TShellListView;
+    ShowHexViewer:         TAction;
     ShowRunLogger:         TAction;
     Splitter1:             TSplitter;
     StatusBar1:            TStatusBar;
@@ -134,14 +139,22 @@ type
     procedure MenuItem16Click(Sender: TObject);
     procedure MenuItem17Click(Sender: TObject);
     procedure MenuItem18Click(Sender: TObject);
+    procedure NMIExecute(Sender: TObject);
+    procedure PauseExecute(Sender: TObject);
     procedure QuitExecute(Sender: TObject);
     procedure RefreshPluginListExecute(Sender: TObject);
+    procedure ResetExecute(Sender: TObject);
     procedure RestartApplicationExecute(Sender: TObject);
+    procedure RunExecute(Sender: TObject);
     procedure SaveStatusExecute(Sender: TObject);
     procedure SelectPluginDirectoryExecute(Sender: TObject);
-    procedure SetMemory1Execute(Sender: TObject);
-    procedure SetMemory2Execute(Sender: TObject);
+    procedure LoadMemoryContentExecute(Sender: TObject);
+    procedure SaveMemoryContentExecute(Sender: TObject);
+    procedure ShowCPURegViewerExecute(Sender: TObject);
+    procedure ShowHexViewerExecute(Sender: TObject);
     procedure ShowRunLoggerExecute(Sender: TObject);
+    procedure StepExecute(Sender: TObject);
+    procedure StopExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
@@ -481,11 +494,6 @@ begin
   DirectoryEdit1.RunDialog;
 end;
 
-procedure TForm1.ShowRunLoggerExecute(Sender: TObject);
-begin
-  Form4.Show;
-end;
-
 // REFRESH PLUGIN LIST
 procedure TForm1.RefreshPluginListExecute(Sender: TObject);
 begin
@@ -561,7 +569,6 @@ begin
       RefreshProperties(opVar2List);
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
-      ExamineDeposit.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(FLoadCounter);
@@ -585,7 +592,6 @@ begin
       LibHandle := NilHandle;
       ValueListEditor1.Enabled := False;
       ValueListEditor2.Enabled := False;
-      ExamineDeposit.Enabled := False;
     end;
   end;
 end;
@@ -611,41 +617,46 @@ begin
   Application.Terminate;
 end;
 
-// EXAMINE/DEPOSIT
-procedure TForm1.ExamineDepositExecute(Sender: TObject);
+// SHOW RUNLOGGER WINDOW
+procedure TForm1.ShowRunLoggerExecute(Sender: TObject);
 begin
-  // állítsd be előtte!
-  Form5.ShowModal;
+  Form4.Show;
 end;
 
-// WRITE A BYTE
-procedure TForm1.DepositExecute(Sender: TObject);
-var
-  OutAddr: DWord;
-  OutData: Integer;
-  OutRange, ReadOnly: Boolean;
+// RESET PROCESSOR
+procedure TForm1.ResetExecute(Sender: TObject);
 begin
-{  OutData := 0;
-  OutAddr := 0;
-  if (TryStrToDWord('$' + ValueListEditor2.Cells[1, 1], OutAddr)) and
-     (TryStrToInt('$' + ValueListEditor2.Cells[1, 2], OutData)) then
-  begin
-    if Assigned(CurrentProcessor) then
-    begin
-      CurrentProcessor.WriteProcessor(OutAddr, OutData);
-      StatusBar1.Panels.Items[2].Text := Format(MSG14, [IntToHex(OutData, 1), IntToHex(OutAddr, 2)]);
-      OutRange := OutAddr >= CurrentProcessor.AddressRangeSize;
-      ReadOnly := CurrentProcessor.ProcessorMode = mmROM;
-      // out of address range
-      if OutRange or ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' (';
-      if OutRange then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + MSG16;
-      if OutRange then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ' ';
-      // write ROM
-      if ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + MSG27;
-      if OutRange or ReadOnly then StatusBar1.Panels[2].Text := StatusBar1.Panels[2].Text + ')';
-      Timer1.Enabled := True;
-    end;
-  end;}
+
+end;
+
+// REQUEST NMI
+procedure TForm1.NMIExecute(Sender: TObject);
+begin
+
+end;
+
+// RUN PROGRAM BY STEP
+procedure TForm1.StepExecute(Sender: TObject);
+begin
+
+end;
+
+// RUN PROGRAM
+procedure TForm1.RunExecute(Sender: TObject);
+begin
+
+end;
+
+// PAUSE PROGRAM
+procedure TForm1.PauseExecute(Sender: TObject);
+begin
+
+end;
+
+// STOP PROGRAM
+procedure TForm1.StopExecute(Sender: TObject);
+begin
+
 end;
 
 // LOAD PLUGIN STATUS
@@ -682,16 +693,6 @@ begin
   end;}
 end;
 
-procedure TForm1.SetMemory1Execute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.SetMemory2Execute(Sender: TObject);
-begin
-
-end;
-
 //SAVE PLUGIN STATUS
 procedure TForm1.SaveStatusExecute(Sender: TObject);
 {var
@@ -721,6 +722,45 @@ begin
   end;}
 end;
 
+// SHOW HEXVIEWER WINDOW
+procedure TForm1.ShowHexViewerExecute(Sender: TObject);
+begin
+  with Form3 do
+  begin
+    MemSize := MEM_SIZE;
+    Show;
+  end;
+end;
+
+// LOAD MEMORY CONTENT
+procedure TForm1.LoadMemoryContentExecute(Sender: TObject);
+begin
+
+end;
+
+// SAVE MEMORY CONTENT
+procedure TForm1.SaveMemoryContentExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.ShowCPURegViewerExecute(Sender: TObject);
+begin
+  // beállítások ide
+  Form6.Show;
+end;
+
+// EXAMINE/DEPOSIT
+procedure TForm1.ExamineDepositExecute(Sender: TObject);
+begin
+  with Form5 do
+  begin
+    // Architecture :=
+    MemSize := MEM_SIZE;
+    ShowModal;
+  end;
+end;
+
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
@@ -731,6 +771,11 @@ end;
 procedure TForm1.AboutExecute(Sender: TObject);
 begin
   Form2.ShowModal;
+end;
+
+procedure TForm1.DepositExecute(Sender: TObject);
+begin
+
 end;
 
 // ONCREATE EVENT
@@ -782,7 +827,6 @@ begin
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
   LoadChangePlugin.Enabled := False;
-  ExamineDeposit.Enabled := False;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;

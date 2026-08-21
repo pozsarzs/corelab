@@ -651,14 +651,18 @@ object Form1: TForm1
         Action = Quit
       end
     end
-    object MenuItem7: TMenuItem
-      Caption = '&View'
-      object MenuItem9: TMenuItem
-        Action = ShowRunLogger
-      end
-    end
     object MenuItem4: TMenuItem
       Caption = '&Processor'
+      object MenuItem33: TMenuItem
+        Action = ShowRunLogger
+      end
+      object MenuItem7: TMenuItem
+        Action = ShowCPURegViewer
+        ShortCut = 16455
+      end
+      object Separator7: TMenuItem
+        Caption = '-'
+      end
       object MenuItem26: TMenuItem
         Action = Reset
       end
@@ -691,11 +695,18 @@ object Form1: TForm1
     end
     object MenuItem27: TMenuItem
       Caption = '&Memory'
+      object MenuItem32: TMenuItem
+        Action = ShowHexViewer
+        ShortCut = 16456
+      end
+      object Separator8: TMenuItem
+        Caption = '-'
+      end
       object MenuItem28: TMenuItem
-        Action = SetMemory1
+        Action = LoadMemoryContent
       end
       object MenuItem29: TMenuItem
-        Action = SetMemory2
+        Action = SaveMemoryContent
       end
       object Separator5: TMenuItem
         Caption = '-'
@@ -898,6 +909,10 @@ object Form1: TForm1
       Hint = 'Exit from application'
       OnExecute = QuitExecute
     end
+    object ShowCPURegViewer: TAction
+      Caption = 'CPURe&gViewer'
+      OnExecute = ShowCPURegViewerExecute
+    end
     object ShowRunLogger: TAction
       Caption = 'RunLogger...'
       ImageIndex = 9
@@ -906,21 +921,27 @@ object Form1: TForm1
     end
     object Reset: TAction
       Caption = 'Reset'
+      OnExecute = ResetExecute
     end
     object NMI: TAction
       Caption = 'NMI'
+      OnExecute = NMIExecute
     end
     object Step: TAction
       Caption = 'Step'
+      OnExecute = StepExecute
     end
     object Run: TAction
       Caption = 'Run'
+      OnExecute = RunExecute
     end
     object Pause: TAction
       Caption = 'Pause'
+      OnExecute = PauseExecute
     end
     object Stop: TAction
       Caption = 'Stop'
+      OnExecute = StopExecute
     end
     object LoadStatus: TAction
       Caption = 'Load status'
@@ -930,6 +951,26 @@ object Form1: TForm1
       Caption = 'Save status'
       OnExecute = SaveStatusExecute
     end
+    object ShowHexViewer: TAction
+      Caption = '&HexViewer...'
+      OnExecute = ShowHexViewerExecute
+      ShortCut = 32840
+    end
+    object LoadMemoryContent: TAction
+      Caption = '&Load memory content...'
+      OnExecute = LoadMemoryContentExecute
+    end
+    object SaveMemoryContent: TAction
+      Caption = '&Save memory content...'
+      OnExecute = SaveMemoryContentExecute
+    end
+    object ExamineDeposit: TAction
+      Caption = '&Examine/Deposit..'
+      Hint = 'Memory content handling'
+      ImageIndex = 5
+      OnExecute = ExamineDepositExecute
+      ShortCut = 16461
+    end
     object Help: TAction
       Caption = '&Help'
       ImageIndex = 7
@@ -938,21 +979,6 @@ object Form1: TForm1
     object About: TAction
       Caption = '&About'
       OnExecute = AboutExecute
-    end
-    object SetMemory1: TAction
-      Caption = 'Set memory #&1...'
-      OnExecute = SetMemory1Execute
-    end
-    object SetMemory2: TAction
-      Caption = 'Set memory #&2...'
-      OnExecute = SetMemory2Execute
-    end
-    object ExamineDeposit: TAction
-      Caption = '&Examine/Deposit..'
-      Hint = 'Memory content handling'
-      ImageIndex = 5
-      OnExecute = ExamineDepositExecute
-      ShortCut = 16461
     end
   end
   object CHMHelpDatabase1: TCHMHelpDatabase

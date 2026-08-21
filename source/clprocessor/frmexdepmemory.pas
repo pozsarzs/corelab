@@ -16,7 +16,7 @@ unit frmexdepmemory;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  core_cpu;
+  core_cpu, ucommon;
 type
   { TForm5 }
   TForm5 = class(TForm)
@@ -43,8 +43,6 @@ type
   private
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
     FMemSize: Integer;                                // Size of emulated memory
-    function RemoveSpace(AString: string): string;
-    function FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
     procedure SetFArchitecture(AArchitecture: TArchitecture);
   public
     property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
@@ -66,46 +64,6 @@ resourcestring
   MSG04 = 'Memory address too high! (> %s)';
 
 // ---- PRIVATE METHODS ----
-
-function TForm5.RemoveSpace(AString: string): string;
-var
-  b: Byte;
-begin
-  Result := '';
-  for b := 1 to Length(AString) do
-    if (AString[b] <> #32) and (AString[b] <> #9) then Result := Result + UpCase(AString[b]);
-end;
-
-// FORMAT HEXADECIMAL VALUE
-function TForm5.FormatHexValue(AValue: string; ADigit: Byte; var AResult: string): Boolean;
-var
-  b:     Byte;
-  s:     string;
-  Valid: Boolean;
-begin
-  //
-  if Odd(ADigit) then Inc(ADigit);
-  // remove space and tabulator
-  s := '';
-  Valid := true;
-  s := RemoveSpace(AValue);
-  // check bad characters
-  for b := 1 to Length(s) do
-    if not (s[b] in ['0'..'9', 'A'..'F']) then Valid := false;
-  if Valid then
-  begin
-    // set length
-    if Length(s) > ADigit
-      then Delete(s, 1, Length(s) - ADigit)
-      else for b := Length(s) to ADigit - 1 do s := '0' + s;
-    AResult := '';
-    for b := 1 to ADigit do
-      if (not Odd(b)) and (b < ADigit)
-        then AResult := AResult + s[b] + ' '
-        else AResult := AResult + s[b];
-  end;
-  Result := Valid;
-end;
 
 // SET FARCHITECTURE FIELD
 procedure TForm5.SetFArchitecture(AArchitecture: TArchitecture);

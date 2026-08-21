@@ -7,7 +7,7 @@
 
 include ../../Makefile.global
 
-project=`ls | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
+project=`ls | grep -v README.md | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
 
 all:
 	@mkdir -p $(outdir)/

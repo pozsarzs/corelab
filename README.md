@@ -109,6 +109,8 @@ in mind:
 
 ![CLIOPort plugin tester application](document/screenshots/clioport.png)
 
+![CLMemory plugin tester application](document/screenshots/clmemory.png)
+
 (...)
 
 ## IV. Used external libraries, programs and others

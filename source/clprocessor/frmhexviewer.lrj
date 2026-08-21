@@ -1,0 +1,7 @@
+{"version":1,"strings":[
+{"hash":231703298,"name":"tform3.caption","sourcebytes":[72,101,120,86,105,101,119,101,114],"value":"HexViewer"},
+{"hash":44709525,"name":"tform3.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
+{"hash":4640403,"name":"tform3.editbutton1.hint","sourcebytes":[83,101,97,114,99,104,32,105,110,32,108,111,103,32,114,101,99,111,114,100,115],"value":"Search in log records"},
+{"hash":128683235,"name":"tform3.drawgrid1.columns[0].title.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
+{"hash":305313,"name":"tform3.drawgrid1.columns[1].title.caption","sourcebytes":[68,97,116,97],"value":"Data"}
+]}
