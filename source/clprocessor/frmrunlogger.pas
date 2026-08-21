@@ -41,6 +41,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -318,6 +319,12 @@ begin
       Exit;
     end;
   end;
+end;
+
+// ONACTIVATE
+procedure TForm4.FormActivate(Sender: TObject);
+begin
+  Form4.Invalidate;
 end;
 
 // CREATE FORM

@@ -16,7 +16,7 @@ unit frmhexviewer;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types;
+  Buttons, EditBtn, Grids, Types, core_cpu, ucommon;
 type
   { TForm3 }
   TForm3 = class(TForm)
@@ -25,9 +25,11 @@ type
     DrawGrid1:   TDrawGrid;
     EditButton1: TEditButton;
     FindDialog1: TFindDialog;
+    RadioGroup1: TRadioGroup;
     procedure Button1Click(Sender: TObject);
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     // colors
@@ -36,6 +38,8 @@ type
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
+    // others
+    FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
     FMemSize: Integer;                                // Size of emulated memory
   protected
     procedure SetAddressColor(AColor: TColor);
@@ -43,8 +47,10 @@ type
     procedure SetLineSelectorColor(AColor: TColor);
     procedure SetBGColorEvenLines(AColor: TColor);
     procedure SetBGColorOddLines(AColor: TColor);
+    procedure SetFArchitecture(AArchitecture: TArchitecture);
     procedure SetFMemSize(AMemSize: Integer);
   public
+    property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
     property AddressColor: TColor read FAddressColor write SetAddressColor;
     property DataColor: TColor read FDataColor write SetDataColor;
     property LineSelectorColor: TColor read FLineSelectorColor write SetLineSelectorColor;
@@ -56,12 +62,11 @@ var
   Form3: TForm3;
 
 resourcestring
-  MSG01 = 'ERROR: ';
-  MSG02 = 'Address';
-  MSG03 = 'Data';
+  MSG01 = 'Address';
+  MSG02 = 'Data';
 
 implementation
-
+uses frmmain;
 {$R *.lfm}
 
 // ---- PROTECTED METHODS ----
@@ -101,6 +106,13 @@ begin
   DrawGrid1.Invalidate;
 end;
 
+// SET FARCHITECTURE FIELD
+procedure TForm3.SetFArchitecture(AArchitecture: TArchitecture);
+begin
+  FArchitecture := AArchitecture;
+  RadioGroup1.Enabled := (FArchitecture = arHarvard);
+end;
+
 // SET MEMORY SIZE
 procedure TForm3.SetFMemSize(AMemSize: Integer);
 begin
@@ -119,10 +131,21 @@ end;
 // DRAW RECORDS INTO THE GRID
 procedure TForm3.DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
 var
-//  LogRec: TLogRec;
-  Style:  TTextStyle;
+  DAddress: DWord;
+  QData:    QWord;
+  SAddress: string;
+  SData:    string;
+  Style:    TTextStyle;
 begin
-//  if aRow = 0 then Exit else LogRec := GetReadBuffer(aRow - 1);
+  SAddress := '';
+  SData := '';
+  // get data
+  if aRow = 0 then Exit else DAddress := aRow - 1;
+  if RadioGroup1.Enabled
+    then QData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, DAddress)
+    else QData := Form1.GetMemoryCell(0, DAddress);
+  FormatHexValue(IntToHex(DAddress), 6, SAddress);
+  FormatHexValue(IntToHex(QData), 16, SData);
   with DrawGrid1.Canvas do
   begin
     // background
@@ -141,41 +164,51 @@ begin
     Style.Layout := tlCenter;
     case ACol of
       0: Style.Alignment := taCenter;
-      1: Style.Alignment := taLeftJustify;
+      1: Style.Alignment := taCenter;
     end;
     TextStyle := Style;
     // write content
-{    case ACol of
-      0: TextRect(aRect, aRect.Left, aRect.Top, Format('%*.*d',[5, 5, LogRec.InstCount]));
-      1: TextRect(aRect, aRect.Left, aRect.Top, LogRec.Address);
-      2: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.OpCode);
-      3: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.Mnemonic);
+    case ACol of
+      0: TextRect(aRect, aRect.Left, aRect.Top, SAddress);
+      1: TextRect(aRect, aRect.Left, aRect.Top, SData);
     end;
-}  end;
+  end;
 end;
 
-// SEARCH IN VIEWER
+// SEARCH IN DUMP
 procedure TForm3.EditButton1ButtonClick(Sender: TObject);
 var
-  i: Integer;
   s: string;
+  DAddress: DWord;
+  QData:    QWord;
+  SAddress: string;
+  SData:    string;
 begin
-{  if (Length(EditButton1.Text) > 0) and (FRecordCount > 0) then
-  for i := DrawGrid1.Row to FRecordCount -1 do
+  if Length(EditButton1.Text) > 0 then
+  for DAddress := DrawGrid1.Row to FMemSize - 1 do
   begin
-    with ReadBuffer(i) do
-      s := LowerCase(
-             Format('%*.*d',[5, 5, InstCount]) + #9 +
-             Address + #9 +
-             OpCode + #9 +
-             Mnemonic);
+    SAddress := '';
+    SData := '';
+    // get data
+    if RadioGroup1.Enabled
+      then QData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, DAddress)
+      else QData := Form1.GetMemoryCell(0, DAddress);
+    FormatHexValue(IntToHex(DAddress), 6, SAddress);
+    FormatHexValue(IntToHex(QData), 16, SData);
+    s := lowercase(SAddress + #9 + SData);
     if Pos(LowerCase(EditButton1.Text), s) > 0 then
     begin
-      DrawGrid1.Row := i + 1;
-      DrawGrid1.TopRow:= i + 1;
+      DrawGrid1.Row := DAddress + 1;
+      DrawGrid1.TopRow:= DAddress + 1;
       Exit;
     end;
-  end;}
+  end;
+end;
+
+// ONACTIVATE
+procedure TForm3.FormActivate(Sender: TObject);
+begin
+  Form3.Invalidate;
 end;
 
 // CREATE FORM
@@ -187,6 +220,7 @@ begin
   FLineSelectorColor := $00473523;
   FBGColorOddLines := $001E1E1E;
   FBGColorEvenLines := $00262525;
+  SetFArchitecture(arNeumann);
   SetFMemSize(1024);
   with DrawGrid1 do
   begin

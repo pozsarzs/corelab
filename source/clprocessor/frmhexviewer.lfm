@@ -2,10 +2,10 @@ object Form3: TForm3
   Left = 550
   Height = 308
   Top = 226
-  Width = 552
+  Width = 339
   Caption = 'HexViewer'
   ClientHeight = 308
-  ClientWidth = 552
+  ClientWidth = 339
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -363,6 +363,7 @@ object Form3: TForm3
     2020000000000029743E00000000002020200000000000256E6100000000002C
     7565
   }
+  OnActivate = FormActivate
   OnCreate = FormCreate
   Position = poDefault
   LCLVersion = '2.2.6.0'
@@ -370,7 +371,7 @@ object Form3: TForm3
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 469
+    Left = 256
     Height = 25
     Top = 275
     Width = 75
@@ -379,7 +380,7 @@ object Form3: TForm3
     Cancel = True
     Caption = '&Close'
     OnClick = Button1Click
-    TabOrder = 0
+    TabOrder = 3
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
@@ -388,7 +389,7 @@ object Form3: TForm3
     Left = 8
     Height = 4
     Top = 263
-    Width = 536
+    Width = 323
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     Shape = bsBottomLine
@@ -396,14 +397,14 @@ object Form3: TForm3
   object EditButton1: TEditButton
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
+    AnchorSideRight.Control = RadioGroup1
     Left = 8
     Height = 34
-    Hint = 'Search in log records'
+    Hint = 'Search in dump'
     Top = 8
-    Width = 536
+    Width = 172
     Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 4
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
@@ -415,7 +416,7 @@ object Form3: TForm3
     ParentShowHint = False
     PasswordChar = #0
     ShowHint = True
-    TabOrder = 1
+    TabOrder = 0
   end
   object DrawGrid1: TDrawGrid
     AnchorSideLeft.Control = Owner
@@ -427,19 +428,18 @@ object Form3: TForm3
     Left = 8
     Height = 205
     Top = 50
-    Width = 536
+    Width = 323
     Anchors = [akTop, akLeft, akRight, akBottom]
-    AutoFillColumns = True
     BorderSpacing.Around = 8
     ColCount = 2
     Columns = <    
       item
         Title.Caption = 'Address'
-        Width = 267
+        Width = 80
       end    
       item
         Title.Caption = 'Data'
-        Width = 267
+        Width = 240
       end>
     ExtendedSelect = False
     FixedCols = 0
@@ -448,12 +448,48 @@ object Form3: TForm3
     TabOrder = 2
     OnDrawCell = DrawGrid1DrawCell
     ColWidths = (
-      267
-      267
+      80
+      240
     )
   end
+  object RadioGroup1: TRadioGroup
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = EditButton1
+    AnchorSideBottom.Side = asrBottom
+    Left = 192
+    Height = 34
+    Hint = 'Select memory type of the Harvard architecture'
+    Top = 8
+    Width = 139
+    Anchors = [akTop, akRight, akBottom]
+    AutoFill = True
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 8
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 32
+    ClientWidth = 137
+    Columns = 2
+    Enabled = False
+    ItemIndex = 0
+    Items.Strings = (
+      'Code'
+      'Data'
+    )
+    ParentBidiMode = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 1
+  end
   object FindDialog1: TFindDialog
-    Left = 208
+    Left = 8
     Top = 272
   end
 end

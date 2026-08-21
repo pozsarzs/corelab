@@ -2,10 +2,10 @@ object Form4: TForm4
   Left = 550
   Height = 308
   Top = 226
-  Width = 552
+  Width = 478
   Caption = 'RunLogger'
   ClientHeight = 308
-  ClientWidth = 552
+  ClientWidth = 478
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -363,6 +363,7 @@ object Form4: TForm4
     2020000000000029743E00000000002020200000000000256E6100000000002C
     7565
   }
+  OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poDefault
@@ -373,7 +374,7 @@ object Form4: TForm4
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button2
     AnchorSideBottom.Side = asrBottom
-    Left = 469
+    Left = 395
     Height = 25
     Top = 275
     Width = 75
@@ -407,7 +408,7 @@ object Form4: TForm4
     Left = 8
     Height = 4
     Top = 263
-    Width = 536
+    Width = 462
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     Shape = bsBottomLine
@@ -421,7 +422,7 @@ object Form4: TForm4
     Height = 34
     Hint = 'Search in log records'
     Top = 8
-    Width = 536
+    Width = 462
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 8
     ButtonWidth = 23
@@ -462,27 +463,26 @@ object Form4: TForm4
     Left = 8
     Height = 205
     Top = 50
-    Width = 536
+    Width = 462
     Anchors = [akTop, akLeft, akRight, akBottom]
-    AutoFillColumns = True
     BorderSpacing.Around = 8
     ColCount = 4
     Columns = <    
       item
         Title.Caption = 'Count'
-        Width = 133
+        Width = 80
       end    
       item
         Title.Caption = 'Address'
-        Width = 133
+        Width = 80
       end    
       item
         Title.Caption = 'Opcode'
-        Width = 133
+        Width = 150
       end    
       item
         Title.Caption = 'Mnemonic'
-        Width = 135
+        Width = 150
       end>
     ExtendedSelect = False
     FixedCols = 0
@@ -491,10 +491,10 @@ object Form4: TForm4
     TabOrder = 4
     OnDrawCell = DrawGrid1DrawCell
     ColWidths = (
-      133
-      133
-      133
-      135
+      80
+      80
+      150
+      150
     )
   end
   object SaveDialog1: TSaveDialog

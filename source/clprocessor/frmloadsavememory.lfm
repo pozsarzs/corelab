@@ -1,0 +1,171 @@
+object Form7: TForm7
+  Left = 615
+  Height = 240
+  Top = 264
+  Width = 314
+  Caption = 'Load/save'
+  ClientHeight = 240
+  ClientWidth = 314
+  LCLVersion = '2.2.6.0'
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button5
+    Left = 8
+    Height = 4
+    Top = 192
+    Width = 298
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Shape = bsBottomLine
+  end
+  object RadioGroup1: TRadioGroup
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 25
+    Hint = 'Select memory type of the Harvard architecture'
+    Top = 207
+    Width = 130
+    Anchors = [akLeft, akBottom]
+    AutoFill = True
+    AutoSize = True
+    BorderSpacing.Around = 8
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
+    ClientHeight = 23
+    ClientWidth = 128
+    Columns = 2
+    Enabled = False
+    ItemIndex = 0
+    Items.Strings = (
+      'Code'
+      'Data'
+    )
+    ParentBidiMode = False
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 0
+  end
+  object Button5: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 231
+    Height = 28
+    Top = 204
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = '&Close'
+    TabOrder = 1
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 17
+    Top = 8
+    Width = 52
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 8
+    Caption = 'Address'
+    ParentColor = False
+  end
+  object Edit1: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Button1
+    Left = 8
+    Height = 34
+    Top = 29
+    Width = 96
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Left = 8
+    BorderSpacing.Top = 4
+    BorderSpacing.Right = 8
+    MaxLength = 255
+    TabOrder = 2
+    Text = '00 00 00'
+  end
+  object Button1: TButton
+    AnchorSideTop.Control = Edit1
+    AnchorSideBottom.Control = Edit1
+    AnchorSideBottom.Side = asrBottom
+    Left = 112
+    Height = 34
+    Hint = 'Clear address value'
+    Top = 29
+    Width = 34
+    Anchors = [akTop, akBottom]
+    BorderSpacing.Right = 8
+    Caption = '0'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 3
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Edit2
+    AnchorSideTop.Control = Label1
+    AnchorSideBottom.Control = Label1
+    AnchorSideBottom.Side = asrBottom
+    Left = 162
+    Height = 17
+    Top = 8
+    Width = 52
+    Anchors = [akTop, akLeft, akBottom]
+    Caption = 'Address'
+    ParentColor = False
+  end
+  object Edit2: TEdit
+    AnchorSideLeft.Control = Button1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Edit1
+    AnchorSideRight.Control = Button2
+    AnchorSideBottom.Control = Edit1
+    AnchorSideBottom.Side = asrBottom
+    Left = 162
+    Height = 34
+    Top = 29
+    Width = 78
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 16
+    BorderSpacing.Right = 8
+    MaxLength = 255
+    TabOrder = 4
+    Text = '00 00 00'
+  end
+  object Button2: TButton
+    AnchorSideTop.Control = Edit2
+    AnchorSideBottom.Control = Edit2
+    AnchorSideBottom.Side = asrBottom
+    Left = 248
+    Height = 34
+    Hint = 'Clear address value'
+    Top = 29
+    Width = 34
+    Anchors = [akTop, akBottom]
+    BorderSpacing.Right = 8
+    Caption = '0'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 5
+  end
+end

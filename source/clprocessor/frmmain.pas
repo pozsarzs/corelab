@@ -19,7 +19,8 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
-  frmhexviewer, frmrunlogger, frmexdepmemory, frmcpuregviewer, ucommon;
+  frmhexviewer, frmrunlogger, frmexdepmemory, frmcpuregviewer,
+  frmloadsavememory, ucommon;
 const
   MEM_SIZE = 1024;
 type
@@ -40,8 +41,6 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
-    MenuItem7: TMenuItem;
-    ShowCPURegViewer: TAction;
     ActionList1:           TActionList;
     CHMHelpDatabase1:      TCHMHelpDatabase;
     DirectoryEdit1:        TDirectoryEdit;
@@ -77,11 +76,12 @@ type
     MenuItem29:            TMenuItem;
     MenuItem3:             TMenuItem;
     MenuItem30:            TMenuItem;
-    MenuItem32: TMenuItem;
-    MenuItem33: TMenuItem;
+    MenuItem32:            TMenuItem;
+    MenuItem33:            TMenuItem;
     MenuItem4:             TMenuItem;
     MenuItem5:             TMenuItem;
     MenuItem6:             TMenuItem;
+    MenuItem7:             TMenuItem;
     MenuItem8:             TMenuItem;
     NMI:                   TAction;
     OpenDialog1:           TOpenDialog;
@@ -102,9 +102,10 @@ type
     Separator4:            TMenuItem;
     Separator5:            TMenuItem;
     Separator6:            TMenuItem;
-    Separator7: TMenuItem;
-    Separator8: TMenuItem;
+    Separator7:            TMenuItem;
+    Separator8:            TMenuItem;
     ShellListView1:        TShellListView;
+    ShowCPURegViewer:      TAction;
     ShowHexViewer:         TAction;
     ShowRunLogger:         TAction;
     Splitter1:             TSplitter;
@@ -127,7 +128,6 @@ type
     ValueListEditor1:      TValueListEditor;
     ValueListEditor2:      TValueListEditor;
     procedure AboutExecute(Sender: TObject);
-    procedure DepositExecute(Sender: TObject);
     procedure ExamineDepositExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -228,6 +228,11 @@ resourcestring
   MSG25 = 'Cannot write state data to plugin.';
   MSG26 = 'CoreLAB stream file|*.clstm|All file|*.*';
   MSG27 = 'Read-only!';
+  MSG28 = 'Save memory content to file';
+  MSG29 = 'Cannot save ''%s'' memory content.';
+  MSG30 = 'Load memory content from file';
+  MSG31 = 'Cannot load ''%s'' memory content.';
+  MSG32 = 'Binary file|*.bin|All file|*.*';
 
 // ---- PRIVATE METHODS ----
 
@@ -727,6 +732,7 @@ procedure TForm1.ShowHexViewerExecute(Sender: TObject);
 begin
   with Form3 do
   begin
+    // Architecture :=
     MemSize := MEM_SIZE;
     Show;
   end;
@@ -734,14 +740,99 @@ end;
 
 // LOAD MEMORY CONTENT
 procedure TForm1.LoadMemoryContentExecute(Sender: TObject);
+var
+  Filename:       string;
+  LoadStream:     TMemoryStream;
+  i, BytesToRead: Integer;
+  Data64, Mask:   QWord;
 begin
+  with OpenDialog1 do
+  begin
+    InitialDir := GetUserDir;
+    Title := MSG30;
+    Filter := MSG32;
+  end;
+  if OpenDialog1.Execute then
+  begin
+    Filename := OpenDialog1.FileName;
+    if Form7.ShowModal = mrOk then
+    begin
+      LoadStream := TMemoryStream.Create;
+      try
+        try
+          LoadStream.LoadFromFile(FileName);
+          LoadStream.Position := 0;
+          // number of byte to read
+          BytesToRead := (Form7.DataWidth + 7) div 8;
+          // make mask to cover unwanted bits
+          if Form7.DataWidth = 64
+            then Mask := $FFFFFFFFFFFFFFFF
+            else Mask := (QWord(1) shl Form7.DataWidth) - 1;
 
+          for i := Form7.AddressFrom to Form7.AddressTo do
+          begin
+            if LoadStream.Position + BytesToRead > LoadStream.Size then Break;
+            Data64 := 0;
+            // read data from stream
+            LoadStream.ReadBuffer(Data64, BytesToRead);
+            // mask and write data to FMemory
+            Form1.FMemory[Form7.Bank, i] := Data64 and Mask;
+          end;
+        except
+          ShowMessage(MSG01 + Format(MSG31, [FileName]));
+        end;
+      finally
+        LoadStream.Free;
+      end;
+    end;
+  end;
 end;
 
 // SAVE MEMORY CONTENT
 procedure TForm1.SaveMemoryContentExecute(Sender: TObject);
+var
+  Filename:        string;
+  SaveStream:      TMemoryStream;
+  i, BytesToWrite: Integer;
+  Data64, Mask:    QWord;
 begin
+  with SaveDialog1 do
+  begin
+    InitialDir := GetUserDir;
+    Title := MSG28;
+    Filter := MSG32;
+  end;
+  if SaveDialog1.Execute then
+  begin
+    Filename := SaveDialog1.FileName;
+    if Form7.ShowModal = mrOk then
+    begin
+      SaveStream := TMemoryStream.Create;
+      try
+        try
+          // number of bytes to write
+          BytesToWrite := (Form7.DataWidth + 7) div 8;
+          // make mask to cover unwanted bits
+          if Form7.DataWidth = 64
+            then Mask := $FFFFFFFFFFFFFFFF
+            else Mask := (QWord(1) shl Form7.DataWidth) - 1;
 
+          for i := Form7.AddressFrom to Form7.AddressTo do
+          begin
+            // read and mask data from FMemory
+            Data64 := Form1.FMemory[Form7.Bank, i] and Mask;
+            // add valid data bytes to stream
+            SaveStream.WriteBuffer(Data64, BytesToWrite);
+          end;
+          SaveStream.SaveToFile(FileName);
+        except
+          ShowMessage(MSG01 + Format(MSG29, [FileName]));
+        end;
+      finally
+        SaveStream.Free;
+      end;
+    end;
+  end;
 end;
 
 procedure TForm1.ShowCPURegViewerExecute(Sender: TObject);
@@ -771,11 +862,6 @@ end;
 procedure TForm1.AboutExecute(Sender: TObject);
 begin
   Form2.ShowModal;
-end;
-
-procedure TForm1.DepositExecute(Sender: TObject);
-begin
-
 end;
 
 // ONCREATE EVENT

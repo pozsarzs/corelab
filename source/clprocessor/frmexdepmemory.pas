@@ -16,33 +16,31 @@ unit frmexdepmemory;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  core_cpu, ucommon;
+  EditBtn, core_cpu, ucommon;
 type
   { TForm5 }
   TForm5 = class(TForm)
     Bevel1: TBevel;
-    Bevel2: TBevel;
-    Button1: TButton;
-    Button2: TButton;
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
-    Edit1: TEdit;
-    Edit2: TEdit;
+    EditButton1: TEditButton;
+    EditButton2: TEditButton;
     Label1: TLabel;
     Label2: TLabel;
     RadioGroup1: TRadioGroup;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
-    procedure Edit1EditingDone(Sender: TObject);
-    procedure Edit2EditingDone(Sender: TObject);
+    procedure EditButton1ButtonClick(Sender: TObject);
+    procedure EditButton1EditingDone(Sender: TObject);
+    procedure EditButton2ButtonClick(Sender: TObject);
+    procedure EditButton2EditingDone(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
     FMemSize: Integer;                                // Size of emulated memory
+  protected
     procedure SetFArchitecture(AArchitecture: TArchitecture);
   public
     property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
@@ -75,23 +73,23 @@ end;
 // ---- EVENT HANDLER METHODS ----
 
 // ZEROIZE ADDRESS VALUE
-procedure TForm5.Button1Click(Sender: TObject);
+procedure TForm5.EditButton1ButtonClick(Sender: TObject);
 var
   s: string;
 begin
   s := '';
   FormatHexValue('0', 6, s);
-  Edit1.Text := s;
+  EditButton1.Text := s;
 end;
 
 // ZEROIZE DATA VALUE
-procedure TForm5.Button2Click(Sender: TObject);
+procedure TForm5.EditButton2ButtonClick(Sender: TObject);
 var
   s: string;
 begin
   s := '';
   FormatHexValue('0', 16, s);
-  Edit2.Text := s;
+  EditButton2.Text := s;
 end;
 
 // GET DATA FROM SPECIFIED MEMORY AND ADDRESS
@@ -105,18 +103,18 @@ begin
   // set highest address
   MaxAddress := FMemSize - 1;
   // validate address
-  PrevText := Edit1.Text;
+  PrevText := EditButton1.Text;
   NewText := '';
-  if not FormatHexValue(Edit1.Text, 6, NewText) then
+  if not FormatHexValue(EditButton1.Text, 6, NewText) then
   begin
     ShowMessage(MSG01 + MSG02);
-    Edit1.Text := PrevText;
+    EditButton1.Text := PrevText;
     Exit;
   end else
   begin
-    Edit1.Text := NewText;
+    EditButton1.Text := NewText;
     // convert and store strings
-    Address := StrToDWord('$' + RemoveSpace(Edit1.Text));
+    Address := StrToDWord('$' + RemoveSpace(EditButton1.Text));
     if Address > MaxAddress then
     begin
       ShowMessage(MSG01 + Format(MSG04, [MaxAddress.ToString]));
@@ -126,8 +124,8 @@ begin
       then Data := Form1.GetMemoryCell(RadioGroup1.ItemIndex, Address)
       else Data := Form1.GetMemoryCell(0, Address);
     if FormatHexValue(IntToHex(Data, 16), 16, NewText)
-      then Edit2.Text := NewText
-      else Button2Click(Sender);
+      then EditButton2.Text := NewText
+      else EditButton2ButtonClick(Sender);
   end;
 end;
 
@@ -142,29 +140,29 @@ begin
   // set highest address
   MaxAddress := FMemSize - 1;
   // validate address
-  PrevText := Edit1.Text;
+  PrevText := EditButton1.Text;
   NewText := '';
-  if not FormatHexValue(Edit1.Text, 6, NewText) then
+  if not FormatHexValue(EditButton1.Text, 6, NewText) then
   begin
     ShowMessage(MSG01 + MSG02);
-    Edit1.Text := PrevText;
+    EditButton1.Text := PrevText;
     Exit;
   end else
   begin
-    Edit1.Text := NewText;
+    EditButton1.Text := NewText;
     // validate data
-    PrevText := Edit2.Text;
-    if not FormatHexValue(Edit2.Text, 16, NewText) then
+    PrevText := EditButton2.Text;
+    if not FormatHexValue(EditButton2.Text, 16, NewText) then
     begin
       ShowMessage(MSG01 + MSG03);
-      Edit2.Text := PrevText;
+      EditButton2.Text := PrevText;
       Exit;
     end else
     begin
-      Edit2.Text := NewText;
+      EditButton2.Text := NewText;
       // convert and store strings
-      Address := StrToDWord('$' + RemoveSpace(Edit1.Text));
-      Data := StrToQWord('$' + RemoveSpace(Edit2.Text));
+      Address := StrToDWord('$' + RemoveSpace(EditButton1.Text));
+      Data := StrToQWord('$' + RemoveSpace(EditButton2.Text));
       if Address > MaxAddress then
       begin
         ShowMessage(MSG01 + Format(MSG04, [MaxAddress.ToString]));
@@ -183,32 +181,32 @@ begin
 end;
 
 // VALIDATE ADDRESS VALUE
-procedure TForm5.Edit1EditingDone(Sender: TObject);
+procedure TForm5.EditButton1EditingDone(Sender: TObject);
 var
   PrevText, NewText: string;
 begin
-  PrevText := Edit1.Text;
+  PrevText := EditButton1.Text;
   NewText := '';
-  if FormatHexValue(Edit1.Text, 6, NewText)
-  then Edit1.Text := NewText else
+  if FormatHexValue(EditButton1.Text, 6, NewText)
+  then EditButton1.Text := NewText else
   begin
     ShowMessage(MSG01 + MSG02);
-    Edit1.Text := PrevText;
+    EditButton1.Text := PrevText;
   end;
 end;
 
 // VALIDATE DATA VALUE
-procedure TForm5.Edit2EditingDone(Sender: TObject);
+procedure TForm5.EditButton2EditingDone(Sender: TObject);
 var
   PrevText, NewText: string;
 begin
-  PrevText := Edit2.Text;
+  PrevText := EditButton2.Text;
   NewText := '';
-  if FormatHexValue(Edit2.Text, 16, NewText)
-  then Edit2.Text := NewText else
+  if FormatHexValue(EditButton2.Text, 16, NewText)
+  then EditButton2.Text := NewText else
   begin
     ShowMessage(MSG01 + MSG03);
-    Edit2.Text := PrevText;
+    EditButton2.Text := PrevText;
   end;
 end;
 

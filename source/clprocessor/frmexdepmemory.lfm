@@ -1,13 +1,13 @@
 object Form5: TForm5
-  Left = 678
-  Height = 206
-  Top = 327
-  Width = 347
-  ActiveControl = Edit1
+  Left = 609
+  Height = 199
+  Top = 312
+  Width = 329
+  Anchors = [akLeft]
   BorderStyle = bsDialog
   Caption = 'Examine/deposit'
-  ClientHeight = 206
-  ClientWidth = 347
+  ClientHeight = 199
+  ClientWidth = 329
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -375,136 +375,60 @@ object Form5: TForm5
     AnchorSideBottom.Control = Button5
     Left = 8
     Height = 4
-    Top = 158
-    Width = 331
+    Top = 151
+    Width = 313
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Shape = bsBottomLine
   end
-  object Edit1: TEdit
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Label1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Button1
-    Left = 8
-    Height = 34
-    Top = 29
-    Width = 206
-    Alignment = taRightJustify
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 4
-    BorderSpacing.Right = 8
-    MaxLength = 255
-    OnEditingDone = Edit1EditingDone
-    TabOrder = 0
-    Text = '00 00 00'
-  end
-  object Edit2: TEdit
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Button2
-    AnchorSideBottom.Control = Bevel1
-    Left = 8
-    Height = 34
-    Top = 116
-    Width = 206
-    Alignment = taRightJustify
-    Anchors = [akLeft, akRight, akBottom]
-    BorderSpacing.Left = 8
-    BorderSpacing.Top = 4
-    BorderSpacing.Right = 8
-    BorderSpacing.Bottom = 8
-    MaxLength = 255
-    OnEditingDone = Edit2EditingDone
-    TabOrder = 3
-    Text = '00 00 00 00 00 00 00 00'
-  end
-  object Button1: TButton
-    AnchorSideLeft.Control = Edit1
-    AnchorSideTop.Control = Edit1
-    AnchorSideRight.Control = RadioGroup1
-    AnchorSideBottom.Control = Edit1
-    AnchorSideBottom.Side = asrBottom
-    Left = 222
-    Height = 34
-    Hint = 'Clear address value'
-    Top = 29
-    Width = 34
-    Anchors = [akTop, akRight, akBottom]
-    BorderSpacing.Right = 8
-    Caption = '0'
-    OnClick = Button1Click
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 1
-  end
-  object Button2: TButton
-    AnchorSideTop.Control = Edit2
-    AnchorSideRight.Control = RadioGroup1
-    AnchorSideBottom.Control = Edit2
-    AnchorSideBottom.Side = asrBottom
-    Left = 222
-    Height = 34
-    Hint = 'Clear data value'
-    Top = 116
-    Width = 34
-    Anchors = [akTop, akRight, akBottom]
-    BorderSpacing.Right = 8
-    Caption = '0'
-    OnClick = Button2Click
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 4
-  end
   object Button3: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button4
-    Left = 264
+    Left = 246
     Height = 28
-    Top = 86
+    Top = 79
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = '&Examine'
     OnClick = Button3Click
-    TabOrder = 5
+    TabOrder = 3
   end
   object Button4: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
-    Left = 264
+    Left = 246
     Height = 28
-    Top = 122
+    Top = 115
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Caption = '&Deposit'
     OnClick = Button4Click
-    TabOrder = 6
+    TabOrder = 4
   end
   object Button5: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 264
+    Left = 246
     Height = 28
-    Top = 170
+    Top = 163
     Width = 75
-    Anchors = [akRight, akBottom]
+    Anchors = [akTop, akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
     Cancel = True
     Caption = '&Close'
     OnClick = Button5Click
-    TabOrder = 7
+    TabOrder = 5
   end
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
@@ -521,12 +445,11 @@ object Form5: TForm5
   object Label2: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom
-    AnchorSideBottom.Control = Edit2
     Left = 8
     Height = 17
-    Top = 91
+    Top = 84
     Width = 31
-    Anchors = [akLeft, akBottom]
+    Anchors = [akTop, akLeft, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Bottom = 8
     Caption = 'Data'
@@ -536,18 +459,17 @@ object Form5: TForm5
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Bevel1
-    Left = 264
-    Height = 72
+    AnchorSideBottom.Control = Button3
+    Left = 246
+    Height = 63
     Hint = 'Select memory type of the Harvard architecture'
     Top = 8
     Width = 75
-    Anchors = [akTop, akLeft, akRight]
+    Anchors = [akTop, akRight, akBottom]
     AutoFill = True
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = 'Harvard'
     ChildSizing.LeftRightSpacing = 6
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsHomogenousChildResize
@@ -555,7 +477,7 @@ object Form5: TForm5
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 54
+    ClientHeight = 61
     ClientWidth = 73
     Enabled = False
     ItemIndex = 0
@@ -566,21 +488,56 @@ object Form5: TForm5
     ParentBidiMode = False
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 2
+    TabOrder = 1
   end
-  object Bevel2: TBevel
+  object EditButton1: TEditButton
     AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
     AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Button1
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Button5
+    AnchorSideRight.Control = RadioGroup1
     Left = 8
-    Height = 4
-    Top = 80
-    Width = 248
+    Height = 34
+    Top = 33
+    Width = 226
+    Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Left = 8
-    BorderSpacing.Bottom = 8
-    Shape = bsTopLine
+    BorderSpacing.Right = 4
+    BorderSpacing.Around = 8
+    ButtonWidth = 23
+    Images = Form1.ImageList1
+    ImageIndex = 10
+    MaxLength = 255
+    NumGlyphs = 1
+    OnButtonClick = EditButton1ButtonClick
+    OnEditingDone = EditButton1EditingDone
+    ParentShowHint = False
+    PasswordChar = #0
+    TabOrder = 0
+    Text = '00 00 00'
+  end
+  object EditButton2: TEditButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label2
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = RadioGroup1
+    Left = 8
+    Height = 34
+    Top = 109
+    Width = 226
+    Alignment = taRightJustify
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Right = 4
+    BorderSpacing.Around = 8
+    ButtonWidth = 23
+    Images = Form1.ImageList1
+    ImageIndex = 10
+    MaxLength = 255
+    NumGlyphs = 1
+    OnButtonClick = EditButton2ButtonClick
+    OnEditingDone = EditButton2EditingDone
+    ParentShowHint = False
+    PasswordChar = #0
+    TabOrder = 2
+    Text = '00 00 00 00 00 00 00 00'
   end
 end
