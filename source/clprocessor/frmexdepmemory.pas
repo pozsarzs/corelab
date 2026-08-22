@@ -39,12 +39,12 @@ type
     procedure FormCreate(Sender: TObject);
   private
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FMemSize: Integer;                                // Size of emulated memory
+    FMemSize: DWord;                                  // Size of emulated memory
   protected
     procedure SetFArchitecture(AArchitecture: TArchitecture);
   public
     property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
-    property MemSize: integer read FMemSize write FMemSize;
+    property MemSize: DWord read FMemSize write FMemSize;
   end;
 var
   Form5: TForm5;
@@ -90,6 +90,36 @@ begin
   s := '';
   FormatHexValue('0', 16, s);
   EditButton2.Text := s;
+end;
+
+// VALIDATE ADDRESS VALUE
+procedure TForm5.EditButton1EditingDone(Sender: TObject);
+var
+  PrevText, NewText: string;
+begin
+  PrevText := EditButton1.Text;
+  NewText := '';
+  if FormatHexValue(EditButton1.Text, 6, NewText)
+  then EditButton1.Text := NewText else
+  begin
+    ShowMessage(MSG01 + MSG02);
+    EditButton1.Text := PrevText;
+  end;
+end;
+
+// VALIDATE DATA VALUE
+procedure TForm5.EditButton2EditingDone(Sender: TObject);
+var
+  PrevText, NewText: string;
+begin
+  PrevText := EditButton2.Text;
+  NewText := '';
+  if FormatHexValue(EditButton2.Text, 16, NewText)
+  then EditButton2.Text := NewText else
+  begin
+    ShowMessage(MSG01 + MSG03);
+    EditButton2.Text := PrevText;
+  end;
 end;
 
 // GET DATA FROM SPECIFIED MEMORY AND ADDRESS
@@ -175,39 +205,10 @@ begin
   end;
 end;
 
+// CLOSE
 procedure TForm5.Button5Click(Sender: TObject);
 begin
-  Close;
-end;
-
-// VALIDATE ADDRESS VALUE
-procedure TForm5.EditButton1EditingDone(Sender: TObject);
-var
-  PrevText, NewText: string;
-begin
-  PrevText := EditButton1.Text;
-  NewText := '';
-  if FormatHexValue(EditButton1.Text, 6, NewText)
-  then EditButton1.Text := NewText else
-  begin
-    ShowMessage(MSG01 + MSG02);
-    EditButton1.Text := PrevText;
-  end;
-end;
-
-// VALIDATE DATA VALUE
-procedure TForm5.EditButton2EditingDone(Sender: TObject);
-var
-  PrevText, NewText: string;
-begin
-  PrevText := EditButton2.Text;
-  NewText := '';
-  if FormatHexValue(EditButton2.Text, 16, NewText)
-  then EditButton2.Text := NewText else
-  begin
-    ShowMessage(MSG01 + MSG03);
-    EditButton2.Text := PrevText;
-  end;
+  ModalResult := mrOk;
 end;
 
 // ONCREATE

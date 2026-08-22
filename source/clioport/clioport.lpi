@@ -81,6 +81,7 @@
         <Filename Value="frmsizepos.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form4"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>
@@ -93,7 +94,7 @@
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
       <OtherUnitFiles Value="../corelab-core;../_ext/modlcltranslator;../_ppu"/>
-      <UnitOutputDirectory Value="./lib/$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Options>

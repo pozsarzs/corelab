@@ -187,7 +187,17 @@ Runtime events and execution logs can be saved to files for later analysis.
 Memory contents can be exported in binary or Intel HEX format, allowing results
 to be used with other development tools or transferred to real hardware.
 
-## VI. Implemented commands  
+## VI. Used filetypes
+
+|extension|type                      |application                    |
+|:-------:|:-------------------------|:------------------------------|
+|*.clsht  |CoreLAB snapshot          |CoreLAB                        |
+|*.clsce  |CoreLAB scriptembly       |CoreLAB                        |
+|*.clpst  |CoreLAB plugin status file|CLIOPort, CLMemory, CLProcessor|
+|*.bin    |General binary file       |CoreLAB, CLProcessor           |			*.bin
+|*.log    |General log file          |CoreLAB, CLProcessor           |			*.bin
+
+## VII. Implemented commands  
 
 |name  |description                                                                       |
 |:----:|----------------------------------------------------------------------------------|
@@ -260,7 +270,7 @@ to be used with other development tools or transferred to real hardware.
 |`WAIT`|Wait specified ms.                                                                |
 |`XOR` |Bitwise/logical XOR in-place.                                                     |
 
-## VII. Command exit codes
+## VIII. Command exit codes
 
 | v.|category        |description                 |
 |:-:|:---------------|----------------------------|
@@ -279,7 +289,7 @@ to be used with other development tools or transferred to real hardware.
 |20 |Simulation error|General error               |
 |21 |Simulation error|Attach/Detach error         |
 
-## VIII. System constants  
+## IX. System constants  
 
 |name     |value                                    |
 |:--------|:----------------------------------------|
@@ -298,7 +308,7 @@ to be used with other development tools or transferred to real hardware.
 |`$TIME`  |time                                     |
 |`$VER`   |application version                      |
 
-## IX. Documentation and Help  
+## X. Documentation and Help  
 
 CoreLAB features built-in help and comprehensive documentation, accessible
 through the following channels:
@@ -313,14 +323,14 @@ through the following channels:
 - Additionally, you can view the manual page from *nix shell (_man corelab_) or
   _corelab.txt_ on other systems.  
 
-## X. Contributing  
+## XI. Contributing  
 
 If you find any bugs, please report them! I am also happy to accept pull
 requests from anyone. You can use the GitHub issue tracker to report bugs, ask
 questions, or suggest new features. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 for details.  
 
-## XI. Links  
+## XII. Links  
 
  - [Homepage](https://www.pozsarzs.hu/60_myprogcom/corelab/)  
  - [GitHub repository](https://github.com/pozsarzs/corelab)  

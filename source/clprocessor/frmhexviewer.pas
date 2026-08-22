@@ -40,7 +40,7 @@ type
     FBGColorEvenLines:  TColor;                                    // Even lines
     // others
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FMemSize: Integer;                                // Size of emulated memory
+    FMemSize: DWord;                                  // Size of emulated memory
   protected
     procedure SetAddressColor(AColor: TColor);
     procedure SetDataColor(AColor: TColor);
@@ -48,7 +48,7 @@ type
     procedure SetBGColorEvenLines(AColor: TColor);
     procedure SetBGColorOddLines(AColor: TColor);
     procedure SetFArchitecture(AArchitecture: TArchitecture);
-    procedure SetFMemSize(AMemSize: Integer);
+    procedure SetFMemSize(AMemSize: DWord);
   public
     property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
     property AddressColor: TColor read FAddressColor write SetAddressColor;
@@ -56,7 +56,7 @@ type
     property LineSelectorColor: TColor read FLineSelectorColor write SetLineSelectorColor;
     property BGColorOddLines: TColor read FBGColorOddLines write SetBGColorOddLines;
     property BGColorEvenLines: TColor read FBGColorEvenLines write SetBGColorEvenLines;
-    property MemSize: integer read FMemSize write SetFMemSize;
+    property MemSize: DWord read FMemSize write SetFMemSize;
   end;
 var
   Form3: TForm3;
@@ -114,7 +114,7 @@ begin
 end;
 
 // SET MEMORY SIZE
-procedure TForm3.SetFMemSize(AMemSize: Integer);
+procedure TForm3.SetFMemSize(AMemSize: DWord);
 begin
   if AMemSize > 0 then FMemSize := AMemSize else Exit;
   DrawGrid1.RowCount := FMemSize + 1;

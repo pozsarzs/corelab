@@ -1,11 +1,11 @@
 object Form3: TForm3
-  Left = 534
-  Height = 129
-  Top = 302
+  Left = 653
+  Height = 122
+  Top = 317
   Width = 304
   BorderStyle = bsDialog
   Caption = 'Set panel caption'
-  ClientHeight = 129
+  ClientHeight = 122
   ClientWidth = 304
   Position = poDefault
   LCLVersion = '2.2.6.0'
@@ -16,13 +16,14 @@ object Form3: TForm3
     AnchorSideBottom.Side = asrBottom
     Left = 221
     Height = 28
-    Top = 93
+    Top = 86
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Around = 8
     Caption = '&Set'
     ModalResult = 1
-    TabOrder = 1
+    OnClick = Button1Click
+    TabOrder = 0
   end
   object Button2: TButton
     AnchorSideRight.Control = Button1
@@ -30,44 +31,55 @@ object Form3: TForm3
     AnchorSideBottom.Side = asrBottom
     Left = 138
     Height = 28
-    Top = 93
+    Top = 86
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Around = 8
     Caption = '&Cancel'
     ModalResult = 2
-    TabOrder = 2
+    OnClick = Button2Click
+    TabOrder = 1
   end
-  object GroupBox1: TGroupBox
+  object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button1
     Left = 8
-    Height = 77
-    Top = 8
+    Height = 2
+    Top = 76
     Width = 288
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Shape = bsTopLine
+  end
+  object Edit1: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 8
+    Height = 34
+    Top = 33
+    Width = 288
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 8
+    MaxLength = 32
+    OnEditingDone = Edit1EditingDone
+    TabOrder = 2
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 8
+    Height = 17
+    Top = 8
+    Width = 50
     BorderSpacing.Around = 8
     Caption = 'Caption'
-    ClientHeight = 59
-    ClientWidth = 286
-    TabOrder = 0
-    object Edit1: TEdit
-      AnchorSideLeft.Control = GroupBox1
-      AnchorSideTop.Control = GroupBox1
-      AnchorSideRight.Control = GroupBox1
-      AnchorSideRight.Side = asrBottom
-      Left = 8
-      Height = 34
-      Top = 8
-      Width = 270
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Around = 8
-      MaxLength = 32
-      OnEditingDone = Edit1EditingDone
-      TabOrder = 0
-    end
+    ParentColor = False
   end
 end

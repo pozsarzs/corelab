@@ -226,7 +226,7 @@ resourcestring
   MSG23 = 'Load plugin state from file';
   MSG24 = 'Cannot load ''%s'' plugin data.';
   MSG25 = 'Cannot write state data to plugin.';
-  MSG26 = 'CoreLAB stream file|*.clstm|All file|*.*';
+  MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Read-only!';
   MSG28 = 'Save memory content to file';
   MSG29 = 'Cannot save ''%s'' memory content.';
@@ -755,7 +755,10 @@ begin
   if OpenDialog1.Execute then
   begin
     Filename := OpenDialog1.FileName;
-    if Form7.ShowModal = mrOk then
+    // Form7.Architecture :=
+    Form7.Direction := true;
+    Form7.MemSize := MEM_SIZE;
+    if Form7.ShowModal = mrCancel then exit else
     begin
       LoadStream := TMemoryStream.Create;
       try
@@ -793,20 +796,23 @@ procedure TForm1.SaveMemoryContentExecute(Sender: TObject);
 var
   Filename:        string;
   SaveStream:      TMemoryStream;
-  i, BytesToWrite: Integer;
+  i, BytesToWrite: DWord;
   Data64, Mask:    QWord;
 begin
-  with SaveDialog1 do
+  // Form7.Architecture :=
+  Form7.Direction := false;
+  Form7.MemSize := MEM_SIZE;
+  if Form7.ShowModal = mrCancel then Exit else
   begin
-    InitialDir := GetUserDir;
-    Title := MSG28;
-    Filter := MSG32;
-  end;
-  if SaveDialog1.Execute then
-  begin
-    Filename := SaveDialog1.FileName;
-    if Form7.ShowModal = mrOk then
+    with SaveDialog1 do
     begin
+      InitialDir := GetUserDir;
+      Title := MSG28;
+      Filter := MSG32;
+    end;
+    if SaveDialog1.Execute then
+    begin
+      Filename := SaveDialog1.FileName;
       SaveStream := TMemoryStream.Create;
       try
         try
@@ -816,11 +822,10 @@ begin
           if Form7.DataWidth = 64
             then Mask := $FFFFFFFFFFFFFFFF
             else Mask := (QWord(1) shl Form7.DataWidth) - 1;
-
           for i := Form7.AddressFrom to Form7.AddressTo do
           begin
             // read and mask data from FMemory
-            Data64 := Form1.FMemory[Form7.Bank, i] and Mask;
+            Data64 := FMemory[Form7.Bank, i] and Mask;
             // add valid data bytes to stream
             SaveStream.WriteBuffer(Data64, BytesToWrite);
           end;

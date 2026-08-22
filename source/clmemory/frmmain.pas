@@ -183,7 +183,7 @@ resourcestring
   MSG23 = 'Load plugin state from file';
   MSG24 = 'Cannot load ''%s'' plugin data.';
   MSG25 = 'Cannot write state data to plugin.';
-  MSG26 = 'CoreLAB stream file|*.clstm|All file|*.*';
+  MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Read-only!';
   MSG28 = 'The memory size can be 16 B-16 MB';
   MSG29 = 'The data width can be 4-64 bits.';

@@ -147,7 +147,7 @@ msgid "Cannot write state data to plugin."
 msgstr ""
 
 #: frmmain:msg26
-msgid "CoreLAB stream file|*.clstm|All file|*.*"
+msgid "CoreLAB plugin status file|*.clpst|All file|*.*"
 msgstr ""
 
 #: frmmain:msg27

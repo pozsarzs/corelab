@@ -20,10 +20,13 @@ uses
 type
   { TForm3 }
   TForm3 = class(TForm)
+    Bevel1: TBevel;
     Button1: TButton;
     Button2: TButton;
     Edit1: TEdit;
-    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure Edit1EditingDone(Sender: TObject);
   private
     function GetCaption: string;
@@ -58,6 +61,18 @@ end;
 procedure TForm3.Edit1EditingDone(Sender: TObject);
 begin
   Button1.Click;
+end;
+
+// CLOSE WITH CANCEL
+procedure TForm3.Button2Click(Sender: TObject);
+begin
+  ModalResult := mrCancel;
+end;
+
+// CLOSE WITH OK
+procedure TForm3.Button1Click(Sender: TObject);
+begin
+  ModalResult := mrOk;
 end;
 
 end.

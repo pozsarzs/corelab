@@ -959,7 +959,7 @@ object Form1: TForm1
     end
     object SaveStatus: TAction
       Caption = 'Save status'
-      ImageIndex = 6
+      ImageIndex = 5
       OnExecute = SaveStatusExecute
     end
     object ShowHexViewer: TAction

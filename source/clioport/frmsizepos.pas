@@ -20,6 +20,7 @@ uses
 type
   { TForm4 }
   TForm4 = class(TForm)
+    Bevel1: TBevel;
     Button1: TButton;
     Button2: TButton;
     GroupBox1: TGroupBox;
@@ -32,6 +33,8 @@ type
     SpinEdit2: TSpinEdit;
     SpinEdit3: TSpinEdit;
     SpinEdit4: TSpinEdit;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     function GetHeightValue: integer;
     function GetLeftValue: integer;
@@ -55,6 +58,18 @@ implementation
 {$R *.lfm}
 
 // -- PRIVATE METHODS ---
+
+// CLOSE WITH CANCEL
+procedure TForm4.Button2Click(Sender: TObject);
+begin
+  ModalResult := mrCancel;
+end;
+
+// CLOSE WITH OK
+procedure TForm4.Button1Click(Sender: TObject);
+begin
+  ModalResult := mrOk;
+end;
 
 // GET VALUES
 function TForm4.GetHeightValue: integer;

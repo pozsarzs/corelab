@@ -1,13 +1,11 @@
 {"version":1,"strings":[
-{"hash":125225877,"name":"tform7.caption","sourcebytes":[76,111,97,100,47,115,97,118,101],"value":"Load/save"},
+{"hash":5073159,"name":"tform7.caption","sourcebytes":[70,111,114,109,55],"value":"Form7"},
+{"hash":164345429,"name":"tform7.button5.caption","sourcebytes":[66,117,116,116,111,110,53],"value":"Button5"},
+{"hash":218307219,"name":"tform7.label1.caption","sourcebytes":[83,116,97,114,116,32,97,100,100,114,101,115,115],"value":"Start address"},
+{"hash":36904960,"name":"tform7.editbutton1.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
 {"hash":178924709,"name":"tform7.radiogroup1.hint","sourcebytes":[83,101,108,101,99,116,32,109,101,109,111,114,121,32,116,121,112,101,32,111,102,32,116,104,101,32,72,97,114,118,97,114,100,32,97,114,99,104,105,116,101,99,116,117,114,101],"value":"Select memory type of the Harvard architecture"},
-{"hash":44709525,"name":"tform7.button5.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
-{"hash":128683235,"name":"tform7.label1.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
-{"hash":36904960,"name":"tform7.edit1.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
-{"hash":150768437,"name":"tform7.button1.hint","sourcebytes":[67,108,101,97,114,32,97,100,100,114,101,115,115,32,118,97,108,117,101],"value":"Clear address value"},
-{"hash":48,"name":"tform7.button1.caption","sourcebytes":[48],"value":"0"},
-{"hash":128683235,"name":"tform7.label2.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
-{"hash":36904960,"name":"tform7.edit2.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
-{"hash":150768437,"name":"tform7.button2.hint","sourcebytes":[67,108,101,97,114,32,97,100,100,114,101,115,115,32,118,97,108,117,101],"value":"Clear address value"},
-{"hash":48,"name":"tform7.button2.caption","sourcebytes":[48],"value":"0"}
+{"hash":36904960,"name":"tform7.editbutton2.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
+{"hash":132631235,"name":"tform7.label2.caption","sourcebytes":[69,110,100,32,97,100,100,114,101,115,115],"value":"End address"},
+{"hash":177058088,"name":"tform7.label3.caption","sourcebytes":[68,97,116,97,119,105,100,116,104],"value":"Datawidth"},
+{"hash":177752476,"name":"tform7.button1.caption","sourcebytes":[38,67,97,110,99,101,108],"value":"&Cancel"}
 ]}

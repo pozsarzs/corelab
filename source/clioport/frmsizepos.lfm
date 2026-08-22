@@ -1,11 +1,11 @@
 object Form4: TForm4
-  Left = 521
-  Height = 157
-  Top = 373
+  Left = 636
+  Height = 166
+  Top = 234
   Width = 304
   BorderStyle = bsDialog
   Caption = 'Set panel size and position'
-  ClientHeight = 157
+  ClientHeight = 166
   ClientWidth = 304
   Position = poDefault
   LCLVersion = '2.2.6.0'
@@ -16,12 +16,13 @@ object Form4: TForm4
     AnchorSideBottom.Side = asrBottom
     Left = 221
     Height = 28
-    Top = 121
+    Top = 130
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Around = 8
     Caption = '&Set'
     ModalResult = 1
+    OnClick = Button1Click
     TabOrder = 2
   end
   object Button2: TButton
@@ -30,12 +31,13 @@ object Form4: TForm4
     AnchorSideBottom.Side = asrBottom
     Left = 138
     Height = 28
-    Top = 121
+    Top = 130
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Around = 8
     Caption = '&Cancel'
     ModalResult = 2
+    OnClick = Button2Click
     TabOrder = 3
   end
   object GroupBox1: TGroupBox
@@ -174,5 +176,20 @@ object Form4: TForm4
       MaxValue = 2047
       TabOrder = 1
     end
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button1
+    Left = 8
+    Height = 2
+    Top = 120
+    Width = 288
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Shape = bsTopLine
   end
 end
