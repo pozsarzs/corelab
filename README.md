@@ -13,7 +13,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## I. Introduction and Project Goals
 
-The CoreLAB project is a functional CPU, microprocessor, and microcontroller
+The CoreLAB project is a functional 8 bits microprocessor and microcontroller
 simulator born from a fusion of academic research, technical passion, and
 historical preservation. The project was initiated with several key objectives
 in mind:
@@ -66,7 +66,7 @@ in mind:
 |**running modes**         |Normal or interpreter                                                            |
 |**simulation type**       |Instruction-level operation (not cycle-accurate)                                 |
 |**supported architecture**|Neumann and Harvard architectures                                                |
-|**supported processors**  |Word-based CPUs up to 64-bit, 4–16 bit uPs and 4–8 bit, simple MCUs              |
+|**supported processors**  |Byte based uPs and simple MCUs                                                   |
 |**simulation environment**|Configurable memory space and virtual I/O ports or devices                       |
 |**modular architecture**  |Dynamically loadable CPUs and peripherals                                        |
 |**dump**                  |Displaying memory and register contents, with export to binary or Intel HEX files|

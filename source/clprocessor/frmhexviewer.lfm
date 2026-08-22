@@ -1,11 +1,11 @@
 object Form3: TForm3
   Left = 550
   Height = 308
-  Top = 226
-  Width = 339
+  Top = 225
+  Width = 483
   Caption = 'HexViewer'
   ClientHeight = 308
-  ClientWidth = 339
+  ClientWidth = 483
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -371,7 +371,7 @@ object Form3: TForm3
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
-    Left = 256
+    Left = 400
     Height = 25
     Top = 275
     Width = 75
@@ -389,7 +389,7 @@ object Form3: TForm3
     Left = 8
     Height = 4
     Top = 263
-    Width = 323
+    Width = 467
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     Shape = bsBottomLine
@@ -402,7 +402,7 @@ object Form3: TForm3
     Height = 34
     Hint = 'Search in dump'
     Top = 8
-    Width = 172
+    Width = 316
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 4
     BorderSpacing.Around = 8
@@ -428,18 +428,13 @@ object Form3: TForm3
     Left = 8
     Height = 205
     Top = 50
-    Width = 323
+    Width = 467
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
-    ColCount = 2
+    ColCount = 1
     Columns = <    
       item
-        Title.Caption = 'Address'
-        Width = 80
-      end    
-      item
-        Title.Caption = 'Data'
-        Width = 240
+        Title.Caption = 'Title'
       end>
     ExtendedSelect = False
     FixedCols = 0
@@ -447,10 +442,6 @@ object Form3: TForm3
     RowCount = 1
     TabOrder = 2
     OnDrawCell = DrawGrid1DrawCell
-    ColWidths = (
-      80
-      240
-    )
   end
   object RadioGroup1: TRadioGroup
     AnchorSideTop.Control = Owner
@@ -458,7 +449,7 @@ object Form3: TForm3
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = EditButton1
     AnchorSideBottom.Side = asrBottom
-    Left = 192
+    Left = 336
     Height = 34
     Hint = 'Select memory type of the Harvard architecture'
     Top = 8

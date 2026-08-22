@@ -20,16 +20,16 @@ uses
 type
   { TForm7 }
   TForm7 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
-    Button5: TButton;
+    Bevel1:      TBevel;
+    Button1:     TButton;
+    Button5:     TButton;
     EditButton1: TEditButton;
     EditButton2: TEditButton;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
+    Label1:      TLabel;
+    Label2:      TLabel;
+    Label3:      TLabel;
     RadioGroup1: TRadioGroup;
-    SpinEdit1: TSpinEdit;
+    SpinEdit1:   TSpinEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure EditButton1ButtonClick(Sender: TObject);
@@ -37,23 +37,23 @@ type
     procedure EditButton2ButtonClick(Sender: TObject);
     procedure EditButton2EditingDone(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure SpinEdit1Change(Sender: TObject);
   private
-    FAddressFrom: DWord;                                        // Start address
-    FAddressTo: DWord;                                            // End address
+    FAddressFrom:  DWord;                                       // Start address
+    FAddressTo:    DWord;                                         // End address
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FBank: byte;                                    // Number of the memory bank
-    FDataWidth: byte;                                       // Datawidth in bits
-    FDirection: Boolean;                                     // 0: Save, 1: Load
-    FMemSize: DWord;                                  // Size of emulated memory
+    FBank:         Byte;                            // Number of the memory bank
+    FDirection:    Boolean;                                  // 0: save, 1: load
+    FMemSize:      DWord;                             // Size of emulated memory
     procedure SetFArchitecture(AArchitecture: TArchitecture);
     procedure SetFMemSize(AMemSize: DWord);
     procedure SetFDirection(ADirection: Boolean);
+    procedure UpdateDifference;
   public
     property AddressFrom: DWord read FAddressFrom;
     property AddressTo: DWord read FAddressTo;
     property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
     property Bank: byte read FBank;
-    property DataWidth: byte read FDataWidth;
     property Direction: Boolean read FDirection write SetFDirection;
     property MemSize: DWord read FMemSize write SetFMemSize;
   end;
@@ -97,6 +97,23 @@ begin
   if AMemSize > 0 then FMemSize := AMemSize else Exit;
 end;
 
+// UPDATE SPINEDIT DIFFERENCE
+procedure TForm7.UpdateDifference;
+var
+  StartAddr, EndAddr: DWord;
+begin
+  try
+    StartAddr := StrToDWord('$' + RemoveSpace(EditButton1.Text));
+    EndAddr := StrToDWord('$' + RemoveSpace(EditButton2.Text));
+    SpinEdit1.OnChange := nil;                                  // Disable event
+    if EndAddr >= StartAddr
+      then SpinEdit1.Value := EndAddr - StartAddr
+      else SpinEdit1.Value := 0;
+  finally
+    SpinEdit1.OnChange := @SpinEdit1Change;                      // Enable event
+  end;
+end;
+
 // ---- EVENT HANDLER METHODS ----
 
 // ZEROIZE ADDRESS VALUE
@@ -107,6 +124,7 @@ begin
   s := '';
   FormatHexValue('0', 6, s);
   EditButton1.Text := s;
+  UpdateDifference;
 end;
 
 // ZEROIZE DATA VALUE
@@ -117,6 +135,7 @@ begin
   s := '';
   FormatHexValue('0', 6, s);
   EditButton2.Text := s;
+  UpdateDifference;
 end;
 
 // VALIDATE ADDRESS VALUE
@@ -126,8 +145,11 @@ var
 begin
   PrevText := EditButton1.Text;
   NewText := '';
-  if FormatHexValue(EditButton1.Text, 6, NewText)
-  then EditButton1.Text := NewText else
+  if FormatHexValue(EditButton1.Text, 6, NewText) then
+  begin
+    EditButton1.Text := NewText;
+    UpdateDifference;
+  end else
   begin
     ShowMessage(MSG01 + MSG02);
     EditButton1.Text := PrevText;
@@ -141,11 +163,31 @@ var
 begin
   PrevText := EditButton2.Text;
   NewText := '';
-  if FormatHexValue(EditButton2.Text, 6, NewText)
-  then EditButton2.Text := NewText else
+  if FormatHexValue(EditButton2.Text, 6, NewText) then
+  begin
+    EditButton2.Text := NewText;
+    UpdateDifference;
+  end else
   begin
     ShowMessage(MSG01 + MSG02);
     EditButton2.Text := PrevText;
+  end;
+end;
+
+// SPINEDIT CHANGE - UPDATE END ADDRESS
+procedure TForm7.SpinEdit1Change(Sender: TObject);
+var
+  StartAddr, NewEndAddr: DWord;
+  s:                     string;
+begin
+  try
+    StartAddr := StrToDWord('$' + RemoveSpace(EditButton1.Text));
+    NewEndAddr := StartAddr + DWord(SpinEdit1.Value);
+    s := '';
+    FormatHexValue(IntToHex(NewEndAddr, 1), 6, s);
+    EditButton2.Text := s;
+  except
+    // No update at bad data
   end;
 end;
 
@@ -182,7 +224,6 @@ begin
     FAddressFrom := Swap;
   end;
   if not RadioGroup1.Enabled then FBank := 0 else FBank := RadioGroup1.ItemIndex;
-  FDataWidth := SpinEdit1.Value;
   ModalResult := mrOk;
 end;
 
@@ -192,7 +233,7 @@ begin
   SetFDirection(true);
   SetFArchitecture(arNeumann);
   SetFMemSize(1024);
+  SpinEdit1.OnChange := @SpinEdit1Change;
 end;
 
 end.
-

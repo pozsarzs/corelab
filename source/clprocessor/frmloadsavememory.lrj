@@ -6,6 +6,6 @@
 {"hash":178924709,"name":"tform7.radiogroup1.hint","sourcebytes":[83,101,108,101,99,116,32,109,101,109,111,114,121,32,116,121,112,101,32,111,102,32,116,104,101,32,72,97,114,118,97,114,100,32,97,114,99,104,105,116,101,99,116,117,114,101],"value":"Select memory type of the Harvard architecture"},
 {"hash":36904960,"name":"tform7.editbutton2.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
 {"hash":132631235,"name":"tform7.label2.caption","sourcebytes":[69,110,100,32,97,100,100,114,101,115,115],"value":"End address"},
-{"hash":177058088,"name":"tform7.label3.caption","sourcebytes":[68,97,116,97,119,105,100,116,104],"value":"Datawidth"},
+{"hash":4852419,"name":"tform7.label3.caption","sourcebytes":[66,121,116,101,115],"value":"Bytes"},
 {"hash":177752476,"name":"tform7.button1.caption","sourcebytes":[38,67,97,110,99,101,108],"value":"&Cancel"}
 ]}

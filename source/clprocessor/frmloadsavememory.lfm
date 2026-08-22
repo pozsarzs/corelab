@@ -2,11 +2,11 @@ object Form7: TForm7
   Left = 621
   Height = 191
   Top = 283
-  Width = 314
+  Width = 308
   BorderStyle = bsDialog
   Caption = 'Form7'
   ClientHeight = 191
-  ClientWidth = 314
+  ClientWidth = 308
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -375,7 +375,7 @@ object Form7: TForm7
     Left = 8
     Height = 4
     Top = 143
-    Width = 298
+    Width = 292
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
@@ -387,7 +387,7 @@ object Form7: TForm7
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 231
+    Left = 225
     Height = 28
     Top = 155
     Width = 75
@@ -418,14 +418,14 @@ object Form7: TForm7
     Left = 8
     Height = 34
     Top = 33
-    Width = 196
+    Width = 178
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 4
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 10
+    ImageIndex = 20
     MaxLength = 255
     NumGlyphs = 1
     OnButtonClick = EditButton1ButtonClick
@@ -441,11 +441,11 @@ object Form7: TForm7
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = EditButton1
     AnchorSideBottom.Side = asrBottom
-    Left = 216
+    Left = 198
     Height = 59
     Hint = 'Select memory type of the Harvard architecture'
     Top = 8
-    Width = 90
+    Width = 102
     Anchors = [akTop, akRight, akBottom]
     AutoFill = True
     BorderSpacing.Top = 8
@@ -458,7 +458,7 @@ object Form7: TForm7
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 57
-    ClientWidth = 88
+    ClientWidth = 100
     Enabled = False
     ItemIndex = 0
     Items.Strings = (
@@ -478,14 +478,14 @@ object Form7: TForm7
     Left = 8
     Height = 34
     Top = 100
-    Width = 196
+    Width = 178
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 4
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 10
+    ImageIndex = 20
     MaxLength = 255
     NumGlyphs = 1
     OnButtonClick = EditButton2ButtonClick
@@ -516,28 +516,26 @@ object Form7: TForm7
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = EditButton2
     AnchorSideBottom.Side = asrBottom
-    Left = 216
+    Left = 198
     Height = 34
     Top = 100
-    Width = 90
+    Width = 102
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
-    MaxValue = 64
-    MinValue = 8
+    MaxValue = 16777215
     TabOrder = 3
-    Value = 8
   end
   object Label3: TLabel
     AnchorSideLeft.Control = SpinEdit1
     AnchorSideTop.Control = Label2
     AnchorSideBottom.Control = Label2
     AnchorSideBottom.Side = asrBottom
-    Left = 216
+    Left = 198
     Height = 17
     Top = 75
-    Width = 67
+    Width = 37
     Anchors = [akTop, akLeft, akBottom]
-    Caption = 'Datawidth'
+    Caption = 'Bytes'
     ParentColor = False
   end
   object Button1: TButton
@@ -545,7 +543,7 @@ object Form7: TForm7
     AnchorSideRight.Control = Button5
     AnchorSideBottom.Control = Button5
     AnchorSideBottom.Side = asrBottom
-    Left = 148
+    Left = 142
     Height = 28
     Top = 155
     Width = 75

@@ -2,7 +2,7 @@
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | frmhexviewer.pas                                                         | }
-{ | RunLogger form                                                           | }
+{ | HexViewer form                                                           | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -63,7 +63,6 @@ var
 
 resourcestring
   MSG01 = 'Address';
-  MSG02 = 'Data';
 
 implementation
 uses frmmain;
@@ -113,11 +112,11 @@ begin
   RadioGroup1.Enabled := (FArchitecture = arHarvard);
 end;
 
-// SET MEMORY SIZE
+// SET MEMORY SIZE (16 BYTES PER ROW)
 procedure TForm3.SetFMemSize(AMemSize: DWord);
 begin
   if AMemSize > 0 then FMemSize := AMemSize else Exit;
-  DrawGrid1.RowCount := FMemSize + 1;
+  DrawGrid1.RowCount := ((FMemSize + 15) div 16) + 1;
 end;
 
 // ---- EVENT HANDLER METHODS ----
@@ -131,21 +130,33 @@ end;
 // DRAW RECORDS INTO THE GRID
 procedure TForm3.DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
 var
-  DAddress: DWord;
-  QData:    QWord;
-  SAddress: string;
-  SData:    string;
-  Style:    TTextStyle;
+  BaseAddress: DWord;
+  CellAddress: DWord;
+  BData:       Byte;
+  SText:       string;
+  Style:       TTextStyle;
 begin
-  SAddress := '';
-  SData := '';
-  // get data
-  if aRow = 0 then Exit else DAddress := aRow - 1;
-  if RadioGroup1.Enabled
-    then QData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, DAddress)
-    else QData := Form1.GetMemoryCell(0, DAddress);
-  FormatHexValue(IntToHex(DAddress), 6, SAddress);
-  FormatHexValue(IntToHex(QData), 16, SData);
+  if aRow = 0 then Exit;
+
+  BaseAddress := (aRow - 1) * 16;
+  SText := '';
+
+  if aCol = 0 then
+  begin
+    FormatHexValue(IntToHex(BaseAddress), 6, SText);
+  end
+  else if (aCol >= 1) and (aCol <= 16) then
+  begin
+    CellAddress := BaseAddress + aCol - 1;
+    if CellAddress < FMemSize then
+    begin
+      if RadioGroup1.Enabled
+        then BData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, CellAddress)
+        else BData := Form1.GetMemoryCell(0, CellAddress);
+      FormatHexValue(IntToHex(BData), 2, SText);
+    end;
+  end;
+
   with DrawGrid1.Canvas do
   begin
     // background
@@ -154,52 +165,57 @@ begin
       else Brush.Color := FBGColorEvenLines;
     if gdSelected in aState then Brush.Color := FLineSelectorColor;
     FillRect(aRect);
+
     // text color
-    case ACol of
-      0: Font.Color := FAddressColor;
-      1: Font.Color := FDataColor;
-   end;
+    if aCol = 0 then Font.Color := FAddressColor
+    else Font.Color := FDataColor;
+
     // text alignment
     Style := TextStyle;
     Style.Layout := tlCenter;
-    case ACol of
-      0: Style.Alignment := taCenter;
-      1: Style.Alignment := taCenter;
-    end;
+    Style.Alignment := taCenter;
     TextStyle := Style;
+
     // write content
-    case ACol of
-      0: TextRect(aRect, aRect.Left, aRect.Top, SAddress);
-      1: TextRect(aRect, aRect.Left, aRect.Top, SData);
-    end;
+    TextRect(aRect, aRect.Left, aRect.Top, SText);
   end;
 end;
 
 // SEARCH IN DUMP
 procedure TForm3.EditButton1ButtonClick(Sender: TObject);
 var
-  s: string;
-  DAddress: DWord;
-  QData:    QWord;
-  SAddress: string;
-  SData:    string;
+  s, SAddress, SData: string;
+  BaseAddress, CellAddress: DWord;
+  BData:       Byte;
+  r, c:        Integer;
 begin
   if Length(EditButton1.Text) > 0 then
-  for DAddress := DrawGrid1.Row to FMemSize - 1 do
+  for r := DrawGrid1.Row to DrawGrid1.RowCount - 1 do
   begin
+    BaseAddress := (r - 1) * 16;
     SAddress := '';
-    SData := '';
-    // get data
-    if RadioGroup1.Enabled
-      then QData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, DAddress)
-      else QData := Form1.GetMemoryCell(0, DAddress);
-    FormatHexValue(IntToHex(DAddress), 6, SAddress);
-    FormatHexValue(IntToHex(QData), 16, SData);
-    s := lowercase(SAddress + #9 + SData);
+    FormatHexValue(IntToHex(BaseAddress), 6, SAddress);
+    s := SAddress;
+
+    for c := 0 to 15 do
+    begin
+      CellAddress := BaseAddress + c;
+      if CellAddress < FMemSize then
+      begin
+        if RadioGroup1.Enabled
+          then BData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, CellAddress)
+          else BData := Form1.GetMemoryCell(0, CellAddress);
+        SData := '';
+        FormatHexValue(IntToHex(BData), 2, SData);
+        s := s + #9 + SData;
+      end;
+    end;
+
+    s := lowercase(s);
     if Pos(LowerCase(EditButton1.Text), s) > 0 then
     begin
-      DrawGrid1.Row := DAddress + 1;
-      DrawGrid1.TopRow:= DAddress + 1;
+      DrawGrid1.Row := r;
+      DrawGrid1.TopRow := r;
       Exit;
     end;
   end;
@@ -213,6 +229,8 @@ end;
 
 // CREATE FORM
 procedure TForm3.FormCreate(Sender: TObject);
+var
+  i: Integer;
 begin
   // default colors
   FAddressColor := $00AADCDC;
@@ -221,18 +239,29 @@ begin
   FBGColorOddLines := $001E1E1E;
   FBGColorEvenLines := $00262525;
   SetFArchitecture(arNeumann);
-  SetFMemSize(1024);
+
   with DrawGrid1 do
   begin
-    with Columns do
+    Columns.Clear;
+    // Address column
+    with Columns.Add do
     begin
-      Items[0].Title.Caption := MSG01;
-      Items[1].Title.Caption := MSG02;
+      Width := 64;
+      Title.Caption := MSG01;
     end;
-    Color:= FBGColorOddLines;
-    Invalidate;
+    // Data columns (0-F)
+    for i := 0 to 15 do
+    begin
+      with Columns.Add do
+      begin
+        Width := 24;
+        Title.Caption := IntToHex(i, 1);
+      end;
+    end;
+    Color := FBGColorOddLines;
   end;
+
+  SetFMemSize(1024);
 end;
 
 end.
-

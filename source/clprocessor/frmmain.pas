@@ -19,8 +19,7 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
-  frmhexviewer, frmrunlogger, frmexdepmemory, frmcpuregviewer,
-  frmloadsavememory, ucommon;
+  frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory, ucommon;
 const
   MEM_SIZE = 1024;
 type
@@ -81,7 +80,7 @@ type
     MenuItem4:             TMenuItem;
     MenuItem5:             TMenuItem;
     MenuItem6:             TMenuItem;
-    MenuItem7: TMenuItem;
+    MenuItem7:             TMenuItem;
     MenuItem8:             TMenuItem;
     NMI:                   TAction;
     OpenDialog1:           TOpenDialog;
@@ -117,12 +116,12 @@ type
     ToolButton10:          TToolButton;
     ToolButton11:          TToolButton;
     ToolButton12:          TToolButton;
-    ToolButton13: TToolButton;
-    ToolButton14: TToolButton;
+    ToolButton13:          TToolButton;
+    ToolButton14:          TToolButton;
     ToolButton2:           TToolButton;
     ToolButton3:           TToolButton;
     ToolButton4:           TToolButton;
-    ToolButton5: TToolButton;
+    ToolButton5:           TToolButton;
     ToolButton6:           TToolButton;
     ToolButton7:           TToolButton;
     ToolButton8:           TToolButton;
@@ -152,7 +151,6 @@ type
     procedure SelectPluginDirectoryExecute(Sender: TObject);
     procedure LoadMemoryContentExecute(Sender: TObject);
     procedure SaveMemoryContentExecute(Sender: TObject);
-    procedure ShowCPURegViewerExecute(Sender: TObject);
     procedure ShowHexViewerExecute(Sender: TObject);
     procedure ShowRunLoggerExecute(Sender: TObject);
     procedure StepExecute(Sender: TObject);
@@ -180,14 +178,14 @@ type
     // emulated memory
     // - Bank #0: Neumann common memory or Harvard code memory
     // - Bank #1: Harvard data memory
-    FMemory:          array[0..1, 0..MEM_SIZE - 1] of QWord;
+    FMemory:          array[0..1, 0..MEM_SIZE - 1] of Byte;
     procedure ImpExpProperties(Direction: TOpDirection);
     procedure RefreshProperties(Direction: TOpDirection);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   public
-    function GetMemoryCell(ABank: Integer; AAddress: DWord): QWord;
-    procedure SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: QWord);
+    function GetMemoryCell(ABank: Integer; AAddress: DWord): Byte;
+    procedure SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: Byte);
     property IgnoreHelp: Boolean read FIgnoreHelp write SetIgnoreHelp;
     property EXEDirectory: string read FEXEDirectory;
     property PluginDirectory: string read FPluginDirectory write SetPluginDirectory;
@@ -376,13 +374,13 @@ end;
 // ---- PUBLIC METHODS ----
 
 // GET DATA FROM A CELL OF THE EMULATED MEMORY
-function TForm1.GetMemoryCell(ABank: Integer; AAddress: DWord): QWord;
+function TForm1.GetMemoryCell(ABank: Integer; AAddress: DWord): Byte;
 begin
   Result := FMemory[ABank, AAddress];
 end;
 
 // SET DATA TO A CELL OF THE EMULATED MEMORY
-procedure TForm1.SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: QWord);
+procedure TForm1.SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: Byte);
 begin
   FMemory[ABank, AAddress] := AValue;
 end;
@@ -743,10 +741,10 @@ end;
 // LOAD MEMORY CONTENT
 procedure TForm1.LoadMemoryContentExecute(Sender: TObject);
 var
-  Filename:       string;
-  LoadStream:     TMemoryStream;
-  i, BytesToRead: Integer;
-  Data64, Mask:   QWord;
+  Filename:   string;
+  LoadStream: TMemoryStream;
+  i:          DWord;
+  Data:       Byte;
 begin
   with OpenDialog1 do
   begin
@@ -767,21 +765,10 @@ begin
         try
           LoadStream.LoadFromFile(FileName);
           LoadStream.Position := 0;
-          // number of byte to read
-          BytesToRead := (Form7.DataWidth + 7) div 8;
-          // make mask to cover unwanted bits
-          if Form7.DataWidth = 64
-            then Mask := $FFFFFFFFFFFFFFFF
-            else Mask := (QWord(1) shl Form7.DataWidth) - 1;
-
           for i := Form7.AddressFrom to Form7.AddressTo do
           begin
-            if LoadStream.Position + BytesToRead > LoadStream.Size then Break;
-            Data64 := 0;
-            // read data from stream
-            LoadStream.ReadBuffer(Data64, BytesToRead);
-            // mask and write data to FMemory
-            Form1.FMemory[Form7.Bank, i] := Data64 and Mask;
+            LoadStream.ReadBuffer(Data, 1);
+            Form1.FMemory[Form7.Bank, i] := Data;
           end;
         except
           ShowMessage(MSG01 + Format(MSG31, [FileName]));
@@ -796,10 +783,10 @@ end;
 // SAVE MEMORY CONTENT
 procedure TForm1.SaveMemoryContentExecute(Sender: TObject);
 var
-  Filename:        string;
-  SaveStream:      TMemoryStream;
-  i, BytesToWrite: DWord;
-  Data64, Mask:    QWord;
+  Filename:   string;
+  SaveStream: TMemoryStream;
+  i:          DWord;
+  Data:       Byte;
 begin
   // Form7.Architecture :=
   Form7.Direction := false;
@@ -818,18 +805,10 @@ begin
       SaveStream := TMemoryStream.Create;
       try
         try
-          // number of bytes to write
-          BytesToWrite := (Form7.DataWidth + 7) div 8;
-          // make mask to cover unwanted bits
-          if Form7.DataWidth = 64
-            then Mask := $FFFFFFFFFFFFFFFF
-            else Mask := (QWord(1) shl Form7.DataWidth) - 1;
           for i := Form7.AddressFrom to Form7.AddressTo do
           begin
-            // read and mask data from FMemory
-            Data64 := FMemory[Form7.Bank, i] and Mask;
-            // add valid data bytes to stream
-            SaveStream.WriteBuffer(Data64, BytesToWrite);
+            Data := FMemory[Form7.Bank, i];
+            SaveStream.WriteBuffer(Data, 1);
           end;
           SaveStream.SaveToFile(FileName);
         except
@@ -840,12 +819,6 @@ begin
       end;
     end;
   end;
-end;
-
-procedure TForm1.ShowCPURegViewerExecute(Sender: TObject);
-begin
-  // beállítások ide
-  Form6.Show;
 end;
 
 // EXAMINE/DEPOSIT

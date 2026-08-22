@@ -1,13 +1,13 @@
 object Form5: TForm5
-  Left = 637
-  Height = 197
-  Top = 257
-  Width = 317
+  Left = 619
+  Height = 198
+  Top = 284
+  Width = 310
   Anchors = [akLeft]
   BorderStyle = bsDialog
   Caption = 'Examine/deposit'
-  ClientHeight = 197
-  ClientWidth = 317
+  ClientHeight = 198
+  ClientWidth = 310
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -375,8 +375,8 @@ object Form5: TForm5
     AnchorSideBottom.Control = Button5
     Left = 8
     Height = 4
-    Top = 149
-    Width = 301
+    Top = 150
+    Width = 294
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Left = 8
     BorderSpacing.Right = 8
@@ -387,7 +387,7 @@ object Form5: TForm5
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button4
-    Left = 234
+    Left = 227
     Height = 28
     Top = 78
     Width = 75
@@ -403,7 +403,7 @@ object Form5: TForm5
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = EditButton2
     AnchorSideBottom.Side = asrBottom
-    Left = 234
+    Left = 227
     Height = 28
     Top = 114
     Width = 75
@@ -418,9 +418,9 @@ object Form5: TForm5
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 234
+    Left = 227
     Height = 28
-    Top = 161
+    Top = 162
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
@@ -462,7 +462,7 @@ object Form5: TForm5
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = EditButton1
     AnchorSideBottom.Side = asrBottom
-    Left = 234
+    Left = 227
     Height = 59
     Hint = 'Select memory type of the Harvard architecture'
     Top = 8
@@ -499,14 +499,14 @@ object Form5: TForm5
     Left = 8
     Height = 34
     Top = 33
-    Width = 214
+    Width = 207
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 4
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 10
+    ImageIndex = 20
     MaxLength = 255
     NumGlyphs = 1
     OnButtonClick = EditButton1ButtonClick
@@ -524,14 +524,14 @@ object Form5: TForm5
     Left = 8
     Height = 34
     Top = 108
-    Width = 214
+    Width = 207
     Alignment = taRightJustify
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 4
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 10
+    ImageIndex = 20
     MaxLength = 255
     NumGlyphs = 1
     OnButtonClick = EditButton2ButtonClick
@@ -539,6 +539,6 @@ object Form5: TForm5
     ParentShowHint = False
     PasswordChar = #0
     TabOrder = 2
-    Text = '00 00 00 00 00 00 00 00'
+    Text = '00'
   end
 end

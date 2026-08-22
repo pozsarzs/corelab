@@ -20,14 +20,14 @@ uses
 type
   { TForm5 }
   TForm5 = class(TForm)
-    Bevel1: TBevel;
-    Button3: TButton;
-    Button4: TButton;
-    Button5: TButton;
+    Bevel1:      TBevel;
+    Button3:     TButton;
+    Button4:     TButton;
+    Button5:     TButton;
     EditButton1: TEditButton;
     EditButton2: TEditButton;
-    Label1: TLabel;
-    Label2: TLabel;
+    Label1:      TLabel;
+    Label2:      TLabel;
     RadioGroup1: TRadioGroup;
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -39,7 +39,7 @@ type
     procedure FormCreate(Sender: TObject);
   private
     FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FMemSize: DWord;                                  // Size of emulated memory
+    FMemSize:      DWord;                             // Size of emulated memory
   protected
     procedure SetFArchitecture(AArchitecture: TArchitecture);
   public
@@ -88,7 +88,7 @@ var
   s: string;
 begin
   s := '';
-  FormatHexValue('0', 16, s);
+  FormatHexValue('0', 2, s);
   EditButton2.Text := s;
 end;
 
@@ -114,7 +114,7 @@ var
 begin
   PrevText := EditButton2.Text;
   NewText := '';
-  if FormatHexValue(EditButton2.Text, 16, NewText)
+  if FormatHexValue(EditButton2.Text, 2, NewText)
   then EditButton2.Text := NewText else
   begin
     ShowMessage(MSG01 + MSG03);
@@ -125,10 +125,9 @@ end;
 // GET DATA FROM SPECIFIED MEMORY AND ADDRESS
 procedure TForm5.Button3Click(Sender: TObject);
 var
-  PrevText, NewText: string;
-  Data:              QWord;
-  Address:           DWord;
-  MaxAddress:        Integer;
+  Address, MaxAddress: DWord;
+  Data:                Byte;
+  PrevText, NewText:   string;
 begin
   // set highest address
   MaxAddress := FMemSize - 1;
@@ -153,7 +152,7 @@ begin
     if RadioGroup1.Enabled
       then Data := Form1.GetMemoryCell(RadioGroup1.ItemIndex, Address)
       else Data := Form1.GetMemoryCell(0, Address);
-    if FormatHexValue(IntToHex(Data, 16), 16, NewText)
+    if FormatHexValue(IntToHex(Data, 2), 2, NewText)
       then EditButton2.Text := NewText
       else EditButton2ButtonClick(Sender);
   end;
@@ -162,10 +161,9 @@ end;
 // SET DATA TO SPECIFIED MEMORY AND ADDRESS
 procedure TForm5.Button4Click(Sender: TObject);
 var
-  PrevText, NewText: string;
-  Data:              QWord;
-  Address:           DWord;
-  MaxAddress:        Integer;
+  Address, MaxAddress: DWord;
+  Data:                Byte;
+  PrevText, NewText:   string;
 begin
   // set highest address
   MaxAddress := FMemSize - 1;
@@ -182,7 +180,7 @@ begin
     EditButton1.Text := NewText;
     // validate data
     PrevText := EditButton2.Text;
-    if not FormatHexValue(EditButton2.Text, 16, NewText) then
+    if not FormatHexValue(EditButton2.Text, 2, NewText) then
     begin
       ShowMessage(MSG01 + MSG03);
       EditButton2.Text := PrevText;
@@ -192,7 +190,7 @@ begin
       EditButton2.Text := NewText;
       // convert and store strings
       Address := StrToDWord('$' + RemoveSpace(EditButton1.Text));
-      Data := StrToQWord('$' + RemoveSpace(EditButton2.Text));
+      Data := StrToInt('$' + RemoveSpace(EditButton2.Text));
       if Address > MaxAddress then
       begin
         ShowMessage(MSG01 + Format(MSG04, [MaxAddress.ToString]));
