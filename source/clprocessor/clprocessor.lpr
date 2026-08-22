@@ -16,7 +16,7 @@ program clprocessor;
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
   lhelpcontrolpkg, crt, frmabout, frmmain, frmhexviewer, frmrunlogger,
-  frmexdepmemory, frmcpuregviewer, frmloadsavememory;
+  frmexdepmemory, frmloadsavememory;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -179,7 +179,7 @@ begin
     CreateForm(TForm3, Form3);
     CreateForm(TForm4, Form4);
     CreateForm(TForm5, Form5);
-    CreateForm(TForm6, Form6);
+//    CreateForm(TForm6, Form6);
     CreateForm(TForm7, Form7);
   end;
   Form2.SetAboutLabels(AboutLabels);

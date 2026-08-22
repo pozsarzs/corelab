@@ -185,6 +185,7 @@ begin
       ReadBuffer(FMemoryMode, SizeOf(FMemoryMode));
       ReadBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
       SetFAddressRangeSize(FAddressRangeSize);
+      ReadBuffer(FDataWidth, SizeOf(FDataWidth));
       Reset;
       if FAddressRangeSize > 0 then
         ReadBuffer(FMemCells[0], FAddressRangeSize);

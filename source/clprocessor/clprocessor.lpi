@@ -92,13 +92,6 @@
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="frmcpuregviewer.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form6"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit>
-      <Unit>
         <Filename Value="frmloadsavememory.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form7"/>

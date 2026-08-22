@@ -19,28 +19,28 @@ uses
 type
   // Last executed instruction
   TLastInstruction = record
-    Address: word;
-    Opcode: byte;
-    NumOperand: byte;
-    Operands: array[1..2] of word;
-    Mnemonic: string[12];
+    Address:    Word;
+    Opcode:     Byte;
+    NumOperand: Byte;
+    Operands:   array[1..2] of Word;
+    Mnemonic:   string[12];
   end;
   // Register set
   T8080Registers = record
     case boolean of
       true: (
-        BC, DE, HL, AF: word;
-        PC, SP: word;
+        BC, DE, HL, AF: Word;
+        PC, SP:         Word;
       );
       false: (
-        C, B, E, D, L, H, F, A: byte;
-        PCL, PCH, SPL, SPH: byte;
+        C, B, E, D, L, H, F, A: Byte;
+        PCL, PCH, SPL, SPH:     Byte;
       );
   end;
   // 8080 CPU implementation
   T8080CPU = class(TCPU)
   private
-    LogRecord: TLastInstruction;                         // Raw running log data
+    LogRecord:   TLastInstruction;                       // Raw running log data
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
     s: string;                                                 // General string
   protected
@@ -55,8 +55,8 @@ type
     // Used via the ICtlAPI by TSupervisor class
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
-    function GetRegister(const RegName: PChar): qword; override;
-    procedure SetRegister(const RegName: PChar; Value: qword); override;
+    function GetRegister(const RegName: PChar): Byte; override;
+    procedure SetRegister(const RegName: PChar; Value: Byte); override;
   end;
 const
   RegNames: array[0..7] of string = ('B', 'C', 'D', 'E', 'H', 'L', 'M', 'A');
@@ -64,11 +64,11 @@ const
 // ---- PROTECTED METHODS ----
 
 // UPDATE REGISTER F (SZ0A 0P1C)
-procedure T8080CPU.UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
+procedure T8080CPU.UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);
 var
-  b: byte;
-  l: boolean;
-  Value8: byte;
+  b:      Byte;
+  l:      Boolean;
+  Value8: Byte;
 begin
   Value8 := Value16 and $FF;
   // 7. Sign:            Sxxx xxxx
@@ -112,7 +112,6 @@ begin
   FDescription := 'Intel 8080 microprocessor';
   // CPU features
   FArchitecture := arNeumann;                            // Type of architecture
-  FBitWidth := 8;                            // Main processor word size in bits
   FAddressWidth := 16;                              // Address bus width in bits
   FEndianness := enLittle;                                         // Byte order
   FMaxMemAddress := $FFFF;                  // The highest (data) memory address
@@ -203,11 +202,11 @@ end;
 // EXECUTING AN INSTRUCTION
 procedure T8080CPU.Step;
 var
-  OC: byte;
-  SourceRegIndex, DestRegIndex: byte;
-  dw1: cardinal;
-  w1, w2: word;
-  b1, b2: byte;
+  OC:                           Byte;
+  SourceRegIndex, DestRegIndex: Byte;
+  dw1:                          Cardinal;
+  w1, w2:                       Word;
+  b1, b2:                       Byte;
 begin
   if CheckInterrupts then Exit;
   if FHalted then Exit;
@@ -248,7 +247,7 @@ begin
 end;
 
 // QUERYING REGISTERS
-function T8080CPU.GetRegister(const RegName: PChar): qword;
+function T8080CPU.GetRegister(const RegName: PChar): Byte;
 begin
   Result := 0;
   case UpperCase(RegName) of
@@ -263,7 +262,7 @@ begin
 end;
 
 // SETTING REGISTERS
-procedure T8080CPU.SetRegister(const RegName: PChar; Value: qword);
+procedure T8080CPU.SetRegister(const RegName: PChar; Value: Byte);
 begin
   case UpperCase(RegName) of
     'A':  FRegs.A := Value and $FF;

@@ -67,7 +67,6 @@ type
     FVersion:          TSemanticVersion;                       // Module version
     // CPU features
     FArchitecture:     TArchitecture;                    // Type of architecture
-    FBitWidth:         Byte;                 // Main processor word size in bits
     FAddressWidth:     Byte;                        // Address bus width in bits
     FEnabled:          Boolean;         // Enable device without detach from bus
     FEndianness:       TEndianness;                                // Byte order
@@ -93,8 +92,8 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
     // Used via the ICtlAPI by TSupervisor class
-    procedure SetRegister(const RegName: PChar; AValue: QWord); virtual; abstract;
-    function  GetRegister(const RegName: PChar): QWord; virtual; abstract;
+    procedure SetRegister(const RegName: PChar; AValue: Byte); virtual; abstract;
+    function  GetRegister(const RegName: PChar): Byte; virtual; abstract;
     procedure Run; virtual;
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
@@ -109,7 +108,6 @@ type
     // Public properties
     property AddressWidth: Byte read FAddressWidth;
     property Architecture: TArchitecture read FArchitecture;
-    property BitWidth: Byte read FBitWidth;
     property Cycles: QWord read FCycles;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;

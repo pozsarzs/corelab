@@ -43,8 +43,8 @@ type
     function DetachMemory(InstanceID: Integer): Boolean; virtual;
     function DetachIOPorts(InstanceID: Integer): Boolean; virtual;
     // Used via the ISysBus by TCPU class
-    function ReadMemory(AAddress: DWord): QWord; virtual;
-    procedure WriteMemory(AAddress: DWord; AValue: QWord); virtual;
+    function ReadMemory(AAddress: DWord): Byte; virtual;
+    procedure WriteMemory(AAddress: DWord; AValue: Byte); virtual;
     function ReadPort(APort: Word): Byte; virtual;
     procedure WritePort(APort: Word; AValue: Byte); virtual;
     // Used via the ISvcAPI by TSupervisor class
@@ -61,8 +61,8 @@ type
     function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
     function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
     // Used via the ICtlAPI by TSupervisor class
-    procedure SetRegister(const RegName: PChar; AValue: QWord); virtual;
-    function  GetRegister(const RegName: PChar): QWord; virtual;
+    procedure SetRegister(const RegName: PChar; AValue: Byte); virtual;
+    function  GetRegister(const RegName: PChar): Byte; virtual;
     procedure Run; virtual;
     procedure Step; virtual;
     procedure Stop; virtual;
@@ -122,12 +122,12 @@ end;
 
 // -- ISysBus --
 
-function TBus.ReadMemory(AAddress: DWord): QWord;
+function TBus.ReadMemory(AAddress: DWord): Byte;
 begin
   Result := 0;
 end;
 
-procedure TBus.WriteMemory(AAddress: DWord; AValue: QWord);
+procedure TBus.WriteMemory(AAddress: DWord; AValue: Byte);
 begin
 end;
 
@@ -195,11 +195,11 @@ end;
 
 // -- ICtlAPI --
 
-procedure TBus.SetRegister(const RegName: PChar; AValue: QWord);
+procedure TBus.SetRegister(const RegName: PChar; AValue: Byte);
 begin
 end;
 
-function TBus.GetRegister(const RegName: PChar): QWord;
+function TBus.GetRegister(const RegName: PChar): Byte;
 begin
   Result := 0;
 end;

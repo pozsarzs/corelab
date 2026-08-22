@@ -21,8 +21,8 @@ type
   ISysBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
     // Implemented only in TMemory class
-    function ReadMemory(AAddress: DWord): QWord;
-    procedure WriteMemory(AAddress: DWord; AValue: QWord);
+    function ReadMemory(AAddress: DWord): Byte;
+    procedure WriteMemory(AAddress: DWord; AValue: Byte);
     // Implemented only in TIOPort class
     function ReadPort(APort: Word): Byte;
     procedure WritePort(APort: Word; AValue: Byte);

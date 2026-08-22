@@ -81,7 +81,7 @@ type
     MenuItem4:             TMenuItem;
     MenuItem5:             TMenuItem;
     MenuItem6:             TMenuItem;
-    MenuItem7:             TMenuItem;
+    MenuItem7: TMenuItem;
     MenuItem8:             TMenuItem;
     NMI:                   TAction;
     OpenDialog1:           TOpenDialog;
@@ -105,7 +105,6 @@ type
     Separator7:            TMenuItem;
     Separator8:            TMenuItem;
     ShellListView1:        TShellListView;
-    ShowCPURegViewer:      TAction;
     ShowHexViewer:         TAction;
     ShowRunLogger:         TAction;
     Splitter1:             TSplitter;
@@ -118,9 +117,12 @@ type
     ToolButton10:          TToolButton;
     ToolButton11:          TToolButton;
     ToolButton12:          TToolButton;
+    ToolButton13: TToolButton;
+    ToolButton14: TToolButton;
     ToolButton2:           TToolButton;
     ToolButton3:           TToolButton;
     ToolButton4:           TToolButton;
+    ToolButton5: TToolButton;
     ToolButton6:           TToolButton;
     ToolButton7:           TToolButton;
     ToolButton8:           TToolButton;
