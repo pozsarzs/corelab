@@ -397,7 +397,7 @@ object Form1: TForm1
       ''
     )
     TitleCaptions.Strings = (
-      ''
+      'Reg.'
       'Value (Hex)'
     )
     ColWidths = (

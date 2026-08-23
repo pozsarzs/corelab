@@ -55,8 +55,8 @@ type
     // Used via the ICtlAPI by TSupervisor class
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
-    function GetRegister(const RegName: PChar): Byte; override;
-    procedure SetRegister(const RegName: PChar; Value: Byte); override;
+    function GetRegister(const RegName: PChar): Word; override;
+    procedure SetRegister(const RegName: PChar; Value: Word); override;
   end;
 const
   RegNames: array[0..7] of string = ('B', 'C', 'D', 'E', 'H', 'L', 'M', 'A');
@@ -247,7 +247,7 @@ begin
 end;
 
 // QUERYING REGISTERS
-function T8080CPU.GetRegister(const RegName: PChar): Byte;
+function T8080CPU.GetRegister(const RegName: PChar): Word;
 begin
   Result := 0;
   case UpperCase(RegName) of
@@ -262,7 +262,7 @@ begin
 end;
 
 // SETTING REGISTERS
-procedure T8080CPU.SetRegister(const RegName: PChar; Value: Byte);
+procedure T8080CPU.SetRegister(const RegName: PChar; Value: Word);
 begin
   case UpperCase(RegName) of
     'A':  FRegs.A := Value and $FF;

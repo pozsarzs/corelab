@@ -29,6 +29,14 @@ type
     PEnabled:          Boolean;     // disable processor without detach from bus
     PInstanceID:       Integer;                            // Module instance ID
     PModname:          string;                                    // module name
+    PAddressWidth:     Byte;                        // Address bus width in bits
+    PArchitecture:     TArchitecture;                    // Type of architecture
+    PEndianness:       TEndianness;                                // Byte order
+    PMaxCodeAddress:   QWord;                 // The highest code memory address
+    PMaxIOPortAddress: QWord;                    // The highest I/O port address
+    PMaxMemAddress:    QWord;               // The highest (data) memory address
+    PHasSeparateIOBus: Boolean;       // Indicates separate memory and I/O buses
+    PInterruptEnabled: Boolean;                  // Global interrupt enable flag
   end;
   // direction pairs for data moving procedures
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
@@ -211,7 +219,7 @@ resourcestring
   MSG08 = 'Type';
   MSG09 = 'Property';
   MSG10 = 'Value';
-  MSG11 = 'Address';
+  MSG11 = 'Reg.';
   MSG12 = 'Data';
   MSG13 = ' %sh read from address %sh.';
   MSG14 = ' %sh write to address %sh.';
@@ -253,7 +261,6 @@ begin
         else PDescription := '';
       // read processor properties
       PEnabled := CurrentProcessor.Enabled;
-      {...}
     end;
   end;
   // export from variables to plugin
@@ -263,13 +270,15 @@ begin
     begin
       // only writeable properties
       CurrentProcessor.Enabled := PEnabled;
-      {...}
     end;
   end;
 end;
 
 // REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
+var
+  ta: TArchitecture;
+  en: TEndianness;
 begin
   if Direction = opVar2List then
   begin
@@ -293,7 +302,22 @@ begin
         PickList.CommaText := 'true,false';
         ReadOnly := True;
       end;
-      {...}
+      InsertRow('AddressWidth', IntToStr(LoadedPlugin.PAddressWidth), True);
+      ItemProps['AddressWidth'].ReadOnly := True;
+      InsertRow('Architecture', LoadedPlugin.PArchitecture.ToString, True);
+      ItemProps['Architecture'].ReadOnly := True;
+      InsertRow('Endianness', LoadedPlugin.PEndianness.ToString, True);
+      ItemProps['Endianness'].ReadOnly := True;
+      InsertRow('HasSeparateIOBus', BoolToStr(LoadedPlugin.PHasSeparateIOBus, 'true', 'false'), True);
+      ItemProps['HasSeparateIOBus'].ReadOnly := True;
+      InsertRow('InterruptEnabled', BoolToStr(LoadedPlugin.PInterruptEnabled, 'true', 'false'), True);
+      ItemProps['InterruptEnabled'].ReadOnly := True;
+      InsertRow('MaxCodeAddress', IntToHex(LoadedPlugin.PMaxCodeAddress), True);
+      ItemProps['MaxCodeAddress'].ReadOnly := True;
+      InsertRow('MaxIOPortAddress', IntToHex(LoadedPlugin.PMaxIOPortAddress), True);
+      ItemProps['MaxIOPortAddress'].ReadOnly := True;
+      InsertRow('MaxMemAddress', IntToHex(LoadedPlugin.PMaxMemAddress), True);
+      ItemProps['MaxMemAddress'].ReadOnly := True;
     end;
   end;
   if Direction = opList2Var then
@@ -303,7 +327,6 @@ begin
     begin
       try
         LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
-        {...}
       except
         ShowMessage(MSG01 + MSG02);
       end;
@@ -505,9 +528,9 @@ begin
   with ShellListView1 do
   begin
     {$IFDEF WINDOWS}
-    Mask := 'processor_*.dll';
+    Mask := 'cpu_*.dll';
     {$ELSE}
-    Mask := 'libprocessor_*.so';
+    Mask := 'libcpu_*.so';
     {$ENDIF}
     try
       Root := DirectoryEdit1.Directory;
@@ -556,11 +579,11 @@ begin
     end;
     // search exported function and instantiation
     // processor
-    Pointer(CreateProcessor) := GetProcedureAddress(LibHandle, 'processor_create');
-    Pointer(DestroyProcessor) := GetProcedureAddress(LibHandle, 'processor_destroy');
+    Pointer(CreateProcessor) := GetProcedureAddress(LibHandle, 'cpu_create');
+    Pointer(DestroyProcessor) := GetProcedureAddress(LibHandle, 'cpu_destroy');
     // module
-    Pointer(LoadState) := GetProcedureAddress(LibHandle, 'processor_loadstate');
-    Pointer(SaveState) := GetProcedureAddress(LibHandle, 'processor_savestate');
+    Pointer(LoadState) := GetProcedureAddress(LibHandle, 'cpu_loadstate');
+    Pointer(SaveState) := GetProcedureAddress(LibHandle, 'cpu_savestate');
     // load data
     if (Assigned(CreateProcessor)) and (Assigned(DestroyProcessor)) then
     begin
@@ -631,25 +654,25 @@ end;
 // RESET PROCESSOR
 procedure TForm1.ResetExecute(Sender: TObject);
 begin
-
+  CurrentProcessor.Reset;
 end;
 
 // REQUEST NMI
 procedure TForm1.NMIExecute(Sender: TObject);
 begin
-
+  CurrentProcessor.NMI;
 end;
 
 // RUN PROGRAM BY STEP
 procedure TForm1.StepExecute(Sender: TObject);
 begin
-
+  CurrentProcessor.Step;
 end;
 
 // RUN PROGRAM
 procedure TForm1.RunExecute(Sender: TObject);
 begin
-
+  CurrentProcessor.Run;
 end;
 
 // PAUSE PROGRAM
@@ -661,7 +684,7 @@ end;
 // STOP PROGRAM
 procedure TForm1.StopExecute(Sender: TObject);
 begin
-
+  CurrentProcessor.Stop;
 end;
 
 // LOAD PLUGIN STATUS
@@ -879,12 +902,10 @@ begin
   end;
   with ValueListEditor2 do
   begin
-    TitleCaptions.Strings[0] := '';
+    TitleCaptions.Strings[0] := MSG11;
     TitleCaptions.Strings[1] := MSG17;
-    Cells[0, 1] := MSG11;
-    Cells[0, 2] := MSG12;
-    Cells[1, 1] := '0';
-    Cells[1, 2] := '0';
+    Cells[0, 1] := '';
+    Cells[0, 2] := '';
     Enabled := False;
   end;
   // enable/disable menuitems
