@@ -393,6 +393,7 @@ object Form1: TForm1
     RowCount = 2
     TabOrder = 2
     OnValidateEntry = ValueListEditor2ValidateEntry
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAlwaysShowEditor, goThumbTracking, goDblClickAutoSize]
     Strings.Strings = (
       ''
     )
@@ -487,10 +488,7 @@ object Form1: TForm1
       TabOrder = 2
       OnDrawCell = ValueListEditor1DrawCell
       OnEditingDone = ValueListEditor1EditingDone
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking]
-      Strings.Strings = (
-        ''
-      )
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goRowSelect, goAlwaysShowEditor, goThumbTracking, goDblClickAutoSize]
       TitleCaptions.Strings = (
         'Property'
         'Value'
@@ -550,41 +548,36 @@ object Form1: TForm1
       Style = tbsDivider
     end
     object ToolButton4: TToolButton
-      Left = 190
+      Left = 52
       Top = 2
       Action = ShowRunLogger
     end
     object ToolButton6: TToolButton
-      Left = 213
+      Left = 236
       Height = 22
       Top = 2
       Caption = 'ToolButton6'
       Style = tbsDivider
     end
     object ToolButton7: TToolButton
-      Left = 52
+      Left = 75
       Top = 2
       Action = Reset
     end
     object ToolButton8: TToolButton
-      Left = 75
+      Left = 98
       Top = 2
       Action = NMI
     end
     object ToolButton9: TToolButton
-      Left = 98
+      Left = 121
       Top = 2
       Action = Step
     end
     object ToolButton10: TToolButton
-      Left = 121
-      Top = 2
-      Action = Run
-    end
-    object ToolButton11: TToolButton
       Left = 144
       Top = 2
-      Action = Pause
+      Action = Run
     end
     object ToolButton12: TToolButton
       Left = 167
@@ -592,21 +585,31 @@ object Form1: TForm1
       Action = Stop
     end
     object ToolButton5: TToolButton
-      Left = 264
+      Left = 287
       Height = 22
       Top = 2
       Caption = 'ToolButton5'
       Style = tbsDivider
     end
     object ToolButton13: TToolButton
-      Left = 218
+      Left = 241
       Top = 2
       Action = ShowHexViewer
     end
     object ToolButton14: TToolButton
-      Left = 241
+      Left = 264
       Top = 2
       Action = ExamineDeposit
+    end
+    object ToolButton11: TToolButton
+      Left = 190
+      Top = 2
+      Action = LoadRegisterValuesFromCPU
+    end
+    object ToolButton15: TToolButton
+      Left = 213
+      Top = 2
+      Action = SaveRegisterValuesToCPU
     end
   end
   object Timer1: TTimer
@@ -678,6 +681,15 @@ object Form1: TForm1
       object Separator7: TMenuItem
         Caption = '-'
       end
+      object MenuItem9: TMenuItem
+        Action = LoadRegisterValuesFromCPU
+      end
+      object MenuItem20: TMenuItem
+        Action = SaveRegisterValuesToCPU
+      end
+      object Separator9: TMenuItem
+        Caption = '-'
+      end
       object MenuItem26: TMenuItem
         Action = Reset
       end
@@ -689,9 +701,6 @@ object Form1: TForm1
       end
       object MenuItem22: TMenuItem
         Action = Run
-      end
-      object MenuItem20: TMenuItem
-        Action = Pause
       end
       object MenuItem19: TMenuItem
         Action = Stop
@@ -1097,6 +1106,19 @@ object Form1: TForm1
       OnExecute = ShowRunLoggerExecute
       ShortCut = 16460
     end
+    object LoadRegisterValuesFromCPU: TAction
+      Caption = 'Loa&d register values from CPU'
+      Hint = 'Load register values from CPU'
+      ImageIndex = 16
+      OnExecute = LoadRegisterValuesFromCPUExecute
+      ShortCut = 16466
+    end
+    object SaveRegisterValuesToCPU: TAction
+      Caption = 'Sa&ve register values to CPU'
+      Hint = 'Save register values to CPU'
+      ImageIndex = 17
+      OnExecute = SaveRegisterValuesToCPUExecute
+    end
     object Reset: TAction
       Caption = 'Reset'
       Hint = 'Reset processor'
@@ -1120,12 +1142,6 @@ object Form1: TForm1
       Hint = 'Run program'
       ImageIndex = 9
       OnExecute = RunExecute
-    end
-    object Pause: TAction
-      Caption = 'Pause'
-      Hint = 'Pause program'
-      ImageIndex = 10
-      OnExecute = PauseExecute
     end
     object Stop: TAction
       Caption = 'Stop'

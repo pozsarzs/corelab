@@ -257,6 +257,8 @@ begin
       end;
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
       ItemProps['AddressRangeSize'].ReadOnly := False;
+      Row := 1;
+      AutoSizeColumn(0);
     end;
   end;
   if Direction = opList2Var then
@@ -350,19 +352,20 @@ var
   Grid: TValueListEditor;
 begin
   Grid := TValueListEditor(Sender);
-  if (aRow > 0) and
-    (aRow < Grid.RowCount - 1) and
-    (Grid.ItemProps[Grid.Keys[aRow]].ReadOnly) and
-    (not (Grid.ItemProps[Grid.Keys[aRow]].EditStyle = esPickList)) and
-    (aCol = 0) then
-    with Grid.Canvas do
-    begin
-      Brush.Color := clBtnFace;
-      Font.Color := clGrayText;
-      Font.Style := [fsItalic];
-      FillRect(aRect);
-      TextRect(aRect, aRect.Left + 4, aRect.Top + 6, Grid.Cells[ACol, ARow]);
-    end;
+  if Length(Grid.Cells[0, aRow]) > 0 then
+    if (aRow > 0) and
+       (aRow <= Grid.RowCount - 1) and
+       (Grid.ItemProps[Grid.Keys[aRow]].ReadOnly) and
+       (not (Grid.ItemProps[Grid.Keys[aRow]].EditStyle = esPickList)) and
+       (aCol = 0) then
+      with Grid.Canvas do
+      begin
+        Brush.Color := clBtnFace;
+        Font.Color := clGrayText;
+        Font.Style := [fsItalic];
+        FillRect(aRect);
+        TextRect(aRect, aRect.Left + 4, aRect.Top + 6, Grid.Cells[ACol, ARow]);
+     end;
 end;
 
 // REFRESH P... VARIABLES

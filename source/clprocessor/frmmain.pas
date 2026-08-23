@@ -32,11 +32,10 @@ type
     PAddressWidth:     Byte;                        // Address bus width in bits
     PArchitecture:     TArchitecture;                    // Type of architecture
     PEndianness:       TEndianness;                                // Byte order
-    PMaxCodeAddress:   QWord;                 // The highest code memory address
-    PMaxIOPortAddress: QWord;                    // The highest I/O port address
-    PMaxMemAddress:    QWord;               // The highest (data) memory address
+    PMaxCodeAddress:   DWord;                 // The highest code memory address
+    PMaxIOPortAddress: DWord;                    // The highest I/O port address
+    PMaxMemAddress:    DWord;               // The highest (data) memory address
     PHasSeparateIOBus: Boolean;       // Indicates separate memory and I/O buses
-    PInterruptEnabled: Boolean;                  // Global interrupt enable flag
   end;
   // direction pairs for data moving procedures
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
@@ -48,6 +47,10 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
+    MenuItem20: TMenuItem;
+    MenuItem9: TMenuItem;
+    SaveRegisterValuesToCPU: TAction;
+    LoadRegisterValuesFromCPU: TAction;
     ActionList1:           TActionList;
     CHMHelpDatabase1:      TCHMHelpDatabase;
     DirectoryEdit1:        TDirectoryEdit;
@@ -71,7 +74,6 @@ type
     MenuItem18:            TMenuItem;
     MenuItem19:            TMenuItem;
     MenuItem2:             TMenuItem;
-    MenuItem20:            TMenuItem;
     MenuItem21:            TMenuItem;
     MenuItem22:            TMenuItem;
     MenuItem23:            TMenuItem;
@@ -93,7 +95,6 @@ type
     NMI:                   TAction;
     OpenDialog1:           TOpenDialog;
     Panel1:                TPanel;
-    Pause:                 TAction;
     Quit:                  TAction;
     RefreshPluginList:     TAction;
     Reset:                 TAction;
@@ -111,6 +112,7 @@ type
     Separator6:            TMenuItem;
     Separator7:            TMenuItem;
     Separator8:            TMenuItem;
+    Separator9: TMenuItem;
     ShellListView1:        TShellListView;
     ShowHexViewer:         TAction;
     ShowRunLogger:         TAction;
@@ -122,10 +124,11 @@ type
     ToolBar1:              TToolBar;
     ToolButton1:           TToolButton;
     ToolButton10:          TToolButton;
-    ToolButton11:          TToolButton;
+    ToolButton11: TToolButton;
     ToolButton12:          TToolButton;
     ToolButton13:          TToolButton;
     ToolButton14:          TToolButton;
+    ToolButton15: TToolButton;
     ToolButton2:           TToolButton;
     ToolButton3:           TToolButton;
     ToolButton4:           TToolButton;
@@ -142,6 +145,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure HelpExecute(Sender: TObject);
     procedure LoadChangePluginExecute(Sender: TObject);
+    procedure LoadRegisterValuesFromCPUExecute(Sender: TObject);
     procedure LoadStatusExecute(Sender: TObject);
     procedure MenuItem14Click(Sender: TObject);
     procedure MenuItem15Click(Sender: TObject);
@@ -149,12 +153,12 @@ type
     procedure MenuItem17Click(Sender: TObject);
     procedure MenuItem18Click(Sender: TObject);
     procedure NMIExecute(Sender: TObject);
-    procedure PauseExecute(Sender: TObject);
     procedure QuitExecute(Sender: TObject);
     procedure RefreshPluginListExecute(Sender: TObject);
     procedure ResetExecute(Sender: TObject);
     procedure RestartApplicationExecute(Sender: TObject);
     procedure RunExecute(Sender: TObject);
+    procedure SaveRegisterValuesToCPUExecute(Sender: TObject);
     procedure SaveStatusExecute(Sender: TObject);
     procedure SelectPluginDirectoryExecute(Sender: TObject);
     procedure LoadMemoryContentExecute(Sender: TObject);
@@ -176,6 +180,11 @@ type
     DestroyProcessor: TDestroyProcessorProc;         // destroy plugin processor
     LoadState:        TLoadStateProc;                       // load plugin state
     SaveState:        TSaveStateProc;                       // save plugin state
+    // registers
+    RegNames:         array of PChar;                 // imported register names
+    RegValues:        array of Word;                 // imported register values
+    RegSize:          array of Byte;                 // register size in nibbles
+    RegCount:         Byte;                       // number of the all registers
     // general variables
     FIgnoreHelp:      Boolean;
     FLoadCounter:     Integer;
@@ -189,6 +198,7 @@ type
     FMemory:          array[0..1, 0..MEM_SIZE - 1] of Byte;
     procedure ImpExpProperties(Direction: TOpDirection);
     procedure RefreshProperties(Direction: TOpDirection);
+    procedure RefreshRegisters(Direction: TOpDirection);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   public
@@ -261,6 +271,13 @@ begin
         else PDescription := '';
       // read processor properties
       PEnabled := CurrentProcessor.Enabled;
+      PAddressWidth := CurrentProcessor.AddressWidth;
+      PArchitecture := CurrentProcessor.Architecture;
+      PEndianness := CurrentProcessor.Endianness;
+      PMaxCodeAddress := CurrentProcessor.MaxCodeAddress;
+      PMaxIOPortAddress := CurrentProcessor.MaxIOPortAddress;
+      PMaxMemAddress := CurrentProcessor.MaxMemAddress;
+      PHasSeparateIOBus := CurrentProcessor.HasSeparateIOBus;
     end;
   end;
   // export from variables to plugin
@@ -310,14 +327,14 @@ begin
       ItemProps['Endianness'].ReadOnly := True;
       InsertRow('HasSeparateIOBus', BoolToStr(LoadedPlugin.PHasSeparateIOBus, 'true', 'false'), True);
       ItemProps['HasSeparateIOBus'].ReadOnly := True;
-      InsertRow('InterruptEnabled', BoolToStr(LoadedPlugin.PInterruptEnabled, 'true', 'false'), True);
-      ItemProps['InterruptEnabled'].ReadOnly := True;
-      InsertRow('MaxCodeAddress', IntToHex(LoadedPlugin.PMaxCodeAddress), True);
+      InsertRow('MaxCodeAddress', IntToHex(LoadedPlugin.PMaxCodeAddress, 6), True);
       ItemProps['MaxCodeAddress'].ReadOnly := True;
-      InsertRow('MaxIOPortAddress', IntToHex(LoadedPlugin.PMaxIOPortAddress), True);
+      InsertRow('MaxIOPortAddress', IntToHex(LoadedPlugin.PMaxIOPortAddress, 6), True);
       ItemProps['MaxIOPortAddress'].ReadOnly := True;
-      InsertRow('MaxMemAddress', IntToHex(LoadedPlugin.PMaxMemAddress), True);
+      InsertRow('MaxMemAddress', IntToHex(LoadedPlugin.PMaxMemAddress, 6), True);
       ItemProps['MaxMemAddress'].ReadOnly := True;
+      Row := 1;
+      AutoSizeColumn(0);
     end;
   end;
   if Direction = opList2Var then
@@ -329,6 +346,60 @@ begin
         LoadedPlugin.PEnabled := StrToBool(Values['Enabled']);
       except
         ShowMessage(MSG01 + MSG02);
+      end;
+    end;
+  end;
+end;
+
+// REFRESH REGISTER LIST
+procedure TForm1.RefreshRegisters(Direction: TOpDirection);
+var
+  b, bb: Byte;
+  i:     Integer;
+begin
+  if Assigned(CurrentProcessor) then
+  begin
+    // get number of registers
+    RegCount := CurrentProcessor.GetRegisterCount;
+    SetLength(RegNames, RegCount);
+    SetLength(RegValues, RegCount);
+    SetLength(RegSize, RegCount);
+    // get registers' name
+    for b := 0 to RegCount - 1 do
+    begin
+      RegNames[b] := CurrentProcessor.GetRegisterName(b);
+      RegSize[b] := CurrentProcessor.GetRegisterSize(b);
+    end;
+    if Direction = opVar2List then
+    begin
+      // registers to array
+      for b := 0 to RegCount - 1 do
+        RegValues[b] := CurrentProcessor.GetRegister(RegNames[b]);
+      // array to ValueListEditor2
+      with ValueListEditor2 do
+      begin
+        Strings.BeginUpdate;
+        Clear;
+        DefaultRowHeight := 20;
+        for b := RegCount - 1 downto 0 do
+          InsertRow(StrPas(RegNames[b]), IntToHex(RegValues[b], RegSize[b]), True);
+        Strings.EndUpdate;
+      end;
+    end else
+    begin
+      // ValueListEditor2 to array
+      with ValueListEditor2 do
+      begin
+        for b := 0 to RegCount - 1 do
+        begin
+          i := -1;
+          for bb := 0 to RegCount - 1 do
+            if Cells[b, 0] = StrPas(RegNames[b]) then i := bb;
+          if i > -1 then RegValues[i] := StrToInt('$' + Cells[b, 0]);
+        end;
+        // array to registers
+        for b := 0 to RegCount - 1 do
+          CurrentProcessor.SetRegister(RegNames[b], RegValues[b]);
       end;
     end;
   end;
@@ -423,19 +494,20 @@ var
   Grid: TValueListEditor;
 begin
   Grid := TValueListEditor(Sender);
-  if (aRow > 0) and
-    (aRow < Grid.RowCount - 1) and
-    (Grid.ItemProps[Grid.Keys[aRow]].ReadOnly) and
-    (not (Grid.ItemProps[Grid.Keys[aRow]].EditStyle = esPickList)) and
-    (aCol = 0) then
-    with Grid.Canvas do
-    begin
-      Brush.Color := clBtnFace;
-      Font.Color := clGrayText;
-      Font.Style := [fsItalic];
-      FillRect(aRect);
-      TextRect(aRect, aRect.Left + 4, aRect.Top + 6, Grid.Cells[ACol, ARow]);
-    end;
+  if Length(Grid.Cells[0, aRow]) > 0 then
+    if (aRow > 0) and
+       (aRow <= Grid.RowCount - 1) and
+       (Grid.ItemProps[Grid.Keys[aRow]].ReadOnly) and
+       (not (Grid.ItemProps[Grid.Keys[aRow]].EditStyle = esPickList)) and
+       (aCol = 0) then
+      with Grid.Canvas do
+      begin
+        Brush.Color := clBtnFace;
+        Font.Color := clGrayText;
+        Font.Style := [fsItalic];
+        FillRect(aRect);
+        TextRect(aRect, aRect.Left + 4, aRect.Top + 6, Grid.Cells[ACol, ARow]);
+     end;
 end;
 
 // REFRESH P... VARIABLES
@@ -446,27 +518,26 @@ begin
 end;
 
 // VALIDATE DATA
-procedure TForm1.ValueListEditor2ValidateEntry(Sender: TObject; aCol,
-  aRow: Integer; const OldValue: string; var NewValue: String);
+procedure TForm1.ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
 var
-  Val, MaxVal, HexDigits: Integer;
+  Val, MaxVal, HexDigits: LongInt;
+  b, bb: Byte;
+  i: Integer;
 begin
   if aCol = 1 then
   begin
     NewValue := Trim(NewValue);
     if NewValue = '' then NewValue := '0';
 
-    // maximal value
-    if aRow = 1 then
+    // hexa digits and upper limit
+    with ValueListEditor2 do
     begin
-      MaxVal := 16777215;
-      HexDigits := 6;
-    end
-    else
-    begin
-      MaxVal := 255;
-      HexDigits := 2;
+      i := -1;
+      for b := 0 to RegCount - 1 do
+        if Cells[0, aRow] = StrPas(RegNames[b]) then i := b;
+      if i > -1 then HexDigits := RegSize[i];
     end;
+    MaxVal := (1 shl (HexDigits * 4)) - 1;
 
     // validating hexa value
     if not TryStrToInt('$' + NewValue, Val) or (Val < 0) or (Val > MaxVal) then
@@ -595,6 +666,8 @@ begin
       ImpExpProperties(opPlugin2Var);
       // show properties
       RefreshProperties(opVar2List);
+      // show registers
+      RefreshRegisters(opVar2List);
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
       // show info
@@ -611,10 +684,13 @@ begin
       // loading error
       ShowMessage(MSG01 + MSG05);
       ValueListEditor1.Clear;
+      ValueListEditor2.Clear;
       with ValueListEditor2 do
       begin
-        Cells[1, 1] := '0';
-        Cells[1, 2] := '0';
+        TitleCaptions.Strings[0] := MSG11;
+        TitleCaptions.Strings[1] := MSG17;
+        Cells[0, 1] := '';
+        Enabled := False;
       end;
       UnloadLibrary(LibHandle);
       LibHandle := NilHandle;
@@ -651,40 +727,51 @@ begin
   Form4.Show;
 end;
 
+// LOAD REGISTER CONTENT FROM CPU
+procedure TForm1.LoadRegisterValuesFromCPUExecute(Sender: TObject);
+begin
+  RefreshRegisters(opVar2List);
+end;
+
+// SAVE REGISTER CONTENT TO CPU
+procedure TForm1.SaveRegisterValuesToCPUExecute(Sender: TObject);
+begin
+  RefreshRegisters(opList2Var);
+end;
+
 // RESET PROCESSOR
 procedure TForm1.ResetExecute(Sender: TObject);
 begin
   CurrentProcessor.Reset;
+  RefreshRegisters(opVar2List);
 end;
 
 // REQUEST NMI
 procedure TForm1.NMIExecute(Sender: TObject);
 begin
   CurrentProcessor.NMI;
+  RefreshRegisters(opVar2List);
 end;
 
 // RUN PROGRAM BY STEP
 procedure TForm1.StepExecute(Sender: TObject);
 begin
   CurrentProcessor.Step;
+  RefreshRegisters(opVar2List);
 end;
 
 // RUN PROGRAM
 procedure TForm1.RunExecute(Sender: TObject);
 begin
+  RefreshRegisters(opVar2List);
   CurrentProcessor.Run;
-end;
-
-// PAUSE PROGRAM
-procedure TForm1.PauseExecute(Sender: TObject);
-begin
-
 end;
 
 // STOP PROGRAM
 procedure TForm1.StopExecute(Sender: TObject);
 begin
   CurrentProcessor.Stop;
+  RefreshRegisters(opVar2List);
 end;
 
 // LOAD PLUGIN STATUS
@@ -905,7 +992,6 @@ begin
     TitleCaptions.Strings[0] := MSG11;
     TitleCaptions.Strings[1] := MSG17;
     Cells[0, 1] := '';
-    Cells[0, 2] := '';
     Enabled := False;
   end;
   // enable/disable menuitems

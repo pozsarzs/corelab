@@ -70,9 +70,9 @@ type
     FArchitecture:     TArchitecture;                    // Type of architecture
     FEnabled:          Boolean;         // Enable device without detach from bus
     FEndianness:       TEndianness;                                // Byte order
-    FMaxCodeAddress:   QWord;                 // The highest code memory address
-    FMaxIOPortAddress: QWord;                    // The highest I/O port address
-    FMaxMemAddress:    QWord;               // The highest (data) memory address
+    FMaxCodeAddress:   DWord;                 // The highest code memory address
+    FMaxIOPortAddress: DWord;                    // The highest I/O port address
+    FMaxMemAddress:    DWord;               // The highest (data) memory address
     FHasSeparateIOBus: Boolean;       // Indicates separate memory and I/O buses
     // Runtime state
     FRunning:          Boolean;                           // CPU execution state
@@ -83,7 +83,7 @@ type
     // Execution statistics
     FCycles:           QWord;                                    // Total cycles
     FInstructions:     QWord;                     // Total executed instructions
-    var FRegPtr:       array of ^QWord;
+    var FRegPtr:       array of ^Word;
     procedure EmitEvent(AEvent: TCPUEvent); virtual;
     procedure DoInterrupt(AEvent: TCPUEvent); virtual;
   public
@@ -93,11 +93,14 @@ type
     destructor Destroy; override;
     // Used via the ICtlAPI by TSupervisor class
     procedure SetRegister(const RegName: PChar; AValue: Word); virtual; abstract;
-    function  GetRegister(const RegName: PChar): Word; virtual; abstract;
+    function GetRegister(const RegName: PChar): Word; virtual; abstract;
+    function GetRegisterCount: Byte; virtual; abstract;
+    function GetRegisterName(AIndex: Byte): PChar; virtual; abstract;
+    function GetRegisterSize(AIndex: Byte): Byte; virtual; abstract;
     procedure Run; virtual;
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
-    function  GetCurrentInstruction: TLogRec; virtual; abstract;
+    function GetCurrentInstruction: TLogRec; virtual; abstract;
     procedure IRQ; virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;
@@ -117,9 +120,9 @@ type
     property InstanceID: Integer read FInstanceID write FInstanceID;
     property Instructions: QWord read FInstructions;
     property InterruptEnabled: Boolean read FInterruptEnabled;
-    property MaxCodeAddress: QWord read FMaxCodeAddress;
-    property MaxIOPortAddress: QWord read FMaxIOPortAddress;
-    property MaxMemAddress: QWord read FMaxMemAddress;
+    property MaxCodeAddress: DWord read FMaxCodeAddress;
+    property MaxIOPortAddress: DWord read FMaxIOPortAddress;
+    property MaxMemAddress: DWord read FMaxMemAddress;
     property Modname: PChar read FModname;
     property OnEvent: TCPUEventHandler read FOnEvent write FOnEvent;
     property Running: Boolean read FRunning;

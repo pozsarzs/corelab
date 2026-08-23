@@ -42,7 +42,6 @@ type
   private
     LogRecord:   TLastInstruction;                       // Raw running log data
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
-    s: string;                                                 // General string
   protected
     FRegs: T8080Registers;
     procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
@@ -57,10 +56,17 @@ type
     function GetCurrentInstruction: TLogRec; override;
     function GetRegister(const RegName: PChar): Word; override;
     procedure SetRegister(const RegName: PChar; Value: Word); override;
+    function GetRegisterCount: Byte; override;
+    function GetRegisterName(AIndex: Byte): PChar; override;
+    function GetRegisterSize(AIndex: Byte): Byte; override;
   end;
 const
-  RegNames: array[0..7] of string = ('B', 'C', 'D', 'E', 'H', 'L', 'M', 'A');
-
+  RegNames:    array[0..7] of char = ('B', 'C', 'D', 'E', 'H', 'L', 'M', 'A');
+  PubRegNames: array[0..13] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
+                                        'F', 'AF', 'BC', 'DE', 'HL', 'PC',
+                                        'SP');
+  PubRegSize: array[0..13] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4);
+                                           
 // ---- PROTECTED METHODS ----
 
 // UPDATE REGISTER F (SZ0A 0P1C)
@@ -251,8 +257,15 @@ function T8080CPU.GetRegister(const RegName: PChar): Word;
 begin
   Result := 0;
   case UpperCase(RegName) of
-    'A':  Result := FRegs.A;
+    'A': Result := FRegs.A;
+    'B': Result := FRegs.B;
+    'C': Result := FRegs.C;
+    'D': Result := FRegs.D;
+    'E': Result := FRegs.E;
+    'H': Result := FRegs.H;
+    'L': Result := FRegs.L;
     'F':  Result := FRegs.F;
+    'AF': Result := FRegs.AF;
     'BC': Result := FRegs.BC;
     'DE': Result := FRegs.DE;
     'HL': Result := FRegs.HL;
@@ -265,14 +278,43 @@ end;
 procedure T8080CPU.SetRegister(const RegName: PChar; Value: Word);
 begin
   case UpperCase(RegName) of
-    'A':  FRegs.A := Value and $FF;
-    'F':  FRegs.F := Value and $FF;
+    'A': FRegs.A := Value and $FF;
+    'B': FRegs.B := Value and $FF;
+    'C': FRegs.C := Value and $FF;
+    'D': FRegs.D := Value and $FF;
+    'E': FRegs.E := Value and $FF;
+    'H': FRegs.H := Value and $FF;
+    'L': FRegs.L := Value and $FF;
+    'F': FRegs.F := Value and $FF;
+    'AF': FRegs.AF := Value and $FFFF;
     'BC': FRegs.BC := Value and $FFFF;
     'DE': FRegs.DE := Value and $FFFF;
     'HL': FRegs.HL := Value and $FFFF;
     'PC': FRegs.PC := Value and $FFFF;
     'SP': FRegs.SP := Value and $FFFF;
   end;
+end;
+
+// QUERYING NUMBER OF THE ALL REGISTERS
+function T8080CPU.GetRegisterCount: Byte;
+begin
+  Result := Length(PubRegNames);
+end;
+
+// QUERYING REGISTER NAME
+function T8080CPU.GetRegisterName(AIndex: Byte): PChar;
+begin
+  if AIndex < Length(PubRegNames)
+    then Result := PubRegNames[AIndex]
+    else Result := nil;
+end;
+
+// QUERYING REGISTER SIZE IN NIBBLES
+function T8080CPU.GetRegisterSize(AIndex: Byte): Byte;
+begin
+  if AIndex < Length(PubRegSize)
+    then Result := PubRegSize[AIndex]
+    else Result := 0;
 end;
 
 // ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
