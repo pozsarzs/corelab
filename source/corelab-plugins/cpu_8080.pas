@@ -62,10 +62,9 @@ type
   end;
 const
   RegNames:    array[0..7] of char = ('B', 'C', 'D', 'E', 'H', 'L', 'M', 'A');
-  PubRegNames: array[0..13] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
-                                        'F', 'AF', 'BC', 'DE', 'HL', 'PC',
-                                        'SP');
-  PubRegSize: array[0..13] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4);
+  PubRegNames: array[0..9] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
+                                        'F', 'PC','SP');
+  PubRegSize: array[0..9] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4);
                                            
 // ---- PROTECTED METHODS ----
 
@@ -214,6 +213,7 @@ var
   w1, w2:                       Word;
   b1, b2:                       Byte;
 begin
+  if not FEnabled then Exit;
   if CheckInterrupts then Exit;
   if FHalted then Exit;
   OC := FBus.ReadMemory(FRegs.PC);                     // Fetch opcode from (PC)
@@ -265,10 +265,6 @@ begin
     'H': Result := FRegs.H;
     'L': Result := FRegs.L;
     'F':  Result := FRegs.F;
-    'AF': Result := FRegs.AF;
-    'BC': Result := FRegs.BC;
-    'DE': Result := FRegs.DE;
-    'HL': Result := FRegs.HL;
     'PC': Result := FRegs.PC;
     'SP': Result := FRegs.SP;
   end;
@@ -286,10 +282,6 @@ begin
     'H': FRegs.H := Value and $FF;
     'L': FRegs.L := Value and $FF;
     'F': FRegs.F := Value and $FF;
-    'AF': FRegs.AF := Value and $FFFF;
-    'BC': FRegs.BC := Value and $FFFF;
-    'DE': FRegs.DE := Value and $FFFF;
-    'HL': FRegs.HL := Value and $FFFF;
     'PC': FRegs.PC := Value and $FFFF;
     'SP': FRegs.SP := Value and $FFFF;
   end;

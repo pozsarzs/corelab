@@ -232,6 +232,7 @@ end;
 // START CPU EXECUTION
 procedure TCPU.Run;
 begin
+  if not FEnabled then Exit;
   FRunning := true;
 end;
 
@@ -244,6 +245,7 @@ end;
 // SIGNAL MASKABLE INTERRUPT
 procedure TCPU.IRQ;
 begin
+  if not FEnabled then Exit;
   FIRQPending := true;                                   // Set pending IRQ flag
   EmitEvent(ceInterrupt);                             // Notify host application
 end;
@@ -251,6 +253,7 @@ end;
 // SIGNAL NON-MASKABLE INTERRUPT
 procedure TCPU.NMI;
 begin
+  if not FEnabled then Exit;
   FNMIPending := true;                                   // Set pending NMI flag
   EmitEvent(ceInterrupt);                             // Notify host application
 end;

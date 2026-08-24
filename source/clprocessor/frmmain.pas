@@ -354,8 +354,7 @@ end;
 // REFRESH REGISTER LIST
 procedure TForm1.RefreshRegisters(Direction: TOpDirection);
 var
-  b, bb: Byte;
-  i:     Integer;
+  b: Byte;
 begin
   if Assigned(CurrentProcessor) then
   begin
@@ -372,34 +371,30 @@ begin
     end;
     if Direction = opVar2List then
     begin
-      // registers to array
-      for b := 0 to RegCount - 1 do
-        RegValues[b] := CurrentProcessor.GetRegister(RegNames[b]);
-      // array to ValueListEditor2
       with ValueListEditor2 do
       begin
-        Strings.BeginUpdate;
+        Col := 0;
+        Row := 1;
         Clear;
         DefaultRowHeight := 20;
-        for b := RegCount - 1 downto 0 do
-          InsertRow(StrPas(RegNames[b]), IntToHex(RegValues[b], RegSize[b]), True);
+        Strings.BeginUpdate;
+        for b := 0 to RegCount - 1 do
+        begin
+          // registers to array
+          RegValues[b] := CurrentProcessor.GetRegister(RegNames[b]);
+          // array to ValueListEditor2
+          Strings.Add(StrPas(RegNames[b]) + '=' + IntToHex(RegValues[b], RegSize[b]));
+        end;
         Strings.EndUpdate;
       end;
     end else
     begin
-      // ValueListEditor2 to array
-      with ValueListEditor2 do
+      for b := 0 to RegCount - 1 do
       begin
-        for b := 0 to RegCount - 1 do
-        begin
-          i := -1;
-          for bb := 0 to RegCount - 1 do
-            if Cells[b, 0] = StrPas(RegNames[b]) then i := bb;
-          if i > -1 then RegValues[i] := StrToInt('$' + Cells[b, 0]);
-        end;
+        // ValueListEditor2 to array
+        RegValues[b] := StrToInt('$' + ValueListEditor2.Values[StrPas(RegNames[b])]);
         // array to registers
-        for b := 0 to RegCount - 1 do
-          CurrentProcessor.SetRegister(RegNames[b], RegValues[b]);
+        CurrentProcessor.SetRegister(RegNames[b], RegValues[b]);
       end;
     end;
   end;
@@ -776,11 +771,11 @@ end;
 
 // LOAD PLUGIN STATUS
 procedure TForm1.LoadStatusExecute(Sender: TObject);
-{var
+var
   Filename: string;
-  LoadStream: TProcessorStream;}
+  LoadStream: TMemoryStream;
 begin
-{  with OpenDialog1 do
+  with OpenDialog1 do
   begin
     InitialDir := GetUserDir;
     Title := MSG23;
@@ -789,7 +784,7 @@ begin
   if OpenDialog1.Execute then
   begin
     Filename := OpenDialog1.FileName;
-    LoadStream := TProcessorStream.Create;
+    LoadStream := TMemoryStream.Create;
     try
       try
         LoadStream.LoadFromFile(FileName);
@@ -805,16 +800,16 @@ begin
     finally
       LoadStream.Free;
     end;
-  end;}
+  end;
 end;
 
 //SAVE PLUGIN STATUS
 procedure TForm1.SaveStatusExecute(Sender: TObject);
-{var
+var
   Filename: string;
-  SaveStream: TProcessorStream;}
+  SaveStream: TMemoryStream;
 begin
-{  with SaveDialog1 do
+  with SaveDialog1 do
   begin
     InitialDir := GetUserDir;
     Title := MSG21;
@@ -823,7 +818,7 @@ begin
   if SaveDialog1.Execute then
   begin
     Filename := SaveDialog1.FileName;
-    SaveStream := TProcessorStream.Create;
+    SaveStream := TMemoryStream.Create;
     try
       if not SaveState(CurrentProcessor, SaveStream) then ShowMessage(MSG01 + MSG20) else
         try
@@ -834,7 +829,7 @@ begin
     finally
       SaveStream.Free;
     end;
-  end;}
+  end;
 end;
 
 // SHOW HEXVIEWER WINDOW
