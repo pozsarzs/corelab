@@ -19,10 +19,12 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
-  frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory, ucommon;
+  frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory, sysbus,
+  ucommon;
 const
   MEM_SIZE = 1024;
 type
+  // Handled plugin attributes
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
     PDescription:      string;                              // short description
@@ -44,102 +46,110 @@ type
   TDestroyProcessorProc = procedure(Processor: TCPU); CALLTYPE;
   TLoadStateProc  = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   TSaveStateProc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  { TTestSysBus }
+  TTestSysBus = class(TInterfacedObject, ISysBus)
+    function ReadMemory(AAddress: DWord): Byte;
+    procedure WriteMemory(AAddress: DWord; AValue: Byte);
+    function ReadPort(APort: Word): Byte;
+    procedure WritePort(APort: Word; AValue: Byte);
+  end;
   { TForm1 }
   TForm1 = class(TForm)
-    About:                 TAction;
-    MenuItem20: TMenuItem;
-    MenuItem9: TMenuItem;
-    SaveRegisterValuesToCPU: TAction;
+    About:                     TAction;
+    MenuItem20:                TMenuItem;
+    MenuItem9:                 TMenuItem;
+    SaveRegisterValuesToCPU:   TAction;
     LoadRegisterValuesFromCPU: TAction;
-    ActionList1:           TActionList;
-    CHMHelpDatabase1:      TCHMHelpDatabase;
-    DirectoryEdit1:        TDirectoryEdit;
-    ExamineDeposit:        TAction;
-    Help:                  TAction;
-    ImageList1:            TImageList;
-    LHelpConnector1:       TLHelpConnector;
-    LoadChangePlugin:      TAction;
-    LoadMemoryContent:     TAction;
-    LoadStatus:            TAction;
-    MainMenu1:             TMainMenu;
-    MenuItem1:             TMenuItem;
-    MenuItem10:            TMenuItem;
-    MenuItem11:            TMenuItem;
-    MenuItem12:            TMenuItem;
-    MenuItem13:            TMenuItem;
-    MenuItem14:            TMenuItem;
-    MenuItem15:            TMenuItem;
-    MenuItem16:            TMenuItem;
-    MenuItem17:            TMenuItem;
-    MenuItem18:            TMenuItem;
-    MenuItem19:            TMenuItem;
-    MenuItem2:             TMenuItem;
-    MenuItem21:            TMenuItem;
-    MenuItem22:            TMenuItem;
-    MenuItem23:            TMenuItem;
-    MenuItem24:            TMenuItem;
-    MenuItem25:            TMenuItem;
-    MenuItem26:            TMenuItem;
-    MenuItem27:            TMenuItem;
-    MenuItem28:            TMenuItem;
-    MenuItem29:            TMenuItem;
-    MenuItem3:             TMenuItem;
-    MenuItem30:            TMenuItem;
-    MenuItem32:            TMenuItem;
-    MenuItem33:            TMenuItem;
-    MenuItem4:             TMenuItem;
-    MenuItem5:             TMenuItem;
-    MenuItem6:             TMenuItem;
-    MenuItem7:             TMenuItem;
-    MenuItem8:             TMenuItem;
-    NMI:                   TAction;
-    OpenDialog1:           TOpenDialog;
-    Panel1:                TPanel;
-    Quit:                  TAction;
-    RefreshPluginList:     TAction;
-    Reset:                 TAction;
-    RestartApplication:    TAction;
-    Run:                   TAction;
-    SaveDialog1:           TSaveDialog;
-    SaveMemoryContent:     TAction;
-    SaveStatus:            TAction;
-    SelectPluginDirectory: TAction;
-    Separator1:            TMenuItem;
-    Separator2:            TMenuItem;
-    Separator3:            TMenuItem;
-    Separator4:            TMenuItem;
-    Separator5:            TMenuItem;
-    Separator6:            TMenuItem;
-    Separator7:            TMenuItem;
-    Separator8:            TMenuItem;
-    Separator9: TMenuItem;
-    ShellListView1:        TShellListView;
-    ShowHexViewer:         TAction;
-    ShowRunLogger:         TAction;
-    Splitter1:             TSplitter;
-    StatusBar1:            TStatusBar;
-    Step:                  TAction;
-    Stop:                  TAction;
-    Timer1:                TTimer;
-    ToolBar1:              TToolBar;
-    ToolButton1:           TToolButton;
-    ToolButton10:          TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton12:          TToolButton;
-    ToolButton13:          TToolButton;
-    ToolButton14:          TToolButton;
-    ToolButton15: TToolButton;
-    ToolButton2:           TToolButton;
-    ToolButton3:           TToolButton;
-    ToolButton4:           TToolButton;
-    ToolButton5:           TToolButton;
-    ToolButton6:           TToolButton;
-    ToolButton7:           TToolButton;
-    ToolButton8:           TToolButton;
-    ToolButton9:           TToolButton;
-    ValueListEditor1:      TValueListEditor;
-    ValueListEditor2:      TValueListEditor;
+    ActionList1:               TActionList;
+    CHMHelpDatabase1:          TCHMHelpDatabase;
+    DirectoryEdit1:            TDirectoryEdit;
+    ExamineDeposit:            TAction;
+    Help:                      TAction;
+    ImageList1:                TImageList;
+    LHelpConnector1:           TLHelpConnector;
+    LoadChangePlugin:          TAction;
+    LoadMemoryContent:         TAction;
+    LoadStatus:                TAction;
+    MainMenu1:                 TMainMenu;
+    MenuItem1:                 TMenuItem;
+    MenuItem10:                TMenuItem;
+    MenuItem11:                TMenuItem;
+    MenuItem12:                TMenuItem;
+    MenuItem13:                TMenuItem;
+    MenuItem14:                TMenuItem;
+    MenuItem15:                TMenuItem;
+    MenuItem16:                TMenuItem;
+    MenuItem17:                TMenuItem;
+    MenuItem18:                TMenuItem;
+    MenuItem19:                TMenuItem;
+    MenuItem2:                 TMenuItem;
+    MenuItem21:                TMenuItem;
+    MenuItem22:                TMenuItem;
+    MenuItem23:                TMenuItem;
+    MenuItem24:                TMenuItem;
+    MenuItem25:                TMenuItem;
+    MenuItem26:                TMenuItem;
+    MenuItem27:                TMenuItem;
+    MenuItem28:                TMenuItem;
+    MenuItem29:                TMenuItem;
+    MenuItem3:                 TMenuItem;
+    MenuItem30:                TMenuItem;
+    MenuItem32:                TMenuItem;
+    MenuItem33:                TMenuItem;
+    MenuItem4:                 TMenuItem;
+    MenuItem5:                 TMenuItem;
+    MenuItem6:                 TMenuItem;
+    MenuItem7:                 TMenuItem;
+    MenuItem8:                 TMenuItem;
+    NMI:                       TAction;
+    OpenDialog1:               TOpenDialog;
+    Panel1:                    TPanel;
+    Quit:                      TAction;
+    RefreshPluginList:         TAction;
+    Reset:                     TAction;
+    RestartApplication:        TAction;
+    Run:                       TAction;
+    SaveDialog1:               TSaveDialog;
+    SaveMemoryContent:         TAction;
+    SaveStatus:                TAction;
+    SelectPluginDirectory:     TAction;
+    Separator1:                TMenuItem;
+    Separator2:                TMenuItem;
+    Separator3:                TMenuItem;
+    Separator4:                TMenuItem;
+    Separator5:                TMenuItem;
+    Separator6:                TMenuItem;
+    Separator7:                TMenuItem;
+    Separator8:                TMenuItem;
+    Separator9:                TMenuItem;
+    ShellListView1:            TShellListView;
+    ShowHexViewer:             TAction;
+    ShowRunLogger:             TAction;
+    Splitter1:                 TSplitter;
+    StatusBar1:                TStatusBar;
+    Step:                      TAction;
+    Stop:                      TAction;
+    Timer1:                    TTimer;
+    ToolBar1:                  TToolBar;
+    ToolButton1:               TToolButton;
+    ToolButton10:              TToolButton;
+    ToolButton11:              TToolButton;
+    ToolButton12:              TToolButton;
+    ToolButton13:              TToolButton;
+    ToolButton14:              TToolButton;
+    ToolButton15:              TToolButton;
+    ToolButton2:               TToolButton;
+    ToolButton3:               TToolButton;
+    ToolButton4:               TToolButton;
+    ToolButton5:               TToolButton;
+    ToolButton6:               TToolButton;
+    ToolButton7:               TToolButton;
+    ToolButton8:               TToolButton;
+    ToolButton9:               TToolButton;
+    ValueListEditor1:          TValueListEditor;
+    ValueListEditor2:          TValueListEditor;
     procedure AboutExecute(Sender: TObject);
+    procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
     procedure ExamineDepositExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -175,6 +185,7 @@ type
     CurrentProcessor: TCPU;                      // created object of TCPU class
     LibHandle:        TLibHandle;                 // handle of the loaded module
     LoadedPlugin:     TPluginAttributes;      // properties of the loaded module
+    FTestSysBus:      ISysBus;                      // Test system bus interface
     // pointers to the plugin entry point
     CreateProcessor:  TCreateProcessorFunc;           // create plugin processor
     DestroyProcessor: TDestroyProcessorProc;         // destroy plugin processor
@@ -252,6 +263,33 @@ resourcestring
   MSG31 = 'Cannot load ''%s'' memory content.';
   MSG32 = 'Binary file|*.bin|All file|*.*';
 
+// ----  TESTSYSBUS CLASS'S METHODS ----
+
+// READ MEMORY METHOD OF THE SYSTEM BUS
+function TTestSysBus.ReadMemory(AAddress: DWord): Byte;
+begin
+  Result := Form1.GetMemoryCell(0, AAddress);
+end;
+
+// WRITE MEMORY METHOD OF THE SYSTEM BUS
+procedure TTestSysBus.WriteMemory(AAddress: DWord; AValue: Byte);
+begin
+  Form1.SetMemoryCell(0, AAddress, AValue)
+end;
+
+// READ PORT METHOD OF THE SYSTEM BUS
+function TTestSysBus.ReadPort(APort: Word): Byte;
+begin
+  Result := 0;
+end;
+
+// WRITE PORT METHOD OF THE SYSTEM BUS
+procedure TTestSysBus.WritePort(APort: Word; AValue: Byte);
+begin
+end;
+
+// ---- TFORM1 CLASS'S METHODS ----
+
 // ---- PRIVATE METHODS ----
 
 // IMPORT/EXPORT PROPERTIES
@@ -293,9 +331,6 @@ end;
 
 // REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
-var
-  ta: TArchitecture;
-  en: TEndianness;
 begin
   if Direction = opVar2List then
   begin
@@ -516,8 +551,8 @@ end;
 procedure TForm1.ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
 var
   Val, MaxVal, HexDigits: LongInt;
-  b, bb: Byte;
-  i: Integer;
+  b:                      Byte;
+  i:                      Integer;
 begin
   if aCol = 1 then
   begin
@@ -612,7 +647,6 @@ end;
 // LOAD/CHANGE PLUGIN
 procedure TForm1.LoadChangePluginExecute(Sender: TObject);
 var
-  b: Byte;
   SelectedFile: String;
 begin
   if ShellListView1.Selected <> nil then
@@ -653,7 +687,13 @@ begin
     // load data
     if (Assigned(CreateProcessor)) and (Assigned(DestroyProcessor)) then
     begin
+      // instantiate processor
       CurrentProcessor := CreateProcessor();
+      CurrentProcessor.OnEvent := @CPUEventHandler;
+      // instantiate and connect system bus
+      FTestSysBus := TTestSysBus.Create;
+      CurrentProcessor.ConnectBus(FTestSysBus);
+      // get filename
       LoadedPlugin.PFilename := SelectedFile;
       // set InstanceID
       CurrentProcessor.InstanceID := 0;
@@ -851,6 +891,7 @@ var
   i:          DWord;
   Data:       Byte;
 begin
+  Data := 0;
   with OpenDialog1 do
   begin
     InitialDir := GetUserDir;
@@ -947,6 +988,13 @@ end;
 procedure TForm1.AboutExecute(Sender: TObject);
 begin
   Form2.ShowModal;
+end;
+
+// CPU EVENT
+procedure TForm1.CPUEventHandler(Sender: TObject; Event: TCPUEvent);
+begin
+  if Event = ceInstructionBoundary then
+    Form4.AppendRecord(CurrentProcessor.GetCurrentInstruction);
 end;
 
 // ONCREATE EVENT

@@ -107,8 +107,8 @@ begin
     EndAddr := StrToDWord('$' + RemoveSpace(EditButton2.Text));
     SpinEdit1.OnChange := nil;                                  // Disable event
     if EndAddr >= StartAddr
-      then SpinEdit1.Value := EndAddr - StartAddr
-      else SpinEdit1.Value := 0;
+      then SpinEdit1.Value := EndAddr - StartAddr + 1
+      else SpinEdit1.Value := 1;
   finally
     SpinEdit1.OnChange := @SpinEdit1Change;                      // Enable event
   end;
@@ -182,7 +182,7 @@ var
 begin
   try
     StartAddr := StrToDWord('$' + RemoveSpace(EditButton1.Text));
-    NewEndAddr := StartAddr + DWord(SpinEdit1.Value);
+    NewEndAddr := StartAddr + DWord(SpinEdit1.Value - 1);
     s := '';
     FormatHexValue(IntToHex(NewEndAddr, 1), 6, s);
     EditButton2.Text := s;

@@ -224,8 +224,8 @@ begin
     NumOperand := 0;
   end;
   Inc(FRegs.PC);                                    // Increment Program Counter
-  EmitEvent(ceInstructionBoundary);              // Notify debugger/trace system
   {$I cpu_8080_microcode.pas}
+  EmitEvent(ceInstructionBoundary);              // Notify debugger/trace system
   Inc(FInstructions);                           // Increment Instruction Counter
 end;
 
@@ -237,8 +237,8 @@ begin
   with LogRecord do
   begin
     RawCode := IntToHex(Opcode, 2);
-    if NumOperand > 0 then RawCode := RawCode + IntToHex(Operands[1], 2);
-    if NumOperand > 1 then RawCode := RawCode + IntToHex(Operands[2], 2);
+    if NumOperand > 0 then RawCode := RawCode + ' ' + IntToHex(Operands[1], 2);
+    if NumOperand > 1 then RawCode := RawCode + ' ' + IntToHex(Operands[2], 2);
     AsmText := Mnemonic;
     if NumOperand > 0 then AsmText := AsmText + ' ' + IntToHex(Operands[1], 2);
     if NumOperand > 1 then AsmText := AsmText + ', ' + IntToHex(Operands[2], 2);

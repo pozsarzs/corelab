@@ -523,7 +523,9 @@ object Form7: TForm7
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 8
     MaxValue = 16777215
+    MinValue = 1
     TabOrder = 3
+    Value = 1
   end
   object Label3: TLabel
     AnchorSideLeft.Control = SpinEdit1

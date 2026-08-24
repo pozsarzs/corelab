@@ -16,16 +16,10 @@ unit frmrunlogger;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types;
+  Buttons, EditBtn, Grids, Types, core_cpu;
 const
   MAX_LOG = 1024;
 type
-  TLogRec = record
-    InstCount: Integer;
-    Address:   string[31];
-    OpCode:    string[31];
-    Mnemonic:  string[127];
-  end;
   { TForm4 }
   TForm4 = class(TForm)
     Bevel1:      TBevel;
