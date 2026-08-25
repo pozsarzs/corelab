@@ -738,9 +738,33 @@ object Form1: TForm1
       object MenuItem30: TMenuItem
         Action = ExamineDeposit
       end
+      object MenuItem31: TMenuItem
+        Caption = '&Clear memory'
+        ImageIndex = 20
+        object MenuItem34: TMenuItem
+          Action = ClearCodeMemory
+        end
+        object MenuItem35: TMenuItem
+          Action = ClearDataMemory
+        end
+      end
     end
     object MenuItem7: TMenuItem
       Caption = 'I/&O port'
+      object MenuItem36: TMenuItem
+        Action = ASCIIConsole
+      end
+      object MenuItem37: TMenuItem
+        Action = StandardPort
+      end
+      object Separator10: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem38: TMenuItem
+        Caption = 'Send i&nterrupt'
+        Checked = True
+        OnClick = MenuItem38Click
+      end
     end
     object MenuItem5: TMenuItem
       Caption = '&Help'
@@ -1183,6 +1207,14 @@ object Form1: TForm1
       OnExecute = ExamineDepositExecute
       ShortCut = 16461
     end
+    object ClearCodeMemory: TAction
+      Caption = 'Clear (&code) memory'
+      OnExecute = ClearCodeMemoryExecute
+    end
+    object ClearDataMemory: TAction
+      Caption = 'Clear &data memory'
+      OnExecute = ClearDataMemoryExecute
+    end
     object Help: TAction
       Caption = '&Help'
       ImageIndex = 18
@@ -1191,6 +1223,14 @@ object Form1: TForm1
     object About: TAction
       Caption = '&About'
       OnExecute = AboutExecute
+    end
+    object ASCIIConsole: TAction
+      Caption = 'ASCII &console'
+      OnExecute = ASCIIConsoleExecute
+    end
+    object StandardPort: TAction
+      Caption = '&Standard port'
+      OnExecute = StandardPortExecute
     end
   end
   object CHMHelpDatabase1: TCHMHelpDatabase

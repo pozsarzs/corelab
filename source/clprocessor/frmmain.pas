@@ -11,6 +11,8 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{$DEFINE NOT_A_LIBRARY_BUT_A_UNIT}
+
 unit frmmain;
 {$MODE OBJFPC}{$H+}
 {$I define.pas}
@@ -20,9 +22,11 @@ uses
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
   frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory, sysbus,
-  ucommon;
+  ioport_console, ioport_standard, ucommon;
 const
   MEM_SIZE = 1024;
+  IOADD_CONSOLE = $A0;
+  IOADD_STDPORT = $B0;
 type
   // Handled plugin attributes
   TPluginAttributes = record
@@ -56,12 +60,11 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                     TAction;
-    MenuItem20:                TMenuItem;
-    MenuItem9:                 TMenuItem;
-    SaveRegisterValuesToCPU:   TAction;
-    LoadRegisterValuesFromCPU: TAction;
     ActionList1:               TActionList;
+    ASCIIConsole:              TAction;
     CHMHelpDatabase1:          TCHMHelpDatabase;
+    ClearCodeMemory:           TAction;
+    ClearDataMemory:           TAction;
     DirectoryEdit1:            TDirectoryEdit;
     ExamineDeposit:            TAction;
     Help:                      TAction;
@@ -69,6 +72,7 @@ type
     LHelpConnector1:           TLHelpConnector;
     LoadChangePlugin:          TAction;
     LoadMemoryContent:         TAction;
+    LoadRegisterValuesFromCPU: TAction;
     LoadStatus:                TAction;
     MainMenu1:                 TMainMenu;
     MenuItem1:                 TMenuItem;
@@ -83,6 +87,7 @@ type
     MenuItem18:                TMenuItem;
     MenuItem19:                TMenuItem;
     MenuItem2:                 TMenuItem;
+    MenuItem20:                TMenuItem;
     MenuItem21:                TMenuItem;
     MenuItem22:                TMenuItem;
     MenuItem23:                TMenuItem;
@@ -94,13 +99,20 @@ type
     MenuItem29:                TMenuItem;
     MenuItem3:                 TMenuItem;
     MenuItem30:                TMenuItem;
+    MenuItem31:                TMenuItem;
     MenuItem32:                TMenuItem;
     MenuItem33:                TMenuItem;
+    MenuItem34:                TMenuItem;
+    MenuItem35:                TMenuItem;
+    MenuItem36:                TMenuItem;
+    MenuItem37:                TMenuItem;
+    MenuItem38:                TMenuItem;
     MenuItem4:                 TMenuItem;
     MenuItem5:                 TMenuItem;
     MenuItem6:                 TMenuItem;
     MenuItem7:                 TMenuItem;
     MenuItem8:                 TMenuItem;
+    MenuItem9:                 TMenuItem;
     NMI:                       TAction;
     OpenDialog1:               TOpenDialog;
     Panel1:                    TPanel;
@@ -111,9 +123,11 @@ type
     Run:                       TAction;
     SaveDialog1:               TSaveDialog;
     SaveMemoryContent:         TAction;
+    SaveRegisterValuesToCPU:   TAction;
     SaveStatus:                TAction;
     SelectPluginDirectory:     TAction;
     Separator1:                TMenuItem;
+    Separator10:               TMenuItem;
     Separator2:                TMenuItem;
     Separator3:                TMenuItem;
     Separator4:                TMenuItem;
@@ -126,6 +140,7 @@ type
     ShowHexViewer:             TAction;
     ShowRunLogger:             TAction;
     Splitter1:                 TSplitter;
+    StandardPort:              TAction;
     StatusBar1:                TStatusBar;
     Step:                      TAction;
     Stop:                      TAction;
@@ -149,6 +164,9 @@ type
     ValueListEditor1:          TValueListEditor;
     ValueListEditor2:          TValueListEditor;
     procedure AboutExecute(Sender: TObject);
+    procedure ASCIIConsoleExecute(Sender: TObject);
+    procedure ClearCodeMemoryExecute(Sender: TObject);
+    procedure ClearDataMemoryExecute(Sender: TObject);
     procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
     procedure ExamineDepositExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -162,6 +180,7 @@ type
     procedure MenuItem16Click(Sender: TObject);
     procedure MenuItem17Click(Sender: TObject);
     procedure MenuItem18Click(Sender: TObject);
+    procedure MenuItem38Click(Sender: TObject);
     procedure NMIExecute(Sender: TObject);
     procedure QuitExecute(Sender: TObject);
     procedure RefreshPluginListExecute(Sender: TObject);
@@ -175,6 +194,7 @@ type
     procedure SaveMemoryContentExecute(Sender: TObject);
     procedure ShowHexViewerExecute(Sender: TObject);
     procedure ShowRunLoggerExecute(Sender: TObject);
+    procedure StandardPortExecute(Sender: TObject);
     procedure StepExecute(Sender: TObject);
     procedure StopExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -182,7 +202,7 @@ type
     procedure ValueListEditor1EditingDone(Sender: TObject);
     procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
   private
-    CurrentProcessor: TCPU;                      // created object of TCPU class
+    CurrentProcessor: TCPU;                    // created object from TCPU class
     LibHandle:        TLibHandle;                 // handle of the loaded module
     LoadedPlugin:     TPluginAttributes;      // properties of the loaded module
     FTestSysBus:      ISysBus;                      // Test system bus interface
@@ -203,6 +223,12 @@ type
     FPluginDirectory: string;
     FSystemLanguage:  string;
     FUserDirectory:   string;
+    // I/O ports
+    FSendIOIntReq:    Boolean;    // Enable/disable sending INT request from I/O
+    FPortConsole:     TConsole;            // created object from TConsole class
+    FPortStandard:    TStandardPort;  // created object from TStandardPort class
+    FPortConsoleCap:  string;                          // created object caption
+    FPortStandardCap: string;                          // created object caption
     // emulated memory
     // - Bank #0: Neumann common memory or Harvard code memory
     // - Bank #1: Harvard data memory
@@ -262,6 +288,8 @@ resourcestring
   MSG30 = 'Load memory content from file';
   MSG31 = 'Cannot load ''%s'' memory content.';
   MSG32 = 'Binary file|*.bin|All file|*.*';
+  MSG33 = 'ASCII console (address: %sh)';
+  MSG34 = 'I/O port (address: %sh)';
 
 // ----  TESTSYSBUS CLASS'S METHODS ----
 
@@ -280,12 +308,21 @@ end;
 // READ PORT METHOD OF THE SYSTEM BUS
 function TTestSysBus.ReadPort(APort: Word): Byte;
 begin
-  Result := 0;
+  case APort of
+    IOADD_CONSOLE: Result := Form1.FPortConsole.ReadPort(APort);
+    IOADD_STDPORT: Result := Form1.FPortStandard.ReadPort(APort);
+  else
+    Result := 0;
+  end;
 end;
 
 // WRITE PORT METHOD OF THE SYSTEM BUS
 procedure TTestSysBus.WritePort(APort: Word; AValue: Byte);
 begin
+  case APort of
+    IOADD_CONSOLE: Form1.FPortConsole.WritePort(APort, AValue);
+    IOADD_STDPORT: Form1.FPortStandard.WritePort(APort, AValue);
+  end;
 end;
 
 // ---- TFORM1 CLASS'S METHODS ----
@@ -978,6 +1015,54 @@ begin
   end;
 end;
 
+// CLEAR BANK0 (Neumann and Harvard code memory)
+procedure TForm1.ClearCodeMemoryExecute(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 0 to Length(FMemory) - 1 do FMemory[0, i] := 0;
+end;
+
+// CLEAR BANK1 (Harvard data memory)
+procedure TForm1.ClearDataMemoryExecute(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 0 to Length(FMemory) - 1 do FMemory[1, i] := 0;
+end;
+
+// SHOW ASCII CONSOLE
+procedure TForm1.ASCIIConsoleExecute(Sender: TObject);
+begin
+  if not Assigned(FPortConsole) then FPortConsole := TConsole.Create;
+  with FPortConsole do
+  begin
+    CreatePanel;
+    ShowPanel;
+    FPortConsoleCap := Format(MSG33,[IntToHex(IOADD_CONSOLE, 2)]);
+    RenamePanel(PChar(FPortConsoleCap));
+  end;
+end;
+
+// SHOW STANDARD I/O PORT
+procedure TForm1.StandardPortExecute(Sender: TObject);
+begin
+  if not Assigned(FPortStandard) then FPortStandard := TStandardPort.Create;
+  with FPortStandard do
+  begin
+    CreatePanel;
+    ShowPanel;
+    FPortStandardCap := Format(MSG33,[IntToHex(IOADD_STDPORT, 2)]);
+    RenamePanel(PChar(FPortStandardCap));
+  end;
+end;
+
+// ENABLE/DISABLE INTERRUPT REQUEST FROM I/O PORT
+procedure TForm1.MenuItem38Click(Sender: TObject);
+begin
+  FSendIOIntReq := MenuItem38.Checked;
+end;
+
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
@@ -1050,6 +1135,21 @@ end;
 // ONDESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
+  // i/o port and device
+  if Assigned(FPortConsole) then
+    with FPortConsole do
+    begin
+      FreePanel;
+      Free;
+      FPortConsole := nil;
+    end;
+  if Assigned(FPortStandard) then
+    with FPortStandard do
+    begin
+      FreePanel;
+      Free;
+      FPortStandard := nil;
+    end;
   // processor
   if Assigned(CurrentProcessor) then
   begin

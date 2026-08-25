@@ -107,7 +107,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
-      <OtherUnitFiles Value="../corelab-core;../_ext/modlcltranslator;../_ppu"/>
+      <OtherUnitFiles Value="../corelab-core;../corelab-plugins;../_ext/modlcltranslator;../_ppu"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
@@ -117,6 +117,9 @@
         </Win32>
       </Options>
     </Linking>
+    <Other>
+      <CustomOptions Value="-dNOT_A_LIBRARY_BUT_A_UNIT"/>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions>

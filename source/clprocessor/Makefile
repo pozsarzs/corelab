@@ -12,7 +12,7 @@ project=clprocessor
 all:
 	@mkdir -p $(outdir)/
 	@if [ -f $(project).lpr ]; then \
-	    $(fpc) $(fpcargs) $(project).lpr; \
+	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT $(project).lpr; \
 	  echo ""; \
 	fi
 	@mkdir -p $(podir)/

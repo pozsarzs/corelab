@@ -11,7 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+unit ioport_console;
+interface
+{$ELSE}
 library ioport_console;
+{$ENDIF}
+
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
@@ -39,6 +45,11 @@ type
   end;
 const
   BUFSIZE: Byte = 64;
+
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+implementation
+{$ELSE}
+{$ENDIF}
 
 // ---- PROTECTED METHODS ----
 
@@ -223,6 +234,9 @@ begin
   end;
 end;
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+{$ELSE}
+
 // ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
 
 function CreatePort: TIOPort; CALLTYPE; export;
@@ -316,6 +330,8 @@ exports ShowPanel name 'ioport_showpanel';
 exports RenamePanel name 'ioport_renamepanel';
 exports ResizePanel name 'ioport_resizepanel';
 exports MovePanel name 'ioport_movepanel';
+
+{$ENDIF}
 
 begin
 end.

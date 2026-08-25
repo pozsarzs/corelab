@@ -11,7 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+unit ioport_standard;
+interface
+{$ELSE}
 library ioport_standard;
+{$ENDIF}
+
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
@@ -31,6 +37,11 @@ type
     procedure WritePort(APort: Word; AValue: Byte); override;
     procedure CreatePanel; override;
   end;
+
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+implementation
+{$ELSE}
+{$ENDIF}
 
 // ---- PUBLIC METHODS ----
   
@@ -155,7 +166,11 @@ begin
   end;
 end;
 
-// EXPORTABLE FUNCTIONS AND PROCEDURES
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+{$ELSE}
+
+// ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
+
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
   Result := TStandardPort.Create;
@@ -247,6 +262,8 @@ exports ShowPanel name 'ioport_showpanel';
 exports RenamePanel name 'ioport_renamepanel';
 exports ResizePanel name 'ioport_resizepanel';
 exports MovePanel name 'ioport_movepanel';
+
+{$ENDIF}
 
 begin
 end.

@@ -28,7 +28,8 @@ fpcargs = -T$(os) \
           -FE$(outdir) \
           -dLCL \
           -dLCLwin32 \
-          -WG
+          -WG \
+          -dNOT_A_LIBRARY_BUT_A_UNIT
 
 all:
 	@if not exist .\lib\nul md .\_lib
