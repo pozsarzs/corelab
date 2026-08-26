@@ -60,6 +60,7 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                     TAction;
+    ResetPorts: TAction;
     ActionList1:               TActionList;
     ASCIIConsole:              TAction;
     CHMHelpDatabase1:          TCHMHelpDatabase;
@@ -107,6 +108,7 @@ type
     MenuItem36:                TMenuItem;
     MenuItem37:                TMenuItem;
     MenuItem38:                TMenuItem;
+    MenuItem39: TMenuItem;
     MenuItem4:                 TMenuItem;
     MenuItem5:                 TMenuItem;
     MenuItem6:                 TMenuItem;
@@ -185,6 +187,7 @@ type
     procedure QuitExecute(Sender: TObject);
     procedure RefreshPluginListExecute(Sender: TObject);
     procedure ResetExecute(Sender: TObject);
+    procedure ResetPortsExecute(Sender: TObject);
     procedure RestartApplicationExecute(Sender: TObject);
     procedure RunExecute(Sender: TObject);
     procedure SaveRegisterValuesToCPUExecute(Sender: TObject);
@@ -640,7 +643,7 @@ end;
 
 procedure TForm1.MenuItem17Click(Sender: TObject);
 begin
-  if DirectoryExists(MenuItem18.Caption, True)
+  if DirectoryExists(MenuItem17.Caption, True)
     then PluginDirectory := MenuItem18.Caption
     else MenuItem18.Enabled := False;
 end;
@@ -818,6 +821,11 @@ begin
   RefreshRegisters(opVar2List);
 end;
 
+procedure TForm1.ResetPortsExecute(Sender: TObject);
+begin
+
+end;
+
 // REQUEST NMI
 procedure TForm1.NMIExecute(Sender: TObject);
 begin
@@ -914,7 +922,7 @@ procedure TForm1.ShowHexViewerExecute(Sender: TObject);
 begin
   with Form3 do
   begin
-    // Architecture :=
+    Architecture := LoadedPlugin.PArchitecture;
     MemSize := MEM_SIZE;
     Show;
   end;
@@ -1009,7 +1017,7 @@ procedure TForm1.ExamineDepositExecute(Sender: TObject);
 begin
   with Form5 do
   begin
-    // Architecture :=
+    Architecture := LoadedPlugin.PArchitecture;
     MemSize := MEM_SIZE;
     ShowModal;
   end;
