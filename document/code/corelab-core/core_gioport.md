@@ -6,7 +6,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TGIOPort from core_gioport unit
 
-`TGIOPort` is an abstract graphical I/O-port base class derived from `TIOPort`. It adds a Lazarus `TForm`-based panel and provides common panel lifetime, visibility, caption, position, size, and state persistence functionality.
+`TGIOPort` is an abstract graphical I/O-port class derived from `TIOPort`. It adds a Lazarus `TForm`-based panel and provides common panel lifetime, visibility, caption, position, size, and state persistence functionality.
 
 Derived classes must implement `CreatePanel`.
 

@@ -1,0 +1,68 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=corelab_en.chm
+Contents file=corelab_en.hhc
+Default topic=Home.htm
+Display compile progress=Yes
+Error log file=corelab_en.log
+Index file=corelab_en.hhk
+Language=0x409 English (United States)
+Title=CoreLAB Help
+
+
+[FILES]
+Home.html
+Application/CLIOPort-plugin-tester.html
+Application/CLMemory-plugin-tester.html
+Application/CLProcessor-plugin-tester.html
+Parts/TIL311-display.html
+Parts/TLEDRound-class.html
+Parts/TLEDSquare-class.html
+Parts/TIL302-display.html
+Classes/TLED-base-class.html
+Classes/TDisplay-base-class.html
+Classes/TCPU-base-class.html
+Classes/TGIOPort-derived-class.html
+Classes/TIOPort-base-class.html
+Classes/TMemory-base-class.html
+Classes/TBus-class.html
+Plugins/TZ80CPU-class.html
+Plugins/TStandardMemory-class.html
+Plugins/TLEDRed64MUX-class.html
+Plugins/TLEDRed8-class.html
+Plugins/TDisp2HexMUXBCD-class.html
+Plugins/TLEDGreen512MUX-class.html
+Plugins/TLEDGreen8-class.html
+Plugins/TDisp4HexMUXBCD-class.html
+Plugins/TSwitch8-class.html
+Plugins/T4004CPU-class.html
+Plugins/TBELLPort-class.html
+Plugins/TLEDYellow64MUX-class.html
+Plugins/TREALPort-class.html
+Plugins/TLEDGreen64MUX-class.html
+Plugins/TConsole-class.html
+Plugins/TDisp47segMUX-class.html
+Plugins/TDisp8HexMUXBCD-class.html
+Plugins/TDisp27segMUX-class.html
+Plugins/TSwitch16BCD-class.html
+Plugins/TLEDRed512MUX-class.html
+Plugins/TSwitch16MUX-class.html
+Plugins/TLEDYellow512MUX-class.html
+Plugins/TButton16BCD-class.html
+Plugins/TLEDYellow8-class.html
+Plugins/TDisp1HexBCD-class.html
+Plugins/T4040CPU-class.html
+Plugins/TNULLPort-class.html
+Plugins/TButton16MUX-class.html
+Plugins/TDisp17seg-class.html
+Plugins/TDisp87segMUX-class.html
+Plugins/TButton8-class.html
+Plugins/TStandardPort-class.html
+Plugins/T8080CPU-class.html
+Plugins/T8000CPU-class.html
+Interfaces/ICtlAPI-interface.html
+Interfaces/ISvcAPI-interface.html
+Interfaces/ISysBus-interface.html
+
+[INFOTYPES]
+

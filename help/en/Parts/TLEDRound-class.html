@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Parts - TLEDRound</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h1 id="corelab">CoreLAB</h1>
+<p><strong>Modular Processor Simulation Framework</strong></p>
+<p>Copyright (C) 2026 Pozsár Zsolt <a href="mailto:pozsarzs@gmail.com"
+class="email">pozsarzs@gmail.com</a></p>
+<h2 id="tledround-from-tled-class-in-led_round-unit">TLEDRound from TLED
+class in led_round unit</h2>
+<p>TLEDRound is a virtual round LED component derived from the TLED base
+class. It renders a circular LED in red, green or yellow, according to
+the color group supplied through the inherited <code>TLEDColors</code>
+structure.</p>
+<h3 id="protected-fields">Protected fields</h3>
+<p>There are no additional protected fields declared by
+<code>TLEDRound</code>.</p>
+<h3 id="public-methods">Public methods</h3>
+<table border="1" cellspacing="0px" cellpadding="4px">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 45%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th style="text-align: center;">flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td style="text-align: center;">Or</td>
+<td>Initializes the round LED, its module information and bitmap
+buffer.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DrawToBuffer(AIsOn: Boolean; AColor: TLEDColors; ABGColor: TColor);</code></td>
+<td style="text-align: center;">Or</td>
+<td>Clears the background and renders the LED in its on or off state,
+including glow and reflection effects.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);</code></td>
+<td style="text-align: center;">Or</td>
+<td>Copies the internal bitmap buffer to the target canvas at the
+specified position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="object-properties-and-inherited-interface">Object properties and
+inherited interface</h3>
+<p>The class inherits the LED state, color and background properties
+from <code>TLED</code>, including <code>ModName</code>,
+<code>Description</code>, <code>Enabled</code>, <code>Color</code>,
+<code>BGColor</code> and <code>IsOn</code>.</p>
+<p>The inherited <code>RETRO_COLORS</code> constant provides the
+predefined red, green and yellow color groups.</p>
+<h3 id="rendering">Rendering</h3>
+<table border="1" cellspacing="0px" cellpadding="4px">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>state</th>
+<th>appearance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>On</td>
+<td>Round LED filled with <code>OnColor</code>, with a <code>Glow</code>
+inner area and a white reflection.</td>
+</tr>
+<tr class="even">
+<td>Off</td>
+<td>Round LED filled with <code>OffColor</code>, with a silver
+reflection.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-information">Module information</h3>
+<table border="1" cellspacing="0px" cellpadding="4px">
+<thead>
+<tr class="header">
+<th>item</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module name</td>
+<td><code>Round LED</code></td>
+</tr>
+<tr class="even">
+<td>Description</td>
+<td><code>Red, green or yellow color round LED</code></td>
+</tr>
+<tr class="odd">
+<td>Buffer width</td>
+<td>29 pixels</td>
+</tr>
+<tr class="even">
+<td>Buffer height</td>
+<td>29 pixels</td>
+</tr>
+<tr class="odd">
+<td>FrameX</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>FrameY</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

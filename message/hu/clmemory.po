@@ -11,166 +11,347 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: clmemory:msg01
+#: clmemory.msg01
 msgid "CoreLAB Memory plugin tester"
 msgstr "CoreLAB Memory bővítménytesztelő"
 
-#: clmemory:msg02
+#: clmemory.msg02
 msgid "Build date:  "
 msgstr "Fordítás dátuma:  "
 
-#: clmemory:msg03
+#: clmemory.msg03
 msgid "Builder:     "
 msgstr "Fordító:     "
 
-#: clmemory:msg04
+#: clmemory.msg04
 msgid "FPC version: "
 msgstr "FPC verzió: "
 
-#: clmemory:msg05
+#: clmemory.msg05
 msgid "Target OS:   "
 msgstr "Cél OS:   "
 
-#: clmemory:msg06
+#: clmemory.msg06
 msgid "Target CPU:  "
 msgstr "Cél CPU:  "
 
-#: clmemory:msg07
+#: clmemory.msg07
 msgid "There are one or more bad arguments in command line."
 msgstr "Egy vagy több hibás parancssori argumentum van megadva."
 
-#: clmemory:msg08
+#: clmemory.msg08
 msgid "Usage"
 msgstr "Használat"
 
-#: clmemory:msg09
+#: clmemory.msg09
 msgid "[argument]"
 msgstr "[argumentum]"
 
-#: clmemory:msg10
+#: clmemory.msg10
 msgid "[directory]"
 msgstr "[könyvtár]"
 
-#: clmemory:msg11
+#: clmemory.msg11
 msgid "arguments:"
 msgstr "argumentumok:"
 
-#: frmabout:msg01
+#: frmabout.msg01
 msgid "Cannot open URL."
 msgstr "Az URL nem nyitható meg."
 
-#: frmmain:msg01
+#: frmmain.msg01
 msgid "ERROR: "
 msgstr "HIBA: "
 
-#: frmmain:msg02
+#: frmmain.msg02
 msgid "Data type conversion error."
 msgstr "Adattípus-konverziós hiba."
 
-#: frmmain:msg03
+#: frmmain.msg03
+#, object-pascal-format
 msgid "Directory '%s' does not exist."
 msgstr "A(z) „%s” könyvtár nem létezik."
 
-#: frmmain:msg04
+#: frmmain.msg04
+#, object-pascal-format
 msgid "Cannot load '%s' plugin%s(%s)."
 msgstr "A(z) „%s” bővítmény%s(%s) nem tölthető be."
 
-#: frmmain:msg05
+#: frmmain.msg05
 msgid "It is not a CoreLAB memory plugin."
 msgstr "Ez nem CoreLAB Memory bővítmény."
 
-#: frmmain:msg06
+#: frmmain.msg06
 msgid "Filename"
 msgstr "Fájlnév"
 
-#: frmmain:msg07
+#: frmmain.msg07
 msgid "Size"
 msgstr "Méret"
 
-#: frmmain:msg08
+#: frmmain.msg08
 msgid "Type"
 msgstr "Típus"
 
-#: frmmain:msg09
+#: frmmain.msg09
 msgid "Property"
 msgstr "Tulajdonság"
 
-#: frmmain:msg10
+#: frmmain.msg10
 msgid "Value"
 msgstr "Érték"
 
-#: frmmain:msg11
+#: frmmain.msg11
 msgid "Address"
 msgstr "Cím"
 
-#: frmmain:msg12
+#: frmmain.msg12
 msgid "Data"
 msgstr "Adat"
 
-#: frmmain:msg13
+#: frmmain.msg13
+#, object-pascal-format
 msgid " %sh read from address %sh."
 msgstr " %sh olvasva a(z) %sh címről."
 
-#: frmmain:msg14
+#: frmmain.msg14
+#, object-pascal-format
 msgid " %sh write to address %sh."
 msgstr " %sh írva a(z) %sh címre."
 
-#: frmmain:msg15
+#: frmmain.msg15
 msgid "Only hexadecimal values can be entered!"
 msgstr "Csak hexadecimális értékek adhatók meg!"
 
-#: frmmain:msg16
+#: frmmain.msg16
 msgid "Out of range!"
 msgstr "Tartományon kívül!"
 
-#: frmmain:msg17
+#: frmmain.msg17
 msgid "Value (Hex)"
 msgstr "Érték (hex)"
 
-#: frmmain:msg18
+#: frmmain.msg18
 msgid "Missing help file."
 msgstr "Hiányzó súgófájl."
 
-#: frmmain:msg19
+#: frmmain.msg19
 msgid "Missing help viewer."
 msgstr "Hiányzó súgónézegető."
 
-#: frmmain:msg20
+#: frmmain.msg20
 msgid "Cannot read state data from plugin."
 msgstr "A bővítmény állapotadatai nem olvashatók."
 
-#: frmmain:msg21
+#: frmmain.msg21
 msgid "Save plugin state to file"
 msgstr "Bővítmény állapotának mentése fájlba"
 
-#: frmmain:msg22
+#: frmmain.msg22
+#, object-pascal-format
 msgid "Cannot save '%s' plugin data."
 msgstr "A(z) „%s” bővítmény adatai nem menthetők."
 
-#: frmmain:msg23
+#: frmmain.msg23
 msgid "Load plugin state from file"
 msgstr "Bővítmény állapotának betöltése fájlból"
 
-#: frmmain:msg24
+#: frmmain.msg24
+#, object-pascal-format
 msgid "Cannot load '%s' plugin data."
 msgstr "A(z) „%s” bővítmény adatai nem tölthetők be."
 
-#: frmmain:msg25
+#: frmmain.msg25
 msgid "Cannot write state data to plugin."
 msgstr "Az állapotadatok nem írhatók a bővítménybe."
 
-#: frmmain:msg26
+#: frmmain.msg26
 msgid "CoreLAB plugin status file|*.clpst|All file|*.*"
 msgstr "CoreLAB beépülő állapotfájl|*.clpst|Minden fájl|*.*"
 
-#: frmmain:msg27
+#: frmmain.msg27
 msgid "Read-only!"
 msgstr "Csak olvasható!"
 
-#: frmmain:msg28
+#: frmmain.msg28
 msgid "The memory size can be 16 B-16 MB"
 msgstr "A memóriaméret 16 B és 16 MB között lehet"
 
-#: frmmain:msg29
-msgid "The data width can be 4-64 bits."
-msgstr "Az adat szélessége 4–64 bit lehet."
+#: tform1.about.caption
+msgid "&About"
+msgstr "&Névjegy"
+
+#: tform1.caption
+msgid "Form1"
+msgstr "Form1"
+
+#: tform1.deposit.caption
+msgid "&Deposit"
+msgstr "&Adatbevitel"
+
+#: tform1.deposit.hint
+msgid "Deposit data in memory cell"
+msgstr "Adat elhelyezése a memóriacellában"
+
+#: tform1.directoryedit1.buttonhint
+msgctxt "tform1.directoryedit1.buttonhint"
+msgid "Select plugin directory"
+msgstr "Bővítménykönyvtár kiválasztása"
+
+#: tform1.examine.caption
+msgid "&Examine"
+msgstr "&Vizsgálat"
+
+#: tform1.examine.hint
+msgid "Examine content of memory cell"
+msgstr "A memóriacella tartalmának vizsgálata"
+
+#: tform1.help.caption
+msgctxt "tform1.help.caption"
+msgid "&Help"
+msgstr "&Súgó"
+
+#: tform1.loadchangeplugin.caption
+msgid "Load/change p&lugin"
+msgstr "Bővítmény betöltése/cseréje"
+
+#: tform1.loadchangeplugin.hint
+msgid "Load/change plugin"
+msgstr "Bővítmény betöltése/cseréje"
+
+#: tform1.loadstatus.caption
+msgid "Load status"
+msgstr "Betöltési állapot"
+
+#: tform1.menuitem1.caption
+msgid "&File"
+msgstr "&Fájl"
+
+#: tform1.menuitem11.caption
+msgid "Us&ual places"
+msgstr "Gyakori helyek"
+
+#: tform1.menuitem14.caption
+msgid "./"
+msgstr "./"
+
+#: tform1.menuitem15.caption
+msgid "/usr/lib/corelab/"
+msgstr "/usr/lib/corelab/"
+
+#: tform1.menuitem16.caption
+msgid "./plugins/"
+msgstr "./plugins/"
+
+#: tform1.menuitem17.caption
+msgid "/usr/local/lib/corelab/"
+msgstr "/usr/local/lib/corelab/"
+
+#: tform1.menuitem18.caption
+msgid "~/.local/lib/corelab/"
+msgstr "~/.local/lib/corelab/"
+
+#: tform1.menuitem4.caption
+msgid "&Operation"
+msgstr "Mű&velet"
+
+#: tform1.menuitem5.caption
+msgctxt "tform1.menuitem5.caption"
+msgid "&Help"
+msgstr "&Súgó"
+
+#: tform1.panel1.caption
+msgid "Panel1"
+msgstr "Panel1"
+
+#: tform1.quit.caption
+msgid "E&xit"
+msgstr "K&ilépés"
+
+#: tform1.quit.hint
+msgid "Exit from application"
+msgstr "Kilépés az alkalmazásból"
+
+#: tform1.refreshpluginlist.caption
+msgid "Re&fresh plugin list"
+msgstr "Bővítménylista fri&ssítése"
+
+#: tform1.refreshpluginlist.hint
+msgid "Refresh plugin list"
+msgstr "Bővítménylista frissítése"
+
+#: tform1.restartapplication.caption
+msgid "Restart &application"
+msgstr "Alkalmazás &újraindítása"
+
+#: tform1.restartapplication.hint
+msgid "Restart application"
+msgstr "Alkalmazás újraindítása"
+
+#: tform1.savestatus.caption
+msgid "Save status"
+msgstr "Állapot mentése"
+
+#: tform1.selectplugindirectory.caption
+msgid "Select plugin &directory..."
+msgstr "Bővítmény&könyvtár kiválasztása..."
+
+#: tform1.selectplugindirectory.hint
+msgctxt "tform1.selectplugindirectory.hint"
+msgid "Select plugin directory"
+msgstr "Bővítménykönyvtár kiválasztása"
+
+#: tform1.toolbar1.caption
+msgid "ToolBar1"
+msgstr "ToolBar1"
+
+#: tform1.toolbutton3.caption
+msgid "ToolButton3"
+msgstr "ToolButton3"
+
+#: tform1.toolbutton6.caption
+msgid "ToolButton6"
+msgstr "ToolButton6"
+
+#: tform2.button1.caption
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform2.caption
+msgid "About"
+msgstr "Névjegy"
+
+#: tform2.label1.caption
+msgid "Label1"
+msgstr "Label1"
+
+#: tform2.label2.caption
+msgid "Label2"
+msgstr "Label2"
+
+#: tform2.label3.caption
+msgid "Label3"
+msgstr "Label3"
+
+#: tform2.label4.caption
+msgid "Label4"
+msgstr "Label4"
+
+#: tform2.label5.caption
+msgid "Label5"
+msgstr "Label5"
+
+#: tform2.label6.caption
+msgid "Homepage:"
+msgstr "Honlap:"
+
+#: tform2.label7.caption
+msgid "E-mail:"
+msgstr "E-mail:"
+
+#: tform2.label8.caption
+msgid "Label8"
+msgstr "Label8"
+
+#~ msgid "The data width can be 4-64 bits."
+#~ msgstr "Az adat szélessége 4–64 bit lehet."
