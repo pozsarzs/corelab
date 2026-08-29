@@ -667,8 +667,11 @@ begin
         ShowPanel(CurrentPort);
       end;
       ValueListEditor1.Enabled := True;
+      // enable plugin relevant actions
       ReadAByte.Enabled := True;
       WriteAByte.Enabled := True;
+      LoadStatus.Enabled := True;
+      SaveStatus.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(FLoadCounter);
@@ -691,11 +694,14 @@ begin
       LibHandle := NilHandle;
       ValueListEditor1.Enabled := False;
       ValueListEditor2.Enabled := False;
-      ReadAByte.Enabled := False;
-      WriteAByte.Enabled := False;
       ShowPluginWindow.Enabled := False;
       SetPluginWindowCaption.Enabled := False;
       SetPluginWindowSizePosition.Enabled := False;
+      // disable plugin relevant actions
+      ReadAByte.Enabled := False;
+      WriteAByte.Enabled := False;
+      LoadStatus.Enabled := False;
+      SaveStatus.Enabled := False;
     end;
   end;
 end;
@@ -929,8 +935,11 @@ begin
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
   LoadChangePlugin.Enabled := False;
+  // disable plugin relevant actions
   ReadAByte.Enabled := False;
   WriteAByte.Enabled := False;
+  LoadStatus.Enabled := False;
+  SaveStatus.Enabled := False;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;

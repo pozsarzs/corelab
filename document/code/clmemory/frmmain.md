@@ -6,113 +6,144 @@ Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 
 ## TForm1 from TForm class in frmmain unit
 
-`TForm1` is the main application form for the CoreLAB standard-memory plugin manager. It searches for memory plugins, dynamically loads a selected plugin library, creates its `TMemory` instance, displays and edits its properties, provides direct byte read/write operations, and saves or restores plugin state.
+`TForm1` is the main form of the CoreLAB standard-memory plugin manager.
+It discovers memory plugins, loads the selected shared library, creates its
+`TMemory` instance, displays and edits its properties, provides direct memory
+read/write operations, and saves or restores plugin state.
 
-### TPluginAttributes
+### Types
 
-`TPluginAttributes` stores the memory-plugin properties displayed and edited by the main form.
+#### TPluginAttributes
 
-|field|type|description|
-|---|---|---|
-|`PFilename`|`string`|Filename of the loaded module.|
-|`PAddressRangeSize`|`DWord`|Configured memory address range.|
-|`PDataWidth`|`Byte`|Data width (4-64 bits).|
-|`PDescription`|`string`|Short module description.|
-|`PEnabled`|`Boolean`|Enables or disables memory access.|
-|`PInstanceID`|`Integer`|Module instance identifier.|
-|`PMemoryMode`|`TMemoryMode`|Memory operation mode, such as RAM or ROM.|
-|`PModname`|`string`|Module name.|
+`TPluginAttributes` stores the properties of the loaded memory plugin.
 
-### TOpDirection
+|field              |type       |description                            |
+|-------------------|-----------|---------------------------------------|
+|`PFilename`        |string     |Filename of the module.                |
+|`PAddressRangeSize`|DWord      |Configured memory address range.       |
+|`PDescription`     |string     |Short module description.              |
+|`PEnabled`         |Boolean    |Enables or disables memory access.     |
+|`PInstanceID`      |Integer    |Module instance identifier.            |
+|`PMemoryMode`      |TMemoryMode|Memory operation mode, e.g. RAM or ROM.|
+|`PModname`         |string     |Module name.                           |
 
-|value|description|
-|---|---|
-|`opPlugin2Var`|Imports properties from the loaded plugin into `LoadedPlugin`.|
-|`opVar2List`|Copies properties from `LoadedPlugin` to the property editor.|
-|`opList2Var`|Reads editable values from the property editor into `LoadedPlugin`.|
-|`opVar2Plugin`|Writes editable properties from `LoadedPlugin` to the plugin.|
+#### TOpDirection
+
+|value         |description                                         |
+|--------------|----------------------------------------------------|
+|`opPlugin2Var`|Imports plugin properties into `LoadedPlugin`.      |
+|`opVar2List`  |Copies `LoadedPlugin` values to the property editor.|
+|`opList2Var`  |Reads edited values into `LoadedPlugin`.            |
+|`opVar2Plugin`|Writes editable values to the plugin.               |
 
 ### Plugin entry-point types
 
-|type|signature|purpose|
-|---|---|---|
-|`TCreateMemoryFunc`|`function: TMemory`|Creates a memory-plugin instance.|
-|`TDestroyMemoryProc`|`procedure(Memory: TMemory)`|Destroys a memory-plugin instance.|
-|`TLoadStateProc`|`function(Memory: TMemory; AStream: TStream): Boolean`|Loads plugin state.|
-|`TSaveStateProc`|`function(Memory: TMemory; AStream: TStream): Boolean`|Saves plugin state.|
+|type                |signature                                                       |purpose                           |
+|--------------------|----------------------------------------------------------------|----------------------------------|
+|`TCreateMemoryFunc` |`function: TMemory; CALLTYPE`                                   |Creates a memory-plugin instance. |
+|`TDestroyMemoryProc`|`procedure(Memory: TMemory); CALLTYPE`                          |Destroys a memory-plugin instance.|
+|`TLoadStateProc`    |`function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE`|Loads plugin state.               |
+|`TSaveStateProc`    |`function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE`|Saves plugin state.               |
 
-### Protected/private fields
+### Published components
 
-|name|type|description|
-|---|---|---|
-|`CurrentMemory`|`TMemory`|Currently instantiated memory plugin.|
-|`LibHandle`|`TLibHandle`|Handle of the dynamically loaded plugin library.|
-|`LoadedPlugin`|`TPluginAttributes`|Cached plugin properties.|
-|`CreateMemory`|`TCreateMemoryFunc`|Pointer to the `memory_create` entry point.|
-|`DestroyMemory`|`TDestroyMemoryProc`|Pointer to the `memory_destroy` entry point.|
-|`LoadState`|`TLoadStateProc`|Pointer to the `memory_loadstate` entry point.|
-|`SaveState`|`TSaveStateProc`|Pointer to the `memory_savestate` entry point.|
-|`FIgnoreHelp`|`Boolean`|Controls whether the help system is ignored.|
-|`FLoadCounter`|`Integer`|Number of successfully loaded plugin instances.|
-|`FEXEDirectory`|`string`|Application executable directory.|
-|`FPluginDirectory`|`string`|Directory searched for memory plugins.|
-|`FSystemLanguage`|`string`|Detected system language.|
-|`FUserDirectory`|`string`|User directory.|
+The form contains the following published controls and actions.
+
+|name              |type            |role                                 |
+|------------------|----------------|-------------------------------------|
+|`ActionList1`     |TActionList     |Stores application actions.          |
+|`MainMenu1`       |TMainMenu       |Main application menu.               |
+|`ToolBar1`        |TToolBar        |Toolbar for common actions.          |
+|`DirectoryEdit1`  |TDirectoryEdit  |Selects the plugin directory.        |
+|`ShellListView1`  |TShellListView  |Lists available memory plugins.      |
+|`ValueListEditor1`|TValueListEditor|Displays plugin properties.          |
+|`ValueListEditor2`|TValueListEditor|Edits memory address and data values.|
+|`StatusBar1`      |TStatusBar      |Displays plugin and operation status.|
+|`Timer1`          |TTimer          |Clears temporary status messages.    |
+|`OpenDialog1`     |TOpenDialog     |Selects a plugin status file to load.|
+|`SaveDialog1`     |TSaveDialog     |Selects a plugin status file to save.|
+|`CHMHelpDatabase1`|TCHMHelpDatabase|Configures CHM help.                 |
+|`LHelpConnector1` |TLHelpConnector |Connects the LHelp viewer.           |
+
+### Private fields
+
+|name              |type              |description                                  |
+|------------------|------------------|---------------------------------------------|
+|`CurrentMemory`   |TMemory           |Currently instantiated memory plugin.        |
+|`LibHandle`       |TLibHandle        |Handle of the loaded shared library.         |
+|`LoadedPlugin`    |TPluginAttributes |Cached plugin properties.                    |
+|`CreateMemory`    |TCreateMemoryFunc |Pointer to `memory_create`.                  |
+|`DestroyMemory`   |TDestroyMemoryProc|Pointer to `memory_destroy`.                 |
+|`LoadState`       |TLoadStateProc    |Pointer to `memory_loadstate`.               |
+|`SaveState`       |TSaveStateProc    |Pointer to `memory_savestate`.               |
+|`FIgnoreHelp`     |Boolean           |Suppresses the help system when true.        |
+|`FLoadCounter`    |Integer           |Counts successfully created plugin instances.|
+|`FEXEDirectory`   |string            |Application executable directory.            |
+|`FPluginDirectory`|string            |Current plugin directory.                    |
+|`FSystemLanguage` |string            |Detected system language.                    |
+|`FUserDirectory`  |string            |Current user directory.                      |
 
 ### Public properties
 
-|name|type|access|description|
-|---|---|---|---|
-|`IgnoreHelp`|`Boolean`|read/write|Controls the help system configuration.|
-|`EXEDirectory`|`string`|read|Application executable directory.|
-|`PluginDirectory`|`string`|read/write|Current memory-plugin directory. Setting it refreshes the plugin list.|
-|`SystemLanguage`|`string`|read|Detected system language.|
-|`UserDirectory`|`string`|read|User directory.|
+|name             |type   |access    |description                                         |
+|-----------------|-------|----------|----------------------------------------------------|
+|`IgnoreHelp`     |Boolean|read/write|Controls help-system configuration.                 |
+|`EXEDirectory`   |string |read      |Application executable directory.                   |
+|`PluginDirectory`|string |read/write|Changes the plugin directory and refreshes the list.|
+|`SystemLanguage` |string |read      |Detected system language.                           |
+|`UserDirectory`  |string |read      |Current user directory.                             |
 
 ### Private methods
 
-|name|description|
-|---|---|
-|`ImpExpProperties`|Imports plugin properties into `LoadedPlugin` or exports editable properties back to `CurrentMemory`.|
-|`RefreshProperties`|Synchronizes `LoadedPlugin` with the property editor and parses edited values.|
-|`SetIgnoreHelp`|Configures the CHM help file and LHelp viewer when help is enabled.|
-|`SetPluginDirectory`|Stores the plugin directory, updates the directory control and refreshes the plugin list.|
+|name                |description                                                         |
+|--------------------|--------------------------------------------------------------------|
+|`ImpExpProperties`  |Transfers properties between the plugin, internal record and editor.|
+|`RefreshProperties` |Synchronizes the property record and property editor.               |
+|`SetIgnoreHelp`     |Configures CHM/LHelp and enables or disables help.                  |
+|`SetPluginDirectory`|Stores the directory, updates the selector and refreshes plugins.   |
 
-### Main operations
+### Event handlers
 
-|operation|description|
-|---|---|
-|Plugin discovery|Searches the selected directory for `memory_*.dll` on Windows or `libmemory_*.so` on Unix-like systems.|
-|Plugin loading|Loads the selected library, resolves `memory_create`, `memory_destroy`, `memory_loadstate` and `memory_savestate`, and creates the memory object.|
-|Property editing|Displays filename, module name, description, instance ID, enabled state, memory mode and address-range size. Only address range size is editable directly; the other displayed plugin properties are read-only or pick-list values.|
-|Examine|Reads data from the hexadecimal address entered by the user and displays the result as a hexadecimal value.|
-|Deposit|Writes a hexadecimal data to a hexadecimal address and reports out-of-range or ROM conditions.|
-|State loading|Loads a `.clstm` stream file and passes it to the plugin's `memory_loadstate` entry point.|
-|State saving|Passes a memory stream to the plugin's `memory_savestate` entry point and saves the resulting data as a `.clstm` file.|
-|Restart|Starts a new instance of the application and terminates the current one.|
-|Help|Opens `html/clmemory.htm` through the LCL help system.|
+|name                           |description                                                                          |
+|-------------------------------|-------------------------------------------------------------------------------------|
+|`AboutExecute`                 |Shows the About dialog.                                                              |
+|`FormCreate`                   |Initializes state, controls, directories and the plugin list.                        |
+|`FormDestroy`                  |Destroys the plugin instance and unloads the library.                                |
+|`HelpExecute`                  |Opens `html/clmemory.htm` through the help system.                                   |
+|`LoadChangePluginExecute`      |Unloads the previous plugin, loads the selected library and creates the new instance.|
+|`LoadStatusExecute`            |Loads plugin state from a `.clpst` file.                                             |
+|`MenuItem14Click`              |Selects the directory stored in menu item 14.                                        |
+|`MenuItem15Click`              |Selects menu item 15's directory if it exists.                                       |
+|`MenuItem16Click`              |Selects menu item 16's directory if it exists.                                       |
+|`MenuItem17Click`              |Selects the configured directory if it exists.                                       |
+|`MenuItem18Click`              |Selects menu item 18's directory if it exists.                                       |
+|`QuitExecute`                  |Terminates the application.                                                          |
+|`ExamineExecute`               |Reads memory at the entered hexadecimal address.                                     |
+|`RefreshPluginListExecute`     |Refreshes the memory-plugin file list.                                               |
+|`RestartApplicationExecute`    |Starts a new application instance and terminates the current one.                    |
+|`SaveStatusExecute`            |Saves plugin state to a `.clpst` file.                                               |
+|`SelectPluginDirectoryExecute` |Opens the directory selection dialog.                                                |
+|`Timer1Timer`                  |Clears the temporary status message.                                                 |
+|`ValueListEditor1DrawCell`     |Draws read-only property names in a distinct style.                                  |
+|`ValueListEditor1EditingDone`  |Applies edited property values to the plugin.                                        |
+|`ValueListEditor1ValidateEntry`|Validates the memory address-range size.                                             |
+|`ValueListEditor2ValidateEntry`|Validates and normalizes hexadecimal address/data input.                             |
+|`DepositExecute`               |Writes the entered value to memory and reports errors.                               |
 
-### Validation
+### Global variable
 
-|field|minimum|maximum|
-|---|---:|---:|
-|`AddressRangeSize`|16 B |16777216 B|
-|`DataWidth`|4 b|64 b|
+|name   |type  |description                      |
+|-------|------|---------------------------------|
+|`Form1`|TForm1|Global instance of the main form.|
 
-Invalid input is rejected and the previous value is restored.
+### Plugin loading interface
 
-### Visual components
+The main form resolves the following exported plugin entry points from the
+loaded shared library:
 
-The form contains the main menu, toolbar, action list, directory selector, plugin file list, property editors, status bar, timer, dialogs and help components required to operate the memory-plugin manager.
-
-### Plugin lifecycle
-
-1. The form initializes without a loaded memory object.
-2. The plugin directory is initialized and scanned.
-3. Selecting a plugin unloads the previous instance and library.
-4. The selected library is dynamically loaded.
-5. Required exported entry points are resolved.
-6. `memory_create` creates the `TMemory` descendant.
-7. Plugin properties are imported and displayed.
-8. The memory object remains active until another plugin is loaded or the form is destroyed.
-9. On destruction, the memory object is destroyed and the library handle and entry-point pointers are cleared.
+|exported name     |purpose                            |
+|------------------|-----------------------------------|
+|`memory_create`   |Create the `TMemory` plugin object.|
+|`memory_destroy`  |Destroy the plugin object.         |
+|`memory_loadstate`|Load plugin state from a stream.   |
+|`memory_savestate`|Save plugin state to a stream.     |

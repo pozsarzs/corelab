@@ -1,0 +1,104 @@
+.TH CLMemory 1 "2026 August 28" ""
+
+.SH NAME
+CLMemory \- Memory plugin tester application of the CoreLAB framework
+
+.SH SYNOPSIS
+.B clmemory
+[options]
+
+.SH COPYRIGHT
+CoreLAB is Copyright (C) 2026 by Pozsar Zsolt.
+
+.SH DESCRIPTION
+The CLMemory application is intended for simple, manual testing of memory
+simulator plugins of the CoreLAB modular framework. It allows loading the
+plugin, viewing and modifying its properties, reading and writing the memory
+cells directly, and saving and reloading the plugin state.
+.PP
+The program is designed for Windows and Unix-like operating systems.
+
+.SH OPTIONS
+.TP
+.B \-d \-\-dir
+Set plugin directory.
+.TP
+.B \-i \-\-ignore-help
+Ignore missing help file or viewer.
+.TP
+.B \-h \-\-help
+Show useable parameters.
+.TP
+.B \-v \-\-version
+Show version and build information.
+
+.SH OPERATION
+..SS Plugin architecture
+CLMemory is designed for simple, manual testing of memory simulator plugins used
+by the CoreLAB modular framework. Plugins are provided as dynamically loadable
+shared libraries containing the plugin class implementation and its exported
+entry points.
+.PP
+The base class for memory plugins is \fITMemory\fP. A concrete plugin
+implementation derives from this class and implements the device-specific
+memory operations and behaviour.
+.PP
+When a plugin library is loaded, \fIclmemory\fP resolves the required entry
+points and creates an instance of the plugin class. The resulting object is
+then used for memory access and plugin management.
+.PP
+.SS Plugin interface
+The plugin interface consists of the \fITMemory\fP class and the exported
+plugin entry points. It provides memory read/write operations, reset and
+configuration, and state saving and loading.
+.PP
+The main plugin properties include the address range (up to 16 MB), memory mode
+and enabled state. Plugin identification and description properties are also
+provided.
+
+.SH ENVIRONMENTAL VARIABLES
+.TP
+.B LANG
+This is the system language on Unix-like operating systems.
+
+.SH FILES
+.TP
+.B memory_*.dll, libmemory_*.so :
+The application loads processor plugins as shared libraries. On Windows,
+plugins use the \fImemory_*.dll\fP naming convention; on Unix-like systems,
+\fIlibmemory_*.so\fP is used.
+.TP
+.B *.clpst:
+Plugin state can be saved to and restored from CoreLAB stream files. The state
+data is handled by the plugin through the corresponding state management
+interface. Their content varies from plugin to plugin.
+
+.SH EXIT STATUS
+.TP
+.B 0
+Normal exit.
+
+.SH HOMEPAGE
+.UR https://www.pozsarzs.hu/60_myprogcom/corelab/
+.UE
+.PP
+.UR https://pozsarzs.github.io/corelab
+.UE
+.PP
+.UR https://github.com/pozsarzs/corelab
+.UE
+
+.SH SEE ALSO
+.PD 0
+.LP
+\fBclioport\fP(1)
+\fBclprocessor\fP(1)
+\fBcorelab\fP(1)
+and files in document or \fI/usr/share/doc/corelab/\fP folder (or equivalent on
+your system). The source code documentation for plugins can only be found in the
+source package and in the help.
+
+.SH AUTHOR
+Pozsar Zsolt
+.MT pozsarzs@gmail.com
+.ME

@@ -2,60 +2,39 @@
 
 **Modular Processor Simulation Framework**
 
-Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
+Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TForm2 from TForm class in frmabout unit
+## TForm2 About Form in frmabout unit
 
-`TForm2` is the About form of the application. It displays application identification and contact information and provides clickable homepage and email links.
+`TForm2` is an About dialog form. It displays application identification data
+supplied through a `TAboutLabels` record and provides clickable homepage and
+e-mail links.
 
-### TAboutLabels
+### Types
 
-`TAboutLabels` is a record used to supply the text displayed by the About form.
-
-|field|type|description|
-|---|---|---|
-|`Copyright`|`string[32]`|Copyright information.|
-|`Description`|`string[32]`|Application description.|
-|`Email`|`string[32]`|Contact email address.|
-|`Homepage`|`string[32]`|Application homepage URL.|
-|`Name`|`string[32]`|Application name.|
-|`Version`|`string[32]`|Application version.|
+|name          |description                                                                                      |
+|--------------|-------------------------------------------------------------------------------------------------|
+|`TAboutLabels`|Record containing application name, version, description, copyright, homepage and e-mail address.|
 
 ### Public methods
 
-|name|flags|description|
-|---|:---:|---|
-|`procedure SetAboutLabels(Labels: TAboutLabels);`| |Assigns the supplied application information to the corresponding About-form labels.|
+|name                                             |description                                                    |
+|-------------------------------------------------|---------------------------------------------------------------|
+|`procedure SetAboutLabels(Labels: TAboutLabels);`|Sets the captions of the About dialog from the supplied record.|
 
-### Event handlers
+### Event handler methods
 
-|name|description|
-|---|---|
-|`Label5MouseEnter`|Underlines the homepage label.|
-|`Label5MouseLeave`|Removes the underline from the homepage label.|
-|`Label8MouseEnter`|Underlines the email label.|
-|`Label8MouseLeave`|Removes the underline from the email label.|
-|`Label5Click`|Attempts to open the homepage URL with `OpenURL`. Displays an error message if opening fails.|
-|`Label8Click`|Attempts to open the email address using a `mailto:` URL. Displays an error message if opening fails.|
+|name                                          |description|
+|----------------------------------------------|-----------------------------------------------------------|
+|`procedure Label5Click(Sender: TObject);`     |Opens the homepage URL.                                    |
+|`procedure Label5MouseEnter(Sender: TObject);`|Underlines the homepage label while the pointer is over it.|
+|`procedure Label5MouseLeave(Sender: TObject);`|Removes the underline from the homepage label.             |
+|`procedure Label8Click(Sender: TObject);`     |Opens the e-mail address using a `mailto:` URL.            |
+|`procedure Label8MouseEnter(Sender: TObject);`|Underlines the e-mail label while the pointer is over it.  |
+|`procedure Label8MouseLeave(Sender: TObject);`|Removes the underline from the e-mail label.               |
 
-### Visual components
+### Global variable
 
-|component|type|purpose|
-|---|---|---|
-|`Bevel1`|`TBevel`|Visual separator/frame.|
-|`Button1`|`TButton`|Form button defined by the form resource.|
-|`Image1`|`TImage`|About-form image.|
-|`Label1`–`Label8`|`TLabel`|Display application name, version, description, copyright, homepage and email information.|
-
-### Behaviour
-
-`SetAboutLabels` assigns:
-
-- `Label1` ← `Name`
-- `Label2` ← `v` + `Version`
-- `Label3` ← `Description`
-- `Label4` ← `Copyright`
-- `Label5` ← `Homepage`
-- `Label8` ← `Email`
-
-The click handlers test `Label8.Caption` for a non-empty value before attempting to open either link.
+|name   |type    |description                       |
+|-------|--------|----------------------------------|
+|`Form2`|`TForm2`|Global instance of the About form.|

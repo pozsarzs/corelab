@@ -10,7 +10,7 @@ Lazarus LCL units are required to compile Xcorelab and FreePascal compiler is
 required to compile all programs.  
 
 > [!IMPORTANT]
-> On DOS and Windows operating systems, FreePascal's BIN directory contains the
+> On Windows operating systems, FreePascal's BIN directory contains the
 > compiler and additional necessary utilities (make, rstconv), so this directory
 > must be included in the PATH.
 

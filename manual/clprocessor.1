@@ -1,0 +1,132 @@
+.TH CLProcessor 1 "2026 August 28" ""
+
+.SH NAME
+CLProcessor \- CPU plugin tester application of the CoreLAB framework
+.SH SYNOPSIS
+.B clprocessor
+[options]
+
+.SH COPYRIGHT
+CoreLAB is Copyright (C) 2026 by Pozsar Zsolt.
+
+.SH DESCRIPTION
+The CLProcessor application is the processor simulation component of the CoreLAB
+modular framework. It is intended for simple, manual testing of CPU simulator
+plugins. The program supports processor plugins implementing different CPU
+architectures.
+.PP
+The program is designed for Windows and Unix-like operating systems.
+
+.SH OPTIONS
+.TP
+.B \-d \-\-dir
+Set plugin directory.
+.TP
+.B \-i \-\-ignore-help
+Ignore missing help file or viewer.
+.TP
+.B \-h \-\-help
+Show useable parameters.
+.TP
+.B \-v \-\-version
+Show version and build information.
+
+.SH OPERATION
+.PP
+.SS Plugin architecture
+Processor plugins are provided as dynamically loadable shared libraries
+containing the processor implementation and its exported entry points. After
+loading a plugin, \fIclprocessor\fP resolves the required entry points and
+creates an instance of the plugin's \fITCPU\fP descendant.
+.PP
+The base class for processor plugins is \fITCPU\fP. A concrete CPU
+implementation derives from this class and implements the processor-specific
+register handling, instruction execution, reset operation, and state management.
+.PP
+After loading a processor plugin, the application connects it to the test
+system bus, displays its properties and registers, and provides basic processor
+control and memory operations. The loaded processor communicates with the
+emulated memory and I/O ports through the \fIISysBus\fP interface.
+.PP
+.SS Plugin interface
+The processor plugin interface consists of the \fITCPU\fP class and the
+exported plugin entry points.
+.PP
+The \fITCPU\fP interface provides register access, execution control, reset,
+interrupt requests, event notification, state saving and loading, and processor
+identification and capability information.
+.PP
+.SS Minimal test environment
+CLProcessor provides a minimal environment for testing processor plugins:
+.TP
+.IP \(bu 2
+1 kB of Neumann or Harvard code memory.
+.IP \(bu 2
+1 kB of Harvard data memory.
+.IP \(bu 2
+One standard I/O port at address \fI$A0\fP. Its interrupt can be disabled.
+.IP \(bu 2
+One ASCII I/O console at address \fI$B0\fP. Its interrupt can be disabled.
+
+The application also provides the following tools:
+.IP \(bu 2
+Memory examine and deposit.
+.IP \(bu 2
+Memory hexadecimal dump viewer (\fIHexViewer\fP).
+.IP \(bu 2
+Run logger (\fIRunLogger\fP), recording the instruction number, address, opcode
+and mnemonic.
+.IP \(bu 2
+Memory content loading and saving in raw binary and Intel HEX formats.
+.IP \(bu 2
+Register viewer and editor.
+
+.SH ENVIRONMENTAL VARIABLES
+.TP
+.B LANG
+This is the system language on Unix-like operating systems.
+
+.SH FILES
+.TP
+.B *.bin, *.hex:
+Memory contents can be loaded from a bin or Intel hex file and saved to disk.
+.TP
+.B cpu_*.dll, libcpu_*.so :
+The application loads processor plugins as shared libraries. On Windows,
+plugins use the \fIcpu_*.dll\fP naming convention; on Unix-like systems,
+\fIlibcpu_*.so\fP is used.
+.TP
+.B *.clpst:
+Plugin state can be saved to and restored from CoreLAB stream files. The state
+data is handled by the plugin through the corresponding state management
+interface. Their content varies from plugin to plugin.
+
+.SH EXIT STATUS
+.TP
+.B 0
+Normal exit.
+
+.SH HOMEPAGE
+.UR https://www.pozsarzs.hu/60_myprogcom/corelab/
+.UE
+.PP
+.UR https://pozsarzs.github.io/corelab
+.UE
+.PP
+.UR https://github.com/pozsarzs/corelab
+.UE
+
+.SH SEE ALSO
+.PD 0
+.LP
+\fBclioport\fP(1)
+\fBclmemory\fP(1)
+\fBcorelab\fP(1)
+and files in document or \fI/usr/share/doc/corelab/\fP folder (or equivalent on
+your system). The source code documentation for plugins can only be found in the
+source package and in the help.
+
+.SH AUTHOR
+Pozsar Zsolt
+.MT pozsarzs@gmail.com
+.ME

@@ -58,6 +58,6 @@
 {"hash":55088270,"name":"tform1.asciiconsole.caption","sourcebytes":[65,83,67,73,73,32,38,99,111,110,115,111,108,101,46,46,46],"value":"ASCII &console..."},
 {"hash":65691134,"name":"tform1.standardport.caption","sourcebytes":[38,83,116,97,110,100,97,114,100,32,112,111,114,116,46,46,46],"value":"&Standard port..."},
 {"hash":80715891,"name":"tform1.resetports.caption","sourcebytes":[38,82,101,115,101,116,32,112,111,114,116,115],"value":"&Reset ports"},
-{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"},
-{"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"}
+{"hash":2812976,"name":"tform1.help.caption","sourcebytes":[38,72,101,108,112],"value":"&Help"},
+{"hash":44537540,"name":"tform1.about.caption","sourcebytes":[38,65,98,111,117,116],"value":"&About"}
 ]}

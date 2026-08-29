@@ -534,8 +534,11 @@ begin
       RefreshProperties(opVar2List);
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
+      // enable plugin relevant actions
       Examine.Enabled := True;
       Deposit.Enabled := True;
+      LoadStatus.Enabled := True;
+      SaveStatus.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(FLoadCounter);
@@ -559,8 +562,11 @@ begin
       LibHandle := NilHandle;
       ValueListEditor1.Enabled := False;
       ValueListEditor2.Enabled := False;
+      // disable plugin relevant actions
       Examine.Enabled := False;
       Deposit.Enabled := False;
+      LoadStatus.Enabled := False;
+      SaveStatus.Enabled := False;
     end;
   end;
 end;
@@ -763,8 +769,11 @@ begin
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
   LoadChangePlugin.Enabled := False;
+  // disable plugin relevant actions
   Examine.Enabled := False;
   Deposit.Enabled := False;
+  LoadStatus.Enabled := False;
+  SaveStatus.Enabled := False;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;

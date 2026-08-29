@@ -11,146 +11,118 @@ skinparam packageStyle rectangle
 skinparam ranksep 10
 skinparam shadowing false
 left to right direction
+skinparam monochrome true
 
-package "CLMemory Application" {
+' ============================================================
+' Plugin metadata
+' ============================================================
 
-  class TForm1 <<main form>> {
-    - CurrentMemory : TMemory
-    - LibHandle : TLibHandle
-    - LoadedPlugin : TPluginAttributes
-    - CreateMemory : TCreateMemoryFunc
-    - DestroyMemory : TDestroyMemoryProc
-    - LoadState : TLoadStateProc
-    - SaveState : TSaveStateProc
-    - FIgnoreHelp : Boolean
-    - FLoadCounter : Integer
-    - FEXEDirectory : string
-    - FPluginDirectory : string
-    - FSystemLanguage : string
-    - FUserDirectory : string
-    --
-    + IgnoreHelp : Boolean
-    + EXEDirectory : string
-    + PluginDirectory : string
-    + SystemLanguage : string
-    + UserDirectory : string
-    --
-    - ImpExpProperties(Direction : TOpDirection)
-    - RefreshProperties(Direction : TOpDirection)
-    - SetIgnoreHelp(AIgnoreHelp : Boolean)
-    - SetPluginDirectory(APluginDirectory : string)
-    --
-    + AboutExecute(Sender : TObject)
-    + FormCreate(Sender : TObject)
-    + FormDestroy(Sender : TObject)
-    + HelpExecute(Sender : TObject)
-    + LoadChangePluginExecute(Sender : TObject)
-    + LoadStatusExecute(Sender : TObject)
-    + QuitExecute(Sender : TObject)
-    + ReadAByteExecute(Sender : TObject)
-    + RefreshPluginListExecute(Sender : TObject)
-    + RestartApplicationExecute(Sender : TObject)
-    + SaveStatusExecute(Sender : TObject)
-    + SelectPluginDirectoryExecute(Sender : TObject)
-    + Timer1Timer(Sender : TObject)
-    + WriteAByteExecute(Sender : TObject)
-  }
+class TPluginAttributes <<record>> {
+    PFilename: string
+    PAddressRangeSize: DWord
+    PDescription: string
+    PEnabled: Boolean
+    PInstanceID: Integer
+    PMemoryMode: TMemoryMode
+    PModname: string
+}
 
-  class TForm2 <<about form>> {
-    + SetAboutLabels(Labels : TAboutLabels)
-    --
-    + Label5Click(Sender : TObject)
-    + Label5MouseEnter(Sender : TObject)
-    + Label5MouseLeave(Sender : TObject)
-    + Label8Click(Sender : TObject)
-    + Label8MouseEnter(Sender : TObject)
-    + Label8MouseLeave(Sender : TObject)
-  }
-
-  class TPluginAttributes <<record>> {
-    + PFilename : string
-    + PAddressRangeSize : DWord
-    + PDescription : string
-    + PEnabled : Boolean
-    + PInstanceID : Integer
-    + PMemoryMode : TMemoryMode
-    + PModname : string
-  }
-
-  enum TOpDirection {
+enum TOpDirection {
     opPlugin2Var
     opVar2List
     opList2Var
     opVar2Plugin
-  }
-
-  class TCreateMemoryFunc <<procedure type>>
-  class TDestroyMemoryProc <<procedure type>>
-  class TLoadStateProc <<procedure type>>
-  class TSaveStateProc <<procedure type>>
-
-  class TAboutLabels <<record>> {
-    + Copyright : string[32]
-    + Description : string[32]
-    + Email : string[32]
-    + Homepage : string[32]
-    + Name : string[32]
-    + Version : string[32]
-  }
-
-  class TMemory <<external base class>> {
-    + AddressRangeSize : DWord
-    + Description : PChar
-    + Enabled : Boolean
-    + InstanceID : Integer
-    + MemoryMode : TMemoryMode
-    + ModName : PChar
-    + ReadMemory(AAddress : DWord) : Byte
-    + WriteMemory(AAddress : DWord; AValue : Byte)
-    + LoadState(AStream : TStream) : Boolean
-    + SaveState(AStream : TStream) : Boolean
-  }
-
-  class TForm <<LCL base class>>
-
-  TForm <|-- TForm1
-  TForm <|-- TForm2
-
-  TForm1 *-- TPluginAttributes : stores
-  TForm2 ..> TAboutLabels : uses
-
-  TForm1 ..> TMemory : manages
-  TForm1 ..> TMemory : creates/destroys via plugin
-  TForm1 ..> TMemory : reads/writes
-  TForm1 ..> TMemory : saves/loads state
-
-  TPluginAttributes ..> TMemoryMode
-  TCreateMemoryFunc ..> TMemory : returns
-  TDestroyMemoryProc ..> TMemory : destroys
-  TLoadStateProc ..> TMemory : loads state
-  TSaveStateProc ..> TMemory : saves state
-
-  TForm1 ..> TForm2 : opens
-  TForm1 ..> TOpDirection : uses
-
-  note right of TForm1
-    Main CLMemory window.
-
-    Responsibilities:
-    * Discover memory plugins
-    * Load/unload plugin libraries
-    * Create/destroy TMemory instances
-    * Display and edit memory properties
-    * Read and write individual bytes
-    * Load and save plugin state
-    * Configure help
-  end note
-
-  note bottom of TForm2
-    Displays application name,
-    version, description, copyright,
-    homepage and email information.
-  end note
 }
+
+' ============================================================
+' Plugin entry points
+' ============================================================
+
+interface TCreateMemoryFunc {
+    {static} CreateMemory(): TMemory
+}
+
+interface TDestroyMemoryProc {
+    {static} DestroyMemory(Memory: TMemory)
+}
+
+interface TLoadStateProc {
+    {static} LoadState(
+        Memory: TMemory,
+        AStream: TStream
+    ): Boolean
+}
+
+interface TSaveStateProc {
+    {static} SaveState(
+        Memory: TMemory,
+        AStream: TStream
+    ): Boolean
+}
+
+' ============================================================
+' External plugin class
+' ============================================================
+
+class TMemory <<plugin / external>> {
+    +InstanceID: Integer
+    +AddressRangeSize: DWord
+    +Enabled: Boolean
+    +MemoryMode: TMemoryMode
+    +Modname: PChar
+    +Description: PChar
+
+    +ReadMemory(Address: DWord): Byte
+    +WriteMemory(Address: DWord, Data: Integer)
+}
+
+' ============================================================
+' Main application
+' ============================================================
+
+class TForm1 {
+    -CurrentMemory: TMemory
+    -LibHandle: TLibHandle
+    -LoadedPlugin: TPluginAttributes
+
+    -CreateMemory: TCreateMemoryFunc
+    -DestroyMemory: TDestroyMemoryProc
+    -LoadState: TLoadStateProc
+    -SaveState: TSaveStateProc
+
+    -ImpExpProperties(Direction: TOpDirection)
+    -RefreshProperties(Direction: TOpDirection)
+    -SetPluginDirectory(APluginDirectory: string)
+
+    +LoadChangePluginExecute(Sender: TObject)
+    +ExamineExecute(Sender: TObject)
+    +DepositExecute(Sender: TObject)
+    +LoadStatusExecute(Sender: TObject)
+    +SaveStatusExecute(Sender: TObject)
+
+    +FormCreate(Sender: TObject)
+    +FormDestroy(Sender: TObject)
+}
+
+' ============================================================
+' Relationships
+' ============================================================
+
+TForm1 *-- TPluginAttributes
+TForm1 o-- TMemory
+
+TForm1 ..> TCreateMemoryFunc
+TForm1 ..> TDestroyMemoryProc
+TForm1 ..> TLoadStateProc
+TForm1 ..> TSaveStateProc
+TForm1 ..> TOpDirection
+
+TCreateMemoryFunc ..> TMemory
+TDestroyMemoryProc ..> TMemory
+TLoadStateProc ..> TMemory
+TSaveStateProc ..> TMemory
+
+TForm1 ..> TMemory : plugin operations
+TForm1 ..> TStream : state data
 
 @enduml

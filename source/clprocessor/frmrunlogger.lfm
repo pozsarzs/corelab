@@ -427,7 +427,7 @@ object Form4: TForm4
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 19
+    ImageIndex = 27
     MaxLength = 0
     NumGlyphs = 1
     OnButtonClick = EditButton1ButtonClick

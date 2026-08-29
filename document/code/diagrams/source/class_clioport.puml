@@ -10,211 +10,216 @@ skinparam nodesep 10
 skinparam packageStyle rectangle
 skinparam ranksep 10
 skinparam shadowing false
+skinparam monochrome true
 
 left to right direction
 
-' ---- FORMS ----
-
-class TForm1 <<TForm>> {
-  - CurrentPort: TIOPort
-  - LibHandle: TLibHandle
-  - LoadedPlugin: TPluginAttributes
-  - CreatePort: TCreatePortFunc
-  - DestroyPort: TDestroyPortProc
-  - CreatePanel: TCreatePanelProc
-  - ShowPanel: TShowPanelProc
-  - HidePanel: THidePanelProc
-  - FreePanel: TFreePanelProc
-  - RenamePanel: TRenamePanelProc
-  - ResizePanel: TResizePanelProc
-  - MovePanel: TMovePanelProc
-  - SetIntHandler: TSetIntHandler
-  - LoadState: TLoadStateProc
-  - SaveState: TSaveStateProc
-  - FIgnoreHelp: Boolean
-  - FLoadCounter: Integer
-  - FEXEDirectory: string
-  - FPluginDirectory: string
-  - FSystemLanguage: string
-  - FUserDirectory: string
-  --
-  + IgnoreHelp: Boolean
-  + EXEDirectory: string
-  + PluginDirectory: string
-  + SystemLanguage: string
-  + UserDirectory: string
-  --
-  - ImpExpProperties(Direction: TOpDirection)
-  - InterruptHandler(Sender: TIOPort; Vector: Byte)
-  - RefreshProperties(Direction: TOpDirection)
-  - SetIgnoreHelp(AIgnoreHelp: Boolean)
-  - SetPluginDirectory(APluginDirectory: string)
-  --
-  + AboutExecute(Sender: TObject)
-  + FormCreate(Sender: TObject)
-  + FormDestroy(Sender: TObject)
-  + HelpExecute(Sender: TObject)
-  + LoadChangePluginExecute(Sender: TObject)
-  + LoadStatusExecute(Sender: TObject)
-  + MenuItem14Click(Sender: TObject)
-  + MenuItem15Click(Sender: TObject)
-  + MenuItem16Click(Sender: TObject)
-  + MenuItem17Click(Sender: TObject)
-  + MenuItem18Click(Sender: TObject)
-  + QuitExecute(Sender: TObject)
-  + ReadAByteExecute(Sender: TObject)
-  + RefreshPluginListExecute(Sender: TObject)
-  + RestartApplicationExecute(Sender: TObject)
-  + SaveStatusExecute(Sender: TObject)
-  + SelectPluginDirectoryExecute(Sender: TObject)
-  + SetPluginWindowCaptionExecute(Sender: TObject)
-  + SetPluginWindowSizePositionExecute(Sender: TObject)
-  + ShowPluginWindowExecute(Sender: TObject)
-  + Timer1Timer(Sender: TObject)
-  + ValueListEditor1DrawCell(Sender, aCol, aRow, aRect, aState)
-  + ValueListEditor1EditingDone(Sender: TObject)
-  + ValueListEditor2EditingDone(Sender: TObject)
-  + ValueListEditor2ValidateEntry(Sender, aCol, aRow, OldValue, NewValue)
-  + WriteAByteExecute(Sender: TObject)
-}
-
-class TForm2 <<TForm>> {
-  + SetAboutLabels(Labels: TAboutLabels)
-  --
-  + Label5Click(Sender: TObject)
-  + Label5MouseEnter(Sender: TObject)
-  + Label5MouseLeave(Sender: TObject)
-  + Label8Click(Sender: TObject)
-  + Label8MouseEnter(Sender: TObject)
-  + Label8MouseLeave(Sender: TObject)
-}
-
-class TForm3 <<TForm>> {
-  - GetCaption(): string
-  - SetCaption(Title: string)
-  --
-  + PanelCaption: string
-  --
-  + Edit1EditingDone(Sender: TObject)
-}
-
-class TForm4 <<TForm>> {
-  - GetHeightValue(): Integer
-  - GetLeftValue(): Integer
-  - GetTopValue(): Integer
-  - GetWidthValue(): Integer
-  - SetHeightValue(Value: Integer)
-  - SetLeftValue(Value: Integer)
-  - SetTopValue(Value: Integer)
-  - SetWidthValue(Value: Integer)
-  --
-  + PanelLeft: Integer
-  + PanelHeight: Integer
-  + PanelTop: Integer
-  + PanelWidth: Integer
-}
-
-' ---- DATA TYPES DECLARED BY THE FORMS ----
-
-class TAboutLabels <<record>> {
-  + Copyright: string[32]
-  + Description: string[32]
-  + Email: string[32]
-  + Homepage: string[32]
-  + Name: string[32]
-  + Version: string[32]
-}
+' ============================================================
+' Plugin metadata
+' ============================================================
 
 class TPluginAttributes <<record>> {
-  + PFilename: string
-  + PAddressRangeSize: Byte
-  + PDataInMode: TLineMode
-  + PDataInNegation: Boolean
-  + PDataOutMode: TLineMode
-  + PDataOutNegation: Boolean
-  + PDescription: string
-  + PEnabled: Boolean
-  + PHasPanel: Boolean
-  + PIntVector: Byte
-  + PInstanceID: Integer
-  + PLatchedOutput: Boolean
-  + PModname: string
-  + PReadBackOutput: Boolean
-  + PSelMode: TLineMode
-  + PSelNegation: Boolean
+    PFilename: string
+    PModname: string
+    PDescription: string
+    PInstanceID: Integer
+    PAddressRangeSize: Byte
+    PIntVector: Byte
+    PHasPanel: Boolean
+    PEnabled: Boolean
+    PLatchedOutput: Boolean
+    PReadBackOutput: Boolean
+    PDataInMode: TLineMode
+    PDataInNegation: Boolean
+    PDataOutMode: TLineMode
+    PDataOutNegation: Boolean
+    PSelMode: TLineMode
+    PSelNegation: Boolean
 }
 
 enum TOpDirection {
-  opPlugin2Var
-  opVar2List
-  opList2Var
-  opVar2Plugin
+    opPlugin2Var
+    opVar2List
+    opList2Var
+    opVar2Plugin
 }
 
-' ---- PLUGIN ENTRY-POINT PROCEDURAL TYPES USED BY TFORM1 ----
+' ============================================================
+' Plugin entry points
+' ============================================================
 
-class TCreatePortFunc <<procedure type>> {
-  + CreatePort(): TIOPort
-}
-class TDestroyPortProc <<procedure type>> {
-  + DestroyPort(Port: TIOPort)
-}
-class TCreatePanelProc <<procedure type>> {
-  + CreatePanel(Port: TIOPort)
-}
-class TShowPanelProc <<procedure type>> {
-  + ShowPanel(Port: TIOPort)
-}
-class THidePanelProc <<procedure type>> {
-  + HidePanel(Port: TIOPort)
-}
-class TFreePanelProc <<procedure type>> {
-  + FreePanel(Port: TIOPort)
-}
-class TRenamePanelProc <<procedure type>> {
-  + RenamePanel(Port: TIOPort, Caption: PChar)
-}
-class TResizePanelProc <<procedure type>> {
-  + ResizePanel(Port: TIOPort, Width, Height: Integer): Boolean
-}
-class TMovePanelProc <<procedure type>> {
-  + MovePanel(Port: TIOPort, Left, Top: Integer): Boolean
-}
-class TSetIntHandler <<procedure type>> {
-  + SetIntHandler(Port: TIOPort, IntProc: TInterruptCallback, IntVector: Byte)
-}
-class TLoadStateProc <<procedure type>> {
-  + LoadState(Port: TIOPort, AStream: TStream): Boolean
-}
-class TSaveStateProc <<procedure type>> {
-  + SaveState(Port: TIOPort, AStream: TStream): Boolean
+interface TCreatePortFunc {
+    {static} CreatePort(): TIOPort
 }
 
-' ---- EXTERNAL FRAMEWORK TYPES REFERENCED BY THE FORMS ----
+interface TDestroyPortProc {
+    {static} DestroyPort(Port: TIOPort)
+}
 
-class TForm
-class TIOPort
-class TLineMode
-class TInterruptCallback
-class TAction
-class TButton
-class TImage
-class TLabel
-class TBevel
-class TEdit
-class TGroupBox
-class TSpinEdit
+interface TCreatePanelProc {
+    {static} CreatePanel(Port: TIOPort)
+}
 
-' Inheritance
-TForm <|-- TForm1
-TForm <|-- TForm2
-TForm <|-- TForm3
-TForm <|-- TForm4
+interface TShowPanelProc {
+    {static} ShowPanel(Port: TIOPort)
+}
 
-' TForm1's data and type dependencies
+interface THidePanelProc {
+    {static} HidePanel(Port: TIOPort)
+}
+
+interface TFreePanelProc {
+    {static} FreePanel(Port: TIOPort)
+}
+
+interface TRenamePanelProc {
+    {static} RenamePanel(Port: TIOPort, Caption: PChar)
+}
+
+interface TResizePanelProc {
+    {static} ResizePanel(
+        Port: TIOPort,
+        Width: Integer,
+        Height: Integer
+    ): Boolean
+}
+
+interface TMovePanelProc {
+    {static} MovePanel(
+        Port: TIOPort,
+        Left: Integer,
+        Top: Integer
+    ): Boolean
+}
+
+interface TSetIntHandler {
+    {static} SetIntHandler(
+        Port: TIOPort,
+        IntProc: TInterruptCallback,
+        IntVector: Byte
+    )
+}
+
+interface TLoadStateProc {
+    {static} LoadState(
+        Port: TIOPort,
+        AStream: TStream
+    ): Boolean
+}
+
+interface TSaveStateProc {
+    {static} SaveState(
+        Port: TIOPort,
+        AStream: TStream
+    ): Boolean
+}
+
+' ============================================================
+' External plugin port classes
+' ============================================================
+
+class TIOPort <<external>> {
+    +InstanceID: Integer
+    +AddressRangeSize: Byte
+    +DataInMode: TLineMode
+    +DataInNegation: Boolean
+    +DataOutMode: TLineMode
+    +DataOutNegation: Boolean
+    +Enabled: Boolean
+    +HasPanel: Boolean
+    +IntVector: Byte
+    +LatchedOutput: Boolean
+    +ReadBackOutput: Boolean
+    +SelMode: TLineMode
+    +SelNegation: Boolean
+    +Modname: PChar
+    +Description: PChar
+
+    +ReadPort(Address: Byte): Byte
+    +WritePort(Address: Byte, Data: Integer)
+}
+
+class TGIOPort <<external>> {
+    +PanelCaption: string
+    +PanelHeight: Integer
+    +PanelWidth: Integer
+    +PanelLeft: Integer
+    +PanelTop: Integer
+}
+
+TIOPort <|-- TGIOPort
+
+' ============================================================
+' Main application
+' ============================================================
+
+class TForm1 {
+    -CurrentPort: TIOPort
+    -LoadedPlugin: TPluginAttributes
+
+    -CreatePort: TCreatePortFunc
+    -DestroyPort: TDestroyPortProc
+
+    -CreatePanel: TCreatePanelProc
+    -ShowPanel: TShowPanelProc
+    -HidePanel: THidePanelProc
+    -FreePanel: TFreePanelProc
+    -RenamePanel: TRenamePanelProc
+    -ResizePanel: TResizePanelProc
+    -MovePanel: TMovePanelProc
+
+    -SetIntHandler: TSetIntHandler
+    -LoadState: TLoadStateProc
+    -SaveState: TSaveStateProc
+
+    -ImpExpProperties(Direction: TOpDirection)
+    -RefreshProperties(Direction: TOpDirection)
+    -SetPluginDirectory(APluginDirectory: string)
+
+    +LoadChangePluginExecute()
+    +ShowPluginWindowExecute()
+    +SetPluginWindowCaptionExecute()
+    +SetPluginWindowSizePositionExecute()
+    +ReadAByteExecute()
+    +WriteAByteExecute()
+    +LoadStatusExecute()
+    +SaveStatusExecute()
+}
+
+' ============================================================
+' Panel configuration forms
+' ============================================================
+
+class TForm3 {
+    -GetCaption(): string
+    -SetCaption(Title: string)
+    +PanelCaption: string
+}
+
+class TForm4 {
+    -GetHeightValue(): Integer
+    -GetLeftValue(): Integer
+    -GetTopValue(): Integer
+    -GetWidthValue(): Integer
+
+    -SetHeightValue(Value: Integer)
+    -SetLeftValue(Value: Integer)
+    -SetTopValue(Value: Integer)
+    -SetWidthValue(Value: Integer)
+
+    +PanelHeight: Integer
+    +PanelLeft: Integer
+    +PanelTop: Integer
+    +PanelWidth: Integer
+}
+
+' ============================================================
+' Relationships
+' ============================================================
+
 TForm1 *-- TPluginAttributes
-TForm1 ..> TOpDirection
-TForm1 ..> TIOPort
+TForm1 o-- TIOPort
+
 TForm1 ..> TCreatePortFunc
 TForm1 ..> TDestroyPortProc
 TForm1 ..> TCreatePanelProc
@@ -227,38 +232,25 @@ TForm1 ..> TMovePanelProc
 TForm1 ..> TSetIntHandler
 TForm1 ..> TLoadStateProc
 TForm1 ..> TSaveStateProc
-TPluginAttributes ..> TLineMode
-TSetIntHandler ..> TInterruptCallback
 
-' Form relationships
-TForm1 ..> TForm2 : opens
-TForm1 ..> TForm3 : opens
-TForm1 ..> TForm4 : opens
+TForm1 ..> TGIOPort : panel properties
 
-TForm2 ..> TAboutLabels : uses
+TForm1 --> TForm3 : panel caption
+TForm1 --> TForm4 : panel size/position
 
-' GUI controls declared on the forms
-TForm1 *-- TAction
-TForm1 *-- TButton
-TForm1 *-- TEdit
-TForm1 *-- TImage
-TForm1 *-- TLabel
-TForm1 *-- TBevel
-TForm1 *-- TGroupBox
-TForm1 *-- TSpinEdit
+TForm1 ..> TOpDirection
 
-TForm2 *-- TButton
-TForm2 *-- TImage
-TForm2 *-- TLabel
-TForm2 *-- TBevel
-
-TForm3 *-- TButton
-TForm3 *-- TEdit
-TForm3 *-- TGroupBox
-
-TForm4 *-- TButton
-TForm4 *-- TGroupBox
-TForm4 *-- TLabel
-TForm4 *-- TSpinEdit
+TCreatePortFunc ..> TIOPort
+TDestroyPortProc ..> TIOPort
+TCreatePanelProc ..> TIOPort
+TShowPanelProc ..> TIOPort
+THidePanelProc ..> TIOPort
+TFreePanelProc ..> TIOPort
+TRenamePanelProc ..> TIOPort
+TResizePanelProc ..> TIOPort
+TMovePanelProc ..> TIOPort
+TSetIntHandler ..> TIOPort
+TLoadStateProc ..> TIOPort
+TSaveStateProc ..> TIOPort
 
 @enduml

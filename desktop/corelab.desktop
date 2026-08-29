@@ -8,4 +8,4 @@ Icon=corelab-orange
 Terminal=false
 StartupNotify=true
 Categories=Science;Development;Education;
-MimeType=application/x-corelab-snapshot;application/x-corelab-script;
+MimeType=application/x-corelab-snapshot;application/x-corelab-scriptembly;

@@ -1,12 +1,12 @@
 object Form2: TForm2
-  Left = 442
-  Height = 204
-  Top = 279
-  Width = 324
+  Left = 351
+  Height = 226
+  Top = 247
+  Width = 326
   BorderStyle = bsDialog
   Caption = 'About'
-  ClientHeight = 204
-  ClientWidth = 324
+  ClientHeight = 226
+  ClientWidth = 326
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -367,11 +367,15 @@ object Form2: TForm2
   Position = poMainFormCenter
   LCLVersion = '2.2.6.0'
   object Bevel1: TBevel
-    AnchorSideBottom.Control = Button1
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel2
     Left = 8
-    Height = 152
+    Height = 162
     Top = 8
-    Width = 308
+    Width = 310
     Align = alTop
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
@@ -384,9 +388,9 @@ object Form2: TForm2
     AnchorSideBottom.Control = Bevel1
     AnchorSideBottom.Side = asrBottom
     Left = 9
-    Height = 150
+    Height = 160
     Top = 9
-    Width = 306
+    Width = 308
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 1
     Picture.Data = {
@@ -1133,9 +1137,9 @@ object Form2: TForm2
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 241
+    Left = 243
     Height = 28
-    Top = 168
+    Top = 190
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Around = 8
@@ -1257,5 +1261,18 @@ object Form2: TForm2
     OnClick = Label8Click
     OnMouseEnter = Label8MouseEnter
     OnMouseLeave = Label8MouseLeave
+  end
+  object Bevel2: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button1
+    Left = 8
+    Height = 4
+    Top = 178
+    Width = 310
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 8
+    Shape = bsBottomLine
   end
 end

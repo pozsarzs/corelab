@@ -425,7 +425,7 @@ object Form7: TForm7
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 20
+    ImageIndex = 21
     MaxLength = 255
     NumGlyphs = 1
     OnButtonClick = EditButton1ButtonClick
@@ -485,7 +485,7 @@ object Form7: TForm7
     BorderSpacing.Around = 8
     ButtonWidth = 23
     Images = Form1.ImageList1
-    ImageIndex = 20
+    ImageIndex = 21
     MaxLength = 255
     NumGlyphs = 1
     OnButtonClick = EditButton2ButtonClick
