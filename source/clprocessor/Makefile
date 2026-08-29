@@ -8,11 +8,13 @@
 include ../../Makefile.global
 
 project=clprocessor
+logfile=../../build.log
 
 all:
 	@mkdir -p $(outdir)/
 	@if [ -f $(project).lpr ]; then \
-	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT $(project).lpr; \
+	  $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT $(project).lpr; \
+          $(call addtobuildlog,$(project).lpr,$$?); \
 	  echo ""; \
 	fi
 	@mkdir -p $(podir)/

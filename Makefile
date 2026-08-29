@@ -7,10 +7,12 @@
 
 include ./Makefile.global
 
+logfile=./build.log
 dirs=desktop document help manual message source syntax
 
 all:
 	@echo "Compiling source code..."
+	@$(rm) logfile
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then $(make) -s -C $$dir all; fi; \
 	done
@@ -21,6 +23,7 @@ clean:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then $(make) -s -C $$dir clean; fi; \
 	done
+	@$(rm) build.log
 	@$(rm) config.log
 	@$(rm) config.status
 	@$(rm) Makefile.global

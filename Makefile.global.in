@@ -12,6 +12,7 @@ libversion	= @libversion@
 architecture	= @architecture@
 os              = @os@
 
+projectdir	= @abs_top_srcdir@
 prefix		= @prefix@
 bindir		= @bindir@
 datarootdir	= @datarootdir@
@@ -71,3 +72,14 @@ fpcargs		= -T@os@ \
                   -FE./lib/@architecture@-@os@/ \
                   -dLCL \
                   -dLCLgtk2
+
+logfile = @abs_top_srcdir@/build.log
+
+define addtobuildlog
+	STATUS=$(2); \
+	printf "%-70s" "Build $(1)..." >> $(logfile); \
+	if [ "$$STATUS" = "0" ]; \
+	  then echo '[ OK ]' >> $(logfile); \
+	  else echo '[ERROR]' >> $(logfile); \
+	fi
+endef

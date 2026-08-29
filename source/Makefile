@@ -19,7 +19,6 @@ projectdirs=corelab lhelp clprocessor clioport clmemory
 plugins=`ls corelab-plugins | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64 | sed s/'.pas'/''/`
 
 all:
-	@mkdir -p $(sourcedir)/
 	@if [ ! $(lib) = "no" ]; then \
 	  cd corelab-plugins; \
 	  make; \

@@ -12,7 +12,8 @@ project=clioport
 all:
 	@mkdir -p $(outdir)/
 	@if [ -f $(project).lpr ]; then \
-	    $(fpc) $(fpcargs) $(project).lpr; \
+	  $(fpc) $(fpcargs) $(project).lpr; \
+          $(call addtobuildlog,$(project).lpr,$$?); \
 	  echo ""; \
 	fi
 	@mkdir -p $(podir)/
