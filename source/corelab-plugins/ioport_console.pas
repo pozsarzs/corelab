@@ -220,7 +220,7 @@ begin
     Font.Color := $0029CAFF;    
     Font.Pitch := fpFixed;      
     Font.Style := [fsBold];
-    Font.Size := 14;
+    Font.Size := 12;
     Font.Name := 'Courier New'; 
     OnKeyPress := @FConFaceKeyPress;
   end;

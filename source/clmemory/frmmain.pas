@@ -440,8 +440,8 @@ end;
 
 procedure TForm1.MenuItem17Click(Sender: TObject);
 begin
-  if DirectoryExists(MenuItem18.Caption, True)
-    then PluginDirectory := MenuItem18.Caption
+  if DirectoryExists(MenuItem17.Caption, True)
+    then PluginDirectory := MenuItem17.Caption
     else MenuItem18.Enabled := False;
 end;
 

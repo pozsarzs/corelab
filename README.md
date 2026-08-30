@@ -111,6 +111,16 @@ in mind:
 
 ![CLMemory plugin tester application](document/screenshots/clmemory.png)
 
+![CLMemory plugin tester application](document/screenshots/clprocessor_1.png)
+
+![CLMemory plugin tester application](document/screenshots/clprocessor_2.png)
+
+![CLMemory plugin tester application](document/screenshots/clprocessor_3.png)
+
+![CLMemory plugin tester application](document/screenshots/clprocessor_4.png)
+
+![CLMemory plugin tester application](document/screenshots/clprocessor_5.png)
+
 (...)
 
 ## IV. Used external libraries, programs and others
@@ -194,8 +204,9 @@ to be used with other development tools or transferred to real hardware.
 |*.clsht  |CoreLAB snapshot          |CoreLAB                        |
 |*.clsce  |CoreLAB scriptembly       |CoreLAB                        |
 |*.clpst  |CoreLAB plugin status file|CLIOPort, CLMemory, CLProcessor|
-|*.bin    |General binary file       |CoreLAB, CLProcessor           |			*.bin
-|*.log    |General log file          |CoreLAB, CLProcessor           |			*.bin
+|*.bin    |General binary file       |CoreLAB, CLProcessor           |
+|*.hex    |Intel hexa file           |CoreLAB, CLProcessor           |
+|*.log    |General log file          |CoreLAB, CLProcessor           |
 
 ## VII. Implemented commands  
 
@@ -218,7 +229,7 @@ to be used with other development tools or transferred to real hardware.
 |`DEPO`|Deposit (write) a value directly into memory, register or bus address.            |
 |`DEST`|Delete an object and free its memory.                                             |
 |`DETH`|Disconnect a module from the bus.                                                 |
-|`END` |End of script.                                                                     |
+|`END` |End of script.                                                                    |
 |`EXAM`|Examine (read) a value from memory, register or bus address into a variable.      |
 |`EXIT`|Terminate the script.                                                             |
 |`FILL`|Fill an array with a specific byte value.                                         |

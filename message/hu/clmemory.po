@@ -221,7 +221,7 @@ msgstr "Bővítmény betöltése/cseréje"
 
 #: tform1.loadstatus.caption
 msgid "Load status"
-msgstr "Betöltési állapot"
+msgstr "Állapot betöltése"
 
 #: tform1.menuitem1.caption
 msgid "&File"

@@ -36,7 +36,7 @@ install:
 	done
 	@ldconfig
 	@update-mime-database $(datarootdir)/mime
-	@gtk-update-icon-cache $(datarootdir)/icons
+	@gtk-update-icon-cache -t $(datarootdir)/icons/hicolor
 	@echo "Done."
 
 uninstall:
@@ -46,7 +46,7 @@ uninstall:
 	done
 	@ldconfig
 	@update-mime-database $(datarootdir)/mime
-	@gtk-update-icon-cache $(datarootdir)/icons
+	@gtk-update-icon-cache -t $(datarootdir)/icons
 	@echo "Done."
 
 convert:

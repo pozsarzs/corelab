@@ -2,7 +2,7 @@
 Compatibility=1.1 or later
 Compiled file=corelab_en.chm
 Contents file=corelab_en.hhc
-Default topic=Home.htm
+Default topic=Home.html
 Display compile progress=Yes
 Error log file=corelab_en.log
 Index file=corelab_en.hhk

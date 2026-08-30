@@ -12,7 +12,7 @@ removetargetdir=0
 sourcedir="."
 targetdir=$(localedir)
 filemode=$(txtmode)
-languages=fi fr hu lt pl ru uk
+languages=hu
 
 # convert encoding and line-ending of the .po file for DOS
 define conv_encode
@@ -39,42 +39,26 @@ install:
 	  fi; \
 	done
 	@for x in $(languages); do \
-	  if [ -f $$x/x$(name).mo ]; \
+	  if [ -f $$x/clprocessor.mo ]; \
 	  then \
 	    $(install) -d $(targetdir)/$$x/LC_MESSAGES/; \
-	    $(install) -m $(filemode) $(sourcedir)/$$x/x$(name).mo $(targetdir)/$$x/LC_MESSAGES/; \
+	    $(install) -m $(filemode) $(sourcedir)/$$x/clprocessor.mo $(targetdir)/$$x/LC_MESSAGES/; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@for x in $(languages); do \
-	  if [ -f $$x/serialechoserver.mo ]; \
+	  if [ -f $$x/clioport.mo ]; \
 	  then \
 	    $(install) -d $(targetdir)/$$x/LC_MESSAGES/; \
-	    $(install) -m $(filemode) $(sourcedir)/$$x/serialechoserver.mo $(targetdir)/$$x/LC_MESSAGES/; \
+	    $(install) -m $(filemode) $(sourcedir)/$$x/clioport.mo $(targetdir)/$$x/LC_MESSAGES/; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@for x in $(languages); do \
-	  if [ -f $$x/serialmbmonitor.mo ]; \
+	  if [ -f $$x/clmemory.mo ]; \
 	  then \
 	    $(install) -d $(targetdir)/$$x/LC_MESSAGES/; \
-	    $(install) -m $(filemode) $(sourcedir)/$$x/serialmbmonitor.mo $(targetdir)/$$x/LC_MESSAGES/; \
-	    echo -n "#"; \
-	  fi; \
-	done
-	@for x in $(languages); do \
-	  if [ -f $$x/tcpechoserver.mo ]; \
-	  then \
-	    $(install) -d $(targetdir)/$$x/LC_MESSAGES/; \
-	    $(install) -m $(filemode) $(sourcedir)/$$x/tcpechoserver.mo $(targetdir)/$$x/LC_MESSAGES/; \
-	    echo -n "#"; \
-	  fi; \
-	done
-	@for x in $(languages); do \
-	  if [ -f $$x/udpechoserver.mo ]; \
-	  then \
-	    $(install) -d $(targetdir)/$$x/LC_MESSAGES/; \
-	    $(install) -m $(filemode) $(sourcedir)/$$x/udpechoserver.mo $(targetdir)/$$x/LC_MESSAGES/; \
+	    $(install) -m $(filemode) $(sourcedir)/$$x/clmemory.mo $(targetdir)/$$x/LC_MESSAGES/; \
 	    echo -n "#"; \
 	  fi; \
 	done
@@ -101,37 +85,23 @@ uninstall:
 	  fi; \
 	done  
 	@for x in $(languages); do \
-	  if [ -f $$x/x$(name).mo ]; \
+	  if [ -f $$x/clprocessor.mo ]; \
 	  then \
-	    $(rm) $(targetdir)/$$x/LC_MESSAGES/x$(name).mo; \
+	    $(rm) $(targetdir)/$$x/LC_MESSAGES/clprocessor.mo; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@for x in $(languages); do \
-	  if [ -f $$x/serialechoserver.mo ]; \
+	  if [ -f $$x/clioport.mo ]; \
 	  then \
-	    $(rm) $(targetdir)/$$x/LC_MESSAGES/serialechoserver.mo; \
+	    $(rm) $(targetdir)/$$x/LC_MESSAGES/clioport.mo; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@for x in $(languages); do \
-	  if [ -f $$x/serialmbmonitor.mo ]; \
+	  if [ -f $$x/clmemory.mo ]; \
 	  then \
-	    $(rm) $(targetdir)/$$x/LC_MESSAGES/serialmbmonitor.mo; \
-	    echo -n "#"; \
-	  fi; \
-	done
-	@for x in $(languages); do \
-	  if [ -f $$x/tcpechoserver.mo ]; \
-	  then \
-	    $(rm) $(targetdir)/$$x/LC_MESSAGES/tcpechoserver.mo; \
-	    echo -n "#"; \
-	  fi; \
-	done
-	@for x in $(languages); do \
-	  if [ -f $$x/udpechoserver.mo ]; \
-	  then \
-	    $(rm) $(targetdir)/$$x/LC_MESSAGES/udpechoserver.mo; \
+	    $(rm) $(targetdir)/$$x/LC_MESSAGES/clmemory.mo; \
 	    echo -n "#"; \
 	  fi; \
 	done
@@ -156,14 +126,12 @@ uninstall:
 convert:
 	@if [ $(iconv) != "no" ] && [ $(msgfmt) != "no" ] && [ $(unix2dos) != "no" ]; \
 	then \
-	  $(call conv_encode,modshell,hu,852,dos); \
-	  $(call conv_encode,modshell,hu,1250,windows); \
-	  $(call conv_encode,serialechoserver,hu,1250,windows); \
-	  $(call conv_encode,serialmbmonitor,hu,1250,windows); \
-	  $(call conv_encode,tcpechoserver,hu,1250,windows); \
-	  $(call conv_encode,udpechoserver,hu,1250,windows); \
+	  $(call conv_encode,corelab,hu,1250,windows); \
+	  $(call conv_encode,clprocessor,hu,1250,windows); \
+	  $(call conv_encode,clioport,hu,1250,windows); \
+	  $(call conv_encode,clmemory,hu,1250,windows); \
 	else \
-	  echo "To create message file for DOS and Windows, install the necessary tools."; \
+	  echo "To create message file for Windows, install the necessary tools."; \
 	fi
 
 createhelp:

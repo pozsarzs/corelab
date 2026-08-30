@@ -66,13 +66,13 @@ install:
 	done
 	@echo "]"
 	@echo -n "- Installing "$(title2)"["
-	@$(install) -d $(targetlibdir)
+	@$(install) -d $(targetlibdir)/$(name)
 	@for x in $(plugins); do \
 	  if [ -f corelab-plugins/$(sourcedir)/lib$$x.so ]; \
 	  then \
-	    $(install) -m $(filemode) corelab-plugins/$(sourcedir)/lib$$x.so $(targetlibdir)/lib$$x.so.$(libversion); \
-	    $(ln) $(targetlibdir)/lib$$x.so.$(libversion) $(targetlibdir)/lib$$x.so.$(majorlibversion); \
-	    $(ln) $(targetlibdir)/lib$$x.so.$(majorlibversion) $(targetlibdir)/lib$$x.so; \
+	    $(install) -m $(filemode) corelab-plugins/$(sourcedir)/lib$$x.so $(targetlibdir)/$(name)/lib$$x.so.$(libversion); \
+	    $(ln) $(targetlibdir)/$(name)/lib$$x.so.$(libversion) $(targetlibdir)/$(name)/lib$$x.so.$(majorlibversion); \
+	    $(ln) $(targetlibdir)/$(name)/lib$$x.so.$(majorlibversion) $(targetlibdir)/$(name)/lib$$x.so; \
 	    echo -n "#"; \
 	  fi; \
 	done
@@ -91,12 +91,12 @@ uninstall:
 	@echo "]"
 	@echo -n "- Removing "$(title2)"["
 	@for x in $(plugins); do \
-	  $(rm) $(targetlibdir)/lib$$x.so*; \
+	  $(rm) $(targetlibdir)/$(name)/lib$$x.so*; \
 	  echo -n "#"; \
 	done
 	@if [ $(removetargetdir) -eq 1 ]; \
 	then \
-	  if [ -d $(targetlibdir) ]; then $(rmdir) $(targetlibdir); fi; \
+	  if [ -d $(targetlibdir)/$(name) ]; then $(rmdir) $(targetlibdir)/$(name); fi; \
 	fi
 	@echo "]"
 

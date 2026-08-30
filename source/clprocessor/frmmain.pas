@@ -644,7 +644,7 @@ end;
 procedure TForm1.MenuItem17Click(Sender: TObject);
 begin
   if DirectoryExists(MenuItem17.Caption, True)
-    then PluginDirectory := MenuItem18.Caption
+    then PluginDirectory := MenuItem17.Caption
     else MenuItem18.Enabled := False;
 end;
 
@@ -1060,7 +1060,7 @@ begin
   begin
     CreatePanel;
     ShowPanel;
-    FPortStandardCap := Format(MSG33,[IntToHex(IOADD_STDPORT, 2)]);
+    FPortStandardCap := Format(MSG34,[IntToHex(IOADD_STDPORT, 2)]);
     RenamePanel(PChar(FPortStandardCap));
   end;
 end;
