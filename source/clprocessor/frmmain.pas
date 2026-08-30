@@ -20,12 +20,13 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, frmabout,
-  frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory, sysbus,
-  ioport_console, ioport_standard, ucommon;
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, core_ioport,
+  frmabout, frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory,
+  sysbus, ioport_console, ioport_standard, ucommon;
 const
   MEM_SIZE = 1024;
   IOADD_CONSOLE = $A0;
+  IVECT_CONSOLE = $08;
   IOADD_STDPORT = $B0;
 type
   // Handled plugin attributes
@@ -108,7 +109,7 @@ type
     MenuItem36:                TMenuItem;
     MenuItem37:                TMenuItem;
     MenuItem38:                TMenuItem;
-    MenuItem39: TMenuItem;
+    MenuItem39:                TMenuItem;
     MenuItem4:                 TMenuItem;
     MenuItem5:                 TMenuItem;
     MenuItem6:                 TMenuItem;
@@ -237,6 +238,7 @@ type
     // - Bank #1: Harvard data memory
     FMemory:          array[0..1, 0..MEM_SIZE - 1] of Byte;
     procedure ImpExpProperties(Direction: TOpDirection);
+    procedure InterruptHandler(Sender: TIOPort; AVector: Byte);
     procedure RefreshProperties(Direction: TOpDirection);
     procedure RefreshRegisters(Direction: TOpDirection);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
@@ -270,7 +272,7 @@ resourcestring
   MSG09 = 'Property';
   MSG10 = 'Value';
   MSG11 = 'Reg.';
-  MSG12 = 'Data';
+  MSG12 = 'INT required (vector: %s)';
   MSG13 = ' %sh read from address %sh.';
   MSG14 = ' %sh write to address %sh.';
   MSG15 = 'Only hexadecimal values can be entered!';
@@ -291,7 +293,7 @@ resourcestring
   MSG30 = 'Load memory content from file';
   MSG31 = 'Cannot load ''%s'' memory content.';
   MSG32 = 'Binary file|*.bin|All file|*.*';
-  MSG33 = 'ASCII console (address: %sh)';
+  MSG33 = 'ASCII console (a/v: %sh/%sh)';
   MSG34 = 'I/O port (address: %sh)';
 
 // ----  TESTSYSBUS CLASS'S METHODS ----
@@ -365,6 +367,21 @@ begin
     begin
       // only writeable properties
       CurrentProcessor.Enabled := PEnabled;
+    end;
+  end;
+end;
+
+// INTERRUPT HANDLER
+procedure TForm1.InterruptHandler(Sender: TIOPort; AVector: Byte);
+begin
+  if FSendIOIntReq then
+  begin
+    StatusBar1.Panels.Items[2].Text := Format(MSG12, [IntToHex(AVector, 2)]);
+    Timer1.Enabled := True;
+    if Assigned(CurrentProcessor) then
+    begin
+      CurrentProcessor.IRQ(AVector);
+      RefreshRegisters(opVar2List);
     end;
   end;
 end;
@@ -745,6 +762,16 @@ begin
       RefreshRegisters(opVar2List);
       ValueListEditor2.Enabled := True;
       ValueListEditor1.Enabled := True;
+      // enable/disable actions
+      LoadRegisterValuesFromCPU.Enabled := True;
+      SaveRegisterValuesToCPU.Enabled := True;
+      Reset.Enabled := True;
+      NMI.Enabled := True;
+      Step.Enabled := True;
+      Run.Enabled := True;
+      Stop.Enabled := True;
+      LoadStatus.Enabled := True;
+      SaveStatus.Enabled := True;
       // show info
       Form1.Caption := Application.Title + ' - ' + LoadedPlugin.PModName;
       Inc(FLoadCounter);
@@ -771,6 +798,16 @@ begin
       LibHandle := NilHandle;
       ValueListEditor1.Enabled := False;
       ValueListEditor2.Enabled := False;
+      // enable/disable actions
+      LoadRegisterValuesFromCPU.Enabled := False;
+      SaveRegisterValuesToCPU.Enabled := False;
+      Reset.Enabled := False;
+      NMI.Enabled := False;
+      Step.Enabled := False;
+      Run.Enabled := False;
+      Stop.Enabled := False;
+      LoadStatus.Enabled := False;
+      SaveStatus.Enabled := False;
     end;
   end;
 end;
@@ -819,11 +856,6 @@ procedure TForm1.ResetExecute(Sender: TObject);
 begin
   CurrentProcessor.Reset;
   RefreshRegisters(opVar2List);
-end;
-
-procedure TForm1.ResetPortsExecute(Sender: TObject);
-begin
-
 end;
 
 // REQUEST NMI
@@ -1047,8 +1079,12 @@ begin
   begin
     CreatePanel;
     ShowPanel;
-    FPortConsoleCap := Format(MSG33,[IntToHex(IOADD_CONSOLE, 2)]);
+    FPortConsoleCap := Format(MSG33,[IntToHex(IOADD_CONSOLE, 2),
+                                     IntToHex(IVECT_CONSOLE, 2)]);
     RenamePanel(PChar(FPortConsoleCap));
+    FPortConsole.OnInterrupt:= @InterruptHandler;
+    FPortConsole.IntVector := IVECT_CONSOLE;
+    Enabled := true;
   end;
 end;
 
@@ -1062,6 +1098,7 @@ begin
     ShowPanel;
     FPortStandardCap := Format(MSG34,[IntToHex(IOADD_STDPORT, 2)]);
     RenamePanel(PChar(FPortStandardCap));
+    Enabled := true;
   end;
 end;
 
@@ -1069,6 +1106,13 @@ end;
 procedure TForm1.MenuItem38Click(Sender: TObject);
 begin
   FSendIOIntReq := MenuItem38.Checked;
+end;
+
+// RESET I/O PORTS
+procedure TForm1.ResetPortsExecute(Sender: TObject);
+begin
+  if Assigned(FPortConsole) then FPortConsole.Reset;
+  if Assigned(FPortStandard) then FPortStandard.Reset;
 end;
 
 // HELP
@@ -1106,6 +1150,7 @@ begin
   FLoadCounter := 0;
   FEXEDirectory := GetExeDir;
   FPluginDirectory := '.';
+  FSendIOIntReq := True;
   FSystemLanguage := GetLang;
   FUserDirectory := GetUserDir;
   Form1.Caption := Application.Title;
@@ -1130,12 +1175,22 @@ begin
     Cells[0, 1] := '';
     Enabled := False;
   end;
+  // enable/disable actions
+  LoadChangePlugin.Enabled := False;
+  LoadRegisterValuesFromCPU.Enabled := False;
+  SaveRegisterValuesToCPU.Enabled := False;
+  Reset.Enabled := False;
+  NMI.Enabled := False;
+  Step.Enabled := False;
+  Run.Enabled := False;
+  Stop.Enabled := False;
+  LoadStatus.Enabled := False;
+  SaveStatus.Enabled := False;
   // enable/disable menuitems
   if not DirectoryExists(MenuItem15.Caption, True) then MenuItem15.Free;
   if not DirectoryExists(MenuItem16.Caption, True) then MenuItem16.Free;
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
-  LoadChangePlugin.Enabled := False;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;

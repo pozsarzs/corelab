@@ -761,6 +761,7 @@ object Form1: TForm1
         Caption = '-'
       end
       object MenuItem38: TMenuItem
+        AutoCheck = True
         Caption = 'Send i&nterrupt'
         Checked = True
         OnClick = MenuItem38Click

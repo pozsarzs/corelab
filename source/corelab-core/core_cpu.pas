@@ -79,6 +79,7 @@ type
     FHalted:           Boolean;                                // CPU HALT state
     FInterruptEnabled: Boolean;                  // Global interrupt enable flag
     FIRQPending:       Boolean;                    // Pending maskable interrupt
+    FIRQVector:        Byte;                        // Received interrupt vector
     FNMIPending:       Boolean;                // Pending non-maskable interrupt
     // Execution statistics
     FCycles:           QWord;                                    // Total cycles
@@ -101,7 +102,7 @@ type
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
     function GetCurrentInstruction: TLogRec; virtual; abstract;
-    procedure IRQ; virtual;
+    procedure IRQ(AVector: Byte); virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;
     // Used via the ISvcAPI by TSupervisor class
@@ -208,6 +209,7 @@ begin
   FHalted := false;
   FInterruptEnabled := false;
   // No pending interrupts
+  FIRQVector := 0;
   FIRQPending := false;
   FNMIPending := false;
   // Clear counters
@@ -243,9 +245,10 @@ begin
 end;
 
 // SIGNAL MASKABLE INTERRUPT
-procedure TCPU.IRQ;
+procedure TCPU.IRQ(AVector: Byte);
 begin
   if not FEnabled then Exit;
+  FIRQVector := AVector;
   FIRQPending := true;                                   // Set pending IRQ flag
   EmitEvent(ceInterrupt);                             // Notify host application
 end;
