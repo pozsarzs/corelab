@@ -105,23 +105,29 @@ in mind:
 
 ## III. Screenshots
 
+### CoreLAB framework application
+
+(...)
+
 ### CLIOPort plugin tester application
 
 ![CLIOPort plugin tester application](document/screenshots/clioport.png)
 
+### CLMemory plugin tester application
+
 ![CLMemory plugin tester application](document/screenshots/clmemory.png)
 
-![CLMemory plugin tester application](document/screenshots/clprocessor_1.png)
+### CLProcessor plugin tester application
 
-![CLMemory plugin tester application](document/screenshots/clprocessor_2.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_1.png)
 
-![CLMemory plugin tester application](document/screenshots/clprocessor_3.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_2.png)
+
+![CLProcessor plugin tester application](document/screenshots/clprocessor_3.png)
 
 ![CLMemory plugin tester application](document/screenshots/clprocessor_4.png)
 
-![CLMemory plugin tester application](document/screenshots/clprocessor_5.png)
-
-(...)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_5.png)
 
 ## IV. Used external libraries, programs and others
 
@@ -344,14 +350,14 @@ for details.
 ## XII. Links  
 
  - [Homepage](https://www.pozsarzs.hu/60_myprogcom/corelab/)  
- - [GitHub repository](https://github.com/pozsarzs/corelab)  
+ - [GitHub repository](https://github.com/pozsarzs/corelab/tree/CoreLAB8)  
  - [Project webpage on Github](https://pozsarzs.github.io/corelab)  
 
 ### Source packages  
 
 |name                                                                                 |version|
 |-------------------------------------------------------------------------------------|:-----:|
-|[main.zip](https://github.com/pozsarzs/corelab/archive/refs/heads/main.zip)          |latest |
+|[main.zip](https://github.com/pozsarzs/corelab/archive/refs/heads/CoreLAB8.zip)      |latest |
 |[corelab-0.1.tar.gz](https://www.pozsarzs.hu/60_myprogcom/package/corelab-0.1.tar.gz)|v0.1   |
 
 ### Binaries and installer packages for several OS and architecture

@@ -1,17 +1,70 @@
+#: clprocessor:msg01
+msgid "CoreLAB Processor plugin tester"
+msgstr ""
+
+#: clprocessor:msg02
+msgid "Build date:  "
+msgstr ""
+
+#: clprocessor:msg03
+msgid "Builder:     "
+msgstr ""
+
+#: clprocessor:msg04
+msgid "FPC version: "
+msgstr ""
+
+#: clprocessor:msg05
+msgid "Target OS:   "
+msgstr ""
+
+#: clprocessor:msg06
+msgid "Target CPU:  "
+msgstr ""
+
+#: clprocessor:msg07
+msgid "There are one or more bad arguments in command line."
+msgstr ""
+
+#: clprocessor:msg08
+msgid "Usage"
+msgstr ""
+
+#: clprocessor:msg09
+msgid "[argument]"
+msgstr ""
+
+#: clprocessor:msg10
+msgid "[directory]"
+msgstr ""
+
+#: clprocessor:msg11
+msgid "arguments:"
+msgstr ""
+
 #: frmabout:msg01
 msgid "Cannot open URL."
 msgstr ""
 
-#: frmloadsavememory:msg01 frmrunlogger:msg01
+#: frmexdepmemory:msg01 frmloadsavememory:msg01 frmmain:msg01
+#: frmrunlogger:msg01
 msgid "ERROR: "
 msgstr ""
 
-#: frmloadsavememory:msg02
+#: frmexdepmemory:msg02 frmloadsavememory:msg02
 msgid "Only hexadecimal values can be entered for address value!"
 msgstr ""
 
-#: frmloadsavememory:msg03
+#: frmexdepmemory:msg03
+msgid "Only hexadecimal values can be entered for data value!"
+msgstr ""
+
+#: frmexdepmemory:msg04 frmloadsavememory:msg03
 msgid "Memory address too high! (> %s)"
+msgstr ""
+
+#: frmhexviewer:msg01 frmrunlogger:msg06
+msgid "Address"
 msgstr ""
 
 #: frmloadsavememory:msg04
@@ -30,6 +83,138 @@ msgstr ""
 msgid "Load parameters"
 msgstr ""
 
+#: frmmain:msg02
+msgid "Data type conversion error."
+msgstr ""
+
+#: frmmain:msg03
+msgid "Directory '%s' does not exist."
+msgstr ""
+
+#: frmmain:msg04
+msgid "Cannot load '%s' plugin%s(%s)."
+msgstr ""
+
+#: frmmain:msg05
+msgid "It is not a CoreLAB processor plugin."
+msgstr ""
+
+#: frmmain:msg06
+msgid "Filename"
+msgstr ""
+
+#: frmmain:msg07
+msgid "Size"
+msgstr ""
+
+#: frmmain:msg08
+msgid "Type"
+msgstr ""
+
+#: frmmain:msg09
+msgid "Property"
+msgstr ""
+
+#: frmmain:msg10
+msgid "Value"
+msgstr ""
+
+#: frmmain:msg11
+msgid "Reg."
+msgstr ""
+
+#: frmmain:msg12
+msgid "INT required (vector: %sh)"
+msgstr ""
+
+#: frmmain:msg13
+msgid " %sh read from address %sh."
+msgstr ""
+
+#: frmmain:msg14
+msgid " %sh write to address %sh."
+msgstr ""
+
+#: frmmain:msg15
+msgid "Only hexadecimal values can be entered!"
+msgstr ""
+
+#: frmmain:msg16
+msgid "Out of range!"
+msgstr ""
+
+#: frmmain:msg17
+msgid "Value (Hex)"
+msgstr ""
+
+#: frmmain:msg18
+msgid "Missing help file."
+msgstr ""
+
+#: frmmain:msg19
+msgid "Missing help viewer."
+msgstr ""
+
+#: frmmain:msg20
+msgid "Cannot read state data from plugin."
+msgstr ""
+
+#: frmmain:msg21
+msgid "Save plugin state to file"
+msgstr ""
+
+#: frmmain:msg22
+msgid "Cannot save '%s' plugin data."
+msgstr ""
+
+#: frmmain:msg23
+msgid "Load plugin state from file"
+msgstr ""
+
+#: frmmain:msg24
+msgid "Cannot load '%s' plugin data."
+msgstr ""
+
+#: frmmain:msg25
+msgid "Cannot write state data to plugin."
+msgstr ""
+
+#: frmmain:msg26
+msgid "CoreLAB plugin status file|*.clpst|All file|*.*"
+msgstr ""
+
+#: frmmain:msg27
+msgid "Read-only!"
+msgstr ""
+
+#: frmmain:msg28
+msgid "Save memory content to file"
+msgstr ""
+
+#: frmmain:msg29
+msgid "Cannot save '%s' memory content."
+msgstr ""
+
+#: frmmain:msg30
+msgid "Load memory content from file"
+msgstr ""
+
+#: frmmain:msg31
+msgid "Cannot load '%s' memory content."
+msgstr ""
+
+#: frmmain:msg32
+msgid "Binary file|*.bin|All file|*.*"
+msgstr ""
+
+#: frmmain:msg33
+msgid "ASCII console (a/v: %sh/%sh)"
+msgstr ""
+
+#: frmmain:msg34
+msgid "I/O port (address: %sh)"
+msgstr ""
+
 #: frmrunlogger:msg02
 msgid "Save log to file"
 msgstr ""
@@ -44,10 +229,6 @@ msgstr ""
 
 #: frmrunlogger:msg05
 msgid "Counter"
-msgstr ""
-
-#: frmrunlogger:msg06
-msgid "Address"
 msgstr ""
 
 #: frmrunlogger:msg07

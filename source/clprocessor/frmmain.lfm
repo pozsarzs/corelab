@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 407
+  Left = 489
   Height = 480
-  Top = 191
+  Top = 188
   Width = 640
   Caption = 'Form1'
   ClientHeight = 455
@@ -378,9 +378,9 @@ object Form1: TForm1
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = StatusBar1
+    AnchorSideBottom.Control = Panel2
     Left = 456
-    Height = 352
+    Height = 185
     Top = 76
     Width = 176
     Anchors = [akTop, akRight, akBottom]
@@ -527,7 +527,7 @@ object Form1: TForm1
     Images = ImageList1
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 4
+    TabOrder = 5
     object ToolButton1: TToolButton
       Left = 1
       Top = 2
@@ -612,17 +612,111 @@ object Form1: TForm1
       Action = SaveRegisterValuesToCPU
     end
   end
+  object Panel2: TPanel
+    AnchorSideLeft.Control = ValueListEditor2
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = StatusBar1
+    Left = 456
+    Height = 159
+    Top = 269
+    Width = 176
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    BorderStyle = bsSingle
+    ClientHeight = 157
+    ClientWidth = 174
+    TabOrder = 3
+    object TrackBar1: TTrackBar
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Edit1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel2
+      AnchorSideBottom.Side = asrBottom
+      Left = 9
+      Height = 49
+      Hint = 'Delay between steps'
+      Top = 99
+      Width = 156
+      Max = 1000
+      Min = 10
+      OnChange = TrackBar1Change
+      Position = 100
+      Reversed = True
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Around = 8
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object Label1: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel2
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Edit1
+      Left = 9
+      Height = 17
+      Top = 7
+      Width = 156
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Around = 8
+      Caption = 'I/O IRQ vector (Hex):'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Edit1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = TrackBar1
+      Left = 9
+      Height = 17
+      Top = 74
+      Width = 156
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Around = 8
+      Caption = 'Delay (ms):'
+      ParentColor = False
+    end
+    object Edit1: TEdit
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Label1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Label2
+      Left = 9
+      Height = 34
+      Hint = 'Interrupt vector for ASCII console'
+      Top = 32
+      Width = 156
+      Alignment = taRightJustify
+      Anchors = [akLeft, akRight, akBottom]
+      BorderSpacing.Around = 8
+      OnEditingDone = Edit1EditingDone
+      OnExit = Edit1EditingDone
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      Text = '00'
+    end
+  end
   object Timer1: TTimer
     Enabled = False
     Interval = 3000
     OnTimer = Timer1Timer
     Left = 560
-    Top = 336
+    Top = 144
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
     Left = 464
-    Top = 336
+    Top = 144
     object MenuItem1: TMenuItem
       Caption = '&File'
       object MenuItem13: TMenuItem
@@ -785,7 +879,7 @@ object Form1: TForm1
   end
   object ImageList1: TImageList
     Left = 528
-    Top = 336
+    Top = 144
     Bitmap = {
       4C7A1C0000001000000010000000DB2400000000000078DAED9C075854D7D6F7
       37F61A7B1235A65862378AC6120BA858B0778D6241102CA8B137D4A8D815416C
@@ -1088,7 +1182,7 @@ object Form1: TForm1
   object ActionList1: TActionList
     Images = ImageList1
     Left = 496
-    Top = 336
+    Top = 144
     object SelectPluginDirectory: TAction
       Caption = 'Select plugin &directory...'
       Hint = 'Select plugin directory'
@@ -1242,19 +1336,26 @@ object Form1: TForm1
   object CHMHelpDatabase1: TCHMHelpDatabase
     AutoRegister = False
     Left = 464
-    Top = 392
+    Top = 200
   end
   object LHelpConnector1: TLHelpConnector
     AutoRegister = False
     Left = 496
-    Top = 392
+    Top = 200
   end
   object OpenDialog1: TOpenDialog
     Left = 528
-    Top = 392
+    Top = 200
   end
   object SaveDialog1: TSaveDialog
     Left = 560
-    Top = 392
+    Top = 200
+  end
+  object Timer2: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = Timer2Timer
+    Left = 592
+    Top = 144
   end
 end

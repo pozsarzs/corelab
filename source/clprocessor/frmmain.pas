@@ -20,13 +20,13 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_cpu, core_ioport,
-  frmabout, frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory,
-  sysbus, ioport_console, ioport_standard, ucommon;
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_cpu,
+  core_ioport, frmabout, frmhexviewer, frmrunlogger, frmexdepmemory,
+  frmloadsavememory, sysbus, ioport_console, ioport_standard, ucommon;
 const
   MEM_SIZE = 1024;
   IOADD_CONSOLE = $A0;
-  IVECT_CONSOLE = $08;
+  IVECT_CONSOLE = $CF;
   IOADD_STDPORT = $B0;
 type
   // Handled plugin attributes
@@ -61,6 +61,10 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                     TAction;
+    Edit1: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Panel2: TPanel;
     ResetPorts: TAction;
     ActionList1:               TActionList;
     ASCIIConsole:              TAction;
@@ -148,6 +152,7 @@ type
     Step:                      TAction;
     Stop:                      TAction;
     Timer1:                    TTimer;
+    Timer2: TTimer;
     ToolBar1:                  TToolBar;
     ToolButton1:               TToolButton;
     ToolButton10:              TToolButton;
@@ -164,6 +169,7 @@ type
     ToolButton7:               TToolButton;
     ToolButton8:               TToolButton;
     ToolButton9:               TToolButton;
+    TrackBar1: TTrackBar;
     ValueListEditor1:          TValueListEditor;
     ValueListEditor2:          TValueListEditor;
     procedure AboutExecute(Sender: TObject);
@@ -171,6 +177,7 @@ type
     procedure ClearCodeMemoryExecute(Sender: TObject);
     procedure ClearDataMemoryExecute(Sender: TObject);
     procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
+    procedure Edit1EditingDone(Sender: TObject);
     procedure ExamineDepositExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -202,6 +209,8 @@ type
     procedure StepExecute(Sender: TObject);
     procedure StopExecute(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure TrackBar1Change(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1EditingDone(Sender: TObject);
     procedure ValueListEditor2ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
@@ -229,6 +238,7 @@ type
     FUserDirectory:   string;
     // I/O ports
     FSendIOIntReq:    Boolean;    // Enable/disable sending INT request from I/O
+    FPortIntVector:   Byte;                          // Console interrupt vector
     FPortConsole:     TConsole;            // created object from TConsole class
     FPortStandard:    TStandardPort;  // created object from TStandardPort class
     FPortConsoleCap:  string;                          // created object caption
@@ -272,7 +282,7 @@ resourcestring
   MSG09 = 'Property';
   MSG10 = 'Value';
   MSG11 = 'Reg.';
-  MSG12 = 'INT required (vector: %s)';
+  MSG12 = 'INT required (vector: %sh)';
   MSG13 = ' %sh read from address %sh.';
   MSG14 = ' %sh write to address %sh.';
   MSG15 = 'Only hexadecimal values can be entered!';
@@ -293,7 +303,7 @@ resourcestring
   MSG30 = 'Load memory content from file';
   MSG31 = 'Cannot load ''%s'' memory content.';
   MSG32 = 'Binary file|*.bin|All file|*.*';
-  MSG33 = 'ASCII console (a/v: %sh/%sh)';
+  MSG33 = 'ASCII console (address: %sh)';
   MSG34 = 'I/O port (address: %sh)';
 
 // ----  TESTSYSBUS CLASS'S METHODS ----
@@ -314,8 +324,8 @@ end;
 function TTestSysBus.ReadPort(APort: Word): Byte;
 begin
   case APort of
-    IOADD_CONSOLE: Result := Form1.FPortConsole.ReadPort(APort);
-    IOADD_STDPORT: Result := Form1.FPortStandard.ReadPort(APort);
+    IOADD_CONSOLE: Result := Form1.FPortConsole.ReadPort(0);
+    IOADD_STDPORT: Result := Form1.FPortStandard.ReadPort(0);
   else
     Result := 0;
   end;
@@ -573,6 +583,20 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   Timer1.Enabled := False;
   StatusBar1.Panels.Items[2].Text := '';
+end;
+
+// RUN TIMER
+procedure TForm1.Timer2Timer(Sender: TObject);
+begin
+  CurrentProcessor.Step;
+  RefreshRegisters(opVar2List);
+  Timer2.Enabled := True;
+end;
+
+// CHANGE DELAY
+procedure TForm1.TrackBar1Change(Sender: TObject);
+begin
+  Timer2.Interval := TrackBar1.Position;
 end;
 
 // COLORING READ-ONLY PROPERTIES
@@ -876,13 +900,13 @@ end;
 procedure TForm1.RunExecute(Sender: TObject);
 begin
   RefreshRegisters(opVar2List);
-  CurrentProcessor.Run;
+  Timer2.Enabled := True;
 end;
 
 // STOP PROGRAM
 procedure TForm1.StopExecute(Sender: TObject);
 begin
-  CurrentProcessor.Stop;
+  Timer2.Enabled := False;
   RefreshRegisters(opVar2List);
 end;
 
@@ -978,7 +1002,7 @@ begin
   if OpenDialog1.Execute then
   begin
     Filename := OpenDialog1.FileName;
-    // Form7.Architecture :=
+    Form7.Architecture := CurrentProcessor.Architecture;
     Form7.Direction := true;
     Form7.MemSize := MEM_SIZE;
     if Form7.ShowModal = mrCancel then exit else
@@ -1011,7 +1035,7 @@ var
   i:          DWord;
   Data:       Byte;
 begin
-  // Form7.Architecture :=
+  Form7.Architecture := CurrentProcessor.Architecture;
   Form7.Direction := false;
   Form7.MemSize := MEM_SIZE;
   if Form7.ShowModal = mrCancel then Exit else
@@ -1079,11 +1103,10 @@ begin
   begin
     CreatePanel;
     ShowPanel;
-    FPortConsoleCap := Format(MSG33,[IntToHex(IOADD_CONSOLE, 2),
-                                     IntToHex(IVECT_CONSOLE, 2)]);
+    FPortConsoleCap := Format(MSG33,[IntToHex(IOADD_CONSOLE, 2)]);
     RenamePanel(PChar(FPortConsoleCap));
     FPortConsole.OnInterrupt:= @InterruptHandler;
-    FPortConsole.IntVector := IVECT_CONSOLE;
+    FPortConsole.IntVector := FPortIntVector;
     Enabled := true;
   end;
 end;
@@ -1127,11 +1150,29 @@ begin
   Form2.ShowModal;
 end;
 
-// CPU EVENT
+// CPU EVENT HANDLER
 procedure TForm1.CPUEventHandler(Sender: TObject; Event: TCPUEvent);
 begin
   if Event = ceInstructionBoundary then
     Form4.AppendRecord(CurrentProcessor.GetCurrentInstruction);
+end;
+
+// VALIDATE VECTOR VALUE
+procedure TForm1.Edit1EditingDone(Sender: TObject);
+var
+  PrevText, NewText: string;
+begin
+  PrevText := Edit1.Text;
+  NewText := '';
+  if FormatHexValue(Edit1.Text, 2, NewText) then
+  begin
+    Edit1.Text := NewText;
+    FPortIntVector := StrToInt('$' + Edit1.Text);
+  end else
+  begin
+    ShowMessage(MSG01 + MSG02);
+    Edit1.Text := PrevText;
+  end;
 end;
 
 // ONCREATE EVENT
@@ -1191,6 +1232,11 @@ begin
   if not DirectoryExists(MenuItem16.Caption, True) then MenuItem16.Free;
   if not DirectoryExists(MenuItem17.Caption, True) then MenuItem17.Free;
   if not DirectoryExists(MenuItem18.Caption, True) then MenuItem18.Free;
+  // default i/o irq vector value
+  FPortIntVector := IVECT_CONSOLE;
+  Edit1.Text := IntToHex(FPortIntVector, 2);
+  // run timer
+  Timer2.Interval := TrackBar1.Position;
   // refresh plugin list
   RefreshPluginList.Execute;
 end;
