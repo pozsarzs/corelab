@@ -1,0 +1,762 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pozsár Zsolt <pozsarzs@gmail.com>\n"
+"Language-Team: \n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: clprocessor.msg01
+msgid "CoreLAB Processor plugin tester"
+msgstr "CoreLAB Processor bővítménytesztelő"
+
+#: clprocessor.msg02
+msgid "Build date:  "
+msgstr "Fordítás dátuma:  "
+
+#: clprocessor.msg03
+msgid "Builder:     "
+msgstr "Fordító:     "
+
+#: clprocessor.msg04
+msgid "FPC version: "
+msgstr "FPC verzió: "
+
+#: clprocessor.msg05
+msgid "Target OS:   "
+msgstr "Cél OS:   "
+
+#: clprocessor.msg06
+msgid "Target CPU:  "
+msgstr "Cél CPU:  "
+
+#: clprocessor.msg07
+msgid "There are one or more bad arguments in command line."
+msgstr "Egy vagy több hibás parancssori argumentum van megadva."
+
+#: clprocessor.msg08
+msgid "Usage"
+msgstr "Használat"
+
+#: clprocessor.msg09
+msgid "[argument]"
+msgstr "[argumentum]"
+
+#: clprocessor.msg10
+msgid "[directory]"
+msgstr "[könyvtár]"
+
+#: clprocessor.msg11
+msgid "arguments:"
+msgstr "argumentumok:"
+
+#: frmabout.msg01
+msgid "Cannot open URL."
+msgstr "Az URL nem nyitható meg."
+
+#: frmexdepmemory.msg01
+msgctxt "frmexdepmemory.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmexdepmemory.msg02
+msgctxt "frmexdepmemory.msg02"
+msgid "Only hexadecimal values can be entered for address value!"
+msgstr "A címértékhez csak hexadecimális értékek adhatók meg!"
+
+#: frmexdepmemory.msg03
+msgid "Only hexadecimal values can be entered for data value!"
+msgstr "Az adatértékhez csak hexadecimális értékek adhatók meg!"
+
+#: frmexdepmemory.msg04
+#, object-pascal-format
+msgctxt "frmexdepmemory.msg04"
+msgid "Memory address too high! (> %s)"
+msgstr "A memóriacím túl magas! (> %s)"
+
+#: frmhexviewer.msg01
+msgctxt "frmhexviewer.msg01"
+msgid "Address"
+msgstr "Cím"
+
+#: frmloadsavememory.msg01
+msgctxt "frmloadsavememory.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmloadsavememory.msg02
+msgctxt "frmloadsavememory.msg02"
+msgid "Only hexadecimal values can be entered for address value!"
+msgstr "A címértékhez csak hexadecimális értékek adhatók meg!"
+
+#: frmloadsavememory.msg03
+#, object-pascal-format
+msgctxt "frmloadsavememory.msg03"
+msgid "Memory address too high! (> %s)"
+msgstr "A memóriacím túl magas! (> %s)"
+
+#: frmloadsavememory.msg04
+msgid "&Save"
+msgstr "&Mentés"
+
+#: frmloadsavememory.msg05
+msgid "&Load"
+msgstr "&Betöltés"
+
+#: frmloadsavememory.msg06
+msgid "Save parameters"
+msgstr "Mentési paraméterek"
+
+#: frmloadsavememory.msg07
+msgid "Load parameters"
+msgstr "Betöltési paraméterek"
+
+#: frmmain.msg01
+msgctxt "frmmain.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmmain.msg02
+msgid "Data type conversion error."
+msgstr "Adattípus-konverziós hiba."
+
+#: frmmain.msg03
+#, object-pascal-format
+msgid "Directory '%s' does not exist."
+msgstr "A(z) „%s” könyvtár nem létezik."
+
+#: frmmain.msg04
+#, object-pascal-format
+msgid "Cannot load '%s' plugin%s(%s)."
+msgstr "A(z) „%s” bővítmény%s(%s) nem tölthető be."
+
+#: frmmain.msg05
+msgid "It is not a CoreLAB processor plugin."
+msgstr "Ez nem CoreLAB Processor bővítmény."
+
+#: frmmain.msg06
+msgid "Filename"
+msgstr "Fájlnév"
+
+#: frmmain.msg07
+msgid "Size"
+msgstr "Méret"
+
+#: frmmain.msg08
+msgid "Type"
+msgstr "Típus"
+
+#: frmmain.msg09
+msgid "Property"
+msgstr "Tulajdonság"
+
+#: frmmain.msg10
+msgid "Value"
+msgstr "Érték"
+
+#: frmmain.msg11
+msgid "Reg."
+msgstr "Reg."
+
+#: frmmain.msg12
+#, object-pascal-format
+msgid "INT required (vector: %sh)"
+msgstr "INT szükséges (vektor: %sh)"
+
+#: frmmain.msg13
+#, object-pascal-format
+msgid " %sh read from address %sh."
+msgstr " %sh olvasva a(z) %sh címről."
+
+#: frmmain.msg14
+#, object-pascal-format
+msgid " %sh write to address %sh."
+msgstr " %sh írva a(z) %sh címre."
+
+#: frmmain.msg15
+msgid "Only hexadecimal values can be entered!"
+msgstr "Csak hexadecimális értékek adhatók meg!"
+
+#: frmmain.msg16
+msgid "Out of range!"
+msgstr "Tartományon kívül!"
+
+#: frmmain.msg17
+msgid "Value (Hex)"
+msgstr "Érték (hex)"
+
+#: frmmain.msg18
+msgid "Missing help file."
+msgstr "Hiányzó súgófájl."
+
+#: frmmain.msg19
+msgid "Missing help viewer."
+msgstr "Hiányzó súgónézegető."
+
+#: frmmain.msg20
+msgid "Cannot read state data from plugin."
+msgstr "A bővítmény állapotadatai nem olvashatók."
+
+#: frmmain.msg21
+msgid "Save plugin state to file"
+msgstr "Bővítmény állapotának mentése fájlba"
+
+#: frmmain.msg22
+#, object-pascal-format
+msgid "Cannot save '%s' plugin data."
+msgstr "A(z) „%s” bővítmény adatai nem menthetők."
+
+#: frmmain.msg23
+msgid "Load plugin state from file"
+msgstr "Bővítmény állapotának betöltése fájlból"
+
+#: frmmain.msg24
+#, object-pascal-format
+msgid "Cannot load '%s' plugin data."
+msgstr "A(z) „%s” bővítmény adatai nem tölthetők be."
+
+#: frmmain.msg25
+msgid "Cannot write state data to plugin."
+msgstr "Az állapotadatok nem írhatók a bővítménybe."
+
+#: frmmain.msg26
+msgid "CoreLAB plugin status file|*.clpst|All file|*.*"
+msgstr "CoreLAB beépülő állapotfájl|*.clpst|Minden fájl|*.*"
+
+#: frmmain.msg27
+msgid "Read-only!"
+msgstr "Csak olvasható!"
+
+#: frmmain.msg28
+msgid "Save memory content to file"
+msgstr "Memóriatartalom mentése fájlba"
+
+#: frmmain.msg29
+#, object-pascal-format
+msgid "Cannot save '%s' memory content."
+msgstr "A(z) „%s” memóriatartalma nem menthető."
+
+#: frmmain.msg30
+msgid "Load memory content from file"
+msgstr "Memóriatartalom betöltése fájlból"
+
+#: frmmain.msg31
+#, object-pascal-format
+msgid "Cannot load '%s' memory content."
+msgstr "A(z) „%s” memóriatartalma nem tölthető be."
+
+#: frmmain.msg32
+msgid "Binary file|*.bin|Intel hexa file|*.hex|All file|*.*"
+msgstr "Bináris fájl|*.bin|Intel hexa fájl|*.hex|Minden fájl|*.*"
+
+#: frmmain.msg33
+#, object-pascal-format
+msgid "ASCII console (address: %sh)"
+msgstr "ASCII-konzol (cím: %sh)"
+
+#: frmmain.msg34
+#, object-pascal-format
+msgid "I/O port (address: %sh)"
+msgstr "I/O port (cím: %sh)"
+
+#: frmrunlogger.msg01
+msgctxt "frmrunlogger.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmrunlogger.msg02
+msgid "Save log to file"
+msgstr "Napló mentése fájlba"
+
+#: frmrunlogger.msg03
+#, object-pascal-format
+msgid "Cannot save '%s' log file."
+msgstr "A(z) „%s” naplófájl nem menthető."
+
+#: frmrunlogger.msg04
+msgid "Log file|*.log|All file|*.*"
+msgstr "Naplófájl|*.log|Minden fájl|*.*"
+
+#: frmrunlogger.msg05
+msgid "Counter"
+msgstr "Számláló"
+
+#: frmrunlogger.msg06
+msgctxt "frmrunlogger.msg06"
+msgid "Address"
+msgstr "Cím"
+
+#: frmrunlogger.msg07
+msgctxt "frmrunlogger.msg07"
+msgid "Opcode"
+msgstr "Opkód"
+
+#: frmrunlogger.msg08
+msgctxt "frmrunlogger.msg08"
+msgid "Mnemonic"
+msgstr "Mnemonik"
+
+#: tform1.about.caption
+msgid "&About"
+msgstr "&Névjegy"
+
+#: tform1.asciiconsole.caption
+msgid "ASCII &console..."
+msgstr "ASCII-&konzol..."
+
+#: tform1.caption
+msgid "Form1"
+msgstr "Form1"
+
+#: tform1.clearcodememory.caption
+msgid "Clear (&code) memory"
+msgstr "(&Kód)memória törlése"
+
+#: tform1.cleardatamemory.caption
+msgid "Clear &data memory"
+msgstr "&Adatmemória törlése"
+
+#: tform1.directoryedit1.buttonhint
+msgctxt "tform1.directoryedit1.buttonhint"
+msgid "Select plugin directory"
+msgstr "Bővítménykönyvtár kiválasztása"
+
+#: tform1.edit1.hint
+msgid "Interrupt vector for ASCII console"
+msgstr "Az ASCII-konzol megszakítási vektora"
+
+#: tform1.edit1.text
+msgctxt "tform1.edit1.text"
+msgid "00"
+msgstr "00"
+
+#: tform1.examinedeposit.caption
+msgid "&Examine/Deposit..."
+msgstr "&Vizsgálat/Adatbevitel..."
+
+#: tform1.examinedeposit.hint
+msgid "Memory content handling"
+msgstr "Memóriatartalom kezelése"
+
+#: tform1.help.caption
+msgctxt "tform1.help.caption"
+msgid "&Help"
+msgstr "&Súgó"
+
+#: tform1.irq.caption
+msgid "IR&Q"
+msgstr "IR&Q"
+
+#: tform1.irq.hint
+msgid "Request IRQ"
+msgstr "IRQ kérése"
+
+#: tform1.label1.caption
+msgid "I/O IRQ vector (Hex):"
+msgstr "I/O IRQ vektor (hex):"
+
+#: tform1.label2.caption
+msgid "Delay (ms):"
+msgstr "Késleltetés (ms):"
+
+#: tform1.loadchangeplugin.caption
+msgid "Load/change p&lugin"
+msgstr "Bővítmény betöltése/cseréje"
+
+#: tform1.loadchangeplugin.hint
+msgid "Load/change plugin"
+msgstr "Bővítmény betöltése/cseréje"
+
+#: tform1.loadmemorycontent.caption
+msgid "&Load memory content..."
+msgstr "Memóriatartalom &betöltése..."
+
+#: tform1.loadregistervaluesfromcpu.caption
+msgid "Loa&d register values from CPU"
+msgstr "Regiszterértékek &betöltése a CPU-ból"
+
+#: tform1.loadregistervaluesfromcpu.hint
+msgid "Load register values from CPU"
+msgstr "Regiszterértékek betöltése a CPU-ból"
+
+#: tform1.loadstatus.caption
+msgid "Load status..."
+msgstr "Állapot betöltése..."
+
+#: tform1.menuitem1.caption
+msgid "&File"
+msgstr "&Fájl"
+
+#: tform1.menuitem11.caption
+msgid "Us&ual places"
+msgstr "Gyakori helyek"
+
+#: tform1.menuitem14.caption
+msgid "./"
+msgstr "./"
+
+#: tform1.menuitem15.caption
+msgid "/usr/lib/corelab/"
+msgstr "/usr/lib/corelab/"
+
+#: tform1.menuitem16.caption
+msgid "./plugins/"
+msgstr "./plugins/"
+
+#: tform1.menuitem17.caption
+msgid "/usr/local/lib/corelab/"
+msgstr "/usr/local/lib/corelab/"
+
+#: tform1.menuitem18.caption
+msgid "~/.local/lib/corelab/"
+msgstr "~/.local/lib/corelab/"
+
+#: tform1.menuitem27.caption
+msgid "&Memory"
+msgstr "&Memória"
+
+#: tform1.menuitem31.caption
+msgid "&Clear memory"
+msgstr "Memória &törlése"
+
+#: tform1.menuitem38.caption
+msgid "Send i&nterrupt"
+msgstr "Meg&szakítás küldése"
+
+#: tform1.menuitem4.caption
+msgid "&Processor"
+msgstr "&Processzor"
+
+#: tform1.menuitem5.caption
+msgctxt "tform1.menuitem5.caption"
+msgid "&Help"
+msgstr "&Súgó"
+
+#: tform1.menuitem7.caption
+msgid "I/&O port"
+msgstr "I/&O port"
+
+#: tform1.nmi.caption
+msgid "NMI"
+msgstr "NMI"
+
+#: tform1.nmi.hint
+msgid "Request NMI"
+msgstr "NMI kérése"
+
+#: tform1.panel1.caption
+msgid "Panel1"
+msgstr "Panel1"
+
+#: tform1.quit.caption
+msgid "E&xit"
+msgstr "K&ilépés"
+
+#: tform1.quit.hint
+msgid "Exit from application"
+msgstr "Kilépés az alkalmazásból"
+
+#: tform1.refreshpluginlist.caption
+msgid "Re&fresh plugin list"
+msgstr "Bővítménylista fri&ssítése"
+
+#: tform1.refreshpluginlist.hint
+msgid "Refresh plugin list"
+msgstr "Bővítménylista frissítése"
+
+#: tform1.reset.caption
+msgid "Reset"
+msgstr "Alaphelyzet"
+
+#: tform1.reset.hint
+msgid "Reset processor"
+msgstr "Processzor alaphelyzetbe állítása"
+
+#: tform1.resetports.caption
+msgid "&Reset ports"
+msgstr "Portok alap&helyzetbe állítása"
+
+#: tform1.restartapplication.caption
+msgid "Restart &application"
+msgstr "Alkalmazás &újraindítása"
+
+#: tform1.restartapplication.hint
+msgid "Restart application"
+msgstr "Alkalmazás újraindítása"
+
+#: tform1.run.caption
+msgid "Run"
+msgstr "Futtatás"
+
+#: tform1.run.hint
+msgid "Run program"
+msgstr "Program futtatása"
+
+#: tform1.savememorycontent.caption
+msgid "&Save memory content..."
+msgstr "Memóriatartalom &mentése..."
+
+#: tform1.saveregistervaluestocpu.caption
+msgid "Sa&ve register values to CPU"
+msgstr "Regiszterértékek &mentése a CPU-ba"
+
+#: tform1.saveregistervaluestocpu.hint
+msgid "Save register values to CPU"
+msgstr "Regiszterértékek mentése a CPU-ba"
+
+#: tform1.savestatus.caption
+msgid "Save status..."
+msgstr "Állapot mentése..."
+
+#: tform1.selectplugindirectory.caption
+msgid "Select plugin &directory..."
+msgstr "Bővítmény&könyvtár kiválasztása..."
+
+#: tform1.selectplugindirectory.hint
+msgctxt "tform1.selectplugindirectory.hint"
+msgid "Select plugin directory"
+msgstr "Bővítménykönyvtár kiválasztása"
+
+#: tform1.showhexviewer.caption
+msgid "&HexViewer..."
+msgstr "&HexViewer..."
+
+#: tform1.showhexviewer.hint
+msgid "Show hexadecimal memory viewer"
+msgstr "Hexadecimális memórianézegető megjelenítése"
+
+#: tform1.showrunlogger.caption
+msgid "RunLogger..."
+msgstr "RunLogger..."
+
+#: tform1.showrunlogger.hint
+msgid "Show run logger"
+msgstr "Futási napló megjelenítése"
+
+#: tform1.standardport.caption
+msgid "&Standard port..."
+msgstr "&Szabványos port..."
+
+#: tform1.step.caption
+msgid "Step"
+msgstr "Lépés"
+
+#: tform1.step.hint
+msgid "Run program step by step"
+msgstr "Program futtatása lépésenként"
+
+#: tform1.stop.caption
+msgid "Stop"
+msgstr "Leállítás"
+
+#: tform1.stop.hint
+msgid "Stop program"
+msgstr "Program leállítása"
+
+#: tform1.toolbar1.caption
+msgid "ToolBar1"
+msgstr "ToolBar1"
+
+#: tform1.toolbutton3.caption
+msgid "ToolButton3"
+msgstr "ToolButton3"
+
+#: tform1.toolbutton5.caption
+msgid "ToolButton5"
+msgstr "ToolButton5"
+
+#: tform1.toolbutton6.caption
+msgid "ToolButton6"
+msgstr "ToolButton6"
+
+#: tform1.trackbar1.hint
+msgid "Delay between steps"
+msgstr "Lépések közötti késleltetés"
+
+#: tform2.button1.caption
+msgctxt "tform2.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform2.caption
+msgid "About"
+msgstr "Névjegy"
+
+#: tform2.label1.caption
+msgid "Label1"
+msgstr "Label1"
+
+#: tform2.label2.caption
+msgid "Label2"
+msgstr "Label2"
+
+#: tform2.label3.caption
+msgid "Label3"
+msgstr "Label3"
+
+#: tform2.label4.caption
+msgid "Label4"
+msgstr "Label4"
+
+#: tform2.label5.caption
+msgid "Label5"
+msgstr "Label5"
+
+#: tform2.label6.caption
+msgid "Homepage:"
+msgstr "Honlap:"
+
+#: tform2.label7.caption
+msgid "E-mail:"
+msgstr "E-mail:"
+
+#: tform2.label8.caption
+msgid "Label8"
+msgstr "Label8"
+
+#: tform3.button1.caption
+msgctxt "tform3.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform3.caption
+msgid "HexViewer"
+msgstr "HexViewer"
+
+#: tform3.drawgrid1.columns[0].title.caption
+msgid "Title"
+msgstr "Cím"
+
+#: tform3.editbutton1.hint
+msgid "Search in dump"
+msgstr "Keresés a memóriakiíratásban"
+
+#: tform3.radiogroup1.hint
+msgctxt "tform3.radiogroup1.hint"
+msgid "Select memory type of the Harvard architecture"
+msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+
+#: tform4.button1.caption
+msgctxt "tform4.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform4.button2.caption
+msgid "Clea&r"
+msgstr "&Törlés"
+
+#: tform4.button3.caption
+msgid "&Save..."
+msgstr "&Mentés..."
+
+#: tform4.caption
+msgid "RunLogger"
+msgstr "RunLogger"
+
+#: tform4.drawgrid1.columns[0].title.caption
+msgid "Count"
+msgstr "Darabszám"
+
+#: tform4.drawgrid1.columns[1].title.caption
+msgctxt "tform4.drawgrid1.columns[1].title.caption"
+msgid "Address"
+msgstr "Cím"
+
+#: tform4.drawgrid1.columns[2].title.caption
+msgctxt "tform4.drawgrid1.columns[2].title.caption"
+msgid "Opcode"
+msgstr "Opkód"
+
+#: tform4.drawgrid1.columns[3].title.caption
+msgctxt "tform4.drawgrid1.columns[3].title.caption"
+msgid "Mnemonic"
+msgstr "Mnemonik"
+
+#: tform4.editbutton1.hint
+msgid "Search in log records"
+msgstr "Keresés a naplóbejegyzésekben"
+
+#: tform5.button3.caption
+msgid "&Examine"
+msgstr "&Vizsgálat"
+
+#: tform5.button4.caption
+msgid "&Deposit"
+msgstr "&Adatbevitel"
+
+#: tform5.button5.caption
+msgctxt "tform5.button5.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform5.caption
+msgid "Examine/deposit"
+msgstr "Vizsgálat/adatbevitel"
+
+#: tform5.editbutton1.text
+msgctxt "tform5.editbutton1.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+#: tform5.editbutton2.text
+msgctxt "tform5.editbutton2.text"
+msgid "00"
+msgstr "00"
+
+#: tform5.label1.caption
+msgctxt "tform5.label1.caption"
+msgid "Address"
+msgstr "Cím"
+
+#: tform5.label2.caption
+msgid "Data"
+msgstr "Adat"
+
+#: tform5.radiogroup1.hint
+msgctxt "tform5.radiogroup1.hint"
+msgid "Select memory type of the Harvard architecture"
+msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+
+#: tform7.button1.caption
+msgid "&Cancel"
+msgstr "&Mégse"
+
+#: tform7.button5.caption
+msgid "Button5"
+msgstr "Button5"
+
+#: tform7.caption
+msgid "Form7"
+msgstr "Form7"
+
+#: tform7.editbutton1.text
+msgctxt "tform7.editbutton1.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+#: tform7.editbutton2.text
+msgctxt "tform7.editbutton2.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+#: tform7.label1.caption
+msgid "Start address"
+msgstr "Kezdőcím"
+
+#: tform7.label2.caption
+msgid "End address"
+msgstr "Végcím"
+
+#: tform7.label3.caption
+msgid "Bytes"
+msgstr "Bájtok"
+
+#: tform7.radiogroup1.hint
+msgctxt "tform7.radiogroup1.hint"
+msgid "Select memory type of the Harvard architecture"
+msgstr "A Harvard-architektúra memóriatípusának kiválasztása"

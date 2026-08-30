@@ -61,9 +61,11 @@ type
   { TForm1 }
   TForm1 = class(TForm)
     About:                     TAction;
+    IRQ: TAction;
     Edit1: TEdit;
     Label1: TLabel;
     Label2: TLabel;
+    MenuItem40: TMenuItem;
     Panel2: TPanel;
     ResetPorts: TAction;
     ActionList1:               TActionList;
@@ -161,6 +163,7 @@ type
     ToolButton13:              TToolButton;
     ToolButton14:              TToolButton;
     ToolButton15:              TToolButton;
+    ToolButton16: TToolButton;
     ToolButton2:               TToolButton;
     ToolButton3:               TToolButton;
     ToolButton4:               TToolButton;
@@ -182,6 +185,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure HelpExecute(Sender: TObject);
+    procedure IRQExecute(Sender: TObject);
     procedure LoadChangePluginExecute(Sender: TObject);
     procedure LoadRegisterValuesFromCPUExecute(Sender: TObject);
     procedure LoadStatusExecute(Sender: TObject);
@@ -302,7 +306,7 @@ resourcestring
   MSG29 = 'Cannot save ''%s'' memory content.';
   MSG30 = 'Load memory content from file';
   MSG31 = 'Cannot load ''%s'' memory content.';
-  MSG32 = 'Binary file|*.bin|All file|*.*';
+  MSG32 = 'Binary file|*.bin|Intel hexa file|*.hex|All file|*.*';
   MSG33 = 'ASCII console (address: %sh)';
   MSG34 = 'I/O port (address: %sh)';
 
@@ -791,6 +795,7 @@ begin
       SaveRegisterValuesToCPU.Enabled := True;
       Reset.Enabled := True;
       NMI.Enabled := True;
+      IRQ.Enabled := True;
       Step.Enabled := True;
       Run.Enabled := True;
       Stop.Enabled := True;
@@ -827,6 +832,7 @@ begin
       SaveRegisterValuesToCPU.Enabled := False;
       Reset.Enabled := False;
       NMI.Enabled := False;
+      IRQ.Enabled := False;
       Step.Enabled := False;
       Run.Enabled := False;
       Stop.Enabled := False;
@@ -887,6 +893,20 @@ procedure TForm1.NMIExecute(Sender: TObject);
 begin
   CurrentProcessor.NMI;
   RefreshRegisters(opVar2List);
+end;
+
+// REQUEST IRQ
+procedure TForm1.IRQExecute(Sender: TObject);
+begin
+  begin
+    StatusBar1.Panels.Items[2].Text := Format(MSG12, [IntToHex(FPortIntVector, 2)]);
+    Timer1.Enabled := True;
+    if Assigned(CurrentProcessor) then
+    begin
+      CurrentProcessor.IRQ(FPortIntVector);
+      RefreshRegisters(opVar2List);
+    end;
+  end;
 end;
 
 // RUN PROGRAM BY STEP
@@ -1010,12 +1030,19 @@ begin
       LoadStream := TMemoryStream.Create;
       try
         try
-          LoadStream.LoadFromFile(FileName);
-          LoadStream.Position := 0;
-          for i := Form7.AddressFrom to Form7.AddressTo do
+          if OpenDialog1.FilterIndex <> 1 then
           begin
-            LoadStream.ReadBuffer(Data, 1);
-            Form1.FMemory[Form7.Bank, i] := Data;
+            // load from .bin file
+            LoadStream.LoadFromFile(FileName);
+            LoadStream.Position := 0;
+            for i := Form7.AddressFrom to Form7.AddressTo do
+            begin
+              LoadStream.ReadBuffer(Data, 1);
+              Form1.FMemory[Form7.Bank, i] := Data;
+            end;
+          end else
+          begin
+            // load from .hex file
           end;
         except
           ShowMessage(MSG01 + Format(MSG31, [FileName]));
@@ -1052,12 +1079,19 @@ begin
       SaveStream := TMemoryStream.Create;
       try
         try
-          for i := Form7.AddressFrom to Form7.AddressTo do
+          if SaveDialog1.FilterIndex <> 1 then
           begin
-            Data := FMemory[Form7.Bank, i];
-            SaveStream.WriteBuffer(Data, 1);
+            // save to .bin file
+            for i := Form7.AddressFrom to Form7.AddressTo do
+            begin
+              Data := FMemory[Form7.Bank, i];
+              SaveStream.WriteBuffer(Data, 1);
+            end;
+            SaveStream.SaveToFile(FileName);
+          end else
+          begin
+            // save to .hex file
           end;
-          SaveStream.SaveToFile(FileName);
         except
           ShowMessage(MSG01 + Format(MSG29, [FileName]));
         end;
@@ -1222,6 +1256,7 @@ begin
   SaveRegisterValuesToCPU.Enabled := False;
   Reset.Enabled := False;
   NMI.Enabled := False;
+  IRQ.Enabled := False;
   Step.Enabled := False;
   Run.Enabled := False;
   Stop.Enabled := False;

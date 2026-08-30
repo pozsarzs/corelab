@@ -10,6 +10,7 @@ skinparam nodesep 10
 skinparam packageStyle rectangle
 skinparam ranksep 10
 skinparam shadowing false
+skinparam monochrome true
 
 package "Command Engine" {
 

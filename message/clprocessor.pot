@@ -204,11 +204,11 @@ msgid "Cannot load '%s' memory content."
 msgstr ""
 
 #: frmmain:msg32
-msgid "Binary file|*.bin|All file|*.*"
+msgid "Binary file|*.bin|Intel hexa file|*.hex|All file|*.*"
 msgstr ""
 
 #: frmmain:msg33
-msgid "ASCII console (a/v: %sh/%sh)"
+msgid "ASCII console (address: %sh)"
 msgstr ""
 
 #: frmmain:msg34

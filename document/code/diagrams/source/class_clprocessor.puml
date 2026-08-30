@@ -1,0 +1,106 @@
+@startuml
+
+title CLProcessor application class diagram
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+left to right direction
+skinparam monochrome true
+
+class TCPU <<abstract>> {
+  --
+  +ConnectBus(const Bus: ISysBus)
+  +Create()
+  +Destroy()
+  --
+  +SetRegister(const RegName: PChar; AValue: Word) <<abstract>>
+  +GetRegister(const RegName: PChar): Word <<abstract>>
+  +GetRegisterCount(): Byte <<abstract>>
+  +GetRegisterName(AIndex: Byte): PChar <<abstract>>
+  +GetRegisterSize(AIndex: Byte): Byte <<abstract>>
+  +Run()
+  +Step() <<abstract>>
+  +Stop()
+  +GetCurrentInstruction(): TLogRec <<abstract>>
+  +IRQ()
+  +NMI()
+  +CheckInterrupts(): Boolean
+  +Reset() <<abstract>>
+  +LoadState(AStream: TStream): Boolean <<abstract>>
+  +SaveState(AStream: TStream): Boolean <<abstract>>
+  --
+  AddressWidth: Byte {read}
+  Architecture: TArchitecture {read}
+  Cycles: QWord {read}
+  Description: PChar {read}
+  Enabled: Boolean {read/write}
+  Endianness: TEndianness {read}
+  Halted: Boolean {read}
+  HasSeparateIOBus: Boolean {read}
+  InstanceID: Integer {read/write}
+  Instructions: QWord {read}
+  InterruptEnabled: Boolean {read}
+  MaxCodeAddress: DWord {read}
+  MaxIOPortAddress: DWord {read}
+  MaxMemAddress: DWord {read}
+  Modname: PChar {read}
+  OnEvent: TCPUEventHandler {read/write}
+  Running: Boolean {read}
+  Version: TSemanticVersion {read}
+}
+
+interface ISysBus
+
+class TTestSysBus {
+  +ReadMemory(AAddress: DWord): Byte
+  +WriteMemory(AAddress: DWord; AValue: Byte)
+  +ReadPort(APort: Word): Byte
+  +WritePort(APort: Word; AValue: Byte)
+}
+
+class TForm1 {
+  --
+  +ImpExpProperties(Direction: TOpDirection)
+  +InterruptHandler(Sender: TIOPort; AVector: Byte)
+  +RefreshProperties(Direction: TOpDirection)
+  +RefreshRegisters(Direction: TOpDirection)
+  +SetIgnoreHelp(AIgnoreHelp: Boolean)
+  +SetPluginDirectory(APluginDirectory: string)
+  +GetMemoryCell(ABank: Integer; AAddress: DWord): Byte
+  +SetMemoryCell(ABank: Integer; AAddress: DWord; AValue: Byte)
+}
+
+class T8080CPU <<example plugin>> {
+}
+
+T8080CPU --|> TCPU
+TTestSysBus ..|> ISysBus
+TForm1 --> TCPU : manages / tests
+TForm1 --> TTestSysBus : provides test bus
+TCPU --> ISysBus : connected bus
+TTestSysBus --> TForm1 : accesses emulated memory/I/O
+
+note right of TCPU
+  Base class for processor plugins.
+  Concrete CPU plugins derive from TCPU.
+end note
+
+note right of TTestSysBus
+  Test implementation of ISysBus.
+  Provides access to the emulated
+  memory and I/O devices.
+end note
+
+note bottom of TForm1
+  Event handlers are intentionally omitted.
+  Only methods directly involved in
+  plugin operation/testing are shown.
+end note
+
+@enduml
