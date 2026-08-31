@@ -1030,7 +1030,7 @@ begin
       LoadStream := TMemoryStream.Create;
       try
         try
-          if OpenDialog1.FilterIndex <> 1 then
+          if OpenDialog1.FilterIndex <> 2 then
           begin
             // load from .bin file
             LoadStream.LoadFromFile(FileName);
@@ -1079,7 +1079,7 @@ begin
       SaveStream := TMemoryStream.Create;
       try
         try
-          if SaveDialog1.FilterIndex <> 1 then
+          if SaveDialog1.FilterIndex <> 2 then
           begin
             // save to .bin file
             for i := Form7.AddressFrom to Form7.AddressTo do

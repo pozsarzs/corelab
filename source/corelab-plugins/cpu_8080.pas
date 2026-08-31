@@ -110,33 +110,26 @@ end;
 // INTERRUPT HANDLER
 procedure T8080CPU.DoInterrupt(AEvent: TCPUEvent);
 begin
-  inherited DoInterrupt(AEvent); // Értesíti a gazdaprogramot
-
+  // send event to host
+  inherited DoInterrupt(AEvent); 
   if AEvent = ceInterrupt then
   begin
-    // Megszakítás elfogadása után automatikusan tiltjuk a továbbiakat
+    // prohibit further interruption
     FInterruptEnabled := false; 
-    
-    // A 8080-as architektúra szerint a periféria által küldött vektor 
-    // egy végrehajtandó utasítás, jellemzően egy RST utasítás ($C7, $CF, stb.)
-    // Vagy dekódolod manuálisan (mint egy RST), vagy beállítod a mikrokód futtatására
-    
     if (FIRQVector >= $C0) and ((FIRQVector and $07) = $07) then
     begin
-       // Ha RST utasítás jött (ami a leggyakoribb):
-       // Visszatérési cím mentése a verembe
-       Dec(FRegs.SP);
-       FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
-       Dec(FRegs.SP);
-       FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
-       
-       // Ugrás a vektor alapján (RST n = n * 8)
-       FRegs.PC := ((FIRQVector shr 3) and $07) * 8;
+      // RST interrupt instructions
+      // save return address to stack
+      Dec(FRegs.SP);
+      FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
+      Dec(FRegs.SP);
+      FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
+      // jump based on vector (RST n = n * 8)
+      FRegs.PC := ((FIRQVector shr 3) and $07) * 8;
     end
     else
     begin
-       // Ide jöhet a többi megszakítási utasítás (pl. CALL vektor) feldolgozása, 
-       // ha a periféria ilyet küld.
+      // other interrupt instructions (e.g. CALL vector)
     end;
   end;
 end;
