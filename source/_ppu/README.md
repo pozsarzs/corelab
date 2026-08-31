@@ -6,6 +6,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## Pascal unit files  
 
-|name        |description                    |
-|------------|-------------------------------|
-|ucommon.pas |common functions and procedures|
+|name         |description                    |
+|-------------|-------------------------------|
+|ucommon.pas  |common functions and procedures|
+|uintelhex.pas|Intel hex file handler         |

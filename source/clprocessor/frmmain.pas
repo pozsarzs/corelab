@@ -22,7 +22,7 @@ uses
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_cpu,
   core_ioport, frmabout, frmhexviewer, frmrunlogger, frmexdepmemory,
-  frmloadsavememory, sysbus, ioport_console, ioport_standard, ucommon;
+  frmloadsavememory, sysbus, ioport_console, ioport_standard, ucommon, uintelhex;
 const
   MEM_SIZE = 1024;
   IOADD_CONSOLE = $A0;
@@ -303,12 +303,17 @@ resourcestring
   MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Read-only!';
   MSG28 = 'Save memory content to file';
-  MSG29 = 'Cannot save ''%s'' memory content.';
+  MSG29 = 'Cannot save memory content to ''%s'' binary file.';
   MSG30 = 'Load memory content from file';
-  MSG31 = 'Cannot load ''%s'' memory content.';
+  MSG31 = 'Cannot load memory content from ''%s'' binary file.';
   MSG32 = 'Binary file|*.bin|Intel hexa file|*.hex|All file|*.*';
   MSG33 = 'ASCII console (address: %sh)';
   MSG34 = 'I/O port (address: %sh)';
+  MSG35 = 'Cannot load memory content from ''%s'' Intel hexa file.';
+  MSG36 = 'Cannot save memory content to ''%s'' Intel hexa file.';
+  MSG37 = 'Data converting error.';
+  MSG38 = 'Checksum error.';
+  MSG39 = 'Unexpected error.';
 
 // ----  TESTSYSBUS CLASS'S METHODS ----
 
@@ -1022,17 +1027,19 @@ begin
   if OpenDialog1.Execute then
   begin
     Filename := OpenDialog1.FileName;
-    Form7.Architecture := CurrentProcessor.Architecture;
+    if Assigned(CurrentProcessor)
+      then Form7.Architecture := CurrentProcessor.Architecture
+      else Form7.Architecture := arNeumann;
     Form7.Direction := true;
     Form7.MemSize := MEM_SIZE;
     if Form7.ShowModal = mrCancel then exit else
     begin
       LoadStream := TMemoryStream.Create;
       try
-        try
-          if OpenDialog1.FilterIndex <> 2 then
-          begin
-            // load from .bin file
+        if OpenDialog1.FilterIndex <> 2 then
+        begin
+          // load from .bin file
+          try
             LoadStream.LoadFromFile(FileName);
             LoadStream.Position := 0;
             for i := Form7.AddressFrom to Form7.AddressTo do
@@ -1040,12 +1047,23 @@ begin
               LoadStream.ReadBuffer(Data, 1);
               Form1.FMemory[Form7.Bank, i] := Data;
             end;
-          end else
-          begin
-            // load from .hex file
+          except
+            ShowMessage(MSG01 + Format(MSG31, [FileName]));
           end;
-        except
-          ShowMessage(MSG01 + Format(MSG31, [FileName]));
+        end else
+        begin
+          // clear target memory
+          case Form7.Bank of
+            0: ClearCodeMemoryExecute(Sender);
+            1: ClearDataMemoryExecute(Sender);
+          end;
+          // load from .hex file
+          case LoadFromIntelHex(Filename, FMemory[Form7.Bank]) of
+            1: ShowMessage(MSG01 + Format(MSG35, [FileName]));
+            2: ShowMessage(MSG01 + MSG37);
+            3: ShowMessage(MSG01 + MSG38);
+            255: ShowMessage(MSG01 + MSG39);
+          end;
         end;
       finally
         LoadStream.Free;
@@ -1062,7 +1080,9 @@ var
   i:          DWord;
   Data:       Byte;
 begin
-  Form7.Architecture := CurrentProcessor.Architecture;
+  if Assigned(CurrentProcessor)
+    then Form7.Architecture := CurrentProcessor.Architecture
+    else Form7.Architecture := arNeumann;
   Form7.Direction := false;
   Form7.MemSize := MEM_SIZE;
   if Form7.ShowModal = mrCancel then Exit else
@@ -1078,22 +1098,26 @@ begin
       Filename := SaveDialog1.FileName;
       SaveStream := TMemoryStream.Create;
       try
-        try
-          if SaveDialog1.FilterIndex <> 2 then
-          begin
-            // save to .bin file
+        if SaveDialog1.FilterIndex <> 2 then
+        begin
+          // save to .bin file
+          try
             for i := Form7.AddressFrom to Form7.AddressTo do
             begin
               Data := FMemory[Form7.Bank, i];
               SaveStream.WriteBuffer(Data, 1);
             end;
             SaveStream.SaveToFile(FileName);
-          end else
-          begin
-            // save to .hex file
+          except
+            ShowMessage(MSG01 + Format(MSG29, [FileName]));
           end;
-        except
-          ShowMessage(MSG01 + Format(MSG29, [FileName]));
+        end else
+        begin
+          // save to .hex file
+          case SaveToIntelHex(Filename, FMemory[Form7.Bank]) of
+            1: ShowMessage(MSG01 + Format(MSG36, [FileName]));
+            255: ShowMessage(MSG01 + MSG39);
+          end;
         end;
       finally
         SaveStream.Free;

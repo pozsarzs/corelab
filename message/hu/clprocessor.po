@@ -238,8 +238,8 @@ msgstr "Memóriatartalom mentése fájlba"
 
 #: frmmain.msg29
 #, object-pascal-format
-msgid "Cannot save '%s' memory content."
-msgstr "A(z) „%s” memóriatartalma nem menthető."
+msgid "Cannot save memory content to '%s' binary file."
+msgstr "Memóriatartalom mentése '%s' bináris fájlba sikertelen."
 
 #: frmmain.msg30
 msgid "Load memory content from file"
@@ -247,8 +247,8 @@ msgstr "Memóriatartalom betöltése fájlból"
 
 #: frmmain.msg31
 #, object-pascal-format
-msgid "Cannot load '%s' memory content."
-msgstr "A(z) „%s” memóriatartalma nem tölthető be."
+msgid "Cannot load memory content from '%s' binary file."
+msgstr "Memóriatartalom betöltése '%s' bináris fájlból sikertelen."
 
 #: frmmain.msg32
 msgid "Binary file|*.bin|Intel hexa file|*.hex|All file|*.*"
@@ -263,6 +263,30 @@ msgstr "ASCII-konzol (cím: %sh)"
 #, object-pascal-format
 msgid "I/O port (address: %sh)"
 msgstr "I/O port (cím: %sh)"
+
+#: frmmain.msg35
+#, object-pascal-format
+msgctxt "frmmain.msg35"
+msgid "Cannot load memory content from '%s' Intel hexa file."
+msgstr "Memóriatartalom betöltése '%s' Intel hexa fájlból sikertelen."
+
+#: frmmain.msg36
+#, object-pascal-format
+msgctxt "frmmain.msg36"
+msgid "Cannot save memory content to '%s' Intel hexa file."
+msgstr "Memóriatartalom mentése '%s' Intel hexa fájlba sikertelen."
+
+#: frmmain.msg37
+msgid "Data converting error."
+msgstr "Adattípus-konverziós hiba."
+
+#: frmmain.msg38
+msgid "Checksum error."
+msgstr "Hibás ellenőrzőösszeg."
+
+#: frmmain.msg39
+msgid "Unexpected error."
+msgstr "Váratlan hiba."
 
 #: frmrunlogger.msg01
 msgctxt "frmrunlogger.msg01"
@@ -760,3 +784,11 @@ msgstr "Bájtok"
 msgctxt "tform7.radiogroup1.hint"
 msgid "Select memory type of the Harvard architecture"
 msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+
+#, object-pascal-format
+#~ msgid "Cannot save '%s' memory content."
+#~ msgstr "A(z) „%s” memóriatartalma nem menthető."
+
+#, object-pascal-format
+#~ msgid "Cannot load '%s' memory content."
+#~ msgstr "A(z) „%s” memóriatartalma nem tölthető be."
