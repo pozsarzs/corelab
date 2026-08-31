@@ -27,8 +27,3 @@ the original token text without further interpretation.
 |name     |type    |access|description              |
 |---------|--------|------|-------------------------|
 |`RawText`|`string`|read  |Text stored in the token.|
-
-### Token list
-
-`TTokenList` is a specialized `TObjectList<TToken>` used to store token objects.
-As a `TObjectList`, it owns the contained `TToken` instances.

@@ -10,11 +10,9 @@ This is an output with green LEDs, each bit controls a specific LED within a Byt
 
 ### I/O behaviour
 
-|port|description|
-
-|---|---|
-
-|0|Each input bit controls the corresponding LED; `FDataInNegation` may invert the input. Read returns `00h` while enabled and `FFh` while disabled.|
+|port|description                                                                                                                                      |
+|----|-------------------------------------------------------------------------------------------------------------------------------------------------|
+|0   |Each input bit controls the corresponding LED; `FDataInNegation` may invert the input. Read returns `00h` while enabled and `FFh` while disabled.|
 
 ### Abbreviations
 
@@ -29,39 +27,38 @@ This is an output with green LEDs, each bit controls a specific LED within a Byt
 - _Vi_: means 'virtual',
 - _Wr_: means 'write'.
 
-
 ### Private fields
 
-|name|type|description|default|
-|---|---|---|---|
-|`FValue`|Byte|Device-specific state or GUI object|0|
+|name    |type|description                        |default|
+|--------|----|-----------------------------------|-------|
+|`FValue`|Byte|Device-specific state or GUI object|0      |
 
 ### Protected fields
 
-|name|type|description|default|
-|---|---|---|---|
-|`FPanel`|TPanel|Device-specific state or GUI object|nil|
-|`FPaintBox`|TPaintBox|Device-specific state or GUI object|nil|
-|`FLED`|array[0..MAXX] of TLEDRound|Device-specific state or GUI object||
+|name       |type                       |description                        |default|
+|-----------|---------------------------|-----------------------------------|-------|
+|`FPanel`   |TPanel                     |Device-specific state or GUI object|nil    |
+|`FPaintBox`|TPaintBox                  |Device-specific state or GUI object|nil    |
+|`FLED`     |array[0..MAXX] of TLEDRound|Device-specific state or GUI object|       |
 
 ### Protected methods
 
-|name|flags|description|
-|---|:---:|---|
-|`procedure PaintBoxPaint(Sender: TObject);`||Paints the device representation on the panel.|
+|name                                       |flags|description                                   |
+|-------------------------------------------|-----|----------------------------------------------|
+|`procedure PaintBoxPaint(Sender: TObject);`|     |Paints the device representation on the panel.|
 
 ### Public methods
 
-|name|flags|description|
-|---|:---:|---|
-|`constructor Create; override;`|Or|Initialises the object and its device-specific state.|
-|`destructor Destroy; override;`|Or|Releases the object and its allocated resources.|
-|`procedure Reset; override;`|Or|Resets the device state.|
-|`function ReadPort(APort: Word): Byte; override;`|Or|Reads the selected virtual I/O port.|
-|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or|Writes the selected virtual I/O port.|
-|`function LoadState(AStream: TStream): Boolean; override;`|Or|Loads the device state from a stream.|
-|`function SaveState(AStream: TStream): Boolean; override;`|Or|Saves the device state to a stream.|
-|`procedure CreatePanel; override;`|Or|Creates the graphical user-interface panel.|
+|name                                                       |flags|description                                          |
+|-----------------------------------------------------------|-----|-----------------------------------------------------|
+|`constructor Create; override;`                            |Or   |Initialises the object and its device-specific state.|
+|`destructor Destroy; override;`                            |Or   |Releases the object and its allocated resources.     |
+|`procedure Reset; override;`                               |Or   |Resets the device state.                             |
+|`function ReadPort(APort: Word): Byte; override;`          |Or   |Reads the selected virtual I/O port.                 |
+|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or   |Writes the selected virtual I/O port.                |
+|`function LoadState(AStream: TStream): Boolean; override;` |Or   |Loads the device state from a stream.                |
+|`function SaveState(AStream: TStream): Boolean; override;` |Or   |Saves the device state to a stream.                  |
+|`procedure CreatePanel; override;`                         |Or   |Creates the graphical user-interface panel.          |
 
 ### Exported functions and procedures
 
@@ -70,17 +67,17 @@ This is an output with green LEDs, each bit controls a specific LED within a Byt
 - on Windows: `stdcall`,
 - on Unix-like OS: `cdecl`.
 
-|name|exported name|description|
-|---|---|---|
-|`function CreatePort: TIOPort;`|ioport_create|Create a new device object.|
-|`procedure DestroyPort(APort: TIOPort);`|ioport_destroy|Destroy the device object.|
+|name                                                                                    |exported name       |description                                     |
+|----------------------------------------------------------------------------------------|--------------------|------------------------------------------------|
+|`function CreatePort: TIOPort;`                                                         |ioport_create       |Create a new device object.                     |
+|`procedure DestroyPort(APort: TIOPort);`                                                |ioport_destroy      |Destroy the device object.                      |
 |`procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);`|ioport_setinthandler|Set the interrupt callback and interrupt vector.|
-|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_loadstate|Load the device state from a stream.|
-|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`|ioport_savestate|Save the device state to a stream.|
-|`procedure CreatePanel(APort: TIOPort);`|ioport_createpanel|Create the graphical user-interface panel.|
-|`procedure FreePanel(APort: TIOPort);`|ioport_freepanel|Destroy the graphical user-interface panel.|
-|`procedure ShowPanel(APort: TIOPort);`|ioport_showpanel|Show the graphical user-interface panel.|
-|`procedure HidePanel(APort: TIOPort);`|ioport_hidepanel|Hide the graphical user-interface panel.|
-|`procedure RenamePanel(APort: TIOPort; ACaption: PChar);`|ioport_renamepanel|Change the GUI panel caption.|
-|`function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;`|ioport_resizepanel|Resize the GUI panel.|
-|`function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;`|ioport_movepanel|Move the GUI panel.|
+|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`                        |ioport_loadstate    |Load the device state from a stream.            |
+|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`                        |ioport_savestate    |Save the device state to a stream.              |
+|`procedure CreatePanel(APort: TIOPort);`                                                |ioport_createpanel  |Create the graphical user-interface panel.      |
+|`procedure FreePanel(APort: TIOPort);`                                                  |ioport_freepanel    |Destroy the graphical user-interface panel.     |
+|`procedure ShowPanel(APort: TIOPort);`                                                  |ioport_showpanel    |Show the graphical user-interface panel.        |
+|`procedure HidePanel(APort: TIOPort);`                                                  |ioport_hidepanel    |Hide the graphical user-interface panel.        |
+|`procedure RenamePanel(APort: TIOPort; ACaption: PChar);`                               |ioport_renamepanel  |Change the GUI panel caption.                   |
+|`function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;`              |ioport_resizepanel  |Resize the GUI panel.                           |
+|`function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;`                    |ioport_movepanel    |Move the GUI panel.                             |

@@ -16,19 +16,19 @@ The implementation suppresses the two inner dots on rows 1, 2, 4 and 5 to reprod
 
 ### Protected members
 
-|name|flags|description|
-|---|:---:|---|
-|`procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);`| |Draws a single display dot into the internal buffer.|
-|`CHARMAP_TIL311`|Co|16-entry hexadecimal character map; each entry contains seven 4-bit rows for characters `0`–`F`.|
+|name                                                |flags|description                                                                                     |
+|----------------------------------------------------|-----|------------------------------------------------------------------------------------------------|
+|`procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);`|     |Draws a single display dot into the internal buffer.                                            |
+|`CHARMAP_TIL311`                                    |Co   |16-entry hexadecimal character map; each entry contains seven 4-bit rows for characters `0`–`F`.|
 
 ### Public methods
 
-|name|flags|description|
-|---|:---:|---|
-|`constructor Create;`|Or|Initializes the TIL311 display, its module information and bitmap buffer.|
-|`destructor Destroy;`|Or|Destroys the display object.|
-|`procedure DrawToBuffer(AInputData: TDisplayedData);`|Or|Clears the buffer and renders the selected hexadecimal value and decimal points.|
-|`procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);`|Or|Copies the internal bitmap buffer to the target canvas at the specified position.|
+|name                                                          |flags|description                                                                      |
+|--------------------------------------------------------------|-----|---------------------------------------------------------------------------------|
+|`constructor Create;`                                         |Or   |Initializes the TIL311 display, its module information and bitmap buffer.        |
+|`destructor Destroy;`                                         |Or   |Destroys the display object.                                                     |
+|`procedure DrawToBuffer(AInputData: TDisplayedData);`         |Or   |Clears the buffer and renders the selected hexadecimal value and decimal points. |
+|`procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);`|Or   |Copies the internal bitmap buffer to the target canvas at the specified position.|
 
 ### Object properties and inherited interface
 
@@ -38,11 +38,11 @@ For TIL311 rendering, the `Value` field is used as an index into the 16-characte
 
 ### Module information
 
-|item|value|
-|---|---|
-|Module name|`TIL311`|
-|Description|`Texas Instruments TIL311 LED display (1972)`|
-|Buffer width|118 pixels|
-|Buffer height|122 pixels|
-|FrameX|14|
-|FrameY|28|
+|item         |value                                        |
+|-------------|---------------------------------------------|
+|Module name  |`TIL311`                                     |
+|Description  |`Texas Instruments TIL311 LED display (1972)`|
+|Buffer width |118 pixels                                   |
+|Buffer height|122 pixels                                   |
+|FrameX       |14                                           |
+|FrameY       |28                                           |

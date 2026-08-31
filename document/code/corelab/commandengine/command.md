@@ -32,23 +32,20 @@ method.
 
 ### Public methods
 
-|name|flags|description|
-|---|:---:|---|
-|`constructor Create;`|Vi|Initializes the command state and sets the default scope to `csEverywhere`.|
-|`destructor Destroy;`|Or|Destroys the command object.|
-|`function Execute(Tokens: TTokenList; AContext: TCommandContext): Integer;`|Vi|Abstract command operation implemented by descendants.|
-|`procedure SetParamCount(ACount: Byte);`| |Sets the actual parameter count.|
+|name                                                                       |flags|description                                                                |
+|---------------------------------------------------------------------------|:---:|---------------------------------------------------------------------------|
+|`constructor Create;`                                                      |Vi   |Initializes the command state and sets the default scope to `csEverywhere`.|
+|`destructor Destroy;`                                                      |Or   |Destroys the command object.                                               |
+|`function Execute(Tokens: TTokenList; AContext: TCommandContext): Integer;`|Vi   |Abstract command operation implemented by descendants.                     |
+|`procedure SetParamCount(ACount: Byte);`                                   |     |Sets the actual parameter count.                                           |
 
 ### Public properties
 
-|name|type|access|description|
-|---|---|---|---|
-|`ActionName`|`string`|read|Action name associated with the command.|
-|`ExitRequested`|`Boolean`|read|Indicates whether execution requested an exit.|
-|`MinParamCount`|`Byte`|read|Minimum parameter count.|
-|`MaxParamCount`|`Byte`|read|Maximum parameter count.|
-|`ParamCount`|`Byte`|read/write|Actual parameter count; the write operation is handled by `SetParamCount`.|
-|`CommandScope`|`TCommandScope`|read|Execution scope.|
-
-`SetParamCount` applies `EnsureRange(ACount, 0, 255)`, although `ACount` is
-already a `Byte`.
+|name           |type           |access    |description                                                               |
+|---------------|---------------|----------|--------------------------------------------------------------------------|
+|`ActionName`   |`string`       |read      |Action name associated with the command.                                  |
+|`ExitRequested`|`Boolean`      |read      |Indicates whether execution requested an exit.                            |
+|`MinParamCount`|`Byte`         |read      |Minimum parameter count.                                                  |
+|`MaxParamCount`|`Byte`         |read      |Maximum parameter count.                                                  |
+|`ParamCount`   |`Byte`         |read/write|Actual parameter count; the write operation is handled by `SetParamCount`.|
+|`CommandScope` |`TCommandScope`|read      |Execution scope.                                                          |

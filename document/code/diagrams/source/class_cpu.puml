@@ -12,167 +12,247 @@ skinparam ranksep 10
 skinparam shadowing false
 skinparam monochrome true
 
-package "CPU Architecture" {
+' ============================================================
+' Common CPU types
+' ============================================================
 
-  abstract class TCPU {
-    # FBus : ISysBus
-    # FInstanceID : Integer
-    # FOnEvent : TCPUEventHandler
-    # FModname : PChar
-    # FDescription : PChar
-    # FVersion : TSemanticVersion
-    # FArchitecture : TArchitecture
-    # FBitWidth : Byte
-    # FAddressWidth : Byte
-    # FEnabled : Boolean
-    # FEndianness : TEndianness
-    # FMaxMemAddress : QWord
-    # FMaxCodeAddress : QWord
-    # FMaxIOPortAddress : QWord
-    # FHasSeparateIOBus : Boolean
-    # FRunning : Boolean
-    # FHalted : Boolean
-    # FInterruptEnabled : Boolean
-    # FIRPending : Boolean
-    # FNMIpending : Boolean
-    # FCycles : QWord
-    # FInstructions : QWord
-    # FRegPtr : array of ^QWord
-    --
-    # EmitEvent(AEvent: TCPUEvent)
-    # DoInterrupt(AEvent: TCPUEvent)
-    --
-    + Create
-    + Destroy
-    + ConnectBus(Bus: ISysBus)
-    + SetRegister(RegName: PChar; AValue: QWord)
-    + GetRegister(RegName: PChar): QWord
-    + Reset
-    + Run
-    + Step
-    + Stop
-    + GetCurrentInstruction: PChar
-    + IRQ
-    + NMI
-    + CheckInterrupts: Boolean
-    + LoadState(AStream: TStream): Boolean
-    + SaveState(AStream: TStream): Boolean
-    --
-    + AddressWidth : Byte
-    + Architecture : TArchitecture
-    + BitWidth : Byte
-    + Cycles : QWord
-    + Description : PChar
-    + Enabled : Boolean
-    + Endianness : TEndianness
-    + Halted : Boolean
-    + HasSeparateIOBus : Boolean
-    + InstanceID : Integer
-    + Instructions : QWord
-    + InterruptEnabled : Boolean
-    + MaxCodeAddress : QWord
-    + MaxIOPortAddress : QWord
-    + MaxMemAddress : QWord
-    + Modname : PChar
-    + OnEvent : TCPUEventHandler
-    + Running : Boolean
-    + Version : TSemanticVersion
-  }
-
-  class T8080CPU {
-    # FRegs : T8080Registers
-    # LogRecord : TLastInstruction
-    # RegPointers : array[0..7] of PByte
-    # s : string
-    --
-    # UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte)
-    --
-    + Create
-    + Reset
-    + LoadState(AStream: TStream): Boolean
-    + SaveState(AStream: TStream): Boolean
-    + Step
-    + GetCurrentInstruction: PChar
-    + GetRegister(RegName: PChar): QWord
-    + SetRegister(RegName: PChar; Value: QWord)
-  }
-
-  class T8080Registers <<record>> {
-    + BC : Word
-    + DE : Word
-    + HL : Word
-    + AF : Word
-    + PC : Word
-    + SP : Word
-    --
-    + B : Byte
-    + C : Byte
-    + D : Byte
-    + E : Byte
-    + H : Byte
-    + L : Byte
-    + F : Byte
-    + A : Byte
-    + PCL : Byte
-    + PCH : Byte
-    + SPL : Byte
-    + SPH : Byte
-  }
-
-  class TLastInstruction <<record>> {
-    + Address : Word
-    + Opcode : Byte
-    + NumOperand : Byte
-    + Operands : array[1..2] of Word
-    + Mnemonic : string[12]
-  }
-
-  enum TArchitecture {
-    arHarvad
+enum TArchitecture {
+    arHarvard
     arNeumann
-  }
+}
 
-  enum TEndianness {
+enum TEndianness {
     enLittle
     enBig
-  }
+}
 
-  enum TCPUEvent {
+enum TCPUEvent {
     ceInstructionBoundary
     ceInterrupt
     ceHalt
     ceReset
-  }
-
-  interface ISysBus {
-    + MemRead(AAddress: UInt64): Byte
-    + MemWrite(AAddress: UInt64; AValue: Byte)
-    + CodeRead(AAddress: UInt64): Byte
-    + CodeWrite(AAddress: UInt64; AValue: Byte)
-    + IORead(APort: UInt64): Byte
-    + IOWrite(APort: UInt64; AValue: Byte)
-  }
-
-  TCPU <|-- T8080CPU
-  T8080CPU *-- T8080Registers
-  T8080CPU *-- TLastInstruction
-
-  TCPU ..> ISysBus : uses
-  TCPU ..> TArchitecture
-  TCPU ..> TEndianness
-  TCPU ..> TCPUEvent
-
-  note right of T8080CPU
-    Intel 8080 implementation
-
-    Module: 8080
-    Bit width: 8
-    Address width: 16
-    Endianness: Little
-    Architecture: von Neumann
-    Memory: $0000..$FFFF
-    I/O: $00..$FF
-  end note
 }
+
+class TSemanticVersion <<record>> {
+    Major: Integer
+    Minor: Integer
+    Patch: Integer
+
+    ToString(): string
+    Compare(AOther: TSemanticVersion): Integer
+}
+
+class TLogRec <<record>> {
+    InstCount: Integer
+    Address: string
+    OpCode: string
+    Mnemonic: string
+}
+
+' ============================================================
+' Event handling
+' ============================================================
+
+interface TCPUEventHandler <<procedure type>> {
+    (Sender: TObject, Event: TCPUEvent)
+}
+
+' ============================================================
+' System bus
+' ============================================================
+
+interface ISysBus <<external>> {
+    ReadMemory(Address: DWord): Byte
+    WriteMemory(Address: DWord, Data: Byte)
+}
+
+' ============================================================
+' Abstract CPU base class
+' ============================================================
+
+abstract class TCPU {
+    #FBus: ISysBus
+    #FInstanceID: Integer
+    #FOnEvent: TCPUEventHandler
+
+    #FModname: PChar
+    #FDescription: PChar
+    #FVersion: TSemanticVersion
+
+    #FAddressWidth: Byte
+    #FArchitecture: TArchitecture
+    #FEnabled: Boolean
+    #FEndianness: TEndianness
+    #FMaxCodeAddress: DWord
+    #FMaxIOPortAddress: DWord
+    #FMaxMemAddress: DWord
+    #FHasSeparateIOBus: Boolean
+
+    #FRunning: Boolean
+    #FHalted: Boolean
+    #FInterruptEnabled: Boolean
+    #FIRQPending: Boolean
+    #FIRQVector: Byte
+    #FNMIPending: Boolean
+
+    #FCycles: QWord
+    #FInstructions: QWord
+
+    #FRegPtr: array of ^Word
+
+    #EmitEvent(AEvent: TCPUEvent): virtual
+    #DoInterrupt(AEvent: TCPUEvent): virtual
+
+    +ConnectBus(const Bus: ISysBus): virtual
+
+    +Create()
+    +Destroy()
+
+    +SetRegister(RegName: PChar, AValue: Word): virtual {abstract}
+    +GetRegister(RegName: PChar): Word: virtual {abstract}
+    +GetRegisterCount(): Byte: virtual {abstract}
+    +GetRegisterName(AIndex: Byte): PChar: virtual {abstract}
+    +GetRegisterSize(AIndex: Byte): Byte: virtual {abstract}
+
+    +Run(): virtual
+    +Step(): virtual {abstract}
+    +Stop(): virtual
+
+    +GetCurrentInstruction(): TLogRec: virtual {abstract}
+
+    +IRQ(AVector: Byte): virtual
+    +NMI(): virtual
+    +CheckInterrupts(): Boolean
+
+    +Reset(): virtual {abstract}
+    +LoadState(AStream: TStream): Boolean: virtual {abstract}
+    +SaveState(AStream: TStream): Boolean: virtual {abstract}
+
+    +AddressWidth: Byte
+    +Architecture: TArchitecture
+    +Cycles: QWord
+    +Description: PChar
+    +Enabled: Boolean
+    +Endianness: TEndianness
+    +Halted: Boolean
+    +HasSeparateIOBus: Boolean
+    +InstanceID: Integer
+    +Instructions: QWord
+    +InterruptEnabled: Boolean
+    +MaxCodeAddress: DWord
+    +MaxIOPortAddress: DWord
+    +MaxMemAddress: DWord
+    +Modname: PChar
+    +OnEvent: TCPUEventHandler
+    +Running: Boolean
+    +Version: TSemanticVersion
+}
+
+' ============================================================
+' Intel 8080
+' ============================================================
+
+class T8080Registers <<record>> {
+    BC: Word
+    DE: Word
+    HL: Word
+    AF: Word
+    PC: Word
+    SP: Word
+
+    C: Byte
+    B: Byte
+    E: Byte
+    D: Byte
+    L: Byte
+    H: Byte
+    F: Byte
+    A: Byte
+
+    PCL: Byte
+    PCH: Byte
+    SPL: Byte
+    SPH: Byte
+}
+
+class TLastInstruction <<record>> {
+    Address: Word
+    Opcode: Byte
+    NumOperand: Byte
+    Operands: Word[1..2]
+    Mnemonic: string
+}
+
+class T8080CPU {
+    -LogRecord: TLastInstruction
+    -RegPointers: array[0..7] of PByte
+
+    #FRegs: T8080Registers
+
+    #UpdateFlags(
+        Value16: Word,
+        OldValue: Byte,
+        ValueToAdd: Byte
+    )
+
+    #DoInterrupt(AEvent: TCPUEvent): override
+
+    +Create(): override
+
+    +Reset(): override
+    +LoadState(AStream: TStream): Boolean: override
+    +SaveState(AStream: TStream): Boolean: override
+
+    +Step(): override
+    +GetCurrentInstruction(): TLogRec: override
+    +GetRegister(RegName: PChar): Word: override
+    +SetRegister(RegName: PChar, Value: Word): override
+    +GetRegisterCount(): Byte: override
+    +GetRegisterName(AIndex: Byte): PChar: override
+    +GetRegisterSize(AIndex: Byte): Byte: override
+}
+
+' ============================================================
+' Relationships
+' ============================================================
+
+T8080CPU --|> TCPU
+
+TCPU o-- ISysBus
+TCPU o-- TCPUEventHandler
+TCPU *-- TSemanticVersion
+
+TCPU ..> TArchitecture
+TCPU ..> TEndianness
+TCPU ..> TCPUEvent
+TCPU ..> TLogRec
+
+T8080CPU *-- T8080Registers
+T8080CPU *-- TLastInstruction
+
+T8080CPU ..> TCPUEvent
+T8080CPU ..> ISysBus
+T8080CPU ..> TLogRec
+
+note right of TCPU
+  Abstract CPU interface.
+  Concrete processors implement this
+  class.
+
+  The common control and
+  service API is
+  defined here.
+end note
+
+note right of T8080CPU
+  First CPU implementation.
+
+  Other CPUs for example:
+
+  T4004CPU --|> TCPU
+  T4040CPU --|> TCPU
+  T8008CPU --|> TCPU
+  TZ80CPU --|> TCPU
+end note
 
 @enduml

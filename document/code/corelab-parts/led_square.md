@@ -14,11 +14,11 @@ There are no additional protected fields declared by `TLEDSquare`.
 
 ### Public methods
 
-|name|flags|description|
-|---|:---:|---|
-|`constructor Create;`|Or|Initializes the square LED, its module information and bitmap buffer.|
-|`procedure DrawToBuffer(AIsOn: Boolean; AColor: TLEDColors; ABGColor: TColor);`|Or|Clears the background and renders the LED in its on or off state, including glow and reflection effects.|
-|`procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);`|Or|Copies the internal bitmap buffer to the target canvas at the specified position.|
+|name                                                                           |flags|description                                                                                             |
+|-------------------------------------------------------------------------------|-----|--------------------------------------------------------------------------------------------------------|
+|`constructor Create;`                                                          |Or   |Initializes the square LED, its module information and bitmap buffer.                                   |
+|`procedure DrawToBuffer(AIsOn: Boolean; AColor: TLEDColors; ABGColor: TColor);`|Or   |Clears the background and renders the LED in its on or off state, including glow and reflection effects.|
+|`procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);`                 |Or   |Copies the internal bitmap buffer to the target canvas at the specified position.                       |
 
 ### Object properties and inherited interface
 
@@ -28,18 +28,18 @@ The inherited `RETRO_COLORS` constant provides the predefined red, green and yel
 
 ### Rendering
 
-|state|appearance|
-|---|---|
-|On|Square LED filled with `OnColor`, with a `Glow` inner area and a white reflection.|
-|Off|Square LED filled with `OffColor`, with a silver reflection.|
+|state|appearance                                                                        |
+|-----|----------------------------------------------------------------------------------|
+|On   |Square LED filled with `OnColor`, with a `Glow` inner area and a white reflection.|
+|Off  |Square LED filled with `OffColor`, with a silver reflection.                      |
 
 ### Module information
 
-|item|value|
-|---|---|
-|Module name|`Square LED`|
-|Description|`Red, green or yellow color square LED`|
-|Buffer width|15 pixels|
-|Buffer height|15 pixels|
-|FrameX|1|
-|FrameY|1|
+|item         |value                                  |
+|-------------|---------------------------------------|
+|Module name  |`Square LED`                           |
+|Description  |`Red, green or yellow color square LED`|
+|Buffer width |15 pixels                              |
+|Buffer height|15 pixels                              |
+|FrameX       |1                                      |
+|FrameY       |1                                      |
