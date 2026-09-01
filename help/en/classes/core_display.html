@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TDisplay from core_display unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tdisplay-from-core_display-unit">TDisplay from core_display
+unit</h2>
+<p><code>TDisplay</code> is an abstract base class for graphical display
+implementations. It stores the displayed BCD value, seven-segment data,
+two decimal-point states, and a blank state. Derived classes provide the
+actual drawing and rendering operations.</p>
+<h3 id="tdisplayeddata-record"><code>TDisplayedData</code> record</h3>
+<table>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Blank</code></td>
+<td><code>Boolean</code></td>
+<td>Blank-display state</td>
+</tr>
+<tr class="even">
+<td><code>LeftDot</code></td>
+<td><code>Boolean</code></td>
+<td>Left decimal-point state</td>
+</tr>
+<tr class="odd">
+<td><code>RightDot</code></td>
+<td><code>Boolean</code></td>
+<td>Right decimal-point state</td>
+</tr>
+<tr class="even">
+<td><code>Segments</code></td>
+<td><code>Byte</code></td>
+<td>Seven-segment data; bits 0–6 are used</td>
+</tr>
+<tr class="odd">
+<td><code>Value</code></td>
+<td><code>Byte</code></td>
+<td>BCD value; bits 0–3 are used</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields">Protected fields</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Module name</td>
+</tr>
+<tr class="even">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>Short description</td>
+</tr>
+<tr class="odd">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Enable displaying</td>
+</tr>
+<tr class="even">
+<td><code>FBuffer</code></td>
+<td><code>TBitmap</code></td>
+<td>Internal drawing buffer</td>
+</tr>
+<tr class="odd">
+<td><code>FDisplayedData</code></td>
+<td><code>TDisplayedData</code></td>
+<td>Current display data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-constants">Protected constants</h3>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RETRO_RED_GLOW</code></td>
+<td><code>TColor</code></td>
+<td><code>$003333FF</code></td>
+<td>Retro-red LED glow color</td>
+</tr>
+<tr class="even">
+<td><code>RETRO_RED_ON</code></td>
+<td><code>TColor</code></td>
+<td><code>$000000FF</code></td>
+<td>Retro-red active color</td>
+</tr>
+<tr class="odd">
+<td><code>RETRO_RED_OFF</code></td>
+<td><code>TColor</code></td>
+<td><code>$00000040</code></td>
+<td>Retro-red inactive color</td>
+</tr>
+<tr class="even">
+<td><code>RETRO_RED_BG</code></td>
+<td><code>TColor</code></td>
+<td><code>$00000015</code></td>
+<td>Retro-red display background color</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 3%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Create the display and its internal bitmap buffer</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Vi</td>
+<td>Free the internal bitmap buffer</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Vi</td>
+<td>Clear blank and decimal-point states and reset segment/value
+data</td>
+</tr>
+<tr class="even">
+<td><code>procedure DrawToBuffer(AInputData: TDisplayedData);</code></td>
+<td>Ab,Vi</td>
+<td>Draw the supplied display data into the internal buffer; implemented
+by a derived class</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);</code></td>
+<td>Ab,Vi</td>
+<td>Render the display onto a target canvas; implemented by a derived
+class</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetBlank(AStatus: Boolean);</code></td>
+<td>Vi</td>
+<td>Set the blank state and redraw</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetLeftDot(AStatus: Boolean);</code></td>
+<td>Vi</td>
+<td>Set the left decimal-point state and redraw</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetRightDot(AStatus: Boolean);</code></td>
+<td>Vi</td>
+<td>Set the right decimal-point state and redraw</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetSegments(AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Set the seven-segment data and redraw</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetValue(AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Set the BCD value using the low four bits and redraw</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-properties">Public properties</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ModName</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Module name</td>
+</tr>
+<tr class="even">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Short description</td>
+</tr>
+<tr class="odd">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>Re/Wr</td>
+<td>Enable displaying</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

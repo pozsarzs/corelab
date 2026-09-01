@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TMemory from core_memory unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tmemory-from-core_memory-unit">TMemory from core_memory unit</h2>
+<p><code>TMemory</code> is the base memory component of the CoreLAB
+framework. It provides byte-addressable memory storage with configurable
+address-space size, RAM/ROM operation mode, enable state, instance
+identification and stream-based state persistence.</p>
+<h3 id="tmemorymode">TMemoryMode</h3>
+<p><code>TMemoryMode</code> defines the memory operation mode:</p>
+<table>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mmRAM</code></td>
+<td>Memory contents can be written when the memory is enabled.</td>
+</tr>
+<tr class="even">
+<td><code>mmROM</code></td>
+<td>Memory contents are read-only through <code>WriteMemory</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tmemorymodehelper">TMemoryModeHelper</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ToString</code></td>
+<td>Converts the current <code>TMemoryMode</code> value to its
+enumeration name.</td>
+</tr>
+<tr class="even">
+<td><code>FromString(const Value: string)</code></td>
+<td>Converts an enumeration name to a <code>TMemoryMode</code> value
+using RTTI.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tsemanticversion">TSemanticVersion</h3>
+<p><code>TSemanticVersion</code> stores the module version as three
+integer components.</p>
+<table>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Major</code></td>
+<td><code>Integer</code></td>
+<td>Major version number.</td>
+</tr>
+<tr class="even">
+<td><code>Minor</code></td>
+<td><code>Integer</code></td>
+<td>Minor version number.</td>
+</tr>
+<tr class="odd">
+<td><code>Patch</code></td>
+<td><code>Integer</code></td>
+<td>Patch version number.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tsemanticversionhelper">TSemanticVersionHelper</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ToString</code></td>
+<td>Formats the version as <code>Major.Minor.Patch</code>.</td>
+</tr>
+<tr class="even">
+<td><code>Compare(AOther: TSemanticVersion)</code></td>
+<td>Compares the other version with the current version. Returns
+<code>-1</code>, <code>0</code> or <code>1</code> for newer, equal or
+older.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields">Protected fields</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 14%" />
+<col style="width: 36%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FAddressRangeSize</code></td>
+<td><code>DWord</code></td>
+<td>Number of addressable memory cells.</td>
+<td><code>1024</code></td>
+</tr>
+<tr class="even">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>Short module description.</td>
+<td><code>Standard memory with 8 bit data width.</code></td>
+</tr>
+<tr class="odd">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Enables memory access without bus detachment.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FInstanceID</code></td>
+<td><code>Integer</code></td>
+<td>Module instance identifier.</td>
+<td>not explicitly initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FMemoryMode</code></td>
+<td><code>TMemoryMode</code></td>
+<td>RAM or ROM operation mode.</td>
+<td><code>mmRAM</code></td>
+</tr>
+<tr class="even">
+<td><code>FMemCells</code></td>
+<td><code>array of Byte</code></td>
+<td>Internal byte-addressable memory storage.</td>
+<td>1024 bytes initially</td>
+</tr>
+<tr class="odd">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Module name.</td>
+<td><code>RAM/ROM</code></td>
+</tr>
+<tr class="even">
+<td><code>FVersion</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>Module version.</td>
+<td><code>0.1.0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-methods">Protected methods</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure SetFAddressRangeSize(AAddressRangeSize: DWord);</code></td>
+<td>Sets the address-space size and resizes the memory array. Values
+below <code>16</code> are ignored; the maximum size is <code>2^24</code>
+bytes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 2%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Initializes a 1024-byte RAM memory module, disables it, sets its
+module information and clears its memory contents.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Destroys the memory object.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Vi</td>
+<td>Fills all allocated memory cells with zero.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadMemory(AAddress: DWord): Byte;</code></td>
+<td>Vi</td>
+<td>Returns the byte at the specified address when enabled and inside
+the configured range. Otherwise returns <code>0</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WriteMemory(AAddress: DWord; AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Writes a byte when enabled, in <code>mmRAM</code> mode and inside
+the configured range.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Loads enabled state, memory mode, address-range size and memory
+contents from a stream. Returns <code>False</code> on a stream read
+exception.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Saves enabled state, memory mode, address-range size and memory
+contents. Returns <code>True</code> when <code>InstanceID &gt; -1</code>
+and writing succeeds.</td>
+</tr>
+<tr class="even">
+<td><code>procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
+<td>Vi</td>
+<td>Loads <code>ACount</code> bytes from the current stream position
+into memory when enabled and both memory and stream bounds are
+valid.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
+<td>Vi</td>
+<td>Writes <code>ACount</code> bytes from memory to the current stream
+position when enabled and memory bounds are valid.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-properties">Public properties</h3>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 5%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressRangeSize</code></td>
+<td><code>DWord</code></td>
+<td>read/write</td>
+<td>Configured memory address-space size. The setter resizes the memory
+array and limits the size to <code>2^24</code> bytes; values below
+<code>16</code> are ignored.</td>
+</tr>
+<tr class="even">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Short module description.</td>
+</tr>
+<tr class="odd">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>read/write</td>
+<td>Enables or disables memory access.</td>
+</tr>
+<tr class="even">
+<td><code>InstanceID</code></td>
+<td><code>Integer</code></td>
+<td>read/write</td>
+<td>Module instance identifier.</td>
+</tr>
+<tr class="odd">
+<td><code>MemoryMode</code></td>
+<td><code>TMemoryMode</code></td>
+<td>read/write</td>
+<td>Selects RAM or ROM operation.</td>
+</tr>
+<tr class="even">
+<td><code>ModName</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Module name.</td>
+</tr>
+<tr class="odd">
+<td><code>Version</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>read</td>
+<td>Module version.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

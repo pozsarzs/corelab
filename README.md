@@ -56,7 +56,7 @@ in mind:
 
 |Features                  |Specification / Description                                                      |
 |--------------------------|---------------------------------------------------------------------------------|
-|**project type**          |Functional CPU/uP/MCU simulator                                                  |
+|**project type**          |Functional processor simulator                                                   |
 |**actual version**        |v0.1                                                                             |
 |**licence**               |EUPL v1.2                                                                        |
 |**language**              |en, hu                                                                           |

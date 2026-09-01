@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - ISysBus from sysbus unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="isysbus-from-sysbus-unit">ISysBus from sysbus unit</h2>
+<p><code>ISysBus</code> is the CoreLAB system-bus interface. It defines
+the memory and I/O operations used by a CPU to communicate with memory
+and I/O-port devices through the system bus.</p>
+<p>The source identifies the interface as the CPU-to-device path from
+<code>TCPU</code> to <code>TIOPort</code> and <code>TMemory</code>.</p>
+<h3 id="interface-methods">Interface methods</h3>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function ReadMemory(AAddress: DWord): QWord;</code></td>
+<td>Reads a value from the memory address specified by
+<code>AAddress</code>. The source specifies this operation as
+implemented only in <code>TMemory</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WriteMemory(AAddress: DWord; AValue: QWord);</code></td>
+<td>Writes a value to the memory address specified by
+<code>AAddress</code>. The source specifies this operation as
+implemented only in <code>TMemory</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function ReadPort(APort: Word): Byte;</code></td>
+<td>Reads a byte from the specified I/O port. The source specifies this
+operation as implemented only in <code>TIOPort</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WritePort(APort: Word; AValue: Byte);</code></td>
+<td>Writes a byte to the specified I/O port. The source specifies this
+operation as implemented only in <code>TIOPort</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interface-identifier">Interface identifier</h3>
+<p><code>ISysBus</code> is identified by GUID:</p>
+<p><code>{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}</code></p>
+<h3 id="usage">Usage</h3>
+<p>The source comment identifies <code>ISysBus</code> as the
+communication path from <code>TCPU</code> to <code>TIOPort</code> and
+<code>TMemory</code>.</p>
+<p><code>TBus</code> implements <code>ISysBus</code> and therefore
+provides the bus-level implementation of these operations.</p>
+</body>
+</html>

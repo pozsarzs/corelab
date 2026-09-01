@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - ICtlAPI from ctlapi unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="ictlapi-from-ctlapi-unit">ICtlAPI from ctlapi unit</h2>
+<p><code>ICtlAPI</code> is the CoreLAB control API interface. It defines
+the operations used by the supervisor to control a CPU, including
+register access, execution control, instruction inspection and interrupt
+handling.</p>
+<p>The source explicitly states that this interface is implemented only
+in the <code>TCPU</code> class.</p>
+<h3 id="interface-methods">Interface methods</h3>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; AValue: QWord);</code></td>
+<td>Sets the value of the CPU register identified by
+<code>RegName</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): QWord;</code></td>
+<td>Returns the value of the CPU register identified by
+<code>RegName</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Resets the CPU.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Run;</code></td>
+<td>Starts CPU execution.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Step;</code></td>
+<td>Executes a single CPU step.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Stop;</code></td>
+<td>Stops CPU execution.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInstruction: PChar;</code></td>
+<td>Returns the current instruction representation.</td>
+</tr>
+<tr class="even">
+<td><code>procedure IRQ;</code></td>
+<td>Requests an interrupt request.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure NMI;</code></td>
+<td>Requests a non-maskable interrupt.</td>
+</tr>
+<tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td>Checks whether interrupts require processing.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interface-identifier">Interface identifier</h3>
+<p><code>ICtlAPI</code> is identified by GUID:</p>
+<p><code>{D7A29B3C-1F5E-46A8-B2C4-9D3E8F5A7B1C}</code></p>
+<h3 id="usage">Usage</h3>
+<p>The interface is intended as the control path from
+<code>TSupervisor</code> to <code>TCPU</code>.</p>
+<p><code>TBus</code> also implements this interface so that the bus can
+expose the same control operations at the system level.</p>
+</body>
+</html>

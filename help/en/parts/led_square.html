@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TLEDSquare from TLED class in led_square unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tledsquare-from-tled-class-in-led_square-unit">TLEDSquare from
+TLED class in led_square unit</h2>
+<p>TLEDSquare is a virtual square LED component derived from the TLED
+base class. It renders a square LED in red, green or yellow, according
+to the color group supplied through the inherited
+<code>TLEDColors</code> structure.</p>
+<h3 id="protected-fields">Protected fields</h3>
+<p>There are no additional protected fields declared by
+<code>TLEDSquare</code>.</p>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 2%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Initializes the square LED, its module information and bitmap
+buffer.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DrawToBuffer(AIsOn: Boolean; AColor: TLEDColors; ABGColor: TColor);</code></td>
+<td>Or</td>
+<td>Clears the background and renders the LED in its on or off state,
+including glow and reflection effects.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);</code></td>
+<td>Or</td>
+<td>Copies the internal bitmap buffer to the target canvas at the
+specified position.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="object-properties-and-inherited-interface">Object properties and
+inherited interface</h3>
+<p>The class inherits the LED state, color and background properties
+from <code>TLED</code>, including <code>ModName</code>,
+<code>Description</code>, <code>Enabled</code>, <code>Color</code>,
+<code>BGColor</code> and <code>IsOn</code>.</p>
+<p>The inherited <code>RETRO_COLORS</code> constant provides the
+predefined red, green and yellow color groups.</p>
+<h3 id="rendering">Rendering</h3>
+<table>
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 94%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>state</th>
+<th>appearance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>On</td>
+<td>Square LED filled with <code>OnColor</code>, with a
+<code>Glow</code> inner area and a white reflection.</td>
+</tr>
+<tr class="even">
+<td>Off</td>
+<td>Square LED filled with <code>OffColor</code>, with a silver
+reflection.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-information">Module information</h3>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module name</td>
+<td><code>Square LED</code></td>
+</tr>
+<tr class="even">
+<td>Description</td>
+<td><code>Red, green or yellow color square LED</code></td>
+</tr>
+<tr class="odd">
+<td>Buffer width</td>
+<td>15 pixels</td>
+</tr>
+<tr class="even">
+<td>Buffer height</td>
+<td>15 pixels</td>
+</tr>
+<tr class="odd">
+<td>FrameX</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>FrameY</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

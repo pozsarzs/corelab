@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 
-## TMemory from TMemory class in core_memory unit
+## TMemory from core_memory unit
 
 `TMemory` is the base memory component of the CoreLAB framework. It provides
 byte-addressable memory storage with configurable address-space size, RAM/ROM

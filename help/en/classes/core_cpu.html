@@ -1,0 +1,641 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TCPU and related types from core_cpu unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tcpu-from-core_cpu-unit">TCPU from core_cpu unit</h2>
+<p><code>TCPU</code> is an abstract base class for processor
+implementations. It defines common CPU identity and architecture
+information, runtime state, execution statistics, interrupt handling,
+event notification and connection to an external
+<code>ISysBus</code>.</p>
+<p>Processor-specific register access, reset, single-step execution,
+current-instruction reporting and state persistence are left abstract
+for derived CPU classes.</p>
+<h3 id="related-types">Related types</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 17%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TArchitecture</code></td>
+<td>enumeration</td>
+<td>CPU memory architecture.</td>
+</tr>
+<tr class="even">
+<td><code>TEndianness</code></td>
+<td>enumeration</td>
+<td>CPU byte order.</td>
+</tr>
+<tr class="odd">
+<td><code>TCPUEvent</code></td>
+<td>enumeration</td>
+<td>Generic CPU events.</td>
+</tr>
+<tr class="even">
+<td><code>TCPUEventHandler</code></td>
+<td>procedure type</td>
+<td>CPU event callback.</td>
+</tr>
+<tr class="odd">
+<td><code>TSemanticVersion</code></td>
+<td>record</td>
+<td>Major, minor and patch version information.</td>
+</tr>
+<tr class="even">
+<td><code>TLogRec</code></td>
+<td>record</td>
+<td>Information about the last executed instruction.</td>
+</tr>
+</tbody>
+</table>
+<p><code>TArchitecture</code> contains <code>arHarvard</code> and
+<code>arNeumann</code>.</p>
+<h3 id="enumeration-values">Enumeration values</h3>
+<h4 id="tarchitecture">TArchitecture</h4>
+<table>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>arHarvard</code></td>
+<td>Harvard architecture.</td>
+</tr>
+<tr class="even">
+<td><code>arNeumann</code></td>
+<td>von Neumann architecture.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tendianness">TEndianness</h4>
+<table>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>enLittle</code></td>
+<td>Little-endian byte order.</td>
+</tr>
+<tr class="even">
+<td><code>enBig</code></td>
+<td>Big-endian byte order.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tcpuevent">TCPUEvent</h4>
+<table>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ceInstructionBoundary</code></td>
+<td>Instruction boundary event.</td>
+</tr>
+<tr class="even">
+<td><code>ceInterrupt</code></td>
+<td>Interrupt event.</td>
+</tr>
+<tr class="odd">
+<td><code>ceHalt</code></td>
+<td>CPU halt event.</td>
+</tr>
+<tr class="even">
+<td><code>ceReset</code></td>
+<td>CPU reset event.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-helpers">Type helpers</h3>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TArchitectureHelper.ToString</code></td>
+<td>Converts an architecture value to its enumeration name.</td>
+</tr>
+<tr class="even">
+<td><code>TArchitectureHelper.FromString</code></td>
+<td>Converts a name to <code>TArchitecture</code> using RTTI.</td>
+</tr>
+<tr class="odd">
+<td><code>TEndiannessHelper.ToString</code></td>
+<td>Converts an endianness value to its enumeration name.</td>
+</tr>
+<tr class="even">
+<td><code>TEndiannessHelper.FromString</code></td>
+<td>Converts a name to <code>TEndianness</code> using RTTI.</td>
+</tr>
+<tr class="odd">
+<td><code>TCPUEventHelper.ToString</code></td>
+<td>Converts a CPU event value to its enumeration name.</td>
+</tr>
+<tr class="even">
+<td><code>TCPUEventHelper.FromString</code></td>
+<td>Converts a name to <code>TCPUEvent</code> using RTTI.</td>
+</tr>
+<tr class="odd">
+<td><code>TSemanticVersionHelper.ToString</code></td>
+<td>Formats a version as <code>Major.Minor.Patch</code>.</td>
+</tr>
+<tr class="even">
+<td><code>TSemanticVersionHelper.Compare</code></td>
+<td>Compares two versions and returns <code>-1</code>, <code>0</code> or
+<code>1</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="isysbus-interface"><code>ISysBus</code> interface</h3>
+<p>The CPU stores an <code>ISysBus</code> reference in
+<code>FBus</code>.</p>
+<table>
+<colgroup>
+<col style="width: 58%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>method</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>MemRead(AAddress: UInt64): Byte</code></td>
+<td>Reads a byte from data memory.</td>
+</tr>
+<tr class="even">
+<td><code>MemWrite(AAddress: UInt64; AValue: Byte)</code></td>
+<td>Writes a byte to data memory.</td>
+</tr>
+<tr class="odd">
+<td><code>CodeRead(AAddress: UInt64): Byte</code></td>
+<td>Reads a byte from code memory.</td>
+</tr>
+<tr class="even">
+<td><code>CodeWrite(AAddress: UInt64; AValue: Byte)</code></td>
+<td>Writes a byte to code memory.</td>
+</tr>
+<tr class="odd">
+<td><code>IORead(APort: UInt64): Byte</code></td>
+<td>Reads a byte from an I/O port.</td>
+</tr>
+<tr class="even">
+<td><code>IOWrite(APort: UInt64; AValue: Byte)</code></td>
+<td>Writes a byte to an I/O port.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields">Protected fields</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 19%" />
+<col style="width: 44%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>initial value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FBus</code></td>
+<td><code>ISysBus</code></td>
+<td>Connected external bus.</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="even">
+<td><code>FInstanceID</code></td>
+<td><code>Integer</code></td>
+<td>Module instance identifier.</td>
+<td><code>-1</code></td>
+</tr>
+<tr class="odd">
+<td><code>FOnEvent</code></td>
+<td><code>TCPUEventHandler</code></td>
+<td>CPU event callback.</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="even">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Module name.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>Short description.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FVersion</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>Module version.</td>
+<td><code>0.1.0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FAddressWidth</code></td>
+<td><code>Byte</code></td>
+<td>Address bus width in bits.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FArchitecture</code></td>
+<td><code>TArchitecture</code></td>
+<td>CPU architecture.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Enables CPU without bus detachment.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FEndianness</code></td>
+<td><code>TEndianness</code></td>
+<td>CPU byte order.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FMaxCodeAddress</code></td>
+<td><code>DWord</code></td>
+<td>Highest code memory address.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FMaxIOPortAddress</code></td>
+<td><code>DWord</code></td>
+<td>Highest I/O port address.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FMaxMemAddress</code></td>
+<td><code>DWord</code></td>
+<td>Highest data memory address.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FHasSeparateIOBus</code></td>
+<td><code>Boolean</code></td>
+<td>Indicates separate memory and I/O buses.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FRunning</code></td>
+<td><code>Boolean</code></td>
+<td>CPU execution state.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FHalted</code></td>
+<td><code>Boolean</code></td>
+<td>CPU HALT state.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FInterruptEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Global maskable-interrupt enable flag.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FIRQPending</code></td>
+<td><code>Boolean</code></td>
+<td>Pending maskable interrupt.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FIRQVector</code></td>
+<td><code>Byte</code></td>
+<td>Received interrupt vector.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FNMIPending</code></td>
+<td><code>Boolean</code></td>
+<td>Pending non-maskable interrupt.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FCycles</code></td>
+<td><code>QWord</code></td>
+<td>Total CPU cycles.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FInstructions</code></td>
+<td><code>QWord</code></td>
+<td>Total executed instructions.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FRegPtr</code></td>
+<td><code>array of ^Word</code></td>
+<td>Register pointers for derived CPU classes.</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-methods">Protected methods</h3>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 5%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure EmitEvent(AEvent: TCPUEvent);</code></td>
+<td>Vi</td>
+<td>Sends a CPU event to the host callback.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td>Vi</td>
+<td>Dispatches an accepted interrupt event.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 47%" />
+<col style="width: 3%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure ConnectBus(const Bus: ISysBus);</code></td>
+<td>Vi</td>
+<td>Connects the CPU to an external system bus.</td>
+</tr>
+<tr class="even">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Initializes CPU state, interrupt flags, counters and version.</td>
+</tr>
+<tr class="odd">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Destroys the CPU instance.</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetRegister(const RegName: PChar; AValue: Word);</code></td>
+<td>Ab,Vi</td>
+<td>Sets a processor register; implemented by derived classes.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td>Ab,Vi</td>
+<td>Reads a processor register; implemented by derived classes.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td>Ab,Vi</td>
+<td>Returns the number of processor registers.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td>Ab,Vi</td>
+<td>Returns a register name by index.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td>Ab,Vi</td>
+<td>Returns a register size by index.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Run;</code></td>
+<td>Vi</td>
+<td>Starts execution when the CPU is enabled.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td>Ab,Vi</td>
+<td>Executes one processor step; implemented by derived classes.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Stop;</code></td>
+<td>Vi</td>
+<td>Stops CPU execution.</td>
+</tr>
+<tr class="even">
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td>Ab,Vi</td>
+<td>Returns information about the current instruction.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure IRQ(AVector: Byte);</code></td>
+<td>Vi</td>
+<td>Sets the pending IRQ and stores its vector.</td>
+</tr>
+<tr class="even">
+<td><code>procedure NMI;</code></td>
+<td>Vi</td>
+<td>Sets the pending non-maskable interrupt.</td>
+</tr>
+<tr class="odd">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td></td>
+<td>Accepts a pending interrupt when applicable.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td>Ab,Vi</td>
+<td>Resets the processor; implemented by derived classes.</td>
+</tr>
+<tr class="odd">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Ab,Vi</td>
+<td>Loads processor state; implemented by derived classes.</td>
+</tr>
+<tr class="even">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Ab,Vi</td>
+<td>Saves processor state; implemented by derived classes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-properties">Public properties</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 11%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressWidth</code></td>
+<td><code>Byte</code></td>
+<td>read</td>
+<td>Address bus width in bits.</td>
+</tr>
+<tr class="even">
+<td><code>Architecture</code></td>
+<td><code>TArchitecture</code></td>
+<td>read</td>
+<td>CPU architecture.</td>
+</tr>
+<tr class="odd">
+<td><code>Cycles</code></td>
+<td><code>QWord</code></td>
+<td>read</td>
+<td>Total CPU cycle counter.</td>
+</tr>
+<tr class="even">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Short module description.</td>
+</tr>
+<tr class="odd">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>read/write</td>
+<td>Enables or disables CPU operation.</td>
+</tr>
+<tr class="even">
+<td><code>Endianness</code></td>
+<td><code>TEndianness</code></td>
+<td>read</td>
+<td>CPU byte order.</td>
+</tr>
+<tr class="odd">
+<td><code>Halted</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>Current CPU HALT state.</td>
+</tr>
+<tr class="even">
+<td><code>HasSeparateIOBus</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>Whether memory and I/O buses are separate.</td>
+</tr>
+<tr class="odd">
+<td><code>InstanceID</code></td>
+<td><code>Integer</code></td>
+<td>read/write</td>
+<td>Module instance identifier.</td>
+</tr>
+<tr class="even">
+<td><code>Instructions</code></td>
+<td><code>QWord</code></td>
+<td>read</td>
+<td>Total executed instruction counter.</td>
+</tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>Global maskable-interrupt state.</td>
+</tr>
+<tr class="even">
+<td><code>MaxCodeAddress</code></td>
+<td><code>DWord</code></td>
+<td>read</td>
+<td>Highest code memory address.</td>
+</tr>
+<tr class="odd">
+<td><code>MaxIOPortAddress</code></td>
+<td><code>DWord</code></td>
+<td>read</td>
+<td>Highest I/O port address.</td>
+</tr>
+<tr class="even">
+<td><code>MaxMemAddress</code></td>
+<td><code>DWord</code></td>
+<td>read</td>
+<td>Highest data memory address.</td>
+</tr>
+<tr class="odd">
+<td><code>Modname</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Module name.</td>
+</tr>
+<tr class="even">
+<td><code>OnEvent</code></td>
+<td><code>TCPUEventHandler</code></td>
+<td>read/write</td>
+<td>CPU event callback.</td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>Current execution state.</td>
+</tr>
+<tr class="even">
+<td><code>Version</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>read</td>
+<td>Module version.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

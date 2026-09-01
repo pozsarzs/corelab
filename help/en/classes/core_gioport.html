@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TGIOPort from core_gioport unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tgioport-from-core_gioport-unit">TGIOPort from core_gioport
+unit</h2>
+<p><code>TGIOPort</code> is an abstract graphical I/O-port class derived
+from <code>TIOPort</code>. It adds a Lazarus <code>TForm</code>-based
+panel and provides common panel lifetime, visibility, caption, position,
+size, and state persistence functionality.</p>
+<p>Derived classes must implement <code>CreatePanel</code>.</p>
+<h3 id="private-fields">Private fields</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SPanelCaption</code></td>
+<td><code>String</code></td>
+<td>Internal storage for the panel caption</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields">Protected fields</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>initial value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FPanelForm</code></td>
+<td><code>TForm</code></td>
+<td>Graphical panel form</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="even">
+<td><code>FPanelCaption</code></td>
+<td><code>PChar</code></td>
+<td>Panel caption</td>
+<td><code>MyIO</code></td>
+</tr>
+<tr class="odd">
+<td><code>FPanelHeight</code></td>
+<td><code>Integer</code></td>
+<td>Panel height</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FPanelLeft</code></td>
+<td><code>Integer</code></td>
+<td>Panel left position</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FPanelTop</code></td>
+<td><code>Integer</code></td>
+<td>Panel top position</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FPanelWidth</code></td>
+<td><code>Integer</code></td>
+<td>Panel width</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 3%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Initialize panel caption, position, and size</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td></td>
+<td>Free the panel and destroy the object</td>
+</tr>
+<tr class="odd">
+<td><code>procedure CreatePanel;</code></td>
+<td>Ab,Vi</td>
+<td>Create the implementation-specific GUI panel</td>
+</tr>
+<tr class="even">
+<td><code>procedure FreePanel;</code></td>
+<td>Vi</td>
+<td>Free the panel form if it exists</td>
+</tr>
+<tr class="odd">
+<td><code>procedure ShowPanel;</code></td>
+<td>Vi</td>
+<td>Show the panel if it exists</td>
+</tr>
+<tr class="even">
+<td><code>procedure HidePanel;</code></td>
+<td>Vi</td>
+<td>Hide the panel if it exists</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RenamePanel(ACaption: PChar);</code></td>
+<td>Vi</td>
+<td>Change the stored caption and the form caption</td>
+</tr>
+<tr class="even">
+<td><code>function MovePanel(ALeft, ATop: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Set panel position when both coordinates are non-negative</td>
+</tr>
+<tr class="odd">
+<td><code>function ResizePanel(AWidth, AHeight: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Set panel size when both dimensions are non-negative</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Or</td>
+<td>Load inherited I/O-port state and panel caption, size, and
+position</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Or</td>
+<td>Save inherited I/O-port state and panel caption, size, and
+position</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-properties">Public properties</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PanelCaption</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Current panel caption</td>
+</tr>
+<tr class="even">
+<td><code>PanelHeight</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>Current panel height</td>
+</tr>
+<tr class="odd">
+<td><code>PanelLeft</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>Current panel left position</td>
+</tr>
+<tr class="even">
+<td><code>PanelTop</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>Current panel top position</td>
+</tr>
+<tr class="odd">
+<td><code>PanelWidth</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>Current panel width</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

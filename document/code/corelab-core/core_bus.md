@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>
 
-## TBus from TInterfacedObject class in core_bus unit
+## TBus from core_bus unit
 
 `TBus` is the system and service bus implementation class. It implements
 `ISysBus`, `ISvcAPI` and `ICtlAPI` and provides the interface through which CPU,

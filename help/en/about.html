@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - About CoreLAB</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="about-corelab">About CoreLAB</h2>
+<h3 id="general-features">General features</h3>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Features</th>
+<th>Specification / Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>project type</strong></td>
+<td>Functional processor simulator</td>
+</tr>
+<tr class="even">
+<td><strong>actual version</strong></td>
+<td>v0.1</td>
+</tr>
+<tr class="odd">
+<td><strong>licence</strong></td>
+<td>EUPL v1.2</td>
+</tr>
+<tr class="even">
+<td><strong>language</strong></td>
+<td>en, hu</td>
+</tr>
+<tr class="odd">
+<td><strong>architecture</strong></td>
+<td>amd64, armhf, i386, x86_64</td>
+</tr>
+<tr class="even">
+<td><strong>operation system</strong></td>
+<td>FreeBSD, Linux, Windows</td>
+</tr>
+<tr class="odd">
+<td><strong>user interface</strong></td>
+<td>Graphical User Interface (GUI) with scriptable command-line
+control</td>
+</tr>
+<tr class="even">
+<td><strong>running modes</strong></td>
+<td>Normal or interpreter</td>
+</tr>
+<tr class="odd">
+<td><strong>simulation type</strong></td>
+<td>Instruction-level operation (not cycle-accurate)</td>
+</tr>
+<tr class="even">
+<td><strong>supported architecture</strong></td>
+<td>Neumann and Harvard architectures</td>
+</tr>
+<tr class="odd">
+<td><strong>supported processors</strong></td>
+<td>Byte based uPs and simple MCUs</td>
+</tr>
+<tr class="even">
+<td><strong>simulation environment</strong></td>
+<td>Configurable memory space and virtual I/O ports or devices</td>
+</tr>
+<tr class="odd">
+<td><strong>modular architecture</strong></td>
+<td>Dynamically loadable CPUs and peripherals</td>
+</tr>
+<tr class="even">
+<td><strong>dump</strong></td>
+<td>Displaying memory and register contents, with export to binary or
+Intel HEX files</td>
+</tr>
+<tr class="odd">
+<td><strong>logging</strong></td>
+<td>Runtime log exportable to file</td>
+</tr>
+<tr class="even">
+<td><strong>debug features</strong></td>
+<td>Breakpoints, memory monitoring, single-stepping, and commentable
+memory addresses</td>
+</tr>
+<tr class="odd">
+<td><strong>program loading</strong></td>
+<td>Via keyboard entry or from binary/Intel HEX files</td>
+</tr>
+<tr class="even">
+<td><strong>state saving</strong></td>
+<td>Saving and restoring full environment state</td>
+</tr>
+</tbody>
+</table>
+<h3 id="integrated-modules">Integrated modules</h3>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Features</th>
+<th>Specification / Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Breakpoint Manager</strong></td>
+<td>Managing code, memory, and conditional hardware breakpoints</td>
+</tr>
+<tr class="even">
+<td><strong>Bus Monitor / Tracer</strong></td>
+<td>Passive real-time tracing of address, data, and control buses</td>
+</tr>
+<tr class="odd">
+<td><strong>CPU Register Viewer</strong></td>
+<td>Real-time inspection of registers, program counter, and flag
+status</td>
+</tr>
+<tr class="even">
+<td><strong>Device Manager Map</strong></td>
+<td>Overview of mapped virtual peripheral addresses and memory
+spaces</td>
+</tr>
+<tr class="odd">
+<td><strong>HexEditor</strong></td>
+<td>Memory viewer and editor component</td>
+</tr>
+<tr class="even">
+<td><strong>Interrupt Controller Status</strong></td>
+<td>Monitoring interrupt requests, masks, and priorities</td>
+</tr>
+<tr class="odd">
+<td><strong>RunLogger</strong></td>
+<td>Real-time output of address, machine code, and mnemonic</td>
+</tr>
+<tr class="even">
+<td><strong>Script Editor</strong></td>
+<td>Built-in environment for writing and executing control scripts</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual System Monitor</strong></td>
+<td>Altair-style virtual front panel with toggles and LED
+indicators</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plug-in-modules">Plug-in modules</h3>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Features</th>
+<th>Specification / Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Virtual CPU, uP, and MCU</strong></td>
+<td>Emulated processor, microprocessor, and microcontroller cores with
+custom architectures.</td>
+</tr>
+<tr class="even">
+<td><strong>Virtual Memory (RAM/ROM)</strong></td>
+<td>Configurable volatile and non-volatile memory blocks with custom
+sizing and address mapping.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual 7-Segment Display</strong></td>
+<td>Single and multiplexed 7-segment display arrays for numerical and
+basic character output.</td>
+</tr>
+<tr class="even">
+<td><strong>Virtual Hexadecimal Display</strong></td>
+<td>Single and multiplexed hex display arrays mapped to virtual port
+addresses.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual LED Array and Matrix</strong></td>
+<td>Linear LED bars and dot-matrix displays for visual bit-state and
+coordinate-based output.</td>
+</tr>
+<tr class="even">
+<td><strong>Virtual Pushbutton Array and Matrix</strong></td>
+<td>Linear and matrix-arranged momentary pushbuttons for interactive
+binary input.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual Switch Array and Matrix</strong></td>
+<td>Linear and matrix-arranged toggle switches providing persistent
+binary data to virtual ports.</td>
+</tr>
+<tr class="even">
+<td><strong>Real Port Redirection</strong></td>
+<td>Bridges virtual port I/O streams directly to the physical hardware
+ports of the host machine.</td>
+</tr>
+<tr class="odd">
+<td><strong>Simple Console</strong></td>
+<td>Basic text-based console for data stream monitoring.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="project-management">Project Management</h3>
+<p>CoreLAB uses a simple directory-based project structure. A project
+directory can contain all related files—such as optional environment
+setup scripts, saved state snapshots, program code, and data streams.
+The simulation environment can also be built manually, meaning none of
+these files are strictly mandatory. This setup keeps experiments
+independent while fully supporting the use of external files.</p>
+<h3 id="modular-architecture">Modular Architecture</h3>
+<p>One of the most important features of the simulator is its modular
+design. Processors, memories, and peripherals can be created as
+independent objects and connected dynamically. Users can build custom
+virtual hardware environments tailored to the requirements of the system
+being studied.</p>
+<h3 id="supported-processor-architectures">Supported Processor
+Architectures</h3>
+<p>CoreLAB is not limited to a single processor type. Different CPU,
+microprocessor, and microcontroller architectures can be loaded as
+plug-ins. This enables the same environment to be used for studying
+multiple instruction sets and hardware models.</p>
+<h3 id="virtual-memory-and-io-environment">Virtual Memory and I/O
+Environment</h3>
+<p>The memory map and I/O address space can be configured freely during
+simulation. Virtual peripherals can be assigned to memory locations or
+I/O ports in the same way as real hardware devices.</p>
+<h3 id="debugging-features">Debugging Features</h3>
+<p>CoreLAB provides several built-in diagnostic and debugging tools.
+Users can halt execution at breakpoints, execute programs step by step,
+inspect memory and register contents, and monitor instruction execution
+in real time. These features are especially useful for educational
+purposes and low-level software development.</p>
+<h3 id="scripting-and-automation">Scripting and Automation</h3>
+<p>The program is primarily operated through its own built-in console
+command line, though a menu is also available. It features a custom
+command interpreter and scripting language. Scripts can be executed
+directly from the OS shell; when run this way, the script automatically
+builds the execution environment and performs all specified operations.
+This allows for the efficient automation of repetitive tasks, tests, and
+the reproduction of complex hardware configurations.</p>
+<h3 id="state-saving-and-restoration">State Saving and Restoration</h3>
+<p>The complete state of a simulation can be saved and restored at any
+time. This includes not only memory contents but also the current state
+of processors, peripherals, and other objects. As a result, development
+and debugging sessions can be paused and resumed without loss of
+progress.</p>
+<h3 id="logging-and-data-export">Logging and Data Export</h3>
+<p>Runtime events and execution logs can be saved to files for later
+analysis. Memory contents can be exported in binary or Intel HEX format,
+allowing results to be used with other development tools or transferred
+to real hardware.</p>
+<h3 id="used-filetypes">Used filetypes</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">extension</th>
+<th style="text-align: left;">type</th>
+<th style="text-align: left;">application</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">*.clsht</td>
+<td style="text-align: left;">CoreLAB snapshot</td>
+<td style="text-align: left;">CoreLAB</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">*.clsce</td>
+<td style="text-align: left;">CoreLAB scriptembly</td>
+<td style="text-align: left;">CoreLAB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">*.clpst</td>
+<td style="text-align: left;">CoreLAB plugin status file</td>
+<td style="text-align: left;">CLIOPort, CLMemory, CLProcessor</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">*.bin</td>
+<td style="text-align: left;">General binary file</td>
+<td style="text-align: left;">CoreLAB, CLProcessor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">*.hex</td>
+<td style="text-align: left;">Intel hexa file</td>
+<td style="text-align: left;">CoreLAB, CLProcessor</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">*.log</td>
+<td style="text-align: left;">General log file</td>
+<td style="text-align: left;">CoreLAB, CLProcessor</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

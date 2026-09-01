@@ -1,0 +1,11 @@
+{"version":1,"strings":[
+{"hash":42428084,"name":"tform5.caption","sourcebytes":[69,120,97,109,105,110,101,47,100,101,112,111,115,105,116],"value":"Examine/deposit"},
+{"hash":216547045,"name":"tform5.button3.caption","sourcebytes":[38,69,120,97,109,105,110,101],"value":"&Examine"},
+{"hash":180841636,"name":"tform5.button4.caption","sourcebytes":[38,68,101,112,111,115,105,116],"value":"&Deposit"},
+{"hash":44709525,"name":"tform5.button5.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
+{"hash":128683235,"name":"tform5.label1.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
+{"hash":305313,"name":"tform5.label2.caption","sourcebytes":[68,97,116,97],"value":"Data"},
+{"hash":178924709,"name":"tform5.radiogroup1.hint","sourcebytes":[83,101,108,101,99,116,32,109,101,109,111,114,121,32,116,121,112,101,32,111,102,32,116,104,101,32,72,97,114,118,97,114,100,32,97,114,99,104,105,116,101,99,116,117,114,101],"value":"Select memory type of the Harvard architecture"},
+{"hash":36904960,"name":"tform5.editbutton1.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
+{"hash":816,"name":"tform5.editbutton2.text","sourcebytes":[48,48],"value":"00"}
+]}

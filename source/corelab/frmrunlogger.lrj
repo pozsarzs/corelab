@@ -1,0 +1,11 @@
+{"version":1,"strings":[
+{"hash":53838850,"name":"tform4.caption","sourcebytes":[82,117,110,76,111,103,103,101,114],"value":"RunLogger"},
+{"hash":44709525,"name":"tform4.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
+{"hash":77771730,"name":"tform4.button2.caption","sourcebytes":[67,108,101,97,38,114],"value":"Clea&r"},
+{"hash":4640403,"name":"tform4.editbutton1.hint","sourcebytes":[83,101,97,114,99,104,32,105,110,32,108,111,103,32,114,101,99,111,114,100,115],"value":"Search in log records"},
+{"hash":160203710,"name":"tform4.button3.caption","sourcebytes":[38,83,97,118,101,46,46,46],"value":"&Save..."},
+{"hash":4877396,"name":"tform4.drawgrid1.columns[0].title.caption","sourcebytes":[67,111,117,110,116],"value":"Count"},
+{"hash":128683235,"name":"tform4.drawgrid1.columns[1].title.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
+{"hash":90613157,"name":"tform4.drawgrid1.columns[2].title.caption","sourcebytes":[79,112,99,111,100,101],"value":"Opcode"},
+{"hash":79978931,"name":"tform4.drawgrid1.columns[3].title.caption","sourcebytes":[77,110,101,109,111,110,105,99],"value":"Mnemonic"}
+]}

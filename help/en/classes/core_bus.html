@@ -1,0 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TBus from TInterfacedObject class in core_bus unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tbus-from-core_bus-unit">TBus from core_bus unit</h2>
+<p><code>TBus</code> is the system and service bus implementation class.
+It implements <code>ISysBus</code>, <code>ISvcAPI</code> and
+<code>ICtlAPI</code> and provides the interface through which CPU,
+memory and I/O devices can be attached to and accessed through a common
+bus.</p>
+<p>The current source contains the bus structure and API implementation,
+but the operational methods are currently stubs: device attachment,
+memory and port access, service operations and CPU control operations do
+not yet perform their intended actions.</p>
+<h3 id="tbusdevice">TBusDevice</h3>
+<p><code>TBusDevice</code> describes one device entry associated with
+the bus.</p>
+<table>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>InstanceID</code></td>
+<td><code>Integer</code></td>
+<td>Device instance identifier.</td>
+</tr>
+<tr class="even">
+<td><code>BaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>Base address assigned to the device.</td>
+</tr>
+<tr class="odd">
+<td><code>AddressRange</code></td>
+<td><code>DWord</code></td>
+<td>Address range assigned to the device.</td>
+</tr>
+<tr class="even">
+<td><code>CPUDevice</code></td>
+<td><code>TCPU</code></td>
+<td>CPU device reference.</td>
+</tr>
+<tr class="odd">
+<td><code>MemoryDevice</code></td>
+<td><code>TMemory</code></td>
+<td>Memory device reference.</td>
+</tr>
+<tr class="even">
+<td><code>IODevice</code></td>
+<td><code>TIOPort</code></td>
+<td>I/O port device reference.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="private-fields">Private fields</h3>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 22%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FDevices</code></td>
+<td><code>array of TBusDevice</code></td>
+<td>List of devices attached to the bus.</td>
+</tr>
+<tr class="even">
+<td><code>FNextID</code></td>
+<td><code>Integer</code></td>
+<td>Internal counter intended for assigning instance identifiers.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 2%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Creates the bus object. The current implementation only calls the
+inherited constructor.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Destroys the bus object by calling the inherited destructor.</td>
+</tr>
+<tr class="odd">
+<td><code>function AttachCPU(ACPU: TCPU): Integer;</code></td>
+<td>Vi</td>
+<td>Attaches a CPU device. The current implementation always returns
+<code>0</code> and does not modify the device list.</td>
+</tr>
+<tr class="even">
+<td><code>function AttachMemory(AMemory: TMemory; ABaseAddress: DWord; AAddressRange: DWord): Integer;</code></td>
+<td>Vi</td>
+<td>Attaches a memory device. The current implementation always returns
+<code>0</code> and performs no attachment.</td>
+</tr>
+<tr class="odd">
+<td><code>function AttachIOPorts(APorts: TIOPort; ABaseAddress: DWord; AAddressRange: DWord): Integer;</code></td>
+<td>Vi</td>
+<td>Attaches an I/O-port device. The current implementation always
+returns <code>0</code> and performs no attachment.</td>
+</tr>
+<tr class="even">
+<td><code>function DetachCPU(InstanceID: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Detaches a CPU device. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function DetachMemory(InstanceID: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Detaches a memory device. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function DetachIOPorts(InstanceID: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Detaches an I/O-port device. The current implementation always
+returns <code>False</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function ReadMemory(AAddress: DWord): QWord;</code></td>
+<td>Vi</td>
+<td>Reads memory through the system-bus API. The current implementation
+always returns <code>0</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WriteMemory(AAddress: DWord; AValue: QWord);</code></td>
+<td>Vi</td>
+<td>Writes memory through the system-bus API. The current implementation
+performs no operation.</td>
+</tr>
+<tr class="odd">
+<td><code>function ReadPort(APort: Word): Byte;</code></td>
+<td>Vi</td>
+<td>Reads an I/O port. The current implementation does not assign a
+return value.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WritePort(APort: Word; AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Writes an I/O port. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Vi</td>
+<td>Resets attached services. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Loads bus state. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Saves bus state. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
+<td>Vi</td>
+<td>Loads a memory block through the service API. The current
+implementation performs no operation.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
+<td>Vi</td>
+<td>Saves a memory block through the service API. The current
+implementation performs no operation.</td>
+</tr>
+<tr class="even">
+<td><code>procedure CreatePanel;</code></td>
+<td>Vi</td>
+<td>Creates a service panel. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure FreePanel;</code></td>
+<td>Vi</td>
+<td>Frees a service panel. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="even">
+<td><code>procedure ShowPanel;</code></td>
+<td>Vi</td>
+<td>Shows a service panel. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure HidePanel;</code></td>
+<td>Vi</td>
+<td>Hides a service panel. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="even">
+<td><code>procedure RenamePanel(ACaption: PChar);</code></td>
+<td>Vi</td>
+<td>Renames a service panel. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="odd">
+<td><code>function ResizePanel(AWidth, AHeight: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Resizes a service panel. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function MovePanel(ALeft, ATop: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Moves a service panel. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; AValue: QWord);</code></td>
+<td>Vi</td>
+<td>Sets a CPU register through the control API. The current
+implementation performs no operation.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): QWord;</code></td>
+<td>Vi</td>
+<td>Gets a CPU register value. The current implementation always returns
+<code>0</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Run;</code></td>
+<td>Vi</td>
+<td>Starts CPU execution through the control API. The current
+implementation performs no operation.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td>Vi</td>
+<td>Executes one CPU step through the control API. The current
+implementation performs no operation.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Stop;</code></td>
+<td>Vi</td>
+<td>Stops CPU execution. The current implementation performs no
+operation.</td>
+</tr>
+<tr class="even">
+<td><code>function GetCurrentInstruction: PChar;</code></td>
+<td>Vi</td>
+<td>Returns the current CPU instruction text. The current implementation
+always returns <code>nil</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure IRQ;</code></td>
+<td>Vi</td>
+<td>Requests a maskable interrupt. The current implementation performs
+no operation.</td>
+</tr>
+<tr class="even">
+<td><code>procedure NMI;</code></td>
+<td>Vi</td>
+<td>Requests a non-maskable interrupt. The current implementation
+performs no operation.</td>
+</tr>
+<tr class="odd">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td>Vi</td>
+<td>Checks pending interrupts. The current implementation always returns
+<code>False</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="implemented-interfaces">Implemented interfaces</h3>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>interface</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ISysBus</code></td>
+<td>Provides CPU-side memory and I/O access through the bus.</td>
+</tr>
+<tr class="even">
+<td><code>ISvcAPI</code></td>
+<td>Provides reset, state persistence, memory stream and panel
+operations.</td>
+</tr>
+<tr class="odd">
+<td><code>ICtlAPI</code></td>
+<td>Provides CPU register, execution and interrupt control
+operations.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

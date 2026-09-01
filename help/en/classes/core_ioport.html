@@ -1,0 +1,405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TIOPort from core_ioport unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tioport-from-core_ioport-unit">TIOPort from core_ioport
+unit</h2>
+<p><code>TIOPort</code> is an abstract base class for I/O-port device
+implementations. It defines common address-range, data-line decoding,
+interrupt, state-persistence, and module-identification properties.
+Concrete devices must implement reset, port read, and port write
+operations.</p>
+<h3 id="related-types">Related types</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 14%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TLineMode</code></td>
+<td>enumeration</td>
+<td>Data-line decoding mode: <code>lmDirect</code> or
+<code>lmBCD</code></td>
+</tr>
+<tr class="even">
+<td><code>TInterruptCallback</code></td>
+<td>procedure type</td>
+<td>Interrupt callback receiving the source port and interrupt
+vector</td>
+</tr>
+<tr class="odd">
+<td><code>TSemanticVersion</code></td>
+<td>record</td>
+<td>Major, minor, and patch version information</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-helpers">Type helpers</h3>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TLineModeHelper.ToString</code></td>
+<td>Converts a line mode to its enumeration name</td>
+</tr>
+<tr class="even">
+<td><code>TLineModeHelper.FromString</code></td>
+<td>Converts an enumeration name to <code>TLineMode</code></td>
+</tr>
+<tr class="odd">
+<td><code>TSemanticVersionHelper.ToString</code></td>
+<td>Formats a version as <code>Major.Minor.Patch</code></td>
+</tr>
+<tr class="even">
+<td><code>TSemanticVersionHelper.Compare</code></td>
+<td>Compares two semantic versions; returns <code>-1</code>,
+<code>0</code>, or <code>1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields">Protected fields</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 18%" />
+<col style="width: 46%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>initial value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FAddressRangeSize</code></td>
+<td><code>Word</code></td>
+<td>Address range size</td>
+<td><code>1</code></td>
+</tr>
+<tr class="even">
+<td><code>FDataInMode</code></td>
+<td><code>TLineMode</code></td>
+<td>Input data-line decoding mode</td>
+<td><code>lmBCD</code></td>
+</tr>
+<tr class="odd">
+<td><code>FDataInNegation</code></td>
+<td><code>Boolean</code></td>
+<td>Input data-bit negation</td>
+<td><code>false</code></td>
+</tr>
+<tr class="even">
+<td><code>FDataOutMode</code></td>
+<td><code>TLineMode</code></td>
+<td>Output data-line decoding mode</td>
+<td><code>lmBCD</code></td>
+</tr>
+<tr class="odd">
+<td><code>FDataOutNegation</code></td>
+<td><code>Boolean</code></td>
+<td>Output data-bit negation</td>
+<td><code>false</code></td>
+</tr>
+<tr class="even">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>Short description</td>
+<td>not initialized here</td>
+</tr>
+<tr class="odd">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Enable the port without detaching it from the bus</td>
+<td><code>false</code></td>
+</tr>
+<tr class="even">
+<td><code>FHasPanel</code></td>
+<td><code>Boolean</code></td>
+<td>Indicates whether the implementation has a GUI panel</td>
+<td><code>false</code></td>
+</tr>
+<tr class="odd">
+<td><code>FInstanceID</code></td>
+<td><code>Integer</code></td>
+<td>Module instance ID</td>
+<td><code>-1</code></td>
+</tr>
+<tr class="even">
+<td><code>FIntVector</code></td>
+<td><code>Byte</code></td>
+<td>Interrupt vector</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FLatchedOutput</code></td>
+<td><code>Boolean</code></td>
+<td>Indicates latched output capability/state</td>
+<td><code>false</code></td>
+</tr>
+<tr class="even">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Module name</td>
+<td><code>MyIO</code></td>
+</tr>
+<tr class="odd">
+<td><code>FOnInterrupt</code></td>
+<td><code>TInterruptCallback</code></td>
+<td>Interrupt callback</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="even">
+<td><code>FReadBackOutput</code></td>
+<td><code>Boolean</code></td>
+<td>Indicates output read-back capability</td>
+<td><code>false</code></td>
+</tr>
+<tr class="odd">
+<td><code>FSelMode</code></td>
+<td><code>TLineMode</code></td>
+<td>Selector-line decoding mode</td>
+<td><code>lmBCD</code></td>
+</tr>
+<tr class="even">
+<td><code>FSelNegation</code></td>
+<td><code>Boolean</code></td>
+<td>Selector-bit negation</td>
+<td><code>false</code></td>
+</tr>
+<tr class="odd">
+<td><code>FVersion</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>Module version</td>
+<td><code>0.1.0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-methods">Protected methods</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 4%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure RequestInterrupt;</code></td>
+<td>Vi</td>
+<td>Call the interrupt callback with the configured vector when the port
+is enabled</td>
+</tr>
+</tbody>
+</table>
+<p><code>RequestInterrupt</code> performs no action unless
+<code>Enabled</code> is <code>true</code> and an interrupt callback is
+assigned.</p>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 3%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Initialize common I/O-port settings</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Destroy the I/O-port object</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Ab,Vi</td>
+<td>Reset the concrete I/O device; implementation is supplied by a
+derived class</td>
+</tr>
+<tr class="even">
+<td><code>function ReadPort(APort: Word): Byte;</code></td>
+<td>Ab,Vi</td>
+<td>Read a byte from a concrete I/O port</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WritePort(APort: Word; AValue: Byte);</code></td>
+<td>Ab,Vi</td>
+<td>Write a byte to a concrete I/O port</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Load common I/O-port state from a stream</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Save common I/O-port state when the instance has a valid instance
+ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-properties">Public properties</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 6%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressRangeSize</code></td>
+<td><code>Word</code></td>
+<td>Re</td>
+<td>Address range size</td>
+</tr>
+<tr class="even">
+<td><code>DataInMode</code></td>
+<td><code>TLineMode</code></td>
+<td>Re/Wr</td>
+<td>Input data-line decoding mode</td>
+</tr>
+<tr class="odd">
+<td><code>DataInNegation</code></td>
+<td><code>Boolean</code></td>
+<td>Re/Wr</td>
+<td>Input data-bit negation</td>
+</tr>
+<tr class="even">
+<td><code>DataOutMode</code></td>
+<td><code>TLineMode</code></td>
+<td>Re/Wr</td>
+<td>Output data-line decoding mode</td>
+</tr>
+<tr class="odd">
+<td><code>DataOutNegation</code></td>
+<td><code>Boolean</code></td>
+<td>Re/Wr</td>
+<td>Output data-bit negation</td>
+</tr>
+<tr class="even">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Short description</td>
+</tr>
+<tr class="odd">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>Re/Wr</td>
+<td>Enable the port</td>
+</tr>
+<tr class="even">
+<td><code>HasPanel</code></td>
+<td><code>Boolean</code></td>
+<td>Re</td>
+<td>Whether the implementation has a GUI panel</td>
+</tr>
+<tr class="odd">
+<td><code>IntVector</code></td>
+<td><code>Byte</code></td>
+<td>Re/Wr</td>
+<td>Interrupt vector</td>
+</tr>
+<tr class="even">
+<td><code>InstanceID</code></td>
+<td><code>Integer</code></td>
+<td>Re/Wr</td>
+<td>Module instance ID</td>
+</tr>
+<tr class="odd">
+<td><code>LatchedOutput</code></td>
+<td><code>Boolean</code></td>
+<td>Re</td>
+<td>Latched-output property</td>
+</tr>
+<tr class="even">
+<td><code>ModName</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Module name</td>
+</tr>
+<tr class="odd">
+<td><code>OnInterrupt</code></td>
+<td><code>TInterruptCallback</code></td>
+<td>Re/Wr</td>
+<td>Interrupt callback</td>
+</tr>
+<tr class="even">
+<td><code>ReadBackOutput</code></td>
+<td><code>Boolean</code></td>
+<td>Re</td>
+<td>Output read-back property</td>
+</tr>
+<tr class="odd">
+<td><code>SelMode</code></td>
+<td><code>TLineMode</code></td>
+<td>Re/Wr</td>
+<td>Selector-line decoding mode</td>
+</tr>
+<tr class="even">
+<td><code>SelNegation</code></td>
+<td><code>Boolean</code></td>
+<td>Re/Wr</td>
+<td>Selector-bit negation</td>
+</tr>
+<tr class="odd">
+<td><code>Version</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>Re</td>
+<td>Module version</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

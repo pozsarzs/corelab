@@ -4,7 +4,7 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TCPU and related types from core_cpu unit
+## TCPU from core_cpu unit
 
 `TCPU` is an abstract base class for processor implementations. It defines common
 CPU identity and architecture information, runtime state, execution statistics,

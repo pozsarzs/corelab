@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TLEDYellow512MUX from TGIOPort class in ioport_ledyellow512mux unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2
+id="tledyellow512mux-from-tgioport-class-in-ioport_ledyellow512mux-unit">TLEDYellow512MUX
+from TGIOPort class in ioport_ledyellow512mux unit</h2>
+<p>Select the column and write the row status.</p>
+<h3 id="io-behaviour">I/O behaviour</h3>
+<table>
+<colgroup>
+<col style="width: 3%" />
+<col style="width: 96%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>port</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Each bit of the written byte controls one LED in the selected
+column; <code>FDataInNegation</code> may invert the input.</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Selects the LED column, accepting indices from 0 to the last
+column.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="abbreviations">Abbreviations</h3>
+<ul>
+<li><em>Ab</em>: means ‘abstract’,</li>
+<li><em>Co</em>: means ‘constant’,</li>
+<li><em>Il</em>: means ‘inline’,</li>
+<li><em>Ol</em>: means ‘overload’,</li>
+<li><em>Or</em>: means ‘override’,</li>
+<li><em>Re</em>: means ‘read’,</li>
+<li><em>Ri</em>: means ‘reintroduce’,</li>
+<li><em>St</em>: means ‘static’,</li>
+<li><em>Vi</em>: means ‘virtual’,</li>
+<li><em>Wr</em>: means ‘write’.</li>
+</ul>
+<h3 id="private-fields">Private fields</h3>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 30%" />
+<col style="width: 48%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FValue</code></td>
+<td>array[0..MAXX] of Byte</td>
+<td>Device-specific state or GUI object</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields">Protected fields</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 41%" />
+<col style="width: 38%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FPanel</code></td>
+<td>TPanel</td>
+<td>Device-specific state or GUI object</td>
+<td>nil</td>
+</tr>
+<tr class="even">
+<td><code>FPaintBox</code></td>
+<td>TPaintBox</td>
+<td>Device-specific state or GUI object</td>
+<td>nil</td>
+</tr>
+<tr class="odd">
+<td><code>FLED</code></td>
+<td>array[0..MAXX, 0..MAXY] of TLEDSquare</td>
+<td>Device-specific state or GUI object</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>FSelLine</code></td>
+<td>Byte</td>
+<td>Device-specific state or GUI object</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-methods">Protected methods</h3>
+<table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 5%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure PaintBoxPaint(Sender: TObject);</code></td>
+<td></td>
+<td>Paints the device representation on the panel.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 4%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create; override;</code></td>
+<td>Or</td>
+<td>Initialises the object and its device-specific state.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy; override;</code></td>
+<td>Or</td>
+<td>Releases the object and its allocated resources.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset; override;</code></td>
+<td>Or</td>
+<td>Resets the device state.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadPort(APort: Word): Byte; override;</code></td>
+<td>Or</td>
+<td>Reads the selected virtual I/O port.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WritePort(APort: Word; AValue: Byte); override;</code></td>
+<td>Or</td>
+<td>Writes the selected virtual I/O port.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean; override;</code></td>
+<td>Or</td>
+<td>Loads the device state from a stream.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean; override;</code></td>
+<td>Or</td>
+<td>Saves the device state to a stream.</td>
+</tr>
+<tr class="even">
+<td><code>procedure CreatePanel; override;</code></td>
+<td>Or</td>
+<td>Creates the graphical user-interface panel.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exported-functions-and-procedures">Exported functions and
+procedures</h3>
+<p><strong>Calling mode:</strong></p>
+<ul>
+<li>on Windows: <code>stdcall</code>,</li>
+<li>on Unix-like OS: <code>cdecl</code>.</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 56%" />
+<col style="width: 12%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>exported name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function CreatePort: TIOPort;</code></td>
+<td>ioport_create</td>
+<td>Create a new device object.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DestroyPort(APort: TIOPort);</code></td>
+<td>ioport_destroy</td>
+<td>Destroy the device object.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);</code></td>
+<td>ioport_setinthandler</td>
+<td>Set the interrupt callback and interrupt vector.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(APort: TIOPort; AStream: TStream): Boolean;</code></td>
+<td>ioport_loadstate</td>
+<td>Load the device state from a stream.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(APort: TIOPort; AStream: TStream): Boolean;</code></td>
+<td>ioport_savestate</td>
+<td>Save the device state to a stream.</td>
+</tr>
+<tr class="even">
+<td><code>procedure CreatePanel(APort: TIOPort);</code></td>
+<td>ioport_createpanel</td>
+<td>Create the graphical user-interface panel.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure FreePanel(APort: TIOPort);</code></td>
+<td>ioport_freepanel</td>
+<td>Destroy the graphical user-interface panel.</td>
+</tr>
+<tr class="even">
+<td><code>procedure ShowPanel(APort: TIOPort);</code></td>
+<td>ioport_showpanel</td>
+<td>Show the graphical user-interface panel.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure HidePanel(APort: TIOPort);</code></td>
+<td>ioport_hidepanel</td>
+<td>Hide the graphical user-interface panel.</td>
+</tr>
+<tr class="even">
+<td><code>procedure RenamePanel(APort: TIOPort; ACaption: PChar);</code></td>
+<td>ioport_renamepanel</td>
+<td>Change the GUI panel caption.</td>
+</tr>
+<tr class="odd">
+<td><code>function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;</code></td>
+<td>ioport_resizepanel</td>
+<td>Resize the GUI panel.</td>
+</tr>
+<tr class="even">
+<td><code>function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;</code></td>
+<td>ioport_movepanel</td>
+<td>Move the GUI panel.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
