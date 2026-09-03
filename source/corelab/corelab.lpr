@@ -15,8 +15,9 @@ program corelab;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmabout, frmmain, frmhexviewer, frmrunlogger,
-  frmexdepmemory, frmloadsavememory;
+  lhelpcontrolpkg, crt, frmmain, frmabout;
+//  frmabout, frmhexviewer, frmrunlogger,
+//  frmexdepmemory, frmloadsavememory;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -176,14 +177,14 @@ begin
     Initialize;
     CreateForm(TForm1, Form1);
     CreateForm(TForm2, Form2);
-    CreateForm(TForm3, Form3);
-    CreateForm(TForm4, Form4);
-    CreateForm(TForm5, Form5);
-    CreateForm(TForm7, Form7);
+//    CreateForm(TForm3, Form3);
+//    CreateForm(TForm4, Form4);
+//    CreateForm(TForm5, Form5);
+//    CreateForm(TForm7, Form7);
   end;
   Form2.SetAboutLabels(AboutLabels);
-  Form1.PluginDirectory := PluginDir;
-  Form1.IgnoreHelp := IgnoreHelp;
+//  Form1.PluginDirectory := PluginDir;
+//  Form1.IgnoreHelp := IgnoreHelp;
   Application.ProcessMessages;
   Application.Run;
 end.
