@@ -20,6 +20,30 @@ uses
 type
   { TForm1 }
   TForm1 = class(TForm)
+    Separator44: TMenuItem;
+    Separator43: TMenuItem;
+    Separator42: TMenuItem;
+    MExamineDeposit: TAction;
+    MSaveMemoryContent: TAction;
+    MLoadMemoryContent: TAction;
+    Separator41: TMenuItem;
+    Separator40: TMenuItem;
+    Separator39: TMenuItem;
+    Separator38: TMenuItem;
+    Separator37: TMenuItem;
+    Separator36: TMenuItem;
+    Separator35: TMenuItem;
+    Separator34: TMenuItem;
+    Separator33: TMenuItem;
+    Separator32: TMenuItem;
+    Separator31: TMenuItem;
+    Separator30: TMenuItem;
+    Separator23: TMenuItem;
+    Separator29: TMenuItem;
+    Separator28: TMenuItem;
+    Separator27: TMenuItem;
+    Separator26: TMenuItem;
+    Separator25: TMenuItem;
     SStepScript: TAction;
     CoolBar1: TCoolBar;
     MenuItem71: TMenuItem;
@@ -47,14 +71,20 @@ type
     ToolButton29: TToolButton;
     ToolButton30: TToolButton;
     ToolButton31: TToolButton;
+    ToolButton32: TToolButton;
+    ToolButton33: TToolButton;
+    ToolButton34: TToolButton;
+    ToolButton35: TToolButton;
+    ToolButton36: TToolButton;
+    ToolButton37: TToolButton;
+    ToolButton38: TToolButton;
     ToolButton6: TToolButton;
     ToolButton7: TToolButton;
     ToolButton8: TToolButton;
     ToolButton9: TToolButton;
     VShowObjectManager: TAction;
     MenuItem62: TMenuItem;
-    MenuItem65: TMenuItem;
-    MenuItem67: TMenuItem;
+    Separator24: TMenuItem;
     PopupMenu1: TPopupMenu;
     Separator22: TMenuItem;
     VShowHideSystemConsole: TAction;
