@@ -5,7 +5,7 @@
    height="100%"
    version="1.1"
    id="svg462"
-   sodipodi:docname="corelab-green.svg"
+   sodipodi:docname="corelab-pink.svg"
    inkscape:export-filename="corelab-green.png"
    inkscape:export-xdpi="18.618181"
    inkscape:export-ydpi="18.618181"
@@ -57,7 +57,8 @@
      rx="20"
      ry="20"
      fill="#00b400"
-     id="rect454" />
+     id="rect454"
+     style="fill:#ffadc0;fill-opacity:1" />
   <rect
      x="10"
      y="125"
