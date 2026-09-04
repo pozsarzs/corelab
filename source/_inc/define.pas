@@ -12,45 +12,29 @@
   FOR A PARTICULAR PURPOSE. }
 
 {$MACRO ON}
-
-{$DEFINE BASENAME := lowercase(PRGNAME)}
 {$DEFINE COMMENT := #35}
+{$DEFINE BASENAME := 'corelab'}
+{$DEFINE CONFIGFILE := BASENAME + '.ini'}
 
 // Uncomment following line, if you want to build binary file
 // for deb, rpm, tgz package.
 // {$DEFINE INSTPKGMAN}
 
-{$IFDEF GO32V2}
-  {$DEFINE SHEBANG := '@corelab -r %0' + #13 + #10 + '@goto :eof'}
-  {$DEFINE LABELEOF := ':eof'}
+{$IFDEF BSD}
+  {$DEFINE SHEBANG := '#!/usr/local/bin/corelab -r'}
 {$ELSE}
-  {$IFDEF BSD}
-    {$DEFINE SHEBANG := '#!/usr/local/bin/corelab -r'}
-  {$ELSE}
-    {$IFDEF LINUX}
-      {$IFDEF INSTPKGMAN}
-        {$DEFINE SHEBANG := '#!/usr/bin/corelab -r'}
-      {$ELSE}
-        {$DEFINE SHEBANG := '#!/usr/local/bin/corelab -r'}
-      {$ENDIF}
+  {$IFDEF LINUX}
+    {$IFDEF INSTPKGMAN}
+      {$DEFINE SHEBANG := '#!/usr/bin/corelab -r'}
     {$ELSE}
-      {$IFDEF WINDOWS}
-        {$DEFINE SHEBANG := '@corelab -r %0' + #13 + #10 + '@goto :eof'}
-        {$DEFINE LABELEOF := ':eof'}
-      {$ENDIF}
+      {$DEFINE SHEBANG := '#!/usr/local/bin/corelab -r'}
+    {$ENDIF}
+  {$ELSE}
+    {$IFDEF WINDOWS}
+      {$DEFINE SHEBANG := '@corelab -r %0' + #13 + #10 + '@goto :eof'}
+      {$DEFINE LABELEOF := ':eof'}
     {$ENDIF}
   {$ENDIF}
-{$ENDIF}
-
-{$IFDEF UNIX}
-  {$DEFINE DIR_LOCK := '/var/lock'}
-{$ENDIF}
-
-{$IFDEF UNIX}
-  {$DEFINE BROWSER := 'xdg-open'}
-{$ENDIF}
-{$IFDEF WINDOWS}
-  {$DEFINE BROWSER := 'rundll32.exe url.dll,FileProtocolHandler'}
 {$ENDIF}
 
 {$IFDEF WINDOWS}

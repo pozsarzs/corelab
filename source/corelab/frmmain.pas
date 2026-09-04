@@ -13,82 +13,33 @@
 
 unit frmmain;
 {$MODE OBJFPC}{$H+}
+{$I define.pas}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
-  ComCtrls, ActnList, StdCtrls;
+  CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
+  ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, frmabout,
+  core_cpu, core_memory, core_ioport, ucommon, uconfig;
 type
+  // operation mode type
+  TOpMode = (omInteractive, omScript, omInterpreter);
+  // procedural types pointing to the plugin entry point
+  TIOPortCreateFunc = function: TIOPort; CALLTYPE;
+  TIOPortDestroyProc = procedure(AIOPort: TIOPort); CALLTYPE;
+  TIOPortLoadStateFunc = function(AIOPort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TIOPortSaveStateFunc = function(AIOPort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TMemoryCreateFunc = function: TMemory; CALLTYPE;
+  TMemoryDestroyProc = procedure(AMemory: TMemory); CALLTYPE;
+  TMemoryLoadStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TMemorySaveStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TProcessorCreateFunc = function: TCPU; CALLTYPE;
+  TProcessorDestroyProc = procedure(Processor: TCPU); CALLTYPE;
+  TProcessorLoadStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  TProcessorSaveStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
-    Separator44: TMenuItem;
-    Separator43: TMenuItem;
-    Separator42: TMenuItem;
-    MExamineDeposit: TAction;
-    MSaveMemoryContent: TAction;
-    MLoadMemoryContent: TAction;
-    Separator41: TMenuItem;
-    Separator40: TMenuItem;
-    Separator39: TMenuItem;
-    Separator38: TMenuItem;
-    Separator37: TMenuItem;
-    Separator36: TMenuItem;
-    Separator35: TMenuItem;
-    Separator34: TMenuItem;
-    Separator33: TMenuItem;
-    Separator32: TMenuItem;
-    Separator31: TMenuItem;
-    Separator30: TMenuItem;
-    Separator23: TMenuItem;
-    Separator29: TMenuItem;
-    Separator28: TMenuItem;
-    Separator27: TMenuItem;
-    Separator26: TMenuItem;
-    Separator25: TMenuItem;
-    SStepScript: TAction;
-    CoolBar1: TCoolBar;
-    MenuItem71: TMenuItem;
-    Panel1: TPanel;
-    Splitter1: TSplitter;
-    ToolButton10: TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton12: TToolButton;
-    ToolButton13: TToolButton;
-    ToolButton14: TToolButton;
-    ToolButton15: TToolButton;
-    ToolButton16: TToolButton;
-    ToolButton17: TToolButton;
-    ToolButton18: TToolButton;
-    ToolButton19: TToolButton;
-    ToolButton20: TToolButton;
-    ToolButton21: TToolButton;
-    ToolButton22: TToolButton;
-    ToolButton23: TToolButton;
-    ToolButton24: TToolButton;
-    ToolButton25: TToolButton;
-    ToolButton26: TToolButton;
-    ToolButton27: TToolButton;
-    ToolButton28: TToolButton;
-    ToolButton29: TToolButton;
-    ToolButton30: TToolButton;
-    ToolButton31: TToolButton;
-    ToolButton32: TToolButton;
-    ToolButton33: TToolButton;
-    ToolButton34: TToolButton;
-    ToolButton35: TToolButton;
-    ToolButton36: TToolButton;
-    ToolButton37: TToolButton;
-    ToolButton38: TToolButton;
-    ToolButton6: TToolButton;
-    ToolButton7: TToolButton;
-    ToolButton8: TToolButton;
-    ToolButton9: TToolButton;
-    VShowObjectManager: TAction;
-    MenuItem62: TMenuItem;
-    Separator24: TMenuItem;
-    PopupMenu1: TPopupMenu;
-    Separator22: TMenuItem;
-    VShowHideSystemConsole: TAction;
     ActionList1:              TActionList;
+    CHMHelpDatabase1:         TCHMHelpDatabase;
+    CoolBar1:                 TCoolBar;
     FExit:                    TAction;
     FLoadWorkspace:           TAction;
     FNewWorkspace:            TAction;
@@ -107,12 +58,13 @@ type
     IODetachFromBus:          TAction;
     IOPorperties:             TAction;
     IOReset:                  TAction;
+    LHelpConnector1:          TLHelpConnector;
     MainMenu1:                TMainMenu;
     MAttachToBus:             TAction;
     MCreate:                  TAction;
     MDestroy:                 TAction;
     MDetachFromBus:           TAction;
-    Memo1: TMemo;
+    Memo1:                    TMemo;
     MenuItem1:                TMenuItem;
     MenuItem10:               TMenuItem;
     MenuItem11:               TMenuItem;
@@ -171,6 +123,7 @@ type
     MenuItem6:                TMenuItem;
     MenuItem60:               TMenuItem;
     MenuItem61:               TMenuItem;
+    MenuItem62:               TMenuItem;
     MenuItem63:               TMenuItem;
     MenuItem64:               TMenuItem;
     MenuItem66:               TMenuItem;
@@ -178,11 +131,15 @@ type
     MenuItem69:               TMenuItem;
     MenuItem7:                TMenuItem;
     MenuItem70:               TMenuItem;
+    MenuItem71:               TMenuItem;
     MenuItem8:                TMenuItem;
     MenuItem9:                TMenuItem;
+    MExamineDeposit:          TAction;
+    MLoadMemoryContent:       TAction;
     MProperties:              TAction;
     MReset:                   TAction;
-    OClearAllBreakpoints:        TAction;
+    MSaveMemoryContent:       TAction;
+    OClearAllBreakpoints:     TAction;
     OIRQ:                     TAction;
     OMakeSnapshot:            TAction;
     ONMI:                     TAction;
@@ -191,15 +148,16 @@ type
     ORun:                     TAction;
     OStep:                    TAction;
     OStop:                    TAction;
-    OToggleBreakpoint:       TAction;
+    OToggleBreakpoint:        TAction;
     PageControl1:             TPageControl;
+    Panel1:                   TPanel;
     PAttachToBus:             TAction;
     PCreate:                  TAction;
     PDestroy:                 TAction;
     PDetachFromBus:           TAction;
+    PopupMenu1:               TPopupMenu;
     PProperties:              TAction;
     PReset:                   TAction;
-    SStopScript:             TAction;
     SClearScriptBuffer:       TAction;
     Separator1:               TMenuItem;
     Separator10:              TMenuItem;
@@ -215,8 +173,31 @@ type
     Separator2:               TMenuItem;
     Separator20:              TMenuItem;
     Separator21:              TMenuItem;
+    Separator22:              TMenuItem;
+    Separator23:              TMenuItem;
+    Separator24:              TMenuItem;
+    Separator25:              TMenuItem;
+    Separator26:              TMenuItem;
+    Separator27:              TMenuItem;
+    Separator28:              TMenuItem;
+    Separator29:              TMenuItem;
     Separator3:               TMenuItem;
+    Separator30:              TMenuItem;
+    Separator31:              TMenuItem;
+    Separator32:              TMenuItem;
+    Separator33:              TMenuItem;
+    Separator34:              TMenuItem;
+    Separator35:              TMenuItem;
+    Separator36:              TMenuItem;
+    Separator37:              TMenuItem;
+    Separator38:              TMenuItem;
+    Separator39:              TMenuItem;
     Separator4:               TMenuItem;
+    Separator40:              TMenuItem;
+    Separator41:              TMenuItem;
+    Separator42:              TMenuItem;
+    Separator43:              TMenuItem;
+    Separator44:              TMenuItem;
     Separator5:               TMenuItem;
     Separator6:               TMenuItem;
     Separator7:               TMenuItem;
@@ -224,9 +205,12 @@ type
     Separator9:               TMenuItem;
     SLoadScript:              TAction;
     SNewScript:               TAction;
+    Splitter1:                TSplitter;
     SRunScript:               TAction;
     SSaveScript:              TAction;
     SSaveScriptAs:            TAction;
+    SStepScript:              TAction;
+    SStopScript:              TAction;
     TabSheet1:                TTabSheet;
     TabSheet2:                TTabSheet;
     TabSheet3:                TTabSheet;
@@ -238,25 +222,86 @@ type
     ToolBar5:                 TToolBar;
     ToolBar6:                 TToolBar;
     ToolButton1:              TToolButton;
+    ToolButton10:             TToolButton;
+    ToolButton11:             TToolButton;
+    ToolButton12:             TToolButton;
+    ToolButton13:             TToolButton;
+    ToolButton14:             TToolButton;
+    ToolButton15:             TToolButton;
+    ToolButton16:             TToolButton;
+    ToolButton17:             TToolButton;
+    ToolButton18:             TToolButton;
+    ToolButton19:             TToolButton;
     ToolButton2:              TToolButton;
+    ToolButton20:             TToolButton;
+    ToolButton21:             TToolButton;
+    ToolButton22:             TToolButton;
+    ToolButton23:             TToolButton;
+    ToolButton24:             TToolButton;
+    ToolButton25:             TToolButton;
+    ToolButton26:             TToolButton;
+    ToolButton27:             TToolButton;
+    ToolButton28:             TToolButton;
+    ToolButton29:             TToolButton;
     ToolButton3:              TToolButton;
+    ToolButton30:             TToolButton;
+    ToolButton31:             TToolButton;
+    ToolButton32:             TToolButton;
+    ToolButton33:             TToolButton;
+    ToolButton34:             TToolButton;
+    ToolButton35:             TToolButton;
+    ToolButton36:             TToolButton;
+    ToolButton37:             TToolButton;
+    ToolButton38:             TToolButton;
     ToolButton4:              TToolButton;
     ToolButton5:              TToolButton;
+    ToolButton6:              TToolButton;
+    ToolButton7:              TToolButton;
+    ToolButton8:              TToolButton;
+    ToolButton9:              TToolButton;
     VMoveResizeIOPanel:       TAction;
     VRenameIOPanel:           TAction;
     VShowBreakpointManager:   TAction;
     VShowHexViewer:           TAction;
     VShowHideIOPanel:         TAction;
+    VShowHideSystemConsole:   TAction;
     VShowIntLogger:           TAction;
+    VShowObjectManager:       TAction;
     VShowRegViewer:           TAction;
     VShowRunLogger:           TAction;
     VShowScriptConsole:       TAction;
     VShowScriptEditor:        TAction;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure HAboutExecute(Sender: TObject);
     procedure HHelpExecute(Sender: TObject);
-    procedure ORunExecute(Sender: TObject);
+    procedure SClearScriptBufferExecute(Sender: TObject);
+    procedure SLoadScriptExecute(Sender: TObject);
+    procedure SNewScriptExecute(Sender: TObject);
+    procedure SRunScriptExecute(Sender: TObject);
+    procedure SSaveScriptAsExecute(Sender: TObject);
+    procedure SSaveScriptExecute(Sender: TObject);
+    procedure SStepScriptExecute(Sender: TObject);
+    procedure SStopScriptExecute(Sender: TObject);
   private
+    // simulation objects
+    FProcessors: array of TCPU;               // created objects from TCPU class
+    FMemories:   array of TMemory;         // created objects from TMemory class
+    FOPorts:     array of TIOPort;         // created objects from TIOPort class
+    FAppConfig:  TAppConfig;                        // application configuration
+    procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
+    procedure SetPluginDirectory(APluginDirectory: string);
+  protected
+    FConfigDirectory:  string;                      // directory of the INI file
+    FEXEDirectory:     string;                    // directory of the executable
+    FIgnoreHelp:       Boolean;                       // ignore search help file
+    FOpMode:           TOpMode;                                // operation mode
+    FPluginDirectory:  string;                       // directory of the plugins
+    FProjectDirectory: string;                       // actual project directory
+    FScriptBuffer:     TStringList;                             // script buffer
+    FSystemLanguage:   string;                                // system language
+    FUserDirectory:    string;                               // user's directory
   public
   end;
 var
@@ -265,39 +310,188 @@ var
 implementation
 
 {$R *.lfm}
-
 { TForm1 }
 
+resourcestring
+  MSG01 = 'ERROR: ';
+  MSG18 = 'Missing help file.';
+  MSG19 = 'Missing help viewer.';
+  MSG40 = 'Cannot load ''%s'' configuration file.';
+  MSG41 = 'Cannot save ''%s'' configuration file.';
 
+// ---- PRIVATE METHODS ----
 
-// ----
+// SET HELP SYSTEM
+procedure TForm1.SetIgnoreHelp(AIgnoreHelp: Boolean);
+var
+  CHMFile, CHMViewer:             string;
+  CHMFileExists, CHMViewerExists: Boolean;
+begin
+  FIgnoreHelp := AIgnoreHelp;
+  if not FIgnoreHelp then
+  begin
+  // search help file
+  {$IFDEF UNIX}
+    CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm',
+      './:./help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
+    if Length(CHMFile) = 0 then
+      CHMFile := FileSearch('corelab_en.chm',
+        './:./help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
+  {$ELSE}
+    CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm','.\;.\help\');
+    if Length(CHMFile) = 0 then
+      CHMFile := FileSearch('modshell_en.chm','.\;.\help\');
+  {$ENDIF}
+  // - search LHelp application
+  {$IFDEF UNIX}
+    CHMViewer := FileSearch('lhelp', GetEnvironmentVariable('PATH'));
+  {$ELSE}
+    CHMViewer := FileSearch('lhelp.exe', GetEnvironmentVariable('PATH'));
+  {$ENDIF}
+    CHMFileExists := FileExists(CHMFile);
+    CHMViewerExists := FileExists(CHMFile);
+    if CHMFileExists and CHMViewerExists then
+    begin
+      CreateLCLHelpSystem;
+      with CHMHelpDatabase1 do
+      begin
+        Autoregister := true;
+        Filename := CHMFile;
+        KeywordPrefix := 'html'
+      end;
+      with LHelpConnector1 do
+      begin
+        Autoregister := true;
+        LHelpPath := CHMViewer;
+      end;
+    end else
+    begin
+      if not CHMFileExists then ShowMessage(MSG01 + MSG18);
+      if not CHMViewerExists then ShowMessage(MSG01 + MSG19);
+    end;
+  end;
+  HHelp.Enabled := CHMFileExists and CHMViewerExists and not FIgnoreHelp;
+end;
 
-// HELP/HELP
+// SET PLUGIN DIRECTORY
+procedure TForm1.SetPluginDirectory(APluginDirectory: string);
+begin
+  FPluginDirectory := APluginDirectory;
+end;
+
+// ---- EVENT HANDLER METHODS ----
+
+procedure TForm1.SNewScriptExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SLoadScriptExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SSaveScriptExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SSaveScriptAsExecute(Sender: TObject);
+begin
+
+end;
+
+// ACTIONS/SCRIPT/CLEAR SCRIPT BUFFER
+procedure TForm1.SClearScriptBufferExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SRunScriptExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SStepScriptExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.SStopScriptExecute(Sender: TObject);
+begin
+
+end;
+
+// ACTIONS/HELP/SHOW HELP
 procedure TForm1.HHelpExecute(Sender: TObject);
 begin
-
+  ShowHelpOrErrorForKeyword('','html/framework/index.html');
 end;
 
-procedure TForm1.ORunExecute(Sender: TObject);
-begin
-
-end;
-
-// HELP/ABOUT
+// ACTIONS/HELP/SHOW ABOUT
 procedure TForm1.HAboutExecute(Sender: TObject);
 begin
-
+  Form2.ShowModal;
 end;
 
-// ----
+// ---- CREATE AND DESTROY EVENT HANDLER ----
 
-
+// ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  // set general fields
+  FEXEDirectory := GetExeDir;
+  FIgnoreHelp := false;
+  FPluginDirectory := '.';
+  FProjectDirectory := '';
+  FOpMode := omInteractive;
+  FSystemLanguage := GetLang;
+  FUserDirectory := GetUserDir;
+  Form1.Caption := Application.Title;
+  // enable/disable actions
+  // - depends on opmode
+  if FOpMode = omInteractive then
+  begin
 
+  end else
+  begin
+
+  end;
+  // set directory and load configuration
+  {$IFDEF WINDOWS}
+    FConfigDirectory := FUserDirectory + DirectorySeparator +
+                        'Appdata' + DirectorySeparator +
+                        'Local' + DirectorySeparator +
+                        BASENAME + DirectorySeparator;
+  {$ELSE}
+    {$IFDEF UNIX}
+      FConfigDirectory := FUserDirectory + DirectorySeparator +
+                          '.config' + DirectorySeparator +
+                          BASENAME + DirectorySeparator;
+    {$ELSE}
+      {$FATAL Not supported operation system!}
+    {$ENDIF}
+  {$ENDIF}
+  ForceDirectories(FConfigDirectory);
+  if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
+    then ShowMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]));;
+  // - depends on system status
+  {...}
 end;
 
+// JOBS BEFORE CLOSE FORM
+procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  // save configuration
+  if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
+    then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));;
+  CanClose := True;
+end;
 
+// DESTROY EVENT
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+end;
 
 end.
 

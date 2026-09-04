@@ -870,7 +870,7 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/clioport.htm');
+  ShowHelpOrErrorForKeyword('','html/applications/clioport.html');
 end;
 
 // ABOUT

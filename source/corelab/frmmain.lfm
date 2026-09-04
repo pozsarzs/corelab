@@ -1,7 +1,7 @@
 object Form1: TForm1
   Left = 331
   Height = 174
-  Top = 151
+  Top = 183
   Width = 930
   Caption = 'Form1'
   ClientHeight = 149
@@ -366,7 +366,9 @@ object Form1: TForm1
     D27F
   }
   Menu = MainMenu1
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   LCLVersion = '2.2.6.0'
   object Memo1: TMemo
     Left = 0
@@ -1265,7 +1267,6 @@ object Form1: TForm1
       Caption = '&Run'
       Hint = 'Run'
       ImageIndex = 14
-      OnExecute = ORunExecute
       ShortCut = 120
     end
     object OStep: TAction
@@ -1321,46 +1322,54 @@ object Form1: TForm1
       Caption = '&New script'
       Hint = 'New script'
       ImageIndex = 33
+      OnExecute = SNewScriptExecute
       ShortCut = 24654
     end
     object SLoadScript: TAction
       Caption = '&Load script...'
       Hint = 'Load script'
       ImageIndex = 16
+      OnExecute = SLoadScriptExecute
       ShortCut = 24655
     end
     object SSaveScript: TAction
       Caption = 'Save script'
       Hint = 'Save script'
       ImageIndex = 17
+      OnExecute = SSaveScriptExecute
       ShortCut = 24659
     end
     object SSaveScriptAs: TAction
       Caption = 'S&ave script as...'
       Hint = 'Save script as'
       ImageIndex = 32
+      OnExecute = SSaveScriptAsExecute
     end
     object SClearScriptBuffer: TAction
       Caption = '&Clear script buffer'
       Hint = 'Clear script buffer'
       ImageIndex = 21
+      OnExecute = SClearScriptBufferExecute
     end
     object SRunScript: TAction
       Caption = '&Run script'
       Hint = 'Run script'
       ImageIndex = 34
+      OnExecute = SRunScriptExecute
       ShortCut = 8312
     end
     object SStepScript: TAction
       Caption = 'St&ep script'
       Hint = 'Step script'
       ImageIndex = 35
+      OnExecute = SStepScriptExecute
       ShortCut = 8311
     end
     object SStopScript: TAction
       Caption = 'S&top script'
       Hint = 'Stop script'
       ImageIndex = 36
+      OnExecute = SStopScriptExecute
       ShortCut = 8313
     end
     object HHelp: TAction

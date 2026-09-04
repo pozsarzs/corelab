@@ -711,7 +711,7 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/clmemory.htm');
+  ShowHelpOrErrorForKeyword('','html/applications/clmemory.html');
 end;
 
 // ABOUT

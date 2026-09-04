@@ -1199,7 +1199,7 @@ end;
 // HELP
 procedure TForm1.HelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/clprocessor.htm');
+  ShowHelpOrErrorForKeyword('','html/applications/cprocessor.html');
 end;
 
 // ABOUT
