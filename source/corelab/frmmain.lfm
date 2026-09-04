@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 331
+  Left = 379
   Height = 174
-  Top = 183
+  Top = 150
   Width = 930
   Caption = 'Form1'
   ClientHeight = 149
@@ -388,28 +388,27 @@ object Form1: TForm1
     Top = 0
     Width = 930
     Align = alTop
-    Caption = 'Panel1'
     ClientHeight = 60
     ClientWidth = 930
     TabOrder = 1
     object PageControl1: TPageControl
-      Left = 202
+      Left = 172
       Height = 58
       Top = 1
-      Width = 727
-      ActivePage = TabSheet5
+      Width = 757
+      ActivePage = TabSheet1
       Align = alClient
-      TabIndex = 4
-      TabOrder = 0
+      TabIndex = 0
+      TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Operation'
         ClientHeight = 27
-        ClientWidth = 717
+        ClientWidth = 747
         object ToolBar2: TToolBar
           Left = 0
           Height = 27
           Top = 0
-          Width = 717
+          Width = 747
           Align = alClient
           Caption = 'ToolBar2'
           Images = ImageList1
@@ -471,12 +470,12 @@ object Form1: TForm1
       object TabSheet2: TTabSheet
         Caption = 'Processor'
         ClientHeight = 27
-        ClientWidth = 717
+        ClientWidth = 747
         object ToolBar3: TToolBar
           Left = 0
           Height = 27
           Top = 0
-          Width = 717
+          Width = 747
           Align = alClient
           Caption = 'ToolBar3'
           Images = ImageList1
@@ -540,12 +539,12 @@ object Form1: TForm1
       object TabSheet3: TTabSheet
         Caption = 'Memory'
         ClientHeight = 27
-        ClientWidth = 717
+        ClientWidth = 747
         object ToolBar4: TToolBar
           Left = 0
           Height = 27
           Top = 0
-          Width = 717
+          Width = 747
           Align = alClient
           Caption = 'ToolBar4'
           Images = ImageList1
@@ -560,12 +559,12 @@ object Form1: TForm1
       object TabSheet4: TTabSheet
         Caption = 'I/O port'
         ClientHeight = 27
-        ClientWidth = 717
+        ClientWidth = 747
         object ToolBar5: TToolBar
           Left = 0
           Height = 27
           Top = 0
-          Width = 717
+          Width = 747
           Align = alClient
           Caption = 'ToolBar5'
           Images = ImageList1
@@ -648,12 +647,12 @@ object Form1: TForm1
       object TabSheet5: TTabSheet
         Caption = 'Script'
         ClientHeight = 27
-        ClientWidth = 717
+        ClientWidth = 747
         object ToolBar6: TToolBar
           Left = 0
           Height = 27
           Top = 0
-          Width = 717
+          Width = 747
           Align = alClient
           Caption = 'ToolBar6'
           Images = ImageList1
@@ -699,25 +698,75 @@ object Form1: TForm1
       end
     end
     object Splitter1: TSplitter
-      Left = 201
+      Left = 171
       Height = 58
       Top = 1
       Width = 1
     end
-    object CoolBar1: TCoolBar
+    object Panel2: TPanel
       Left = 1
       Height = 58
       Top = 1
-      Width = 200
+      Width = 170
       Align = alLeft
-      Bands = <      
-        item
-        end      
-        item
-        end>
-      Images = ImageList1
-      ParentShowHint = False
-      ShowHint = True
+      ClientHeight = 58
+      ClientWidth = 170
+      TabOrder = 2
+      object ToolBar1: TToolBar
+        Left = 1
+        Height = 26
+        Top = 1
+        Width = 168
+        Caption = 'ToolBar1'
+        Images = ImageList1
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 0
+        object ToolButton39: TToolButton
+          Left = 1
+          Top = 2
+          Action = FSwitchToInteractiveMode
+        end
+        object ToolButton40: TToolButton
+          Left = 24
+          Top = 2
+          Action = FSwitchToScriptMode
+        end
+        object ToolButton41: TToolButton
+          Left = 52
+          Top = 2
+          Action = FNewProject
+        end
+        object ToolButton42: TToolButton
+          Left = 75
+          Top = 2
+          Action = FLoadProject
+        end
+        object ToolButton43: TToolButton
+          Left = 98
+          Top = 2
+          Action = FSaveProject
+        end
+        object ToolButton44: TToolButton
+          Left = 47
+          Height = 22
+          Top = 2
+          Caption = 'ToolButton44'
+          Style = tbsDivider
+        end
+      end
+      object ToolBar7: TToolBar
+        Left = 1
+        Height = 26
+        Top = 29
+        Width = 168
+        BorderSpacing.Top = 2
+        Caption = 'ToolBar7'
+        Images = ImageList1
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 1
+      end
     end
   end
   object MainMenu1: TMainMenu
@@ -732,21 +781,22 @@ object Form1: TForm1
       end
       object MenuItem35: TMenuItem
         Action = FSwitchToScriptMode
+        AutoCheck = True
       end
       object Separator12: TMenuItem
         Caption = '-'
       end
       object MenuItem37: TMenuItem
-        Action = FNewWorkspace
+        Action = FNewProject
       end
       object MenuItem38: TMenuItem
-        Action = FLoadWorkspace
+        Action = FLoadProject
       end
       object MenuItem39: TMenuItem
-        Action = FSaveWorkspace
+        Action = FSaveProject
       end
       object MenuItem40: TMenuItem
-        Action = FSaveWorkspaceAs
+        Action = FSaveProjectAs
       end
       object Separator11: TMenuItem
         Caption = '-'
@@ -1069,78 +1119,95 @@ object Form1: TForm1
       Caption = 'Switch to &interactive mode'
       GroupIndex = 1
       Hint = 'Switch to interactive mode'
+      OnExecute = FSwitchToInteractiveModeExecute
       ShortCut = 16433
     end
     object FSwitchToScriptMode: TAction
+      AutoCheck = True
       Caption = 'Switch to s&cript mode'
       GroupIndex = 1
       Hint = 'Switch to script mode'
+      OnExecute = FSwitchToScriptModeExecute
       ShortCut = 16434
     end
-    object FNewWorkspace: TAction
-      Caption = '&New workspace'
-      Hint = 'New workspace'
+    object FNewProject: TAction
+      Caption = '&New project'
+      Hint = 'Create new project'
+      OnExecute = FNewProjectExecute
       ShortCut = 16462
     end
-    object FLoadWorkspace: TAction
-      Caption = '&Load workspace...'
-      Hint = 'Load workspace'
+    object FLoadProject: TAction
+      Caption = '&Load project...'
+      Hint = 'Load project'
       ImageIndex = 16
+      OnExecute = FLoadProjectExecute
       ShortCut = 16463
     end
-    object FSaveWorkspace: TAction
-      Caption = '&Save workspace'
-      Hint = 'Save workspace'
+    object FSaveProject: TAction
+      Caption = '&Save project'
+      Hint = 'Save project'
       ImageIndex = 17
+      OnExecute = FSaveProjectExecute
       ShortCut = 16467
     end
-    object FSaveWorkspaceAs: TAction
-      Caption = 'Save workspace &as...'
-      Hint = 'Save workspace as'
+    object FSaveProjectAs: TAction
+      Caption = 'Save project &as...'
+      Hint = 'Save project as'
       ImageIndex = 32
+      OnExecute = FSaveProjectAsExecute
     end
     object FSettings: TAction
       Caption = 'Set&tings...'
       Hint = 'Settings'
+      OnExecute = FSettingsExecute
       ShortCut = 16464
     end
     object FRestartApplication: TAction
       Caption = '&Restart application'
       Hint = 'Restart application'
       ImageIndex = 3
+      OnExecute = FRestartApplicationExecute
     end
     object FExit: TAction
       Caption = 'E&xit'
       Hint = 'Exit from application'
       ImageIndex = 4
+      OnExecute = FExitExecute
     end
     object VShowObjectManager: TAction
       Caption = 'Show Object manager'
     end
     object VShowBreakpointManager: TAction
       Caption = 'Show Breakpoint Manager...'
+      OnExecute = VShowBreakpointManagerExecute
     end
     object VShowRunLogger: TAction
       Caption = 'Show RunLogger...'
       ImageIndex = 8
+      OnExecute = VShowRunLoggerExecute
     end
     object VShowIntLogger: TAction
       Caption = 'Show IntLogger...'
+      OnExecute = VShowIntLoggerExecute
     end
     object VShowRegViewer: TAction
       Caption = 'Show RegViewer...'
+      OnExecute = VShowRegViewerExecute
     end
     object VShowHexViewer: TAction
       Caption = 'Show HexViewer'
       ImageIndex = 18
+      OnExecute = VShowHexViewerExecute
     end
     object VShowScriptEditor: TAction
       Caption = 'Show ScriptEditor...'
       ImageIndex = 46
+      OnExecute = VShowScriptEditorExecute
     end
     object VShowScriptConsole: TAction
       Caption = 'Show ScriptConsole...'
       ImageIndex = 45
+      OnExecute = VShowScriptConsoleExecute
     end
     object VRenameIOPanel: TAction
       Caption = 'Rename I/O panel'
@@ -1157,11 +1224,13 @@ object Form1: TForm1
     object VShowHideSystemConsole: TAction
       Caption = 'Show/hide SysConsole'
       ImageIndex = 23
+      OnExecute = VShowHideSystemConsoleExecute
     end
     object PCreate: TAction
       Caption = '&Create...'
       Hint = 'Create processor'
       ImageIndex = 39
+      OnExecute = PCreateExecute
     end
     object PDestroy: TAction
       Caption = 'Destro&y'
@@ -1192,6 +1261,7 @@ object Form1: TForm1
       Caption = '&Create...'
       Hint = 'Create memory'
       ImageIndex = 42
+      OnExecute = MCreateExecute
     end
     object MDestroy: TAction
       Caption = 'Destro&y'
@@ -1237,6 +1307,7 @@ object Form1: TForm1
       Caption = '&Create...'
       Hint = 'Create I/O port or device'
       ImageIndex = 47
+      OnExecute = IOCreateExecute
     end
     object IODestroy: TAction
       Caption = '&Destroy'
@@ -1267,18 +1338,21 @@ object Form1: TForm1
       Caption = '&Run'
       Hint = 'Run'
       ImageIndex = 14
+      OnExecute = ORunExecute
       ShortCut = 120
     end
     object OStep: TAction
       Caption = 'S&tep'
       Hint = 'Step'
       ImageIndex = 13
+      OnExecute = OStepExecute
       ShortCut = 119
     end
     object OStop: TAction
       Caption = '&Stop'
       Hint = 'Stop'
       ImageIndex = 15
+      OnExecute = OStopExecute
       ShortCut = 121
     end
     object ONMI: TAction
@@ -1295,27 +1369,32 @@ object Form1: TForm1
       Caption = 'R&eset all'
       Hint = 'Reset all'
       ImageIndex = 11
+      OnExecute = OResetAllExecute
     end
     object OToggleBreakpoint: TAction
       Caption = 'To&ggle breakpoint...'
       Hint = 'Toggle breakpoint'
       ImageIndex = 31
+      OnExecute = OToggleBreakpointExecute
     end
     object OClearAllBreakpoints: TAction
       Caption = '&Clear all breakpoints'
       Hint = 'Clear all breakpoints'
       ImageIndex = 21
+      OnExecute = OClearAllBreakpointsExecute
     end
     object OMakeSnapshot: TAction
       Caption = 'Make snaps&hot'
       Hint = 'Make snapshot'
       ImageIndex = 29
+      OnExecute = OMakeSnapshotExecute
       ShortCut = 113
     end
     object ORestoreSnapshot: TAction
       Caption = 'Rest&ore snapshot...'
       Hint = 'Rest&ore snapshot'
       ImageIndex = 30
+      OnExecute = ORestoreSnapshotExecute
       ShortCut = 114
     end
     object SNewScript: TAction

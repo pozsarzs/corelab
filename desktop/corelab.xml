@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-  <mime-type type="application/x-corelab-snapshot">
-    <comment>CoreLAB snapshot</comment>
-    <glob pattern="*.clsht"/>
+  <mime-type type="application/x-corelab-project">
+    <comment>CoreLAB project</comment>
+    <glob pattern="*.clprj"/>
   </mime-type>
   <mime-type type="application/x-corelab-scriptembly">
     <comment>CoreLAB scriptembly</comment>
     <glob pattern="*.clsce"/>
+  </mime-type>
+  <mime-type type="application/x-corelab-snapshot">
+    <comment>CoreLAB snapshot</comment>
+    <glob pattern="*.clsht"/>
   </mime-type>
   <mime-type type="application/x-corelab-status">
     <comment>CoreLAB plugin status</comment>

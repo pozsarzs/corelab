@@ -17,8 +17,9 @@ unit frmmain;
 interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
-  ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, frmabout,
-  core_cpu, core_memory, core_ioport, ucommon, uconfig;
+  ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
+  frmabout, frmscripteditor, core_cpu, core_memory, core_ioport, ucommon,
+  uconfig, uproject;
 type
   // operation mode type
   TOpMode = (omInteractive, omScript, omInterpreter);
@@ -47,13 +48,12 @@ type
   TForm1 = class(TForm)
     ActionList1:              TActionList;
     CHMHelpDatabase1:         TCHMHelpDatabase;
-    CoolBar1:                 TCoolBar;
     FExit:                    TAction;
-    FLoadWorkspace:           TAction;
-    FNewWorkspace:            TAction;
+    FLoadProject:             TAction;
+    FNewProject:              TAction;
     FRestartApplication:      TAction;
-    FSaveWorkspace:           TAction;
-    FSaveWorkspaceAs:         TAction;
+    FSaveProject:             TAction;
+    FSaveProjectAs:           TAction;
     FSettings:                TAction;
     FSwitchToInteractiveMode: TAction;
     FSwitchToScriptMode:      TAction;
@@ -279,11 +279,31 @@ type
     VShowRunLogger:           TAction;
     VShowScriptConsole:       TAction;
     VShowScriptEditor:        TAction;
+    procedure FExitExecute(Sender: TObject);
+    procedure FLoadProjectExecute(Sender: TObject);
+    procedure FNewProjectExecute(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FRestartApplicationExecute(Sender: TObject);
+    procedure FSaveProjectAsExecute(Sender: TObject);
+    procedure FSaveProjectExecute(Sender: TObject);
+    procedure FSettingsExecute(Sender: TObject);
+    procedure FSwitchToInteractiveModeExecute(Sender: TObject);
+    procedure FSwitchToScriptModeExecute(Sender: TObject);
     procedure HAboutExecute(Sender: TObject);
     procedure HHelpExecute(Sender: TObject);
+    procedure IOCreateExecute(Sender: TObject);
+    procedure MCreateExecute(Sender: TObject);
+    procedure OClearAllBreakpointsExecute(Sender: TObject);
+    procedure OMakeSnapshotExecute(Sender: TObject);
+    procedure OResetAllExecute(Sender: TObject);
+    procedure ORestoreSnapshotExecute(Sender: TObject);
+    procedure ORunExecute(Sender: TObject);
+    procedure OStepExecute(Sender: TObject);
+    procedure OStopExecute(Sender: TObject);
+    procedure OToggleBreakpointExecute(Sender: TObject);
+    procedure PCreateExecute(Sender: TObject);
     procedure SClearScriptBufferExecute(Sender: TObject);
     procedure SLoadScriptExecute(Sender: TObject);
     procedure SNewScriptExecute(Sender: TObject);
@@ -292,25 +312,37 @@ type
     procedure SSaveScriptExecute(Sender: TObject);
     procedure SStepScriptExecute(Sender: TObject);
     procedure SStopScriptExecute(Sender: TObject);
+    procedure VShowBreakpointManagerExecute(Sender: TObject);
+    procedure VShowHexViewerExecute(Sender: TObject);
+    procedure VShowHideSystemConsoleExecute(Sender: TObject);
+    procedure VShowIntLoggerExecute(Sender: TObject);
+    procedure VShowRegViewerExecute(Sender: TObject);
+    procedure VShowRunLoggerExecute(Sender: TObject);
+    procedure VShowScriptConsoleExecute(Sender: TObject);
+    procedure VShowScriptEditorExecute(Sender: TObject);
   private
     // simulation objects
     FProcessors: array of TCPU;               // created objects from TCPU class
     FMemories:   array of TMemory;         // created objects from TMemory class
     FOPorts:     array of TIOPort;         // created objects from TIOPort class
-    FAppConfig:  TAppConfig;                        // application configuration
+    FAppConfig:  TAppConfig;                               // configuration data
+    FAppProject: TAppProject;                                    // project data
+    procedure ChangeOpMode(AOpMode: TOpMode);           // change operation mode
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   protected
-    FActualProject:    string;                       // actual project directory
-    FActualScript:     string;                             // actual script file
-    FConfigDirectory:  string;                      // directory of the INI file
-    FEXEDirectory:     string;                    // directory of the executable
-    FIgnoreHelp:       Boolean;                       // ignore search help file
-    FOpMode:           TOpMode;                                // operation mode
-    FPluginDirectory:  string;                       // directory of the plugins
-    FScriptBuffer:     TStringList;                             // script buffer
-    FSystemLanguage:   string;                                // system language
-    FUserDirectory:    string;                               // user's directory
+    FActualProject:        string;                   // actual project directory
+    FActualProjectIsSaved: Boolean;                  // actual project directory
+    FActualScript:         string;                         // actual script file
+    FActualScriptIsSaved:  Boolean;                        // actual script file
+    FConfigDirectory:      string;                  // directory of the INI file
+    FEXEDirectory:         string;                // directory of the executable
+    FIgnoreHelp:           Boolean;                   // ignore search help file
+    FOpMode:               TOpMode;                            // operation mode
+    FPluginDirectory:      string;                   // directory of the plugins
+    FScriptBuffer:         TStringList;                         // script buffer
+    FSystemLanguage:       string;                            // system language
+    FUserDirectory:        string;                           // user's directory
   public
   end;
 var
@@ -335,8 +367,29 @@ resourcestring
   MSG47 = 'Save script';
   MSG48 = 'Cannot load script from ''%s'' file.';
   MSG49 = 'Cannot save script to ''%s'' file.';
+  MSG50 = 'The script is unsaved, should I continue?';
+  MSG51 = 'There is already a project, do you want to delete it?';
+  MSG52 = 'CoreLAB project file|*.clprj|All file|*.*';
+  MSG53 = 'Load project';
+  MSG54 = 'Save project';
+  MSG55 = 'Cannot load project from ''%s'' file.';
+  MSG56 = 'Cannot save project to ''%s'' file.';
+  MSG57 = 'The project is unsaved, should I continue?';
 
-  // ---- PRIVATE METHODS ----
+// ---- PRIVATE METHODS ----
+
+// CHANGE OPERATION MODE
+procedure TForm1.ChangeOpMode(AOpMode: TOpMode);
+begin
+  if FOpMode = AOpMode then Exit;
+  if FOpMode = omInteractive then
+  begin
+
+  end else
+  begin
+
+  end;
+end;
 
 // SET HELP SYSTEM
 procedure TForm1.SetIgnoreHelp(AIgnoreHelp: Boolean);
@@ -396,18 +449,207 @@ begin
   FPluginDirectory := APluginDirectory;
 end;
 
-// ---- EVENT HANDLER METHODS ----
+// ---- ACTION HANDLER METHODS ----
 
-// ACTIONS/SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
+// FILE/SWITCH TO INTERACTIVE MODE
+procedure TForm1.FSwitchToInteractiveModeExecute(Sender: TObject);
+begin
+  ChangeOpMode(omInteractive);
+end;
+
+// FILE/SWITCH TO SCRIPT MODE
+procedure TForm1.FSwitchToScriptModeExecute(Sender: TObject);
+begin
+  ChangeOpMode(omScript);
+end;
+
+// FILE/CREATE NEW PROJECT
+procedure TForm1.FNewProjectExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// FILE/LOAD EXISTING PROJECT
+procedure TForm1.FLoadProjectExecute(Sender: TObject);
+var
+  Filename:   string;
+  OpenDialog: TOpenDialog;
+begin
+  if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    OpenDialog := TOpenDialog.Create(Form1);
+    with OpenDialog do
+    begin
+      InitialDir := GetUserDir;
+      Title := MSG53;
+      Filter := MSG52;
+    end;
+    if OpenDialog.Execute then
+    begin
+      Filename := OpenDialog.FileName;
+      try
+        if not SaveProject(FActualProject, FAppProject) then
+        begin
+          ShowMessage(MSG01 + Format(MSG55, [FActualProject]));
+          Exit;
+        end;
+        FActualProject := Filename;                             // with filename
+        FActualProjectIsSaved := True;                        // no need to save
+      finally
+        OpenDialog.Free;
+      end;
+    end;
+  end;
+end;
+
+// FILE/SAVE PROJECT
+procedure TForm1.FSaveProjectExecute(Sender: TObject);
+begin
+  if Length(FActualProject) = 0 then Exit;
+  if not SaveProject(FActualProject, FAppProject) then
+  begin
+    ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
+    Exit;
+  end;
+  FActualProjectIsSaved := True;                              // no need to save
+end;
+
+// FILE/SAVE PROJECT AS
+procedure TForm1.FSaveProjectAsExecute(Sender: TObject);
+var
+  Filename:   string;
+  SaveDialog: TSaveDialog;
+begin
+  SaveDialog := TSaveDialog.Create(Form1);
+  with SaveDialog do
+  begin
+    InitialDir := GetUserDir;
+    Title := MSG54;
+    Filter := MSG52;
+  end;
+  if SaveDialog.Execute then
+  begin
+    Filename := SaveDialog.FileName;
+    try
+      if not SaveProject(FActualProject, FAppProject) then
+      begin
+        ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
+        Exit;
+      end;
+      FActualProject := Filename;                                       // named
+      FActualProjectIsSaved := True;                          // no need to save
+      FSaveProject.Enabled := True;                             // enable 'Save'
+    finally
+      SaveDialog.Free;
+    end;
+  end;
+end;
+
+// FILE/SETTINGS
+procedure TForm1.FSettingsExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// FILE/RESTART APPLICATION
+procedure TForm1.FRestartApplicationExecute(Sender: TObject);
+var
+  NewProcess: TProcess;
+begin
+  NewProcess := TProcess.Create(nil);
+  try
+    NewProcess.Executable := ParamStr(0);
+    NewProcess.Execute;
+  finally
+    NewProcess.Free;
+  end;
+  Application.Terminate;
+end;
+
+// FILE/EXIT TO OS
+procedure TForm1.FExitExecute(Sender: TObject);
+begin
+  Application.Terminate;
+end;
+
+// VIEW/SHOW SYSTEM CONSOLE
+procedure TForm1.VShowHideSystemConsoleExecute(Sender: TObject);
+begin
+  if Memo1.Height = 0 then Memo1.Height := FAppConfig.sysconsole_height;
+
+
+end;
+
+procedure TForm1.VShowBreakpointManagerExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowRegViewerExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowHexViewerExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowScriptConsoleExecute(Sender: TObject);
+begin
+
+end;
+
+
+
+
+
+
+
+// SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
   if FScriptBuffer.Count > 0 then
     if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
-      SClearScriptBufferExecute(Sender);
-      { ha nincs megnyitva a ScriptEditor, akkor meg kell nyitni}
+      SClearScriptBufferExecute(Sender);                  // clear script buffer
+      FActualScript := '';                                   // without filename
+      FActualScriptIsSaved := True;                           // no need to save
+      Form6.ReLoad;                                    // refresh editor content
+      if not Form6.Visible then Form6.Show;                // open script editor
+      SSaveScript.Enabled := False;                            // disable 'Save'
     end;
 end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ACTIONS/SCRIPT/LOAD SCRIPT
 procedure TForm1.SLoadScriptExecute(Sender: TObject);
@@ -435,7 +677,9 @@ begin
             ShowMessage(MSG01 + Format(MSG48, [FileName]));
             exit;
           end;
-          { ha nincs megnyitva a ScriptEditor, akkor meg kell nyitni}
+          FActualScript := Filename;                            // with filename
+          FActualScriptIsSaved := True;                       // no need to save
+          { ha nincs megnyitva a ScriptEditor, akkor itt meg kell nyitni}
         finally
           OpenDialog.Free;
         end;
@@ -446,13 +690,46 @@ end;
 // ACTIONS/SCRIPT/SAVE SCRIPT
 procedure TForm1.SSaveScriptExecute(Sender: TObject);
 begin
-
+  if Length(FActualScript) = 0 then Exit;
+  try
+    FScriptBuffer.SaveToFile(FActualScript);
+  except
+    ShowMessage(MSG01 + Format(MSG49, [FActualScript]));
+    Exit;
+  end;
+  FActualScriptIsSaved := True;                               // no need to save
 end;
 
 // ACTIONS/SCRIPT/SAVE SCRIPT AS
 procedure TForm1.SSaveScriptAsExecute(Sender: TObject);
+var
+  Filename:   string;
+  SaveDialog: TSaveDialog;
 begin
-
+  SaveDialog := TSaveDialog.Create(Form1);
+  with SaveDialog do
+  begin
+    InitialDir := GetUserDir;
+    Title := MSG47;
+    Filter := MSG45;
+  end;
+  if SaveDialog.Execute then
+  begin
+    Filename := SaveDialog.FileName;
+    try
+      try
+        FScriptBuffer.SaveToFile(FileName);
+      except
+        ShowMessage(MSG01 + Format(MSG49, [FileName]));
+        Exit;
+      end;
+      FActualScript := Filename;                                        // named
+      FActualScriptIsSaved := True;                           // no need to save
+      SSaveScript.Enabled := True;                              // enable 'Save'
+    finally
+      SaveDialog.Free;
+    end;
+  end;
 end;
 
 // ACTIONS/SCRIPT/CLEAR SCRIPT BUFFER AND REFRESH SCRIPTEDITOR
@@ -486,10 +763,66 @@ begin
   {...}
 end;
 
+
 // ACTIONS/HELP/SHOW HELP
 procedure TForm1.HHelpExecute(Sender: TObject);
 begin
   ShowHelpOrErrorForKeyword('','html/framework/index.html');
+end;
+
+procedure TForm1.IOCreateExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.MCreateExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.OClearAllBreakpointsExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.OMakeSnapshotExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.OResetAllExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.ORestoreSnapshotExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.ORunExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.OStepExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.OStopExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.OToggleBreakpointExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.PCreateExecute(Sender: TObject);
+begin
+
 end;
 
 // ACTIONS/HELP/SHOW ABOUT
@@ -505,24 +838,20 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   // set actual project/script property
   FActualProject := '';
+  FActualProjectIsSaved := True;
   FActualScript := '';
+  FActualScriptIsSaved := True;
   // set general fields
   FEXEDirectory := GetExeDir;
   FIgnoreHelp := false;
   FPluginDirectory := '.';
-  FOpMode := omInteractive;
+  ChangeOpMode(omInteractive);
   FSystemLanguage := GetLang;
   FUserDirectory := GetUserDir;
   Form1.Caption := Application.Title;
   // enable/disable actions
-  // - depends on opmode
-  if FOpMode = omInteractive then
-  begin
-
-  end else
-  begin
-
-  end;
+  FSaveProject.Enabled := False;
+  SSaveScript.Enabled := False;
   // set directory and load configuration
   {$IFDEF WINDOWS}
     FConfigDirectory := FUserDirectory + DirectorySeparator +
@@ -541,22 +870,40 @@ begin
   ForceDirectories(FConfigDirectory);
   if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
     then ShowMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]));;
-  // - depends on system status
   {...}
 end;
 
 // JOBS BEFORE CLOSE FORM
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
+  // stop running script or simulation
+//  if FOpMode <> omInteractive
+//    then OStopExecute(Sender)
+//    else SStopScriptExecute(Sender);
   // save configuration
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
-    then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));;
+    then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));
+  // save project
+  if FActualProjectIsSaved = False then
+    if not (MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    begin
+      CanClose := False;
+      exit;
+    end;
+  // save script
+  if FActualScriptIsSaved = False then
+    if not (MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    begin
+      CanClose := False;
+      exit;
+    end;
   CanClose := True;
 end;
 
 // DESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
+  {...}
 end;
 
 end.

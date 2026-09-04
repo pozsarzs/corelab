@@ -15,7 +15,7 @@ program corelab;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmmain, frmabout;
+  lhelpcontrolpkg, crt, frmmain, frmabout, frmscripteditor;
 //  frmabout, frmhexviewer, frmrunlogger,
 //  frmexdepmemory, frmloadsavememory;
 const
@@ -180,6 +180,7 @@ begin
 //    CreateForm(TForm3, Form3);
 //    CreateForm(TForm4, Form4);
 //    CreateForm(TForm5, Form5);
+    CreateForm(TForm6, Form6);
 //    CreateForm(TForm7, Form7);
   end;
   Form2.SetAboutLabels(AboutLabels);

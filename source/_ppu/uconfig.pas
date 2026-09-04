@@ -18,10 +18,11 @@ interface
 uses
   INIFiles, SysUtils;
 type
-  // configuration type
+  // configuration data type
   TAppConfig = record
     directory_plugin: string;
     frmmain_left, frmmain_top, frmmain_height, frmmain_width: integer;
+    sysconsole_height: integer;
   end;
 var
   INIFile: TINIFile;
