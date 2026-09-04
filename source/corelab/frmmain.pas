@@ -102,7 +102,6 @@ type
     MenuItem33:               TMenuItem;
     MenuItem34:               TMenuItem;
     MenuItem35:               TMenuItem;
-    MenuItem36:               TMenuItem;
     MenuItem37:               TMenuItem;
     MenuItem38:               TMenuItem;
     MenuItem39:               TMenuItem;
@@ -159,11 +158,14 @@ type
     OToggleBreakpoint:        TAction;
     PageControl1:             TPageControl;
     Panel1:                   TPanel;
+    Panel2:                   TPanel;
     PAttachToBus:             TAction;
     PCreate:                  TAction;
     PDestroy:                 TAction;
     PDetachFromBus:           TAction;
     PopupMenu1:               TPopupMenu;
+    PopupMenu2:               TPopupMenu;
+    PopupMenu3:               TPopupMenu;
     PProperties:              TAction;
     PReset:                   TAction;
     SClearScriptBuffer:       TAction;
@@ -181,7 +183,6 @@ type
     Separator2:               TMenuItem;
     Separator20:              TMenuItem;
     Separator21:              TMenuItem;
-    Separator22:              TMenuItem;
     Separator23:              TMenuItem;
     Separator24:              TMenuItem;
     Separator25:              TMenuItem;
@@ -206,6 +207,8 @@ type
     Separator42:              TMenuItem;
     Separator43:              TMenuItem;
     Separator44:              TMenuItem;
+    Separator45:              TMenuItem;
+    Separator46:              TMenuItem;
     Separator5:               TMenuItem;
     Separator6:               TMenuItem;
     Separator7:               TMenuItem;
@@ -224,11 +227,13 @@ type
     TabSheet3:                TTabSheet;
     TabSheet4:                TTabSheet;
     TabSheet5:                TTabSheet;
+    ToolBar1:                 TToolBar;
     ToolBar2:                 TToolBar;
     ToolBar3:                 TToolBar;
     ToolBar4:                 TToolBar;
     ToolBar5:                 TToolBar;
     ToolBar6:                 TToolBar;
+    ToolBar7:                 TToolBar;
     ToolButton1:              TToolButton;
     ToolButton10:             TToolButton;
     ToolButton11:             TToolButton;
@@ -261,8 +266,25 @@ type
     ToolButton36:             TToolButton;
     ToolButton37:             TToolButton;
     ToolButton38:             TToolButton;
+    ToolButton39:             TToolButton;
     ToolButton4:              TToolButton;
+    ToolButton40:             TToolButton;
+    ToolButton41:             TToolButton;
+    ToolButton42:             TToolButton;
+    ToolButton43:             TToolButton;
+    ToolButton44:             TToolButton;
+    ToolButton45:             TToolButton;
+    ToolButton46:             TToolButton;
+    ToolButton47:             TToolButton;
+    ToolButton48:             TToolButton;
+    ToolButton49:             TToolButton;
     ToolButton5:              TToolButton;
+    ToolButton50:             TToolButton;
+    ToolButton51:             TToolButton;
+    ToolButton52:             TToolButton;
+    ToolButton53:             TToolButton;
+    ToolButton54:             TToolButton;
+    ToolButton55:             TToolButton;
     ToolButton6:              TToolButton;
     ToolButton7:              TToolButton;
     ToolButton8:              TToolButton;
@@ -271,10 +293,8 @@ type
     VRenameIOPanel:           TAction;
     VShowBreakpointManager:   TAction;
     VShowHexViewer:           TAction;
-    VShowHideIOPanel:         TAction;
-    VShowHideSystemConsole:   TAction;
     VShowIntLogger:           TAction;
-    VShowObjectManager:       TAction;
+    VShowIOPanel:             TAction;
     VShowRegViewer:           TAction;
     VShowRunLogger:           TAction;
     VShowScriptConsole:       TAction;
@@ -296,7 +316,9 @@ type
     procedure IOCreateExecute(Sender: TObject);
     procedure MCreateExecute(Sender: TObject);
     procedure OClearAllBreakpointsExecute(Sender: TObject);
+    procedure OIRQExecute(Sender: TObject);
     procedure OMakeSnapshotExecute(Sender: TObject);
+    procedure ONMIExecute(Sender: TObject);
     procedure OResetAllExecute(Sender: TObject);
     procedure ORestoreSnapshotExecute(Sender: TObject);
     procedure ORunExecute(Sender: TObject);
@@ -313,10 +335,7 @@ type
     procedure SStepScriptExecute(Sender: TObject);
     procedure SStopScriptExecute(Sender: TObject);
     procedure VShowBreakpointManagerExecute(Sender: TObject);
-    procedure VShowHexViewerExecute(Sender: TObject);
-    procedure VShowHideSystemConsoleExecute(Sender: TObject);
     procedure VShowIntLoggerExecute(Sender: TObject);
-    procedure VShowRegViewerExecute(Sender: TObject);
     procedure VShowRunLoggerExecute(Sender: TObject);
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
@@ -327,7 +346,7 @@ type
     FOPorts:     array of TIOPort;         // created objects from TIOPort class
     FAppConfig:  TAppConfig;                               // configuration data
     FAppProject: TAppProject;                                    // project data
-    procedure ChangeOpMode(AOpMode: TOpMode);           // change operation mode
+    procedure ChangeOpMode(AOpMode: TOpMode; AForced: Boolean); // change opmode
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   protected
@@ -379,15 +398,34 @@ resourcestring
 // ---- PRIVATE METHODS ----
 
 // CHANGE OPERATION MODE
-procedure TForm1.ChangeOpMode(AOpMode: TOpMode);
+procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced: Boolean);
 begin
-  if FOpMode = AOpMode then Exit;
+  if (FOpMode = AOpMode) and (not AForced) then Exit;
+  FOpMode := AOpMode;
   if FOpMode = omInteractive then
   begin
-
+    MenuItem3.Enabled := True;
+    MenuItem4.Enabled := True;
+    MenuItem5.Enabled := True;
+    MenuItem6.Enabled := True;
+    MenuItem7.Enabled := False;
+    ToolBar2.Enabled := True;
+    ToolBar3.Enabled := True;
+    ToolBar4.Enabled := True;
+    ToolBar5.Enabled := True;
+    ToolBar6.Enabled := False;
   end else
   begin
-
+    MenuItem3.Enabled := False;
+    MenuItem4.Enabled := False;
+    MenuItem5.Enabled := False;
+    MenuItem6.Enabled := False;
+    MenuItem7.Enabled := True;
+    ToolBar2.Enabled := False;
+    ToolBar3.Enabled := False;
+    ToolBar4.Enabled := False;
+    ToolBar5.Enabled := False;
+    ToolBar6.Enabled := True;
   end;
 end;
 
@@ -454,19 +492,20 @@ end;
 // FILE/SWITCH TO INTERACTIVE MODE
 procedure TForm1.FSwitchToInteractiveModeExecute(Sender: TObject);
 begin
-  ChangeOpMode(omInteractive);
+  ChangeOpMode(omInteractive, False);
 end;
 
 // FILE/SWITCH TO SCRIPT MODE
 procedure TForm1.FSwitchToScriptModeExecute(Sender: TObject);
 begin
-  ChangeOpMode(omScript);
+  ChangeOpMode(omScript, False);
 end;
 
 // FILE/CREATE NEW PROJECT
 procedure TForm1.FNewProjectExecute(Sender: TObject);
 begin
   {...}
+  Form1.Caption := Application.Title;
 end;
 
 // FILE/LOAD EXISTING PROJECT
@@ -495,6 +534,7 @@ begin
         end;
         FActualProject := Filename;                             // with filename
         FActualProjectIsSaved := True;                        // no need to save
+        Form1.Caption := Application.Title + ' - ' + FActualProject;
       finally
         OpenDialog.Free;
       end;
@@ -539,6 +579,7 @@ begin
       FActualProject := Filename;                                       // named
       FActualProjectIsSaved := True;                          // no need to save
       FSaveProject.Enabled := True;                             // enable 'Save'
+      Form1.Caption := Application.Title + ' - ' + FActualProject;
     finally
       SaveDialog.Free;
     end;
@@ -569,57 +610,116 @@ end;
 // FILE/EXIT TO OS
 procedure TForm1.FExitExecute(Sender: TObject);
 begin
-  Application.Terminate;
+  Close;
 end;
 
-// VIEW/SHOW SYSTEM CONSOLE
-procedure TForm1.VShowHideSystemConsoleExecute(Sender: TObject);
-begin
-  if Memo1.Height = 0 then Memo1.Height := FAppConfig.sysconsole_height;
-
-
-end;
-
+// VIEW/SHOW BREAKPOINT MANAGER
 procedure TForm1.VShowBreakpointManagerExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
+// VIEW/SHOW RUNLOGGER
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
+// VIEW/SHOW INTLOGGER
 procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
-procedure TForm1.VShowRegViewerExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.VShowHexViewerExecute(Sender: TObject);
-begin
-
-end;
-
+// VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
+// VIEW/SHOW SCRIPTCONSOLE
 procedure TForm1.VShowScriptConsoleExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
+// PROCESSOR/CREATE
+procedure TForm1.PCreateExecute(Sender: TObject);
+begin
+  {...}
+end;
 
+// MEMORY/CREATE
+procedure TForm1.MCreateExecute(Sender: TObject);
+begin
+  {...}
+end;
 
+// IO PORT/CREATE
+procedure TForm1.IOCreateExecute(Sender: TObject);
+begin
+  {...}
+end;
 
+// OPERATION/RUN SIMULATION
+procedure TForm1.ORunExecute(Sender: TObject);
+begin
+  {...}
+end;
 
+// OPERATION/RUN SIMULATION STEP BY STEP
+procedure TForm1.OStepExecute(Sender: TObject);
+begin
+  {...}
+end;
 
+// OPERATION/STOP SIMULATION
+procedure TForm1.OStopExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/REQUEST NMI
+procedure TForm1.ONMIExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/REQUEST IRQ
+procedure TForm1.OIRQExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/RESET SIMULATION
+procedure TForm1.OResetAllExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/TOGGLE BREAKPOINTS
+procedure TForm1.OToggleBreakpointExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/CLEAR ALL BREAKPOINT
+procedure TForm1.OClearAllBreakpointsExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/MAKE SNAPSHOT
+procedure TForm1.OMakeSnapshotExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// OPERATION/RESTORE SNAPSHOT
+procedure TForm1.ORestoreSnapshotExecute(Sender: TObject);
+begin
+  {...}
+end;
 
 // SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
 procedure TForm1.SNewScriptExecute(Sender: TObject);
@@ -633,23 +733,9 @@ begin
       Form6.ReLoad;                                    // refresh editor content
       if not Form6.Visible then Form6.Show;                // open script editor
       SSaveScript.Enabled := False;                            // disable 'Save'
+      Form1.Caption := Application.Title;
     end;
 end;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // ACTIONS/SCRIPT/LOAD SCRIPT
 procedure TForm1.SLoadScriptExecute(Sender: TObject);
@@ -679,6 +765,7 @@ begin
           end;
           FActualScript := Filename;                            // with filename
           FActualScriptIsSaved := True;                       // no need to save
+          Form1.Caption := Application.Title + ' - ' + FActualScript;
           { ha nincs megnyitva a ScriptEditor, akkor itt meg kell nyitni}
         finally
           OpenDialog.Free;
@@ -726,6 +813,7 @@ begin
       FActualScript := Filename;                                        // named
       FActualScriptIsSaved := True;                           // no need to save
       SSaveScript.Enabled := True;                              // enable 'Save'
+      Form1.Caption := Application.Title + ' - ' + FActualScript;
     finally
       SaveDialog.Free;
     end;
@@ -763,66 +851,10 @@ begin
   {...}
 end;
 
-
 // ACTIONS/HELP/SHOW HELP
 procedure TForm1.HHelpExecute(Sender: TObject);
 begin
   ShowHelpOrErrorForKeyword('','html/framework/index.html');
-end;
-
-procedure TForm1.IOCreateExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.MCreateExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.OClearAllBreakpointsExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.OMakeSnapshotExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.OResetAllExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.ORestoreSnapshotExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.ORunExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.OStepExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.OStopExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.OToggleBreakpointExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.PCreateExecute(Sender: TObject);
-begin
-
 end;
 
 // ACTIONS/HELP/SHOW ABOUT
@@ -845,7 +877,7 @@ begin
   FEXEDirectory := GetExeDir;
   FIgnoreHelp := false;
   FPluginDirectory := '.';
-  ChangeOpMode(omInteractive);
+  ChangeOpMode(omInteractive, True);
   FSystemLanguage := GetLang;
   FUserDirectory := GetUserDir;
   Form1.Caption := Application.Title;
@@ -869,7 +901,14 @@ begin
   {$ENDIF}
   ForceDirectories(FConfigDirectory);
   if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
-    then ShowMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]));;
+    then ShowMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]));
+  with FAppConfig do
+  begin
+    Top := frmmain_top;
+    Left := frmmain_left;
+    Height := frmmain_height;
+    Width := frmmain_width;
+  end;
   {...}
 end;
 
@@ -877,10 +916,17 @@ end;
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   // stop running script or simulation
-//  if FOpMode <> omInteractive
-//    then OStopExecute(Sender)
-//    else SStopScriptExecute(Sender);
+  if FOpMode <> omInteractive
+    then OStopExecute(Sender)
+    else SStopScriptExecute(Sender);
   // save configuration
+  with FAppConfig do
+  begin
+    frmmain_top := Top;
+    frmmain_left := Left;
+    frmmain_height := Height;
+    frmmain_width := Width;
+  end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
     then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));
   // save project

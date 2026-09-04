@@ -41,6 +41,7 @@ begin
     try
       with INIFile do
       begin
+        {...}
       end;
     except
       Result := False;
@@ -59,6 +60,7 @@ begin
     try
       with INIFile do
       begin
+        {...}
       end;
     except
       Result := False;

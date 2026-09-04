@@ -21,8 +21,7 @@ type
   // configuration data type
   TAppConfig = record
     directory_plugin: string;
-    frmmain_left, frmmain_top, frmmain_height, frmmain_width: integer;
-    sysconsole_height: integer;
+    frmmain_left, frmmain_top, frmmain_height, frmmain_width: Integer;
   end;
 var
   INIFile: TINIFile;
