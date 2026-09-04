@@ -48,9 +48,9 @@ type
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
   TCreateProcessorFunc = function: TCPU; CALLTYPE;
-  TDestroyProcessorProc = procedure(Processor: TCPU); CALLTYPE;
-  TLoadStateProc  = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateProc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  TDestroyProcessorProc = procedure(AProcessor: TCPU); CALLTYPE;
+  TLoadStateFunc  = function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateFunc = function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   { TTestSysBus }
   TTestSysBus = class(TInterfacedObject, ISysBus)
     function ReadMemory(AAddress: DWord): Byte;
@@ -226,8 +226,8 @@ type
     // pointers to the plugin entry point
     CreateProcessor:  TCreateProcessorFunc;           // create plugin processor
     DestroyProcessor: TDestroyProcessorProc;         // destroy plugin processor
-    LoadState:        TLoadStateProc;                       // load plugin state
-    SaveState:        TSaveStateProc;                       // save plugin state
+    LoadState:        TLoadStateFunc;                       // load plugin state
+    SaveState:        TSaveStateFunc;                       // save plugin state
     // registers
     RegNames:         array of PChar;                 // imported register names
     RegValues:        array of Word;                 // imported register values

@@ -34,9 +34,9 @@ type
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
   TCreateMemoryFunc = function: TMemory; CALLTYPE;
-  TDestroyMemoryProc = procedure(Memory: TMemory); CALLTYPE;
-  TLoadStateProc  = function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateProc = function(Memory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TDestroyMemoryProc = procedure(AMemory: TMemory); CALLTYPE;
+  TLoadStateFunc  = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
@@ -127,8 +127,8 @@ type
     // pointers to the plugin entry point
     CreateMemory:     TCreateMemoryFunc;                 // create plugin memory
     DestroyMemory:    TDestroyMemoryProc;               // destroy plugin memory
-    LoadState:        TLoadStateProc;                       // load plugin state
-    SaveState:        TSaveStateProc;                       // save plugin state
+    LoadState:        TLoadStateFunc;                       // load plugin state
+    SaveState:        TSaveStateFunc;                       // save plugin state
     // general variables
     FIgnoreHelp:      Boolean;
     FLoadCounter:     Integer;

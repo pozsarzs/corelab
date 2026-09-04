@@ -43,17 +43,17 @@ type
   TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
   TCreatePortFunc = function: TIOPort; CALLTYPE;
-  TDestroyPortProc = procedure(Port: TIOPort); CALLTYPE;
-  TCreatePanelProc = procedure(Port: TIOPort); CALLTYPE;
-  TShowPanelProc = procedure(Port: TIOPort); CALLTYPE;
-  THidePanelProc = procedure(Port: TIOPort); CALLTYPE;
-  TFreePanelProc = procedure(Port: TIOPort); CALLTYPE;
-  TRenamePanelProc = procedure(Port: TIOPort; Caption: PChar); CALLTYPE;
-  TResizePanelProc = function(Port: TIOPort; Width, Height: Integer): Boolean; CALLTYPE;
-  TMovePanelProc = function(Port: TIOPort; Left, Top: Integer): Boolean; CALLTYPE;
-  TSetIntHandler = procedure(Port: TIOPort; IntProc: TInterruptCallback; IntVector: Byte); CALLTYPE;
-  TLoadStateProc  = function(Port: TIOPort; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateProc = function(Port: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TDestroyPortProc = procedure(APort: TIOPort); CALLTYPE;
+  TCreatePanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TShowPanelProc = procedure(APort: TIOPort); CALLTYPE;
+  THidePanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TFreePanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TRenamePanelProc = procedure(APort: TIOPort; Caption: PChar); CALLTYPE;
+  TResizePanelFunc = function(APort: TIOPort; Width, Height: Integer): Boolean; CALLTYPE;
+  TMovePanelFunc = function(APort: TIOPort; Left, Top: Integer): Boolean; CALLTYPE;
+  TSetIntHandlerProc = procedure(APort: TIOPort; IntProc: TInterruptCallback; IntVector: Byte); CALLTYPE;
+  TLoadStateFunc  = function(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateFunc = function(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
     About:                       TAction;
@@ -161,11 +161,11 @@ type
     HidePanel:        THidePanelProc;                       // hide plugin panel
     FreePanel:        TFreePanelProc;                    // destroy plugin panel
     RenamePanel:      TRenamePanelProc;                   // rename plugin panel
-    ResizePanel:      TResizePanelProc;                   // resize plugin panel
-    MovePanel:        TMovePanelProc;                       // move plugin panel
-    SetIntHandler:    TSetIntHandler; // set plugin interrupt callback procedure
-    LoadState:        TLoadStateProc;                       // load plugin state
-    SaveState:        TSaveStateProc;                       // save plugin state
+    ResizePanel:      TResizePanelFunc;                   // resize plugin panel
+    MovePanel:        TMovePanelFunc;                       // move plugin panel
+    SetIntHandler:    TSetIntHandlerProc;    // set interrupt callback procedure
+    LoadState:        TLoadStateFunc;                       // load plugin state
+    SaveState:        TSaveStateFunc;                       // save plugin state
     // general variables
     FIgnoreHelp:      Boolean;
     FLoadCounter:     Integer;

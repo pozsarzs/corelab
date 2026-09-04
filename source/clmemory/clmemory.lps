@@ -19,6 +19,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
+        <CursorPos X="5" Y="2"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -75,10 +76,6 @@
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="123" Column="35" TopLine="106"/>
-      </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="26" Column="15"/>
@@ -192,6 +189,10 @@
       </Position>
       <Position>
         <Filename Value="frmabout.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="40" TopLine="73"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -27,6 +27,14 @@ type
   TIOPortDestroyProc = procedure(AIOPort: TIOPort); CALLTYPE;
   TIOPortLoadStateFunc = function(AIOPort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
   TIOPortSaveStateFunc = function(AIOPort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TIOPortCreatePanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TIOPortShowPanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TIOPortHidePanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TIOPortFreePanelProc = procedure(APort: TIOPort); CALLTYPE;
+  TIOPortRenamePanelProc = procedure(APort: TIOPort; Caption: PChar); CALLTYPE;
+  TIOPortResizePanelFunc = function(APort: TIOPort; Width, Height: Integer): Boolean; CALLTYPE;
+  TIOPortMovePanelFunc = function(APort: TIOPort; Left, Top: Integer): Boolean; CALLTYPE;
+  TIOPortSetIntHandlerProc = procedure(APort: TIOPort; IntProc: TInterruptCallback; IntVector: Byte); CALLTYPE;
   TMemoryCreateFunc = function: TMemory; CALLTYPE;
   TMemoryDestroyProc = procedure(AMemory: TMemory); CALLTYPE;
   TMemoryLoadStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
@@ -293,12 +301,13 @@ type
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   protected
+    FActualProject:    string;                       // actual project directory
+    FActualScript:     string;                             // actual script file
     FConfigDirectory:  string;                      // directory of the INI file
     FEXEDirectory:     string;                    // directory of the executable
     FIgnoreHelp:       Boolean;                       // ignore search help file
     FOpMode:           TOpMode;                                // operation mode
     FPluginDirectory:  string;                       // directory of the plugins
-    FProjectDirectory: string;                       // actual project directory
     FScriptBuffer:     TStringList;                             // script buffer
     FSystemLanguage:   string;                                // system language
     FUserDirectory:    string;                               // user's directory
@@ -318,8 +327,16 @@ resourcestring
   MSG19 = 'Missing help viewer.';
   MSG40 = 'Cannot load ''%s'' configuration file.';
   MSG41 = 'Cannot save ''%s'' configuration file.';
+  MSG42 = 'No script, create or load one.';
+  MSG43 = 'Confirmation';
+  MSG44 = 'There is already a script, do you want to delete it?';
+  MSG45 = 'CoreLAB scriptembly file|*.clsce|All file|*.*';
+  MSG46 = 'Load script';
+  MSG47 = 'Save script';
+  MSG48 = 'Cannot load script from ''%s'' file.';
+  MSG49 = 'Cannot save script to ''%s'' file.';
 
-// ---- PRIVATE METHODS ----
+  // ---- PRIVATE METHODS ----
 
 // SET HELP SYSTEM
 procedure TForm1.SetIgnoreHelp(AIgnoreHelp: Boolean);
@@ -381,45 +398,92 @@ end;
 
 // ---- EVENT HANDLER METHODS ----
 
+// ACTIONS/SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
-
+  if FScriptBuffer.Count > 0 then
+    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      SClearScriptBufferExecute(Sender);
+      { ha nincs megnyitva a ScriptEditor, akkor meg kell nyitni}
+    end;
 end;
 
+// ACTIONS/SCRIPT/LOAD SCRIPT
 procedure TForm1.SLoadScriptExecute(Sender: TObject);
+var
+  Filename:   string;
+  OpenDialog: TOpenDialog;
 begin
-
+  if FScriptBuffer.Count > 0 then
+    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      OpenDialog := TOpenDialog.Create(Form1);
+      with OpenDialog do
+      begin
+        InitialDir := GetUserDir;
+        Title := MSG46;
+        Filter := MSG45;
+      end;
+      if OpenDialog.Execute then
+      begin
+        Filename := OpenDialog.FileName;
+        try
+          try
+            FScriptBuffer.LoadFromFile(FileName);
+          except
+            ShowMessage(MSG01 + Format(MSG48, [FileName]));
+            exit;
+          end;
+          { ha nincs megnyitva a ScriptEditor, akkor meg kell nyitni}
+        finally
+          OpenDialog.Free;
+        end;
+      end;
+    end;
 end;
 
+// ACTIONS/SCRIPT/SAVE SCRIPT
 procedure TForm1.SSaveScriptExecute(Sender: TObject);
 begin
 
 end;
 
+// ACTIONS/SCRIPT/SAVE SCRIPT AS
 procedure TForm1.SSaveScriptAsExecute(Sender: TObject);
 begin
 
 end;
 
-// ACTIONS/SCRIPT/CLEAR SCRIPT BUFFER
+// ACTIONS/SCRIPT/CLEAR SCRIPT BUFFER AND REFRESH SCRIPTEDITOR
 procedure TForm1.SClearScriptBufferExecute(Sender: TObject);
 begin
-
+  FScriptBuffer.Clear;
+  { ScriptEditor frissítése }
 end;
 
+// ACTIONS/SCRIPT/RUN SCRIPT
 procedure TForm1.SRunScriptExecute(Sender: TObject);
 begin
-
+  if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
+  begin
+    {...}
+  end;
 end;
 
+// ACTIONS/SCRIPT/RUN SCRIPT STEP BY STEP
 procedure TForm1.SStepScriptExecute(Sender: TObject);
 begin
-
+  if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
+  begin
+    {...}
+  end;
 end;
 
+// ACTIONS/SCRIPT/STOP SCRIPT
 procedure TForm1.SStopScriptExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
 // ACTIONS/HELP/SHOW HELP
@@ -439,11 +503,13 @@ end;
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  // set actual project/script property
+  FActualProject := '';
+  FActualScript := '';
   // set general fields
   FEXEDirectory := GetExeDir;
   FIgnoreHelp := false;
   FPluginDirectory := '.';
-  FProjectDirectory := '';
   FOpMode := omInteractive;
   FSystemLanguage := GetLang;
   FUserDirectory := GetUserDir;
