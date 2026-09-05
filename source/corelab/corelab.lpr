@@ -15,9 +15,9 @@ program corelab;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmmain, frmabout, frmscripteditor;
-//  frmabout, frmhexviewer, frmrunlogger,
-//  frmexdepmemory, frmloadsavememory;
+  lhelpcontrolpkg, crt, frmmain, frmabout
+   // frmscripteditor, frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory
+  ;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -114,7 +114,7 @@ end;
 begin
   // default values
   IgnoreHelp := false;
-  PluginDir := '.';
+  PluginDir := '';
   ExeName := ExtractFilename(ParamStr(0));
   // arguments and operation modes
   if ParamCount > 0 then
@@ -175,17 +175,27 @@ begin
     Title:='CoreLAB | Processor simulation framework';
     Scaled:=True;
     Initialize;
-    CreateForm(TForm1, Form1);
-    CreateForm(TForm2, Form2);
-//    CreateForm(TForm3, Form3);
-//    CreateForm(TForm4, Form4);
-//    CreateForm(TForm5, Form5);
-    CreateForm(TForm6, Form6);
-//    CreateForm(TForm7, Form7);
+    CreateForm(TForm1, Form1);                                      // Main Form
+    CreateForm(TForm2, Form2);                                          // About
+//    CreateForm(TForm3, Form3);                                    // HexViewer
+//    CreateForm(TForm4, Form4);                                    // RunLogger
+//    CreateForm(TForm5, Form5);                                  // ExDepMemory
+//    CreateForm(TForm6, Form6);                                 // ScriptEditor
+//    CreateForm(TForm7, Form7);                               // LoadSaveMemory
+//    CreateForm(TForm8, Form8);                                    // IntLogger
+//    CreateForm(TForm9, Form9);                               // LoadSaveMemory
+//    CreateForm(TForm10, Form10);                         // Breakpoint Manager
+//    CreateForm(TForm11, Form11);                                  // RegViewer
+//    CreateForm(TForm12, Form12);                              // ScriptConsole
+//    CreateForm(TForm13, Form13);                    // Rename I/O plugin panel
+//    CreateForm(TForm14, Form14);               // Move/resize I/O plugin panel
+//    CreateForm(TForm15, Form15);                          // Plugin properties
   end;
+  // set properties
   Form2.SetAboutLabels(AboutLabels);
-//  Form1.PluginDirectory := PluginDir;
-//  Form1.IgnoreHelp := IgnoreHelp;
+  Form1.PluginDirectory := PluginDir;
+  Form1.IgnoreHelp := IgnoreHelp;
+  // start application
   Application.ProcessMessages;
   Application.Run;
 end.

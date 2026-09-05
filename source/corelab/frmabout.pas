@@ -46,9 +46,10 @@ type
     procedure Label8Click(Sender: TObject);
     procedure Label8MouseEnter(Sender: TObject);
     procedure Label8MouseLeave(Sender: TObject);
+    procedure SetAboutLabels(ALabels: TAboutLabels);
   private
   public
-    procedure SetAboutLabels(Labels: TAboutLabels);
+    property AboutLabels: TAboutLabels write SetAboutLabels;
   end;
 var
   Form2: TForm2;
@@ -61,12 +62,12 @@ resourcestring
 {$R *.lfm}
 { TForm2 }
 
-// ---- PUBLIC METHODS ----
+// ---- PRIVATE METHODS ----
 
 // SET LABELS
-procedure TForm2.SetAboutLabels(Labels: TAboutLabels);
+procedure TForm2.SetAboutLabels(ALabels: TAboutLabels);
 begin
-  with Labels do
+  with ALabels do
   begin
     Label1.Caption := Name;
     Label2.Caption := 'v' + Version;

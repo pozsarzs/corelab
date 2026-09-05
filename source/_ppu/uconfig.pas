@@ -23,8 +23,6 @@ type
     directory_plugin: string;
     frmmain_left, frmmain_top, frmmain_height, frmmain_width: Integer;
   end;
-var
-  INIFile: TINIFile;
 const
   KEY1: array[0..1] of string = ('directory_', 'frmmain_');
   KEY2: array[0..4] of string = ('plugin', 'top', 'left', 'height', 'width');
@@ -37,6 +35,8 @@ implementation
 
 // LOAD CONFIGURATION
 function LoadConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
+var
+  INIFile: TINIFile;
 begin
   Result := True;
   INIFile := TINIFile.Create(AFilename);
@@ -47,10 +47,10 @@ begin
         // Directories
         AAppConfig.directory_plugin := ReadString(SECTION[0], KEY1[0] + KEY2[0], '.');
         // Forms
-        AAppConfig.frmmain_left := ReadInteger(SECTION[1], KEY1[1] + KEY2[0], 8);
-        AAppConfig.frmmain_top := ReadInteger(SECTION[1], KEY1[1] + KEY2[1], 8);
-        AAppConfig.frmmain_height := ReadInteger(SECTION[1], KEY1[1] + KEY2[2], 174);
-        AAppConfig.frmmain_width := ReadInteger(SECTION[1], KEY1[1] + KEY2[3], 930);
+        AAppConfig.frmmain_left := ReadInteger(SECTION[1], KEY1[1] + KEY2[1], 8);
+        AAppConfig.frmmain_top := ReadInteger(SECTION[1], KEY1[1] + KEY2[2], 8);
+        AAppConfig.frmmain_height := ReadInteger(SECTION[1], KEY1[1] + KEY2[3], 174);
+        AAppConfig.frmmain_width := ReadInteger(SECTION[1], KEY1[1] + KEY2[4], 930);
       end;
     except
       Result := False;
@@ -62,6 +62,8 @@ end;
 
 // SAVE CONFIGURATION
 function SaveConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
+var
+  INIFile: TINIFile;
 begin
   Result := True;
   INIFile := TINIFile.Create(AFilename);
@@ -72,10 +74,10 @@ begin
         // Directories
         WriteString(SECTION[0], KEY1[0] + KEY2[0], AAppConfig.directory_plugin);
         // Forms
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[0], AAppConfig.frmmain_left);
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[1], AAppConfig.frmmain_top);
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[2], AAppConfig.frmmain_height);
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[3], AAppConfig.frmmain_width);
+        WriteInteger(SECTION[1], KEY1[1] + KEY2[1], AAppConfig.frmmain_left);
+        WriteInteger(SECTION[1], KEY1[1] + KEY2[2], AAppConfig.frmmain_top);
+        WriteInteger(SECTION[1], KEY1[1] + KEY2[3], AAppConfig.frmmain_height);
+        WriteInteger(SECTION[1], KEY1[1] + KEY2[4], AAppConfig.frmmain_width);
       end;
     except
       Result := False;

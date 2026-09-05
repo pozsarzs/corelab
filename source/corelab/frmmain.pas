@@ -18,32 +18,15 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
-  frmabout, frmscripteditor, core_cpu, core_memory, core_ioport, ucommon,
-  uconfig, uproject;
+  Generics.Collections, frmabout, frmscripteditor, core_cpu, core_memory,
+  core_ioport, ucommon, uconfig, uplugin, uproject;
 type
+  // allocated simulation objects
+  TProcInstanceDict = specialize TDictionary<string, TCPU>;
+  TMemInstanceDict = specialize TDictionary<string, TMemory>;
+  TPortInstanceDict = specialize TDictionary<string, TIOPort>;
   // operation mode type
   TOpMode = (omInteractive, omScript, omInterpreter);
-  // procedural types pointing to the plugin entry point
-  TIOPortCreateFunc = function: TIOPort; CALLTYPE;
-  TIOPortDestroyProc = procedure(AIOPort: TIOPort); CALLTYPE;
-  TIOPortLoadStateFunc = function(AIOPort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
-  TIOPortSaveStateFunc = function(AIOPort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
-  TIOPortCreatePanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TIOPortShowPanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TIOPortHidePanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TIOPortFreePanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TIOPortRenamePanelProc = procedure(APort: TIOPort; Caption: PChar); CALLTYPE;
-  TIOPortResizePanelFunc = function(APort: TIOPort; Width, Height: Integer): Boolean; CALLTYPE;
-  TIOPortMovePanelFunc = function(APort: TIOPort; Left, Top: Integer): Boolean; CALLTYPE;
-  TIOPortSetIntHandlerProc = procedure(APort: TIOPort; IntProc: TInterruptCallback; IntVector: Byte); CALLTYPE;
-  TMemoryCreateFunc = function: TMemory; CALLTYPE;
-  TMemoryDestroyProc = procedure(AMemory: TMemory); CALLTYPE;
-  TMemoryLoadStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
-  TMemorySaveStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
-  TProcessorCreateFunc = function: TCPU; CALLTYPE;
-  TProcessorDestroyProc = procedure(Processor: TCPU); CALLTYPE;
-  TProcessorLoadStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
-  TProcessorSaveStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
     ActionList1:              TActionList;
@@ -340,12 +323,15 @@ type
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
   private
-    // simulation objects
-    FProcessors: array of TCPU;               // created objects from TCPU class
-    FMemories:   array of TMemory;         // created objects from TMemory class
-    FOPorts:     array of TIOPort;         // created objects from TIOPort class
-    FAppConfig:  TAppConfig;                               // configuration data
-    FAppProject: TAppProject;                                    // project data
+    // active component instances
+    FProcInstanceDict: TProcInstanceDict;
+    FMemInstanceDict:  TMemInstanceDict;
+    FPortInstanceDict: TPortInstanceDict;
+    // script buffer
+    FScriptBuffer:     TStringList;
+    // global and project settings
+    FAppConfig:        TAppConfig;                         // configuration data
+    FAppProject:       TAppProject;                              // project data
     procedure ChangeOpMode(AOpMode: TOpMode; AForced: Boolean); // change opmode
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
@@ -359,10 +345,11 @@ type
     FIgnoreHelp:           Boolean;                   // ignore search help file
     FOpMode:               TOpMode;                            // operation mode
     FPluginDirectory:      string;                   // directory of the plugins
-    FScriptBuffer:         TStringList;                         // script buffer
     FSystemLanguage:       string;                            // system language
     FUserDirectory:        string;                           // user's directory
   public
+    property IgnoreHelp: Boolean write SetIgnoreHelp;
+    property PluginDirectory: string write SetPluginDirectory;
   end;
 var
   Form1: TForm1;
@@ -374,6 +361,9 @@ implementation
 
 resourcestring
   MSG01 = 'ERROR: ';
+  MSG03 = 'Plugin directory does not exist.';
+  MSG04 = 'Cannot load plugins from %s.';
+  MSG05 = 'It is not a CoreLAB processor plugin.';
   MSG18 = 'Missing help file.';
   MSG19 = 'Missing help viewer.';
   MSG40 = 'Cannot load ''%s'' configuration file.';
@@ -399,11 +389,19 @@ resourcestring
 
 // CHANGE OPERATION MODE
 procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced: Boolean);
+var
+  i: integer;
 begin
+  // forced change
   if (FOpMode = AOpMode) and (not AForced) then Exit;
-  FOpMode := AOpMode;
-  if FOpMode = omInteractive then
+  // change
+  if AOpMode = omInteractive then
   begin
+    if not FActualScriptIsSaved then
+      if MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+        then Exit;
+    FOpMode := AOpMode;
+    // enable/disable MenuItems and ToolBars
     MenuItem3.Enabled := True;
     MenuItem4.Enabled := True;
     MenuItem5.Enabled := True;
@@ -416,6 +414,9 @@ begin
     ToolBar6.Enabled := False;
   end else
   begin
+    if not FActualProjectIsSaved then
+      if MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrNo then Exit;
+    FOpMode := AOpMode;
     MenuItem3.Enabled := False;
     MenuItem4.Enabled := False;
     MenuItem5.Enabled := False;
@@ -427,6 +428,28 @@ begin
     ToolBar5.Enabled := False;
     ToolBar6.Enabled := True;
   end;
+  // set new project value
+  FActualProject := '';
+  FActualProjectIsSaved := False;
+  FActualScript := '';
+  FActualScriptIsSaved := False;
+  // clear active component instances
+  FProcInstanceDict.Clear;
+  FMemInstanceDict.Clear;
+  FPortInstanceDict.Clear;
+  // clear script buffer and refresh ScriptEditor;
+  FScriptBuffer.Clear;
+  // clear content of the internal modules
+  // Form3.ClearContent;                                          // HexViewer
+  // Form4.ClearContent;                                          // RunLogger
+  // Form6.ClearContent;                                       // ScriptEditor
+  // Form8.ClearContent;                                          // IntLogger
+  // Form11.ClearContent;                                         // RegViewer
+  // Form12.ClearContent;                                     // ScriptConsole
+  // close internal modules
+  for i := Screen.FormCount - 1 downto 0 do
+    if (Screen.Forms[i] <> Application.MainForm) and
+        Screen.Forms[i].Visible then Screen.Forms[i].Close;
 end;
 
 // SET HELP SYSTEM
@@ -724,17 +747,16 @@ end;
 // SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
-  if FScriptBuffer.Count > 0 then
-    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-      SClearScriptBufferExecute(Sender);                  // clear script buffer
-      FActualScript := '';                                   // without filename
-      FActualScriptIsSaved := True;                           // no need to save
-      Form6.ReLoad;                                    // refresh editor content
-      if not Form6.Visible then Form6.Show;                // open script editor
-      SSaveScript.Enabled := False;                            // disable 'Save'
-      Form1.Caption := Application.Title;
-    end;
+  if (FScriptBuffer.Count > 0) and (not FActualScriptIsSaved) then
+    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrNo then Exit;
+  {...}                                                   // clear OOP items
+  SClearScriptBufferExecute(Sender);                  // clear script buffer
+  Form6.ReLoad;                                    // refresh editor content
+  FActualScript := '';                                   // without filename
+  FActualScriptIsSaved := True;                           // no need to save
+  if not Form6.Visible then Form6.Show;                // open script editor
+  SSaveScript.Enabled := False;                            // disable 'Save'
+  Form1.Caption := Application.Title;
 end;
 
 // ACTIONS/SCRIPT/LOAD SCRIPT
@@ -863,27 +885,27 @@ begin
   Form2.ShowModal;
 end;
 
-// ---- CREATE AND DESTROY EVENT HANDLER ----
+// ---- CREATE AND DESTROY EVENT HANDLERS ----
 
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
+var
+  Error: Boolean;
 begin
+  Error := False;
+  Form1.Caption := Application.Title;
   // set actual project/script property
   FActualProject := '';
   FActualProjectIsSaved := True;
   FActualScript := '';
   FActualScriptIsSaved := True;
-  // set general fields
-  FEXEDirectory := GetExeDir;
-  FIgnoreHelp := false;
-  FPluginDirectory := '.';
-  ChangeOpMode(omInteractive, True);
-  FSystemLanguage := GetLang;
-  FUserDirectory := GetUserDir;
-  Form1.Caption := Application.Title;
-  // enable/disable actions
+  // save without dialog buttons
   FSaveProject.Enabled := False;
   SSaveScript.Enabled := False;
+  // set general fields
+  FEXEDirectory := GetExeDir;
+  FSystemLanguage := GetLang;
+  FUserDirectory := GetUserDir;
   // set directory and load configuration
   {$IFDEF WINDOWS}
     FConfigDirectory := FUserDirectory + DirectorySeparator +
@@ -891,13 +913,9 @@ begin
                         'Local' + DirectorySeparator +
                         BASENAME + DirectorySeparator;
   {$ELSE}
-    {$IFDEF UNIX}
-      FConfigDirectory := FUserDirectory + DirectorySeparator +
-                          '.config' + DirectorySeparator +
-                          BASENAME + DirectorySeparator;
-    {$ELSE}
-      {$FATAL Not supported operation system!}
-    {$ENDIF}
+    FConfigDirectory := FUserDirectory + DirectorySeparator +
+                        '.config' + DirectorySeparator +
+                        BASENAME + DirectorySeparator;
   {$ENDIF}
   ForceDirectories(FConfigDirectory);
   if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
@@ -909,47 +927,122 @@ begin
     Height := frmmain_height;
     Width := frmmain_width;
   end;
-  {...}
+  // set plugin directory and load plugins
+  if FPluginDirectory = '' then
+  begin
+    {$IFDEF UNIX}
+      FPluginDirectory := './lib';
+      if not DirectoryExists(FPluginDirectory) then
+      begin
+        FPluginDirectory := '/usr/lib/corelab';
+        if not DirectoryExists(FPluginDirectory) then
+        begin
+          FPluginDirectory := '/usr/local/lib/corelab';
+          if not DirectoryExists(FPluginDirectory) then
+          begin
+            ShowMessage(MSG01 + MSG03);
+            Error := True;
+          end;
+        end;
+      end;
+    {$ELSE}
+      FPluginDirectory := '.\lib';
+      if not DirectoryExists(FPluginDirectory) then
+      begin
+        ShowMessage(MSG01 + MSG03);
+        Error := True;
+      end;
+    {$ENDIF}
+  end;
+  if not Error then
+    if not LoadAllPlugins(FPluginDirectory) then
+    begin
+      ShowMessage(MSG01 + Format(MSG04, [FPluginDirectory]));
+      Error := True;
+    end;
+  if not Error then
+  begin
+    // create dictionaries for active component instances
+    FProcInstanceDict := TProcInstanceDict.Create;
+    FMemInstanceDict := TMemInstanceDict.Create;
+    FPortInstanceDict := TPortInstanceDict.Create;
+    // create script buffer
+    FScriptBuffer := TStringList.Create;
+    // change operation mode
+    ChangeOpMode(omInteractive, True);
+  end else Application.Terminate;
 end;
 
 // JOBS BEFORE CLOSE FORM
 procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
+  // check unsaved project or script
+  if (FOpMode <> omInteractive) then
+  begin
+    // check script
+    if FActualScriptIsSaved = False then
+      if not (MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      begin
+        CanClose := False;
+        Exit;
+      end;
+  end else
+  begin
+    // check project
+    if FActualProjectIsSaved = False then
+      if not (MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      begin
+        CanClose := False;
+        Exit;
+      end;
+  end;
   // stop running script or simulation
   if FOpMode <> omInteractive
-    then OStopExecute(Sender)
-    else SStopScriptExecute(Sender);
+    then SStopScriptExecute(Sender)
+    else OStopExecute(Sender);
   // save configuration
   with FAppConfig do
   begin
+    // main form
     frmmain_top := Top;
     frmmain_left := Left;
     frmmain_height := Height;
     frmmain_width := Width;
+    {...}
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
     then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));
-  // save project
-  if FActualProjectIsSaved = False then
-    if not (MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    begin
-      CanClose := False;
-      exit;
-    end;
-  // save script
-  if FActualScriptIsSaved = False then
-    if not (MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    begin
-      CanClose := False;
-      exit;
-    end;
+  // go to destroy
   CanClose := True;
 end;
 
 // DESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  {...}
+  // clear and destroy dictionaries
+  if Assigned(FProcInstanceDict) then
+  begin
+    FProcInstanceDict.Clear;
+    FProcInstanceDict.Free;
+  end;
+  if Assigned(FMemInstanceDict) then
+  begin
+    FMemInstanceDict.Clear;
+    FMemInstanceDict.Free;
+  end;
+  if Assigned(FPortInstanceDict) then
+  begin
+    FPortInstanceDict.Clear;
+    FPortInstanceDict.Free;
+  end;
+  // clear and destroy script buffer
+  if Assigned(FScriptBuffer) then
+  begin
+    FScriptBuffer.Clear;
+    FScriptBuffer.Free;
+  end;
+  // unload plugins
+  UnLoadAllPlugins;
 end;
 
 end.
