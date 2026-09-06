@@ -15,7 +15,7 @@ type
     procedure ReLoad;
 
   end;
-
+// ha OnShow, akkor buffer frissítés!
 var
   Form6: TForm6;
 

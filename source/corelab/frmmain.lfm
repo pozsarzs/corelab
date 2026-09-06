@@ -396,9 +396,9 @@ object Form1: TForm1
       Height = 58
       Top = 1
       Width = 727
-      ActivePage = TabSheet1
+      ActivePage = TabSheet5
       Align = alClient
-      TabIndex = 0
+      TabIndex = 4
       TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Operation'
@@ -927,6 +927,16 @@ object Form1: TForm1
         end
       end
     end
+    object Memo2: TMemo
+      Left = 515
+      Height = 90
+      Top = 11
+      Width = 150
+      Lines.Strings = (
+        'Memo2'
+      )
+      TabOrder = 3
+    end
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
@@ -1244,12 +1254,6 @@ object Form1: TForm1
         Action = SSaveScriptAs
       end
       object Separator7: TMenuItem
-        Caption = '-'
-      end
-      object MenuItem30: TMenuItem
-        Action = SClearScriptBuffer
-      end
-      object Separator6: TMenuItem
         Caption = '-'
       end
       object MenuItem32: TMenuItem
@@ -1597,12 +1601,6 @@ object Form1: TForm1
       Hint = 'Save script as'
       ImageIndex = 32
       OnExecute = SSaveScriptAsExecute
-    end
-    object SClearScriptBuffer: TAction
-      Caption = '&Clear script buffer'
-      Hint = 'Clear script buffer'
-      ImageIndex = 21
-      OnExecute = SClearScriptBufferExecute
     end
     object SRunScript: TAction
       Caption = '&Run script'

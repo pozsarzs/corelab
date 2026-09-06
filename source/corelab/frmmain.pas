@@ -18,8 +18,8 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
-  Generics.Collections, frmabout, frmscripteditor, core_cpu, core_memory,
-  core_ioport, ucommon, uconfig, uplugin, uproject;
+  Generics.Collections, frmabout, core_cpu, core_memory, core_ioport, ucommon,
+  uconfig, uplugin, uproject;
 type
   // allocated simulation objects
   TProcInstanceDict = specialize TDictionary<string, TCPU>;
@@ -79,7 +79,6 @@ type
     MenuItem28:               TMenuItem;
     MenuItem29:               TMenuItem;
     MenuItem3:                TMenuItem;
-    MenuItem30:               TMenuItem;
     MenuItem31:               TMenuItem;
     MenuItem32:               TMenuItem;
     MenuItem33:               TMenuItem;
@@ -151,7 +150,6 @@ type
     PopupMenu3:               TPopupMenu;
     PProperties:              TAction;
     PReset:                   TAction;
-    SClearScriptBuffer:       TAction;
     Separator1:               TMenuItem;
     Separator10:              TMenuItem;
     Separator11:              TMenuItem;
@@ -193,7 +191,6 @@ type
     Separator45:              TMenuItem;
     Separator46:              TMenuItem;
     Separator5:               TMenuItem;
-    Separator6:               TMenuItem;
     Separator7:               TMenuItem;
     Separator8:               TMenuItem;
     Separator9:               TMenuItem;
@@ -309,7 +306,6 @@ type
     procedure OStopExecute(Sender: TObject);
     procedure OToggleBreakpointExecute(Sender: TObject);
     procedure PCreateExecute(Sender: TObject);
-    procedure SClearScriptBufferExecute(Sender: TObject);
     procedure SLoadScriptExecute(Sender: TObject);
     procedure SNewScriptExecute(Sender: TObject);
     procedure SRunScriptExecute(Sender: TObject);
@@ -340,6 +336,8 @@ type
     FActualProjectIsSaved: Boolean;                  // actual project directory
     FActualScript:         string;                         // actual script file
     FActualScriptIsSaved:  Boolean;                        // actual script file
+    FScriptInstPointer:    integer;                   // next instruction number
+    FScriptIsRunning:      Boolean;                      // script running state
     FConfigDirectory:      string;                  // directory of the INI file
     FEXEDirectory:         string;                // directory of the executable
     FIgnoreHelp:           Boolean;                   // ignore search help file
@@ -395,13 +393,26 @@ begin
   // forced change
   if (FOpMode = AOpMode) and (not AForced) then Exit;
   // change
-  if AOpMode = omInteractive then
+  // check actual project or script status
+  if FOpMode = omInteractive then
+  begin
+    if not FActualProjectIsSaved then
+      if MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+        then Exit;
+  end else
   begin
     if not FActualScriptIsSaved then
       if MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrNo
         then Exit;
-    FOpMode := AOpMode;
-    // enable/disable MenuItems and ToolBars
+  end;
+  FOpMode := AOpMode;
+  // stop running script or simulation
+  if FOpMode <> omInteractive
+    then SStopScriptExecute(Nil)
+    else OStopExecute(Nil);
+  // enable/disable MenuItems and ToolBars for required OpMode
+  if FOpMode = omInteractive then
+  begin
     MenuItem3.Enabled := True;
     MenuItem4.Enabled := True;
     MenuItem5.Enabled := True;
@@ -414,9 +425,6 @@ begin
     ToolBar6.Enabled := False;
   end else
   begin
-    if not FActualProjectIsSaved then
-      if MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrNo then Exit;
-    FOpMode := AOpMode;
     MenuItem3.Enabled := False;
     MenuItem4.Enabled := False;
     MenuItem5.Enabled := False;
@@ -428,11 +436,14 @@ begin
     ToolBar5.Enabled := False;
     ToolBar6.Enabled := True;
   end;
+  // restore mainform caption
+  Form1.Caption := Application.Title;
   // set new project value
   FActualProject := '';
   FActualProjectIsSaved := False;
   FActualScript := '';
   FActualScriptIsSaved := False;
+  FScriptInstPointer := 0;
   // clear active component instances
   FProcInstanceDict.Clear;
   FMemInstanceDict.Clear;
@@ -527,8 +538,7 @@ end;
 // FILE/CREATE NEW PROJECT
 procedure TForm1.FNewProjectExecute(Sender: TObject);
 begin
-  {...}
-  Form1.Caption := Application.Title;
+  ChangeOpMode(omInteractive, True)
 end;
 
 // FILE/LOAD EXISTING PROJECT
@@ -537,9 +547,13 @@ var
   Filename:   string;
   OpenDialog: TOpenDialog;
 begin
-  if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  begin
-    OpenDialog := TOpenDialog.Create(Form1);
+  // check actual script status
+  if not FActualProjectIsSaved then
+    if MessageDlg(MSG43, MSG51, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+      then Exit;
+  // select file
+  OpenDialog := TOpenDialog.Create(Form1);
+  try
     with OpenDialog do
     begin
       InitialDir := GetUserDir;
@@ -549,32 +563,37 @@ begin
     if OpenDialog.Execute then
     begin
       Filename := OpenDialog.FileName;
+      FActualProjectIsSaved := True;
+      // clearing
+      ChangeOpMode(omScript, True);
+      // loading
       try
-        if not SaveProject(FActualProject, FAppProject) then
-        begin
-          ShowMessage(MSG01 + Format(MSG55, [FActualProject]));
-          Exit;
-        end;
-        FActualProject := Filename;                             // with filename
-        FActualProjectIsSaved := True;                        // no need to save
-        Form1.Caption := Application.Title + ' - ' + FActualProject;
-      finally
-        OpenDialog.Free;
+        LoadProject(FileName, FAppProject)
+      except
+        ShowMessage(MSG01 + Format(MSG55, [FileName]));
+        exit;
       end;
+      FActualProject := Filename;                               // with filename
+      FActualProjectIsSaved := True;                          // no need to save
+      Form1.Caption := Application.Title + ' - ' + FActualScript;
     end;
-  end;
-end;
+  finally
+    OpenDialog.Free;
+  end; end;
 
 // FILE/SAVE PROJECT
 procedure TForm1.FSaveProjectExecute(Sender: TObject);
 begin
-  if Length(FActualProject) = 0 then Exit;
-  if not SaveProject(FActualProject, FAppProject) then
+  if FActualProjectIsSaved then Exit;
+  if Length(FActualProject) = 0 then FSaveProjectAsExecute(Sender) else
   begin
-    ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
-    Exit;
+    if not SaveProject(FActualProject, FAppProject) then
+    begin
+      ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
+      Exit;
+    end;
+    FActualProjectIsSaved := True;                            // no need to save
   end;
-  FActualProjectIsSaved := True;                              // no need to save
 end;
 
 // FILE/SAVE PROJECT AS
@@ -584,28 +603,27 @@ var
   SaveDialog: TSaveDialog;
 begin
   SaveDialog := TSaveDialog.Create(Form1);
-  with SaveDialog do
-  begin
-    InitialDir := GetUserDir;
-    Title := MSG54;
-    Filter := MSG52;
-  end;
-  if SaveDialog.Execute then
-  begin
-    Filename := SaveDialog.FileName;
-    try
-      if not SaveProject(FActualProject, FAppProject) then
+  try
+    with SaveDialog do
+    begin
+      InitialDir := GetUserDir;
+      Title := MSG54;
+      Filter := MSG52;
+    end;
+    if SaveDialog.Execute then
+    begin
+      Filename := SaveDialog.FileName;
+      if not SaveProject(Filename, FAppProject) then
       begin
-        ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
+        ShowMessage(MSG01 + Format(MSG56, [Filename]));
         Exit;
       end;
       FActualProject := Filename;                                       // named
       FActualProjectIsSaved := True;                          // no need to save
-      FSaveProject.Enabled := True;                             // enable 'Save'
       Form1.Caption := Application.Title + ' - ' + FActualProject;
-    finally
-      SaveDialog.Free;
     end;
+  finally
+    SaveDialog.Free;
   end;
 end;
 
@@ -657,7 +675,8 @@ end;
 // VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
 begin
-  {...}
+  // Form6.Reload(FScriptBuffer);     // reload ScriptEditor content from buffer
+  // if not Form6.Visible then Form6.Show;
 end;
 
 // VIEW/SHOW SCRIPTCONSOLE
@@ -747,85 +766,87 @@ end;
 // SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
-  if (FScriptBuffer.Count > 0) and (not FActualScriptIsSaved) then
-    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrNo then Exit;
-  {...}                                                   // clear OOP items
-  SClearScriptBufferExecute(Sender);                  // clear script buffer
-  Form6.ReLoad;                                    // refresh editor content
-  FActualScript := '';                                   // without filename
-  FActualScriptIsSaved := True;                           // no need to save
-  if not Form6.Visible then Form6.Show;                // open script editor
-  SSaveScript.Enabled := False;                            // disable 'Save'
-  Form1.Caption := Application.Title;
+  ChangeOpMode(omScript, True);
+  // Form6.Reload(FScriptBuffer);     // reload ScriptEditor content from buffer
+  // if not Form6.Visible then Form6.Show;                  // show ScriptEditor
 end;
 
-// ACTIONS/SCRIPT/LOAD SCRIPT
+// SCRIPT/LOAD SCRIPT
 procedure TForm1.SLoadScriptExecute(Sender: TObject);
 var
   Filename:   string;
   OpenDialog: TOpenDialog;
 begin
-  if FScriptBuffer.Count > 0 then
-    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  // check actual script status
+  if not FActualScriptIsSaved then
+    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+      then Exit;
+  // select file
+  OpenDialog := TOpenDialog.Create(Form1);
+  try
+    with OpenDialog do
     begin
-      OpenDialog := TOpenDialog.Create(Form1);
-      with OpenDialog do
-      begin
-        InitialDir := GetUserDir;
-        Title := MSG46;
-        Filter := MSG45;
-      end;
-      if OpenDialog.Execute then
-      begin
-        Filename := OpenDialog.FileName;
-        try
-          try
-            FScriptBuffer.LoadFromFile(FileName);
-          except
-            ShowMessage(MSG01 + Format(MSG48, [FileName]));
-            exit;
-          end;
-          FActualScript := Filename;                            // with filename
-          FActualScriptIsSaved := True;                       // no need to save
-          Form1.Caption := Application.Title + ' - ' + FActualScript;
-          { ha nincs megnyitva a ScriptEditor, akkor itt meg kell nyitni}
-        finally
-          OpenDialog.Free;
-        end;
-      end;
+      InitialDir := GetUserDir;
+      Title := MSG46;
+      Filter := MSG45;
     end;
+    if OpenDialog.Execute then
+    begin
+      Filename := OpenDialog.FileName;
+      FActualScriptIsSaved := True;
+      // clearing
+      ChangeOpMode(omScript, True);
+      // loading
+      try
+        FScriptBuffer.LoadFromFile(FileName);
+      except
+        ShowMessage(MSG01 + Format(MSG48, [FileName]));
+        exit;
+      end;
+      FActualScript := Filename;                                // with filename
+      FActualScriptIsSaved := True;                           // no need to save
+      Form1.Caption := Application.Title + ' - ' + FActualScript;
+      // Form6.Reload(FScriptBuffer); // reload ScriptEditor content from buffer
+      // if not Form6.Visible then Form6.Show;              // show ScriptEditor
+    end;
+  finally
+    OpenDialog.Free;
+  end;
 end;
 
-// ACTIONS/SCRIPT/SAVE SCRIPT
+// SCRIPT/SAVE SCRIPT
 procedure TForm1.SSaveScriptExecute(Sender: TObject);
 begin
-  if Length(FActualScript) = 0 then Exit;
-  try
-    FScriptBuffer.SaveToFile(FActualScript);
-  except
-    ShowMessage(MSG01 + Format(MSG49, [FActualScript]));
-    Exit;
+  if FActualScriptIsSaved then Exit;
+  if Length(FActualScript) = 0 then SSaveScriptAsExecute(Sender) else
+  begin
+    try
+      FScriptBuffer.SaveToFile(FActualScript);
+    except
+      ShowMessage(MSG01 + Format(MSG49, [FActualScript]));
+      Exit;
+    end;
+    FActualScriptIsSaved := True;                             // no need to save
   end;
-  FActualScriptIsSaved := True;                               // no need to save
 end;
 
-// ACTIONS/SCRIPT/SAVE SCRIPT AS
+// SCRIPT/SAVE SCRIPT AS
 procedure TForm1.SSaveScriptAsExecute(Sender: TObject);
 var
   Filename:   string;
   SaveDialog: TSaveDialog;
 begin
   SaveDialog := TSaveDialog.Create(Form1);
-  with SaveDialog do
-  begin
-    InitialDir := GetUserDir;
-    Title := MSG47;
-    Filter := MSG45;
-  end;
-  if SaveDialog.Execute then
-  begin
-    Filename := SaveDialog.FileName;
-    try
+  try
+    with SaveDialog do
+    begin
+      InitialDir := GetUserDir;
+      Title := MSG47;
+      Filter := MSG45;
+    end;
+    if SaveDialog.Execute then
+    begin
+      Filename := SaveDialog.FileName;
       try
         FScriptBuffer.SaveToFile(FileName);
       except
@@ -834,42 +855,45 @@ begin
       end;
       FActualScript := Filename;                                        // named
       FActualScriptIsSaved := True;                           // no need to save
-      SSaveScript.Enabled := True;                              // enable 'Save'
       Form1.Caption := Application.Title + ' - ' + FActualScript;
-    finally
-      SaveDialog.Free;
     end;
+  finally
+    SaveDialog.Free;
   end;
 end;
 
-// ACTIONS/SCRIPT/CLEAR SCRIPT BUFFER AND REFRESH SCRIPTEDITOR
-procedure TForm1.SClearScriptBufferExecute(Sender: TObject);
-begin
-  FScriptBuffer.Clear;
-  { ScriptEditor frissítése }
-end;
-
-// ACTIONS/SCRIPT/RUN SCRIPT
+// SCRIPT/RUN SCRIPT
 procedure TForm1.SRunScriptExecute(Sender: TObject);
 begin
+  if FScriptIsRunning then Exit;
+  // Form6.Store(FScriptBuffer);         // store ScriptEditor content to buffer
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
   begin
+    // Form12.Clear;                                      // clear ScriptConsole
+    // if not Form12.Visible then Form12.Show;             // show ScriptConsole
+    FScriptInstPointer := 0;
     {...}
   end;
 end;
 
-// ACTIONS/SCRIPT/RUN SCRIPT STEP BY STEP
+// SCRIPT/RUN SCRIPT STEP BY STEP
 procedure TForm1.SStepScriptExecute(Sender: TObject);
 begin
+  if FScriptIsRunning then Exit;
+  // if FScriptInstPointer = 0 then
+  //   Form6.Store(FScriptBuffer);       // store ScriptEditor content to buffer
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
   begin
+    // Form12.Clear;                                      // clear ScriptConsole
+    // if not Form12.Visible then Form12.Show;             // show ScriptConsole
     {...}
   end;
 end;
 
-// ACTIONS/SCRIPT/STOP SCRIPT
+// SCRIPT/STOP SCRIPT
 procedure TForm1.SStopScriptExecute(Sender: TObject);
 begin
+  FScriptInstPointer := 0;
   {...}
 end;
 
@@ -899,9 +923,7 @@ begin
   FActualProjectIsSaved := True;
   FActualScript := '';
   FActualScriptIsSaved := True;
-  // save without dialog buttons
-  FSaveProject.Enabled := False;
-  SSaveScript.Enabled := False;
+  FScriptInstPointer := 0;
   // set general fields
   FEXEDirectory := GetExeDir;
   FSystemLanguage := GetLang;

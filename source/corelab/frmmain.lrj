@@ -144,8 +144,6 @@
 {"hash":130227204,"name":"tform1.ssavescript.hint","sourcebytes":[83,97,118,101,32,115,99,114,105,112,116],"value":"Save script"},
 {"hash":78535950,"name":"tform1.ssavescriptas.caption","sourcebytes":[83,38,97,118,101,32,115,99,114,105,112,116,32,97,115,46,46,46],"value":"S&ave script as..."},
 {"hash":29366963,"name":"tform1.ssavescriptas.hint","sourcebytes":[83,97,118,101,32,115,99,114,105,112,116,32,97,115],"value":"Save script as"},
-{"hash":85937522,"name":"tform1.sclearscriptbuffer.caption","sourcebytes":[38,67,108,101,97,114,32,115,99,114,105,112,116,32,98,117,102,102,101,114],"value":"&Clear script buffer"},
-{"hash":85938066,"name":"tform1.sclearscriptbuffer.hint","sourcebytes":[67,108,101,97,114,32,115,99,114,105,112,116,32,98,117,102,102,101,114],"value":"Clear script buffer"},
 {"hash":129051764,"name":"tform1.srunscript.caption","sourcebytes":[38,82,117,110,32,115,99,114,105,112,116],"value":"&Run script"},
 {"hash":127872116,"name":"tform1.srunscript.hint","sourcebytes":[82,117,110,32,115,99,114,105,112,116],"value":"Run script"},
 {"hash":37510228,"name":"tform1.sstepscript.caption","sourcebytes":[83,116,38,101,112,32,115,99,114,105,112,116],"value":"St&ep script"},
