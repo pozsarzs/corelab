@@ -46,8 +46,8 @@ type
     procedure Label8Click(Sender: TObject);
     procedure Label8MouseEnter(Sender: TObject);
     procedure Label8MouseLeave(Sender: TObject);
-    procedure SetAboutLabels(ALabels: TAboutLabels);
   private
+    procedure SetAboutLabels(ALabels: TAboutLabels);
   public
     property AboutLabels: TAboutLabels write SetAboutLabels;
   end;

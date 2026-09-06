@@ -42,4 +42,3 @@
 {$ELSE}
   {$DEFINE CALLTYPE := cdecl}
 {$ENDIF}
-

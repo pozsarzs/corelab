@@ -13,6 +13,7 @@
 
 unit frmrunlogger;
 {$MODE OBJFPC}{$H+}
+{$I defcolors.pas}
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
@@ -51,7 +52,7 @@ type
     FRecordCount:       Integer;          // Number of valid items in the buffer
     FRingBuffer:        array[0..MAX_LOG - 1] of TLogRec;   // Log record buffer
     FWriteMarker:       Integer;         // Next empty place for write to buffer
-    procedure ResetBuffer;
+    procedure Clear;
     function ReadBuffer(ALine: Integer): TLogRec;
     procedure WriteBuffer(ALogRec: TLogRec);
   protected
@@ -92,7 +93,7 @@ implementation
 // ---- PRIVATE METHODS ----
 
 // RESET RINGBUFFER
-procedure TForm4.ResetBuffer;
+procedure TForm4.Clear;
 var
   i: Integer;
 begin
@@ -208,7 +209,7 @@ end;
 // CLEAR LOG
 procedure TForm4.Button2Click(Sender: TObject);
 begin
-  ResetBuffer;
+  Clear;
   DrawGrid1.RowCount := 1;
   DrawGrid1.Invalidate;
 end;
@@ -325,14 +326,14 @@ end;
 procedure TForm4.FormCreate(Sender: TObject);
 begin
   // default colors
-  FInstCountColor := $004E8B60;
-  FAddressColor := $00AADCDC;
-  FOpCodeColor := $00D69C56;
-  FMnemonicColor := $00D4D4D4;
-  FLineSelectorColor := $00473523;
-  FBGColorOddLines := $001E1E1E;
-  FBGColorEvenLines := $00262525;
-  ResetBuffer;
+  FInstCountColor := StringToColor(RUNLOGGER_INSTCOUNT_DEFAULT);
+  FAddressColor := StringToColor(RUNLOGGER_ADDRESS_DEFAULT);
+  FOpCodeColor := StringToColor(RUNLOGGER_OPCODE_DEFAULT);
+  FMnemonicColor := StringToColor(RUNLOGGER_MNEMONIC_DEFAULT);
+  FLineSelectorColor := StringToColor(RUNLOGGER_LINESELECTOR_DEFAULT);
+  FBGColorOddLines := StringToColor(RUNLOGGER_BGCOLOR_ODD_DEFAULT);
+  FBGColorEvenLines := StringToColor(RUNLOGGER_BGCOLOR_EVEN_DEFAULT);
+  Clear;
   with DrawGrid1 do
   begin
     with Columns do

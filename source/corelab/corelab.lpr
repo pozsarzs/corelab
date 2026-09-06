@@ -15,8 +15,8 @@ program corelab;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmmain, frmabout
-   // frmscripteditor, frmhexviewer, frmrunlogger, frmexdepmemory, frmloadsavememory
+  lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger
+   // frmscripteditor, frmhexviewer, frmexdepmemory, frmloadsavememory
   ;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
@@ -178,7 +178,7 @@ begin
     CreateForm(TForm1, Form1);                                      // Main Form
     CreateForm(TForm2, Form2);                                          // About
 //    CreateForm(TForm3, Form3);                                    // HexViewer
-//    CreateForm(TForm4, Form4);                                    // RunLogger
+    CreateForm(TForm4, Form4);                                    // RunLogger
 //    CreateForm(TForm5, Form5);                                  // ExDepMemory
 //    CreateForm(TForm6, Form6);                                 // ScriptEditor
 //    CreateForm(TForm7, Form7);                               // LoadSaveMemory
@@ -192,7 +192,7 @@ begin
 //    CreateForm(TForm15, Form15);                          // Plugin properties
   end;
   // set properties
-  Form2.SetAboutLabels(AboutLabels);
+  Form2.AboutLabels := AboutLabels;
   Form1.PluginDirectory := PluginDir;
   Form1.IgnoreHelp := IgnoreHelp;
   // start application

@@ -18,8 +18,8 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
-  Generics.Collections, frmabout, core_cpu, core_memory, core_ioport, ucommon,
-  uconfig, uplugin, uproject;
+  Generics.Collections, frmabout, frmrunlogger, core_cpu, core_memory,
+  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject;
 type
   // allocated simulation objects
   TProcInstanceDict = specialize TDictionary<string, TCPU>;
@@ -55,7 +55,6 @@ type
     MCreate:                  TAction;
     MDestroy:                 TAction;
     MDetachFromBus:           TAction;
-    Memo1:                    TMemo;
     MenuItem1:                TMenuItem;
     MenuItem10:               TMenuItem;
     MenuItem11:               TMenuItem;
@@ -319,6 +318,7 @@ type
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
   private
+    Memo1: TSysConsole;
     // active component instances
     FProcInstanceDict: TProcInstanceDict;
     FMemInstanceDict:  TMemInstanceDict;
@@ -357,31 +357,40 @@ implementation
 {$R *.lfm}
 { TForm1 }
 
+// Message targets:
+// - MD: MsgDialog
+// - SC: SysConsole
+// - SM: ShowMessage
+
 resourcestring
-  MSG01 = 'ERROR: ';
-  MSG03 = 'Plugin directory does not exist.';
-  MSG04 = 'Cannot load plugins from %s.';
-  MSG05 = 'It is not a CoreLAB processor plugin.';
-  MSG18 = 'Missing help file.';
-  MSG19 = 'Missing help viewer.';
-  MSG40 = 'Cannot load ''%s'' configuration file.';
-  MSG41 = 'Cannot save ''%s'' configuration file.';
-  MSG42 = 'No script, create or load one.';
+  MSG01 = 'ERROR: ';                                                      { SM }
+  MSG02 = 'WARNING: ';                                                    { SC }
+  MSG03 = 'NOTE:    ';                                                    { SC }
+  MSG04 = 'Plugin directory does not exist.';                             { SM }
+  MSG05 = 'Cannot load plugins from %s.';                                 { SM }
+  MSG06 = '%s plugins loaded.';
+  MSG07 = '';
+  MSG08 = '';
+  MSG18 = 'Missing help file.';                                           { SC }
+  MSG19 = 'Missing help viewer.';                                         { SC }
+  MSG40 = 'Cannot load ''%s'' configuration file, using default values.'; { SC }
+  MSG41 = 'Cannot save ''%s'' configuration file.';                       { SM }
+  MSG42 = 'No script, create or load one.';                               { SM }
   MSG43 = 'Confirmation';
-  MSG44 = 'There is already a script, do you want to delete it?';
+  MSG44 = 'There is already a script, do you want to delete it?';         { MD }
   MSG45 = 'CoreLAB scriptembly file|*.clsce|All file|*.*';
   MSG46 = 'Load script';
   MSG47 = 'Save script';
-  MSG48 = 'Cannot load script from ''%s'' file.';
-  MSG49 = 'Cannot save script to ''%s'' file.';
-  MSG50 = 'The script is unsaved, should I continue?';
-  MSG51 = 'There is already a project, do you want to delete it?';
+  MSG48 = 'Cannot load script from ''%s'' file.';                         { SM }
+  MSG49 = 'Cannot save script to ''%s'' file.';                           { SM }
+  MSG50 = 'The script is unsaved, should I continue?';                    { MD }
+  MSG51 = 'There is already a project, do you want to delete it?';        { MD }
   MSG52 = 'CoreLAB project file|*.clprj|All file|*.*';
   MSG53 = 'Load project';
   MSG54 = 'Save project';
-  MSG55 = 'Cannot load project from ''%s'' file.';
-  MSG56 = 'Cannot save project to ''%s'' file.';
-  MSG57 = 'The project is unsaved, should I continue?';
+  MSG55 = 'Cannot load project from ''%s'' file.';                        { SM }
+  MSG56 = 'Cannot save project to ''%s'' file.';                          { SM }
+  MSG57 = 'The project is unsaved, should I continue?';                   { MD }
 
 // ---- PRIVATE METHODS ----
 
@@ -508,8 +517,8 @@ begin
       end;
     end else
     begin
-      if not CHMFileExists then ShowMessage(MSG01 + MSG18);
-      if not CHMViewerExists then ShowMessage(MSG01 + MSG19);
+      if not CHMFileExists then Memo1.WriteMessage(MSG02 + MSG18);
+      if not CHMViewerExists then Memo1.WriteMessage(MSG02 + MSG19);
     end;
   end;
   HHelp.Enabled := CHMFileExists and CHMViewerExists and not FIgnoreHelp;
@@ -663,7 +672,22 @@ end;
 // VIEW/SHOW RUNLOGGER
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
 begin
-  {...}
+  with FAppConfig do
+  begin
+    Form4.Top := runlogger_top;
+    Form4.Left := runlogger_left;
+    Form4.Height := runlogger_height;
+    Form4.Width := runlogger_width;
+    Form4.InstCountColor := runlogger_instcount_color;
+    Form4.AddressColor := runlogger_address_color;
+    Form4.OpCodeColor := runlogger_opcode_color;
+    Form4.MnemonicColor := runlogger_mnemonic_color;
+    Form4.LineSelectorColor := runlogger_lineselector_color;
+    Form4.BGColorOddLines := runlogger_bgcolor_odd;
+    Form4.BGColorEvenLines := runlogger_bgcolor_even;
+  end;
+  Form4.Show;
+  Form4.BringToFront;
 end;
 
 // VIEW/SHOW INTLOGGER
@@ -915,7 +939,15 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   Error: Boolean;
+  i:     Integer;
 begin
+  Memo1 := TSysConsole.Create(Self);
+  with Memo1 do
+  begin
+    Parent := Form1;
+    Align := alClient;
+    ReadOnly := True;
+  end;
   Error := False;
   Form1.Caption := Application.Title;
   // set actual project/script property
@@ -941,7 +973,13 @@ begin
   {$ENDIF}
   ForceDirectories(FConfigDirectory);
   if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
-    then ShowMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]));
+    then Memo1.WriteMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]))
+    else
+      with Memo1 do
+      begin
+        Font.Color := FAppConfig.sysconsole_font_color;
+        Color := FAppConfig.sysconsole_bg_color;
+      end;
   with FAppConfig do
   begin
     Top := frmmain_top;
@@ -953,16 +991,16 @@ begin
   if FPluginDirectory = '' then
   begin
     {$IFDEF UNIX}
-      FPluginDirectory := './lib';
+      FPluginDirectory := '/usr/local/lib/corelab';
       if not DirectoryExists(FPluginDirectory) then
       begin
         FPluginDirectory := '/usr/lib/corelab';
         if not DirectoryExists(FPluginDirectory) then
         begin
-          FPluginDirectory := '/usr/local/lib/corelab';
+          FPluginDirectory := './lib';
           if not DirectoryExists(FPluginDirectory) then
           begin
-            ShowMessage(MSG01 + MSG03);
+            ShowMessage(MSG01 + MSG04);
             Error := True;
           end;
         end;
@@ -971,17 +1009,20 @@ begin
       FPluginDirectory := '.\lib';
       if not DirectoryExists(FPluginDirectory) then
       begin
-        ShowMessage(MSG01 + MSG03);
+        ShowMessage(MSG01 + MSG04);
         Error := True;
       end;
     {$ENDIF}
   end;
   if not Error then
-    if not LoadAllPlugins(FPluginDirectory) then
+  begin
+    i := LoadAllPlugins(FPluginDirectory);
+    if i = -1 then
     begin
-      ShowMessage(MSG01 + Format(MSG04, [FPluginDirectory]));
+      ShowMessage(MSG01 + Format(MSG05, [FPluginDirectory]));
       Error := True;
-    end;
+    end else Memo1.Lines.Add(MSG03 + Format(MSG06, [IntToStr(i)]));
+  end;
   if not Error then
   begin
     // create dictionaries for active component instances
@@ -1025,11 +1066,27 @@ begin
   // save configuration
   with FAppConfig do
   begin
-    // main form
+    // Form1
     frmmain_top := Top;
     frmmain_left := Left;
     frmmain_height := Height;
     frmmain_width := Width;
+    sysconsole_bg_color := Memo1.BGColor;
+    sysconsole_font_color := Memo1.Font.Color;
+    // Form3
+    {...}
+    // Form4
+    runlogger_top := Form4.Top;
+    runlogger_left := Form4.Left;
+    runlogger_height := Form4.Height;
+    runlogger_width := Form4.Width;
+    runlogger_instcount_color := Form4.InstCountColor;
+    runlogger_address_color := Form4.AddressColor;
+    runlogger_opcode_color := Form4.OpCodeColor;
+    runlogger_mnemonic_color := Form4.MnemonicColor;
+    runlogger_lineselector_color := Form4.LineSelectorColor;
+    runlogger_bgcolor_odd := Form4.BGColorOddLines;
+    runlogger_bgcolor_even := Form4.BGColorEvenLines;
     {...}
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)

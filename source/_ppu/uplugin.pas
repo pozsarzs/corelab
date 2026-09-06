@@ -67,7 +67,7 @@ var
   FMemPluginDict:  TMemPluginDict;
   FPortPluginDict: TPortPluginDict;
 
-function LoadAllPlugins(ADirectory: string): Boolean;
+function LoadAllPlugins(ADirectory: string): Integer;
 function UnLoadAllPlugins: Boolean;
 
 implementation
@@ -94,7 +94,7 @@ begin
 end;
 
 // LOAD ALL PLUGIN
-function LoadAllPlugins(ADirectory: string): Boolean;
+function LoadAllPlugins(ADirectory: string): Integer;
 var
   i:              Integer;
   LibList:        TStringList;
@@ -102,11 +102,11 @@ var
   MemPluginItem:  TMemPluginItem;
   PortPluginItem: TPortPluginItem;
 begin
-  Result := True;
+  Result := 0;
   LibList := FindAllFiles(ADirectory, '*.dll;*.so', False);
   LibList.Sort;
   try
-    if LibList.Count = 0 then Result := False else
+    if LibList.Count = 0 then Result := -1 else
     begin
       // create dictionaries
       FProcPluginDict := TProcPluginDict.Create([doOwnsValues]);
@@ -120,27 +120,33 @@ begin
         begin
           ProcPluginItem := TProcPluginItem.Create;
           ProcPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
-          if ProcPluginItem.FHandle <> NilHandle
-            then FProcPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), ProcPluginItem)
-            else ProcPluginItem.Free;
+          if ProcPluginItem.FHandle <> NilHandle then
+          begin
+            FProcPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), ProcPluginItem);
+            Inc(Result);
+          end else ProcPluginItem.Free;
         end;
         // memory_*.*
         if ContainsText(LibList.Strings[i], 'memory_') then
         begin
           MemPluginItem := TMemPluginItem.Create;
           MemPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
-          if MemPluginItem.FHandle <> NilHandle
-            then FMemPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), MemPluginItem)
-            else MemPluginItem.Free;
+          if MemPluginItem.FHandle <> NilHandle then
+          begin
+            FMemPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), MemPluginItem);
+            Inc(Result);
+          end else MemPluginItem.Free;
         end;
         // ioport_*.*
         if ContainsText(LibList.Strings[i], 'ioport_') then
         begin
           PortPluginItem := TPortPluginItem.Create;
           PortPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
-          if PortPluginItem.FHandle <> NilHandle
-            then FPortPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), PortPluginItem)
-            else PortPluginItem.Free;
+          if PortPluginItem.FHandle <> NilHandle then
+          begin
+            FPortPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), PortPluginItem);
+            Inc(Result);
+          end else PortPluginItem.Free;
         end;
       end;
     end;
