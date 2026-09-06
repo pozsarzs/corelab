@@ -22,7 +22,7 @@ type
     FOnCommand: TNotifyEvent;
     FBGColor: TColor;
     FFontColor: TColor;
-    procedure Clear;
+    procedure ClearContent;
     procedure SetBGColor(AColor: TColor);
     procedure SetFontColor(AColor: TColor);
     procedure WMKeyDown(var Message: TLMKeyDown); message WM_KEYDOWN;
@@ -47,7 +47,7 @@ end;
 // ---- PRIVATE METHODS ----
 
 // CLEAR CONSOLE
-procedure TSysConsole.Clear;
+procedure TSysConsole.ClearContent;
 begin
   Clear;
 end;

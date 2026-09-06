@@ -52,7 +52,7 @@ type
     FRecordCount:       Integer;          // Number of valid items in the buffer
     FRingBuffer:        array[0..MAX_LOG - 1] of TLogRec;   // Log record buffer
     FWriteMarker:       Integer;         // Next empty place for write to buffer
-    procedure Clear;
+    procedure Reset;
     function ReadBuffer(ALine: Integer): TLogRec;
     procedure WriteBuffer(ALogRec: TLogRec);
   protected
@@ -65,6 +65,7 @@ type
     procedure SetBGColorOddLines(AColor: TColor);
   public
     procedure AppendRecord(ALogRec: TLogRec);
+    procedure ClearContent;
     property InstCountColor: TColor read FInstCountColor write SetInstCountColor;
     property AddressColor: TColor read FAddressColor write SetAddressColor;
     property OpCodeColor: TColor read FOpCodeColor write SetOpCodeColor;
@@ -93,7 +94,7 @@ implementation
 // ---- PRIVATE METHODS ----
 
 // RESET RINGBUFFER
-procedure TForm4.Clear;
+procedure TForm4.Reset;
 var
   i: Integer;
 begin
@@ -198,6 +199,11 @@ begin
   if Form4.Visible then DrawGrid1.RowCount := FRecordCount + 1;
 end;
 
+procedure TForm4.ClearContent;
+begin
+  Button2Click(Nil);
+end;
+
 // ---- EVENT HANDLER METHODS ----
 
 // HIDE LOG WINDOW
@@ -209,7 +215,7 @@ end;
 // CLEAR LOG
 procedure TForm4.Button2Click(Sender: TObject);
 begin
-  Clear;
+  Reset;
   DrawGrid1.RowCount := 1;
   DrawGrid1.Invalidate;
 end;
@@ -333,7 +339,7 @@ begin
   FLineSelectorColor := StringToColor(RUNLOGGER_LINESELECTOR_DEFAULT);
   FBGColorOddLines := StringToColor(RUNLOGGER_BGCOLOR_ODD_DEFAULT);
   FBGColorEvenLines := StringToColor(RUNLOGGER_BGCOLOR_EVEN_DEFAULT);
-  Clear;
+  Reset;
   with DrawGrid1 do
   begin
     with Columns do

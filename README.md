@@ -77,31 +77,30 @@ in mind:
 
 ### Integrated modules
 
-|Features                       |Specification / Description                                        |
-|-------------------------------|-------------------------------------------------------------------|
-|**Breakpoint Manager**         |Managing code, memory, and conditional hardware breakpoints        |
-|**Bus Monitor / Tracer**       |Passive real-time tracing of address, data, and control buses      |
-|**CPU Register Viewer**        |Real-time inspection of registers, program counter, and flag status|
-|**Device Manager Map**         |Overview of mapped virtual peripheral addresses and memory spaces  |
-|**HexEditor**                  |Memory viewer and editor component                                 |
-|**Interrupt Controller Status**|Monitoring interrupt requests, masks, and priorities               |
-|**RunLogger**                  |Real-time output of address, machine code, and mnemonic            |
-|**Script Editor**              |Built-in environment for writing and executing control scripts     |
-|**Virtual System Monitor**     |Altair-style virtual front panel with toggles and LED indicators   |
+|Features              |Specification / Description                                        |
+|----------------------|-------------------------------------------------------------------|
+|**Breakpoint Manager**|Managing breakpoints                                               |
+|**HexViewer**         |Memory viewer component                                            |
+|**IntLogger**         |Logging interrupt requests                                         |
+|**RegViewer**         |Real-time inspection of registers, program counter, and flag status|
+|**RunLogger**         |Real-time output of address, machine code, and mnemonic            |
+|**ScriptConsole**     |Console for show running script output                             |
+|**ScriptEditor**      |Built-in environment for writing and executing control scripts     |
+|**SysConsole**        |Console for system messages and command line interface             |
 
 ### Plug-in modules
 
 |Features                               |Specification / Description                                                                  |
 |---------------------------------------|---------------------------------------------------------------------------------------------|
-|**Virtual CPU, uP, and MCU**           |Emulated processor, microprocessor, and microcontroller cores with custom architectures.     |
-|**Virtual Memory (RAM/ROM)**           |Configurable volatile and non-volatile memory blocks with custom sizing and address mapping. |
-|**Virtual 7-Segment Display**          |Single and multiplexed 7-segment display arrays for numerical and basic character output.    |
-|**Virtual Hexadecimal Display**        |Single and multiplexed hex display arrays mapped to virtual port addresses.                  |
-|**Virtual LED Array and Matrix**       |Linear LED bars and dot-matrix displays for visual bit-state and coordinate-based output.    |
-|**Virtual Pushbutton Array and Matrix**|Linear and matrix-arranged momentary pushbuttons for interactive binary input.               |
-|**Virtual Switch Array and Matrix**    |Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.|
 |**Real Port Redirection**              |Bridges virtual port I/O streams directly to the physical hardware ports of the host machine.|
 |**Simple Console**                     |Basic text-based console for data stream monitoring.                                         |
+|**Virtual 7-Segment Display**          |Single and multiplexed 7-segment display arrays for numerical and basic character output.    |
+|**Virtual CPU**                        |Emulated processor, microprocessor with custom architectures.                                |
+|**Virtual Hexadecimal Display**        |Single and multiplexed hex display arrays mapped to virtual port addresses.                  |
+|**Virtual LED Array and Matrix**       |Linear LED bars and dot-matrix displays for visual bit-state and coordinate-based output.    |
+|**Virtual Memory (RAM/ROM)**           |Configurable volatile and non-volatile memory blocks with custom sizing and address mapping. |
+|**Virtual Pushbutton Array and Matrix**|Linear and matrix-arranged momentary pushbuttons for interactive binary input.               |
+|**Virtual Switch Array and Matrix**    |Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.|
 
 ## III. Screenshots
 
@@ -205,14 +204,15 @@ to be used with other development tools or transferred to real hardware.
 
 ## VI. Used filetypes
 
-|extension|type                      |application                    |
-|:-------:|:-------------------------|:------------------------------|
-|*.clsht  |CoreLAB snapshot          |CoreLAB                        |
-|*.clsce  |CoreLAB scriptembly       |CoreLAB                        |
-|*.clpst  |CoreLAB plugin status file|CLIOPort, CLMemory, CLProcessor|
-|*.bin    |General binary file       |CoreLAB, CLProcessor           |
-|*.hex    |Intel hexa file           |CoreLAB, CLProcessor           |
-|*.log    |General log file          |CoreLAB, CLProcessor           |
+|extension|type                 |application                    |
+|:-------:|:--------------------|:------------------------------|
+|*.clprj  |CoreLAB project      |CoreLAB                        |
+|*.clsht  |CoreLAB snapshot     |CoreLAB                        |
+|*.clsce  |CoreLAB scriptembly  |CoreLAB                        |
+|*.clpst  |CoreLAB plugin status|CLIOPort, CLMemory, CLProcessor|
+|*.bin    |General binary file  |CoreLAB, CLProcessor           |
+|*.hex    |Intel hexa file      |CoreLAB, CLProcessor           |
+|*.log    |General log file     |CoreLAB, CLProcessor           |
 
 ## VII. Implemented commands  
 

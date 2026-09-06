@@ -18,8 +18,8 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
-  Generics.Collections, frmabout, frmrunlogger, core_cpu, core_memory,
-  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject;
+  Generics.Collections, frmabout, frmclasslist, frmrunlogger, core_cpu,
+  core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject;
 type
   // allocated simulation objects
   TProcInstanceDict = specialize TDictionary<string, TCPU>;
@@ -368,9 +368,9 @@ resourcestring
   MSG03 = 'NOTE:    ';                                                    { SC }
   MSG04 = 'Plugin directory does not exist.';                             { SM }
   MSG05 = 'Cannot load plugins from %s.';                                 { SM }
-  MSG06 = '%s plugins loaded.';
-  MSG07 = '';
-  MSG08 = '';
+  MSG06 = '%s plugins loaded.';                                           { SC }
+  MSG07 = 'The switch to interactive operation mode was successful.';     { SC }
+  MSG08 = 'The switch to script operation mode was successful.';          { SC }
   MSG18 = 'Missing help file.';                                           { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
   MSG40 = 'Cannot load ''%s'' configuration file, using default values.'; { SC }
@@ -391,6 +391,7 @@ resourcestring
   MSG55 = 'Cannot load project from ''%s'' file.';                        { SM }
   MSG56 = 'Cannot save project to ''%s'' file.';                          { SM }
   MSG57 = 'The project is unsaved, should I continue?';                   { MD }
+  MSG58 = 'The %s module named ''%s'' was successfully created.';         { SC }
 
 // ---- PRIVATE METHODS ----
 
@@ -460,16 +461,20 @@ begin
   // clear script buffer and refresh ScriptEditor;
   FScriptBuffer.Clear;
   // clear content of the internal modules
-  // Form3.ClearContent;                                          // HexViewer
-  // Form4.ClearContent;                                          // RunLogger
-  // Form6.ClearContent;                                       // ScriptEditor
-  // Form8.ClearContent;                                          // IntLogger
-  // Form11.ClearContent;                                         // RegViewer
-  // Form12.ClearContent;                                     // ScriptConsole
+  // if Assigned(Form3) then Form3.ClearContent;                    // HexViewer
+  if Assigned(Form4) then Form4.ClearContent;                       // RunLogger
+  // if Assigned(Form6) then Form6.ClearContent;                 // ScriptEditor
+  // if Assigned(Form8) then Form8.ClearContent;                    // IntLogger
+  // if Assigned(Form11) then Form11.ClearContent;                  // RegViewer
+  // if Assigned(Form12) then Form12.ClearContent;              // ScriptConsole
   // close internal modules
   for i := Screen.FormCount - 1 downto 0 do
     if (Screen.Forms[i] <> Application.MainForm) and
         Screen.Forms[i].Visible then Screen.Forms[i].Close;
+  // write message to console
+  if FOpMode = omInteractive
+    then Memo1.WriteMessage(MSG03 + MSG07)
+    else Memo1.WriteMessage(MSG03 + MSG08);
 end;
 
 // SET HELP SYSTEM
@@ -711,20 +716,86 @@ end;
 
 // PROCESSOR/CREATE
 procedure TForm1.PCreateExecute(Sender: TObject);
+var
+  KeyName:      string;
+  NewLibHandle: TProcPluginItem;
+  NewName:      string;
+  StringList:   TStringList;
 begin
-  {...}
+  StringList := TStringList.Create;
+  try
+    for KeyName in FProcPluginDict.Keys do
+      StringList.Add(KeyName);
+    with Form16 do
+    begin
+      PluginList := StringList;
+      if Form16.ShowModal = mrOk then
+      begin
+        NewLibHandle := FProcPluginDict[SelectedKey];
+        NewName := SelectedName;
+        {...}
+        Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', NewName]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
 // MEMORY/CREATE
 procedure TForm1.MCreateExecute(Sender: TObject);
+var
+  KeyName:      string;
+  NewLibHandle: TMemPluginItem;
+  NewName:      string;
+  StringList:   TStringList;
 begin
-  {...}
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemPluginDict.Keys do
+      StringList.Add(KeyName);
+    with Form16 do
+    begin
+      PluginList := StringList;
+      if Form16.ShowModal = mrOk then
+      begin
+        NewLibHandle := FMemPluginDict[SelectedKey];
+        NewName := SelectedName;
+        {...}
+        Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', NewName]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
 // IO PORT/CREATE
 procedure TForm1.IOCreateExecute(Sender: TObject);
+var
+  KeyName:      string;
+  NewLibHandle: TPortPluginItem;
+  NewName:      string;
+  StringList:   TStringList;
 begin
-  {...}
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortPluginDict.Keys do
+      StringList.Add(KeyName);
+    with Form16 do
+    begin
+      PluginList := StringList;
+      if Form16.ShowModal = mrOk then
+      begin
+        NewLibHandle := FPortPluginDict[SelectedKey];
+        NewName := SelectedName;
+        {...}
+        Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', NewName]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
 // OPERATION/RUN SIMULATION
@@ -1021,7 +1092,7 @@ begin
     begin
       ShowMessage(MSG01 + Format(MSG05, [FPluginDirectory]));
       Error := True;
-    end else Memo1.Lines.Add(MSG03 + Format(MSG06, [IntToStr(i)]));
+    end else Memo1.WriteMessage(MSG03 + Format(MSG06, [IntToStr(i)]));
   end;
   if not Error then
   begin
