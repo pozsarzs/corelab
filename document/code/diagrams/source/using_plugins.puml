@@ -1,0 +1,55 @@
+@startuml
+title Using CoreLAB plugins
+
+autonumber
+skinparam monochrome true
+
+box "External Module" #E8F8F5
+participant "Plugin\n(DLL/SO)" as Plugin
+end box
+
+box "CoreLAB Framework" #FEF9E7
+participant "Loader / Main" as Main
+participant "FMemPluginDict\n(Available Modules)" as P_Dict
+participant "FMemInstanceDict\n(Active Instances)" as I_Dict
+end box
+
+actor "User (UI)" as User
+
+== Phase 1: Exporting (Plugin Side) ==
+Plugin -> Plugin: 1. Export functions\n(e.g., 'memory_create')
+
+== Phase 2: Initialization & Loading (Main Program) ==
+Main -> Main: 2. Search for plugins\n(FindAllFiles)
+Main -> Plugin: 3. Link library (LoadLibrary)
+Plugin --> Main: Return TLibHandle
+Main -> Plugin: 4. Extract addresses\n(GetProcedureAddress)
+Plugin --> Main: Return physical memory addresses\n(e.g., FCreate, FDestroy)
+Main -> Main: Build TMemPluginItem\n(Descriptor)
+Main -> P_Dict: 5. Add to Directory\n(Key: filename)
+
+== Phase 3: Instantiation & Registration ==
+User -> Main: Select module to instantiate\n(from PluginList)
+Main -> P_Dict: Look up plugin descriptor
+Main -> Plugin: 7. Call FCreate()
+Plugin --> Main: Return new object instance
+Main -> Main: Build TMemInfo\n(Instance + ModuleName)
+Main -> I_Dict: 8. Register instance\n(Key: user-defined name)
+
+== Phase 4: Runtime Usage ==
+User -> Main: Trigger action (e.g., Reset)
+Main -> I_Dict: 9. Retrieve active instance record
+I_Dict --> Main: Return TMemInfo
+Main -> Main: Execute method\n(MemInfo.Memory.Reset)
+
+== Phase 5: Destruction ==
+User -> Main: Select instance to destroy
+Main -> I_Dict: 10. Retrieve active instance record
+I_Dict --> Main: Return TMemInfo
+Main -> P_Dict: Look up descriptor by MemInfo.ModuleName
+P_Dict --> Main: Return TMemPluginItem
+Main -> Plugin: Call FDestroy(MemInfo.Memory)\n//Free memory in DLL//
+Main -> I_Dict: Remove instance by key
+Main -> Main: Finalize & clean up
+
+@enduml

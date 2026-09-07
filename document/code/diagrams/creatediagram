@@ -21,3 +21,8 @@ if command -v plantuml >/dev/null 2>&1; then
 else
   echo "ERROR: The PlantUML is not installed."
 fi
+
+# If the output PDF is too large, use Ghostscript to reduce the size:
+#
+# gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen \
+#    -dNOPAUSE -dQUIET -dBATCH -sOutputFile=smaller.pdf original.pdf
