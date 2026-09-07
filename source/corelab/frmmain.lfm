@@ -384,9 +384,9 @@ object Form1: TForm1
       Height = 58
       Top = 1
       Width = 727
-      ActivePage = TabSheet5
+      ActivePage = TabSheet1
       Align = alClient
-      TabIndex = 4
+      TabIndex = 0
       TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Operation'
@@ -405,7 +405,6 @@ object Form1: TForm1
             Left = 1
             Top = 2
             Action = ORun
-            DropdownMenu = PopupMenu1
             ParentShowHint = False
             ShowHint = True
           end
@@ -477,50 +476,40 @@ object Form1: TForm1
             Left = 24
             Top = 2
             Action = PDestroy
-            DropdownMenu = PopupMenu1
-            Style = tbsDropDown
           end
           object ToolButton33: TToolButton
-            Left = 94
+            Left = 70
             Height = 22
             Top = 2
             Caption = 'ToolButton33'
             Style = tbsDivider
           end
           object ToolButton34: TToolButton
-            Left = 59
+            Left = 47
             Top = 2
             Action = PReset
-            DropdownMenu = PopupMenu1
-            Style = tbsDropDown
           end
           object ToolButton35: TToolButton
-            Left = 99
+            Left = 75
             Top = 2
             Action = PAttachToBus
-            DropdownMenu = PopupMenu1
-            Style = tbsDropDown
           end
           object ToolButton36: TToolButton
-            Left = 134
+            Left = 98
             Top = 2
             Action = PDetachFromBus
-            DropdownMenu = PopupMenu1
-            Style = tbsDropDown
           end
           object ToolButton37: TToolButton
-            Left = 169
+            Left = 121
             Height = 22
             Top = 2
             Caption = 'ToolButton37'
             Style = tbsDivider
           end
           object ToolButton38: TToolButton
-            Left = 174
+            Left = 126
             Top = 2
             Action = PProperties
-            DropdownMenu = PopupMenu1
-            Style = tbsDropDown
           end
         end
       end
@@ -546,74 +535,58 @@ object Form1: TForm1
             Left = 24
             Top = 2
             Action = MDestroy
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton46: TToolButton
-            Left = 59
+            Left = 47
             Top = 2
             Action = MReset
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton47: TToolButton
-            Left = 94
+            Left = 70
             Height = 22
             Top = 2
             Caption = 'ToolButton47'
             Style = tbsDivider
           end
           object ToolButton48: TToolButton
-            Left = 99
+            Left = 75
             Top = 2
             Action = MAttachToBus
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton49: TToolButton
-            Left = 134
+            Left = 98
             Top = 2
             Action = MDetachFromBus
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton50: TToolButton
-            Left = 174
+            Left = 126
             Top = 2
             Action = MProperties
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton51: TToolButton
-            Left = 209
+            Left = 149
             Height = 22
             Top = 2
             Caption = 'ToolButton51'
             Style = tbsDivider
           end
           object ToolButton52: TToolButton
-            Left = 214
+            Left = 154
             Top = 2
             Action = MLoadMemoryContent
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton53: TToolButton
-            Left = 249
+            Left = 177
             Top = 2
             Action = MSaveMemoryContent
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton54: TToolButton
-            Left = 284
+            Left = 200
             Top = 2
             Action = MExamineDeposit
-            PopupMenu = PopupMenu2
-            Style = tbsDropDown
           end
           object ToolButton55: TToolButton
-            Left = 169
+            Left = 121
             Height = 22
             Top = 2
             Caption = 'ToolButton55'
@@ -643,85 +616,69 @@ object Form1: TForm1
             Left = 24
             Top = 2
             Action = IODestroy
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton21: TToolButton
-            Left = 59
+            Left = 47
             Top = 2
             Action = IOReset
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton22: TToolButton
-            Left = 94
+            Left = 70
             Height = 22
             Top = 2
             Caption = 'ToolButton22'
             Style = tbsDivider
           end
           object ToolButton23: TToolButton
-            Left = 99
+            Left = 75
             Top = 2
             Action = IOAttachToBus
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton24: TToolButton
-            Left = 134
+            Left = 98
             Top = 2
             Action = IODetachFromBus
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton25: TToolButton
-            Left = 169
+            Left = 121
             Height = 22
             Top = 2
             Caption = 'ToolButton25'
             Style = tbsDivider
           end
           object ToolButton26: TToolButton
-            Left = 174
+            Left = 126
             Top = 2
             Action = IOPorperties
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton27: TToolButton
-            Left = 209
+            Left = 149
             Height = 22
             Top = 2
             Caption = 'ToolButton27'
             Style = tbsDivider
           end
           object ToolButton28: TToolButton
-            Left = 214
+            Left = 154
             Top = 2
             Action = VRenameIOPanel
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton29: TToolButton
-            Left = 249
+            Left = 177
             Top = 2
             Action = VMoveResizeIOPanel
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
           object ToolButton30: TToolButton
-            Left = 284
+            Left = 200
             Height = 22
             Top = 2
             Caption = 'ToolButton30'
             Style = tbsDivider
           end
           object ToolButton31: TToolButton
-            Left = 289
+            Left = 205
             Top = 2
             Action = VShowIOPanel
-            PopupMenu = PopupMenu3
-            Style = tbsDropDown
           end
         end
       end
@@ -987,15 +944,9 @@ object Form1: TForm1
       end
       object MenuItem48: TMenuItem
         Action = VShowRegViewer
-        object Separator45: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem49: TMenuItem
         Action = VShowHexViewer
-        object Separator46: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator15: TMenuItem
         Caption = '-'
@@ -1011,21 +962,12 @@ object Form1: TForm1
       end
       object MenuItem54: TMenuItem
         Action = VRenameIOPanel
-        object Separator39: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem55: TMenuItem
         Action = VMoveResizeIOPanel
-        object Separator40: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem41: TMenuItem
         Action = VShowIOPanel
-        object Separator41: TMenuItem
-          Caption = '-'
-        end
       end
     end
     object MenuItem3: TMenuItem
@@ -1035,39 +977,24 @@ object Form1: TForm1
       end
       object MenuItem50: TMenuItem
         Action = PDestroy
-        object Separator25: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem53: TMenuItem
         Action = PReset
-        object Separator26: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator17: TMenuItem
         Caption = '-'
       end
       object MenuItem57: TMenuItem
         Action = PAttachToBus
-        object Separator27: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem58: TMenuItem
         Action = PDetachFromBus
-        object Separator28: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator18: TMenuItem
         Caption = '-'
       end
       object MenuItem60: TMenuItem
         Action = PProperties
-        object Separator29: TMenuItem
-          Caption = '-'
-        end
       end
     end
     object MenuItem4: TMenuItem
@@ -1077,60 +1004,36 @@ object Form1: TForm1
       end
       object MenuItem59: TMenuItem
         Action = MDestroy
-        object Separator23: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem61: TMenuItem
-        Action = IOReset
-        object Separator30: TMenuItem
-          Caption = '-'
-        end
+        Action = MReset
       end
       object Separator19: TMenuItem
         Caption = '-'
       end
       object MenuItem63: TMenuItem
         Action = MAttachToBus
-        object Separator31: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem64: TMenuItem
         Action = MDetachFromBus
-        object Separator32: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator20: TMenuItem
         Caption = '-'
       end
       object MenuItem66: TMenuItem
         Action = MProperties
-        object Separator33: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator21: TMenuItem
         Caption = '-'
       end
       object MenuItem68: TMenuItem
         Action = MLoadMemoryContent
-        object Separator42: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem69: TMenuItem
         Action = MSaveMemoryContent
-        object Separator43: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem70: TMenuItem
         Action = MExamineDeposit
-        object Separator44: TMenuItem
-          Caption = '-'
-        end
       end
     end
     object MenuItem5: TMenuItem
@@ -1140,39 +1043,24 @@ object Form1: TForm1
       end
       object MenuItem16: TMenuItem
         Action = IODestroy
-        object Separator34: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem19: TMenuItem
         Action = IOReset
-        object Separator35: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator4: TMenuItem
         Caption = '-'
       end
       object MenuItem23: TMenuItem
         Action = IOAttachToBus
-        object Separator36: TMenuItem
-          Caption = '-'
-        end
       end
       object MenuItem24: TMenuItem
         Action = IODetachFromBus
-        object Separator37: TMenuItem
-          Caption = '-'
-        end
       end
       object Separator5: TMenuItem
         Caption = '-'
       end
       object MenuItem26: TMenuItem
         Action = IOPorperties
-        object Separator38: TMenuItem
-          Caption = '-'
-        end
       end
     end
     object MenuItem6: TMenuItem
@@ -1421,11 +1309,13 @@ object Form1: TForm1
       Caption = 'Destro&y'
       Hint = 'Destroy memory'
       ImageIndex = 43
+      OnExecute = MDestroyExecute
     end
     object MReset: TAction
       Caption = '&Reset'
       Hint = 'Reset I/O port'
       ImageIndex = 11
+      OnExecute = MResetExecute
     end
     object MAttachToBus: TAction
       Caption = '&Attach to bus'
@@ -1467,26 +1357,31 @@ object Form1: TForm1
       Caption = '&Destroy'
       Hint = 'Destroy I/O port or device'
       ImageIndex = 48
+      OnExecute = IODestroyExecute
     end
     object IOReset: TAction
       Caption = '&Reset'
       Hint = 'Reset I/O port or device'
       ImageIndex = 11
+      OnExecute = IOResetExecute
     end
     object IOAttachToBus: TAction
       Caption = '&Attach to bus'
       Hint = 'Attach to bus'
       ImageIndex = 41
+      OnExecute = IOAttachToBusExecute
     end
     object IODetachFromBus: TAction
       Caption = '&Detach from bus'
       Hint = 'Detach from bus'
       ImageIndex = 40
+      OnExecute = IODetachFromBusExecute
     end
     object IOPorperties: TAction
       Caption = '&Properties'
       Hint = 'Properties'
       ImageIndex = 49
+      OnExecute = IOPorpertiesExecute
     end
     object ORun: TAction
       Caption = '&Run'
@@ -2146,17 +2041,5 @@ object Form1: TForm1
       2D90A6FF8E1D6BEDFBF3CF9A47C4D1B06B5D274EA75508B7B8B53FA7DB5AC04D
       6EE1F07FDE34EE8B
     }
-  end
-  object PopupMenu1: TPopupMenu
-    Left = 656
-    object Separator24: TMenuItem
-      Caption = '-'
-    end
-  end
-  object PopupMenu2: TPopupMenu
-    Left = 688
-  end
-  object PopupMenu3: TPopupMenu
-    Left = 720
   end
 end

@@ -19,28 +19,6 @@ uses
   Classes, FileUtil, StrUtils, SysUtils, Generics.Collections, dynlibs, core_cpu,
   core_memory, core_ioport;
 type
-  // loaded processor plugin modules
-  TProcPluginItem = class
-    FHandle: TLibHandle;
-    // egyéb eljárásmutatók ide jönnek majd
-    destructor Destroy; override;
-  end;
-  // loaded memory plugin modules
-  TMemPluginItem = class
-    FHandle: TLibHandle;
-    // egyéb eljárásmutatók ide jönnek majd
-    destructor Destroy; override;
-  end;
-  // loaded i/o port plugin modules
-  TPortPluginItem = class
-    FHandle: TLibHandle;
-    // egyéb eljárásmutatók ide jönnek majd
-    destructor Destroy; override;
-  end;
-  // loaded plugin dictionaries
-  TProcPluginDict = specialize TObjectDictionary<string, TProcPluginItem>;
-  TMemPluginDict = specialize TObjectDictionary<string, TMemPluginItem>;
-  TPortPluginDict = specialize TObjectDictionary<string, TPortPluginItem>;
   // procedural types pointing to the plugin entry point
   TIOPortCreateFunc = function: TIOPort; CALLTYPE;
   TIOPortDestroyProc = procedure(AIOPort: TIOPort); CALLTYPE;
@@ -62,10 +40,49 @@ type
   TProcessorDestroyProc = procedure(Processor: TCPU); CALLTYPE;
   TProcessorLoadStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   TProcessorSaveStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  // loaded processor plugin modules
+  TProcPluginItem = class
+    FHandle:    TLibHandle;
+    FCreate:    TProcessorCreateFunc;
+    FDestroy:   TProcessorDestroyProc;
+    FLoadState: TProcessorLoadStateFunc;
+    FSaveState: TProcessorSaveStateFunc;
+    destructor Destroy; override;
+  end;
+  // loaded memory plugin modules
+  TMemPluginItem = class
+    FHandle:    TLibHandle;
+    FCreate:    TMemoryCreateFunc;
+    FDestroy:   TMemoryDestroyProc;
+    FLoadState: TMemoryLoadStateFunc;
+    FSaveState: TMemorySaveStateFunc;
+    destructor Destroy; override;
+  end;
+  // loaded i/o port plugin modules
+  TPortPluginItem = class
+    FHandle:        TLibHandle;
+    FCreate:        TIOPortCreateFunc;
+    FDestroy:       TIOPortDestroyProc;
+    FLoadState:     TIOPortLoadStateFunc;
+    FSaveState:     TIOPortSaveStateFunc;
+    FCreatePanel:   TIOPortCreatePanelProc;
+    FShowPanel:     TIOPortShowPanelProc;
+    FHidePanel:     TIOPortHidePanelProc;
+    FFreePanel:     TIOPortFreePanelProc;
+    FRenamePanel:   TIOPortRenamePanelProc;
+    FResizePanel:   TIOPortResizePanelFunc;
+    FMovePanel:     TIOPortMovePanelFunc;
+    FSetIntHandler: TIOPortSetIntHandlerProc;
+    destructor Destroy; override;
+  end;
+  // plugin dictionary types
+  TProcPluginDict = specialize TObjectDictionary<string, TProcPluginItem>;
+  TMemPluginDict = specialize TObjectDictionary<string, TMemPluginItem>;
+  TPortPluginDict = specialize TObjectDictionary<string, TPortPluginItem>;
 var
-  FProcPluginDict: TProcPluginDict;
-  FMemPluginDict:  TMemPluginDict;
-  FPortPluginDict: TPortPluginDict;
+  FProcPluginDict: TProcPluginDict;                  // loaded processor plugins
+  FMemPluginDict:  TMemPluginDict;                      // loaded memory plugins
+  FPortPluginDict: TPortPluginDict;                   // loaded i/o port plugins
 
 function LoadAllPlugins(ADirectory: string): Integer;
 function UnLoadAllPlugins: Boolean;
@@ -122,20 +139,17 @@ begin
           ProcPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
           if ProcPluginItem.FHandle <> NilHandle then
           begin
+            Pointer(ProcPluginItem.FCreate) :=
+              GetProcedureAddress(ProcPluginItem.FHandle, 'cpu_create');
+            Pointer(ProcPluginItem.FDestroy) :=
+              GetProcedureAddress(ProcPluginItem.FHandle, 'cpu_destroy');
+            Pointer(ProcPluginItem.FLoadState) :=
+              GetProcedureAddress(ProcPluginItem.FHandle, 'cpu_loadstate');
+            Pointer(ProcPluginItem.FSaveState) :=
+              GetProcedureAddress(ProcPluginItem.FHandle, 'cpu_savestate');
             FProcPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), ProcPluginItem);
             Inc(Result);
           end else ProcPluginItem.Free;
-        end;
-        // memory_*.*
-        if ContainsText(LibList.Strings[i], 'memory_') then
-        begin
-          MemPluginItem := TMemPluginItem.Create;
-          MemPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
-          if MemPluginItem.FHandle <> NilHandle then
-          begin
-            FMemPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), MemPluginItem);
-            Inc(Result);
-          end else MemPluginItem.Free;
         end;
         // ioport_*.*
         if ContainsText(LibList.Strings[i], 'ioport_') then
@@ -144,9 +158,53 @@ begin
           PortPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
           if PortPluginItem.FHandle <> NilHandle then
           begin
+            // get exported methods address
+            Pointer(PortPluginItem.FCreate) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_create');
+            Pointer(PortPluginItem.FDestroy) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_destroy');
+            Pointer(PortPluginItem.FLoadState) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_loadstate');
+            Pointer(PortPluginItem.FSaveState) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_savestate');
+            Pointer(PortPluginItem.FCreatePanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_createpanel');
+            Pointer(PortPluginItem.FFreePanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_freepanel');
+            Pointer(PortPluginItem.FShowPanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_showpanel');
+            Pointer(PortPluginItem.FHidePanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_hidepanel');
+            Pointer(PortPluginItem.FRenamePanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_renamepanel');
+            Pointer(PortPluginItem.FResizePanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_resizepanel');
+            Pointer(PortPluginItem.FMovePanel) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_movepanel');
+            Pointer(PortPluginItem.FSetIntHandler) :=
+              GetProcedureAddress(PortPluginItem.FHandle, 'ioport_setinthandler');
             FPortPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), PortPluginItem);
             Inc(Result);
           end else PortPluginItem.Free;
+        end;
+        // memory_*.*
+        if ContainsText(LibList.Strings[i], 'memory_') then
+        begin
+          MemPluginItem := TMemPluginItem.Create;
+          MemPluginItem.FHandle := LoadLibrary(LibList.Strings[i]);
+          if MemPluginItem.FHandle <> NilHandle then
+          begin
+            Pointer(MemPluginItem.FCreate) :=
+              GetProcedureAddress(MemPluginItem.FHandle, 'memory_create');
+            Pointer(MemPluginItem.FDestroy) :=
+              GetProcedureAddress(MemPluginItem.FHandle, 'memory_destroy');
+            Pointer(MemPluginItem.FLoadState) :=
+              GetProcedureAddress(MemPluginItem.FHandle, 'memory_loadstate');
+            Pointer(MemPluginItem.FSaveState) :=
+              GetProcedureAddress(MemPluginItem.FHandle, 'memory_savestate');
+            FMemPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), MemPluginItem);
+            Inc(Result);
+          end else MemPluginItem.Free;
         end;
       end;
     end;

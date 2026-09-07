@@ -15,7 +15,8 @@ program corelab;
 {$MODE OBJFPC}{$H+}
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
-  lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist
+  lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
+  frmmodulelist
    // frmscripteditor, frmhexviewer, frmexdepmemory, frmloadsavememory
   ;
 const
@@ -191,6 +192,7 @@ begin
 //    CreateForm(TForm14, Form14);               // Move/resize I/O plugin panel
 //    CreateForm(TForm15, Form15);                          // Plugin properties
     CreateForm(TForm16, Form16);                   // Class list for instantiate
+    CreateForm(TForm17, Form17);                     // Instantiated module list
   end;
   // set properties
   Form2.AboutLabels := AboutLabels;

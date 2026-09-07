@@ -109,6 +109,7 @@
         <Filename Value="frmclasslist.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form16"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
     </Units>

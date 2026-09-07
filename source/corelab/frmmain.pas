@@ -18,13 +18,26 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
-  Generics.Collections, frmabout, frmclasslist, frmrunlogger, core_cpu,
-  core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject;
+  Generics.Collections, frmabout, frmclasslist, frmmodulelist, frmrunlogger,
+  core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
+  uproject;
 type
-  // allocated simulation objects
-  TProcInstanceDict = specialize TDictionary<string, TCPU>;
-  TMemInstanceDict = specialize TDictionary<string, TMemory>;
-  TPortInstanceDict = specialize TDictionary<string, TIOPort>;
+  // allocated simulation objects and its types
+  TCPUInfo = record
+    Port: TCPU;
+    ModuleName: string;
+  end;
+  TMemInfo = record
+    Port: TMemory;
+    ModuleName: string;
+  end;
+  TPortInfo = record
+    Port: TIOPort;
+    ModuleName: string;
+  end;
+  TProcInstanceDict = specialize TDictionary<string, TCPUInfo>;
+  TMemInstanceDict = specialize TDictionary<string, TMemInfo>;
+  TPortInstanceDict = specialize TDictionary<string, TPortInfo>;
   // operation mode type
   TOpMode = (omInteractive, omScript, omInterpreter);
   { TForm1 }
@@ -144,9 +157,6 @@ type
     PCreate:                  TAction;
     PDestroy:                 TAction;
     PDetachFromBus:           TAction;
-    PopupMenu1:               TPopupMenu;
-    PopupMenu2:               TPopupMenu;
-    PopupMenu3:               TPopupMenu;
     PProperties:              TAction;
     PReset:                   TAction;
     Separator1:               TMenuItem;
@@ -163,32 +173,8 @@ type
     Separator2:               TMenuItem;
     Separator20:              TMenuItem;
     Separator21:              TMenuItem;
-    Separator23:              TMenuItem;
-    Separator24:              TMenuItem;
-    Separator25:              TMenuItem;
-    Separator26:              TMenuItem;
-    Separator27:              TMenuItem;
-    Separator28:              TMenuItem;
-    Separator29:              TMenuItem;
     Separator3:               TMenuItem;
-    Separator30:              TMenuItem;
-    Separator31:              TMenuItem;
-    Separator32:              TMenuItem;
-    Separator33:              TMenuItem;
-    Separator34:              TMenuItem;
-    Separator35:              TMenuItem;
-    Separator36:              TMenuItem;
-    Separator37:              TMenuItem;
-    Separator38:              TMenuItem;
-    Separator39:              TMenuItem;
     Separator4:               TMenuItem;
-    Separator40:              TMenuItem;
-    Separator41:              TMenuItem;
-    Separator42:              TMenuItem;
-    Separator43:              TMenuItem;
-    Separator44:              TMenuItem;
-    Separator45:              TMenuItem;
-    Separator46:              TMenuItem;
     Separator5:               TMenuItem;
     Separator7:               TMenuItem;
     Separator8:               TMenuItem;
@@ -292,8 +278,15 @@ type
     procedure FSwitchToScriptModeExecute(Sender: TObject);
     procedure HAboutExecute(Sender: TObject);
     procedure HHelpExecute(Sender: TObject);
+    procedure IOAttachToBusExecute(Sender: TObject);
     procedure IOCreateExecute(Sender: TObject);
+    procedure IODestroyExecute(Sender: TObject);
+    procedure IODetachFromBusExecute(Sender: TObject);
+    procedure IOPorpertiesExecute(Sender: TObject);
+    procedure IOResetExecute(Sender: TObject);
     procedure MCreateExecute(Sender: TObject);
+    procedure MDestroyExecute(Sender: TObject);
+    procedure MResetExecute(Sender: TObject);
     procedure OClearAllBreakpointsExecute(Sender: TObject);
     procedure OIRQExecute(Sender: TObject);
     procedure OMakeSnapshotExecute(Sender: TObject);
@@ -392,6 +385,19 @@ resourcestring
   MSG56 = 'Cannot save project to ''%s'' file.';                          { SM }
   MSG57 = 'The project is unsaved, should I continue?';                   { MD }
   MSG58 = 'The %s module named ''%s'' was successfully created.';         { SC }
+  MSG59 = 'Destroy';
+  MSG60 = 'The module named ''%s'' was successfully destroyed.';          { SC }
+  MSG61 = 'Reset';
+  MSG62 = 'The module named ''%s'' was restored.';                        { SC }
+
+  MSG72 = 'Attach to bus';
+  MSG73 = 'Detach from bus';
+  MSG74 = 'Edit properties';
+  MSG75 = 'Load content';
+  MSG76 = 'Save content';
+  MSG77 = 'Rename panel';
+  MSG78 = 'Move/resize panel';
+  MSG79 = 'Show panel';
 
 // ---- PRIVATE METHODS ----
 
@@ -716,86 +722,130 @@ end;
 
 // PROCESSOR/CREATE
 procedure TForm1.PCreateExecute(Sender: TObject);
-var
-  KeyName:      string;
-  NewLibHandle: TProcPluginItem;
-  NewName:      string;
-  StringList:   TStringList;
 begin
-  StringList := TStringList.Create;
-  try
-    for KeyName in FProcPluginDict.Keys do
-      StringList.Add(KeyName);
-    with Form16 do
-    begin
-      PluginList := StringList;
-      if Form16.ShowModal = mrOk then
-      begin
-        NewLibHandle := FProcPluginDict[SelectedKey];
-        NewName := SelectedName;
-        {...}
-        Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', NewName]));
-      end;
-    end;
-  finally
-    StringList.Free;
-  end;
 end;
 
 // MEMORY/CREATE
 procedure TForm1.MCreateExecute(Sender: TObject);
-var
-  KeyName:      string;
-  NewLibHandle: TMemPluginItem;
-  NewName:      string;
-  StringList:   TStringList;
 begin
-  StringList := TStringList.Create;
-  try
-    for KeyName in FMemPluginDict.Keys do
-      StringList.Add(KeyName);
-    with Form16 do
-    begin
-      PluginList := StringList;
-      if Form16.ShowModal = mrOk then
-      begin
-        NewLibHandle := FMemPluginDict[SelectedKey];
-        NewName := SelectedName;
-        {...}
-        Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', NewName]));
-      end;
-    end;
-  finally
-    StringList.Free;
-  end;
+end;
+
+procedure TForm1.MDestroyExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.MResetExecute(Sender: TObject);
+begin
+
 end;
 
 // IO PORT/CREATE
 procedure TForm1.IOCreateExecute(Sender: TObject);
 var
-  KeyName:      string;
-  NewLibHandle: TPortPluginItem;
-  NewName:      string;
-  StringList:   TStringList;
+  PortInfo: TPortInfo;
+  KeyName:    string;
+  StringList: TStringList;
 begin
   StringList := TStringList.Create;
   try
-    for KeyName in FPortPluginDict.Keys do
-      StringList.Add(KeyName);
+    for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
     with Form16 do
     begin
       PluginList := StringList;
-      if Form16.ShowModal = mrOk then
+      if ShowModal = mrOk then
       begin
-        NewLibHandle := FPortPluginDict[SelectedKey];
-        NewName := SelectedName;
-        {...}
-        Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', NewName]));
+        // create
+        if Assigned(FPortPluginDict[SelectedKey].FCreate) then
+        begin
+          PortInfo.Port := FPortPluginDict[SelectedKey].FCreate();
+          PortInfo.ModuleName := SelectedKey;
+        end;
+        // store
+        FPortInstanceDict.Add(SelectedName, PortInfo);
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', SelectedName]));
       end;
     end;
   finally
     StringList.Free;
   end;
+end;
+
+// IO PORT/DESTROY
+procedure TForm1.IODestroyExecute(Sender: TObject);
+var
+  KeyName:    string;
+  StringList: TStringList;
+  PortInfo: TPortInfo;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG60;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        PortInfo := FPortInstanceDict[SelectedKey];
+        // destroy
+        FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
+        // remove from dict
+        FPortInstanceDict.Remove(SelectedKey);
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// IO PORT/RESET
+procedure TForm1.IOResetExecute(Sender: TObject);
+var
+  KeyName:    string;
+  StringList: TStringList;
+  PortInfo: TPortInfo;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG61;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        PortInfo := FPortInstanceDict[SelectedKey];
+        // Reset
+        PortInfo.Port.Reset;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// IO PORT/ATTACH TO BUS
+procedure TForm1.IOAttachToBusExecute(Sender: TObject);
+begin
+
+end;
+
+// IO PORT/DETACH FROM BUS
+procedure TForm1.IODetachFromBusExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// IO PORT/PROPERTIES
+procedure TForm1.IOPorpertiesExecute(Sender: TObject);
+begin
+  {...}
 end;
 
 // OPERATION/RUN SIMULATION

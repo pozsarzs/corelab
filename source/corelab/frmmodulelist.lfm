@@ -1,9 +1,9 @@
-object Form16: TForm16
+object Form17: TForm17
   Left = 672
   Height = 315
   Top = 204
   Width = 276
-  Caption = 'Select plugin'
+  Caption = 'Select module'
   ClientHeight = 315
   ClientWidth = 276
   Icon.Data = {
@@ -379,7 +379,7 @@ object Form16: TForm16
     Cancel = True
     Caption = '&Cancel'
     ModalResult = 2
-    TabOrder = 3
+    TabOrder = 2
   end
   object Button5: TButton
     AnchorSideRight.Control = Owner
@@ -393,10 +393,10 @@ object Form16: TForm16
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Caption = '&Instantiate'
+    Caption = 'Button5'
     Enabled = False
     OnClick = Button5Click
-    TabOrder = 2
+    TabOrder = 1
   end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
@@ -413,17 +413,6 @@ object Form16: TForm16
     BorderSpacing.Bottom = 8
     Shape = bsBottomLine
   end
-  object Label1: TLabel
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
-    Left = 8
-    Height = 17
-    Top = 8
-    Width = 43
-    BorderSpacing.Around = 8
-    Caption = 'Name:'
-    ParentColor = False
-  end
   object ListBox1: TListBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Label2
@@ -432,42 +421,26 @@ object Form16: TForm16
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Bevel1
     Left = 8
-    Height = 162
-    Top = 100
+    Height = 229
+    Top = 33
     Width = 260
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     ItemHeight = 0
     OnDblClick = Button5Click
     Sorted = True
-    TabOrder = 1
+    TabOrder = 0
     TopIndex = -1
   end
   object Label2: TLabel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Edit1
-    AnchorSideTop.Side = asrBottom
+    AnchorSideTop.Control = Owner
     Left = 8
     Height = 17
-    Top = 75
-    Width = 115
+    Top = 8
+    Width = 124
     BorderSpacing.Around = 8
-    Caption = 'Available plugins:'
+    Caption = 'Available modules:'
     ParentColor = False
-  end
-  object Edit1: TEdit
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Label1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    Left = 8
-    Height = 34
-    Top = 33
-    Width = 260
-    Anchors = [akTop, akLeft, akRight]
-    BorderSpacing.Around = 8
-    OnEditingDone = Button5Click
-    TabOrder = 0
   end
 end
