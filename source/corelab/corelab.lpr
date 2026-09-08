@@ -16,7 +16,7 @@ program corelab;
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
   lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
-  frmmodulelist
+  frmmodulelist, frmsettings
    // frmscripteditor, frmhexviewer, frmexdepmemory, frmloadsavememory
   ;
 const
@@ -193,6 +193,7 @@ begin
 //    CreateForm(TForm15, Form15);                          // Plugin properties
     CreateForm(TForm16, Form16);                   // Class list for instantiate
     CreateForm(TForm17, Form17);                     // Instantiated module list
+    CreateForm(TForm18, Form18);                                     // Settings
   end;
   // set properties
   Form2.AboutLabels := AboutLabels;

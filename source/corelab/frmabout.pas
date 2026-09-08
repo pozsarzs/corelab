@@ -21,7 +21,7 @@ type
   { TForm2 }
   TAboutLabels = record
     Copyright:   string[31];
-    Description: string[31];
+    Description: string;
     Email:       string[31];
     Homepage:    string[31];
     Name:        string[31];

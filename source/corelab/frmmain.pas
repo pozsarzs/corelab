@@ -19,8 +19,8 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
   Generics.Collections, frmabout, frmclasslist, frmmodulelist, frmrunlogger,
-  core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
-  uproject;
+  frmsettings, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
+  uconfig, uplugin, uproject;
 type
   // allocated simulation objects and its types
   TCPUInfo = record
@@ -650,7 +650,32 @@ end;
 // FILE/SETTINGS
 procedure TForm1.FSettingsExecute(Sender: TObject);
 begin
-  {...}
+  with Form18 do
+  begin
+    // original settings
+    SetFAppConfig(FAppConfig);
+    if ShowModal = mrOk then
+    begin
+      // new settings
+      FAppConfig := AppConfig;
+      with FAppConfig do
+      begin
+        // refresh RunLogger
+        Form4.InstCountColor := runlogger_instcount_color;
+        Form4.AddressColor := runlogger_address_color;
+        Form4.OpCodeColor := runlogger_opcode_color;
+        Form4.MnemonicColor := runlogger_mnemonic_color;
+        Form4.LineSelectorColor := runlogger_lineselector_color;
+        Form4.BGColorOddLines := runlogger_bgcolor_odd;
+        Form4.BGColorEvenLines := runlogger_bgcolor_even;
+        Form4.Invalidate;
+        // refresh SysConsole
+        Memo1.Font.Color := sysconsole_font_color;
+        Memo1.Color := sysconsole_bg_color;
+        Memo1.Invalidate;
+      end;
+    end;
+  end;
 end;
 
 // FILE/RESTART APPLICATION
@@ -784,7 +809,7 @@ begin
     for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
     with Form17 do
     begin
-      OKButtonCaption := MSG60;
+      OKButtonCaption := MSG59;
       ModuleList := StringList;
       if ShowModal = mrOk then
       begin

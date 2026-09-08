@@ -1,0 +1,16 @@
+{"version":1,"strings":[
+{"hash":213582195,"name":"tform18.caption","sourcebytes":[83,101,116,116,105,110,103,115],"value":"Settings"},
+{"hash":178628,"name":"tform18.button5.caption","sourcebytes":[38,83,101,116],"value":"&Set"},
+{"hash":177752476,"name":"tform18.button1.caption","sourcebytes":[38,67,97,110,99,101,108],"value":"&Cancel"},
+{"hash":53838850,"name":"tform18.tabsheet1.caption","sourcebytes":[82,117,110,76,111,103,103,101,114],"value":"RunLogger"},
+{"hash":246378378,"name":"tform18.label1.caption","sourcebytes":[73,110,115,116,114,117,99,116,105,111,110,58],"value":"Instruction:"},
+{"hash":179883546,"name":"tform18.label2.caption","sourcebytes":[65,100,100,114,101,115,115,58],"value":"Address:"},
+{"hash":216178890,"name":"tform18.label3.caption","sourcebytes":[79,112,101,114,97,116,105,111,110,32,99,111,100,101,58],"value":"Operation code:"},
+{"hash":205921066,"name":"tform18.label4.caption","sourcebytes":[77,110,101,109,111,110,105,99,58],"value":"Mnemonic:"},
+{"hash":232415541,"name":"tform18.label5.caption","sourcebytes":[76,105,110,101,32,115,101,108,101,99,116,111,114,58,76,97,98,101,108,53],"value":"Line selector:Label5"},
+{"hash":229412106,"name":"tform18.label6.caption","sourcebytes":[79,100,100,32,108,105,110,101,115,32,98,97,99,107,103,114,111,117,110,100,58],"value":"Odd lines background:"},
+{"hash":195597930,"name":"tform18.label7.caption","sourcebytes":[69,118,101,110,32,108,105,110,101,115,32,98,97,99,107,103,114,111,117,110,100,58],"value":"Even lines background:"},
+{"hash":174077525,"name":"tform18.tabsheet2.caption","sourcebytes":[83,121,115,67,111,110,115,111,108,101],"value":"SysConsole"},
+{"hash":5072250,"name":"tform18.label8.caption","sourcebytes":[70,111,110,116,58],"value":"Font:"},
+{"hash":249486954,"name":"tform18.label9.caption","sourcebytes":[66,97,99,107,103,114,111,117,110,100,58],"value":"Background:"}
+]}

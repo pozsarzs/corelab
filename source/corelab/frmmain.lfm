@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 304
+  Left = 333
   Height = 160
-  Top = 115
+  Top = 23
   Width = 930
   Caption = 'Form1'
   ClientHeight = 135
@@ -1235,19 +1235,19 @@ object Form1: TForm1
       ImageIndex = 55
     end
     object VShowHexViewer: TAction
-      Caption = 'Show He&xViewer'
+      Caption = 'Show He&xViewer...'
       Hint = 'Show HexViewer'
       ImageIndex = 18
     end
     object VShowScriptEditor: TAction
-      Caption = 'Show S&criptEditor...'
+      Caption = 'Show S&criptEditor'
       Hint = 'Show ScriptEditor'
       ImageIndex = 46
       OnExecute = VShowScriptEditorExecute
       ShortCut = 8307
     end
     object VShowScriptConsole: TAction
-      Caption = 'Show Scrip&tConsole...'
+      Caption = 'Show Scrip&tConsole'
       Hint = 'Show ScriptConsole'
       ImageIndex = 45
       OnExecute = VShowScriptConsoleExecute
@@ -1275,27 +1275,27 @@ object Form1: TForm1
       OnExecute = PCreateExecute
     end
     object PDestroy: TAction
-      Caption = 'Destro&y'
+      Caption = 'Destro&y...'
       Hint = 'Destroy processor'
       ImageIndex = 38
     end
     object PReset: TAction
-      Caption = '&Reset'
+      Caption = '&Reset...'
       Hint = 'Reset processor'
       ImageIndex = 11
     end
     object PAttachToBus: TAction
-      Caption = '&Attach to bus'
+      Caption = '&Attach to bus...'
       Hint = 'Attach to bus'
       ImageIndex = 41
     end
     object PDetachFromBus: TAction
-      Caption = '&Detach from bus'
+      Caption = '&Detach from bus...'
       Hint = 'Detach from bus'
       ImageIndex = 40
     end
     object PProperties: TAction
-      Caption = '&Properties'
+      Caption = '&Properties...'
       Hint = 'Properties'
       ImageIndex = 37
     end
@@ -1306,44 +1306,44 @@ object Form1: TForm1
       OnExecute = MCreateExecute
     end
     object MDestroy: TAction
-      Caption = 'Destro&y'
+      Caption = 'Destro&y...'
       Hint = 'Destroy memory'
       ImageIndex = 43
       OnExecute = MDestroyExecute
     end
     object MReset: TAction
-      Caption = '&Reset'
+      Caption = '&Reset...'
       Hint = 'Reset I/O port'
       ImageIndex = 11
       OnExecute = MResetExecute
     end
     object MAttachToBus: TAction
-      Caption = '&Attach to bus'
+      Caption = '&Attach to bus...'
       Hint = 'Attach to bus'
       ImageIndex = 41
     end
     object MDetachFromBus: TAction
-      Caption = '&Detach from bus'
+      Caption = '&Detach from bus...'
       Hint = 'Detach from bus'
       ImageIndex = 40
     end
     object MProperties: TAction
-      Caption = '&Properties'
+      Caption = '&Properties...'
       Hint = 'Properties'
       ImageIndex = 44
     end
     object MLoadMemoryContent: TAction
-      Caption = '&Load memory content'
+      Caption = '&Load memory content...'
       Hint = 'Load memory content'
       ImageIndex = 19
     end
     object MSaveMemoryContent: TAction
-      Caption = '&Save memory content'
+      Caption = '&Save memory content...'
       Hint = 'Save memory content'
       ImageIndex = 20
     end
     object MExamineDeposit: TAction
-      Caption = 'E&xamine/deposit'
+      Caption = 'E&xamine/deposit...'
       Hint = 'Examine/deposit memory cell'
       ImageIndex = 22
     end
@@ -1354,31 +1354,31 @@ object Form1: TForm1
       OnExecute = IOCreateExecute
     end
     object IODestroy: TAction
-      Caption = '&Destroy'
+      Caption = '&Destroy...'
       Hint = 'Destroy I/O port or device'
       ImageIndex = 48
       OnExecute = IODestroyExecute
     end
     object IOReset: TAction
-      Caption = '&Reset'
+      Caption = '&Reset...'
       Hint = 'Reset I/O port or device'
       ImageIndex = 11
       OnExecute = IOResetExecute
     end
     object IOAttachToBus: TAction
-      Caption = '&Attach to bus'
+      Caption = '&Attach to bus...'
       Hint = 'Attach to bus'
       ImageIndex = 41
       OnExecute = IOAttachToBusExecute
     end
     object IODetachFromBus: TAction
-      Caption = '&Detach from bus'
+      Caption = '&Detach from bus...'
       Hint = 'Detach from bus'
       ImageIndex = 40
       OnExecute = IODetachFromBusExecute
     end
     object IOPorperties: TAction
-      Caption = '&Properties'
+      Caption = '&Properties...'
       Hint = 'Properties'
       ImageIndex = 49
       OnExecute = IOPorpertiesExecute
