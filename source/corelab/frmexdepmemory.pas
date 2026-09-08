@@ -36,9 +36,10 @@ type
     procedure EditButton2ButtonClick(Sender: TObject);
     procedure EditButton2EditingDone(Sender: TObject);
   private
-    FMemInstance:        TMemory;
-  public
+    FMemInstance: TMemory;
+  protected
     procedure SetMemInstance(AMemInstance: TMemory);
+  public
     property MemInstance: TMemory write SetMemInstance;
   end;
 var
@@ -56,8 +57,7 @@ resourcestring
   MSG04 = 'Memory address too high. (> %s)';
   MSG05 = 'Cannot open memory modul.';
 
-
-// ----  PUBLIC METHODS ----
+// ----  PROTECTED METHODS ----
 
 procedure TForm5.SetMemInstance(AMemInstance: TMemory);
 begin

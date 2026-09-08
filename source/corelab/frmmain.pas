@@ -19,7 +19,7 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
   Generics.Collections, frmabout, frmclasslist, frmmodulelist, frmrunlogger,
-  frmsettings, frmexdepmemory, frmloadsavememory,{frmhexviewer,} core_cpu,
+  frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer, core_cpu,
   core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject,
   uintelhex;
 type
@@ -741,6 +741,13 @@ begin
       FAppConfig := AppConfig;
       with FAppConfig do
       begin
+        // refresh HexViewer
+        Form3.AddressColor := hexviewer_address_color;
+        Form3.DataColor := hexviewer_data_color;
+        Form3.LineSelectorColor := hexviewer_lineselector_color;
+        Form3.BGColorOddLines := hexviewer_bgcolor_odd;
+        Form3.BGColorEvenLines := hexviewer_bgcolor_even;
+        Form3.Invalidate;
         // refresh RunLogger
         Form4.InstCountColor := runlogger_instcount_color;
         Form4.AddressColor := runlogger_address_color;
@@ -788,9 +795,9 @@ end;
 
 procedure TForm1.VShowHexViewerExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  KeyName:       string;
+  MemInfo:       TMemInfo;
+  StringList:    TStringList;
 begin
   StringList := TStringList.Create;
   try
@@ -803,10 +810,12 @@ begin
     if Form17.ShowModal = mrOk then
     begin
       MemInfo := FMemInstanceDict[Form17.SelectedKey];
-
-
-
-
+      // show HexViewer
+      With Form3 do
+      begin
+        MemInstance := MemInfo.Memory;
+        Show;
+      end;
     end;
   finally
     StringList.Free;
@@ -1385,7 +1394,7 @@ begin
       // examine/deposit
       With Form5 do
       begin
-        SetMemInstance(MemInfo.Memory);
+        MemInstance := MemInfo.Memory;
         ShowModal;
       end;
       // restore original status

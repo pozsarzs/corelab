@@ -13,10 +13,11 @@
 
 unit frmhexviewer;
 {$MODE OBJFPC}{$H+}
+{$I defcolors.pas}
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types, core_cpu, ucommon;
+  Buttons, EditBtn, Grids, Types, core_memory, core_cpu, ucommon;
 type
   { TForm3 }
   TForm3 = class(TForm)
@@ -25,47 +26,44 @@ type
     DrawGrid1:   TDrawGrid;
     EditButton1: TEditButton;
     FindDialog1: TFindDialog;
-    RadioGroup1: TRadioGroup;
     procedure Button1Click(Sender: TObject);
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
+    FMemInstance:       TMemory;                               // TMemory object
+    FMemSize:           DWord;
     // colors
     FAddressColor:      TColor;                                // Address column
     FDataColor:         TColor;                                 // Opcode column
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
-    // others
-    FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FMemSize: DWord;                                  // Size of emulated memory
   protected
     procedure SetAddressColor(AColor: TColor);
     procedure SetDataColor(AColor: TColor);
     procedure SetLineSelectorColor(AColor: TColor);
     procedure SetBGColorEvenLines(AColor: TColor);
     procedure SetBGColorOddLines(AColor: TColor);
-    procedure SetFArchitecture(AArchitecture: TArchitecture);
-    procedure SetFMemSize(AMemSize: DWord);
+    procedure SetMemInstance(AMemInstance: TMemory);
   public
-    property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
+    property MemInstance: TMemory write SetMemInstance;
     property AddressColor: TColor read FAddressColor write SetAddressColor;
     property DataColor: TColor read FDataColor write SetDataColor;
     property LineSelectorColor: TColor read FLineSelectorColor write SetLineSelectorColor;
     property BGColorOddLines: TColor read FBGColorOddLines write SetBGColorOddLines;
     property BGColorEvenLines: TColor read FBGColorEvenLines write SetBGColorEvenLines;
-    property MemSize: DWord read FMemSize write SetFMemSize;
   end;
 var
   Form3: TForm3;
 
 resourcestring
-  MSG01 = 'Address';
+  MSG01 = 'ERROR: ';
+  MSG02 = 'Address';
+  MSG03 = 'Cannot open memory modul.';
 
 implementation
-uses frmmain;
 {$R *.lfm}
 
 // ---- PROTECTED METHODS ----
@@ -105,18 +103,19 @@ begin
   DrawGrid1.Invalidate;
 end;
 
-// SET FARCHITECTURE FIELD
-procedure TForm3.SetFArchitecture(AArchitecture: TArchitecture);
+// SET INSTANCE AND MEMORY SIZE (16 BYTES PER ROW)
+procedure TForm3.SetMemInstance(AMemInstance: TMemory);
 begin
-  FArchitecture := AArchitecture;
-  RadioGroup1.Enabled := (FArchitecture = arHarvard);
-end;
-
-// SET MEMORY SIZE (16 BYTES PER ROW)
-procedure TForm3.SetFMemSize(AMemSize: DWord);
-begin
-  if AMemSize > 0 then FMemSize := AMemSize else Exit;
-  DrawGrid1.RowCount := ((FMemSize + 15) div 16) + 1;
+  if Assigned(AMemInstance) then
+  begin
+    FMemInstance := AMemInstance;
+    FMemSize := FMemInstance.AddressRangeSize;
+    if FMemSize = 0 then Exit;
+    DrawGrid1.RowCount := ((FMemSize + 15) div 16) + 1;
+  end else
+  begin
+    ShowMessage(MSG01 + MSG03);
+  end;
 end;
 
 // ---- EVENT HANDLER METHODS ----
@@ -130,11 +129,12 @@ end;
 // DRAW RECORDS INTO THE GRID
 procedure TForm3.DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
 var
-  BaseAddress: DWord;
-  CellAddress: DWord;
-  BData:       Byte;
-  SText:       string;
-  Style:       TTextStyle;
+  BaseAddress:   DWord;
+  CellAddress:   DWord;
+  CurrentStatus: Boolean;
+  BData:         Byte;
+  SText:         string;
+  Style:         TTextStyle;
 begin
   if aRow = 0 then Exit;
 
@@ -150,9 +150,12 @@ begin
     CellAddress := BaseAddress + aCol - 1;
     if CellAddress < FMemSize then
     begin
-      if RadioGroup1.Enabled
-        then BData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, CellAddress)
-        else BData := Form1.GetMemoryCell(0, CellAddress);
+      // store original status and enable module
+      CurrentStatus := FMemInstance.Enabled;
+      FMemInstance.Enabled := True;
+      BData := FMemInstance.ReadMemory(CellAddress);
+      // restore original status
+      FMemInstance.Enabled := CurrentStatus;
       FormatHexValue(IntToHex(BData), 2, SText);
     end;
   end;
@@ -184,10 +187,11 @@ end;
 // SEARCH IN DUMP
 procedure TForm3.EditButton1ButtonClick(Sender: TObject);
 var
-  s, SAddress, SData: string;
+  CurrentStatus:            Boolean;
   BaseAddress, CellAddress: DWord;
-  BData:       Byte;
-  r, c:        Integer;
+  BData:                    Byte;
+  r, c:                     Integer;
+  s, SAddress, SData:       string;
 begin
   if Length(EditButton1.Text) > 0 then
   for r := DrawGrid1.Row to DrawGrid1.RowCount - 1 do
@@ -197,19 +201,22 @@ begin
     FormatHexValue(IntToHex(BaseAddress), 6, SAddress);
     s := SAddress;
 
+    // store original status and enable module
+    CurrentStatus := FMemInstance.Enabled;
+    FMemInstance.Enabled := True;
     for c := 0 to 15 do
     begin
       CellAddress := BaseAddress + c;
       if CellAddress < FMemSize then
       begin
-        if RadioGroup1.Enabled
-          then BData := Form1.GetMemoryCell(RadioGroup1.ItemIndex, CellAddress)
-          else BData := Form1.GetMemoryCell(0, CellAddress);
+        BData := FMemInstance.ReadMemory(CellAddress);
         SData := '';
         FormatHexValue(IntToHex(BData), 2, SData);
         s := s + #9 + SData;
       end;
     end;
+    // restore original status
+    FMemInstance.Enabled := CurrentStatus;
 
     s := lowercase(s);
     if Pos(LowerCase(EditButton1.Text), s) > 0 then
@@ -233,12 +240,11 @@ var
   i: Integer;
 begin
   // default colors
-  FAddressColor := $00AADCDC;
-  FDataColor := $00D69C56;
-  FLineSelectorColor := $00473523;
-  FBGColorOddLines := $001E1E1E;
-  FBGColorEvenLines := $00262525;
-  SetFArchitecture(arNeumann);
+  FAddressColor := StringToColor(HEXVIEWER_ADDRESS_DEFAULT);
+  FDataColor := StringToColor(HEXVIEWER_DATA_DEFAULT);
+  FLineSelectorColor := StringToColor(HEXVIEWER_LINESELECTOR_DEFAULT);
+  FBGColorOddLines := StringToColor(HEXVIEWER_BGCOLOR_ODD_DEFAULT);
+  FBGColorEvenLines := StringToColor(HEXVIEWER_BGCOLOR_EVEN_DEFAULT);
 
   with DrawGrid1 do
   begin
@@ -247,7 +253,7 @@ begin
     with Columns.Add do
     begin
       Width := 64;
-      Title.Caption := MSG01;
+      Title.Caption := MSG02;
     end;
     // Data columns (0-F)
     for i := 0 to 15 do
@@ -261,7 +267,7 @@ begin
     Color := FBGColorOddLines;
   end;
 
-  SetFMemSize(1024);
+  FMemSize := 1024;
 end;
 
 end.

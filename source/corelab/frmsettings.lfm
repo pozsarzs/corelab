@@ -1,7 +1,7 @@
 object Form18: TForm18
-  Left = 499
+  Left = 422
   Height = 350
-  Top = 158
+  Top = 114
   Width = 477
   BorderStyle = bsSingle
   Caption = 'Settings'
@@ -426,8 +426,163 @@ object Form18: TForm18
     ActivePage = TabSheet1
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
+    object TabSheet3: TTabSheet
+      Caption = 'HexViewer'
+      ClientHeight = 258
+      ClientWidth = 451
+      object Label10: TLabel
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = TabSheet1
+        Left = 8
+        Height = 17
+        Top = 8
+        Width = 56
+        BorderSpacing.Around = 8
+        Caption = 'Address:'
+        ParentColor = False
+      end
+      object ColorBox10: TColorBox
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = Label10
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 33
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 0
+      end
+      object Label11: TLabel
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = ColorBox10
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 17
+        Top = 70
+        Width = 35
+        BorderSpacing.Around = 8
+        Caption = 'Data:'
+        ParentColor = False
+      end
+      object ColorBox11: TColorBox
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = Label11
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 95
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 1
+      end
+      object Label12: TLabel
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = ColorBox11
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 17
+        Top = 132
+        Width = 87
+        BorderSpacing.Around = 8
+        Caption = 'Line selector:'
+        ParentColor = False
+      end
+      object ColorBox12: TColorBox
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = Label12
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 157
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 2
+      end
+      object Bevel5: TBevel
+        AnchorSideLeft.Control = ColorBox10
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabSheet1
+        AnchorSideBottom.Control = TabSheet1
+        AnchorSideBottom.Side = asrBottom
+        Left = 166
+        Height = 242
+        Top = 8
+        Width = 2
+        Anchors = [akTop, akLeft, akBottom]
+        BorderSpacing.Around = 8
+        Shape = bsLeftLine
+      end
+      object Bevel6: TBevel
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabSheet1
+        AnchorSideBottom.Control = TabSheet1
+        AnchorSideBottom.Side = asrBottom
+        Left = 332
+        Height = 242
+        Top = 8
+        Width = 2
+        Anchors = [akTop, akLeft, akBottom]
+        BorderSpacing.Around = 8
+        Shape = bsLeftLine
+      end
+      object Label13: TLabel
+        AnchorSideLeft.Control = Bevel2
+        AnchorSideTop.Control = TabSheet3
+        Left = 174
+        Height = 17
+        Top = 8
+        Width = 146
+        BorderSpacing.Around = 8
+        Caption = 'Odd lines background:'
+        ParentColor = False
+      end
+      object ColorBox13: TColorBox
+        AnchorSideLeft.Control = Bevel2
+        AnchorSideTop.Control = Label13
+        AnchorSideTop.Side = asrBottom
+        Left = 174
+        Height = 29
+        Top = 33
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 3
+      end
+      object Label14: TLabel
+        AnchorSideLeft.Control = Bevel2
+        AnchorSideTop.Control = ColorBox13
+        AnchorSideTop.Side = asrBottom
+        Left = 174
+        Height = 17
+        Top = 70
+        Width = 151
+        BorderSpacing.Around = 8
+        Caption = 'Even lines background:'
+        ParentColor = False
+      end
+      object ColorBox14: TColorBox
+        AnchorSideLeft.Control = Bevel2
+        AnchorSideTop.Control = Label14
+        AnchorSideTop.Side = asrBottom
+        Left = 174
+        Height = 29
+        Top = 95
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 4
+      end
+    end
     object TabSheet1: TTabSheet
       Caption = 'RunLogger'
       ClientHeight = 258
@@ -551,9 +706,9 @@ object Form18: TForm18
         Left = 174
         Height = 17
         Top = 8
-        Width = 130
+        Width = 87
         BorderSpacing.Around = 8
-        Caption = 'Line selector:Label5'
+        Caption = 'Line selector:'
         ParentColor = False
       end
       object ColorBox5: TColorBox

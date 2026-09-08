@@ -2,6 +2,5 @@
 {"hash":231703298,"name":"tform3.caption","sourcebytes":[72,101,120,86,105,101,119,101,114],"value":"HexViewer"},
 {"hash":44709525,"name":"tform3.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
 {"hash":93201840,"name":"tform3.editbutton1.hint","sourcebytes":[83,101,97,114,99,104,32,105,110,32,100,117,109,112],"value":"Search in dump"},
-{"hash":5966629,"name":"tform3.drawgrid1.columns[0].title.caption","sourcebytes":[84,105,116,108,101],"value":"Title"},
-{"hash":178924709,"name":"tform3.radiogroup1.hint","sourcebytes":[83,101,108,101,99,116,32,109,101,109,111,114,121,32,116,121,112,101,32,111,102,32,116,104,101,32,72,97,114,118,97,114,100,32,97,114,99,104,105,116,101,99,116,117,114,101],"value":"Select memory type of the Harvard architecture"}
+{"hash":5966629,"name":"tform3.drawgrid1.columns[0].title.caption","sourcebytes":[84,105,116,108,101],"value":"Title"}
 ]}
