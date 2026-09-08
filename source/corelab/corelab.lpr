@@ -16,8 +16,8 @@ program corelab;
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
   lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
-  frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory
-   // frmscripteditor, frmhexviewer
+  frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory{, frmhexviewer}
+   // frmscripteditor
   ;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';

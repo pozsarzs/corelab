@@ -36,7 +36,6 @@ type
     procedure EditButton2ButtonClick(Sender: TObject);
     procedure EditButton2EditingDone(Sender: TObject);
   private
-    FMemInstanceEnabled: Boolean;
     FMemInstance:        TMemory;
   public
     procedure SetMemInstance(AMemInstance: TMemory);
@@ -66,9 +65,6 @@ begin
   begin
     ShowMessage(MSG01 + MSG05);
   end;
-  // store original state
-  FMemInstanceEnabled := FMemInstance.Enabled;
-  FMemInstance.Enabled := True;
 end;
 
 // ---- EVENT HANDLER METHODS ----
@@ -202,8 +198,6 @@ end;
 // CLOSE
 procedure TForm5.Button5Click(Sender: TObject);
 begin
-  // restore original state
-  FMemInstance.Enabled := FMemInstanceEnabled;
   ModalResult := mrOk;
 end;
 

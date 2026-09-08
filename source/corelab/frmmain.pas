@@ -19,8 +19,9 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
   Generics.Collections, frmabout, frmclasslist, frmmodulelist, frmrunlogger,
-  frmsettings, frmexdepmemory, frmloadsavememory, core_cpu, core_memory,
-  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject;
+  frmsettings, frmexdepmemory, frmloadsavememory,{frmhexviewer,} core_cpu,
+  core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject,
+  uintelhex;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -428,6 +429,16 @@ resourcestring
   MSG08 = 'The switch to script operation mode was successful.';          { SC }
   MSG18 = 'Missing help file.';                                           { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
+  MSG28 = 'Save memory content to file';
+  MSG29 = 'Cannot save memory content to ''%s'' binary file.';            { SM }
+  MSG30 = 'Load memory content from file';
+  MSG31 = 'Cannot load memory content from ''%s'' binary file.';          { SM }
+  MSG32 = 'Binary file|*.bin|Intel hexa file|*.hex|All file|*.*';
+  MSG35 = 'Cannot load memory content from ''%s'' Intel hexa file.';      { SM }
+  MSG36 = 'Cannot save memory content to ''%s'' Intel hexa file.';        { SM }
+  MSG37 = 'Data converting error.';                                       { SM }
+  MSG38 = 'Checksum error.';                                              { SM }
+  MSG39 = 'Unexpected error.';                                            { SM }
   MSG40 = 'Cannot load ''%s'' configuration file, using default values.'; { SC }
   MSG41 = 'Cannot save ''%s'' configuration file.';                       { SM }
   MSG42 = 'No script, create or load one.';                               { SM }
@@ -447,26 +458,27 @@ resourcestring
   MSG56 = 'Cannot save project to ''%s'' file.';                          { SM }
   MSG57 = 'The project is unsaved, should I continue?';                   { MD }
   MSG58 = 'The %s module named ''%s'' was successfully created.';         { SC }
-  MSG59 = 'Destroy';
+  MSG59 = '&Destroy';
   MSG60 = 'The module named ''%s'' was successfully destroyed.';          { SC }
-  MSG61 = 'Reset';
+  MSG61 = '&Reset';
   MSG62 = 'The module named ''%s'' has been restored.';                   { SC }
-  MSG63 = 'Enable';
+  MSG63 = '&Enable';
   MSG64 = 'The module named ''%s'' has been enabled.';                    { SC }
-  MSG65 = 'Disable';
+  MSG65 = '&Disable';
   MSG66 = 'The module named ''%s'' has been disabled.';                   { SC }
-  MSG67 = 'Attach to the bus';
+  MSG67 = '&Attach to the bus';
   MSG68 = 'The module named ''%s'' has been attached to the bus.';        { SC }
-  MSG69 = 'Detach from the bus';
+  MSG69 = '&Detach from the bus';
   MSG70 = 'The module named ''%s'' has been detached from the bus.';      { SC }
   MSG71 = 'Edit properties';
-  MSG72 = 'Load content';
+  MSG72 = '&Load content';
   MSG73 = 'Data loaded from ''%s'' into the module named ''%s''.';        { SC }
-  MSG74 = 'Save content';
+  MSG74 = '&Save content';
   MSG75 = 'Data saved from the module named ''%s'' to ''%s''.';           { SC }
-  MSG76 = 'Rename panel';
-  MSG77 = 'Move/resize panel';
-  MSG78 = 'Show panel';
+  MSG76 = '&Rename panel';
+  MSG77 = '&Move/resize panel';
+  MSG78 = '&Show panel';
+  MSG79 = '&Show';
 
 // ---- PRIVATE METHODS ----
 
@@ -775,8 +787,30 @@ begin
 end;
 
 procedure TForm1.VShowHexViewerExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
 begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG79;
+      ModuleList := StringList;
+    end;
+    if Form17.ShowModal = mrOk then
+    begin
+      MemInfo := FMemInstanceDict[Form17.SelectedKey];
 
+
+
+
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
 // VIEW/SHOW RUNLOGGER
@@ -1161,9 +1195,13 @@ end;
 // MEMORY/LOAD MEMORY CONTENT
 procedure TForm1.MLoadMemoryContentExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  CurrentStatus: Boolean;
+  Filename:      string;
+  KeyName:       string;
+  LoadStream:    TMemoryStream;
+  MemInfo:       TMemInfo;
+  OpenDialog1:   TOpenDialog;
+  StringList:    TStringList;
 begin
   StringList := TStringList.Create;
   try
@@ -1176,16 +1214,65 @@ begin
     if Form17.ShowModal = mrOk then
     begin
       MemInfo := FMemInstanceDict[Form17.SelectedKey];
-
-      // examine/deposit
-      With Form5 do
-      begin
-        SetMemInstance(MemInfo.Memory);
-        ShowModal;
+      // store original status and enable module
+      CurrentStatus := MemInfo.Memory.Enabled;
+      MemInfo.Memory.Enabled := True;
+      // load data from file
+      OpenDialog1 := TOpenDialog.Create(Form1);
+      try
+        with OpenDialog1 do
+        begin
+          InitialDir := GetUserDir;
+          Title := MSG30;
+          Filter := MSG32;
+        end;
+        if OpenDialog1.Execute then
+        begin
+          Filename := OpenDialog1.FileName;
+          Form7.Direction := true;
+          Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
+          if Form7.ShowModal = mrCancel then exit else
+          begin
+            LoadStream := TMemoryStream.Create;
+            try
+              if OpenDialog1.FilterIndex <> 2 then
+              begin
+                // load from .bin file
+                try
+                  LoadStream.LoadFromFile(FileName);
+                  LoadStream.Position := 0;
+                  MemInfo.Memory.LoadFromStream(LoadStream, Form7.AddressFrom,
+                    Form7.AddressTo - Form7.AddressFrom + 1);
+                except
+                  ShowMessage(MSG01 + Format(MSG31, [FileName]));
+                end;
+              end else
+              begin
+                // clear target memory
+                MemInfo.Memory.Reset;
+                // load from .hex file
+                case LoadFromIntelHexToStream(Filename, LoadStream) of
+                  1: ShowMessage(MSG01 + Format(MSG35, [FileName]));
+                  2: ShowMessage(MSG01 + MSG37);
+                  3: ShowMessage(MSG01 + MSG38);
+                  255: ShowMessage(MSG01 + MSG39);
+                end;
+                LoadStream.Position := 0;
+                MemInfo.Memory.LoadFromStream(LoadStream, 0,
+                  Form7.AddressTo - Form7.AddressFrom + 1);
+              end;
+              // report
+              Memo1.WriteMessage(MSG03 + Format(MSG73, [Filename, Form17.SelectedKey]));
+            finally
+              LoadStream.Free;
+            end;
+          end;
+        end;
+      finally
+        OpenDialog1.Free;
       end;
-
-      // report
-//      Memo1.WriteMessage(MSG03 + Format(MSG73, [Filename, SelectedKey]));
+      // restore original status
+      MemInfo.Memory.Enabled := CurrentStatus;
     end;
   finally
     StringList.Free;
@@ -1195,9 +1282,15 @@ end;
 // MEMORY/LOAD MEMORY CONTENT
 procedure TForm1.MSaveMemoryContentExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  CurrentStatus: Boolean;
+  Data:          Byte;
+  Filename:      string;
+  i:             DWord;
+  KeyName:       string;
+  MemInfo:       TMemInfo;
+  SaveDialog1:   TSaveDialog;
+  SaveStream:    TMemoryStream;
+  StringList:    TStringList;
 begin
   StringList := TStringList.Create;
   try
@@ -1210,16 +1303,57 @@ begin
     if Form17.ShowModal = mrOk then
     begin
       MemInfo := FMemInstanceDict[Form17.SelectedKey];
-
-      // examine/deposit
-      With Form5 do
+      // store original status and enable module
+      CurrentStatus := MemInfo.Memory.Enabled;
+      MemInfo.Memory.Enabled := True;
+      // save data from file
+      Form7.Direction := false;
+      Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
+      if Form7.ShowModal = mrCancel then Exit else
       begin
-        SetMemInstance(MemInfo.Memory);
-        ShowModal;
+        SaveDialog1 := TSaveDialog.Create(Form1);
+        try
+          with SaveDialog1 do
+          begin
+            InitialDir := GetUserDir;
+            Title := MSG28;
+            Filter := MSG32;
+          end;
+          if SaveDialog1.Execute then
+          begin
+            Filename := SaveDialog1.FileName;
+            SaveStream := TMemoryStream.Create;
+            try
+              if SaveDialog1.FilterIndex <> 2 then
+              begin
+                // save to .bin file
+                try
+                  MemInfo.Memory.SaveToStream(SaveStream, Form7.AddressFrom,
+                                      Form7.AddressTo - Form7.AddressFrom + 1);
+                  SaveStream.SaveToFile(FileName);
+                except
+                  ShowMessage(MSG01 + Format(MSG29, [FileName]));
+                end;
+              end else
+              begin
+                MemInfo.Memory.SaveToStream(SaveStream, 0, MemInfo.Memory.AddressRangeSize - 1);
+                case SaveToIntelHexFromStream(Filename, SaveStream) of
+                  1: ShowMessage(MSG01 + Format(MSG36, [FileName]));
+                  255: ShowMessage(MSG01 + MSG39);
+                end;
+              end;
+              // report
+              Memo1.WriteMessage(MSG03 + Format(MSG75, [Filename, Form17.SelectedKey]));
+            finally
+              SaveStream.Free;
+            end;
+          end;
+        finally
+          SaveDialog1.Free;
+        end;
+        // restore original status
+        MemInfo.Memory.Enabled := CurrentStatus;
       end;
-
-      // report
-//      Memo1.WriteMessage(MSG03 + Format(MSG75, [Filename, SelectedKey]));
     end;
   finally
     StringList.Free;
@@ -1229,27 +1363,33 @@ end;
 // MEMORY/EXAMINE-DEPOSIT
 procedure TForm1.MExamineDepositExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  CurrentStatus: Boolean;
+  KeyName:       string;
+  MemInfo:       TMemInfo;
+  StringList:    TStringList;
 begin
   StringList := TStringList.Create;
   try
     for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
     with Form17 do
     begin
-      OKButtonCaption := MSG61;
+      OKButtonCaption := MSG79;
       ModuleList := StringList;
     end;
     if Form17.ShowModal = mrOk then
     begin
       MemInfo := FMemInstanceDict[Form17.SelectedKey];
+      // store original status and enable module
+      CurrentStatus := MemInfo.Memory.Enabled;
+      MemInfo.Memory.Enabled := True;
       // examine/deposit
       With Form5 do
       begin
         SetMemInstance(MemInfo.Memory);
         ShowModal;
       end;
+      // restore original status
+      MemInfo.Memory.Enabled := CurrentStatus;
     end;
   finally
     StringList.Free;

@@ -30,6 +30,8 @@ type
 
 function LoadFromIntelHex(AFilename: string; var ATargetArray: array of Byte): Byte;
 function SaveToIntelHex(AFilename: string; const ASourceArray: array of Byte): Byte;
+function LoadFromIntelHexToStream(AFilename: string; ATargetStream: TStream): Byte;
+function SaveToIntelHexFromStream(AFilename: string; ASourceStream: TStream): Byte;
 
 implementation
 
@@ -196,6 +198,154 @@ begin
     except
       on E: EFCreateError do Result := 1;                   // file create error
       on E: Exception do Result := 255;                // other unexpected error
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// LOAD DATA FROM INTEL HEX FORMAT FILE TO STREAM
+function LoadFromIntelHexToStream(AFilename: string; ATargetStream: TStream): Byte;
+var
+  StringList:      TStringList;
+  i, j:            Integer;
+  Line:            string;
+  HexRecord:       THexRecord;
+  BaseAddress:     Integer;
+  AbsoluteAddress: Integer;
+  Sum:             Integer;
+begin
+  Result := 0;
+  BaseAddress := 0;
+  StringList := TStringList.Create;
+  try
+    try
+      StringList.LoadFromFile(AFilename);
+      for i := 0 to StringList.Count - 1 do
+      begin
+        Line := Trim(StringList.Strings[i]);
+        if Line = '' then Continue;
+        if Line[1] <> ':' then Continue;
+        if Line = ':00000001FF' then Break;
+        
+        Sum := 0;
+        for j := 1 to (Length(Line) - 1) div 2 do
+          Sum := Sum + StrToInt('$' + Copy(Line, j * 2, 2));
+        if (Sum and $FF) <> 0 then raise EIntelHexError.Create('');
+
+        with HexRecord do
+        begin
+          ByteCount  := StrToInt('$' + Copy(Line, 2, 2));
+          Address    := StrToInt('$' + Copy(Line, 4, 4));
+          RecordType := StrToInt('$' + Copy(Line, 8, 2));
+        end;
+        
+        for j := 0 to HexRecord.ByteCount - 1 do
+        begin
+          HexRecord.Data[j] := StrToInt('$' + Copy(Line, 10 + (j * 2), 2));
+        end;
+        
+        case HexRecord.RecordType of
+          $00: begin
+                 AbsoluteAddress := BaseAddress + HexRecord.Address;
+                 ATargetStream.Position := AbsoluteAddress;
+                 ATargetStream.WriteBuffer(HexRecord.Data[0], HexRecord.ByteCount);
+               end;
+          $01: Break;
+          $02: begin
+                 if HexRecord.ByteCount = 2 then
+                   BaseAddress := ((HexRecord.Data[0] shl 8) or HexRecord.Data[1]) shl 4;
+               end;
+          $04: begin
+                 if HexRecord.ByteCount = 2 then
+                   BaseAddress := ((HexRecord.Data[0] shl 8) or HexRecord.Data[1]) shl 16;
+               end;
+        end;
+      end;
+    except
+      on E: EFOpenError do Result := 1;
+      on E: EConvertError do Result := 2;
+      on E: EIntelHexError do Result := 3;
+      on E: Exception do Result := 255;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// SAVE DATA TO INTEL HEX FORMAT FILE FROM STREAM
+function SaveToIntelHexFromStream(AFilename: string; ASourceStream: TStream): Byte;
+var
+  StringList:        TStringList;
+  i, j:              Integer;
+  BlockSize:         Integer;
+  IsEmpty:           Boolean;
+  HighAddr, LowAddr: Word;
+  LastHighAddr:      Integer;
+  Line, DataStr:     string;
+  Sum, Checksum:     Integer;
+  Buffer:            array[0..15] of Byte;
+begin
+  Result := 0;
+  StringList := TStringList.Create;
+  try
+    try
+      StringList.Capacity := (ASourceStream.Size div 16) + 4000;
+      LastHighAddr := -1;
+      i := 0;
+      
+      while i < ASourceStream.Size do
+      begin
+        BlockSize := 16;
+        if i + BlockSize > ASourceStream.Size then 
+          BlockSize := ASourceStream.Size - i;
+          
+        ASourceStream.Position := i;
+        ASourceStream.ReadBuffer(Buffer[0], BlockSize);
+        
+        IsEmpty := True;
+        for j := 0 to BlockSize - 1 do
+        begin
+          if Buffer[j] <> EMPTY_RAM_BYTE then
+          begin
+            IsEmpty := False;
+            Break;
+          end;
+        end;
+        
+        if not IsEmpty then
+        begin
+          HighAddr := i shr 16;
+          LowAddr  := i and $FFFF;
+          
+          if HighAddr <> LastHighAddr then
+          begin
+            Sum := 2 + 0 + 0 + 4 + (HighAddr shr 8) + (HighAddr and $FF);
+            Checksum := ((not Sum) + 1) and $FF;
+            Line := Format(':02000004%0.4X%0.2X', [HighAddr, Checksum]);
+            StringList.Add(Line);
+            LastHighAddr := HighAddr;
+          end;
+          
+          DataStr := '';
+          Sum := BlockSize + (LowAddr shr 8) + (LowAddr and $FF) + 0;
+          for j := 0 to BlockSize - 1 do
+          begin
+            DataStr := DataStr + IntToHex(Buffer[j], 2);
+            Sum := Sum + Buffer[j];
+          end;
+          Checksum := ((not Sum) + 1) and $FF;
+          Line := Format(':%0.2X%0.4X00%s%0.2X', [BlockSize, LowAddr, DataStr, Checksum]);
+          StringList.Add(Line);
+        end;
+        Inc(i, BlockSize);
+      end;
+      
+      StringList.Add(':00000001FF');
+      StringList.SaveToFile(AFilename);
+    except
+      on E: EFCreateError do Result := 1;
+      on E: Exception do Result := 255;
     end;
   finally
     StringList.Free;

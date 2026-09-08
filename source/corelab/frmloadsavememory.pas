@@ -16,7 +16,7 @@ unit frmloadsavememory;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  EditBtn, Spin, core_cpu, ucommon;
+  EditBtn, Spin, ucommon;
 type
   { TForm7 }
   TForm7 = class(TForm)
@@ -40,19 +40,14 @@ type
   private
     FAddressFrom:  DWord;                                       // Start address
     FAddressTo:    DWord;                                         // End address
-    FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FBank:         Byte;                            // Number of the memory bank
     FDirection:    Boolean;                                  // 0: save, 1: load
     FMemSize:      DWord;                             // Size of emulated memory
-    procedure SetFArchitecture(AArchitecture: TArchitecture);
     procedure SetFMemSize(AMemSize: DWord);
     procedure SetFDirection(ADirection: Boolean);
     procedure UpdateDifference;
   public
     property AddressFrom: DWord read FAddressFrom;
     property AddressTo: DWord read FAddressTo;
-    property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
-    property Bank: byte read FBank;
     property Direction: Boolean read FDirection write SetFDirection;
     property MemSize: DWord read FMemSize write SetFMemSize;
   end;
@@ -72,15 +67,6 @@ resourcestring
   MSG05 = '&Load';
   MSG06 = 'Save parameters';
   MSG07 = 'Load parameters';
-
-// ---- PRIVATE METHODS ----
-
-// SET FARCHITECTURE FIELD
-procedure TForm7.SetFArchitecture(AArchitecture: TArchitecture);
-begin
-  FArchitecture := AArchitecture;
-  RadioGroup1.Enabled := (FArchitecture = arHarvard);
-end;
 
 // SET OPERATION'S DIRECTION
 procedure TForm7.SetFDirection(ADirection: Boolean);
@@ -222,7 +208,6 @@ begin
     FAddressTo := FAddressFrom;
     FAddressFrom := Swap;
   end;
-  if not RadioGroup1.Enabled then FBank := 0 else FBank := RadioGroup1.ItemIndex;
   ModalResult := mrOk;
 end;
 
@@ -230,7 +215,6 @@ end;
 procedure TForm7.FormCreate(Sender: TObject);
 begin
   SetFDirection(true);
-  SetFArchitecture(arNeumann);
   SetFMemSize(1024);
   SpinEdit1.OnChange := @SpinEdit1Change;
 end;
