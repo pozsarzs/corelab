@@ -3,7 +3,6 @@
 {"hash":164345429,"name":"tform7.button5.caption","sourcebytes":[66,117,116,116,111,110,53],"value":"Button5"},
 {"hash":218307219,"name":"tform7.label1.caption","sourcebytes":[83,116,97,114,116,32,97,100,100,114,101,115,115],"value":"Start address"},
 {"hash":36904960,"name":"tform7.editbutton1.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
-{"hash":178924709,"name":"tform7.radiogroup1.hint","sourcebytes":[83,101,108,101,99,116,32,109,101,109,111,114,121,32,116,121,112,101,32,111,102,32,116,104,101,32,72,97,114,118,97,114,100,32,97,114,99,104,105,116,101,99,116,117,114,101],"value":"Select memory type of the Harvard architecture"},
 {"hash":36904960,"name":"tform7.editbutton2.text","sourcebytes":[48,48,32,48,48,32,48,48],"value":"00 00 00"},
 {"hash":132631235,"name":"tform7.label2.caption","sourcebytes":[69,110,100,32,97,100,100,114,101,115,115],"value":"End address"},
 {"hash":4852419,"name":"tform7.label3.caption","sourcebytes":[66,121,116,101,115],"value":"Bytes"},

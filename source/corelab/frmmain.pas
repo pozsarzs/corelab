@@ -19,23 +19,26 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
   Generics.Collections, frmabout, frmclasslist, frmmodulelist, frmrunlogger,
-  frmsettings, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
-  uconfig, uplugin, uproject;
+  frmsettings, frmexdepmemory, frmloadsavememory, core_cpu, core_memory,
+  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject;
 type
   // allocated simulation objects and its types
-  TCPUInfo = record
-    Port: TCPU;
-    ModuleName: string;
+  TProcInfo = record
+    Processor:     TCPU;
+    ModuleName:    string;
+    AttachedToBus: Boolean;
   end;
   TMemInfo = record
-    Port: TMemory;
-    ModuleName: string;
+    Memory:        TMemory;
+    ModuleName:    string;
+    AttachedToBus: Boolean;
   end;
   TPortInfo = record
-    Port: TIOPort;
-    ModuleName: string;
+    Port:          TIOPort;
+    ModuleName:    string;
+    AttachedToBus: Boolean;
   end;
-  TProcInstanceDict = specialize TDictionary<string, TCPUInfo>;
+  TProcInstanceDict = specialize TDictionary<string, TProcInfo>;
   TMemInstanceDict = specialize TDictionary<string, TMemInfo>;
   TPortInstanceDict = specialize TDictionary<string, TPortInfo>;
   // operation mode type
@@ -60,6 +63,8 @@ type
     IOCreate:                 TAction;
     IODestroy:                TAction;
     IODetachFromBus:          TAction;
+    IODisable:                TAction;
+    IOEnable:                 TAction;
     IOPorperties:             TAction;
     IOReset:                  TAction;
     LHelpConnector1:          TLHelpConnector;
@@ -68,6 +73,8 @@ type
     MCreate:                  TAction;
     MDestroy:                 TAction;
     MDetachFromBus:           TAction;
+    MDisable:                 TAction;
+    MEnable:                  TAction;
     MenuItem1:                TMenuItem;
     MenuItem10:               TMenuItem;
     MenuItem11:               TMenuItem;
@@ -91,11 +98,13 @@ type
     MenuItem28:               TMenuItem;
     MenuItem29:               TMenuItem;
     MenuItem3:                TMenuItem;
+    MenuItem30:               TMenuItem;
     MenuItem31:               TMenuItem;
     MenuItem32:               TMenuItem;
     MenuItem33:               TMenuItem;
     MenuItem34:               TMenuItem;
     MenuItem35:               TMenuItem;
+    MenuItem36:               TMenuItem;
     MenuItem37:               TMenuItem;
     MenuItem38:               TMenuItem;
     MenuItem39:               TMenuItem;
@@ -127,12 +136,16 @@ type
     MenuItem62:               TMenuItem;
     MenuItem63:               TMenuItem;
     MenuItem64:               TMenuItem;
+    MenuItem65:               TMenuItem;
     MenuItem66:               TMenuItem;
+    MenuItem67:               TMenuItem;
     MenuItem68:               TMenuItem;
     MenuItem69:               TMenuItem;
     MenuItem7:                TMenuItem;
     MenuItem70:               TMenuItem;
     MenuItem71:               TMenuItem;
+    MenuItem72:               TMenuItem;
+    MenuItem73:               TMenuItem;
     MenuItem8:                TMenuItem;
     MenuItem9:                TMenuItem;
     MExamineDeposit:          TAction;
@@ -157,6 +170,8 @@ type
     PCreate:                  TAction;
     PDestroy:                 TAction;
     PDetachFromBus:           TAction;
+    PDisable:                 TAction;
+    PEnable:                  TAction;
     PProperties:              TAction;
     PReset:                   TAction;
     Separator1:               TMenuItem;
@@ -173,9 +188,12 @@ type
     Separator2:               TMenuItem;
     Separator20:              TMenuItem;
     Separator21:              TMenuItem;
+    Separator22:              TMenuItem;
+    Separator23:              TMenuItem;
     Separator3:               TMenuItem;
     Separator4:               TMenuItem;
     Separator5:               TMenuItem;
+    Separator6:               TMenuItem;
     Separator7:               TMenuItem;
     Separator8:               TMenuItem;
     Separator9:               TMenuItem;
@@ -250,8 +268,30 @@ type
     ToolButton53:             TToolButton;
     ToolButton54:             TToolButton;
     ToolButton55:             TToolButton;
+    ToolButton56:             TToolButton;
+    ToolButton57:             TToolButton;
+    ToolButton58:             TToolButton;
+    ToolButton59:             TToolButton;
     ToolButton6:              TToolButton;
+    ToolButton60:             TToolButton;
+    ToolButton61:             TToolButton;
+    ToolButton62:             TToolButton;
+    ToolButton63:             TToolButton;
+    ToolButton64:             TToolButton;
+    ToolButton65:             TToolButton;
+    ToolButton66:             TToolButton;
+    ToolButton67:             TToolButton;
+    ToolButton68:             TToolButton;
+    ToolButton69:             TToolButton;
     ToolButton7:              TToolButton;
+    ToolButton70:             TToolButton;
+    ToolButton71:             TToolButton;
+    ToolButton72:             TToolButton;
+    ToolButton73:             TToolButton;
+    ToolButton74:             TToolButton;
+    ToolButton75:             TToolButton;
+    ToolButton76:             TToolButton;
+    ToolButton77:             TToolButton;
     ToolButton8:              TToolButton;
     ToolButton9:              TToolButton;
     VMoveResizeIOPanel:       TAction;
@@ -282,11 +322,21 @@ type
     procedure IOCreateExecute(Sender: TObject);
     procedure IODestroyExecute(Sender: TObject);
     procedure IODetachFromBusExecute(Sender: TObject);
+    procedure IODisableExecute(Sender: TObject);
+    procedure IOEnableExecute(Sender: TObject);
     procedure IOPorpertiesExecute(Sender: TObject);
     procedure IOResetExecute(Sender: TObject);
+    procedure MAttachToBusExecute(Sender: TObject);
     procedure MCreateExecute(Sender: TObject);
     procedure MDestroyExecute(Sender: TObject);
+    procedure MDetachFromBusExecute(Sender: TObject);
+    procedure MDisableExecute(Sender: TObject);
+    procedure MEnableExecute(Sender: TObject);
+    procedure MExamineDepositExecute(Sender: TObject);
+    procedure MLoadMemoryContentExecute(Sender: TObject);
+    procedure MPropertiesExecute(Sender: TObject);
     procedure MResetExecute(Sender: TObject);
+    procedure MSaveMemoryContentExecute(Sender: TObject);
     procedure OClearAllBreakpointsExecute(Sender: TObject);
     procedure OIRQExecute(Sender: TObject);
     procedure OMakeSnapshotExecute(Sender: TObject);
@@ -297,7 +347,14 @@ type
     procedure OStepExecute(Sender: TObject);
     procedure OStopExecute(Sender: TObject);
     procedure OToggleBreakpointExecute(Sender: TObject);
+    procedure PAttachToBusExecute(Sender: TObject);
     procedure PCreateExecute(Sender: TObject);
+    procedure PDestroyExecute(Sender: TObject);
+    procedure PDetachFromBusExecute(Sender: TObject);
+    procedure PDisableExecute(Sender: TObject);
+    procedure PEnableExecute(Sender: TObject);
+    procedure PPropertiesExecute(Sender: TObject);
+    procedure PResetExecute(Sender: TObject);
     procedure SLoadScriptExecute(Sender: TObject);
     procedure SNewScriptExecute(Sender: TObject);
     procedure SRunScriptExecute(Sender: TObject);
@@ -305,8 +362,13 @@ type
     procedure SSaveScriptExecute(Sender: TObject);
     procedure SStepScriptExecute(Sender: TObject);
     procedure SStopScriptExecute(Sender: TObject);
+    procedure VMoveResizeIOPanelExecute(Sender: TObject);
+    procedure VRenameIOPanelExecute(Sender: TObject);
     procedure VShowBreakpointManagerExecute(Sender: TObject);
+    procedure VShowHexViewerExecute(Sender: TObject);
     procedure VShowIntLoggerExecute(Sender: TObject);
+    procedure VShowIOPanelExecute(Sender: TObject);
+    procedure VShowRegViewerExecute(Sender: TObject);
     procedure VShowRunLoggerExecute(Sender: TObject);
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
@@ -388,16 +450,23 @@ resourcestring
   MSG59 = 'Destroy';
   MSG60 = 'The module named ''%s'' was successfully destroyed.';          { SC }
   MSG61 = 'Reset';
-  MSG62 = 'The module named ''%s'' was restored.';                        { SC }
-
-  MSG72 = 'Attach to bus';
-  MSG73 = 'Detach from bus';
-  MSG74 = 'Edit properties';
-  MSG75 = 'Load content';
-  MSG76 = 'Save content';
-  MSG77 = 'Rename panel';
-  MSG78 = 'Move/resize panel';
-  MSG79 = 'Show panel';
+  MSG62 = 'The module named ''%s'' has been restored.';                   { SC }
+  MSG63 = 'Enable';
+  MSG64 = 'The module named ''%s'' has been enabled.';                    { SC }
+  MSG65 = 'Disable';
+  MSG66 = 'The module named ''%s'' has been disabled.';                   { SC }
+  MSG67 = 'Attach to the bus';
+  MSG68 = 'The module named ''%s'' has been attached to the bus.';        { SC }
+  MSG69 = 'Detach from the bus';
+  MSG70 = 'The module named ''%s'' has been detached from the bus.';      { SC }
+  MSG71 = 'Edit properties';
+  MSG72 = 'Load content';
+  MSG73 = 'Data loaded from ''%s'' into the module named ''%s''.';        { SC }
+  MSG74 = 'Save content';
+  MSG75 = 'Data saved from the module named ''%s'' to ''%s''.';           { SC }
+  MSG76 = 'Rename panel';
+  MSG77 = 'Move/resize panel';
+  MSG78 = 'Show panel';
 
 // ---- PRIVATE METHODS ----
 
@@ -705,6 +774,11 @@ begin
   {...}
 end;
 
+procedure TForm1.VShowHexViewerExecute(Sender: TObject);
+begin
+
+end;
+
 // VIEW/SHOW RUNLOGGER
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
 begin
@@ -732,6 +806,16 @@ begin
   {...}
 end;
 
+procedure TForm1.VShowIOPanelExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VShowRegViewerExecute(Sender: TObject);
+begin
+
+end;
+
 // VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
 begin
@@ -747,22 +831,429 @@ end;
 
 // PROCESSOR/CREATE
 procedure TForm1.PCreateExecute(Sender: TObject);
+var
+  KeyName:    string;
+  ProcInfo:   TProcInfo;
+  StringList: TStringList;
 begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
+    with Form16 do
+    begin
+      PluginList := StringList;
+      if ShowModal = mrOk then
+      begin
+        // create
+        if Assigned(FProcPluginDict[SelectedKey].FCreate) then
+        begin
+          ProcInfo.Processor := FProcPluginDict[SelectedKey].FCreate();
+          ProcInfo.ModuleName := SelectedKey;
+          ProcInfo.AttachedToBus := False;
+        end;
+        // store
+        FProcInstanceDict.Add(SelectedName, ProcInfo);
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', SelectedName]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// PROCESSOR/DESTROY
+procedure TForm1.PDestroyExecute(Sender: TObject);
+var
+  KeyName:    string;
+  ProcInfo:   TProcInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG59;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        ProcInfo := FProcInstanceDict[SelectedKey];
+        // destroy
+        FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
+        // remove from dict
+        FProcInstanceDict.Remove(SelectedKey);
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// PROCESSOR/RESET
+procedure TForm1.PResetExecute(Sender: TObject);
+var
+  KeyName:    string;
+  ProcInfo:   TProcInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG61;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        ProcInfo := FProcInstanceDict[SelectedKey];
+        // reset
+        ProcInfo.Processor.Reset;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// PROCESSOR/ENABLE
+procedure TForm1.PEnableExecute(Sender: TObject);
+var
+  KeyName:    string;
+  ProcInfo:   TProcInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG63;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        ProcInfo := FProcInstanceDict[SelectedKey];
+        // enable
+        ProcInfo.Processor.Enabled := True;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG64, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end; end;
+
+// PROCESSOR/DISABLE
+procedure TForm1.PDisableExecute(Sender: TObject);
+var
+  KeyName:    string;
+  ProcInfo:   TProcInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG65;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        ProcInfo := FProcInstanceDict[SelectedKey];
+        // disable
+        ProcInfo.Processor.Enabled := False;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG66, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// PROCESSOR/ATTACH TO BUS
+procedure TForm1.PAttachToBusExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// PROCESSOR/DETACH FROM BUS
+procedure TForm1.PDetachFromBusExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// PROCESSOR/PROPERTIES
+procedure TForm1.PPropertiesExecute(Sender: TObject);
+begin
+  {...}
 end;
 
 // MEMORY/CREATE
 procedure TForm1.MCreateExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
 begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
+    with Form16 do
+    begin
+      PluginList := StringList;
+      if ShowModal = mrOk then
+      begin
+        // create
+        if Assigned(FMemPluginDict[SelectedKey].FCreate) then
+        begin
+          MemInfo.Memory := FMemPluginDict[SelectedKey].FCreate();
+          MemInfo.ModuleName := SelectedKey;
+          MemInfo.AttachedToBus := False;
+        end;
+        // store
+        FMemInstanceDict.Add(SelectedName, MemInfo);
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', SelectedName]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
+// MEMORY/DESTROY
 procedure TForm1.MDestroyExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
 begin
-
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG59;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        MemInfo := FMemInstanceDict[SelectedKey];
+        // destroy
+        FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
+        // remove from dict
+        FMemInstanceDict.Remove(SelectedKey);
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
+// MEMORY/RESET
 procedure TForm1.MResetExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
 begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG61;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        MemInfo := FMemInstanceDict[SelectedKey];
+        // reset
+        MemInfo.Memory.Reset;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
 
+// MEMORY/ENABLE
+procedure TForm1.MEnableExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG63;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        MemInfo := FMemInstanceDict[SelectedKey];
+        // enable
+        MemInfo.Memory.Enabled := True;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG64, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// MEMORY/DISABLE
+procedure TForm1.MDisableExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG65;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        MemInfo := FMemInstanceDict[SelectedKey];
+        // disable
+        MemInfo.Memory.Enabled := False;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG66, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// MEMORY/ATTACH TO BUS
+procedure TForm1.MAttachToBusExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// MEMORY/DETACH FROM BUS
+procedure TForm1.MDetachFromBusExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// MEMORY/PROPERTIES
+procedure TForm1.MPropertiesExecute(Sender: TObject);
+begin
+  {...}
+end;
+
+// MEMORY/LOAD MEMORY CONTENT
+procedure TForm1.MLoadMemoryContentExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG72;
+      ModuleList := StringList;
+    end;
+    if Form17.ShowModal = mrOk then
+    begin
+      MemInfo := FMemInstanceDict[Form17.SelectedKey];
+
+      // examine/deposit
+      With Form5 do
+      begin
+        SetMemInstance(MemInfo.Memory);
+        ShowModal;
+      end;
+
+      // report
+//      Memo1.WriteMessage(MSG03 + Format(MSG73, [Filename, SelectedKey]));
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// MEMORY/LOAD MEMORY CONTENT
+procedure TForm1.MSaveMemoryContentExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG74;
+      ModuleList := StringList;
+    end;
+    if Form17.ShowModal = mrOk then
+    begin
+      MemInfo := FMemInstanceDict[Form17.SelectedKey];
+
+      // examine/deposit
+      With Form5 do
+      begin
+        SetMemInstance(MemInfo.Memory);
+        ShowModal;
+      end;
+
+      // report
+//      Memo1.WriteMessage(MSG03 + Format(MSG75, [Filename, SelectedKey]));
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// MEMORY/EXAMINE-DEPOSIT
+procedure TForm1.MExamineDepositExecute(Sender: TObject);
+var
+  KeyName:    string;
+  MemInfo:    TMemInfo;
+  StringList: TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG61;
+      ModuleList := StringList;
+    end;
+    if Form17.ShowModal = mrOk then
+    begin
+      MemInfo := FMemInstanceDict[Form17.SelectedKey];
+      // examine/deposit
+      With Form5 do
+      begin
+        SetMemInstance(MemInfo.Memory);
+        ShowModal;
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
 // IO PORT/CREATE
@@ -785,6 +1276,7 @@ begin
         begin
           PortInfo.Port := FPortPluginDict[SelectedKey].FCreate();
           PortInfo.ModuleName := SelectedKey;
+          PortInfo.AttachedToBus := False;
         end;
         // store
         FPortInstanceDict.Add(SelectedName, PortInfo);
@@ -844,10 +1336,66 @@ begin
       if ShowModal = mrOk then
       begin
         PortInfo := FPortInstanceDict[SelectedKey];
-        // Reset
+        // reset
         PortInfo.Port.Reset;
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// IO PORT/ENABLE
+procedure TForm1.IOEnableExecute(Sender: TObject);
+var
+  KeyName:    string;
+  StringList: TStringList;
+  PortInfo: TPortInfo;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG63;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        PortInfo := FPortInstanceDict[SelectedKey];
+        // enable
+        PortInfo.Port.Enabled := True;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG64, [SelectedKey]));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// IO PORT/DISABLE
+procedure TForm1.IODisableExecute(Sender: TObject);
+var
+  KeyName:    string;
+  StringList: TStringList;
+  PortInfo: TPortInfo;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG65;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        PortInfo := FPortInstanceDict[SelectedKey];
+        // disable
+        PortInfo.Port.Enabled := False;
+        // report
+        Memo1.WriteMessage(MSG03 + Format(MSG66, [SelectedKey]));
       end;
     end;
   finally
@@ -1065,6 +1613,16 @@ procedure TForm1.SStopScriptExecute(Sender: TObject);
 begin
   FScriptInstPointer := 0;
   {...}
+end;
+
+procedure TForm1.VMoveResizeIOPanelExecute(Sender: TObject);
+begin
+
+end;
+
+procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
+begin
+
 end;
 
 // ACTIONS/HELP/SHOW HELP

@@ -16,7 +16,7 @@ unit frmexdepmemory;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  EditBtn, core_cpu, ucommon;
+  EditBtn, core_memory, ucommon;
 type
   { TForm5 }
   TForm5 = class(TForm)
@@ -28,7 +28,6 @@ type
     EditButton2: TEditButton;
     Label1:      TLabel;
     Label2:      TLabel;
-    RadioGroup1: TRadioGroup;
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -36,38 +35,40 @@ type
     procedure EditButton1EditingDone(Sender: TObject);
     procedure EditButton2ButtonClick(Sender: TObject);
     procedure EditButton2EditingDone(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
   private
-    FArchitecture: TArchitecture;     // CPU architecture (arHarvard, arNeumann)
-    FMemSize:      DWord;                             // Size of emulated memory
-  protected
-    procedure SetFArchitecture(AArchitecture: TArchitecture);
+    FMemInstanceEnabled: Boolean;
+    FMemInstance:        TMemory;
   public
-    property Architecture: TArchitecture read FArchitecture write SetFArchitecture;
-    property MemSize: DWord read FMemSize write FMemSize;
+    procedure SetMemInstance(AMemInstance: TMemory);
+    property MemInstance: TMemory write SetMemInstance;
   end;
 var
   Form5: TForm5;
 
 implementation
-uses frmmain;
 
 {$R *.lfm}
 { TForm5 }
 
 resourcestring
   MSG01 = 'ERROR: ';
-  MSG02 = 'Only hexadecimal values can be entered for address value!';
-  MSG03 = 'Only hexadecimal values can be entered for data value!';
-  MSG04 = 'Memory address too high! (> %s)';
+  MSG02 = 'Only hexadecimal values can be entered for address value.';
+  MSG03 = 'Only hexadecimal values can be entered for data value.';
+  MSG04 = 'Memory address too high. (> %s)';
+  MSG05 = 'Cannot open memory modul.';
 
-// ---- PRIVATE METHODS ----
 
-// SET FARCHITECTURE FIELD
-procedure TForm5.SetFArchitecture(AArchitecture: TArchitecture);
+// ----  PUBLIC METHODS ----
+
+procedure TForm5.SetMemInstance(AMemInstance: TMemory);
 begin
-  FArchitecture := AArchitecture;
-  RadioGroup1.Enabled := (FArchitecture = arHarvard);
+  if Assigned(AMemInstance) then FMemInstance := AMemInstance else
+  begin
+    ShowMessage(MSG01 + MSG05);
+  end;
+  // store original state
+  FMemInstanceEnabled := FMemInstance.Enabled;
+  FMemInstance.Enabled := True;
 end;
 
 // ---- EVENT HANDLER METHODS ----
@@ -128,9 +129,10 @@ var
   Address, MaxAddress: DWord;
   Data:                Byte;
   PrevText, NewText:   string;
+
 begin
   // set highest address
-  MaxAddress := FMemSize - 1;
+  MaxAddress := FMemInstance.AddressRangeSize - 1;
   // validate address
   PrevText := EditButton1.Text;
   NewText := '';
@@ -148,10 +150,7 @@ begin
     begin
       ShowMessage(MSG01 + Format(MSG04, [MaxAddress.ToString]));
       Exit;
-    end;
-    if RadioGroup1.Enabled
-      then Data := Form1.GetMemoryCell(RadioGroup1.ItemIndex, Address)
-      else Data := Form1.GetMemoryCell(0, Address);
+    end else Data := FMemInstance.ReadMemory(Address);
     if FormatHexValue(IntToHex(Data, 2), 2, NewText)
       then EditButton2.Text := NewText
       else EditButton2ButtonClick(Sender);
@@ -166,7 +165,7 @@ var
   PrevText, NewText:   string;
 begin
   // set highest address
-  MaxAddress := FMemSize - 1;
+  MaxAddress := FMemInstance.AddressRangeSize - 1;
   // validate address
   PrevText := EditButton1.Text;
   NewText := '';
@@ -195,10 +194,7 @@ begin
       begin
         ShowMessage(MSG01 + Format(MSG04, [MaxAddress.ToString]));
         Exit;
-      end;
-      if RadioGroup1.Enabled
-        then Form1.SetMemoryCell(RadioGroup1.ItemIndex, Address, Data)
-        else Form1.SetMemoryCell(0, Address, Data);
+      end else FMemInstance.WriteMemory(Address, Data);
     end;
   end;
 end;
@@ -206,14 +202,9 @@ end;
 // CLOSE
 procedure TForm5.Button5Click(Sender: TObject);
 begin
+  // restore original state
+  FMemInstance.Enabled := FMemInstanceEnabled;
   ModalResult := mrOk;
-end;
-
-// ONCREATE
-procedure TForm5.FormCreate(Sender: TObject);
-begin
-  SetFArchitecture(arNeumann);
-  FMemSize := 1024;
 end;
 
 end.

@@ -28,7 +28,6 @@ type
     Label1:      TLabel;
     Label2:      TLabel;
     Label3:      TLabel;
-    RadioGroup1: TRadioGroup;
     SpinEdit1:   TSpinEdit;
     procedure Button1Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);

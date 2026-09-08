@@ -108,8 +108,9 @@ keresztül az exportálástól a tényleges memóriabeli hívásig.
 ```pascal
   type
     TMemInfo = record
-      Memory:     TMemory;
-      ModuleName: string;
+      Memory:        TMemory;
+      ModuleName:    string;
+      AttachedToBus: Boolean;
     end;
   var 
     MemInfo:     TMemInfo;

@@ -111,8 +111,9 @@ exporting to the actual in-memory call.
 ```pascal
   type
     TMemInfo = record
-      Memory:     TMemory;
-      ModuleName: string;
+      Memory:        TMemory;
+      ModuleName:    string;
+      AttachedToBus: Boolean;
     end;
   var 
     MemInfo:     TMemInfo;

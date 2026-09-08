@@ -16,8 +16,8 @@ program corelab;
 uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
   lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
-  frmmodulelist, frmsettings
-   // frmscripteditor, frmhexviewer, frmexdepmemory, frmloadsavememory
+  frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory
+   // frmscripteditor, frmhexviewer
   ;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
@@ -180,9 +180,9 @@ begin
     CreateForm(TForm2, Form2);                                          // About
 //    CreateForm(TForm3, Form3);                                    // HexViewer
     CreateForm(TForm4, Form4);                                      // RunLogger
-//    CreateForm(TForm5, Form5);                                  // ExDepMemory
+    CreateForm(TForm5, Form5);                                    // ExDepMemory
 //    CreateForm(TForm6, Form6);                                 // ScriptEditor
-//    CreateForm(TForm7, Form7);                               // LoadSaveMemory
+    CreateForm(TForm7, Form7);                                 // LoadSaveMemory
 //    CreateForm(TForm8, Form8);                                    // IntLogger
 //    CreateForm(TForm9, Form9);                               // LoadSaveMemory
 //    CreateForm(TForm10, Form10);                         // Breakpoint Manager

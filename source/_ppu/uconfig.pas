@@ -30,6 +30,7 @@ type
     runlogger_bgcolor_even, sysconsole_bg_color, sysconsole_font_color: TColor;
   end;
 const
+  SECTION: array[0..2] of string = ('directories', 'forms', 'colors');
   KEY1: array[0..3] of string =    ('directory_',
                                     'frmmain_',
                                     'runlogger_',
@@ -48,7 +49,6 @@ const
                                     'bgcolor_even',
                                     'bg_color',
                                     'font_color');
-  SECTION: array[0..2] of string = ('directories', 'forms', 'colors');
 
 function LoadConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
 function SaveConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
