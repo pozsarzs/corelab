@@ -548,9 +548,9 @@ begin
   // clear script buffer and refresh ScriptEditor;
   FScriptBuffer.Clear;
   // clear content of the internal modules
-  // if Assigned(Form3) then Form3.ClearContent;                    // HexViewer
+  if Assigned(Form3) then Form3.Invalidate;                         // HexViewer
   if Assigned(Form4) then Form4.ClearContent;                       // RunLogger
-  // if Assigned(Form6) then Form6.ClearContent;                 // ScriptEditor
+  if Assigned(Form6) then Form6.CopyBufferToEditor;              // ScriptEditor
   // if Assigned(Form8) then Form8.ClearContent;                    // IntLogger
   // if Assigned(Form11) then Form11.ClearContent;                  // RegViewer
   // if Assigned(Form12) then Form12.ClearContent;              // ScriptConsole
@@ -777,6 +777,12 @@ begin
         end;
         // ScriptConsole
         // ScriptEditor
+        with ScriptEditorConfig do
+        begin
+          Form6.BGColor := bg_color;
+          Form6.FontColor := font_color;
+          Form6.GutterFontColor := gutterfont_color;
+        end;
         // Settings
         // SysConsole
         with SysConsoleConfig do
@@ -898,6 +904,8 @@ begin
     Form6.LineNumber := linenumber;
     Form6.Syntax := syntax;
   end;
+  Form6.ExtBuffer := FScriptBuffer;
+  Form6.CopyBufferToEditor;
   Form6.Show;
   Form6.BringToFront;
 end;
@@ -1670,8 +1678,8 @@ end;
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
   ChangeOpMode(omScript, True);
-  // Form6.Reload(FScriptBuffer);     // reload ScriptEditor content from buffer
-  // if not Form6.Visible then Form6.Show;                  // show ScriptEditor
+  // refresh and show ScriptEditor
+  VShowScriptEditorExecute(Sender);
 end;
 
 // SCRIPT/LOAD SCRIPT
@@ -1709,8 +1717,8 @@ begin
       FActualScript := Filename;                                // with filename
       FActualScriptIsSaved := True;                           // no need to save
       Form1.Caption := Application.Title + ' - ' + FActualScript;
-      // Form6.Reload(FScriptBuffer); // reload ScriptEditor content from buffer
-      // if not Form6.Visible then Form6.Show;              // show ScriptEditor
+      // refresh and show ScriptEditor
+      VShowScriptEditorExecute(Sender);
     end;
   finally
     OpenDialog.Free;
@@ -1991,6 +1999,16 @@ begin
     end;
     // ScriptConsole
     // ScriptEditor
+    with ScriptEditorConfig do
+    begin
+      top := Form6.Top;
+      left := Form6.Left;
+      height := Form6.Height;
+      width := Form6.Width;
+      bg_color := Form6.BGColor;
+      font_color := Form6.FontColor;
+      gutterfont_color := Form6.GutterFontColor;
+    end;
     // Settings
     with SettingsConfig do
     begin

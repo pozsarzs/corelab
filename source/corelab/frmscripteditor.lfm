@@ -363,7 +363,9 @@ object Form6: TForm6
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnHide = FormHide
   LCLVersion = '2.2.6.0'
   object Button1: TButton
     AnchorSideRight.Control = Owner
@@ -414,6 +416,7 @@ object Form6: TForm6
     ParentColor = False
     ParentFont = False
     TabOrder = 1
+    OnExit = SynEdit1Exit
     Gutter.Width = 27
     Gutter.MouseActions = <>
     RightGutter.Width = 0
@@ -842,9 +845,6 @@ object Form6: TForm6
     MouseActions = <>
     MouseTextActions = <>
     MouseSelActions = <>
-    Lines.Strings = (
-      'asasa'
-    )
     VisibleSpecialChars = [vscSpace, vscTabAtLast]
     ScrollBars = ssAutoBoth
     SelectedColor.BackPriority = 50

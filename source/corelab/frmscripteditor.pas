@@ -26,13 +26,17 @@ type
     SynAnySyn1: TSynAnySyn;
     SynEdit1: TSynEdit;
     procedure Button1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormHide(Sender: TObject);
+    procedure SynEdit1Exit(Sender: TObject);
   private
     // colors
     FBGColor:         TColor;
     FFontColor:       TColor;
     FGutterFontColor: TColor;
     // Others
+    FExtBuffer: TStringList;
     FLineNumber: Boolean;
     FSyntax:     Boolean;
   protected
@@ -40,12 +44,16 @@ type
     procedure SetFontColor(AColor: TColor);
     procedure SetGutterFontColor(AColor: TColor);
     procedure SetLineNumber(AEnable: Boolean);
+    procedure SetExtBuffer(AExtBuffer: TStringList);
     procedure SetSyntax(AEnable: Boolean);
   public
+    procedure CopyBufferToEditor;
+    procedure CopyEditorToBuffer;
     property BGColor: TColor read FBGColor write SetBGColor;
     property FontColor: TColor read FFontColor write SetFontColor;
     property GutterFontColor: TColor read FGutterFontColor write SetGutterFontColor;
     property LineNumber: Boolean read FLineNumber write SetLineNumber;
+    property ExtBuffer: TStringList write SetExtBuffer;
     property Syntax: Boolean read FSyntax write SetSyntax;
   end;
 var
@@ -99,15 +107,39 @@ begin
     else SynEdit1.HighLighter := nil;
 end;
 
+// SET EXTERNAL BUFFER
+procedure TForm6.SetExtBuffer(AExtBuffer: TStringList);
+begin
+  if Assigned(AExtBuffer) then FExtBuffer := AExtBuffer else FExtBuffer := nil;
+end;
+
 // ---- PUBLIC METHODS ----
+
+// COPY LINES FROM BUFFER
+procedure TForm6.CopyBufferToEditor;
+begin
+  if FExtBuffer <> nil then SynEdit1.Lines.Assign(FExtBuffer);
+end;
+
+// // COPY LINES TO BUFFER
+procedure TForm6.CopyEditorToBuffer;
+begin
+  if FExtBuffer <> nil then FExtBuffer.Assign(SynEdit1.Lines);
+end;
 
 // ---- EVENT HANDLER METHODS
 
 // CLOSE
 procedure TForm6.Button1Click(Sender: TObject);
 begin
-  // save to buffer
-  Close
+  CopyEditorToBuffer;
+  Close;
+end;
+
+// COPY LINES TO BUFFER
+procedure TForm6.SynEdit1Exit(Sender: TObject);
+begin
+    CopyEditorToBuffer;
 end;
 
 procedure TForm6.FormCreate(Sender: TObject);
@@ -119,6 +151,7 @@ begin
   // other default settings
   FLineNumber := True;
   FSyntax := True;
+  FExtBuffer := nil;
   // set syntax highlightning for the script editor
   with SynAnySyn1 do
   begin
@@ -143,6 +176,16 @@ begin
     StringDelim := sdDoubleQuote;
     VariableAttri.Foreground := clNone;
   end;
+end;
+
+procedure TForm6.FormHide(Sender: TObject);
+begin
+  CopyEditorToBuffer;
+end;
+
+procedure TForm6.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  CopyEditorToBuffer;
 end;
 
 end.
