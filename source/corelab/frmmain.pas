@@ -17,11 +17,11 @@ unit frmmain;
 interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
-  ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, Process,
-  Generics.Collections, frmabout, frmclasslist, frmmodulelist, frmrunlogger,
-  frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer, core_cpu,
-  core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject,
-  uintelhex;
+  ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
+  Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
+  frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
+  core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
+  uproject, uintelhex;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -737,30 +737,47 @@ begin
     SetFAppConfig(FAppConfig);
     if ShowModal = mrOk then
     begin
-      // new settings
+      // new settings - refresh application
       FAppConfig := AppConfig;
       with FAppConfig do
       begin
-        // refresh HexViewer
-        Form3.AddressColor := hexviewer_address_color;
-        Form3.DataColor := hexviewer_data_color;
-        Form3.LineSelectorColor := hexviewer_lineselector_color;
-        Form3.BGColorOddLines := hexviewer_bgcolor_odd;
-        Form3.BGColorEvenLines := hexviewer_bgcolor_even;
-        Form3.Invalidate;
-        // refresh RunLogger
-        Form4.InstCountColor := runlogger_instcount_color;
-        Form4.AddressColor := runlogger_address_color;
-        Form4.OpCodeColor := runlogger_opcode_color;
-        Form4.MnemonicColor := runlogger_mnemonic_color;
-        Form4.LineSelectorColor := runlogger_lineselector_color;
-        Form4.BGColorOddLines := runlogger_bgcolor_odd;
-        Form4.BGColorEvenLines := runlogger_bgcolor_even;
-        Form4.Invalidate;
-        // refresh SysConsole
-        Memo1.Font.Color := sysconsole_font_color;
-        Memo1.Color := sysconsole_bg_color;
-        Memo1.Invalidate;
+        // Breakpoint Manager
+        // HexViewer
+        with HexViewerConfig do
+        begin
+          Form3.AddressColor := address_color;
+          Form3.DataColor := data_color;
+          Form3.LineSelectorColor := lineselector_color;
+          Form3.BGColorOddLines := bgodd_color;
+          Form3.BGColorEvenLines := bgeven_color;
+          Form3.Invalidate;
+        end;
+        // IntLogger
+        // Module Manager
+        // Module properties
+        // RegViewer
+        // RunLogger
+        with RunLoggerConfig do
+        begin
+          Form4.InstCountColor := instcount_color;
+          Form4.AddressColor := address_color;
+          Form4.OpCodeColor := opcode_color;
+          Form4.MnemonicColor := mnemonic_color;
+          Form4.LineSelectorColor := lineselector_color;
+          Form4.BGColorOddLines := bgodd_color;
+          Form4.BGColorEvenLines := bgeven_color;
+          Form4.Invalidate;
+        end;
+        // ScriptConsole
+        // ScriptEditor
+        // Settings
+        // SysConsole
+        with SysConsoleConfig do
+        begin
+          Memo1.Font.Color := font_color;
+          Memo1.Color := bg_color;
+          Memo1.Invalidate;
+        end;
       end;
     end;
   end;
@@ -825,19 +842,19 @@ end;
 // VIEW/SHOW RUNLOGGER
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
 begin
-  with FAppConfig do
+  with FAppConfig.RunLoggerConfig do
   begin
-    Form4.Top := runlogger_top;
-    Form4.Left := runlogger_left;
-    Form4.Height := runlogger_height;
-    Form4.Width := runlogger_width;
-    Form4.InstCountColor := runlogger_instcount_color;
-    Form4.AddressColor := runlogger_address_color;
-    Form4.OpCodeColor := runlogger_opcode_color;
-    Form4.MnemonicColor := runlogger_mnemonic_color;
-    Form4.LineSelectorColor := runlogger_lineselector_color;
-    Form4.BGColorOddLines := runlogger_bgcolor_odd;
-    Form4.BGColorEvenLines := runlogger_bgcolor_even;
+    Form4.Top := top;
+    Form4.Left := left;
+    Form4.Height := height;
+    Form4.Width := width;
+    Form4.InstCountColor := instcount_color;
+    Form4.AddressColor := address_color;
+    Form4.OpCodeColor := opcode_color;
+    Form4.MnemonicColor := mnemonic_color;
+    Form4.LineSelectorColor := lineselector_color;
+    Form4.BGColorOddLines := bgodd_color;
+    Form4.BGColorEvenLines := bgeven_color;
   end;
   Form4.Show;
   Form4.BringToFront;
@@ -861,7 +878,78 @@ end;
 
 // VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
+var
+  Form301: TForm;
+  LSynEdit301: TSynEdit;
+  line, sline: integer;
 begin
+  Form301 := TForm.Create(Nil);
+  LSynEdit301 := TSynEdit.Create(Form301);
+  with Form301 do
+  begin
+    BorderStyle := bsSizeable;
+//    Caption := rmampdot(MenuItem30.Caption);
+    Name := 'Form301';
+    Parent := Nil;
+{    Top := formpositions[3, 0];
+    Left := formpositions[3, 1];
+    if formpositions[3, 2] > 240 then Height := formpositions[3, 2];
+    if formpositions[3, 3] > 320 then Width := formpositions[3, 3];}
+  end;
+  with LSynEdit301 do
+  begin
+    Anchors := [akTop, akBottom, akLeft, akRight];
+      AnchorSideTop.Control := Form301;
+      AnchorSideTop.Side := asrTop;
+      BorderSpacing.Top := 1;
+      AnchorSideBottom.Control := Form301;
+      AnchorSideBottom.Side := asrBottom;
+      BorderSpacing.Bottom := 1;
+      AnchorSideLeft.Control := Form301;
+      AnchorSideLeft.Side := asrLeft;
+      BorderSpacing.Left := 1;
+      AnchorSideRight.Control := Form301;
+      AnchorSideRight.Side := asrRight;
+      BorderSpacing.Right := 1;
+    Color := clNavy;
+    Gutter.LineNumberPart.MarkupInfo.Background := clNavy;
+    Gutter.LineNumberPart.MarkupInfo.Foreground := clYellow;
+    Font.Color := clAqua;
+    Gutter.Color := clNavy;
+    Name := 'LSynEdit301';
+    Parent := Form301;
+    ReadOnly := False;
+    ScrollBars := ssAutoBoth;
+    TabOrder := 0;
+    Position := poMainFormCenter;
+//    HighLighter := LSynAnySyn1;
+    Clear;
+  end;
+{  for sline := 0 to SCRBUFFSIZE - 1 do
+    if length(sbuffer[sline]) > 0 then
+      LSynEdit301.Lines.Add(sbuffer[sline]);}
+  Form301.ShowModal;
+  sline := 0;
+{  for line := 0 to LSynEdit301.Lines.Count -1 do
+    if sline < SCRBUFFSIZE - 1 then
+      if length(LSynEdit301.Lines[line]) > 0 then
+      begin
+        sbuffer[sline] := LSynEdit301.Lines[line];
+        inc(sline);
+      end;}
+{  if length(LSynEdit301.Text) > 0 then scriptisloaded := true;}
+{    with Form301 do
+  begin
+    formpositions[3, 0] := Top;
+    formpositions[3, 1] := Left;
+    formpositions[3, 2] := Height;
+    formpositions[3, 3] := Width;
+  end;}
+  FreeAndNil(Form301);
+
+
+
+
   // Form6.Reload(FScriptBuffer);     // reload ScriptEditor content from buffer
   // if not Form6.Visible then Form6.Show;
 end;
@@ -1830,15 +1918,15 @@ begin
     else
       with Memo1 do
       begin
-        Font.Color := FAppConfig.sysconsole_font_color;
-        Color := FAppConfig.sysconsole_bg_color;
+        Font.Color := FAppConfig.SysConsoleConfig.font_color;
+        Color := FAppConfig.SysConsoleConfig.bg_color;
       end;
-  with FAppConfig do
+  with FAppConfig.MainFormConfig do
   begin
-    Top := frmmain_top;
-    Left := frmmain_left;
-    Height := frmmain_height;
-    Width := frmmain_width;
+    Top := top;
+    Left := left;
+    Height := height;
+    Width := width;
   end;
   // set plugin directory and load plugins
   if FPluginDirectory = '' then
@@ -1919,28 +2007,44 @@ begin
   // save configuration
   with FAppConfig do
   begin
-    // Form1
-    frmmain_top := Top;
-    frmmain_left := Left;
-    frmmain_height := Height;
-    frmmain_width := Width;
-    sysconsole_bg_color := Memo1.BGColor;
-    sysconsole_font_color := Memo1.Font.Color;
-    // Form3
-    {...}
-    // Form4
-    runlogger_top := Form4.Top;
-    runlogger_left := Form4.Left;
-    runlogger_height := Form4.Height;
-    runlogger_width := Form4.Width;
-    runlogger_instcount_color := Form4.InstCountColor;
-    runlogger_address_color := Form4.AddressColor;
-    runlogger_opcode_color := Form4.OpCodeColor;
-    runlogger_mnemonic_color := Form4.MnemonicColor;
-    runlogger_lineselector_color := Form4.LineSelectorColor;
-    runlogger_bgcolor_odd := Form4.BGColorOddLines;
-    runlogger_bgcolor_even := Form4.BGColorEvenLines;
-    {...}
+    // Breakpoint Manager
+    // HexViewer
+    // IntLogger
+    // Module Manager
+    // Main Form
+    with MainFormConfig do
+    begin
+      top := Form1.Top;
+      left := Form1.Left;
+      height := Form1.Height;
+      width := Form1.Width;
+    end;
+    // Module properties
+    // RegViewer
+    // RunLogger
+    with RunLoggerConfig do
+    begin
+      top := Form4.Top;
+      left := Form4.Left;
+      height := Form4.Height;
+      width := Form4.Width;
+      instcount_color := Form4.InstCountColor;
+      address_color := Form4.AddressColor;
+      opcode_color := Form4.OpCodeColor;
+      mnemonic_color := Form4.MnemonicColor;
+      lineselector_color := Form4.LineSelectorColor;
+      bgodd_color := Form4.BGColorOddLines;
+      bgeven_color := Form4.BGColorEvenLines;
+    end;
+    // ScriptConsole
+    // ScriptEditor
+    // Settings
+    // SysConsole
+    with SysConsoleConfig do
+    begin
+      bg_color := Memo1.BGColor;
+      font_color := Memo1.Font.Color;
+    end;
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
     then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));

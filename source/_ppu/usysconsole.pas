@@ -20,7 +20,7 @@ type
   TSysConsole = class(TMemo)
   private
     FOnCommand: TNotifyEvent;
-    FBGColor: TColor;
+    FBGColor:   TColor;
     FFontColor: TColor;
     procedure ClearContent;
     procedure SetBGColor(AColor: TColor);

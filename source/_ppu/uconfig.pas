@@ -19,52 +19,214 @@ interface
 uses
   Graphics, INIFiles, SysUtils;
 type
-  // configuration data type
-  TAppConfig = record
-    directory_project:                                                  string;
-    // Main form
-    frmmain_left, frmmain_top, frmmain_height, frmmain_width:           Integer;
-    // HexViewer
-    hexviewer_left, hexviewer_top, hexviewer_height, hexviewer_width:   Integer;
-    hexviewer_address_color, hexviewer_data_color:                      TColor;
-    hexviewer_lineselector_color, hexviewer_bgcolor_odd:                TColor;
-    hexviewer_bgcolor_even:                                             TColor;
-    // RunLogger
-    runlogger_left, runlogger_top, runlogger_height, runlogger_width:   Integer;
-    runlogger_instcount_color, runlogger_address_color:                 TColor;
-    runlogger_opcode_color, runlogger_mnemonic_color:                   TColor;
-    runlogger_lineselector_color, runlogger_bgcolor_odd:                TColor;
-    runlogger_bgcolor_even:                                             TColor;
-    // SysConsole
-    sysconsole_bg_color, sysconsole_font_color:                         TColor;
+  // configuration data types
+  TBPManagerConfig = record
+    left, top, height, width: Integer;
   end;
-const
-  SECTION: array[0..2] of string = ('directories', 'forms', 'colors');
-  KEY1: array[0..4] of string =    ('directory_',
-                                    'frmmain_',
-                                    'runlogger_',
-                                    'sysconsole_',
-                                    'hexviewer_');
-  KEY2: array[0..14] of string =   ('project',
-                                    'top',
-                                    'left',
-                                    'height',
-                                    'width',
-                                    'instcount_color',
-                                    'address_color',
-                                    'opcode_color',
-                                    'mnemonic_color',
-                                    'lineselector_color',
-                                    'bgcolor_odd',
-                                    'bgcolor_even',
-                                    'bg_color',
-                                    'font_color',
-                                    'data_color');
+  THexViewerConfig = record
+    left, top, height, width:                      Integer;
+    address_color, data_color, lineselector_color: TColor;
+    bgodd_color, bgeven_color:                     TColor;
+  end;
+  TIntLoggerConfig = record
+    left, top, height, width:                             Integer;
+    sender_color, vector_color, status_color, flag_color: TColor;
+    lineselector_color, bgodd_color, bgeven_color:        TColor;
+  end;
+  TMainFormConfig = record
+    left, top, height, width: Integer;
+  end;
+  TModuleManagerConfig = record
+    left, top, height, width: Integer;
+  end;
+  TModulePropertiesConfig = record
+    left, top, height, width: Integer;
+  end;
+  TRegViewerConfig = record
+    left, top, height, width: Integer;
+  end;
+  TRunLoggerConfig = record
+    left, top, height, width:                                     Integer;
+    instcount_color, address_color, opcode_color, mnemonic_color: TColor;
+    lineselector_color, bgodd_color, bgeven_color:                TColor;
+  end;
+  TScriptConsoleConfig = record
+    left, top, height, width: Integer;
+    bg_color, font_color:     TColor;
+  end;
+  TScriptEditorConfig = record
+    left, top, height, width: Integer;
+    bg_color, font_color:     TColor;
+    linenumber, syntax:       Boolean;
+  end;
+  TSettingsConfig = record
+    left, top, height, width: Integer;
+  end;
+  TSysConsoleConfig = record
+    left, top, height, width: Integer;
+    bg_color, font_color:     TColor;
+  end;
+  TAppConfig = record
+    BPManagerConfig:        TBPManagerConfig;
+    HexViewerConfig:        THexViewerConfig;
+    IntLoggerConfig:        TIntLoggerConfig;
+    MainFormConfig:         TMainFormConfig;
+    ModuleManagerConfig:    TModuleManagerConfig;
+    ModulePropertiesConfig: TModulePropertiesConfig;
+    RegViewerConfig:        TRegViewerConfig;
+    RunLoggerConfig:        TRunLoggerConfig;
+    ScriptConsoleConfig:    TScriptConsoleConfig;
+    ScriptEditorConfig:     TScriptEditorConfig;
+    SettingsConfig:         TSettingsConfig;
+    SysConsoleConfig:       TSysConsoleConfig;
+  end;
 
 function LoadConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
 function SaveConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
 
 implementation
+
+// COMBINED INI OBJECT HANDLER
+function INIFileHandler(AINIFile: TIniFile; var AAppConfig: TAppConfig; IsSave: Boolean): Boolean;
+var
+  section: string;
+  
+  // READ/WRITE PROCEDURES
+  procedure LoadSave(ASection, AKey: string; var AValue: Boolean; ADefault: Boolean); overload;
+  begin
+    with AINIFile do
+      if not IsSave
+        then AValue := ReadBool(ASection, AKey, ADefault)
+        else WriteBool(ASection, AKey, AValue);
+  end;
+  procedure LoadSave(ASection, AKey: string; var AValue: Integer; ADefault: Integer); overload;
+  begin
+    with AINIFile do
+      if not IsSave
+        then AValue := ReadInteger(ASection, AKey, ADefault)
+        else WriteInteger(ASection, AKey, AValue);
+  end;
+  procedure LoadSave(ASection, AKey: string; var AValue: string; ADefault: string); overload;
+  begin
+    with AINIFile do
+      if not IsSave
+        then AValue := ReadString(ASection, AKey, ADefault)
+        else WriteString(ASection, AKey, AValue);
+  end;
+  procedure LoadSave(ASection, AKey: string; var AValue: TColor; ADefault: string); overload;
+  begin
+    with AINIFile do
+      if not IsSave
+        then AValue := StringToColor(ReadString(ASection, AKey, ADefault))
+        else WriteString(ASection, AKey, ColorToString(AValue));
+  end;
+
+begin
+  Result := True;
+  try
+    // Breakpoint Manager
+    section := 'BreakPointManager';
+    LoadSave(section, 'height', AAppConfig.BPManagerConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.BPManagerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.BPManagerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.BPManagerConfig.width, 480);
+    // HexViewer
+    section := 'HexViewer';
+    LoadSave(section, 'height', AAppConfig.HexViewerConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.HexViewerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.HexViewerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.HexViewerConfig.width, 480);
+    LoadSave(section, 'address_color', AAppConfig.HexViewerConfig.address_color, HEXVIEWER_ADDRESS_DEFAULT);
+    LoadSave(section, 'data_color', AAppConfig.HexViewerConfig.data_color, HEXVIEWER_DATA_DEFAULT);
+    LoadSave(section, 'lineselector_color', AAppConfig.HexViewerConfig.lineselector_color, HEXVIEWER_LINESELECTOR_DEFAULT);
+    LoadSave(section, 'bgodd_color', AAppConfig.HexViewerConfig.bgodd_color, HEXVIEWER_BGCOLOR_ODD_DEFAULT);
+    LoadSave(section, 'bgeven_color', AAppConfig.HexViewerConfig.bgeven_color, HEXVIEWER_BGCOLOR_EVEN_DEFAULT);
+    // IntLogger
+    section := 'IntLogger';
+    LoadSave(section, 'height', AAppConfig.IntLoggerConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.IntLoggerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.IntLoggerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.IntLoggerConfig.width, 480);
+    LoadSave(section, 'sender_color', AAppConfig.IntLoggerConfig.sender_color, INTLOGGER_SENDER_DEFAULT);
+    LoadSave(section, 'vector_color', AAppConfig.IntLoggerConfig.vector_color, INTLOGGER_VECTOR_DEFAULT);
+    LoadSave(section, 'status_color', AAppConfig.IntLoggerConfig.status_color, INTLOGGER_STATUS_DEFAULT);
+    LoadSave(section, 'flag_color', AAppConfig.IntLoggerConfig.flag_color, INTLOGGER_FLAG_DEFAULT);
+    LoadSave(section, 'lineselector_color', AAppConfig.IntLoggerConfig.lineselector_color, INTLOGGER_LINESELECTOR_DEFAULT);
+    LoadSave(section, 'bgodd_color', AAppConfig.IntLoggerConfig.bgodd_color, INTLOGGER_BGCOLOR_ODD_DEFAULT);
+    LoadSave(section, 'bgeven_color', AAppConfig.IntLoggerConfig.bgeven_color, INTLOGGER_BGCOLOR_EVEN_DEFAULT);
+    // Main Form
+    section := 'MainForm';
+    LoadSave(section, 'height', AAppConfig.MainFormConfig.height, 600);
+    LoadSave(section, 'left', AAppConfig.MainFormConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.MainFormConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.MainFormConfig.width, 800);
+    // Module Manager
+    section := 'ModuleManager';
+    LoadSave(section, 'height', AAppConfig.ModuleManagerConfig.height, 480);
+    LoadSave(section, 'left', AAppConfig.ModuleManagerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.ModuleManagerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.ModuleManagerConfig.width, 300);
+    // Module properties
+    section := 'ModuleProperties';
+    LoadSave(section, 'height', AAppConfig.ModulePropertiesConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.ModulePropertiesConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.ModulePropertiesConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.ModulePropertiesConfig.width, 480);
+    // RegViewer
+    section := 'RegViewer';
+    LoadSave(section, 'height', AAppConfig.RegViewerConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.RegViewerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.RegViewerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.RegViewerConfig.width, 480);
+    // RunLogger
+    section := 'RunLogger';
+    LoadSave(section, 'height', AAppConfig.RunLoggerConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.RunLoggerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.RunLoggerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.RunLoggerConfig.width, 480);
+    LoadSave(section, 'instcount_color', AAppConfig.RunLoggerConfig.instcount_color, RUNLOGGER_INSTCOUNT_DEFAULT);
+    LoadSave(section, 'address_color', AAppConfig.RunLoggerConfig.address_color, RUNLOGGER_ADDRESS_DEFAULT);
+    LoadSave(section, 'opcode_color', AAppConfig.RunLoggerConfig.opcode_color, RUNLOGGER_OPCODE_DEFAULT);
+    LoadSave(section, 'mnemonic_color', AAppConfig.RunLoggerConfig.mnemonic_color, RUNLOGGER_MNEMONIC_DEFAULT);
+    LoadSave(section, 'lineselector_color', AAppConfig.RunLoggerConfig.lineselector_color, RUNLOGGER_LINESELECTOR_DEFAULT);
+    LoadSave(section, 'bgodd_color', AAppConfig.RunLoggerConfig.bgodd_color, RUNLOGGER_BGCOLOR_ODD_DEFAULT);
+    LoadSave(section, 'bgeven_color', AAppConfig.RunLoggerConfig.bgeven_color, RUNLOGGER_BGCOLOR_EVEN_DEFAULT);
+    // ScriptConsole
+    section := 'ScriptConsole';
+    LoadSave(section, 'height', AAppConfig.ScriptConsoleConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.ScriptConsoleConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.ScriptConsoleConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.ScriptConsoleConfig.width, 480);
+    LoadSave(section, 'bg_color', AAppConfig.ScriptConsoleConfig.bg_color, SCRIPTCONSOLE_BG_COLOR_DEFAULT);
+    LoadSave(section, 'font_color', AAppConfig.ScriptConsoleConfig.font_color, SCRIPTCONSOLE_FONT_COLOR_DEFAULT);
+    // ScriptEditor
+    section := 'ScriptEditor';
+    LoadSave(section, 'height', AAppConfig.ScriptEditorConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.ScriptEditorConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.ScriptEditorConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.ScriptEditorConfig.width, 480);
+    LoadSave(section, 'bg_color', AAppConfig.ScriptEditorConfig.bg_color, SCRIPTEDITOR_BG_COLOR_DEFAULT);
+    LoadSave(section, 'font_color', AAppConfig.ScriptEditorConfig.font_color, SCRIPTEDITOR_FONT_COLOR_DEFAULT);
+    LoadSave(section, 'linenumber', AAppConfig.ScriptEditorConfig.linenumber, True);
+    LoadSave(section, 'syntax', AAppConfig.ScriptEditorConfig.syntax, True);
+    // Settings
+    section := 'Settings';
+    LoadSave(section, 'height', AAppConfig.SettingsConfig.height, 350);
+    LoadSave(section, 'left', AAppConfig.SettingsConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.SettingsConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.SettingsConfig.width, 363);
+    // SysConsole
+    section := 'SysConsole';
+    LoadSave(section, 'height', AAppConfig.SysConsoleConfig.height, 300);
+    LoadSave(section, 'left', AAppConfig.SysConsoleConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.SysConsoleConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.SysConsoleConfig.width, 480);
+    LoadSave(section, 'bg_color', AAppConfig.SysConsoleConfig.bg_color, SYSCONSOLE_BG_COLOR_DEFAULT);
+    LoadSave(section, 'font_color', AAppConfig.SysConsoleConfig.font_color, SYSCONSOLE_FONT_COLOR_DEFAULT);
+  except
+    Result := False;
+  end;
+end;
 
 // LOAD CONFIGURATION
 function LoadConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
@@ -74,57 +236,7 @@ begin
   Result := True;
   INIFile := TINIFile.Create(AFilename);
   try
-    try
-      with INIFile do
-      begin
-        // Directories
-        AAppConfig.directory_project := ReadString(SECTION[0], KEY1[0] + KEY2[0], '');
-        // Forms
-        AAppConfig.frmmain_left := ReadInteger(SECTION[1], KEY1[1] + KEY2[1], 8);
-        AAppConfig.frmmain_top := ReadInteger(SECTION[1], KEY1[1] + KEY2[2], 8);
-        AAppConfig.frmmain_height := ReadInteger(SECTION[1], KEY1[1] + KEY2[3], 174);
-        AAppConfig.frmmain_width := ReadInteger(SECTION[1], KEY1[1] + KEY2[4], 930);
-        AAppConfig.hexviewer_left := ReadInteger(SECTION[1], KEY1[4] + KEY2[1], 8);
-        AAppConfig.hexviewer_top := ReadInteger(SECTION[1], KEY1[4] + KEY2[2], 8);
-        AAppConfig.hexviewer_height := ReadInteger(SECTION[1], KEY1[4] + KEY2[3], 174);
-        AAppConfig.hexviewer_width := ReadInteger(SECTION[1], KEY1[4] + KEY2[4], 930);
-        AAppConfig.runlogger_left := ReadInteger(SECTION[1], KEY1[2] + KEY2[1], 8);
-        AAppConfig.runlogger_top := ReadInteger(SECTION[1], KEY1[2] + KEY2[2], 8);
-        AAppConfig.runlogger_height := ReadInteger(SECTION[1], KEY1[2] + KEY2[3], 174);
-        AAppConfig.runlogger_width := ReadInteger(SECTION[1], KEY1[2] + KEY2[4], 930);
-        // Colors
-        AAppConfig.hexviewer_address_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[4] + KEY2[6], HEXVIEWER_ADDRESS_DEFAULT));
-        AAppConfig.hexviewer_address_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[4] + KEY2[14], HEXVIEWER_DATA_DEFAULT));
-        AAppConfig.hexviewer_lineselector_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[4] + KEY2[9], HEXVIEWER_LINESELECTOR_DEFAULT));
-        AAppConfig.hexviewer_bgcolor_odd :=
-          StringToColor(ReadString(SECTION[2], KEY1[4] + KEY2[10], HEXVIEWER_BGCOLOR_ODD_DEFAULT));
-        AAppConfig.hexviewer_bgcolor_even :=
-          StringToColor(ReadString(SECTION[2], KEY1[4] + KEY2[11], HEXVIEWER_BGCOLOR_EVEN_DEFAULT));
-        AAppConfig.runlogger_instcount_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[5], RUNLOGGER_INSTCOUNT_DEFAULT));
-        AAppConfig.runlogger_address_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[6], RUNLOGGER_ADDRESS_DEFAULT));
-        AAppConfig.runlogger_opcode_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[7], RUNLOGGER_OPCODE_DEFAULT));
-        AAppConfig.runlogger_mnemonic_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[8], RUNLOGGER_MNEMONIC_DEFAULT));
-        AAppConfig.runlogger_lineselector_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[9], RUNLOGGER_LINESELECTOR_DEFAULT));
-        AAppConfig.runlogger_bgcolor_odd :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[10], RUNLOGGER_BGCOLOR_ODD_DEFAULT));
-        AAppConfig.runlogger_bgcolor_even :=
-          StringToColor(ReadString(SECTION[2], KEY1[2] + KEY2[11], RUNLOGGER_BGCOLOR_EVEN_DEFAULT));
-        AAppConfig.sysconsole_bg_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[3] + KEY2[12], SYSCONSOLE_BG_COLOR_DEFAULT));
-        AAppConfig.sysconsole_font_color :=
-          StringToColor(ReadString(SECTION[2], KEY1[3] + KEY2[13], SYSCONSOLE_FONT_COLOR_DEFAULT));
-      end;
-    except
-      Result := False;
-    end;
+    Result := INIFileHandler(INIFILE, AAppConfig, False);
   finally
     INIFile.Free;
   end;
@@ -138,43 +250,7 @@ begin
   Result := True;
   INIFile := TINIFile.Create(AFilename);
   try
-    try
-      with INIFile do
-      begin
-        // Directories
-        WriteString(SECTION[0], KEY1[0] + KEY2[0], AAppConfig.directory_project);
-        // Forms
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[1], AAppConfig.frmmain_left);
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[2], AAppConfig.frmmain_top);
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[3], AAppConfig.frmmain_height);
-        WriteInteger(SECTION[1], KEY1[1] + KEY2[4], AAppConfig.frmmain_width);
-        WriteInteger(SECTION[1], KEY1[4] + KEY2[1], AAppConfig.hexviewer_left);
-        WriteInteger(SECTION[1], KEY1[4] + KEY2[2], AAppConfig.hexviewer_top);
-        WriteInteger(SECTION[1], KEY1[4] + KEY2[3], AAppConfig.hexviewer_height);
-        WriteInteger(SECTION[1], KEY1[4] + KEY2[4], AAppConfig.hexviewer_width);
-        WriteInteger(SECTION[1], KEY1[2] + KEY2[1], AAppConfig.runlogger_left);
-        WriteInteger(SECTION[1], KEY1[2] + KEY2[2], AAppConfig.runlogger_top);
-        WriteInteger(SECTION[1], KEY1[2] + KEY2[3], AAppConfig.runlogger_height);
-        WriteInteger(SECTION[1], KEY1[2] + KEY2[4], AAppConfig.runlogger_width);
-        // Colors
-        WriteString(SECTION[2], KEY1[4] + KEY2[6], ColorToString(AAppConfig.hexviewer_address_color));
-        WriteString(SECTION[2], KEY1[4] + KEY2[14], ColorToString(AAppConfig.hexviewer_data_color));
-        WriteString(SECTION[2], KEY1[4] + KEY2[9], ColorToString(AAppConfig.hexviewer_lineselector_color));
-        WriteString(SECTION[2], KEY1[4] + KEY2[10], ColorToString(AAppConfig.hexviewer_bgcolor_odd));
-        WriteString(SECTION[2], KEY1[4] + KEY2[11], ColorToString(AAppConfig.hexviewer_bgcolor_even));
-        WriteString(SECTION[2], KEY1[2] + KEY2[5], ColorToString(AAppConfig.runlogger_instcount_color));
-        WriteString(SECTION[2], KEY1[2] + KEY2[6], ColorToString(AAppConfig.runlogger_address_color));
-        WriteString(SECTION[2], KEY1[2] + KEY2[7], ColorToString(AAppConfig.runlogger_opcode_color));
-        WriteString(SECTION[2], KEY1[2] + KEY2[8], ColorToString(AAppConfig.runlogger_mnemonic_color));
-        WriteString(SECTION[2], KEY1[2] + KEY2[9], ColorToString(AAppConfig.runlogger_lineselector_color));
-        WriteString(SECTION[2], KEY1[2] + KEY2[10], ColorToString(AAppConfig.runlogger_bgcolor_odd));
-        WriteString(SECTION[2], KEY1[2] + KEY2[11], ColorToString(AAppConfig.runlogger_bgcolor_even));
-        WriteString(SECTION[2], KEY1[3] + KEY2[12], ColorToString(AAppConfig.sysconsole_bg_color));
-        WriteString(SECTION[2], KEY1[3] + KEY2[13], ColorToString(AAppConfig.sysconsole_font_color));
-      end;
-    except
-      Result := False;
-    end;
+    Result := INIFileHandler(INIFILE, AAppConfig, True);
   finally
     INIFile.Free;
   end;

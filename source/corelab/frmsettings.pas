@@ -84,23 +84,40 @@ begin
   FAppConfig := AAppConfig;
   with FAppConfig do
   begin
+    // Breakpoint Manager
+    // HexViewer
+    with HexViewerConfig do
+    begin
+      ColorBox10.Selected := address_color;
+      ColorBox11.Selected := data_color;
+      ColorBox12.Selected := lineselector_color;
+      ColorBox13.Selected := bgodd_color;
+      ColorBox14.Selected := bgeven_color;
+    end;
+    // IntLogger
+    // Module Manager
+    // Plugin properties
+    // RegViewer
     // RunLogger
-    ColorBox1.Selected := runlogger_instcount_color;
-    ColorBox2.Selected := runlogger_address_color;
-    ColorBox3.Selected := runlogger_opcode_color;
-    ColorBox4.Selected := runlogger_mnemonic_color;
-    ColorBox5.Selected := runlogger_lineselector_color;
-    ColorBox6.Selected := runlogger_bgcolor_odd;
-    ColorBox7.Selected := runlogger_bgcolor_even;
+    with RunLoggerConfig do
+    begin
+      ColorBox1.Selected := instcount_color;
+      ColorBox2.Selected := address_color;
+      ColorBox3.Selected := opcode_color;
+      ColorBox4.Selected := mnemonic_color;
+      ColorBox5.Selected := lineselector_color;
+      ColorBox6.Selected := bgodd_color;
+      ColorBox7.Selected := bgeven_color;
+    end;
+    // ScriptConsole
+    // ScriptEditor
+    // Settings
     // SysConsole
-    ColorBox8.Selected := sysconsole_font_color;
-    ColorBox9.Selected := sysconsole_bg_color;
-    // Hexviewer
-    ColorBox10.Selected := hexviewer_address_color;
-    ColorBox11.Selected := hexviewer_data_color;
-    ColorBox12.Selected := hexviewer_lineselector_color;
-    ColorBox13.Selected := hexviewer_bgcolor_odd;
-    ColorBox14.Selected := hexviewer_bgcolor_even;
+    with SysConsoleConfig do
+    begin
+      ColorBox8.Selected := font_color;
+      ColorBox9.Selected := bg_color;
+    end;
   end;
 end;
 
@@ -110,27 +127,43 @@ procedure TForm18.Button5Click(Sender: TObject);
 begin
   with FAppConfig do
   begin
-    // RunLogger
-    runlogger_instcount_color := ColorBox1.Selected;
-    runlogger_address_color := ColorBox2.Selected;
-    runlogger_opcode_color := ColorBox3.Selected;
-    runlogger_mnemonic_color := ColorBox4.Selected;
-    runlogger_lineselector_color := ColorBox5.Selected;
-    runlogger_bgcolor_odd := ColorBox6.Selected;
-    runlogger_bgcolor_even := ColorBox7.Selected;
-    // SysConsole
-    sysconsole_font_color := ColorBox8.Selected;
-    sysconsole_bg_color := ColorBox9.Selected;
+    // Breakpoint Manager
     // HexViewer
-    hexviewer_address_color := ColorBox10.Selected;
-    hexviewer_data_color := ColorBox11.Selected;
-    hexviewer_lineselector_color := ColorBox12.Selected;
-    hexviewer_bgcolor_odd := ColorBox13.Selected;
-    hexviewer_bgcolor_even := ColorBox14.Selected;
+    with HexViewerConfig do
+    begin
+      address_color := ColorBox10.Selected;
+      data_color := ColorBox11.Selected;
+      lineselector_color := ColorBox12.Selected;
+      bgodd_color := ColorBox13.Selected;
+      bgeven_color := ColorBox14.Selected;
+    end;
+    // IntLogger
+    // Module Manager
+    // Plugin properties
+    // RegViewer
+    // RunLogger
+    with RunLoggerConfig do
+    begin
+      instcount_color := ColorBox1.Selected;
+      address_color := ColorBox2.Selected;
+      opcode_color := ColorBox3.Selected;
+      mnemonic_color := ColorBox4.Selected;
+      lineselector_color := ColorBox5.Selected;
+      bgodd_color := ColorBox6.Selected;
+      bgeven_color := ColorBox7.Selected;
+    end;
+    // ScriptConsole
+    // ScriptEditor
+    // Settings
+    // SysConsole
+    with SysConsoleConfig do
+    begin
+      font_color := ColorBox8.Selected;
+      bg_color := ColorBox9.Selected;
+    end;
   end;
   ModalResult := mrOk;
 end;
-
 
 end.
 

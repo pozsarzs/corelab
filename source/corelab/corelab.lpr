@@ -182,13 +182,13 @@ begin
 //    CreateForm(TForm6, Form6);                                 // ScriptEditor
     CreateForm(TForm7, Form7);                                 // LoadSaveMemory
 //    CreateForm(TForm8, Form8);                                    // IntLogger
-//    CreateForm(TForm9, Form9);                               // LoadSaveMemory
+//    CreateForm(TForm9, Form9);                               // Module Manager
 //    CreateForm(TForm10, Form10);                         // Breakpoint Manager
 //    CreateForm(TForm11, Form11);                                  // RegViewer
 //    CreateForm(TForm12, Form12);                              // ScriptConsole
 //    CreateForm(TForm13, Form13);                    // Rename I/O plugin panel
 //    CreateForm(TForm14, Form14);               // Move/resize I/O plugin panel
-//    CreateForm(TForm15, Form15);                          // Plugin properties
+//    CreateForm(TForm15, Form15);                          // Module properties
     CreateForm(TForm16, Form16);                   // Class list for instantiate
     CreateForm(TForm17, Form17);                     // Instantiated module list
     CreateForm(TForm18, Form18);                                     // Settings
