@@ -20,8 +20,8 @@ uses
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
-  uproject, uintelhex;
+  frmscripteditor, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
+  uconfig, uplugin, uproject, uintelhex;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -731,6 +731,13 @@ end;
 // FILE/SETTINGS
 procedure TForm1.FSettingsExecute(Sender: TObject);
 begin
+  with FAppConfig.SettingsConfig do
+  begin
+    Form18.Left := left;
+    Form18.Height := height;
+    Form18.Top := top;
+    Form18.Width := width;
+  end;
   with Form18 do
   begin
     // original settings
@@ -878,80 +885,21 @@ end;
 
 // VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
-var
-  Form301: TForm;
-  LSynEdit301: TSynEdit;
-  line, sline: integer;
 begin
-  Form301 := TForm.Create(Nil);
-  LSynEdit301 := TSynEdit.Create(Form301);
-  with Form301 do
+  with FAppConfig.ScriptEditorConfig do
   begin
-    BorderStyle := bsSizeable;
-//    Caption := rmampdot(MenuItem30.Caption);
-    Name := 'Form301';
-    Parent := Nil;
-{    Top := formpositions[3, 0];
-    Left := formpositions[3, 1];
-    if formpositions[3, 2] > 240 then Height := formpositions[3, 2];
-    if formpositions[3, 3] > 320 then Width := formpositions[3, 3];}
+    Form6.Top := top;
+    Form6.Left := left;
+    Form6.Height := height;
+    Form6.Width := width;
+    Form6.BGColor := bg_color;
+    Form6.FontColor := font_color;
+    Form6.GutterFontColor := gutterfont_color;
+    Form6.LineNumber := linenumber;
+    Form6.Syntax := syntax;
   end;
-  with LSynEdit301 do
-  begin
-    Anchors := [akTop, akBottom, akLeft, akRight];
-      AnchorSideTop.Control := Form301;
-      AnchorSideTop.Side := asrTop;
-      BorderSpacing.Top := 1;
-      AnchorSideBottom.Control := Form301;
-      AnchorSideBottom.Side := asrBottom;
-      BorderSpacing.Bottom := 1;
-      AnchorSideLeft.Control := Form301;
-      AnchorSideLeft.Side := asrLeft;
-      BorderSpacing.Left := 1;
-      AnchorSideRight.Control := Form301;
-      AnchorSideRight.Side := asrRight;
-      BorderSpacing.Right := 1;
-    Color := clNavy;
-    Gutter.LineNumberPart.MarkupInfo.Background := clNavy;
-    Gutter.LineNumberPart.MarkupInfo.Foreground := clYellow;
-    Font.Color := clAqua;
-    Gutter.Color := clNavy;
-    Name := 'LSynEdit301';
-    Parent := Form301;
-    ReadOnly := False;
-    ScrollBars := ssAutoBoth;
-    TabOrder := 0;
-    Position := poMainFormCenter;
-//    HighLighter := LSynAnySyn1;
-    Clear;
-  end;
-{  for sline := 0 to SCRBUFFSIZE - 1 do
-    if length(sbuffer[sline]) > 0 then
-      LSynEdit301.Lines.Add(sbuffer[sline]);}
-  Form301.ShowModal;
-  sline := 0;
-{  for line := 0 to LSynEdit301.Lines.Count -1 do
-    if sline < SCRBUFFSIZE - 1 then
-      if length(LSynEdit301.Lines[line]) > 0 then
-      begin
-        sbuffer[sline] := LSynEdit301.Lines[line];
-        inc(sline);
-      end;}
-{  if length(LSynEdit301.Text) > 0 then scriptisloaded := true;}
-{    with Form301 do
-  begin
-    formpositions[3, 0] := Top;
-    formpositions[3, 1] := Left;
-    formpositions[3, 2] := Height;
-    formpositions[3, 3] := Width;
-  end;}
-  FreeAndNil(Form301);
-
-
-
-
-  // Form6.Reload(FScriptBuffer);     // reload ScriptEditor content from buffer
-  // if not Form6.Visible then Form6.Show;
+  Form6.Show;
+  Form6.BringToFront;
 end;
 
 // VIEW/SHOW SCRIPTCONSOLE
@@ -1916,18 +1864,23 @@ begin
   if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
     then Memo1.WriteMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]))
     else
-      with Memo1 do
+      with FAppConfig do
       begin
-        Font.Color := FAppConfig.SysConsoleConfig.font_color;
-        Color := FAppConfig.SysConsoleConfig.bg_color;
+        // Main Form
+        with MainFormConfig do
+        begin
+          Form1.Top := top;
+          Form1.Left := left;
+          Form1.Height := height;
+          Form1.Width := width;
+        end;
+        // SysConsole
+        with SysConsoleConfig do
+        begin
+          Memo1.Font.Color := font_color;
+          Memo1.Color := bg_color;
+        end;
       end;
-  with FAppConfig.MainFormConfig do
-  begin
-    Top := top;
-    Left := left;
-    Height := height;
-    Width := width;
-  end;
   // set plugin directory and load plugins
   if FPluginDirectory = '' then
   begin
@@ -2039,6 +1992,13 @@ begin
     // ScriptConsole
     // ScriptEditor
     // Settings
+    with SettingsConfig do
+    begin
+      top := Form18.Top;
+      left := Form18.Left;
+      height := Form18.Height;
+      width := Form18.Width;
+    end;
     // SysConsole
     with SysConsoleConfig do
     begin

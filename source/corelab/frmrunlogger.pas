@@ -180,6 +180,7 @@ end;
 procedure TForm4.SetBGColorOddLines(AColor: TColor);
 begin
   FBGColorOddLines := AColor;
+  DrawGrid1.Color := FBGColorOddLines;
   DrawGrid1.Invalidate;
 end;
 
@@ -349,7 +350,7 @@ begin
       Items[2].Title.Caption := MSG07;
       Items[3].Title.Caption := MSG08;
     end;
-    Color:= FBGColorOddLines;
+    Color := FBGColorOddLines;
     RowCount := 1;
     Invalidate;
   end;

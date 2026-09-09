@@ -3,7 +3,6 @@ object Form18: TForm18
   Height = 350
   Top = 114
   Width = 363
-  BorderStyle = bsSingle
   Caption = 'Settings'
   ClientHeight = 350
   ClientWidth = 363
