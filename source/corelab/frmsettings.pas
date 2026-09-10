@@ -203,10 +203,10 @@ begin
   // Settings
   with uconfig.AppConfig.SettingsConfig do
   begin
-    Form18.Top := top;
-    Form18.Left := left;
-    Form18.Height := height;
-    Form18.Width := width;
+    top := Form18.Top;
+    left := Form18.Left;
+    height := Form18.Height;
+    width := Form18.Width;
   end;
 end;
 

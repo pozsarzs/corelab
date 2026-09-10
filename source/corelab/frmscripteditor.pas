@@ -16,7 +16,7 @@ unit frmscripteditor;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  SynEdit, SynHighlighterAny, MODSynHighlighterAny, uconfig;
+  SynEdit, MODSynHighlighterAny, uconfig;
 type
   { TForm6 }
   TForm6 = class(TForm)
@@ -43,8 +43,27 @@ type
   public
     procedure CopyBufferToEditor;
     procedure CopyEditorToBuffer;
+    procedure RefreshColors;
     property ExtBuffer: TStringList write SetExtBuffer;
   end;
+  const
+    SEConstants: array[0..12] of string = ('ARG', 'ARGCNT', 'DATE', 'FC', 'FZ',
+                                           'HOME', 'INSCNT', 'PRJDIR', 'RNDB', 'RNDI',
+                                           'RNDW', 'TIME', 'VER');
+    SEKeyWords: array[0..67] of string = ('ABS', 'ADD', 'AND', 'APPX', 'ASCI',
+                                          'ATTH', 'BIT', 'CALL', 'CALM', 'CHAR',
+                                          'COMP', 'CONV', 'CRTE', 'DEC', 'DEPO',
+                                          'DEST', 'DETH', 'END', 'EXAM', 'EXIT',
+                                          'FILL', 'GETP', 'HELP', 'IDV', 'IMD',
+                                          'INC', 'INDX', 'INPW', 'INRG', 'JPEQ',
+                                          'JPGE', 'JPGT', 'JPLE', 'JPLT', 'JPNE',
+                                          'JPNZ', 'JPZR', 'MSGW', 'MUL', 'NOT',
+                                          'OR', 'PAUS', 'POPA', 'PRNT', 'PSHA',
+                                          'RDV', 'RSET', 'RTRN', 'SAPP', 'SDEL',
+                                          'SETP', 'SETV', 'SFND', 'SHL', 'SHR',
+                                          'SINS', 'SLEN', 'SLOW', 'SREP', 'SSUB',
+                                          'STEP', 'STOP', 'STRT', 'SUB', 'SUPP',
+                                          'SWAP', 'WAIT', 'XOR');
 var
   Form6: TForm6;
 
@@ -67,10 +86,36 @@ begin
   if FExtBuffer <> nil then SynEdit1.Lines.Assign(FExtBuffer);
 end;
 
-// // COPY LINES TO BUFFER
+// COPY LINES TO BUFFER
 procedure TForm6.CopyEditorToBuffer;
 begin
   if FExtBuffer <> nil then FExtBuffer.Assign(SynEdit1.Lines);
+end;
+
+// REFRESH COLORS
+procedure TForm6.RefreshColors;
+begin
+  with uconfig.AppConfig.ScriptEditorConfig do
+  begin
+    Form6.FBGColor := bg_color;
+    Form6.FFontColor := font_color;
+    Form6.FGutterFontColor := gutterfont_color;
+    Form6.FLineNumber := linenumber;
+    Form6.FSyntax := syntax;
+    with SynEdit1 do
+    begin
+      Color := FBGColor;
+      Font.Color := FFontColor;
+      Gutter.Color := FBGColor;
+      Gutter.LineNumberPart.MarkupInfo.Background := FBGColor;
+      Gutter.LineNumberPart.MarkupInfo.Foreground := FGutterFontColor;
+      Gutter.Visible := FLineNumber;
+      if FSyntax
+        then HighLighter := SynAnySyn1
+        else HighLighter := nil;
+      Invalidate;
+    end;
+  end;
 end;
 
 // ---- EVENT HANDLER METHODS
@@ -90,6 +135,8 @@ end;
 
 // CREATE FORM
 procedure TForm6.FormCreate(Sender: TObject);
+var
+  b: Byte;
 begin
   // other default settings
   FLineNumber := True;
@@ -99,20 +146,15 @@ begin
   with SynAnySyn1 do
   begin
     ActiveDot := False;
-    Comments := [csBashStyle];
+    Comments := [csAsmStyle];
     CommentAttri.Foreground := clLime;
-{    for b := 0 to 1 do Constants.Add(DEV_TYPE[b]);
-    for b := 0 to 2 do Constants.Add(FILE_TYPE[b]);
-    for b := 1 to 3 do Constants.Add(PROT_TYPE[b]);
-    for b := 0 to 3 do Constants.Add(REG_TYPE[b]);
-    for b := 0 to 4 do Constants.Add(PREFIX[b]);
-    for b := 0 to 5 do Constants.Add(METHOD[b]);
-    for b := 0 to 3 do Constants.Add(NUM_SYS[b]);}
+    for b := 0 to Length(SEConstants) - 1 do Constants.Add(SEConstants[b]);
     ConstantAttri.Foreground := clRed;
+    VariableAttri.Foreground := clRed;
     DetectPreprocessor := false;
-    DollarVariables := false;
+    DollarVariables := true;
     KeyAttri.Foreground := clWhite;
-//    for b := 0 to COMMARRSIZE - 1 do KeyWords.Add(COMMANDS[b]);
+    for b := 0 to Length(SEKeyWords) - 1 do Constants.Add(SEKeyWords[b]);
     Markup := False;
     StringAttri.Foreground := clYellow;
     StringAttri.Style := [fsItalic];
@@ -131,25 +173,8 @@ begin
     Form6.Left := left;
     Form6.Height := height;
     Form6.Width := width;
-    Form6.FBGColor := bg_color;
-    Form6.FFontColor := font_color;
-    Form6.FGutterFontColor := gutterfont_color;
-    Form6.FLineNumber := linenumber;
-    Form6.FSyntax := syntax;
-    with SynEdit1 do
-    begin
-      Color := FBGColor;
-      Gutter.Color := FBGColor;
-      Gutter.LineNumberPart.MarkupInfo.Background := FBGColor;
-      Font.Color := FFontColor;
-      Gutter.LineNumberPart.MarkupInfo.Foreground := FGutterFontColor;
-      Gutter.Visible := FLineNumber;
-      if FSyntax
-        then HighLighter := SynAnySyn1
-        else HighLighter := nil;
-      Invalidate;
-    end;
   end;
+  RefreshColors;
 end;
 
 //HIDE FORM

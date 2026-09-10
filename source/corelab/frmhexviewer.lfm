@@ -372,13 +372,15 @@ object Form3: TForm3
   object Button1: TButton
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 400
     Height = 25
     Top = 275
     Width = 75
-    Anchors = [akTop, akRight, akBottom]
+    Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
     Cancel = True
     Caption = '&Close'
     OnClick = Button1Click

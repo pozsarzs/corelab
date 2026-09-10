@@ -58,6 +58,7 @@ type
   public
     procedure AppendRecord(ALogRec: TLogRec);
     procedure ClearContent;
+    procedure RefreshColors;
   end;
 var
   Form4: TForm4;
@@ -138,6 +139,23 @@ end;
 procedure TForm4.ClearContent;
 begin
   Button2Click(Nil);
+end;
+
+// REFRESH COLORS
+procedure TForm4.RefreshColors;
+begin
+  with uconfig.AppConfig.RunLoggerConfig do
+  begin
+    Form4.FInstCountColor := instcount_color;
+    Form4.FAddressColor := address_color;
+    Form4.FOpCodeColor := opcode_color;
+    Form4.FMnemonicColor := mnemonic_color;
+    Form4.FLineSelectorColor := lineselector_color;
+    Form4.FBGColorOddLines := bgodd_color;
+    Form4.FBGColorEvenLines := bgeven_color;
+    DrawGrid1.Color := FBGColorOddLines;
+    DrawGrid1.Invalidate;
+  end;
 end;
 
 // ---- EVENT HANDLER METHODS ----
@@ -230,7 +248,22 @@ begin
       1: TextRect(aRect, aRect.Left, aRect.Top, LogRec.Address);
       2: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.OpCode);
       3: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.Mnemonic);
-    end;
+    end;                         with uconfig.AppConfig.RunLoggerConfig do
+  begin
+    Form4.Top := top;
+    Form4.Left := left;
+    Form4.Height := height;
+    Form4.Width := width;
+    Form4.FInstCountColor := instcount_color;
+    Form4.FAddressColor := address_color;
+    Form4.FOpCodeColor := opcode_color;
+    Form4.FMnemonicColor := mnemonic_color;
+    Form4.FLineSelectorColor := lineselector_color;
+    Form4.FBGColorOddLines := bgodd_color;
+    Form4.FBGColorEvenLines := bgeven_color;
+    DrawGrid1.Color := FBGColorOddLines;
+    DrawGrid1.Invalidate;
+  end;
   end;
 end;
 
@@ -293,16 +326,8 @@ begin
     Form4.Left := left;
     Form4.Height := height;
     Form4.Width := width;
-    Form4.FInstCountColor := instcount_color;
-    Form4.FAddressColor := address_color;
-    Form4.FOpCodeColor := opcode_color;
-    Form4.FMnemonicColor := mnemonic_color;
-    Form4.FLineSelectorColor := lineselector_color;
-    Form4.FBGColorOddLines := bgodd_color;
-    Form4.FBGColorEvenLines := bgeven_color;
-    DrawGrid1.Color := FBGColorOddLines;
-    DrawGrid1.Invalidate;
   end;
+  RefreshColors;
   DrawGrid1.RowCount := FRecordCount + 1;
 end;
 

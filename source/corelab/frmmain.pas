@@ -740,21 +740,15 @@ procedure TForm1.FSettingsExecute(Sender: TObject);
 begin
   if Form18.ShowModal = mrOk then
   begin
-    // refresh application
+    // refresh colors
     with uconfig.AppConfig do
     begin
-      // Breakpoint Manager
-      if Form3.Visible then Form3.Show;                             // HexViewer
-      // IntLogger
-      // Module Manager
-      // Module properties
-      // RegViewer
-      if Form4.Visible then Form4.Show;                             // RunLogger
-      // ScriptConsole
-      if Form6.Visible then Form6.Show;                          // ScriptEditor
-      if Form18.Visible then Form18.Show;                            // Settings
-      // SysConsole
-      with SysConsoleConfig do
+      Form3.RefreshColors;                                          // HexViewer
+      {...}                                                         // IntLogger
+      Form4.RefreshColors;                                          // RunLogger
+      {...}                                                     // ScriptConsole
+      Form6.RefreshColors;                                       // ScriptEditor
+      with SysConsoleConfig do                                     // SysConsole
       begin
         Memo1.Font.Color := font_color;
         Memo1.Color := bg_color;

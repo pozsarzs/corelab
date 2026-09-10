@@ -43,6 +43,7 @@ type
     FBGColorEvenLines:  TColor;                                    // Even lines
     procedure SetFMemInstance(AMemInstance: TMemory);
   public
+    procedure RefreshColors;
     property MemInstance: TMemory write SetFMemInstance;
   end;
 var
@@ -55,6 +56,23 @@ resourcestring
 
 implementation
 {$R *.lfm}
+
+// ---- PUBLIC METHODS ----
+
+// REFRESH COLORS
+procedure TForm3.RefreshColors;
+begin
+  with uconfig.AppConfig.HexViewerConfig do
+  begin
+    Form3.FAddressColor := address_color;
+    Form3.FDataColor := data_color;
+    Form3.FLineSelectorColor := lineselector_color;
+    Form3.FBGColorOddLines := bgodd_color;
+    Form3.FBGColorEvenLines := bgeven_color;
+    DrawGrid1.Color := FBGColorOddLines;
+    DrawGrid1.Invalidate;
+  end;
+end;
 
 // ---- PRIVATE METHODS ----
 
@@ -227,14 +245,8 @@ begin
     Form3.Left := left;
     Form3.Height := height;
     Form3.Width := width;
-    Form3.FAddressColor := address_color;
-    Form3.FDataColor := data_color;
-    Form3.FLineSelectorColor := lineselector_color;
-    Form3.FBGColorOddLines := bgodd_color;
-    Form3.FBGColorEvenLines := bgeven_color;
-    DrawGrid1.Color := FBGColorOddLines;
-    DrawGrid1.Invalidate;
   end;
+  RefreshColors;
 end;
 
 // CLOSE FORM

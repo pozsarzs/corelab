@@ -209,7 +209,7 @@ begin
     LoadSave(section, 'width', AAppConfig.ScriptEditorConfig.width, 480);
     LoadSave(section, 'bg_color', AAppConfig.ScriptEditorConfig.bg_color, SCRIPTEDITOR_BG_COLOR_DEFAULT);
     LoadSave(section, 'font_color', AAppConfig.ScriptEditorConfig.font_color, SCRIPTEDITOR_FONT_COLOR_DEFAULT);
-    LoadSave(section, 'gutterfont_color', AAppConfig.ScriptEditorConfig.font_color, SCRIPTEDITOR_GUTTERFONT_COLOR_DEFAULT);
+    LoadSave(section, 'gutterfont_color', AAppConfig.ScriptEditorConfig.gutterfont_color, SCRIPTEDITOR_GUTTERFONT_COLOR_DEFAULT);
     LoadSave(section, 'linenumber', AAppConfig.ScriptEditorConfig.linenumber, True);
     LoadSave(section, 'syntax', AAppConfig.ScriptEditorConfig.syntax, True);
     // Settings
