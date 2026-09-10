@@ -27,6 +27,7 @@ type
     Label2: TLabel;
     ListBox1: TListBox;
     procedure Button5Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     FPluginList: TStringList;
     FSelectedKey: string;
@@ -69,6 +70,12 @@ begin
     FSelectedName := Edit1.Text;
     ModalResult := mrOk;
   end;
+end;
+
+// SHOW FORM
+procedure TForm16.FormShow(Sender: TObject);
+begin
+  Edit1.Clear;
 end;
 
 end.

@@ -1,10 +1,10 @@
 object Form9: TForm9
-  Left = 399
-  Height = 580
-  Top = 200
+  Left = 12
+  Height = 628
+  Top = 207
   Width = 265
   Caption = 'Module Explorer'
-  ClientHeight = 580
+  ClientHeight = 628
   ClientWidth = 265
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
@@ -414,7 +414,7 @@ object Form9: TForm9
   end
   object PageControl1: TPageControl
     Left = 8
-    Height = 351
+    Height = 399
     Top = 221
     Width = 249
     ActivePage = TabSheet1
@@ -427,11 +427,11 @@ object Form9: TForm9
     TabOrder = 3
     object TabSheet1: TTabSheet
       Caption = 'Instance'
-      ClientHeight = 320
+      ClientHeight = 368
       ClientWidth = 239
       object ValueListEditor2: TValueListEditor
         Left = 0
-        Height = 320
+        Height = 368
         Top = 0
         Width = 239
         Align = alClient
@@ -447,11 +447,11 @@ object Form9: TForm9
     end
     object TabSheet2: TTabSheet
       Caption = 'System'
-      ClientHeight = 320
+      ClientHeight = 368
       ClientWidth = 239
       object ValueListEditor1: TValueListEditor
         Left = 0
-        Height = 320
+        Height = 368
         Top = 0
         Width = 239
         Align = alClient
@@ -461,7 +461,7 @@ object Form9: TForm9
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goAlwaysShowEditor, goThumbTracking]
         ColWidths = (
           64
-          173
+          171
         )
       end
     end

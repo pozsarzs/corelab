@@ -363,6 +363,7 @@ object Form16: TForm16
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  OnShow = FormShow
   Position = poDefault
   LCLVersion = '2.2.6.0'
   object Button1: TButton

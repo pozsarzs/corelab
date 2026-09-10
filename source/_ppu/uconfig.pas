@@ -35,10 +35,11 @@ type
     lineselector_color, bgodd_color, bgeven_color:              TColor;
   end;
   TMainFormConfig = record
-    left, top, height, width: Integer;
+    left, top, height, width, splitter: Integer;
   end;
-  TModuleManagerConfig = record
-    left, top, height, width: Integer;
+  TModuleExplorerConfig = record
+    left, top, height, width, splitter: Integer;
+    visible:                            Boolean;
   end;
   TModulePropertiesConfig = record
     left, top, height, width: Integer;
@@ -73,7 +74,7 @@ type
     HexViewerConfig:        THexViewerConfig;
     IntLoggerConfig:        TIntLoggerConfig;
     MainFormConfig:         TMainFormConfig;
-    ModuleManagerConfig:    TModuleManagerConfig;
+    ModuleExplorerConfig:   TModuleExplorerConfig;
     ModulePropertiesConfig: TModulePropertiesConfig;
     RegViewerConfig:        TRegViewerConfig;
     RunLoggerConfig:        TRunLoggerConfig;
@@ -164,16 +165,19 @@ begin
     LoadSave(section, 'bgeven_color', AAppConfig.IntLoggerConfig.bgeven_color, INTLOGGER_BGCOLOR_EVEN_DEFAULT);
     // Main Form
     section := 'MainForm';
-    LoadSave(section, 'height', AAppConfig.MainFormConfig.height, 600);
-    LoadSave(section, 'left', AAppConfig.MainFormConfig.left, 8);
-    LoadSave(section, 'top', AAppConfig.MainFormConfig.top, 8);
+    LoadSave(section, 'height', AAppConfig.MainFormConfig.height, 160);
+    LoadSave(section, 'left', AAppConfig.MainFormConfig.left, 12);
+    LoadSave(section, 'top', AAppConfig.MainFormConfig.top, 12);
     LoadSave(section, 'width', AAppConfig.MainFormConfig.width, 800);
-    // Module Manager
-    section := 'ModuleManager';
-    LoadSave(section, 'height', AAppConfig.ModuleManagerConfig.height, 480);
-    LoadSave(section, 'left', AAppConfig.ModuleManagerConfig.left, 8);
-    LoadSave(section, 'top', AAppConfig.ModuleManagerConfig.top, 8);
-    LoadSave(section, 'width', AAppConfig.ModuleManagerConfig.width, 300);
+    LoadSave(section, 'splitter', AAppConfig.MainFormConfig.splitter, 210);
+    // Module Explorer
+    section := 'ModuleExplorer';
+    LoadSave(section, 'height', AAppConfig.ModuleExplorerConfig.height, 628);
+    LoadSave(section, 'left', AAppConfig.ModuleExplorerConfig.left, 12);
+    LoadSave(section, 'top', AAppConfig.ModuleExplorerConfig.top, 207);
+    LoadSave(section, 'width', AAppConfig.ModuleExplorerConfig.width, 265);
+    LoadSave(section, 'splitter', AAppConfig.ModuleExplorerConfig.splitter, 160);
+    LoadSave(section, 'visible', AAppConfig.ModuleExplorerConfig.visible, True);
     // Module properties
     section := 'ModuleProperties';
     LoadSave(section, 'height', AAppConfig.ModulePropertiesConfig.height, 300);
