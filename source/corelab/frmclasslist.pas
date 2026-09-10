@@ -43,6 +43,9 @@ var
 
 implementation
 
+{$R *.lfm}
+{ TForm16 }
+
 // ---- PRIVATE METHODS ----
 
 // LOAD PLUGIN LIST TO LISTBOX
@@ -68,8 +71,6 @@ begin
     ModalResult := mrOk;
   end;
 end;
-
-{$R *.lfm}
 
 end.
 

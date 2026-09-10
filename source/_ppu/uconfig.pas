@@ -80,9 +80,11 @@ type
     SettingsConfig:         TSettingsConfig;
     SysConsoleConfig:       TSysConsoleConfig;
   end;
+  var
+    AppConfig: TAppConfig;                          // global configuration data
 
-function LoadConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
-function SaveConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
+function LoadConfiguration(AFilename: string): Boolean;
+function SaveConfiguration(AFilename: string): Boolean;
 
 implementation
 
@@ -230,28 +232,28 @@ begin
 end;
 
 // LOAD CONFIGURATION
-function LoadConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
+function LoadConfiguration(AFilename: string): Boolean;
 var
   INIFile: TINIFile;
 begin
   Result := True;
   INIFile := TINIFile.Create(AFilename);
   try
-    Result := INIFileHandler(INIFILE, AAppConfig, False);
+    Result := INIFileHandler(INIFILE, AppConfig, False);
   finally
     INIFile.Free;
   end;
 end;
 
 // SAVE CONFIGURATION
-function SaveConfiguration(AFilename: string; var AAppConfig: TAppConfig): Boolean;
+function SaveConfiguration(AFilename: string): Boolean;
 var
   INIFile: TINIFile;
 begin
   Result := True;
   INIFile := TINIFile.Create(AFilename);
   try
-    Result := INIFileHandler(INIFILE, AAppConfig, True);
+    Result := INIFileHandler(INIFILE, AppConfig, True);
   finally
     INIFile.Free;
   end;

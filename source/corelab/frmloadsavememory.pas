@@ -42,8 +42,8 @@ type
     FAddressTo:    DWord;                                         // End address
     FDirection:    Boolean;                                  // 0: save, 1: load
     FMemSize:      DWord;                             // Size of emulated memory
-    procedure SetFMemSize(AMemSize: DWord);
     procedure SetFDirection(ADirection: Boolean);
+    procedure SetFMemSize(AMemSize: DWord);
     procedure UpdateDifference;
   public
     property AddressFrom: DWord read FAddressFrom;

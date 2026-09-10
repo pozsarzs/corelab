@@ -382,7 +382,6 @@ type
     // script buffer
     FScriptBuffer:     TStringList;
     // global and project settings
-    FAppConfig:        TAppConfig;                         // configuration data
     FAppProject:       TAppProject;                              // project data
     procedure ChangeOpMode(AOpMode: TOpMode; AForced: Boolean); // change opmode
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
@@ -515,11 +514,15 @@ begin
     MenuItem5.Enabled := True;
     MenuItem6.Enabled := True;
     MenuItem7.Enabled := False;
+    MenuItem51.Enabled := False;
+    MenuItem52.Enabled := False;
     ToolBar2.Enabled := True;
     ToolBar3.Enabled := True;
     ToolBar4.Enabled := True;
     ToolBar5.Enabled := True;
     ToolBar6.Enabled := False;
+    ToolButton64.Enabled := False;
+    ToolButton65.Enabled := False;
   end else
   begin
     MenuItem3.Enabled := False;
@@ -527,11 +530,15 @@ begin
     MenuItem5.Enabled := False;
     MenuItem6.Enabled := False;
     MenuItem7.Enabled := True;
+    MenuItem51.Enabled := True;
+    MenuItem52.Enabled := True;
     ToolBar2.Enabled := False;
     ToolBar3.Enabled := False;
     ToolBar4.Enabled := False;
     ToolBar5.Enabled := False;
     ToolBar6.Enabled := True;
+    ToolButton64.Enabled := True;
+    ToolButton65.Enabled := True;
   end;
   // restore mainform caption
   Form1.Caption := Application.Title;
@@ -731,66 +738,27 @@ end;
 // FILE/SETTINGS
 procedure TForm1.FSettingsExecute(Sender: TObject);
 begin
-  with FAppConfig.SettingsConfig do
+  if Form18.ShowModal = mrOk then
   begin
-    Form18.Left := left;
-    Form18.Height := height;
-    Form18.Top := top;
-    Form18.Width := width;
-  end;
-  with Form18 do
-  begin
-    // original settings
-    SetFAppConfig(FAppConfig);
-    if ShowModal = mrOk then
+    // refresh application
+    with uconfig.AppConfig do
     begin
-      // new settings - refresh application
-      FAppConfig := AppConfig;
-      with FAppConfig do
+      // Breakpoint Manager
+      if Form3.Visible then Form3.Show;                             // HexViewer
+      // IntLogger
+      // Module Manager
+      // Module properties
+      // RegViewer
+      if Form4.Visible then Form4.Show;                             // RunLogger
+      // ScriptConsole
+      if Form6.Visible then Form6.Show;                          // ScriptEditor
+      if Form18.Visible then Form18.Show;                            // Settings
+      // SysConsole
+      with SysConsoleConfig do
       begin
-        // Breakpoint Manager
-        // HexViewer
-        with HexViewerConfig do
-        begin
-          Form3.AddressColor := address_color;
-          Form3.DataColor := data_color;
-          Form3.LineSelectorColor := lineselector_color;
-          Form3.BGColorOddLines := bgodd_color;
-          Form3.BGColorEvenLines := bgeven_color;
-          Form3.Invalidate;
-        end;
-        // IntLogger
-        // Module Manager
-        // Module properties
-        // RegViewer
-        // RunLogger
-        with RunLoggerConfig do
-        begin
-          Form4.InstCountColor := instcount_color;
-          Form4.AddressColor := address_color;
-          Form4.OpCodeColor := opcode_color;
-          Form4.MnemonicColor := mnemonic_color;
-          Form4.LineSelectorColor := lineselector_color;
-          Form4.BGColorOddLines := bgodd_color;
-          Form4.BGColorEvenLines := bgeven_color;
-          Form4.Invalidate;
-        end;
-        // ScriptConsole
-        // ScriptEditor
-        with ScriptEditorConfig do
-        begin
-          Form6.BGColor := bg_color;
-          Form6.FontColor := font_color;
-          Form6.GutterFontColor := gutterfont_color;
-        end;
-        // Settings
-        // SysConsole
-        with SysConsoleConfig do
-        begin
-          Memo1.Font.Color := font_color;
-          Memo1.Color := bg_color;
-          Memo1.Invalidate;
-        end;
+        Memo1.Font.Color := font_color;
+        Memo1.Color := bg_color;
+        Memo1.Invalidate;
       end;
     end;
   end;
@@ -841,11 +809,8 @@ begin
     begin
       MemInfo := FMemInstanceDict[Form17.SelectedKey];
       // show HexViewer
-      With Form3 do
-      begin
-        MemInstance := MemInfo.Memory;
-        Show;
-      end;
+      Form3.MemInstance := MemInfo.Memory;
+      Form3.Show;
     end;
   finally
     StringList.Free;
@@ -855,20 +820,6 @@ end;
 // VIEW/SHOW RUNLOGGER
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
 begin
-  with FAppConfig.RunLoggerConfig do
-  begin
-    Form4.Top := top;
-    Form4.Left := left;
-    Form4.Height := height;
-    Form4.Width := width;
-    Form4.InstCountColor := instcount_color;
-    Form4.AddressColor := address_color;
-    Form4.OpCodeColor := opcode_color;
-    Form4.MnemonicColor := mnemonic_color;
-    Form4.LineSelectorColor := lineselector_color;
-    Form4.BGColorOddLines := bgodd_color;
-    Form4.BGColorEvenLines := bgeven_color;
-  end;
   Form4.Show;
   Form4.BringToFront;
 end;
@@ -892,18 +843,6 @@ end;
 // VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
 begin
-  with FAppConfig.ScriptEditorConfig do
-  begin
-    Form6.Top := top;
-    Form6.Left := left;
-    Form6.Height := height;
-    Form6.Width := width;
-    Form6.BGColor := bg_color;
-    Form6.FontColor := font_color;
-    Form6.GutterFontColor := gutterfont_color;
-    Form6.LineNumber := linenumber;
-    Form6.Syntax := syntax;
-  end;
   Form6.ExtBuffer := FScriptBuffer;
   Form6.CopyBufferToEditor;
   Form6.Show;
@@ -1869,10 +1808,11 @@ begin
                         BASENAME + DirectorySeparator;
   {$ENDIF}
   ForceDirectories(FConfigDirectory);
-  if not LoadConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
+  // load settings
+  if not LoadConfiguration(FConfigDirectory + CONFIGFILE)
     then Memo1.WriteMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]))
     else
-      with FAppConfig do
+      with uconfig.AppConfig do
       begin
         // Main Form
         with MainFormConfig do
@@ -1965,13 +1905,9 @@ begin
   if FOpMode <> omInteractive
     then SStopScriptExecute(Sender)
     else OStopExecute(Sender);
-  // save configuration
-  with FAppConfig do
+  // save settings
+  with uconfig.AppConfig do
   begin
-    // Breakpoint Manager
-    // HexViewer
-    // IntLogger
-    // Module Manager
     // Main Form
     with MainFormConfig do
     begin
@@ -1980,43 +1916,6 @@ begin
       height := Form1.Height;
       width := Form1.Width;
     end;
-    // Module properties
-    // RegViewer
-    // RunLogger
-    with RunLoggerConfig do
-    begin
-      top := Form4.Top;
-      left := Form4.Left;
-      height := Form4.Height;
-      width := Form4.Width;
-      instcount_color := Form4.InstCountColor;
-      address_color := Form4.AddressColor;
-      opcode_color := Form4.OpCodeColor;
-      mnemonic_color := Form4.MnemonicColor;
-      lineselector_color := Form4.LineSelectorColor;
-      bgodd_color := Form4.BGColorOddLines;
-      bgeven_color := Form4.BGColorEvenLines;
-    end;
-    // ScriptConsole
-    // ScriptEditor
-    with ScriptEditorConfig do
-    begin
-      top := Form6.Top;
-      left := Form6.Left;
-      height := Form6.Height;
-      width := Form6.Width;
-      bg_color := Form6.BGColor;
-      font_color := Form6.FontColor;
-      gutterfont_color := Form6.GutterFontColor;
-    end;
-    // Settings
-    with SettingsConfig do
-    begin
-      top := Form18.Top;
-      left := Form18.Left;
-      height := Form18.Height;
-      width := Form18.Width;
-    end;
     // SysConsole
     with SysConsoleConfig do
     begin
@@ -2024,7 +1923,7 @@ begin
       font_color := Memo1.Font.Color;
     end;
   end;
-  if not SaveConfiguration(FConfigDirectory + CONFIGFILE, FAppConfig)
+  if not SaveConfiguration(FConfigDirectory + CONFIGFILE)
     then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));
   // go to destroy
   CanClose := True;

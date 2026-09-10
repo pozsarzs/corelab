@@ -363,6 +363,8 @@ object Form18: TForm18
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  OnClose = FormClose
+  OnShow = FormShow
   Position = poDefault
   LCLVersion = '2.2.6.0'
   object Button5: TButton
@@ -422,10 +424,10 @@ object Form18: TForm18
     Height = 289
     Top = 8
     Width = 347
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     object TabSheet3: TTabSheet
       Caption = 'HexViewer'
@@ -854,6 +856,122 @@ object Form18: TForm18
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Around = 8
         Shape = bsLeftLine
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = 'ScriptEditor'
+      ClientHeight = 258
+      ClientWidth = 337
+      object Label15: TLabel
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = TabSheet1
+        Left = 8
+        Height = 17
+        Top = 8
+        Width = 72
+        BorderSpacing.Around = 8
+        Caption = 'Editor font:'
+        ParentColor = False
+      end
+      object ColorBox15: TColorBox
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = Label15
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 33
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 0
+      end
+      object Label16: TLabel
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = ColorBox15
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 17
+        Top = 70
+        Width = 122
+        BorderSpacing.Around = 8
+        Caption = 'Editor background:'
+        ParentColor = False
+      end
+      object ColorBox16: TColorBox
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = Label16
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 95
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 1
+      end
+      object Label17: TLabel
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = ColorBox16
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 17
+        Top = 132
+        Width = 75
+        BorderSpacing.Around = 8
+        Caption = 'Gutter font:'
+        ParentColor = False
+      end
+      object ColorBox17: TColorBox
+        AnchorSideLeft.Control = TabSheet4
+        AnchorSideTop.Control = Label17
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 157
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 2
+      end
+      object Bevel7: TBevel
+        AnchorSideLeft.Control = ColorBox15
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TabSheet1
+        AnchorSideBottom.Control = TabSheet1
+        AnchorSideBottom.Side = asrBottom
+        Left = 166
+        Height = 242
+        Top = 8
+        Width = 2
+        Anchors = [akTop, akLeft, akBottom]
+        BorderSpacing.Around = 8
+        Shape = bsLeftLine
+      end
+      object CheckBox1: TCheckBox
+        AnchorSideLeft.Control = Bevel7
+        AnchorSideTop.Control = TabSheet4
+        Left = 174
+        Height = 23
+        Top = 8
+        Width = 127
+        BorderSpacing.Around = 8
+        Caption = 'Line numbering'
+        TabOrder = 3
+      end
+      object CheckBox2: TCheckBox
+        AnchorSideLeft.Control = Bevel7
+        AnchorSideTop.Control = CheckBox1
+        AnchorSideTop.Side = asrBottom
+        Left = 174
+        Height = 23
+        Top = 39
+        Width = 152
+        BorderSpacing.Around = 8
+        Caption = 'Syntax highlighting'
+        TabOrder = 4
       end
     end
   end

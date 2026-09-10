@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | frmmain.pas                                                              | }
-{ | Main form                                                                | }
+{ | frmscripteditor.pas                                                      | }
+{ | ScriptEditor form                                                        | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -13,11 +13,10 @@
 
 unit frmscripteditor;
 {$MODE OBJFPC}{$H+}
-{$I defcolors.pas}
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  SynEdit, SynHighlighterAny, MODSynHighlighterAny;
+  SynEdit, SynHighlighterAny, MODSynHighlighterAny, uconfig;
 type
   { TForm6 }
   TForm6 = class(TForm)
@@ -29,6 +28,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormHide(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure SynEdit1Exit(Sender: TObject);
   private
     // colors
@@ -39,22 +39,11 @@ type
     FExtBuffer: TStringList;
     FLineNumber: Boolean;
     FSyntax:     Boolean;
-  protected
-    procedure SetBGColor(AColor: TColor);
-    procedure SetFontColor(AColor: TColor);
-    procedure SetGutterFontColor(AColor: TColor);
-    procedure SetLineNumber(AEnable: Boolean);
     procedure SetExtBuffer(AExtBuffer: TStringList);
-    procedure SetSyntax(AEnable: Boolean);
   public
     procedure CopyBufferToEditor;
     procedure CopyEditorToBuffer;
-    property BGColor: TColor read FBGColor write SetBGColor;
-    property FontColor: TColor read FFontColor write SetFontColor;
-    property GutterFontColor: TColor read FGutterFontColor write SetGutterFontColor;
-    property LineNumber: Boolean read FLineNumber write SetLineNumber;
     property ExtBuffer: TStringList write SetExtBuffer;
-    property Syntax: Boolean read FSyntax write SetSyntax;
   end;
 var
   Form6: TForm6;
@@ -62,50 +51,7 @@ var
 implementation
 
 {$R *.lfm}
-// ---- PROTECTED METHODS ----
-
-// SET BACKGROUND COLOR
-procedure TForm6.SetBGColor(AColor: TColor);
-begin
-  FBGColor := AColor;
-  with SynEdit1 do
-  begin
-    Color := FBGColor;
-    Gutter.Color := FBGColor;
-    Gutter.LineNumberPart.MarkupInfo.Background := FBGColor;
-    Invalidate;
-  end;
-end;
-
-// SET FONT COLOR
-procedure TForm6.SetFontColor(AColor: TColor);
-begin
-  FFontColor := AColor;
-  SynEdit1.Font.Color := FFontColor;
-  SynEdit1.Invalidate;
-end;
-
-// SET COLOR OF THE GUTTER FONT
-procedure TForm6.SetGutterFontColor(AColor: TColor);
-begin
-  FBGColor := AColor;
-  SynEdit1.Gutter.LineNumberPart.MarkupInfo.Foreground := GutterFontColor;
-  SynEdit1.Invalidate;
-end;
-
-procedure TForm6.SetLineNumber(AEnable: Boolean);
-begin
-  FLineNumber := AEnable;
-  SynEdit1.Gutter.Visible := FLineNumber;
-end;
-
-procedure TForm6.SetSyntax(AEnable: Boolean);
-begin
-  FSyntax := AEnable;
-  if FSyntax
-    then SynEdit1.HighLighter := SynAnySyn1
-    else SynEdit1.HighLighter := nil;
-end;
+// ---- PRIVATE METHODS ----
 
 // SET EXTERNAL BUFFER
 procedure TForm6.SetExtBuffer(AExtBuffer: TStringList);
@@ -142,12 +88,9 @@ begin
     CopyEditorToBuffer;
 end;
 
+// CREATE FORM
 procedure TForm6.FormCreate(Sender: TObject);
 begin
-  // default colors
-  FBGColor := StringToColor(SCRIPTEDITOR_BG_COLOR_DEFAULT);
-  FFontColor := StringToColor(SCRIPTEDITOR_FONT_COLOR_DEFAULT);
-  FGutterFontColor := StringToColor(SCRIPTEDITOR_GUTTERFONT_COLOR_DEFAULT);
   // other default settings
   FLineNumber := True;
   FSyntax := True;
@@ -178,14 +121,55 @@ begin
   end;
 end;
 
+// SHOW FORM
+procedure TForm6.FormShow(Sender: TObject);
+begin
+  // retrieve settings
+  with uconfig.AppConfig.ScriptEditorConfig do
+  begin
+    Form6.Top := top;
+    Form6.Left := left;
+    Form6.Height := height;
+    Form6.Width := width;
+    Form6.FBGColor := bg_color;
+    Form6.FFontColor := font_color;
+    Form6.FGutterFontColor := gutterfont_color;
+    Form6.FLineNumber := linenumber;
+    Form6.FSyntax := syntax;
+    with SynEdit1 do
+    begin
+      Color := FBGColor;
+      Gutter.Color := FBGColor;
+      Gutter.LineNumberPart.MarkupInfo.Background := FBGColor;
+      Font.Color := FFontColor;
+      Gutter.LineNumberPart.MarkupInfo.Foreground := FGutterFontColor;
+      Gutter.Visible := FLineNumber;
+      if FSyntax
+        then HighLighter := SynAnySyn1
+        else HighLighter := nil;
+      Invalidate;
+    end;
+  end;
+end;
+
+//HIDE FORM
 procedure TForm6.FormHide(Sender: TObject);
 begin
   CopyEditorToBuffer;
 end;
 
+// CLOSE FORM
 procedure TForm6.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   CopyEditorToBuffer;
+  // store changeable setting
+  with uconfig.AppConfig.ScriptEditorConfig do
+  begin
+    top := Form6.Top;
+    left := Form6.Left;
+    height := Form6.Height;
+    width := Form6.Width;
+  end;
 end;
 
 end.

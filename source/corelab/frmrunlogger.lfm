@@ -364,6 +364,7 @@ object Form4: TForm4
     0000
   }
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poDefault

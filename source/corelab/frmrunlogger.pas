@@ -13,11 +13,10 @@
 
 unit frmrunlogger;
 {$MODE OBJFPC}{$H+}
-{$I defcolors.pas}
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types, core_cpu;
+  Buttons, EditBtn, Grids, Types, core_cpu, uconfig;
 const
   MAX_LOG = 1024;
 type
@@ -37,6 +36,7 @@ type
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -55,24 +55,9 @@ type
     procedure Reset;
     function ReadBuffer(ALine: Integer): TLogRec;
     procedure WriteBuffer(ALogRec: TLogRec);
-  protected
-    procedure SetInstCountColor(AColor: TColor);
-    procedure SetAddressColor(AColor: TColor);
-    procedure SetOpCodeColor(AColor: TColor);
-    procedure SetMnemonicColor(AColor: TColor);
-    procedure SetLineSelectorColor(AColor: TColor);
-    procedure SetBGColorEvenLines(AColor: TColor);
-    procedure SetBGColorOddLines(AColor: TColor);
   public
     procedure AppendRecord(ALogRec: TLogRec);
     procedure ClearContent;
-    property InstCountColor: TColor read FInstCountColor write SetInstCountColor;
-    property AddressColor: TColor read FAddressColor write SetAddressColor;
-    property OpCodeColor: TColor read FOpCodeColor write SetOpCodeColor;
-    property MnemonicColor: TColor read FMnemonicColor write SetMnemonicColor;
-    property LineSelectorColor: TColor read FLineSelectorColor write SetLineSelectorColor;
-    property BGColorOddLines: TColor read FBGColorOddLines write SetBGColorOddLines;
-    property BGColorEvenLines: TColor read FBGColorEvenLines write SetBGColorEvenLines;
   end;
 var
   Form4: TForm4;
@@ -90,6 +75,7 @@ resourcestring
 implementation
 
 {$R *.lfm}
+{ TForm4 }
 
 // ---- PRIVATE METHODS ----
 
@@ -139,58 +125,6 @@ begin
   if FRecordCount < MAX_LOG then Inc(FRecordCount);   // number of the all items
 end;
 
-// ---- PROTECTED METHODS ----
-
-// SET COLOR OF THE INSTRUCTION COUNTER COLUMN
-procedure TForm4.SetInstCountColor(AColor: TColor);
-begin
-  FInstCountColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET COLOR OF THE ADDRESS COLUMN
-procedure TForm4.SetAddressColor(AColor: TColor);
-begin
-  FAddressColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET COLOR OF THE OPCODE COLUMN
-procedure TForm4.SetOpCodeColor(AColor: TColor);
-begin
-  FOpCodeColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET COLOR OF THE MNEMONIC COLUMN
-procedure TForm4.SetMnemonicColor(AColor: TColor);
-begin
-  FMnemonicColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET LINE SELECTOR COLOR
-procedure TForm4.SetLineSelectorColor(AColor: TColor);
-begin
-  FLineSelectorColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET BACKGROUND COLOR OF THE ODD LINES
-procedure TForm4.SetBGColorOddLines(AColor: TColor);
-begin
-  FBGColorOddLines := AColor;
-  DrawGrid1.Color := FBGColorOddLines;
-  DrawGrid1.Invalidate;
-end;
-
-// SET BACKGROUND COLOR OF THE EVEN LINES
-procedure TForm4.SetBGColorEvenLines(AColor: TColor);
-begin
-  FBGColorEvenLines := AColor;
-  DrawGrid1.Invalidate;
-end;
-
 // ---- PUBLIC METHODS ----
 
 // APPEND A RECORD TO LOG
@@ -200,6 +134,7 @@ begin
   if Form4.Visible then DrawGrid1.RowCount := FRecordCount + 1;
 end;
 
+// CLEAR LOGS
 procedure TForm4.ClearContent;
 begin
   Button2Click(Nil);
@@ -332,14 +267,6 @@ end;
 // CREATE FORM
 procedure TForm4.FormCreate(Sender: TObject);
 begin
-  // default colors
-  FInstCountColor := StringToColor(RUNLOGGER_INSTCOUNT_DEFAULT);
-  FAddressColor := StringToColor(RUNLOGGER_ADDRESS_DEFAULT);
-  FOpCodeColor := StringToColor(RUNLOGGER_OPCODE_DEFAULT);
-  FMnemonicColor := StringToColor(RUNLOGGER_MNEMONIC_DEFAULT);
-  FLineSelectorColor := StringToColor(RUNLOGGER_LINESELECTOR_DEFAULT);
-  FBGColorOddLines := StringToColor(RUNLOGGER_BGCOLOR_ODD_DEFAULT);
-  FBGColorEvenLines := StringToColor(RUNLOGGER_BGCOLOR_EVEN_DEFAULT);
   Reset;
   with DrawGrid1 do
   begin
@@ -359,7 +286,37 @@ end;
 // SHOW FORM
 procedure TForm4.FormShow(Sender: TObject);
 begin
+  // retrieve settings
+  with uconfig.AppConfig.RunLoggerConfig do
+  begin
+    Form4.Top := top;
+    Form4.Left := left;
+    Form4.Height := height;
+    Form4.Width := width;
+    Form4.FInstCountColor := instcount_color;
+    Form4.FAddressColor := address_color;
+    Form4.FOpCodeColor := opcode_color;
+    Form4.FMnemonicColor := mnemonic_color;
+    Form4.FLineSelectorColor := lineselector_color;
+    Form4.FBGColorOddLines := bgodd_color;
+    Form4.FBGColorEvenLines := bgeven_color;
+    DrawGrid1.Color := FBGColorOddLines;
+    DrawGrid1.Invalidate;
+  end;
   DrawGrid1.RowCount := FRecordCount + 1;
+end;
+
+// CLOSE FORM
+procedure TForm4.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  // store settings
+  with uconfig.AppConfig.RunLoggerConfig do
+  begin
+    top := Form4.Top;
+    left := Form4.Left;
+    height := Form4.Height;
+    width := Form4.Width;
+  end;
 end;
 
 end.

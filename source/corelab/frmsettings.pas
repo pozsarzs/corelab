@@ -26,14 +26,20 @@ type
     Bevel4: TBevel;
     Bevel5: TBevel;
     Bevel6: TBevel;
+    Bevel7: TBevel;
     Button1: TButton;
     Button5: TButton;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
     ColorBox1: TColorBox;
     ColorBox10: TColorBox;
     ColorBox11: TColorBox;
     ColorBox12: TColorBox;
     ColorBox13: TColorBox;
     ColorBox14: TColorBox;
+    ColorBox15: TColorBox;
+    ColorBox16: TColorBox;
+    ColorBox17: TColorBox;
     ColorBox2: TColorBox;
     ColorBox3: TColorBox;
     ColorBox4: TColorBox;
@@ -48,6 +54,9 @@ type
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -60,12 +69,12 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
+    TabSheet4: TTabSheet;
     procedure Button5Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormShow(Sender: TObject);
   private
-    FAppConfig: TAppConfig;
   public
-    procedure SetFAppConfig(AAppConfig: TAppConfig);
-    property AppConfig: TAppConfig read FAppConfig write SetFAppConfig;
   end;
 
 var
@@ -76,56 +85,13 @@ implementation
 {$R *.lfm}
 { TForm18 }
 
-// ---- PRIVATE METHODS ----
-
-// SET APPCONFIG FIELD
-procedure TForm18.SetFAppConfig(AAppConfig: TAppConfig);
-begin
-  FAppConfig := AAppConfig;
-  with FAppConfig do
-  begin
-    // Breakpoint Manager
-    // HexViewer
-    with HexViewerConfig do
-    begin
-      ColorBox10.Selected := address_color;
-      ColorBox11.Selected := data_color;
-      ColorBox12.Selected := lineselector_color;
-      ColorBox13.Selected := bgodd_color;
-      ColorBox14.Selected := bgeven_color;
-    end;
-    // IntLogger
-    // Module Manager
-    // Plugin properties
-    // RegViewer
-    // RunLogger
-    with RunLoggerConfig do
-    begin
-      ColorBox1.Selected := instcount_color;
-      ColorBox2.Selected := address_color;
-      ColorBox3.Selected := opcode_color;
-      ColorBox4.Selected := mnemonic_color;
-      ColorBox5.Selected := lineselector_color;
-      ColorBox6.Selected := bgodd_color;
-      ColorBox7.Selected := bgeven_color;
-    end;
-    // ScriptConsole
-    // ScriptEditor
-    // Settings
-    // SysConsole
-    with SysConsoleConfig do
-    begin
-      ColorBox8.Selected := font_color;
-      ColorBox9.Selected := bg_color;
-    end;
-  end;
-end;
-
 // ---- EVENT HANDLER METHODS ----
 
+// CLOSE FORM WITH BUTTON
 procedure TForm18.Button5Click(Sender: TObject);
 begin
-  with FAppConfig do
+  // retrieve settings
+  with uconfig.AppConfig do
   begin
     // Breakpoint Manager
     // HexViewer
@@ -154,7 +120,22 @@ begin
     end;
     // ScriptConsole
     // ScriptEditor
+    with ScriptEditorConfig do
+    begin
+      font_color := ColorBox15.Selected;
+      bg_color := ColorBox16.Selected;
+      gutterfont_color := ColorBox17.Selected;
+      linenumber := CheckBox1.Checked;
+      syntax := CheckBox2.Checked;
+    end;
     // Settings
+    with SettingsConfig do
+    begin
+      top := Form18.Top;
+      left := Form18.Left;
+      height := Form18.Height;
+      width := Form18.Width;
+    end;
     // SysConsole
     with SysConsoleConfig do
     begin
@@ -164,6 +145,71 @@ begin
   end;
   ModalResult := mrOk;
 end;
+
+// SHOW FORM
+procedure TForm18.FormShow(Sender: TObject);
+begin
+  // store settings
+  with uconfig.AppConfig do
+  begin
+    // Breakpoint Manager
+    // HexViewer
+    with HexViewerConfig do
+    begin
+      ColorBox10.Selected := address_color;
+      ColorBox11.Selected := data_color;
+      ColorBox12.Selected := lineselector_color;
+      ColorBox13.Selected := bgodd_color;
+      ColorBox14.Selected := bgeven_color;
+    end;
+    // IntLogger
+    // Module Manager
+    // Plugin properties
+    // RegViewer
+    // RunLogger
+    with RunLoggerConfig do
+    begin
+      ColorBox1.Selected := instcount_color;
+      ColorBox2.Selected := address_color;
+      ColorBox3.Selected := opcode_color;
+      ColorBox4.Selected := mnemonic_color;
+      ColorBox5.Selected := lineselector_color;
+      ColorBox6.Selected := bgodd_color;
+      ColorBox7.Selected := bgeven_color;
+    end;
+    // ScriptConsole
+    // ScriptEditor
+    with ScriptEditorConfig do
+    begin
+      ColorBox15.Selected := font_color;
+      ColorBox16.Selected := bg_color;
+      ColorBox17.Selected := gutterfont_color;
+      CheckBox1.Checked := linenumber;
+      CheckBox2.Checked := syntax;
+    end;
+    // SysConsole
+    with SysConsoleConfig do
+    begin
+      ColorBox8.Selected := font_color;
+      ColorBox9.Selected := bg_color;
+    end;
+  end;
+end;
+
+// FORM CLOSE
+procedure TForm18.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  // store settings
+  // Settings
+  with uconfig.AppConfig.SettingsConfig do
+  begin
+    Form18.Top := top;
+    Form18.Left := left;
+    Form18.Height := height;
+    Form18.Width := width;
+  end;
+end;
+
 
 end.
 

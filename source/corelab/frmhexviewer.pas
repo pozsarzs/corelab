@@ -13,11 +13,10 @@
 
 unit frmhexviewer;
 {$MODE OBJFPC}{$H+}
-{$I defcolors.pas}
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types, core_memory, core_cpu, ucommon;
+  Buttons, EditBtn, Grids, Types, core_memory, core_cpu, ucommon, uconfig;
 type
   { TForm3 }
   TForm3 = class(TForm)
@@ -30,7 +29,9 @@ type
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     FMemInstance:       TMemory;                               // TMemory object
     FMemSize:           DWord;
@@ -40,20 +41,9 @@ type
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
-  protected
-    procedure SetAddressColor(AColor: TColor);
-    procedure SetDataColor(AColor: TColor);
-    procedure SetLineSelectorColor(AColor: TColor);
-    procedure SetBGColorEvenLines(AColor: TColor);
-    procedure SetBGColorOddLines(AColor: TColor);
-    procedure SetMemInstance(AMemInstance: TMemory);
+    procedure SetFMemInstance(AMemInstance: TMemory);
   public
-    property MemInstance: TMemory write SetMemInstance;
-    property AddressColor: TColor read FAddressColor write SetAddressColor;
-    property DataColor: TColor read FDataColor write SetDataColor;
-    property LineSelectorColor: TColor read FLineSelectorColor write SetLineSelectorColor;
-    property BGColorOddLines: TColor read FBGColorOddLines write SetBGColorOddLines;
-    property BGColorEvenLines: TColor read FBGColorEvenLines write SetBGColorEvenLines;
+    property MemInstance: TMemory write SetFMemInstance;
   end;
 var
   Form3: TForm3;
@@ -66,45 +56,10 @@ resourcestring
 implementation
 {$R *.lfm}
 
-// ---- PROTECTED METHODS ----
-
-// SET COLOR OF THE ADDRESS COLUMN
-procedure TForm3.SetAddressColor(AColor: TColor);
-begin
-  FAddressColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET COLOR OF THE OPCODE COLUMN
-procedure TForm3.SetDataColor(AColor: TColor);
-begin
-  FDataColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET LINE SELECTOR COLOR
-procedure TForm3.SetLineSelectorColor(AColor: TColor);
-begin
-  FLineSelectorColor := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET BACKGROUND COLOR OF THE ODD LINES
-procedure TForm3.SetBGColorOddLines(AColor: TColor);
-begin
-  FBGColorOddLines := AColor;
-  DrawGrid1.Invalidate;
-end;
-
-// SET BACKGROUND COLOR OF THE EVEN LINES
-procedure TForm3.SetBGColorEvenLines(AColor: TColor);
-begin
-  FBGColorEvenLines := AColor;
-  DrawGrid1.Invalidate;
-end;
+// ---- PRIVATE METHODS ----
 
 // SET INSTANCE AND MEMORY SIZE (16 BYTES PER ROW)
-procedure TForm3.SetMemInstance(AMemInstance: TMemory);
+procedure TForm3.SetFMemInstance(AMemInstance: TMemory);
 begin
   if Assigned(AMemInstance) then
   begin
@@ -239,13 +194,6 @@ procedure TForm3.FormCreate(Sender: TObject);
 var
   i: Integer;
 begin
-  // default colors
-  FAddressColor := StringToColor(HEXVIEWER_ADDRESS_DEFAULT);
-  FDataColor := StringToColor(HEXVIEWER_DATA_DEFAULT);
-  FLineSelectorColor := StringToColor(HEXVIEWER_LINESELECTOR_DEFAULT);
-  FBGColorOddLines := StringToColor(HEXVIEWER_BGCOLOR_ODD_DEFAULT);
-  FBGColorEvenLines := StringToColor(HEXVIEWER_BGCOLOR_EVEN_DEFAULT);
-
   with DrawGrid1 do
   begin
     Columns.Clear;
@@ -266,8 +214,40 @@ begin
     end;
     Color := FBGColorOddLines;
   end;
-
   FMemSize := 1024;
+end;
+
+// SHOW FORM
+procedure TForm3.FormShow(Sender: TObject);
+begin
+  // retrieve settings
+  with uconfig.AppConfig.HexViewerConfig do
+  begin
+    Form3.Top := top;
+    Form3.Left := left;
+    Form3.Height := height;
+    Form3.Width := width;
+    Form3.FAddressColor := address_color;
+    Form3.FDataColor := data_color;
+    Form3.FLineSelectorColor := lineselector_color;
+    Form3.FBGColorOddLines := bgodd_color;
+    Form3.FBGColorEvenLines := bgeven_color;
+    DrawGrid1.Color := FBGColorOddLines;
+    DrawGrid1.Invalidate;
+  end;
+end;
+
+// CLOSE FORM
+procedure TForm3.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  // store settings
+  with uconfig.AppConfig.HexViewerConfig do
+  begin
+    top := Form3.Top;
+    left := Form3.Left;
+    height := Form3.Height;
+    width := Form3.Width;
+  end;
 end;
 
 end.

@@ -364,7 +364,9 @@ object Form3: TForm3
     3046
   }
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poDefault
   LCLVersion = '2.2.6.0'
   object Button1: TButton

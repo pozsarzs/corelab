@@ -366,6 +366,7 @@ object Form6: TForm6
   OnClose = FormClose
   OnCreate = FormCreate
   OnHide = FormHide
+  OnShow = FormShow
   LCLVersion = '2.2.6.0'
   object Button1: TButton
     AnchorSideRight.Control = Owner
