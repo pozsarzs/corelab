@@ -439,11 +439,12 @@ object Form3: TForm3
     ColCount = 1
     Columns = <    
       item
+        Title.Alignment = taCenter
         Title.Caption = 'Title'
       end>
     ExtendedSelect = False
     FixedCols = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goColSizing, goRowSelect, goSmoothScroll]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goRowSelect, goSmoothScroll]
     RowCount = 1
     TabOrder = 1
     OnDrawCell = DrawGrid1DrawCell

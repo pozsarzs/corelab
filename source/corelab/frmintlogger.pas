@@ -172,6 +172,13 @@ begin
     left := Form8.Left;
     height := Form8.Height;
     width := Form8.Width;
+    with DrawGrid1.Columns do
+    begin
+      column0_width := Items[0].Width;
+      column1_width := Items[1].Width;
+      column2_width := Items[2].Width;
+      column3_width := Items[3].Width;
+    end;
   end;
   Form8.Hide;
 end;
@@ -321,6 +328,13 @@ begin
     Form8.Left := left;
     Form8.Height := height;
     Form8.Width := width;
+    with DrawGrid1.Columns do
+    begin
+      Items[0].Width := column0_width;
+      Items[1].Width := column1_width;
+      Items[2].Width := column2_width;
+      Items[3].Width := column3_width;
+    end;
   end;
   RefreshColors;
   DrawGrid1.RowCount := FRecordCount + 1;
@@ -336,6 +350,13 @@ begin
     left := Form8.Left;
     height := Form8.Height;
     width := Form8.Width;
+    with DrawGrid1.Columns do
+    begin
+      column0_width := Items[0].Width;
+      column1_width := Items[1].Width;
+      column2_width := Items[2].Width;
+      column3_width := Items[3].Width;
+    end;
   end;
 end;
 

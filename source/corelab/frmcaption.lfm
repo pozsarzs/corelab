@@ -1,11 +1,12 @@
-object Form8: TForm8
-  Left = 955
-  Height = 278
-  Top = 546
-  Width = 400
-  Caption = 'IntLogger'
-  ClientHeight = 278
-  ClientWidth = 400
+object Form13: TForm13
+  Left = 653
+  Height = 122
+  Top = 317
+  Width = 304
+  BorderStyle = bsDialog
+  Caption = 'Set panel caption'
+  ClientHeight = 122
+  ClientWidth = 304
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -345,163 +346,97 @@ object Form8: TForm8
     0F76FFAA0003FFFFFF00FFFFFF00FFFFFF00FFFFFF0000AAFF030098FF770099
     FFE00098FFFF0098FFFF0098FFFF0098FFFF0098FFFF0098FFFF0098FFFF0098
     FFFF0098FFFF0098FFFF0098FFFF0098FFFF0098FFF50098FFB50098FF25FFFF
-    FF00000000000030444500000000000644450000000000064445000000000006
-    4445000000000006444500000000000644450000000000202030000000000038
-    3130000000000038313000000000003831300000000000383130000000000038
-    313000000000003831300000000000383130000000000038310A000000000006
-    4646000000000006464600000000000646460000000000064646000000000006
-    4646000000000006464600000000000638380000000000063030000000000020
-    2020000000000006464600000000000646460000000000064646000000000006
-    4646000000000006464600000000000646460000000000064646000000000006
-    4646000000000020464600000000000646460000000000064646000000000006
-    4646000000000006464600000000000646460000000000064646000000000006
-    46460000000000060A2000000000003030460000000000303046000000000030
-    3046000000000030304600000000003030440000000000064644000000000006
-    4644000000000006464400000000002020200000000000053831000000000005
-    3831000000000005383100000000000538310000000000053831000000000005
-    3831000000000005383100000000000538310000000000304646000000000030
-    4646000000000030464600000000003046460000000000304646000000000030
-    4646
+    FF00000000000031372C00000000002276610000000000224174000000000034
+    6F2000000000002C0A7B0000000000223A310000000000363632000000000025
+    223A00000000002D312E0000000000216368000000000035732E00000000002F
+    6E2200000000003263650000000000223A5B00000000002C313000000000002C
+    3937000000000030342C0000000000322C310000000000312C3100000000002C
+    393800000000003131350000000000362C340000000000216C75000000000004
+    65740000000000326F6D00000000002E2E220000000000286173000000000038
+    353600000000002E616D0000000000266F72000000000024657400000000002F
+    6D6200000000002E742200000000003263650000000000223A5B000000000031
+    2C3100000000002C3939000000000033322C000000000031342C000000000030
+    392C00000000002C313100000000001D2C220000000000223A22000000000028
+    2066000000000035732200000000002861730000000000353037000000000022
+    6E61000000000034666F00000000002F706F0000000000296573000000000029
+    6F6E0000000000357263000000000033223A0000000000302C31000000000031
+    2C310000000000312C310000000000362C310000000000312C3100000000002C
+    343600000000002276610000000000222650000000000034696500000000003D
+    2C0A
   }
-  OnActivate = FormActivate
-  OnClose = FormClose
-  OnCreate = FormCreate
-  OnShow = FormShow
+  Position = poDefault
   LCLVersion = '2.2.6.0'
+  object Button1: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 221
+    Height = 28
+    Top = 86
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Around = 8
+    Caption = '&Set'
+    ModalResult = 1
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object Button2: TButton
+    AnchorSideRight.Control = Button1
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 138
+    Height = 28
+    Top = 86
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Around = 8
+    Caption = '&Cancel'
+    ModalResult = 2
+    OnClick = Button2Click
+    TabOrder = 2
+  end
   object Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Button2
+    AnchorSideBottom.Control = Button1
     Left = 8
-    Height = 4
-    Top = 233
-    Width = 384
+    Height = 2
+    Top = 76
+    Width = 288
     Anchors = [akLeft, akRight, akBottom]
-    BorderSpacing.Around = 8
-    Shape = bsBottomLine
-  end
-  object Button2: TButton
-    AnchorSideLeft.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
-    AnchorSideBottom.Side = asrBottom
-    Left = 8
-    Height = 25
-    Top = 245
-    Width = 75
-    Anchors = [akLeft, akBottom]
-    BorderSpacing.Around = 8
-    Caption = 'Clea&r'
-    OnClick = Button2Click
-    TabOrder = 0
-  end
-  object Button3: TButton
-    AnchorSideLeft.Control = Button2
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = Button2
-    AnchorSideBottom.Control = Button2
-    AnchorSideBottom.Side = asrBottom
-    Left = 91
-    Height = 25
-    Top = 245
-    Width = 75
-    Anchors = [akTop, akLeft, akBottom]
     BorderSpacing.Left = 8
-    Caption = '&Save...'
-    OnClick = Button3Click
-    TabOrder = 1
-  end
-  object Button1: TButton
-    AnchorSideTop.Control = Button2
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Button2
-    AnchorSideBottom.Side = asrBottom
-    Left = 317
-    Height = 25
-    Top = 245
-    Width = 75
-    Anchors = [akTop, akRight, akBottom]
     BorderSpacing.Right = 8
-    Cancel = True
-    Caption = '&Close'
-    OnClick = Button1Click
-    TabOrder = 2
+    BorderSpacing.Bottom = 8
+    Shape = bsTopLine
   end
-  object EditButton1: TEditButton
+  object Edit1: TEdit
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
+    AnchorSideTop.Control = Label1
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     Left = 8
     Height = 34
-    Hint = 'Search in log records'
-    Top = 8
-    Width = 384
+    Top = 33
+    Width = 288
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 8
-    ButtonWidth = 23
-    Images = Form1.ImageList1
-    ImageIndex = 27
-    MaxLength = 0
-    NumGlyphs = 1
-    OnButtonClick = EditButton1ButtonClick
-    ParentShowHint = False
-    PasswordChar = #0
-    ShowHint = True
-    TabOrder = 3
+    MaxLength = 32
+    OnEditingDone = Edit1EditingDone
+    TabOrder = 0
   end
-  object DrawGrid1: TDrawGrid
+  object Label1: TLabel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = EditButton1
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Bevel1
+    AnchorSideTop.Control = Owner
     Left = 8
-    Height = 175
-    Top = 50
-    Width = 384
-    Anchors = [akTop, akLeft, akRight, akBottom]
+    Height = 17
+    Top = 8
+    Width = 85
     BorderSpacing.Around = 8
-    ColCount = 4
-    Columns = <    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Sender'
-        Width = 150
-      end    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Vector'
-        Width = 80
-      end    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Status'
-        Width = 100
-      end    
-      item
-        Title.Alignment = taCenter
-        Title.Caption = 'Flag'
-        Width = 50
-      end>
-    ExtendedSelect = False
-    FixedCols = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goColSizing, goRowSelect, goSmoothScroll]
-    RowCount = 1
-    TabOrder = 4
-    OnDrawCell = DrawGrid1DrawCell
-    ColWidths = (
-      150
-      80
-      100
-      50
-    )
-  end
-  object SaveDialog1: TSaveDialog
-    Left = 176
-    Top = 240
+    Caption = 'New caption:'
+    ParentColor = False
   end
 end

@@ -28,7 +28,6 @@ type
     Button3:     TButton;
     DrawGrid1:   TDrawGrid;
     EditButton1: TEditButton;
-    FindDialog1: TFindDialog;
     SaveDialog1: TSaveDialog;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -163,6 +162,21 @@ end;
 // HIDE LOG WINDOW
 procedure TForm4.Button1Click(Sender: TObject);
 begin
+  // store settings
+  with uconfig.AppConfig.RunLoggerConfig do
+  begin
+    top := Form4.Top;
+    left := Form4.Left;
+    height := Form4.Height;
+    width := Form4.Width;
+    with DrawGrid1.Columns do
+    begin
+      column0_width := Items[0].Width;
+      column1_width := Items[1].Width;
+      column2_width := Items[2].Width;
+      column3_width := Items[3].Width;
+    end;
+  end;
   Form4.Hide;
 end;
 
@@ -311,6 +325,13 @@ begin
     Form4.Left := left;
     Form4.Height := height;
     Form4.Width := width;
+    with DrawGrid1.Columns do
+    begin
+      Items[0].Width := column0_width;
+      Items[1].Width := column1_width;
+      Items[2].Width := column2_width;
+      Items[3].Width := column3_width;
+    end;
   end;
   RefreshColors;
   DrawGrid1.RowCount := FRecordCount + 1;
@@ -326,6 +347,13 @@ begin
     left := Form4.Left;
     height := Form4.Height;
     width := Form4.Width;
+    with DrawGrid1.Columns do
+    begin
+      column0_width := Items[0].Width;
+      column1_width := Items[1].Width;
+      column2_width := Items[2].Width;
+      column3_width := Items[3].Width;
+    end;
   end;
 end;
 

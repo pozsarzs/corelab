@@ -1,0 +1,6 @@
+{"version":1,"strings":[
+{"hash":78727250,"name":"tform9.caption","sourcebytes":[77,111,100,117,108,101,32,69,120,112,108,111,114,101,114],"value":"Module Explorer"},
+{"hash":93267781,"name":"tform9.editbutton1.buttonhint","sourcebytes":[83,101,97,114,99,104,32,105,110,32,116,114,101,101],"value":"Search in tree"},
+{"hash":95060373,"name":"tform9.tabsheet1.caption","sourcebytes":[73,110,115,116,97,110,99,101],"value":"Instance"},
+{"hash":95464125,"name":"tform9.tabsheet2.caption","sourcebytes":[83,121,115,116,101,109],"value":"System"}
+]}

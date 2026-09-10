@@ -18,6 +18,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, ColorBox, uconfig;
 type
+  { TForm18 }
   TForm18 = class(TForm)
     Bevel1: TBevel;
     Bevel10: TBevel;

@@ -70,6 +70,8 @@ var
 implementation
 
 {$R *.lfm}
+{ TForm6 }
+
 // ---- PRIVATE METHODS ----
 
 // SET EXTERNAL BUFFER

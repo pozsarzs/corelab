@@ -82,7 +82,7 @@ in mind:
 |**Breakpoint Manager**|Managing breakpoints                                               |
 |**HexViewer**         |Memory viewer component                                            |
 |**IntLogger**         |Logging interrupt requests                                         |
-|**Module Manager**    |Managing module instances                                          |
+|**Module Explorer**   |Managing module instances                                          |
 |**RegViewer**         |Real-time inspection of registers, program counter, and flag status|
 |**RunLogger**         |Real-time output of address, machine code, and mnemonic            |
 |**ScriptConsole**     |Console for show running script output                             |

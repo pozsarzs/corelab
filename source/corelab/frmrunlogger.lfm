@@ -470,18 +470,22 @@ object Form4: TForm4
     ColCount = 4
     Columns = <    
       item
+        Title.Alignment = taCenter
         Title.Caption = 'Count'
         Width = 80
       end    
       item
+        Title.Alignment = taCenter
         Title.Caption = 'Address'
         Width = 80
       end    
       item
+        Title.Alignment = taCenter
         Title.Caption = 'Opcode'
         Width = 150
       end    
       item
+        Title.Alignment = taCenter
         Title.Caption = 'Mnemonic'
         Width = 150
       end>
@@ -500,10 +504,6 @@ object Form4: TForm4
   end
   object SaveDialog1: TSaveDialog
     Left = 176
-    Top = 272
-  end
-  object FindDialog1: TFindDialog
-    Left = 208
     Top = 272
   end
 end

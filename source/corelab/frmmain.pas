@@ -20,8 +20,9 @@ uses
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmscripteditor, frmscriptconsole, frmintlogger, core_cpu, core_memory,
-  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex;
+  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmmoduleexplorer,
+  core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
+  uproject, uintelhex;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -46,6 +47,9 @@ type
   TOpMode = (omInteractive, omScript, omInterpreter);
   { TForm1 }
   TForm1 = class(TForm)
+    MenuItem55: TMenuItem;
+    ToolButton29: TToolButton;
+    VModuleExplorer: TAction;
     ActionList1:              TActionList;
     CHMHelpDatabase1:         TCHMHelpDatabase;
     FExit:                    TAction;
@@ -126,7 +130,6 @@ type
     MenuItem52:               TMenuItem;
     MenuItem53:               TMenuItem;
     MenuItem54:               TMenuItem;
-    MenuItem55:               TMenuItem;
     MenuItem56:               TMenuItem;
     MenuItem57:               TMenuItem;
     MenuItem58:               TMenuItem;
@@ -239,9 +242,7 @@ type
     ToolButton26:             TToolButton;
     ToolButton27:             TToolButton;
     ToolButton28:             TToolButton;
-    ToolButton29:             TToolButton;
     ToolButton3:              TToolButton;
-    ToolButton30:             TToolButton;
     ToolButton31:             TToolButton;
     ToolButton32:             TToolButton;
     ToolButton33:             TToolButton;
@@ -363,7 +364,7 @@ type
     procedure SSaveScriptExecute(Sender: TObject);
     procedure SStepScriptExecute(Sender: TObject);
     procedure SStopScriptExecute(Sender: TObject);
-    procedure VMoveResizeIOPanelExecute(Sender: TObject);
+    procedure VModuleExplorerExecute(Sender: TObject);
     procedure VRenameIOPanelExecute(Sender: TObject);
     procedure VShowBreakpointManagerExecute(Sender: TObject);
     procedure VShowHexViewerExecute(Sender: TObject);
@@ -779,12 +780,40 @@ begin
   Close;
 end;
 
+// VIEW/SHOW MODULE MANAGER
+procedure TForm1.VModuleExplorerExecute(Sender: TObject);
+begin
+  Form9.Show;
+  Form9.BringToFront;
+end;
+
 // VIEW/SHOW BREAKPOINT MANAGER
 procedure TForm1.VShowBreakpointManagerExecute(Sender: TObject);
 begin
   {...}
 end;
 
+// VIEW/SHOW RUNLOGGER
+procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
+begin
+  Form4.Show;
+  Form4.BringToFront;
+end;
+
+// VIEW/SHOW INTLOGGER
+procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
+begin
+  Form8.Show;
+  Form8.BringToFront;
+end;
+
+// VIEW/SHOW REGVIEWER
+procedure TForm1.VShowRegViewerExecute(Sender: TObject);
+begin
+
+end;
+
+// VIEW/SHOW HEXVIEWER
 procedure TForm1.VShowHexViewerExecute(Sender: TObject);
 var
   KeyName:       string;
@@ -811,30 +840,6 @@ begin
   end;
 end;
 
-// VIEW/SHOW RUNLOGGER
-procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
-begin
-  Form4.Show;
-  Form4.BringToFront;
-end;
-
-// VIEW/SHOW INTLOGGER
-procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
-begin
-  Form8.Show;
-  Form8.BringToFront;
-end;
-
-procedure TForm1.VShowIOPanelExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.VShowRegViewerExecute(Sender: TObject);
-begin
-
-end;
-
 // VIEW/SHOW SCRIPTEDITOR
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
 begin
@@ -849,6 +854,69 @@ procedure TForm1.VShowScriptConsoleExecute(Sender: TObject);
 begin
   Form12.Show;
   Form12.BringToFront;
+end;
+
+// VIEW/RENAME IO PORT PANEL
+procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
+var
+  KeyName:    string;
+  StringList: TStringList;
+  PanelName:  string;
+  PortInfo:   TPortInfo;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG76;
+      ModuleList := StringList;
+      if ShowModal = mrOk then
+      begin
+        PortInfo := FPortInstanceDict[SelectedKey];
+        // rename panel
+        with Form13 do
+        begin
+          PanelCaption := SelectedKey;
+          Form13.ShowModal;
+          PanelName := PanelCaption;
+        end;
+        if Length(PanelName) > 0 then
+          if PortInfo.Port.HasPanel
+            then FPortPluginDict[PortInfo.ModuleName].FRenamePanel(PortInfo.Port,
+                                                                   PChar(PanelName));
+      end;
+    end;
+  finally
+    StringList.Free;
+  end;
+end;
+
+// VIEW/SHOW IO PORT PANEL
+procedure TForm1.VShowIOPanelExecute(Sender: TObject);
+var
+  KeyName:       string;
+  PortInfo:      TPortInfo;
+  StringList:    TStringList;
+begin
+  StringList := TStringList.Create;
+  try
+    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+    with Form17 do
+    begin
+      OKButtonCaption := MSG78;
+      ModuleList := StringList;
+    end;
+    if Form17.ShowModal = mrOk then
+    begin
+      PortInfo := FPortInstanceDict[Form17.SelectedKey];
+      // show panel
+      if PortInfo.Port.HasPanel
+        then FPortPluginDict[PortInfo.ModuleName].FShowPanel(PortInfo.Port);
+    end;
+  finally
+    StringList.Free;
+  end;
 end;
 
 // PROCESSOR/CREATE
@@ -1387,8 +1455,8 @@ end;
 // IO PORT/CREATE
 procedure TForm1.IOCreateExecute(Sender: TObject);
 var
-  PortInfo: TPortInfo;
   KeyName:    string;
+  PortInfo:   TPortInfo;
   StringList: TStringList;
 begin
   StringList := TStringList.Create;
@@ -1399,12 +1467,17 @@ begin
       PluginList := StringList;
       if ShowModal = mrOk then
       begin
-        // create
         if Assigned(FPortPluginDict[SelectedKey].FCreate) then
         begin
+          // create module
           PortInfo.Port := FPortPluginDict[SelectedKey].FCreate();
           PortInfo.ModuleName := SelectedKey;
           PortInfo.AttachedToBus := False;
+          // create and show panel
+          if PortInfo.Port.HasPanel
+            then FPortPluginDict[SelectedKey].FCreatePanel(PortInfo.Port);
+          if PortInfo.Port.HasPanel
+            then FPortPluginDict[SelectedKey].FShowPanel(PortInfo.Port);
         end;
         // store
         FPortInstanceDict.Add(SelectedName, PortInfo);
@@ -1421,8 +1494,8 @@ end;
 procedure TForm1.IODestroyExecute(Sender: TObject);
 var
   KeyName:    string;
+  PortInfo:   TPortInfo;
   StringList: TStringList;
-  PortInfo: TPortInfo;
 begin
   StringList := TStringList.Create;
   try
@@ -1434,7 +1507,9 @@ begin
       if ShowModal = mrOk then
       begin
         PortInfo := FPortInstanceDict[SelectedKey];
-        // destroy
+        // destroy panel
+        if PortInfo.Port.HasPanel then FPortPluginDict[PortInfo.ModuleName].FFreePanel(PortInfo.Port);
+        // destroy module
         FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
         // remove from dict
         FPortInstanceDict.Remove(SelectedKey);
@@ -1451,8 +1526,8 @@ end;
 procedure TForm1.IOResetExecute(Sender: TObject);
 var
   KeyName:    string;
+  PortInfo:   TPortInfo;
   StringList: TStringList;
-  PortInfo: TPortInfo;
 begin
   StringList := TStringList.Create;
   try
@@ -1479,8 +1554,8 @@ end;
 procedure TForm1.IOEnableExecute(Sender: TObject);
 var
   KeyName:    string;
+  PortInfo:   TPortInfo;
   StringList: TStringList;
-  PortInfo: TPortInfo;
 begin
   StringList := TStringList.Create;
   try
@@ -1507,8 +1582,8 @@ end;
 procedure TForm1.IODisableExecute(Sender: TObject);
 var
   KeyName:    string;
+  PortInfo:   TPortInfo;
   StringList: TStringList;
-  PortInfo: TPortInfo;
 begin
   StringList := TStringList.Create;
   try
@@ -1741,16 +1816,6 @@ procedure TForm1.SStopScriptExecute(Sender: TObject);
 begin
   FScriptInstPointer := 0;
   {...}
-end;
-
-procedure TForm1.VMoveResizeIOPanelExecute(Sender: TObject);
-begin
-
-end;
-
-procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
-begin
-
 end;
 
 // ACTIONS/HELP/SHOW HELP

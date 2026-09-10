@@ -55,7 +55,9 @@ resourcestring
   MSG03 = 'Cannot open memory modul.';
 
 implementation
+
 {$R *.lfm}
+{ TForm3 }
 
 // ---- PRIVATE METHODS ----
 
@@ -220,6 +222,7 @@ begin
     begin
       Width := 64;
       Title.Caption := MSG02;
+      Title.Alignment := taCenter;
     end;
     // Data columns (0-F)
     for i := 0 to 15 do
@@ -228,6 +231,7 @@ begin
       begin
         Width := 24;
         Title.Caption := IntToHex(i, 1);
+        Title.Alignment := taCenter;
       end;
     end;
     Color := FBGColorOddLines;

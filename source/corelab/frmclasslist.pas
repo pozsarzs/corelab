@@ -37,7 +37,6 @@ type
     property SelectedKey: string read FSelectedKey;
     property SelectedName: string read FSelectedName;
   end;
-
 var
   Form16: TForm16;
 

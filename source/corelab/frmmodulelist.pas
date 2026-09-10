@@ -35,11 +35,13 @@ type
     property SelectedKey: string read FSelectedKey;
     property OKButtonCaption: string write SetOKButtonCaption;
   end;
-
 var
   Form17: TForm17;
 
 implementation
+
+{$R *.lfm}
+{ TForm17 }
 
 // ---- PRIVATE METHODS ----
 
@@ -71,8 +73,6 @@ begin
     ModalResult := mrOk;
   end;
 end;
-
-{$R *.lfm}
 
 end.
 
