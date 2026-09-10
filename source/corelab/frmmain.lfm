@@ -1315,7 +1315,7 @@ object Form1: TForm1
       ShortCut = 16457
     end
     object VShowRegViewer: TAction
-      Caption = 'Show Re&gViewer'
+      Caption = 'Show Re&gViewer...'
       Hint = 'Show RegViewer'
       ImageIndex = 55
       OnExecute = VShowRegViewerExecute
@@ -1327,33 +1327,33 @@ object Form1: TForm1
       OnExecute = VShowHexViewerExecute
     end
     object VShowScriptEditor: TAction
-      Caption = 'Show S&criptEditor'
+      Caption = 'Show S&criptEditor...'
       Hint = 'Show ScriptEditor'
       ImageIndex = 46
       OnExecute = VShowScriptEditorExecute
       ShortCut = 8307
     end
     object VShowScriptConsole: TAction
-      Caption = 'Show Scrip&tConsole'
+      Caption = 'Show Scrip&tConsole...'
       Hint = 'Show ScriptConsole'
       ImageIndex = 45
       OnExecute = VShowScriptConsoleExecute
       ShortCut = 8315
     end
     object VRenameIOPanel: TAction
-      Caption = 'Rename I/O panel'
+      Caption = 'Rename I/O panel...'
       Hint = 'Rename I/O panel'
       ImageIndex = 6
       OnExecute = VRenameIOPanelExecute
     end
     object VMoveResizeIOPanel: TAction
-      Caption = 'Move/resize I/O panel'
+      Caption = 'Move/resize I/O panel...'
       Hint = 'Move/resize I/O panel'
       ImageIndex = 7
       OnExecute = VMoveResizeIOPanelExecute
     end
     object VShowIOPanel: TAction
-      Caption = 'Show I/O panel'
+      Caption = 'Show I/O panel...'
       Hint = 'Show I/O panel'
       ImageIndex = 5
       OnExecute = VShowIOPanelExecute

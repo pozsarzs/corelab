@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | frmrunlogger.pas                                                         | }
-{ | RunLogger form                                                           | }
+{ | frmintlogger.pas                                                         | }
+{ | IntLogger form                                                           | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -11,104 +11,106 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-unit frmrunlogger;
+unit frmintlogger;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types, core_cpu, uconfig;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
+  EditBtn, Grids, Types, core_cpu, uconfig;
 const
   MAX_LOG = 1024;
 type
-  { TForm4 }
-  TForm4 = class(TForm)
-    Bevel1:      TBevel;
-    Button1:     TButton;
-    Button2:     TButton;
-    Button3:     TButton;
-    DrawGrid1:   TDrawGrid;
+  { TForm8 }
+  TForm8 = class(TForm)
+    Bevel1: TBevel;
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    DrawGrid1: TDrawGrid;
     EditButton1: TEditButton;
-    FindDialog1: TFindDialog;
     SaveDialog1: TSaveDialog;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
+    procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer;
+      aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
-    // colors
-    FInstCountColor:    TColor;                    // Instruction counter column
-    FAddressColor:      TColor;                                // Address column
-    FOpCodeColor:       TColor;                                 // Opcode column
-    FMnemonicColor:     TColor;                               // Mnemonic column
+    FSenderColor:       TColor;                                 // Sender column
+    FVectorColor:       TColor;                                 // Vector column
+    FStatusColor:       TColor;                                 // Status column
+    FFlagColor:         TColor;                                   // Flag column
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
     // others
     FRecordCount:       Integer;          // Number of valid items in the buffer
-    FRingBuffer:        array[0..MAX_LOG - 1] of TLogRec;   // Log record buffer
+    FRingBuffer:        array[0..MAX_LOG - 1] of TIntLogRec;  // Log rec. buffer
     FWriteMarker:       Integer;         // Next empty place for write to buffer
     procedure Reset;
-    function ReadBuffer(ALine: Integer): TLogRec;
-    procedure WriteBuffer(ALogRec: TLogRec);
+    function ReadBuffer(ALine: Integer): TIntLogRec;
+    procedure WriteBuffer(AIntLogRec: TIntLogRec);
   public
-    procedure AppendRecord(ALogRec: TLogRec);
     procedure ClearContent;
     procedure RefreshColors;
+    procedure AppendRecord(AIntLogRec: TIntLogRec);
   end;
+
 var
-  Form4: TForm4;
+  Form8: TForm8;
 
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Save log to file';
   MSG03 = 'Cannot save ''%s'' log file.';
   MSG04 = 'Log file|*.log|All file|*.*';
-  MSG05 = 'Counter';
-  MSG06 = 'Address';
-  MSG07 = 'Opcode';
-  MSG08 = 'Mnemonic';
+  MSG05 = 'Sender';
+  MSG06 = 'Vector';
+  MSG07 = 'Status';
+  MSG08 = 'Flag';
 
 implementation
 
 {$R *.lfm}
-{ TForm4 }
+{ TForm8 }
 
 // ---- PRIVATE METHODS ----
 
 // RESET RINGBUFFER
-procedure TForm4.Reset;
+procedure TForm8.Reset;
 var
   i: Integer;
 begin
   for i := 0 to MAX_LOG - 1 do
     with FRingBuffer[i] do
     begin
-      InstCount := -1;
-      Address := '';
-      OpCode := '';
-      Mnemonic := '';
+//      InstCount := -1;
+      Sender := '';
+      Vector := '';
+      Status := '';
+      Flag := '';
     end;
   FRecordCount := 0;
   FWriteMarker := 0;
 end;
 
 // READ A RECORD FROM RINGBUFFER
-function TForm4.ReadBuffer(ALine: Integer): TLogRec;
+function TForm8.ReadBuffer(ALine: Integer): TIntLogRec;
 var
   PhysicalIndex: Integer;
 begin
   if (ALine < 0) or (ALine >= FRecordCount) then
   with Result do
   begin
-    Address := '';
-    InstCount := -1;
-    Mnemonic := '';
-    OpCode := '';
+//    InstCount := -1;
+    Sender := '';
+    Vector := '';
+    Status := '';
+    Flag := '';
   end else
   begin
     if FRecordCount < MAX_LOG
@@ -119,9 +121,9 @@ begin
 end;
 
 // WRITE RECORD TO RINGBUFFER
-procedure TForm4.WriteBuffer(ALogRec: TLogRec);
+procedure TForm8.WriteBuffer(AIntLogRec: TIntLogRec);
 begin
-  FRingBuffer[FWriteMarker] := ALogRec;
+  FRingBuffer[FWriteMarker] := AIntLogRec;
   FWriteMarker := (FWriteMarker + 1) mod MAX_LOG;         // next empty position
   if FRecordCount < MAX_LOG then Inc(FRecordCount);   // number of the all items
 end;
@@ -129,45 +131,53 @@ end;
 // ---- PUBLIC METHODS ----
 
 // APPEND A RECORD TO LOG
-procedure TForm4.AppendRecord(ALogRec: TLogRec);
+procedure TForm8.AppendRecord(AIntLogRec: TIntLogRec);
 begin
-  WriteBuffer(ALogRec);
-  if Form4.Visible then DrawGrid1.RowCount := FRecordCount + 1;
+  WriteBuffer(AIntLogRec);
+  if Form8.Visible then DrawGrid1.RowCount := FRecordCount + 1;
 end;
 
 // CLEAR LOGS
-procedure TForm4.ClearContent;
+procedure TForm8.ClearContent;
 begin
   Button2Click(Nil);
 end;
 
 // REFRESH COLORS
-procedure TForm4.RefreshColors;
+procedure TForm8.RefreshColors;
 begin
-  with uconfig.AppConfig.RunLoggerConfig do
+  with uconfig.AppConfig.IntLoggerConfig do
   begin
-    Form4.FInstCountColor := instcount_color;
-    Form4.FAddressColor := address_color;
-    Form4.FOpCodeColor := opcode_color;
-    Form4.FMnemonicColor := mnemonic_color;
-    Form4.FLineSelectorColor := lineselector_color;
-    Form4.FBGColorOddLines := bgodd_color;
-    Form4.FBGColorEvenLines := bgeven_color;
+    Form8.FSenderColor := sender_color;
+    Form8.FVectorColor := vector_color;
+    Form8.FStatusColor := status_color;
+    Form8.FFlagColor := flag_color;
+    Form8.FLineSelectorColor := lineselector_color;
+    Form8.FBGColorOddLines := bgodd_color;
+    Form8.FBGColorEvenLines := bgeven_color;
     DrawGrid1.Color := FBGColorOddLines;
     DrawGrid1.Invalidate;
   end;
 end;
 
-// ---- EVENT HANDLER METHODS ----
+// EVENT HANDLER METHODS
 
 // HIDE LOG WINDOW
-procedure TForm4.Button1Click(Sender: TObject);
+procedure TForm8.Button1Click(Sender: TObject);
 begin
-  Form4.Hide;
+  // store settings
+  with uconfig.AppConfig.IntLoggerConfig do
+  begin
+    top := Form8.Top;
+    left := Form8.Left;
+    height := Form8.Height;
+    width := Form8.Width;
+  end;
+  Form8.Hide;
 end;
 
 // CLEAR LOG
-procedure TForm4.Button2Click(Sender: TObject);
+procedure TForm8.Button2Click(Sender: TObject);
 begin
   Reset;
   DrawGrid1.RowCount := 1;
@@ -175,7 +185,7 @@ begin
 end;
 
 // SAVE LOG TO FILE
-procedure TForm4.Button3Click(Sender: TObject);
+procedure TForm8.Button3Click(Sender: TObject);
 var
   Filename:    string;
   i:           Integer;
@@ -196,10 +206,10 @@ begin
         for i := 0 to FRecordCount -1 do
         with ReadBuffer(i) do
           StringList1.Add(
-            Format('%*.*d',[5, 5, InstCount]) + #9 +
-            Address + #9 +
-            OpCode + #9 +
-            Mnemonic);
+            Sender + #9 +
+            Vector + #9 +
+            Status + #9 +
+            Flag);
         StringList1.SaveToFile(Filename);
       except
         ShowMessage(MSG01 + Format(MSG03, [FileName]));
@@ -211,12 +221,12 @@ begin
 end;
 
 // DRAW RECORDS INTO THE GRID
-procedure TForm4.DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
+procedure TForm8.DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
 var
-  LogRec: TLogRec;
+  IntLogRec: TIntLogRec;
   Style:  TTextStyle;
 begin
-  if aRow = 0 then Exit else LogRec := ReadBuffer(aRow - 1);
+  if aRow = 0 then Exit else IntLogRec := ReadBuffer(aRow - 1);
   with DrawGrid1.Canvas do
   begin
     // background
@@ -227,16 +237,16 @@ begin
     FillRect(aRect);
     // text color
     case ACol of
-      0: Font.Color := FInstCountColor;
-      1: Font.Color := FAddressColor;
-      2: Font.Color := FOpCodeColor;
-      3: Font.Color := FMnemonicColor;
+      0: Font.Color := FSenderColor;
+      1: Font.Color := FVectorColor;
+      2: Font.Color := FStatusColor;
+      3: Font.Color := FFlagColor;
     end;
     // text alignment
     Style := TextStyle;
     Style.Layout := tlCenter;
     case ACol of
-      0: Style.Alignment := taCenter;
+      0: Style.Alignment := taLeftJustify;
       1: Style.Alignment := taCenter;
       2: Style.Alignment := taLeftJustify;
       3: Style.Alignment := taLeftJustify;
@@ -244,16 +254,16 @@ begin
     TextStyle := Style;
     // write content
     case ACol of
-      0: TextRect(aRect, aRect.Left, aRect.Top, Format('%*.*d',[5, 5, LogRec.InstCount]));
-      1: TextRect(aRect, aRect.Left, aRect.Top, LogRec.Address);
-      2: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.OpCode);
-      3: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.Mnemonic);
+      0: TextRect(aRect, aRect.Left, aRect.Top, IntLogRec.Sender);
+      1: TextRect(aRect, aRect.Left, aRect.Top, IntLogRec.Vector);
+      2: TextRect(aRect, aRect.Left + 4, aRect.Top, IntLogRec.Status);
+      3: TextRect(aRect, aRect.Left + 4, aRect.Top, IntLogRec.Flag);
     end;
   end;
 end;
 
 // SEARCH IN LOG
-procedure TForm4.EditButton1ButtonClick(Sender: TObject);
+procedure TForm8.EditButton1ButtonClick(Sender: TObject);
 var
   i: Integer;
   s: string;
@@ -263,10 +273,10 @@ begin
   begin
     with ReadBuffer(i) do
       s := LowerCase(
-             Format('%*.*d',[5, 5, InstCount]) + #9 +
-             Address + #9 +
-             OpCode + #9 +
-             Mnemonic);
+             Sender + #9 +
+             Vector + #9 +
+             Status + #9 +
+             Flag);
     if Pos(LowerCase(EditButton1.Text), s) > 0 then
     begin
       DrawGrid1.Row := i + 1;
@@ -277,13 +287,13 @@ begin
 end;
 
 // ONACTIVATE
-procedure TForm4.FormActivate(Sender: TObject);
+procedure TForm8.FormActivate(Sender: TObject);
 begin
-  Form4.Invalidate;
+  Form8.Invalidate;
 end;
 
 // CREATE FORM
-procedure TForm4.FormCreate(Sender: TObject);
+procedure TForm8.FormCreate(Sender: TObject);
 begin
   Reset;
   with DrawGrid1 do
@@ -302,30 +312,30 @@ begin
 end;
 
 // SHOW FORM
-procedure TForm4.FormShow(Sender: TObject);
+procedure TForm8.FormShow(Sender: TObject);
 begin
   // retrieve settings
-  with uconfig.AppConfig.RunLoggerConfig do
+  with uconfig.AppConfig.IntLoggerConfig do
   begin
-    Form4.Top := top;
-    Form4.Left := left;
-    Form4.Height := height;
-    Form4.Width := width;
+    Form8.Top := top;
+    Form8.Left := left;
+    Form8.Height := height;
+    Form8.Width := width;
   end;
   RefreshColors;
   DrawGrid1.RowCount := FRecordCount + 1;
 end;
 
 // CLOSE FORM
-procedure TForm4.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TForm8.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   // store settings
-  with uconfig.AppConfig.RunLoggerConfig do
+  with uconfig.AppConfig.IntLoggerConfig do
   begin
-    top := Form4.Top;
-    left := Form4.Left;
-    height := Form4.Height;
-    width := Form4.Width;
+    top := Form8.Top;
+    left := Form8.Left;
+    height := Form8.Height;
+    width := Form8.Width;
   end;
 end;
 

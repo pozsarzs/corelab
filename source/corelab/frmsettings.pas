@@ -18,15 +18,17 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, ColorBox, uconfig;
 type
-  { TForm18 }
   TForm18 = class(TForm)
     Bevel1: TBevel;
+    Bevel10: TBevel;
     Bevel2: TBevel;
     Bevel3: TBevel;
     Bevel4: TBevel;
     Bevel5: TBevel;
     Bevel6: TBevel;
     Bevel7: TBevel;
+    Bevel8: TBevel;
+    Bevel9: TBevel;
     Button1: TButton;
     Button5: TButton;
     CheckBox1: TCheckBox;
@@ -40,7 +42,16 @@ type
     ColorBox15: TColorBox;
     ColorBox16: TColorBox;
     ColorBox17: TColorBox;
+    ColorBox18: TColorBox;
+    ColorBox19: TColorBox;
     ColorBox2: TColorBox;
+    ColorBox20: TColorBox;
+    ColorBox21: TColorBox;
+    ColorBox22: TColorBox;
+    ColorBox23: TColorBox;
+    ColorBox24: TColorBox;
+    ColorBox25: TColorBox;
+    ColorBox26: TColorBox;
     ColorBox3: TColorBox;
     ColorBox4: TColorBox;
     ColorBox5: TColorBox;
@@ -57,7 +68,16 @@ type
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
+    Label18: TLabel;
+    Label19: TLabel;
     Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -70,6 +90,8 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
+    TabSheet5: TTabSheet;
+    TabSheet6: TTabSheet;
     procedure Button5Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -104,6 +126,16 @@ begin
       bgeven_color := ColorBox14.Selected;
     end;
     // IntLogger
+    with IntLoggerConfig do
+    begin
+      sender_color := ColorBox18.Selected;
+      vector_color := ColorBox19.Selected;
+      status_color := ColorBox20.Selected;
+      flag_color := ColorBox21.Selected;
+      lineselector_color := ColorBox22.Selected;
+      bgodd_color := ColorBox23.Selected;
+      bgeven_color := ColorBox24.Selected;
+    end;
     // Module Manager
     // Plugin properties
     // RegViewer
@@ -119,6 +151,11 @@ begin
       bgeven_color := ColorBox7.Selected;
     end;
     // ScriptConsole
+    with ScriptConsoleConfig do
+    begin
+      ColorBox25.Selected := font_color;
+      ColorBox26.Selected := bg_color;
+    end;
     // ScriptEditor
     with ScriptEditorConfig do
     begin
@@ -163,6 +200,16 @@ begin
       ColorBox14.Selected := bgeven_color;
     end;
     // IntLogger
+    with IntLoggerConfig do
+    begin
+      ColorBox18.Selected := sender_color;
+      ColorBox19.Selected := vector_color;
+      ColorBox20.Selected := status_color;
+      ColorBox21.Selected := flag_color;
+      ColorBox22.Selected := lineselector_color;
+      ColorBox23.Selected := bgodd_color;
+      ColorBox24.Selected := bgeven_color;
+    end;
     // Module Manager
     // Plugin properties
     // RegViewer
@@ -178,6 +225,11 @@ begin
       ColorBox7.Selected := bgeven_color;
     end;
     // ScriptConsole
+    with ScriptConsoleConfig do
+    begin
+      ColorBox25.Selected := font_color;
+      ColorBox26.Selected := bg_color;
+    end;
     // ScriptEditor
     with ScriptEditorConfig do
     begin

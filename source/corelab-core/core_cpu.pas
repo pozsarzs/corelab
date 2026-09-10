@@ -55,6 +55,13 @@ type
     OpCode:    string[31];
     Mnemonic:  string[127];
   end;
+  // Last executed instruction record for RunLogger
+  TIntLogRec = record
+    Sender: string[31];
+    Vector: string[31];
+    Status: string[31];
+    Flag:   string[31];
+  end;
   // Abstract base CPU class
   TCPU = class
   protected

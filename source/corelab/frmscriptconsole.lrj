@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":34382837,"name":"tform12.caption","sourcebytes":[83,99,114,105,112,116,67,111,110,115,111,108,101],"value":"ScriptConsole"},
+{"hash":77771730,"name":"tform12.button2.caption","sourcebytes":[67,108,101,97,38,114],"value":"Clea&r"},
+{"hash":44709525,"name":"tform12.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"}
+]}

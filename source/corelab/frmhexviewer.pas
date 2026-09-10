@@ -57,23 +57,6 @@ resourcestring
 implementation
 {$R *.lfm}
 
-// ---- PUBLIC METHODS ----
-
-// REFRESH COLORS
-procedure TForm3.RefreshColors;
-begin
-  with uconfig.AppConfig.HexViewerConfig do
-  begin
-    Form3.FAddressColor := address_color;
-    Form3.FDataColor := data_color;
-    Form3.FLineSelectorColor := lineselector_color;
-    Form3.FBGColorOddLines := bgodd_color;
-    Form3.FBGColorEvenLines := bgeven_color;
-    DrawGrid1.Color := FBGColorOddLines;
-    DrawGrid1.Invalidate;
-  end;
-end;
-
 // ---- PRIVATE METHODS ----
 
 // SET INSTANCE AND MEMORY SIZE (16 BYTES PER ROW)
@@ -88,6 +71,23 @@ begin
   end else
   begin
     ShowMessage(MSG01 + MSG03);
+  end;
+end;
+
+// ---- PUBLIC METHODS ----
+
+// REFRESH COLORS
+procedure TForm3.RefreshColors;
+begin
+  with uconfig.AppConfig.HexViewerConfig do
+  begin
+    Form3.FAddressColor := address_color;
+    Form3.FDataColor := data_color;
+    Form3.FLineSelectorColor := lineselector_color;
+    Form3.FBGColorOddLines := bgodd_color;
+    Form3.FBGColorEvenLines := bgeven_color;
+    DrawGrid1.Color := FBGColorOddLines;
+    DrawGrid1.Invalidate;
   end;
 end;
 

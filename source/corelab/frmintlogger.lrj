@@ -1,0 +1,11 @@
+{"version":1,"strings":[
+{"hash":154504594,"name":"tform8.caption","sourcebytes":[73,110,116,76,111,103,103,101,114],"value":"IntLogger"},
+{"hash":77771730,"name":"tform8.button2.caption","sourcebytes":[67,108,101,97,38,114],"value":"Clea&r"},
+{"hash":160203710,"name":"tform8.button3.caption","sourcebytes":[38,83,97,118,101,46,46,46],"value":"&Save..."},
+{"hash":44709525,"name":"tform8.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
+{"hash":4640403,"name":"tform8.editbutton1.hint","sourcebytes":[83,101,97,114,99,104,32,105,110,32,108,111,103,32,114,101,99,111,114,100,115],"value":"Search in log records"},
+{"hash":94128834,"name":"tform8.drawgrid1.columns[0].title.caption","sourcebytes":[83,101,110,100,101,114],"value":"Sender"},
+{"hash":97233762,"name":"tform8.drawgrid1.columns[1].title.caption","sourcebytes":[86,101,99,116,111,114],"value":"Vector"},
+{"hash":95062979,"name":"tform8.drawgrid1.columns[2].title.caption","sourcebytes":[83,116,97,116,117,115],"value":"Status"},
+{"hash":316023,"name":"tform8.drawgrid1.columns[3].title.caption","sourcebytes":[70,108,97,103],"value":"Flag"}
+]}

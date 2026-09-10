@@ -20,8 +20,8 @@ uses
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmscripteditor, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
-  uconfig, uplugin, uproject, uintelhex;
+  frmscripteditor, frmscriptconsole, frmintlogger, core_cpu, core_memory,
+  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -744,9 +744,9 @@ begin
     with uconfig.AppConfig do
     begin
       Form3.RefreshColors;                                          // HexViewer
-      {...}                                                         // IntLogger
+      Form8.RefreshColors;                                          // IntLogger
       Form4.RefreshColors;                                          // RunLogger
-      {...}                                                     // ScriptConsole
+      Form12.RefreshColors;                                     // ScriptConsole
       Form6.RefreshColors;                                       // ScriptEditor
       with SysConsoleConfig do                                     // SysConsole
       begin
@@ -821,7 +821,8 @@ end;
 // VIEW/SHOW INTLOGGER
 procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
 begin
-  {...}
+  Form8.Show;
+  Form8.BringToFront;
 end;
 
 procedure TForm1.VShowIOPanelExecute(Sender: TObject);
@@ -846,7 +847,8 @@ end;
 // VIEW/SHOW SCRIPTCONSOLE
 procedure TForm1.VShowScriptConsoleExecute(Sender: TObject);
 begin
-  {...}
+  Form12.Show;
+  Form12.BringToFront;
 end;
 
 // PROCESSOR/CREATE

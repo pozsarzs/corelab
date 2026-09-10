@@ -22,12 +22,12 @@ type
     FOnCommand: TNotifyEvent;
     FBGColor:   TColor;
     FFontColor: TColor;
-    procedure ClearContent;
     procedure SetBGColor(AColor: TColor);
     procedure SetFontColor(AColor: TColor);
     procedure WMKeyDown(var Message: TLMKeyDown); message WM_KEYDOWN;
   public
     constructor Create(AOwner: TComponent); override;
+    procedure ClearContent;
     procedure WriteMessage(const AText: string);
   published
     property BGColor: TColor read FBGColor write SetBGColor;
@@ -45,12 +45,6 @@ begin
 end;
 
 // ---- PRIVATE METHODS ----
-
-// CLEAR CONSOLE
-procedure TSysConsole.ClearContent;
-begin
-  Clear;
-end;
 
 // SET BACKGROUND COLOR
 procedure TSysConsole.SetBGColor(AColor: TColor);
@@ -82,6 +76,12 @@ begin
 end;
 
 // ---- PUBLIC METHODS ----
+
+// CLEAR CONSOLE
+procedure TSysConsole.ClearContent;
+begin
+  Clear;
+end;
 
 // CREATE COMPONENT
 constructor TSysConsole.Create(AOwner: TComponent);
