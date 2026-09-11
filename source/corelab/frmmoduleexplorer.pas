@@ -47,7 +47,7 @@ implementation
 // CREATE FORM
 procedure TForm9.FormCreate(Sender: TObject);
 begin
-
+  Visible := uconfig.AppConfig.ModuleExplorer.Visible;
 end;
 
 // SHOW FORM
@@ -59,7 +59,15 @@ end;
 // CLOSE FORM
 procedure TForm9.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  // store changeable setting
+  with uconfig.AppConfig.ModuleExplorer do
+  begin
+    top := Form6.Top;
+    left := Form6.Left;
+    height := Form6.Height;
+    width := Form6.Width;
 
+  end;
 end;
 
 end.

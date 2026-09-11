@@ -16,15 +16,13 @@ unit frmscripteditor;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  SynEdit, MODSynHighlighterAny, uconfig;
+  ComCtrls, SynEdit, MODSynHighlighterAny, uconfig;
 type
   { TForm6 }
   TForm6 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
+    StatusBar1: TStatusBar;
     SynAnySyn1: TSynAnySyn;
     SynEdit1: TSynEdit;
-    procedure Button1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormHide(Sender: TObject);
@@ -121,13 +119,6 @@ begin
 end;
 
 // ---- EVENT HANDLER METHODS
-
-// CLOSE
-procedure TForm6.Button1Click(Sender: TObject);
-begin
-  CopyEditorToBuffer;
-  Close;
-end;
 
 // COPY LINES TO BUFFER
 procedure TForm6.SynEdit1Exit(Sender: TObject);
