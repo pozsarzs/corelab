@@ -69,6 +69,7 @@ var
   Form6: TForm6;
 
 implementation
+uses frmmain;
 
 {$R *.lfm}
 { TForm6 }
@@ -151,6 +152,7 @@ begin
   if SynEdit1.Modified
     then StatusBar1.Panels[0].Text := '*'
     else StatusBar1.Panels[0].Text := '';
+  Form1.ActualScriptIsSaved := SynEdit1.Modified;
   // cursor position
   StatusBar1.Panels[1].Text := IntToStr(SynEdit1.CaretY) + ':' + IntToStr(SynEdit1.CaretX);
   // inser/overwrite mode

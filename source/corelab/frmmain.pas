@@ -384,7 +384,11 @@ type
     FScriptBuffer:     TStringList;
     // global and project settings
     FAppProject:       TAppProject;                              // project data
+    function InstanceNameDuplicated(AInstanceDict:  TMemInstanceDict; AKeyName: string): Boolean; overload;
+    function InstanceNameDuplicated(AInstanceDict:  TPortInstanceDict; AKeyName: string): Boolean; overload;
+    function InstanceNameDuplicated(AInstanceDict:  TProcInstanceDict; AKeyName: string): Boolean; overload;
     procedure ChangeOpMode(AOpMode: TOpMode; AForced: Boolean); // change opmode
+    procedure DestroyAllModules(AClose: Boolean);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
   protected
@@ -404,6 +408,7 @@ type
   public
     property IgnoreHelp: Boolean write SetIgnoreHelp;
     property PluginDirectory: string write SetPluginDirectory;
+    property ActualScriptIsSaved: Boolean read FActualScriptIsSaved write FActualScriptIsSaved;
   end;
 var
   Form1: TForm1;
@@ -484,8 +489,36 @@ resourcestring
   MSG82 = 'Script loaded from ''%s''.';                                   { SC }
   MSG83 = 'Script saved to ''%s''.';                                      { SC }
   MSG84 = 'Cannot create backup file.';                                   { SC }
+  MSG85 = 'Module named ''%s'' exists.';                                  { SM }
 
 // ---- PRIVATE METHODS ----
+
+function TForm1.InstanceNameDuplicated(AInstanceDict: TMemInstanceDict; AKeyName: string): Boolean; overload;
+var
+  KeyName: string;
+begin
+  Result := False;
+  for KeyName in AInstanceDict.Keys do
+    if KeyName = AKeyName then Result := True;
+end;
+
+function TForm1.InstanceNameDuplicated(AInstanceDict: TPortInstanceDict; AKeyName: string): Boolean; overload;
+var
+  KeyName: string;
+begin
+  Result := False;
+  for KeyName in AInstanceDict.Keys do
+    if KeyName = AKeyName then Result := True;
+end;
+
+function TForm1.InstanceNameDuplicated(AInstanceDict: TProcInstanceDict; AKeyName: string): Boolean; overload;
+var
+  KeyName: string;
+begin
+  Result := False;
+  for KeyName in AInstanceDict.Keys do
+    if KeyName = AKeyName then Result := True;
+end;
 
 // CHANGE OPERATION MODE
 procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced: Boolean);
@@ -563,6 +596,7 @@ begin
   FActualScriptIsSaved := False;
   FScriptInstPointer := 0;
   // clear active component instances
+  DestroyAllModules(False);
   FProcInstanceDict.Clear;
   FMemInstanceDict.Clear;
   FPortInstanceDict.Clear;
@@ -572,9 +606,9 @@ begin
   if Assigned(Form3) then Form3.Invalidate;                         // HexViewer
   if Assigned(Form4) then Form4.ClearContent;                       // RunLogger
   if Assigned(Form6) then Form6.CopyBufferToEditor;              // ScriptEditor
-  // if Assigned(Form8) then Form8.ClearContent;                    // IntLogger
+  if Assigned(Form8) then Form8.ClearContent;                       // IntLogger
   // if Assigned(Form11) then Form11.ClearContent;                  // RegViewer
-  // if Assigned(Form12) then Form12.ClearContent;              // ScriptConsole
+  if Assigned(Form12) then Form12.ClearContent;                 // ScriptConsole
   // close internal modules
   for i := Screen.FormCount - 1 downto 0 do
     if (Screen.Forms[i] <> Application.MainForm) and
@@ -583,6 +617,63 @@ begin
   if FOpMode = omInteractive
     then Memo1.WriteMessage(MSG03 + MSG07)
     else Memo1.WriteMessage(MSG03 + MSG08);
+end;
+
+// DESTROY ALL MODULE (AND DICTIONARIES)
+procedure TForm1.DestroyAllModules(AClose: Boolean);
+var
+  KeyName:  string;
+  PortInfo: TPortInfo;
+  ProcInfo: TProcInfo;
+  MemInfo:  TMemInfo;
+begin
+  // destroy I/O port modules and theirs dictionary
+  if Assigned(FPortInstanceDict) then
+  begin
+    for KeyName in FPortInstanceDict.Keys do
+    begin
+      PortInfo := FPortInstanceDict[KeyName];
+      // destroy panel
+      if PortInfo.Port.HasPanel then FPortPluginDict[PortInfo.ModuleName].FFreePanel(PortInfo.Port);
+      // destroy module
+      FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
+      // remove from dict
+      FPortInstanceDict.Remove(KeyName);
+      // remove from Module Explorer
+      if not AClose then Form9.DeleteNode('I/O port & device', KeyName);
+    end;
+    if AClose then FPortInstanceDict.Free;
+  end;
+  // destroy processor modules and theirs dictionary
+  if Assigned(FProcInstanceDict) then
+  begin
+    for KeyName in FProcInstanceDict.Keys do
+    begin
+      ProcInfo := FProcInstanceDict[KeyName];
+      // destroy module
+      FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
+      // remove from dict
+      FProcInstanceDict.Remove(KeyName);
+      // remove from Module Explorer
+      if not AClose then Form9.DeleteNode('Processor', KeyName);
+    end;
+    if AClose then FProcInstanceDict.Free;
+  end;
+  // destroy memory modules and theirs dictionary
+  if Assigned(FMemInstanceDict) then
+  begin
+    for KeyName in FMemInstanceDict.Keys do
+    begin
+      MemInfo := FMemInstanceDict[KeyName];
+      // destroy module
+      FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
+      // remove from dict
+      FMemInstanceDict.Remove(KeyName);
+      // remove from Module Explorer
+      if not AClose then Form9.DeleteNode('Memory', KeyName);
+    end;
+    if AClose then FMemInstanceDict.Free;
+  end;
 end;
 
 // SET HELP SYSTEM
@@ -962,19 +1053,23 @@ begin
       PluginList := StringList;
       if ShowModal = mrOk then
       begin
-        // create
-        if Assigned(FProcPluginDict[SelectedKey].FCreate) then
+        // check existing names
+        if not InstanceNameDuplicated(FProcInstanceDict, SelectedName) then
         begin
-          ProcInfo.Processor := FProcPluginDict[SelectedKey].FCreate();
-          ProcInfo.ModuleName := SelectedKey;
-          ProcInfo.AttachedToBus := False;
-        end;
-        // store
-        FProcInstanceDict.Add(SelectedName, ProcInfo);
-        // add to Module Explorer
-        Form9.AddNode('Processor', SelectedName);
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', SelectedName]));
+          // create
+          if Assigned(FProcPluginDict[SelectedKey].FCreate) then
+          begin
+            ProcInfo.Processor := FProcPluginDict[SelectedKey].FCreate();
+            ProcInfo.ModuleName := SelectedKey;
+            ProcInfo.AttachedToBus := False;
+          end;
+          // store
+          FProcInstanceDict.Add(SelectedName, ProcInfo);
+          // add to Module Explorer
+          Form9.AddNode('Processor', SelectedName);
+          // report
+          Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', SelectedName]));
+        end else ShowMessage(MSG01 + Format(MSG85, [SelectedName]));
       end;
     end;
   finally
@@ -1004,7 +1099,7 @@ begin
         // remove from dict
         FProcInstanceDict.Remove(SelectedKey);
         // remove from Module Explorer
-        Form9.AddNode('Processor', SelectedKey);
+        Form9.DeleteNode('Processor', SelectedKey);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
       end;
@@ -1120,7 +1215,6 @@ procedure TForm1.MCreateExecute(Sender: TObject);
 var
   KeyName:    string;
   MemInfo:    TMemInfo;
-  ParentNode: TTreeNode;
   StringList: TStringList;
 begin
   StringList := TStringList.Create;
@@ -1131,19 +1225,23 @@ begin
       PluginList := StringList;
       if ShowModal = mrOk then
       begin
-        // create
-        if Assigned(FMemPluginDict[SelectedKey].FCreate) then
+        // check existing names
+        if not InstanceNameDuplicated(FMemInstanceDict, SelectedName) then
         begin
-          MemInfo.Memory := FMemPluginDict[SelectedKey].FCreate();
-          MemInfo.ModuleName := SelectedKey;
-          MemInfo.AttachedToBus := False;
-        end;
-        // store
-        FMemInstanceDict.Add(SelectedName, MemInfo);
-        // add to Module Explorer
-        Form9.AddNode('Memory', SelectedName);
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', SelectedName]));
+          // create
+          if Assigned(FMemPluginDict[SelectedKey].FCreate) then
+          begin
+            MemInfo.Memory := FMemPluginDict[SelectedKey].FCreate();
+            MemInfo.ModuleName := SelectedKey;
+            MemInfo.AttachedToBus := False;
+          end;
+          // store
+          FMemInstanceDict.Add(SelectedName, MemInfo);
+          // add to Module Explorer
+          Form9.AddNode('Memory', SelectedName);
+          // report
+          Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', SelectedName]));
+        end else ShowMessage(MSG01 + Format(MSG85, [SelectedName]));
       end;
     end;
   finally
@@ -1157,8 +1255,6 @@ var
   KeyName:    string;
   MemInfo:    TMemInfo;
   StringList: TStringList;
-  ParentNode: TTreeNode;
-  Node:       TTreeNode;
 begin
   StringList := TStringList.Create;
   try
@@ -1175,7 +1271,7 @@ begin
         // remove from dict
         FMemInstanceDict.Remove(SelectedKey);
         // remove from Module Explorer
-        Form9.AddNode('Memory', SelectedKey);
+        Form9.DeleteNode('Memory', SelectedKey);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
       end;
@@ -1501,7 +1597,6 @@ end;
 procedure TForm1.IOCreateExecute(Sender: TObject);
 var
   KeyName:    string;
-  ParentNode: TTreeNode;
   PortInfo:   TPortInfo;
   StringList: TStringList;
 begin
@@ -1513,24 +1608,28 @@ begin
       PluginList := StringList;
       if ShowModal = mrOk then
       begin
-        if Assigned(FPortPluginDict[SelectedKey].FCreate) then
+        // check existing names
+        if not InstanceNameDuplicated(FPortInstanceDict, SelectedName) then
         begin
-          // create module
-          PortInfo.Port := FPortPluginDict[SelectedKey].FCreate();
-          PortInfo.ModuleName := SelectedKey;
-          PortInfo.AttachedToBus := False;
-          // create and show panel
-          if PortInfo.Port.HasPanel
-            then FPortPluginDict[SelectedKey].FCreatePanel(PortInfo.Port);
-          if PortInfo.Port.HasPanel
-            then FPortPluginDict[SelectedKey].FShowPanel(PortInfo.Port);
-        end;
-        // store
-        FPortInstanceDict.Add(SelectedName, PortInfo);
-        // add to Module Explorer
-        Form9.AddNode('I/O port & device', SelectedName);
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', SelectedName]));
+          if Assigned(FPortPluginDict[SelectedKey].FCreate) then
+          begin
+            // create module
+            PortInfo.Port := FPortPluginDict[SelectedKey].FCreate();
+            PortInfo.ModuleName := SelectedKey;
+            PortInfo.AttachedToBus := False;
+            // create and show panel
+            if PortInfo.Port.HasPanel
+              then FPortPluginDict[SelectedKey].FCreatePanel(PortInfo.Port);
+            if PortInfo.Port.HasPanel
+              then FPortPluginDict[SelectedKey].FShowPanel(PortInfo.Port);
+          end;
+          // store
+          FPortInstanceDict.Add(SelectedName, PortInfo);
+          // add to Module Explorer
+          Form9.AddNode('I/O port & device', SelectedName);
+          // report
+          Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', SelectedName]));
+        end else ShowMessage(MSG01 + Format(MSG85, [SelectedName]));
       end;
     end;
   finally
@@ -1562,7 +1661,7 @@ begin
         // remove from dict
         FPortInstanceDict.Remove(SelectedKey);
         // remove from Module Explorer
-        Form9.AddNode('I/O port & device', SelectedKey);
+        Form9.DeleteNode('I/O port & device', SelectedKey);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
       end;
@@ -2073,22 +2172,8 @@ end;
 // DESTROY EVENT
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  // clear and destroy dictionaries
-  if Assigned(FProcInstanceDict) then
-  begin
-    FProcInstanceDict.Clear;
-    FProcInstanceDict.Free;
-  end;
-  if Assigned(FMemInstanceDict) then
-  begin
-    FMemInstanceDict.Clear;
-    FMemInstanceDict.Free;
-  end;
-  if Assigned(FPortInstanceDict) then
-  begin
-    FPortInstanceDict.Clear;
-    FPortInstanceDict.Free;
-  end;
+  // destroy modules and theirs dictionaries
+  DestroyAllModules(True);
   // clear and destroy script buffer
   if Assigned(FScriptBuffer) then
   begin
