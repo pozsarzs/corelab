@@ -25,20 +25,27 @@ const
   AUTMAIL = 'pozsarzs@gmail.com';
   PRGNAME = 'CoreLAB';
   PRGVERS = '0.1';
-  PARAMS: array[1..4, 1..3] of string =
+  PARAMS: array[1..7, 1..3] of string =
     (
     ('-h', '--help', 'show help'),
     ('-v', '--version', 'show version and build information'),
     ('-d', '--dir', 'set plugin directory'),
-    ('-i', '--ignore-help', 'ignore missing help file or viewer')
+    ('-i', '--ignore-help', 'ignore missing help file or viewer'),
+    ('-s', '--script', 'switch to script mode, optionally load [filename]'),
+    ('-r', '--run', 'run loaded script immediately'),
+    ('-p', '--project', 'switch to project mode, optionally load [project]')
     );
 var
-  AboutLabels: TAboutLabels;
-  i:           Byte;
-  ExeName:     string;
-  IgnoreHelp:  Boolean;
-  InvalidArg:  Boolean;
-  PluginDir:   string;
+  AboutLabels:   TAboutLabels;
+  ExeName:       string;
+  i:             Integer;
+  IgnoreHelp:    Boolean;
+  IsProjectMode: Boolean;
+  IsScriptMode:  Boolean;
+  PluginDir:     string;
+  ProjectFile:   string;
+  RunScript:     Boolean;
+  ScriptFile:    string;
 
 {$R *.res}
 
@@ -51,14 +58,14 @@ resourcestring
   MSG06 = 'Target CPU:  ';
   MSG07 = 'There are one or more bad arguments in command line.';
   MSG08 = 'Usage';
-  MSG09 = '[argument]';
-  MSG10 = '[directory]';
+  MSG09 = ' [argument]';
+  MSG10 = ' [directory|file]';
   MSG11 = 'arguments:';
 
 // SHOW USAGE
 procedure Help(Mode: Boolean);
 var
-  b: Byte;
+  b:       Byte;
   Caption: string;
   Message: string;
 begin
@@ -68,7 +75,7 @@ begin
     Message := MSG08 + ':' + #13 + #10;
     Message := Message + ' ' + ExeName + MSG09 + ' ' + MSG10 + #13 + #10 + #13 + #10;
     Message := Message + MSG11;
-    for b := 1 to 4 do
+    for b := Low(PARAMS) to High(PARAMS) do
       Message := Message + #13 + #10 + '  ' +
                  PARAMS[b, 1] + ', ' + PARAMS[b, 2] + ': ' + PARAMS[b, 3];
   end;
@@ -107,59 +114,80 @@ begin
   {$IFDEF UNIX}
     writeln(Message);
   {$ELSE}
-    Caption := fn + ' --version';
+    Caption := ExeName + ' --version';
     Application.MessageBox(PChar(Message), PChar(Caption));
   {$ENDIF}
 end;
 
 begin
   // default values
-  IgnoreHelp := false;
-  PluginDir := '';
   ExeName := ExtractFilename(ParamStr(0));
+  IgnoreHelp := False;
+  IsProjectMode := False;
+  IsScriptMode := False;
+  PluginDir := '';
+  ProjectFile := '';
+  RunScript := False;
+  ScriptFile := '';
+
   // arguments and operation modes
   if ParamCount > 0 then
   begin
-    InvalidArg := true;
-    for i := 1 to ParamCount do
+    i := 1;
+    while i <= ParamCount do
     begin
       if (ParamStr(i) = PARAMS[1, 1]) or (ParamStr(i) = PARAMS[1, 2]) then
       begin
-        // show help and halt
-        InvalidArg := false;
         Help(False);
         Halt(0);
-      end;
-      if (ParamStr(i) = PARAMS[2, 1]) or (ParamStr(i) = PARAMS[2, 2]) then
-      begin
-        // show help and halt
-        InvalidArg := false;
-        Version;
-        Halt(0);
-      end;
-      if (ParamStr(i) = PARAMS[3, 1]) or (ParamStr(i) = PARAMS[3, 2]) then
-      begin
-        if i < ParamCount then
+      end else
+        if (ParamStr(i) = PARAMS[2, 1]) or (ParamStr(i) = PARAMS[2, 2]) then
         begin
-          // set plugin directory
-          InvalidArg := false;
-          if DirectoryExists(ParamStr(i + 1), true) then PluginDir := ParamStr(i + 1);
-        end;
-      end;
-      if (ParamStr(i) = PARAMS[4, 1]) or (ParamStr(i) = PARAMS[4, 2]) then
-      begin
-        // set IgnoreHelp variable
-        InvalidArg := false;
-        IgnoreHelp := true;
-      end;
-    end;
-    if InvalidArg then
-    begin
-      // show error message and halt
-      Help(True);
-      Halt(0);
+          Version;
+          Halt(0);
+        end else
+        if (ParamStr(i) = PARAMS[3, 1]) or (ParamStr(i) = PARAMS[3, 2]) then
+        begin
+          if i < ParamCount then
+          begin
+            Inc(i);
+            if DirectoryExists(ParamStr(i), True) then PluginDir := ParamStr(i);
+          end;
+        end else
+          if (ParamStr(i) = PARAMS[4, 1]) or (ParamStr(i) = PARAMS[4, 2]) then
+          begin
+            IgnoreHelp := True;
+          end else
+            if (ParamStr(i) = PARAMS[5, 1]) or (ParamStr(i) = PARAMS[5, 2]) then
+            begin
+              IsScriptMode := True;
+              if (i < ParamCount) and (Copy(ParamStr(i + 1), 1, 1) <> '-') then
+              begin
+                Inc(i);
+                ScriptFile := ParamStr(i);
+              end;
+            end else
+              if (ParamStr(i) = PARAMS[6, 1]) or (ParamStr(i) = PARAMS[6, 2]) then
+              begin
+                RunScript := True;
+              end else
+                if (ParamStr(i) = PARAMS[7, 1]) or (ParamStr(i) = PARAMS[7, 2]) then
+                begin
+                  IsProjectMode := True;
+                  if (i < ParamCount) and (Copy(ParamStr(i + 1), 1, 1) <> '-') then
+                  begin
+                    Inc(i);
+                    ProjectFile := ParamStr(i);
+                  end;
+                end else
+                begin
+                  Help(True);
+                  Halt(0);
+                end;
+                Inc(i);
     end;
   end;
+
   // start application
   RequireDerivedFormResource := True;
   with AboutLabels do
@@ -194,11 +222,26 @@ begin
     CreateForm(TForm17, Form17);                     // Instantiated module list
     CreateForm(TForm18, Form18);                                     // Settings
   end;
+
   // set properties
   Form2.AboutLabels := AboutLabels;
   Form1.PluginDirectory := PluginDir;
   Form1.IgnoreHelp := IgnoreHelp;
+
+  if IsScriptMode then
+  begin
+    Form1.StartupScript := ScriptFile;
+    Form1.AutoRunScript := RunScript;
+    Form1.SetScriptMode;
+  end
+  else if IsProjectMode then
+  begin
+    Form1.StartupProject := ProjectFile;
+    Form1.SetProjectMode;
+  end;
+
   // start application
   Application.ProcessMessages;
   Application.Run;
 end.
+

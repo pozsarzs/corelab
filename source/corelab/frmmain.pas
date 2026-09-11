@@ -387,7 +387,7 @@ type
     function InstanceNameDuplicated(AInstanceDict:  TMemInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict:  TPortInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict:  TProcInstanceDict; AKeyName: string): Boolean; overload;
-    procedure ChangeOpMode(AOpMode: TOpMode; AForced: Boolean); // change opmode
+    procedure ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean); // change opmode
     procedure DestroyAllModules(AClose: Boolean);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
@@ -396,19 +396,27 @@ type
     FActualProjectIsSaved: Boolean;                  // actual project directory
     FActualScript:         string;                         // actual script file
     FActualScriptIsSaved:  Boolean;                        // actual script file
-    FScriptInstPointer:    integer;                   // next instruction number
-    FScriptIsRunning:      Boolean;                      // script running state
+    FAutoRunScript:        Boolean;  // auto run after loading from command line
     FConfigDirectory:      string;                  // directory of the INI file
     FEXEDirectory:         string;                // directory of the executable
     FIgnoreHelp:           Boolean;                   // ignore search help file
     FOpMode:               TOpMode;                            // operation mode
     FPluginDirectory:      string;                   // directory of the plugins
+    FScriptInstPointer:    integer;                   // next instruction number
+    FScriptIsRunning:      Boolean;                      // script running state
+    FStartupProject:       string;        // project file name from command line
+    FStartupScript:        string;         // script file name from command line
     FSystemLanguage:       string;                            // system language
     FUserDirectory:        string;                           // user's directory
   public
+    property ActualScriptIsSaved: Boolean read FActualScriptIsSaved write FActualScriptIsSaved;
+    property AutoRunScript: Boolean write FAutoRunScript;
     property IgnoreHelp: Boolean write SetIgnoreHelp;
     property PluginDirectory: string write SetPluginDirectory;
-    property ActualScriptIsSaved: Boolean read FActualScriptIsSaved write FActualScriptIsSaved;
+    property StartupProject: string write FStartupProject;
+    property StartupScript: string write FStartupScript;
+    procedure SetProjectMode;
+    procedure SetScriptMode;
   end;
 var
   Form1: TForm1;
@@ -521,24 +529,27 @@ begin
 end;
 
 // CHANGE OPERATION MODE
-procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced: Boolean);
+procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean);
 var
   i: integer;
 begin
   // forced change
   if (FOpMode = AOpMode) and (not AForced) then Exit;
   // change
-  // check actual project or script status
-  if FOpMode = omInteractive then
+  if ACheck then
   begin
-    if not FActualProjectIsSaved then
-      if MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrNo
-        then Exit;
-  end else
-  begin
-    if not FActualScriptIsSaved then
-      if MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrNo
-        then Exit;
+    // check actual project or script status
+    if FOpMode = omInteractive then
+    begin
+      if not FActualProjectIsSaved then
+        if MessageDlg(MSG43, MSG57, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+          then Exit;
+    end else
+    begin
+      if not FActualScriptIsSaved then
+        if MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+          then Exit;
+  end;
   end;
   FOpMode := AOpMode;
   // stop running script or simulation
@@ -734,24 +745,56 @@ begin
   FPluginDirectory := APluginDirectory;
 end;
 
+// ---- PUBLIC METHODS ----
+
+// SET PROJECT MODE AT STARTUP
+procedure TForm1.SetProjectMode;
+begin
+  ChangeOpMode(omInteractive, False, False);
+  // if Length(StartupProject) > 0 then projektfájl betöltés
+end;
+
+// SET SCRIPT MODE AT STARTUP
+procedure TForm1.SetScriptMode;
+begin
+  ChangeOpMode(omScript, False, False);
+  if Length(FStartupScript) > 0 then
+  begin
+    try
+      FScriptBuffer.LoadFromFile(FStartupScript);
+      Memo1.WriteMessage(MSG03 + Format(MSG82, [FStartupScript]));
+    except
+      ShowMessage(MSG01 + Format(MSG48, [FStartupScript]));
+      Exit;
+    end;
+    FActualScript := FStartupScript;
+    FActualScriptIsSaved := True;                             // no need to save
+    Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+    Form6.SetFilename(FActualScript);
+    if FAutoRunScript
+      then SRunScriptExecute(nil)
+      else VShowScriptEditorExecute(nil);
+  end;
+end;
+
 // ---- ACTION HANDLER METHODS ----
 
 // FILE/SWITCH TO INTERACTIVE MODE
 procedure TForm1.FSwitchToInteractiveModeExecute(Sender: TObject);
 begin
-  ChangeOpMode(omInteractive, False);
+  ChangeOpMode(omInteractive, False, True);
 end;
 
 // FILE/SWITCH TO SCRIPT MODE
 procedure TForm1.FSwitchToScriptModeExecute(Sender: TObject);
 begin
-  ChangeOpMode(omScript, False);
+  ChangeOpMode(omScript, False, True);
 end;
 
 // FILE/CREATE NEW PROJECT
 procedure TForm1.FNewProjectExecute(Sender: TObject);
 begin
-  ChangeOpMode(omInteractive, True)
+  ChangeOpMode(omInteractive, True, True)
 end;
 
 // FILE/LOAD EXISTING PROJECT
@@ -778,7 +821,7 @@ begin
       Filename := OpenDialog.FileName;
       FActualProjectIsSaved := True;
       // clearing
-      ChangeOpMode(omScript, True);
+      ChangeOpMode(omScript, True, True);
       // loading
       try
         LoadProject(FileName, FAppProject);
@@ -1836,7 +1879,7 @@ end;
 // SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
-  ChangeOpMode(omScript, True);
+  ChangeOpMode(omScript, True, True);
   // refresh and show ScriptEditor
   Form6.ClearModified;
   Form6.SetFilename('');
@@ -1867,7 +1910,7 @@ begin
       Filename := OpenDialog.FileName;
       FActualScriptIsSaved := True;
       // clearing
-      ChangeOpMode(omScript, True);
+      ChangeOpMode(omScript, True, True);
       // loading
       try
         FScriptBuffer.LoadFromFile(FileName);
@@ -2111,7 +2154,7 @@ begin
     // create script buffer
     FScriptBuffer := TStringList.Create;
     // change operation mode
-    ChangeOpMode(omInteractive, True);
+    ChangeOpMode(omInteractive, True, True);
   end else Application.Terminate;
 end;
 
