@@ -22,7 +22,7 @@ uses
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmmoduleexplorer,
   core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
-  uproject, uintelhex;
+  uproject, uintelhex, uactcontext;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -751,7 +751,7 @@ end;
 procedure TForm1.SetProjectMode;
 begin
   ChangeOpMode(omInteractive, False, False);
-  // if Length(StartupProject) > 0 then projektfájl betöltés
+  if Length(FStartupProject) > 0 then LoadProject(FStartupProject);
 end;
 
 // SET SCRIPT MODE AT STARTUP
@@ -824,7 +824,7 @@ begin
       ChangeOpMode(omScript, True, True);
       // loading
       try
-        LoadProject(FileName, FAppProject);
+        LoadProject(FileName);
         Memo1.WriteMessage(MSG03 + Format(MSG80, [FileName]));
       except
         ShowMessage(MSG01 + Format(MSG55, [FileName]));
@@ -851,7 +851,7 @@ begin
       Memo1.WriteMessage(MSG02 + MSG84);
     end;
     // save file
-    if not SaveProject(FActualProject, FAppProject) then
+    if not SaveProject(FActualProject) then
     begin
       ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
       Exit;
@@ -884,7 +884,7 @@ begin
         Memo1.WriteMessage(MSG02 + MSG84);
       end;
       // save file
-      if not SaveProject(Filename, FAppProject) then
+      if not SaveProject(Filename) then
       begin
         ShowMessage(MSG01 + Format(MSG56, [Filename]));
         Exit;
@@ -1260,6 +1260,7 @@ var
   MemInfo:    TMemInfo;
   StringList: TStringList;
 begin
+  // check ActionContext
   StringList := TStringList.Create;
   try
     for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);

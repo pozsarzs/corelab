@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 12
+  Left = 13
   Height = 160
-  Top = 15
+  Top = 11
   Width = 930
   Caption = 'Form1'
   ClientHeight = 135
@@ -880,7 +880,7 @@ object Form1: TForm1
         object ToolButton59: TToolButton
           Left = 75
           Top = 2
-          Action = VShowIntLogger
+          Action = VShowIOPanel
         end
         object ToolButton60: TToolButton
           Left = 98

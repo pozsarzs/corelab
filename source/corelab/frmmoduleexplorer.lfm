@@ -379,6 +379,7 @@ object Form9: TForm9
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
     Images = Form1.ImageList1
+    PopupMenu = PopupMenu1
     ReadOnly = True
     TabOrder = 1
     Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
@@ -471,6 +472,44 @@ object Form9: TForm9
           171
         )
       end
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
+    Left = 152
+    Top = 216
+    object MenuItem1: TMenuItem
+      Caption = 'MenuItem1'
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'MenuItem2'
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'MenuItem3'
+    end
+    object Separator1: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem4: TMenuItem
+      Caption = 'MenuItem4'
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'MenuItem5'
+    end
+    object Separator2: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem6: TMenuItem
+      Caption = 'MenuItem6'
+    end
+    object MenuItem7: TMenuItem
+      Caption = 'MenuItem7'
+    end
+    object Separator3: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem8: TMenuItem
+      Caption = 'MenuItem8'
     end
   end
 end

@@ -16,12 +16,24 @@ unit frmmoduleexplorer;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, EditBtn,
-  ExtCtrls, ValEdit, uconfig;
+  ExtCtrls, ValEdit, Menus, uconfig;
 type
   { TForm9 }
   TForm9 = class(TForm)
     EditButton1: TEditButton;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
     PageControl1: TPageControl;
+    PopupMenu1: TPopupMenu;
+    Separator1: TMenuItem;
+    Separator2: TMenuItem;
+    Separator3: TMenuItem;
     Splitter1: TSplitter;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
@@ -32,6 +44,7 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure PopupMenu1Popup(Sender: TObject);
   private
   public
     procedure AddNode(AParentName, ANodeName: string);
@@ -101,6 +114,16 @@ begin
     Form9.Width := width;
     TreeView1.Height := splitter;
   end;
+end;
+
+procedure TForm9.PopupMenu1Popup(Sender: TObject);
+begin
+
+
+  {  if TTreeView1.pare
+  GetNodeAt(X, Y) → melyik node-ra kattintottak
+Node.Parent <> nil → a node nem gyökér, tehát gyereknode
+ha Node.Parent = nil}
 end;
 
 // CLOSE FORM
