@@ -1,3 +1,5 @@
 {"version":1,"strings":[
-{"hash":220306194,"name":"tform6.caption","sourcebytes":[83,99,114,105,112,116,69,100,105,116,111,114],"value":"ScriptEditor"}
+{"hash":220306194,"name":"tform6.caption","sourcebytes":[83,99,114,105,112,116,69,100,105,116,111,114],"value":"ScriptEditor"},
+{"hash":13521,"name":"tform6.statusbar1.panels[1].text","sourcebytes":[49,58,49],"value":"1:1"},
+{"hash":20019,"name":"tform6.statusbar1.panels[2].text","sourcebytes":[73,78,83],"value":"INS"}
 ]}

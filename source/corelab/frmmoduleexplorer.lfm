@@ -373,12 +373,15 @@ object Form9: TForm9
     Top = 50
     Width = 249
     Align = alTop
+    AutoExpand = True
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 4
     Images = Form1.ImageList1
+    ReadOnly = True
     TabOrder = 1
+    Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
     Items.Data = {
       F9FFFFFF020003000000430000004300000043000000FFFFFFFF000000000000
       00000011000000492F4F20706F72742026206465766963654200000042000000
@@ -400,7 +403,11 @@ object Form9: TForm9
     ImageIndex = 27
     MaxLength = 0
     NumGlyphs = 1
+    OnButtonClick = EditButton1ButtonClick
+    OnEditingDone = EditButton1ButtonClick
+    ParentShowHint = False
     PasswordChar = #0
+    ShowHint = True
     TabOrder = 0
   end
   object Splitter1: TSplitter

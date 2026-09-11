@@ -839,6 +839,7 @@ object Form6: TForm6
     MouseLinkColor.Foreground = clBlue
     LineHighlightColor.Background = clNone
     LineHighlightColor.Foreground = clNone
+    OnStatusChange = SynEdit1StatusChange
     inline SynLeftGutterPartList1: TSynGutterPartList
       object SynGutterLineNumber1: TSynGutterLineNumber
         Width = 25
@@ -863,7 +864,25 @@ object Form6: TForm6
     Height = 19
     Top = 334
     Width = 606
-    Panels = <>
+    Panels = <    
+      item
+        Alignment = taCenter
+        Width = 20
+      end    
+      item
+        Alignment = taCenter
+        Text = '1:1'
+        Width = 80
+      end    
+      item
+        Alignment = taCenter
+        Text = 'INS'
+        Width = 45
+      end    
+      item
+        Width = 200
+      end>
+    SimplePanel = False
   end
   object SynAnySyn1: TSynAnySyn
     Enabled = False

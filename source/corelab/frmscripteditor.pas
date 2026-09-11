@@ -16,7 +16,7 @@ unit frmscripteditor;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, SynEdit, MODSynHighlighterAny, uconfig;
+  ComCtrls, SynEdit, MODSynHighlighterAny, uconfig, SynEditTypes;
 type
   { TForm6 }
   TForm6 = class(TForm)
@@ -28,6 +28,7 @@ type
     procedure FormHide(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SynEdit1Exit(Sender: TObject);
+    procedure SynEdit1StatusChange(Sender: TObject; Changes: TSynStatusChanges);
   private
     // colors
     FBGColor:         TColor;
@@ -39,9 +40,11 @@ type
     FSyntax:     Boolean;
     procedure SetExtBuffer(AExtBuffer: TStringList);
   public
+    procedure ClearModified;
     procedure CopyBufferToEditor;
     procedure CopyEditorToBuffer;
     procedure RefreshColors;
+    procedure SetFilename(AFilename: string);
     property ExtBuffer: TStringList write SetExtBuffer;
   end;
   const
@@ -79,6 +82,15 @@ begin
 end;
 
 // ---- PUBLIC METHODS ----
+
+// CLEAR MODIFIED FLAG
+procedure TForm6.ClearModified;
+begin
+  SynEdit1.Modified := False;
+  if SynEdit1.Modified
+    then StatusBar1.Panels[0].Text := '*'
+    else StatusBar1.Panels[0].Text := '';
+end;
 
 // COPY LINES FROM BUFFER
 procedure TForm6.CopyBufferToEditor;
@@ -118,12 +130,34 @@ begin
   end;
 end;
 
-// ---- EVENT HANDLER METHODS
+// SET FILENAME ON STATUSBAR
+procedure TForm6.SetFilename(AFilename: string);
+begin
+  StatusBar1.Panels[3].Text := AFilename;
+end;
+
+// ---- EVENT HANDLER METHODS ----
 
 // COPY LINES TO BUFFER
 procedure TForm6.SynEdit1Exit(Sender: TObject);
 begin
     CopyEditorToBuffer;
+end;
+
+// DISPLAY INSERT/OVERWRITE MODE
+procedure TForm6.SynEdit1StatusChange(Sender: TObject; Changes: TSynStatusChanges);
+begin
+  // modified
+  if SynEdit1.Modified
+    then StatusBar1.Panels[0].Text := '*'
+    else StatusBar1.Panels[0].Text := '';
+  // cursor position
+  StatusBar1.Panels[1].Text := IntToStr(SynEdit1.CaretY) + ':' + IntToStr(SynEdit1.CaretX);
+  // inser/overwrite mode
+  if scInsertMode in Changes then
+    if SynEdit1.InsertMode
+      then StatusBar1.Panels[2].Text := 'INS'
+      else StatusBar1.Panels[2].Text := 'OVR';
 end;
 
 // CREATE FORM
@@ -168,6 +202,9 @@ begin
     Form6.Width := width;
   end;
   RefreshColors;
+  if SynEdit1.InsertMode
+   then StatusBar1.Panels[1].Text := 'INS'
+   else StatusBar1.Panels[1].Text := 'OVR';
 end;
 
 //HIDE FORM

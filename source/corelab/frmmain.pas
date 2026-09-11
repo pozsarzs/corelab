@@ -375,7 +375,7 @@ type
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
   private
-    Memo1: TSysConsole;
+    Memo1:             TSysConsole;
     // active component instances
     FProcInstanceDict: TProcInstanceDict;
     FMemInstanceDict:  TMemInstanceDict;
@@ -425,8 +425,8 @@ resourcestring
   MSG04 = 'Plugin directory does not exist.';                             { SM }
   MSG05 = 'Cannot load plugins from %s.';                                 { SM }
   MSG06 = '%s plugins loaded.';                                           { SC }
-  MSG07 = 'The switch to interactive operation mode was successful.';     { SC }
-  MSG08 = 'The switch to script operation mode was successful.';          { SC }
+  MSG07 = 'New, empty project has been created.';                         { SC }
+  MSG08 = 'New, empty script has been created.';                          { SC }
   MSG18 = 'Missing help file.';                                           { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
   MSG28 = 'Save memory content to file';
@@ -479,6 +479,11 @@ resourcestring
   MSG77 = '&Move/resize panel';
   MSG78 = '&Show panel';
   MSG79 = '&Show';
+  MSG80 = 'Project loaded from ''%s''.';                                  { SC }
+  MSG81 = 'Project saved to ''%s''.';                                     { SC }
+  MSG82 = 'Script loaded from ''%s''.';                                   { SC }
+  MSG83 = 'Script saved to ''%s''.';                                      { SC }
+  MSG84 = 'Cannot create backup file.';                                   { SC }
 
 // ---- PRIVATE METHODS ----
 
@@ -515,6 +520,10 @@ begin
     MenuItem5.Enabled := True;
     MenuItem6.Enabled := True;
     MenuItem7.Enabled := False;
+    MenuItem37.Enabled := True;
+    MenuItem38.Enabled := True;
+    MenuItem39.Enabled := True;
+    MenuItem40.Enabled := True;
     MenuItem51.Enabled := False;
     MenuItem52.Enabled := False;
     ToolBar2.Enabled := True;
@@ -531,6 +540,10 @@ begin
     MenuItem5.Enabled := False;
     MenuItem6.Enabled := False;
     MenuItem7.Enabled := True;
+    MenuItem37.Enabled := False;
+    MenuItem38.Enabled := False;
+    MenuItem39.Enabled := False;
+    MenuItem40.Enabled := False;
     MenuItem51.Enabled := True;
     MenuItem52.Enabled := True;
     ToolBar2.Enabled := False;
@@ -677,14 +690,15 @@ begin
       ChangeOpMode(omScript, True);
       // loading
       try
-        LoadProject(FileName, FAppProject)
+        LoadProject(FileName, FAppProject);
+        Memo1.WriteMessage(MSG03 + Format(MSG80, [FileName]));
       except
         ShowMessage(MSG01 + Format(MSG55, [FileName]));
         exit;
       end;
       FActualProject := Filename;                               // with filename
       FActualProjectIsSaved := True;                          // no need to save
-      Form1.Caption := Application.Title + ' - ' + FActualScript;
+      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
     end;
   finally
     OpenDialog.Free;
@@ -696,11 +710,18 @@ begin
   if FActualProjectIsSaved then Exit;
   if Length(FActualProject) = 0 then FSaveProjectAsExecute(Sender) else
   begin
+    // create backup
+    try
+      if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
+    except
+      Memo1.WriteMessage(MSG02 + MSG84);
+    end;
+    // save file
     if not SaveProject(FActualProject, FAppProject) then
     begin
       ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
       Exit;
-    end;
+    end else Memo1.WriteMessage(MSG03 + Format(MSG81, [FActualProject]));
     FActualProjectIsSaved := True;                            // no need to save
   end;
 end;
@@ -722,14 +743,21 @@ begin
     if SaveDialog.Execute then
     begin
       Filename := SaveDialog.FileName;
+      // create backup
+      try
+        if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
+      except
+        Memo1.WriteMessage(MSG02 + MSG84);
+      end;
+      // save file
       if not SaveProject(Filename, FAppProject) then
       begin
         ShowMessage(MSG01 + Format(MSG56, [Filename]));
         Exit;
-      end;
+      end else Memo1.WriteMessage(MSG03 + MSG81);
       FActualProject := Filename;                                       // named
       FActualProjectIsSaved := True;                          // no need to save
-      Form1.Caption := Application.Title + ' - ' + FActualProject;
+      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
     end;
   finally
     SaveDialog.Free;
@@ -943,6 +971,8 @@ begin
         end;
         // store
         FProcInstanceDict.Add(SelectedName, ProcInfo);
+        // add to Module Explorer
+        Form9.AddNode('Processor', SelectedName);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', SelectedName]));
       end;
@@ -973,6 +1003,8 @@ begin
         FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
         // remove from dict
         FProcInstanceDict.Remove(SelectedKey);
+        // remove from Module Explorer
+        Form9.AddNode('Processor', SelectedKey);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
       end;
@@ -1088,6 +1120,7 @@ procedure TForm1.MCreateExecute(Sender: TObject);
 var
   KeyName:    string;
   MemInfo:    TMemInfo;
+  ParentNode: TTreeNode;
   StringList: TStringList;
 begin
   StringList := TStringList.Create;
@@ -1107,6 +1140,8 @@ begin
         end;
         // store
         FMemInstanceDict.Add(SelectedName, MemInfo);
+        // add to Module Explorer
+        Form9.AddNode('Memory', SelectedName);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', SelectedName]));
       end;
@@ -1122,6 +1157,8 @@ var
   KeyName:    string;
   MemInfo:    TMemInfo;
   StringList: TStringList;
+  ParentNode: TTreeNode;
+  Node:       TTreeNode;
 begin
   StringList := TStringList.Create;
   try
@@ -1137,6 +1174,8 @@ begin
         FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
         // remove from dict
         FMemInstanceDict.Remove(SelectedKey);
+        // remove from Module Explorer
+        Form9.AddNode('Memory', SelectedKey);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
       end;
@@ -1382,6 +1421,12 @@ begin
             try
               if SaveDialog1.FilterIndex <> 2 then
               begin
+                // create backup
+                try
+                  if FileExists(FileName) then RenameFile(FileName, FileName + '.bak');
+                except
+                  Memo1.WriteMessage(MSG02 + MSG84);
+                end;
                 // save to .bin file
                 try
                   MemInfo.Memory.SaveToStream(SaveStream, Form7.AddressFrom,
@@ -1456,6 +1501,7 @@ end;
 procedure TForm1.IOCreateExecute(Sender: TObject);
 var
   KeyName:    string;
+  ParentNode: TTreeNode;
   PortInfo:   TPortInfo;
   StringList: TStringList;
 begin
@@ -1481,6 +1527,8 @@ begin
         end;
         // store
         FPortInstanceDict.Add(SelectedName, PortInfo);
+        // add to Module Explorer
+        Form9.AddNode('I/O port & device', SelectedName);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', SelectedName]));
       end;
@@ -1513,6 +1561,8 @@ begin
         FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
         // remove from dict
         FPortInstanceDict.Remove(SelectedKey);
+        // remove from Module Explorer
+        Form9.AddNode('I/O port & device', SelectedKey);
         // report
         Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
       end;
@@ -1689,6 +1739,8 @@ procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
   ChangeOpMode(omScript, True);
   // refresh and show ScriptEditor
+  Form6.ClearModified;
+  Form6.SetFilename('');
   VShowScriptEditorExecute(Sender);
 end;
 
@@ -1720,14 +1772,17 @@ begin
       // loading
       try
         FScriptBuffer.LoadFromFile(FileName);
+        Memo1.WriteMessage(MSG03 + Format(MSG82, [FileName]));
       except
         ShowMessage(MSG01 + Format(MSG48, [FileName]));
         exit;
       end;
       FActualScript := Filename;                                // with filename
       FActualScriptIsSaved := True;                           // no need to save
-      Form1.Caption := Application.Title + ' - ' + FActualScript;
+      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
       // refresh and show ScriptEditor
+      Form6.ClearModified;
+      Form6.SetFilename(FActualScript);
       VShowScriptEditorExecute(Sender);
     end;
   finally
@@ -1741,8 +1796,18 @@ begin
   if FActualScriptIsSaved then Exit;
   if Length(FActualScript) = 0 then SSaveScriptAsExecute(Sender) else
   begin
+    // create backup
+    try
+      if FileExists(FActualScript) then RenameFile(FActualScript, FActualScript + '.bak');
+    except
+      Memo1.WriteMessage(MSG02 + MSG84);
+    end;
+    // save file
     try
       FScriptBuffer.SaveToFile(FActualScript);
+      Memo1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
+      // refresh ScriptEditor
+      Form6.ClearModified;
     except
       ShowMessage(MSG01 + Format(MSG49, [FActualScript]));
       Exit;
@@ -1768,15 +1833,26 @@ begin
     if SaveDialog.Execute then
     begin
       Filename := SaveDialog.FileName;
+      // create backup
+      try
+        if FileExists(FActualScript) then RenameFile(FActualScript, FActualScript + '.bak');
+      except
+        Memo1.WriteMessage(MSG02 + MSG84);
+      end;
+      // save file
       try
         FScriptBuffer.SaveToFile(FileName);
+        Memo1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
       except
         ShowMessage(MSG01 + Format(MSG49, [FileName]));
         Exit;
       end;
       FActualScript := Filename;                                        // named
       FActualScriptIsSaved := True;                           // no need to save
-      Form1.Caption := Application.Title + ' - ' + FActualScript;
+      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+      // refresh and show ScriptEditor
+      Form6.ClearModified;
+      Form6.SetFilename(FActualScript);
     end;
   finally
     SaveDialog.Free;
@@ -1882,6 +1958,7 @@ begin
           Form1.Left := left;
           Form1.Height := height;
           Form1.Width := width;
+          Form1.Panel2.Width := splitter;
         end;
         // SysConsole
         with SysConsoleConfig do
@@ -1976,6 +2053,7 @@ begin
       left := Form1.Left;
       height := Form1.Height;
       width := Form1.Width;
+      splitter := Form1.Panel2.Width;
     end;
     // SysConsole
     with SysConsoleConfig do
@@ -1983,6 +2061,8 @@ begin
       bg_color := Memo1.BGColor;
       font_color := Memo1.Font.Color;
     end;
+    // Module Explorer
+    ModuleExplorerConfig.visible := Form9.Visible;
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE)
     then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));
