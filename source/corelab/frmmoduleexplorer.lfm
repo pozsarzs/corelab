@@ -381,9 +381,10 @@ object Form9: TForm9
     Images = Form1.ImageList1
     PopupMenu = PopupMenu1
     ReadOnly = True
+    RightClickSelect = True
     TabOrder = 1
     OnContextPopup = TreeView1ContextPopup
-    Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+    Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoRightClickSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
     Items.Data = {
       F9FFFFFF020003000000430000004300000043000000FFFFFFFF000000000000
       00000011000000492F4F20706F72742026206465766963654200000042000000
@@ -450,7 +451,7 @@ object Form9: TForm9
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goAlwaysShowEditor, goThumbTracking]
         ColWidths = (
           64
-          173
+          171
         )
       end
     end

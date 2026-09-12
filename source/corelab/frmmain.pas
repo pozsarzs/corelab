@@ -384,13 +384,41 @@ type
     FScriptBuffer:     TStringList;
     // global and project settings
     FAppProject:       TAppProject;                              // project data
+    // check name duplication
     function InstanceNameDuplicated(AInstanceDict:  TMemInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict:  TPortInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict:  TProcInstanceDict; AKeyName: string): Boolean; overload;
+    // others
     procedure ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean); // change opmode
     procedure DestroyAllModules(AClose: Boolean);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
+    // action's operation metods
+    //    procedure IOCreateOperation(AIOActionContext: TIOActionContext);
+    procedure IODestroyOperation(AIOActionContext: TIOActionContext);
+    procedure IOResetOperation(AIOActionContext: TIOActionContext);
+    procedure IOEnableOperation(AIOActionContext: TIOActionContext);
+    procedure IODisableOperation(AIOActionContext: TIOActionContext);
+    procedure IOAttachToBusOperation(AIOActionContext: TIOActionContext);
+    procedure IODetachFromBusOperation(AIOActionContext: TIOActionContext);
+    procedure IOPropertiesOperation(AIOActionContext: TIOActionContext);
+//    procedure MCreateOperation(AMActionContext: TMActionContext);
+    procedure MDestroyOperation(AMActionContext: TMActionContext);
+    procedure MResetOperation(AMActionContext: TMActionContext);
+    procedure MEnableOperation(AMActionContext: TMActionContext);
+    procedure MDisableOperation(AMActionContext: TMActionContext);
+    procedure MAttachToBusOperation(AMActionContext: TMActionContext);
+    procedure MDetachFromBusOperation(AMActionContext: TMActionContext);
+    procedure MPropertiesOperation(AMActionContext: TMActionContext);
+//    procedure PCreateOperation(APActionContext: TPActionContext);
+    procedure PDestroyOperation(APActionContext: TPActionContext);
+    procedure PResetOperation(APActionContext: TPActionContext);
+    procedure PEnableOperation(APActionContext: TPActionContext);
+    procedure PDisableOperation(APActionContext: TPActionContext);
+    procedure PAttachToBusOperation(APActionContext: TPActionContext);
+    procedure PDetachFromBusOperation(APActionContext: TPActionContext);
+    procedure PPropertiesOperation(APActionContext: TPActionContext);
+
   protected
     FActualProject:        string;                   // actual project directory
     FActualProjectIsSaved: Boolean;                  // actual project directory
@@ -1123,134 +1151,491 @@ end;
 // PROCESSOR/DESTROY
 procedure TForm1.PDestroyExecute(Sender: TObject);
 var
-  KeyName:    string;
-  ProcInfo:   TProcInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  PActionContext := TPActionContext.Create;
   try
-    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
     begin
-      OKButtonCaption := MSG59;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        ProcInfo := FProcInstanceDict[SelectedKey];
-        // destroy
-        FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
-        // remove from dict
-        FProcInstanceDict.Remove(SelectedKey);
-        // remove from Module Explorer
-        Form9.DeleteNode('Processor', SelectedKey);
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG59;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      PDestroyOperation(PActionContext);
     end;
   finally
-    StringList.Free;
+    PActionContext.Free;
   end;
 end;
 
-// PROCESSOR/RESET
+// PROCESSOR/DESTROY OPERATION
+procedure TForm1.PDestroyOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // destroy
+    FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
+    // remove from dict
+    FProcInstanceDict.Remove(InstanceName);
+    // remove from Module Explorer
+    Form9.DeleteNode('Processor', InstanceName);
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/RESET ACTION
 procedure TForm1.PResetExecute(Sender: TObject);
 var
-  KeyName:    string;
-  ProcInfo:   TProcInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  PActionContext := TPActionContext.Create;
   try
-    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
     begin
-      OKButtonCaption := MSG61;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        ProcInfo := FProcInstanceDict[SelectedKey];
-        // reset
-        ProcInfo.Processor.Reset;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG61;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      PResetOperation(PActionContext);
     end;
   finally
-    StringList.Free;
+    PActionContext.Free;
   end;
 end;
 
-// PROCESSOR/ENABLE
+// PROCESSOR/RESET OPERATION
+procedure TForm1.PResetOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // reset
+    ProcInfo.Processor.Reset;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/ENABLE ACTION
 procedure TForm1.PEnableExecute(Sender: TObject);
 var
-  KeyName:    string;
-  ProcInfo:   TProcInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  PActionContext := TPActionContext.Create;
   try
-    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
     begin
-      OKButtonCaption := MSG63;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        ProcInfo := FProcInstanceDict[SelectedKey];
-        // enable
-        ProcInfo.Processor.Enabled := True;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG64, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG63;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      PEnableOperation(PActionContext);
     end;
   finally
-    StringList.Free;
-  end; end;
-
-// PROCESSOR/DISABLE
-procedure TForm1.PDisableExecute(Sender: TObject);
-var
-  KeyName:    string;
-  ProcInfo:   TProcInfo;
-  StringList: TStringList;
-begin
-  StringList := TStringList.Create;
-  try
-    for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
-    begin
-      OKButtonCaption := MSG65;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
-      begin
-        ProcInfo := FProcInstanceDict[SelectedKey];
-        // disable
-        ProcInfo.Processor.Enabled := False;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG66, [SelectedKey]));
-      end;
-    end;
-  finally
-    StringList.Free;
+    PActionContext.Free;
   end;
 end;
 
-// PROCESSOR/ATTACH TO BUS
+// PROCESSOR/ENABLE OPERATION
+procedure TForm1.PEnableOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // enable
+    ProcInfo.Processor.Enabled := True;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/DISABLE ACTION
+procedure TForm1.PDisableExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
+begin
+  PActionContext := TPActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG65;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      PDisableOperation(PActionContext);
+    end;
+  finally
+    PActionContext.Free;
+  end;
+end;
+
+// PROCESSOR/DISABLE OPERATION
+procedure TForm1.PDisableOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // enable
+    ProcInfo.Processor.Enabled := False;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/ATTACH TO BUS ACTION
 procedure TForm1.PAttachToBusExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  {...}
+  PActionContext := TPActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      PAttachToBusOperation(PActionContext);
+    end;
+  finally
+    PActionContext.Free;
+  end;
 end;
 
-// PROCESSOR/DETACH FROM BUS
+// PROCESSOR/ATTACH TO BUS OPERATION
+procedure TForm1.PAttachToBusOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // attach to bus
+    {...}
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/DETACH FROM BUS ACTION
 procedure TForm1.PDetachFromBusExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  {...}
+  PActionContext := TPActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      PDetachFromBusOperation(PActionContext);
+    end;
+  finally
+    PActionContext.Free;
+  end;
 end;
 
-// PROCESSOR/PROPERTIES
-procedure TForm1.PPropertiesExecute(Sender: TObject);
+// PROCESSOR/DETACH FROM BUS OPERATION
+procedure TForm1.PDetachFromBusOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
 begin
-  {...}
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // detach from bus
+    {...}
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/PROPERTIES ACTION
+procedure TForm1.PPropertiesExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
+begin
+  PActionContext := TPActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG71;
+            ModuleList := StringList;
+            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      PPropertiesOperation(PActionContext);
+    end;
+  finally
+    PActionContext.Free;
+  end;
+end;
+
+// PROCESSOR/PROPERTIES OPERATION
+procedure TForm1.PPropertiesOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    ProcInfo := FProcInstanceDict[InstanceName];
+    // show properties
+    {...}
+  end;
 end;
 
 // MEMORY/CREATE
@@ -1293,138 +1678,494 @@ begin
   end;
 end;
 
-// MEMORY/DESTROY
+// MEMORY/DESTROY ACTION
 procedure TForm1.MDestroyExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  MActionContext := TMActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
     begin
-      OKButtonCaption := MSG59;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        MemInfo := FMemInstanceDict[SelectedKey];
-        // destroy
-        FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
-        // remove from dict
-        FMemInstanceDict.Remove(SelectedKey);
-        // remove from Module Explorer
-        Form9.DeleteNode('Memory', SelectedKey);
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG59;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      MDestroyOperation(MActionContext);
     end;
   finally
-    StringList.Free;
+    MActionContext.Free;
   end;
 end;
 
-// MEMORY/RESET
+// MEMORY/DESTROY OPERATION
+procedure TForm1.MDestroyOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // destroy
+    FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
+    // remove from dict
+    FMemInstanceDict.Remove(InstanceName);
+    // remove from Module Explorer
+    Form9.DeleteNode('Memory', InstanceName);
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  end;
+end;
+
+// MEMORY/RESET ACTION
 procedure TForm1.MResetExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  MActionContext := TMActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
     begin
-      OKButtonCaption := MSG61;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        MemInfo := FMemInstanceDict[SelectedKey];
-        // reset
-        MemInfo.Memory.Reset;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG61;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      MResetOperation(MActionContext);
     end;
   finally
-    StringList.Free;
+    MActionContext.Free;
   end;
 end;
 
-// MEMORY/ENABLE
+// MEMORY/RESET OPERATION
+procedure TForm1.MResetOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // reset
+    MemInfo.Memory.Reset;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  end;
+end;
+
+// MEMORY/ENABLE ACTION
 procedure TForm1.MEnableExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  MActionContext := TMActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
     begin
-      OKButtonCaption := MSG63;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        MemInfo := FMemInstanceDict[SelectedKey];
-        // enable
-        MemInfo.Memory.Enabled := True;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG64, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG63;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      MEnableOperation(MActionContext);
     end;
   finally
-    StringList.Free;
+    MActionContext.Free;
   end;
 end;
 
-// MEMORY/DISABLE
+// MEMORY/ENABLE OPERATION
+procedure TForm1.MEnableOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // enable
+    MemInfo.Memory.Enabled := True;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  end;
+end;
+
+// MEMORY/DISABLE ACTION
 procedure TForm1.MDisableExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  StringList := TStringList.Create;
+  MActionContext := TMActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
     begin
-      OKButtonCaption := MSG65;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        MemInfo := FMemInstanceDict[SelectedKey];
-        // disable
-        MemInfo.Memory.Enabled := False;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG66, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG65;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      MDisableOperation(MActionContext);
     end;
   finally
-    StringList.Free;
+    MActionContext.Free;
   end;
 end;
 
-// MEMORY/ATTACH TO BUS
+// MEMORY/DISABLE OPERATION
+procedure TForm1.MDisableOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // enable
+    MemInfo.Memory.Enabled := False;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  end;
+end;
+
+// MEMORY/ATTACH TO BUS ACTION
 procedure TForm1.MAttachToBusExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  {...}
+  MActionContext := TMActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      MAttachToBusOperation(MActionContext);
+    end;
+  finally
+    MActionContext.Free;
+  end;
 end;
 
-// MEMORY/DETACH FROM BUS
+// MEMORY/ATTACH TO BUS OPERATION
+procedure TForm1.MAttachToBusOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // attach to bus
+    {...}
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  end;
+end;
+
+// MEMORY/DETACH FROM BUS ACTION
 procedure TForm1.MDetachFromBusExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  {...}
+  MActionContext := TMActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      MDetachFromBusOperation(MActionContext);
+    end;
+  finally
+    MActionContext.Free;
+  end;
 end;
 
-// MEMORY/PROPERTIES
-procedure TForm1.MPropertiesExecute(Sender: TObject);
+// MEMORY/DETACH FROM BUS OPERATION
+procedure TForm1.MDetachFromBusOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
 begin
-  {...}
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // detach from bus
+    {...}
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  end;
+end;
+
+// MEMORY/PROPERTIES ACTION
+procedure TForm1.MPropertiesExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
+begin
+  MActionContext := TMActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG71;
+            ModuleList := StringList;
+            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      MPropertiesOperation(MActionContext);
+    end;
+  finally
+    MActionContext.Free;
+  end;
+end;
+
+// MEMORY/PROPERTIES OPERATION
+procedure TForm1.MPropertiesOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // show properties
+    {...}
+  end;
 end;
 
 // MEMORY/LOAD MEMORY CONTENT
@@ -1681,140 +2422,494 @@ begin
   end;
 end;
 
-// IO PORT/DESTROY
+// I/O PORT/DESTROY ACTION
 procedure TForm1.IODestroyExecute(Sender: TObject);
 var
-  KeyName:    string;
-  PortInfo:   TPortInfo;
-  StringList: TStringList;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
+  Tree:            TTreeView;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      OKButtonCaption := MSG59;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        PortInfo := FPortInstanceDict[SelectedKey];
-        // destroy panel
-        if PortInfo.Port.HasPanel then FPortPluginDict[PortInfo.ModuleName].FFreePanel(PortInfo.Port);
-        // destroy module
-        FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
-        // remove from dict
-        FPortInstanceDict.Remove(SelectedKey);
-        // remove from Module Explorer
-        Form9.DeleteNode('I/O port & device', SelectedKey);
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG60, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG59;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      IODestroyOperation(IOActionContext);
     end;
   finally
-    StringList.Free;
+    IOActionContext.Free;
   end;
 end;
 
-// IO PORT/RESET
+// I/O PORT/DESTROY OPERATION
+procedure TForm1.IODestroyOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // destroy
+    FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
+    // remove from dict
+    FPortInstanceDict.Remove(InstanceName);
+    // remove from Module Explorer
+    Form9.DeleteNode('I/O port & device', InstanceName);
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  end;
+end;
+
+// I/O PORT/RESET ACTION
 procedure TForm1.IOResetExecute(Sender: TObject);
 var
-  KeyName:    string;
-  PortInfo:   TPortInfo;
-  StringList: TStringList;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
+  Tree:            TTreeView;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      OKButtonCaption := MSG61;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        PortInfo := FPortInstanceDict[SelectedKey];
-        // reset
-        PortInfo.Port.Reset;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG62, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG61;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      IOResetOperation(IOActionContext);
     end;
   finally
-    StringList.Free;
+    IOActionContext.Free;
   end;
 end;
 
-// IO PORT/ENABLE
+// I/O PORT/RESET OPERATION
+procedure TForm1.IOResetOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // reset
+    PortInfo.Port.Reset;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  end;
+end;
+
+// I/O PORT/ENABLE ACTION
 procedure TForm1.IOEnableExecute(Sender: TObject);
 var
-  KeyName:    string;
-  PortInfo:   TPortInfo;
-  StringList: TStringList;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
+  Tree:            TTreeView;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      OKButtonCaption := MSG63;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        PortInfo := FPortInstanceDict[SelectedKey];
-        // enable
-        PortInfo.Port.Enabled := True;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG64, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG63;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      IOEnableOperation(IOActionContext);
     end;
   finally
-    StringList.Free;
+    IOActionContext.Free;
   end;
 end;
 
-// IO PORT/DISABLE
+// I/O PORT/ENABLE OPERATION
+procedure TForm1.IOEnableOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // enable
+    PortInfo.Port.Enabled := True;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  end;
+end;
+
+// I/O PORT/DISABLE ACTION
 procedure TForm1.IODisableExecute(Sender: TObject);
 var
-  KeyName:    string;
-  PortInfo:   TPortInfo;
-  StringList: TStringList;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
+  Tree:            TTreeView;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      OKButtonCaption := MSG65;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        PortInfo := FPortInstanceDict[SelectedKey];
-        // disable
-        PortInfo.Port.Enabled := False;
-        // report
-        Memo1.WriteMessage(MSG03 + Format(MSG66, [SelectedKey]));
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG65;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
       end;
+      IODisableOperation(IOActionContext);
     end;
   finally
-    StringList.Free;
+    IOActionContext.Free;
   end;
 end;
 
-// IO PORT/ATTACH TO BUS
+// I/O PORT/DISABLE OPERATION
+procedure TForm1.IODisableOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // enable
+    PortInfo.Port.Enabled := False;
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  end;
+end;
+
+// I/O PORT/ATTACH TO BUS ACTION
 procedure TForm1.IOAttachToBusExecute(Sender: TObject);
+var
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
+  Tree:            TTreeView;
 begin
-
+  IOActionContext := TIOActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      IOAttachToBusOperation(IOActionContext);
+    end;
+  finally
+    IOActionContext.Free;
+  end;
 end;
 
-// IO PORT/DETACH FROM BUS
+// I/O PORT/ATTACH TO BUS OPERATION
+procedure TForm1.IOAttachToBusOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // attach to bus
+    {...}
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  end;
+end;
+
+// I/O PORT/DETACH FROM BUS ACTION
 procedure TForm1.IODetachFromBusExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  IOActionContext: TIOActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
-  {...}
+  IOActionContext := TIOActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      IODetachFromBusOperation(IOActionContext);
+    end;
+  finally
+    IOActionContext.Free;
+  end;
 end;
 
-// IO PORT/PROPERTIES
-procedure TForm1.IOPropertiesExecute(Sender: TObject);
+// I/O PORT/DETACH FROM BUS OPERATION
+procedure TForm1.IODetachFromBusOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
 begin
-  {...}
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // detach from bus
+    {...}
+    // report
+    if ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
+      else Memo1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/PROPERTIES ACTION
+procedure TForm1.IOPropertiesExecute(Sender: TObject);
+var
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
+  Tree:            TTreeView;
+begin
+  IOActionContext := TIOActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG71;
+            ModuleList := StringList;
+            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      IOPropertiesOperation(IOActionContext);
+    end;
+  finally
+    IOActionContext.Free;
+  end;
+end;
+
+// PROCESSOR/PROPERTIES OPERATION
+procedure TForm1.IOPropertiesOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // show properties
+    {...}
+  end;
 end;
 
 // OPERATION/RUN SIMULATION
