@@ -394,7 +394,9 @@ type
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
     // action's operation metods
-    //    procedure IOCreateOperation(AIOActionContext: TIOActionContext);
+    procedure VRenameIOPanelOperation(AIOActionContext: TIOActionContext);
+    procedure VShowIOPanelOperation(AIOActionContext: TIOActionContext);
+    procedure IOCreateOperation(AIOActionContext: TIOActionContext);
     procedure IODestroyOperation(AIOActionContext: TIOActionContext);
     procedure IOResetOperation(AIOActionContext: TIOActionContext);
     procedure IOEnableOperation(AIOActionContext: TIOActionContext);
@@ -402,7 +404,7 @@ type
     procedure IOAttachToBusOperation(AIOActionContext: TIOActionContext);
     procedure IODetachFromBusOperation(AIOActionContext: TIOActionContext);
     procedure IOPropertiesOperation(AIOActionContext: TIOActionContext);
-//    procedure MCreateOperation(AMActionContext: TMActionContext);
+    procedure MCreateOperation(AMActionContext: TMActionContext);
     procedure MDestroyOperation(AMActionContext: TMActionContext);
     procedure MResetOperation(AMActionContext: TMActionContext);
     procedure MEnableOperation(AMActionContext: TMActionContext);
@@ -410,7 +412,7 @@ type
     procedure MAttachToBusOperation(AMActionContext: TMActionContext);
     procedure MDetachFromBusOperation(AMActionContext: TMActionContext);
     procedure MPropertiesOperation(AMActionContext: TMActionContext);
-//    procedure PCreateOperation(APActionContext: TPActionContext);
+    procedure PCreateOperation(APActionContext: TPActionContext);
     procedure PDestroyOperation(APActionContext: TPActionContext);
     procedure PResetOperation(APActionContext: TPActionContext);
     procedure PEnableOperation(APActionContext: TPActionContext);
@@ -1024,7 +1026,7 @@ begin
       // show HexViewer
       Form3.MemInstance := MemInfo.Memory;
       Form3.Show;
-    end;
+    end else Exit;
   finally
     StringList.Free;
   end;
@@ -1046,109 +1048,193 @@ begin
   Form12.BringToFront;
 end;
 
-// VIEW/RENAME IO PORT PANEL
+// VIEW/RENAME IO PORT PANEL ACTION
 procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
 var
-  KeyName:    string;
-  StringList: TStringList;
-  PanelName:  string;
-  PortInfo:   TPortInfo;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      OKButtonCaption := MSG76;
-      ModuleList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        PortInfo := FPortInstanceDict[SelectedKey];
-        // rename panel
-        with Form13 do
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      // call from others
+      StringList := TStringList.Create;
+      try
+        for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
         begin
-          PanelCaption := SelectedKey;
-          Form13.ShowModal;
-          PanelName := PanelCaption;
+          OKButtonCaption := MSG76;
+          ModuleList := StringList;
+          if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+          // rename panel
+          with Form13 do
+          begin
+            PanelCaption := SelectedKey;
+            Form13.ShowModal;
+            IOActionContext.PanelCaption := PanelCaption;
+          end;
         end;
-        if Length(PanelName) > 0 then
-          if PortInfo.Port.HasPanel
-            then FPortPluginDict[PortInfo.ModuleName].FRenamePanel(PortInfo.Port,
-                                                                   PChar(PanelName));
+      finally
+        StringList.Free;
       end;
     end;
+    VRenameIOPanelOperation(IOActionContext);
   finally
-    StringList.Free;
+    IOActionContext.Free;
   end;
 end;
 
-// VIEW/SHOW IO PORT PANEL
+// VIEW/RENAME IO PORT PANEL OPERATION
+procedure TForm1.VRenameIOPanelOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // rename panel
+    if Length(PanelCaption) > 0 then
+      if PortInfo.Port.HasPanel
+        then FPortPluginDict[PortInfo.ModuleName].FRenamePanel(PortInfo.Port,
+                                                               PChar(PanelCaption));
+  end;
+end;
+
+// VIEW/SHOW IO PORT PANEL ACTION
 procedure TForm1.VShowIOPanelExecute(Sender: TObject);
 var
-  KeyName:       string;
-  PortInfo:      TPortInfo;
-  StringList:    TStringList;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      OKButtonCaption := MSG78;
-      ModuleList := StringList;
-    end;
-    if Form17.ShowModal = mrOk then
-    begin
-      PortInfo := FPortInstanceDict[Form17.SelectedKey];
-      // show panel
-      if PortInfo.Port.HasPanel
-        then FPortPluginDict[PortInfo.ModuleName].FShowPanel(PortInfo.Port);
-    end;
-  finally
-    StringList.Free;
-  end;
-end;
-
-// PROCESSOR/CREATE
-procedure TForm1.PCreateExecute(Sender: TObject);
-var
-  KeyName:    string;
-  ProcInfo:   TProcInfo;
-  StringList: TStringList;
-begin
-  StringList := TStringList.Create;
-  try
-    for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
-    with Form16 do
-    begin
-      PluginList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        // check existing names
-        if not InstanceNameDuplicated(FProcInstanceDict, SelectedName) then
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      // call from others
+      StringList := TStringList.Create;
+      try
+        for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
         begin
-          // create
-          if Assigned(FProcPluginDict[SelectedKey].FCreate) then
-          begin
-            ProcInfo.Processor := FProcPluginDict[SelectedKey].FCreate();
-            ProcInfo.ModuleName := SelectedKey;
-            ProcInfo.AttachedToBus := False;
-          end;
-          // store
-          FProcInstanceDict.Add(SelectedName, ProcInfo);
-          // add to Module Explorer
-          Form9.AddNode('Processor', SelectedName);
-          // report
-          Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', SelectedName]));
-        end else ShowMessage(MSG01 + Format(MSG85, [SelectedName]));
+          OKButtonCaption := MSG76;
+          ModuleList := StringList;
+          if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+        end;
+      finally
+        StringList.Free;
       end;
     end;
+    VShowIOPanelOperation(IOActionContext);
   finally
-    StringList.Free;
+    IOActionContext.Free;
   end;
 end;
 
-// PROCESSOR/DESTROY
+// VIEW/SHOW IO PORT PANEL OPERATION
+procedure TForm1.VShowIOPanelOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    PortInfo := FPortInstanceDict[InstanceName];
+    // rename panel
+    if PortInfo.Port.HasPanel
+      then FPortPluginDict[PortInfo.ModuleName].FShowPanel(PortInfo.Port);
+  end;
+end;
+
+// PROCESSOR/CREATE ACTION
+procedure TForm1.PCreateExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  PActionContext: TPActionContext;
+  StringList:     TStringList;
+begin
+  PActionContext := TPActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with PActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      StringList := TStringList.Create;
+        try
+          for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
+          with Form16 do
+          begin
+            PluginList := StringList;
+            if ShowModal = mrOk then ModuleType := SelectedKey else Exit;
+            InstanceName := Edit1.Text;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      PCreateOperation(PActionContext);
+  finally
+    PActionContext.Free;
+  end;
+end;
+
+// PROCESSOR/CREATE OPERATION
+procedure TForm1.PCreateOperation(APActionContext: TPActionContext);
+var
+  ProcInfo: TProcInfo;
+begin
+  with APActionContext do
+  begin
+    // check existing names
+    if not InstanceNameDuplicated(FProcInstanceDict, InstanceName) then
+    begin
+      // create
+      if Assigned(FProcPluginDict[ModuleType].FCreate) then
+      begin
+        ProcInfo.Processor := FProcPluginDict[ModuleType].FCreate();
+        ProcInfo.ModuleName := ModuleType;
+        ProcInfo.AttachedToBus := False;
+      end;
+      // store
+      FProcInstanceDict.Add(InstanceName, ProcInfo);
+      // add to Module Explorer
+      Form9.AddNode('Processor', InstanceName);
+      // report
+      if ActionSource = asScript
+        then Form12.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]))
+        else Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+    end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
+  end;
+end;
+
+// PROCESSOR/DESTROY ACTION
 procedure TForm1.PDestroyExecute(Sender: TObject);
 var
   Caller:         TComponent;
@@ -1188,7 +1274,7 @@ begin
           begin
             OKButtonCaption := MSG59;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1262,7 +1348,7 @@ begin
           begin
             OKButtonCaption := MSG61;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1332,7 +1418,7 @@ begin
           begin
             OKButtonCaption := MSG63;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1402,7 +1488,7 @@ begin
           begin
             OKButtonCaption := MSG65;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1472,7 +1558,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1542,7 +1628,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1612,7 +1698,7 @@ begin
           begin
             OKButtonCaption := MSG71;
             ModuleList := StringList;
-            if ShowModal = mrOk then PActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1638,43 +1724,70 @@ begin
   end;
 end;
 
-// MEMORY/CREATE
+// MEMORY/CREATE ACTION
 procedure TForm1.MCreateExecute(Sender: TObject);
 var
-  KeyName:    string;
-  MemInfo:    TMemInfo;
-  StringList: TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
 begin
-  // check ActionContext
-  StringList := TStringList.Create;
+  MActionContext := TMActionContext.Create;
   try
-    for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
-    with Form16 do
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
     begin
-      PluginList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        // check existing names
-        if not InstanceNameDuplicated(FMemInstanceDict, SelectedName) then
-        begin
-          // create
-          if Assigned(FMemPluginDict[SelectedKey].FCreate) then
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      StringList := TStringList.Create;
+        try
+          for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
+          with Form16 do
           begin
-            MemInfo.Memory := FMemPluginDict[SelectedKey].FCreate();
-            MemInfo.ModuleName := SelectedKey;
-            MemInfo.AttachedToBus := False;
+            PluginList := StringList;
+            if ShowModal = mrOk then ModuleType := SelectedKey else Exit;
+            InstanceName := Edit1.Text;
           end;
-          // store
-          FMemInstanceDict.Add(SelectedName, MemInfo);
-          // add to Module Explorer
-          Form9.AddNode('Memory', SelectedName);
-          // report
-          Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', SelectedName]));
-        end else ShowMessage(MSG01 + Format(MSG85, [SelectedName]));
+        finally
+          StringList.Free;
+        end;
       end;
-    end;
+      MCreateOperation(MActionContext);
   finally
-    StringList.Free;
+    MActionContext.Free;
+  end;
+end;
+
+// MEMORY/CREATE OPERATION
+procedure TForm1.MCreateOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    // check existing names
+    if not InstanceNameDuplicated(FMemInstanceDict, InstanceName) then
+    begin
+      // create
+      if Assigned(FMemPluginDict[ModuleType].FCreate) then
+      begin
+        MemInfo.Memory := FMemPluginDict[ModuleType].FCreate();
+        MemInfo.ModuleName := ModuleType;
+        MemInfo.AttachedToBus := False;
+      end;
+      // store
+      FMemInstanceDict.Add(InstanceName, MemInfo);
+      // add to Module Explorer
+      Form9.AddNode('Memory', InstanceName);
+      // report
+      if ActionSource = asScript
+        then Form12.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]))
+        else Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
+    end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
   end;
 end;
 
@@ -1718,7 +1831,7 @@ begin
           begin
             OKButtonCaption := MSG59;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1792,7 +1905,7 @@ begin
           begin
             OKButtonCaption := MSG61;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1862,7 +1975,7 @@ begin
           begin
             OKButtonCaption := MSG63;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1932,7 +2045,7 @@ begin
           begin
             OKButtonCaption := MSG65;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2002,7 +2115,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2072,7 +2185,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2142,7 +2255,7 @@ begin
           begin
             OKButtonCaption := MSG71;
             ModuleList := StringList;
-            if ShowModal = mrOk then MActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2378,47 +2491,75 @@ begin
   end;
 end;
 
-// IO PORT/CREATE
+// IO PORT/CREATE ACTION
 procedure TForm1.IOCreateExecute(Sender: TObject);
 var
-  KeyName:    string;
-  PortInfo:   TPortInfo;
-  StringList: TStringList;
+  Caller:          TComponent;
+  KeyName:         string;
+  IOActionContext: TIOActionContext;
+  StringList:      TStringList;
 begin
-  StringList := TStringList.Create;
+  IOActionContext := TIOActionContext.Create;
   try
-    for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
-    with Form16 do
+    Caller := (Sender as TAction).ActionComponent;
+    with IOActionContext do
     begin
-      PluginList := StringList;
-      if ShowModal = mrOk then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        // check existing names
-        if not InstanceNameDuplicated(FPortInstanceDict, SelectedName) then
-        begin
-          if Assigned(FPortPluginDict[SelectedKey].FCreate) then
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      StringList := TStringList.Create;
+        try
+          for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
+          with Form16 do
           begin
-            // create module
-            PortInfo.Port := FPortPluginDict[SelectedKey].FCreate();
-            PortInfo.ModuleName := SelectedKey;
-            PortInfo.AttachedToBus := False;
-            // create and show panel
-            if PortInfo.Port.HasPanel
-              then FPortPluginDict[SelectedKey].FCreatePanel(PortInfo.Port);
-            if PortInfo.Port.HasPanel
-              then FPortPluginDict[SelectedKey].FShowPanel(PortInfo.Port);
+            PluginList := StringList;
+            if ShowModal = mrOk then ModuleType := SelectedKey else Exit;
+            InstanceName := Edit1.Text;
           end;
-          // store
-          FPortInstanceDict.Add(SelectedName, PortInfo);
-          // add to Module Explorer
-          Form9.AddNode('I/O port & device', SelectedName);
-          // report
-          Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', SelectedName]));
-        end else ShowMessage(MSG01 + Format(MSG85, [SelectedName]));
+        finally
+          StringList.Free;
+        end;
       end;
-    end;
+      IOCreateOperation(IOActionContext);
   finally
-    StringList.Free;
+    IOActionContext.Free;
+  end;
+end;
+
+// IO PORT/CREATE OPERATION
+procedure TForm1.IOCreateOperation(AIOActionContext: TIOActionContext);
+var
+  PortInfo: TPortInfo;
+begin
+  with AIOActionContext do
+  begin
+    // check existing names
+    if not InstanceNameDuplicated(FPortInstanceDict, InstanceName) then
+    begin
+      if Assigned(FPortPluginDict[ModuleType].FCreate) then
+      begin
+        // create module
+        PortInfo.Port := FPortPluginDict[ModuleType].FCreate();
+        PortInfo.ModuleName := ModuleType;
+        PortInfo.AttachedToBus := False;
+        // create and show panel
+        if PortInfo.Port.HasPanel
+          then FPortPluginDict[ModuleType].FCreatePanel(PortInfo.Port);
+        if PortInfo.Port.HasPanel
+          then FPortPluginDict[ModuleType].FShowPanel(PortInfo.Port);
+      end;
+      // store
+      FPortInstanceDict.Add(InstanceName, PortInfo);
+      // add to Module Explorer
+      Form9.AddNode('I/O port & device', InstanceName);
+      // report
+      if ActionSource = asScript
+        then Form12.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]))
+        else Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
+    end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
   end;
 end;
 
@@ -2462,7 +2603,7 @@ begin
           begin
             OKButtonCaption := MSG59;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2536,7 +2677,7 @@ begin
           begin
             OKButtonCaption := MSG61;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2606,7 +2747,7 @@ begin
           begin
             OKButtonCaption := MSG63;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2676,7 +2817,7 @@ begin
           begin
             OKButtonCaption := MSG65;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2746,7 +2887,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2816,7 +2957,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2886,7 +3027,7 @@ begin
           begin
             OKButtonCaption := MSG71;
             ModuleList := StringList;
-            if ShowModal = mrOk then IOActionContext.InstanceName := SelectedKey;
+            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
