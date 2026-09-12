@@ -382,8 +382,6 @@ type
     FPortInstanceDict: TPortInstanceDict;
     // script buffer
     FScriptBuffer:     TStringList;
-    // global and project settings
-    FAppProject:       TAppProject;                              // project data
     // check name duplication
     function InstanceNameDuplicated(AInstanceDict:  TMemInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict:  TPortInstanceDict; AKeyName: string): Boolean; overload;
@@ -394,6 +392,9 @@ type
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
     // action's operation metods
+    procedure FLoadProjectOperation(AActionContext: TActionContext);
+//    procedure FSaveProjectAsOperation(AActionContext: TActionContext);
+    procedure VShowHexViewerOperation(AMActionContext: TMActionContext);
     procedure VRenameIOPanelOperation(AIOActionContext: TIOActionContext);
     procedure VShowIOPanelOperation(AIOActionContext: TIOActionContext);
     procedure IOCreateOperation(AIOActionContext: TIOActionContext);
@@ -412,6 +413,8 @@ type
     procedure MAttachToBusOperation(AMActionContext: TMActionContext);
     procedure MDetachFromBusOperation(AMActionContext: TMActionContext);
     procedure MPropertiesOperation(AMActionContext: TMActionContext);
+//    procedure MLoadMemoryContentOperation(AMActionContext: TMActionContext);
+    //    procedure MSaveMemoryContentOperation(AMActionContext: TMActionContext);
     procedure PCreateOperation(APActionContext: TPActionContext);
     procedure PDestroyOperation(APActionContext: TPActionContext);
     procedure PResetOperation(APActionContext: TPActionContext);
@@ -809,66 +812,92 @@ end;
 
 // ---- ACTION HANDLER METHODS ----
 
-// FILE/SWITCH TO INTERACTIVE MODE
+// FILE/SWITCH TO INTERACTIVE MODE ACTION
 procedure TForm1.FSwitchToInteractiveModeExecute(Sender: TObject);
 begin
   ChangeOpMode(omInteractive, False, True);
 end;
 
-// FILE/SWITCH TO SCRIPT MODE
+// FILE/SWITCH TO SCRIPT MODE ACTION
 procedure TForm1.FSwitchToScriptModeExecute(Sender: TObject);
 begin
   ChangeOpMode(omScript, False, True);
 end;
 
-// FILE/CREATE NEW PROJECT
+// FILE/CREATE NEW PROJECT ACTION
 procedure TForm1.FNewProjectExecute(Sender: TObject);
 begin
   ChangeOpMode(omInteractive, True, True)
 end;
 
-// FILE/LOAD EXISTING PROJECT
+// FILE/LOAD EXISTING PROJECT ACTION
 procedure TForm1.FLoadProjectExecute(Sender: TObject);
 var
-  Filename:   string;
-  OpenDialog: TOpenDialog;
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+  OpenDialog:    TOpenDialog;
 begin
-  // check actual script status
-  if not FActualProjectIsSaved then
-    if MessageDlg(MSG43, MSG51, mtConfirmation, [mbYes, mbNo], 0) = mrNo
-      then Exit;
-  // select file
-  OpenDialog := TOpenDialog.Create(Form1);
+  ActionContext := TActionContext.Create;
   try
-    with OpenDialog do
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
     begin
-      InitialDir := GetUserDir;
-      Title := MSG53;
-      Filter := MSG52;
-    end;
-    if OpenDialog.Execute then
-    begin
-      Filename := OpenDialog.FileName;
-      FActualProjectIsSaved := True;
-      // clearing
-      ChangeOpMode(omScript, True, True);
-      // loading
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then Exit;
+      // select file
+      OpenDialog := TOpenDialog.Create(Form1);
       try
-        LoadProject(FileName);
-        Memo1.WriteMessage(MSG03 + Format(MSG80, [FileName]));
-      except
-        ShowMessage(MSG01 + Format(MSG55, [FileName]));
-        exit;
+        with OpenDialog do
+        begin
+          InitialDir := GetUserDir;
+          Title := MSG53;
+          Filter := MSG52;
+        end;
+        if OpenDialog.Execute then InstanceName := OpenDialog.FileName else Exit;
+      finally
+        OpenDialog.Free;
       end;
-      FActualProject := Filename;                               // with filename
-      FActualProjectIsSaved := True;                          // no need to save
-      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+      FLoadProjectOperation(ActionContext);
     end;
   finally
-    OpenDialog.Free;
-  end; end;
+    ActionContext.Free;
+  end;
+end;
 
-// FILE/SAVE PROJECT
+// FILE/LOAD EXISTING PROJECT ACTION
+procedure TForm1.FLoadProjectOperation(AActionContext: TActionContext);
+begin
+  with AActionContext do
+  begin
+    FActualProjectIsSaved := True;
+    // clearing
+    ChangeOpMode(omScript, True, True);
+    // loading
+    try
+      LoadProject(InstanceName);
+      Memo1.WriteMessage(MSG03 + Format(MSG80, [InstanceName]));
+    except
+      ShowMessage(MSG01 + Format(MSG55, [InstanceName]));
+      exit;
+    end;
+    FActualProject := InstanceName;                             // with filename
+    FActualProjectIsSaved := True;                            // no need to save
+    Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+  end;
+end;
+
+
+
+
+
+// FILE/SAVE PROJECT ACTION
 procedure TForm1.FSaveProjectExecute(Sender: TObject);
 begin
   if FActualProjectIsSaved then Exit;
@@ -890,7 +919,7 @@ begin
   end;
 end;
 
-// FILE/SAVE PROJECT AS
+// FILE/SAVE PROJECT AS ACTION
 procedure TForm1.FSaveProjectAsExecute(Sender: TObject);
 var
   Filename:   string;
@@ -928,7 +957,7 @@ begin
   end;
 end;
 
-// FILE/SETTINGS
+// FILE/SETTINGS ACTION
 procedure TForm1.FSettingsExecute(Sender: TObject);
 begin
   if Form18.ShowModal = mrOk then
@@ -951,7 +980,7 @@ begin
   end;
 end;
 
-// FILE/RESTART APPLICATION
+// FILE/RESTART APPLICATION ACTION
 procedure TForm1.FRestartApplicationExecute(Sender: TObject);
 var
   NewProcess: TProcess;
@@ -966,73 +995,102 @@ begin
   Application.Terminate;
 end;
 
-// FILE/EXIT TO OS
+// FILE/EXIT TO OS ACTION
 procedure TForm1.FExitExecute(Sender: TObject);
 begin
   Close;
 end;
 
-// VIEW/SHOW MODULE MANAGER
+// VIEW/SHOW MODULE MANAGER ACTION
 procedure TForm1.VModuleExplorerExecute(Sender: TObject);
 begin
   Form9.Show;
   Form9.BringToFront;
 end;
 
-// VIEW/SHOW BREAKPOINT MANAGER
+// VIEW/SHOW BREAKPOINT MANAGER ACTION
 procedure TForm1.VShowBreakpointManagerExecute(Sender: TObject);
 begin
   {...}
 end;
 
-// VIEW/SHOW RUNLOGGER
+// VIEW/SHOW RUNLOGGER ACTION
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
 begin
   Form4.Show;
   Form4.BringToFront;
 end;
 
-// VIEW/SHOW INTLOGGER
+// VIEW/SHOW INTLOGGER ACTION
 procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
 begin
   Form8.Show;
   Form8.BringToFront;
 end;
 
-// VIEW/SHOW REGVIEWER
+// VIEW/SHOW REGVIEWER ACTION
 procedure TForm1.VShowRegViewerExecute(Sender: TObject);
 begin
-
+  {...}
 end;
 
-// VIEW/SHOW HEXVIEWER
+// VIEW/SHOW HEXVIEWER ACTION
 procedure TForm1.VShowHexViewerExecute(Sender: TObject);
 var
-  KeyName:       string;
-  MemInfo:       TMemInfo;
-  StringList:    TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  MActionContext: TMActionContext;
+  StringList:     TStringList;
 begin
-  StringList := TStringList.Create;
+  MActionContext := TMActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with MActionContext do
     begin
-      OKButtonCaption := MSG79;
-      ModuleList := StringList;
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then Exit;
+      // call from others
+      StringList := TStringList.Create;
+      try
+        for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
+        begin
+          OKButtonCaption := MSG79;
+          ModuleList := StringList;
+          if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+        end;
+      finally
+        StringList.Free;
+      end;
     end;
-    if Form17.ShowModal = mrOk then
-    begin
-      MemInfo := FMemInstanceDict[Form17.SelectedKey];
-      // show HexViewer
-      Form3.MemInstance := MemInfo.Memory;
-      Form3.Show;
-    end else Exit;
+    VShowHexViewerOperation(MActionContext);
   finally
-    StringList.Free;
+    MActionContext.Free;
   end;
 end;
 
-// VIEW/SHOW SCRIPTEDITOR
+// VIEW/SHOW HEXVIEWER OPERATION
+procedure TForm1.VShowHexViewerOperation(AMActionContext: TMActionContext);
+var
+  MemInfo: TMemInfo;
+begin
+  with AMActionContext do
+  begin
+    MemInfo := FMemInstanceDict[InstanceName];
+    // show HexViewer
+    Form3.MemInstance := MemInfo.Memory;
+    Form3.Show;
+  end;
+end;
+
+// VIEW/SHOW SCRIPTEDITOR ACTION
 procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
 begin
   Form6.ExtBuffer := FScriptBuffer;
@@ -1041,7 +1099,7 @@ begin
   Form6.BringToFront;
 end;
 
-// VIEW/SHOW SCRIPTCONSOLE
+// VIEW/SHOW SCRIPTCONSOLE ACTION
 procedure TForm1.VShowScriptConsoleExecute(Sender: TObject);
 begin
   Form12.Show;
@@ -1052,8 +1110,8 @@ end;
 procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
 var
   Caller:          TComponent;
-  KeyName:         string;
   IOActionContext: TIOActionContext;
+  KeyName:         string;
   StringList:      TStringList;
 begin
   IOActionContext := TIOActionContext.Create;
@@ -1069,7 +1127,7 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      // call from others
+      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
       try
         for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
@@ -1116,8 +1174,8 @@ end;
 procedure TForm1.VShowIOPanelExecute(Sender: TObject);
 var
   Caller:          TComponent;
-  KeyName:         string;
   IOActionContext: TIOActionContext;
+  KeyName:         string;
   StringList:      TStringList;
 begin
   IOActionContext := TIOActionContext.Create;
@@ -1133,7 +1191,7 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      // call from others
+      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
       try
         for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
@@ -1186,6 +1244,7 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
         try
           for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
@@ -1743,6 +1802,7 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
         try
           for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
@@ -2510,6 +2570,7 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
         try
           for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
