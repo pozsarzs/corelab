@@ -382,6 +382,7 @@ object Form9: TForm9
     PopupMenu = PopupMenu1
     ReadOnly = True
     TabOrder = 1
+    OnContextPopup = TreeView1ContextPopup
     Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
     Items.Data = {
       F9FFFFFF020003000000430000004300000043000000FFFFFFFF000000000000
@@ -425,13 +426,13 @@ object Form9: TForm9
     Height = 399
     Top = 221
     Width = 249
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     BorderSpacing.Left = 8
     BorderSpacing.Top = 4
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 3
     object TabSheet1: TTabSheet
       Caption = 'Instance'
@@ -469,13 +470,13 @@ object Form9: TForm9
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goAlwaysShowEditor, goThumbTracking]
         ColWidths = (
           64
-          171
+          173
         )
       end
     end
   end
   object PopupMenu1: TPopupMenu
-    OnPopup = PopupMenu1Popup
+    Images = Form1.ImageList1
     Left = 152
     Top = 216
     object MenuItem1: TMenuItem
@@ -484,32 +485,29 @@ object Form9: TForm9
     object MenuItem2: TMenuItem
       Caption = 'MenuItem2'
     end
-    object MenuItem3: TMenuItem
-      Caption = 'MenuItem3'
-    end
     object Separator1: TMenuItem
       Caption = '-'
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'MenuItem3'
     end
     object MenuItem4: TMenuItem
       Caption = 'MenuItem4'
     end
-    object MenuItem5: TMenuItem
-      Caption = 'MenuItem5'
-    end
     object Separator2: TMenuItem
       Caption = '-'
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'MenuItem5'
     end
     object MenuItem6: TMenuItem
       Caption = 'MenuItem6'
     end
-    object MenuItem7: TMenuItem
-      Caption = 'MenuItem7'
-    end
     object Separator3: TMenuItem
       Caption = '-'
     end
-    object MenuItem8: TMenuItem
-      Caption = 'MenuItem8'
+    object MenuItem7: TMenuItem
+      Caption = 'MenuItem7'
     end
   end
 end

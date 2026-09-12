@@ -690,7 +690,7 @@ object Form1: TForm1
           object ToolButton26: TToolButton
             Left = 177
             Top = 2
-            Action = IOPorperties
+            Action = IOProperties
           end
           object ToolButton27: TToolButton
             Left = 200
@@ -1131,7 +1131,7 @@ object Form1: TForm1
         Caption = '-'
       end
       object MenuItem26: TMenuItem
-        Action = IOPorperties
+        Action = IOProperties
       end
     end
     object MenuItem6: TMenuItem
@@ -1506,11 +1506,11 @@ object Form1: TForm1
       ImageIndex = 40
       OnExecute = IODetachFromBusExecute
     end
-    object IOPorperties: TAction
+    object IOProperties: TAction
       Caption = '&Properties...'
       Hint = 'Properties'
       ImageIndex = 49
-      OnExecute = IOPorpertiesExecute
+      OnExecute = IOPropertiesExecute
     end
     object ORun: TAction
       Caption = '&Run'

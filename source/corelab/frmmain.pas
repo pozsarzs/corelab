@@ -70,7 +70,7 @@ type
     IODetachFromBus:          TAction;
     IODisable:                TAction;
     IOEnable:                 TAction;
-    IOPorperties:             TAction;
+    IOProperties:             TAction;
     IOReset:                  TAction;
     LHelpConnector1:          TLHelpConnector;
     MainMenu1:                TMainMenu;
@@ -326,7 +326,7 @@ type
     procedure IODetachFromBusExecute(Sender: TObject);
     procedure IODisableExecute(Sender: TObject);
     procedure IOEnableExecute(Sender: TObject);
-    procedure IOPorpertiesExecute(Sender: TObject);
+    procedure IOPropertiesExecute(Sender: TObject);
     procedure IOResetExecute(Sender: TObject);
     procedure MAttachToBusExecute(Sender: TObject);
     procedure MCreateExecute(Sender: TObject);
@@ -1812,7 +1812,7 @@ begin
 end;
 
 // IO PORT/PROPERTIES
-procedure TForm1.IOPorpertiesExecute(Sender: TObject);
+procedure TForm1.IOPropertiesExecute(Sender: TObject);
 begin
   {...}
 end;
