@@ -6,26 +6,16 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## Command engine class for command line
 
-|filename            |base, parent|class            |description                       |
-|--------------------|------------|-----------------|----------------------------------|
-|command.pas         |            |TCommand         |Command class                     |
-|commandengine.pas   |            |TCommandEngine   |Command line engine class         |
-|commandregistry.pas |            |TCommandRegistry |Command registry class            |
-|commandparser.pas   |            |TCommandParser   |Command parser class              |
-|token.pas           |            |TToken           |Token class                       |
-
-
-
-
-
-
-|chkcommandengine.pas|            |                 |Class checker program             |
-|cmd\_data.pas       |TCommand    |TCmd\_commandname|Data handler command classes      |
-|cmd\_general.pas    |TCommand    |TCmd\_commandname|General command classes           |
-|cmd\_logic.pas      |TCommand    |TCmd\_commandname|Logical command classes           |
-|cmd\_math.pas       |TCommand    |TCmd\_commandname|Arithmetical command classes      |
-|cmd\_object.pas     |TCommand    |TCmd\_commandname|Object handler command classes    |
-|cmd\_sim.pas        |TCommand    |TCmd\_commandname|Simulation control command classes|
-|cmd\_string.pas     |TCommand    |TCmd\_commandname|String handler command classes    |
-|cmd\_test.pas       |TCommand    |TCmd\_commandname|Test command classes              |
-|commandcontext.pas  |            |TCommandContext  |Command context class             |
+|filename            |base, parent|class            |description              |
+|--------------------|------------|-----------------|-------------------------|
+|cmd-f.pas           |            |(include file)   |File menu commands       |
+|cmd-io.pas          |            |(include file)   |I/O port menu commands   |
+|cmd-m.pas           |            |(include file)   |Memory menu commands     |
+|cmd-o.pas           |            |(include file)   |Operation menu commands  |
+|cmd-p.pas           |            |(include file)   |Processor menu commands  |
+|cmd-v.pas           |            |(include file)   |Viewer menu commands     |
+|command.pas         |            |TCommand         |Command class            |
+|commandengine.pas   |            |TCommandEngine   |Command line engine class|
+|commandregistry.pas |            |TCommandRegistry |Command registry class   |
+|commandparser.pas   |            |TCommandParser   |Command parser class     |
+|token.pas           |            |TToken           |Token class              |

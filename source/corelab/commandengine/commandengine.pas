@@ -15,7 +15,7 @@ unit commandengine;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, command, commandparser, commandregistry, uactcontext, token;
+  SysUtils, Classes, command, commandparser, commandregistry, uactcontext, token;
 type
   // Command engine class
   TCommandEngine = class
@@ -47,12 +47,12 @@ begin
   // commands
   with FRegistry do
   begin
-    RegisterCommand(TCommand.Create('CRME',
-                                    'Instantiate a memory module.',
-                                    csEverywhere,
-                                    'CRME library instancename',
-                                    2,
-                                    @Form1.MCreateOperation));
+    {$I cmd-f.pas}
+    {$I cmd-v.pas}
+    {$I cmd-p.pas}
+    {$I cmd-m.pas}
+    {$I cmd-io.pas}
+    {$I cmd-o.pas}
   end;
   FParser := TCommandParser.Create;
 end;
@@ -71,8 +71,10 @@ var
   ActionContext: TActionContext;
   Command:       TCommand;  
   CommandName:   string;
+  i:             Integer;
   Tokens:        TTokenList;
   InfoText:      string;
+  InfoList:      TStringList;
 begin
   Result := 0;
   // empty line or comment
@@ -90,10 +92,18 @@ begin
       // command list
       if Tokens.Count = 1 then
       begin
-        for Command in FRegistry.Commands.Values do
-          Form1.SysConsole1.WriteMessage(Format('%-10s %s', [Command.Name, Command.Description]));
-        Result := 0;
-        Exit;
+        InfoList := TStringList.Create;
+        try
+          for Command in FRegistry.Commands.Values do
+            InfoList.Add(Format('%-10s %s', [Command.Name, Command.Description]));
+          InfoList.Sort;
+          for i := 0 to InfoList.Count -1 do
+            Form1.SysConsole1.WriteMessage(InfoList.Strings[i]);
+          Result := 0;
+          Exit;
+        finally
+          InfoList.Free
+        end;
       end;
       // command info
       Command := FRegistry.FindCommand(Tokens[1].RawText);
@@ -106,11 +116,11 @@ begin
       begin
         InfoText := Name + LineEnding +
                     '  ' + Description + LineEnding +
-                    '  Syntax: ' + Syntax;
+                    '  Syntax: ' + Syntax + LineEnding;
         case Scope of
-          csEverywhere:      InfoText := InfoText + '  Scope: Everywhere';
-          csScriptOnly:      InfoText := InfoText + '  Scope: Script only';
-          csInteractiveOnly: InfoText := InfoText + '  Scope: Interactive only';
+          csEverywhere:      InfoText := InfoText + '  Scope:  Everywhere';
+          csScriptOnly:      InfoText := InfoText + '  Scope:  Script only';
+          csInteractiveOnly: InfoText := InfoText + '  Scope:  Interactive only';
       end;
       end;
       Form1.SysConsole1.WriteMessage(InfoText);

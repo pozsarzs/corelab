@@ -216,6 +216,7 @@ to be used with other development tools or transferred to real hardware.
 |*.log    |General log file     |CoreLAB, CLProcessor           |
 
 ## VII. Implemented commands  
+**PONTOSÍTANDÓ!**
 
 |name  |description                                                                       |
 |:----:|----------------------------------------------------------------------------------|
@@ -289,6 +290,7 @@ to be used with other development tools or transferred to real hardware.
 |`XOR` |Bitwise/logical XOR in-place.                                                     |
 
 ## VIII. Command exit codes
+**PONTOSÍTANDÓ!**
 
 | v.|category        |description                 |
 |:-:|:---------------|----------------------------|
