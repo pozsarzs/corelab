@@ -49,23 +49,23 @@ var
   InQuote:                  Boolean;
   NewToken:                 TToken;
 begin
-  // create TTokenList instance
+  // Create TTokenList instance
   Result := TTokenList.Create;
-  // check length of ALine
+  // Check length of ALine 
   Len := Length(ALine);
   if Len = 0 then exit;
-  // set initial values
+  // Set initial values
   CurrentTokenStr := '';
   InQuote := False;
   InQuoteChar := #0;
-  // tokenizing
+  // Tokenizing
   for i := 1 to Len do
   begin
     CurrentChar := ALine[i];
-    // string detection ('...' or "...")
+    // String detection ('...' or "...")
     if InQuote then
     begin
-      // end of quote sign
+      // End of quote sign
       if CurrentChar = InQuoteChar then
       begin
         InQuote := False;
@@ -73,13 +73,13 @@ begin
       end else CurrentTokenStr := CurrentTokenStr + CurrentChar;
     end else
     begin
-      // begin of quote sign
+      // Begin of quote sign
       if (CurrentChar = '''') or (CurrentChar = '"') then
       begin
         InQuote := True;
         InQuoteChar := CurrentChar;
       end else
-      // separator detection (#32 or #9)
+      // Separator detection (#32 or #9)
       if (CurrentChar = #32) or (CurrentChar = #9) then
       begin
         if Length(CurrentTokenStr) > 0 then
@@ -91,7 +91,7 @@ begin
       end else CurrentTokenStr := CurrentTokenStr + CurrentChar;
     end;
   end;
-  // add last token
+  // Add last token
   if Length(CurrentTokenStr) > 0 then
   begin
     NewToken := TToken.Create(CurrentTokenStr);

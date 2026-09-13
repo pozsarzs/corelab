@@ -28,7 +28,7 @@ function SaveProject(AFilename: string): Boolean;
 implementation
 
 // COMBINED INI OBJECT HANDLER
-function INIFileHandler(AINIFile: TIniFile; var AAppConfig: TAppProject; IsSave: Boolean): Boolean;
+function INIFileHandler(AINIFile: TIniFile; var AAppProject: TAppProject; IsSave: Boolean): Boolean;
 var
   section: string;
   

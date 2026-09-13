@@ -16,7 +16,7 @@ unit frmhexviewer;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types, core_memory, core_cpu, ucommon, uconfig;
+  Buttons, EditBtn, Grids, Types, core_memory, ucommon, uconfig;
 type
   { TForm3 }
   TForm3 = class(TForm)

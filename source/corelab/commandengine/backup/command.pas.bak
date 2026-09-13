@@ -43,7 +43,6 @@ type
     property Scope: TCommandScope read FScope;
     property Syntax: string read FSyntax;
     property Operation: TActionOperation read FOperation;
-    property RequiredArgs: Integer read FRequiredArgs;
   end;
 
 implementation

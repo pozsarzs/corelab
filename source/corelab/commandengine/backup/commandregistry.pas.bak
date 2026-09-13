@@ -28,7 +28,6 @@ type
     destructor Destroy; override;
     function FindCommand(const AName: string): TCommand;
     procedure RegisterCommand(ACommand: TCommand); virtual;
-    property Commands: TCommandDict read FCommands;
   end;
 
 implementation

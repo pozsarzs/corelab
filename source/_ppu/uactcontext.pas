@@ -2,7 +2,7 @@
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | uactcontext.pas                                                          | }
-{ | TActionContext class                                                     | }
+{ | ActionContext class                                                      | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -15,78 +15,56 @@ unit uactcontext;
 {$MODE OBJFPC} {$H+} {$MACRO ON}
 interface
 type
-  TActionSource = (asMainMenu, asToolBar, asModuleExplorer,
-                   asSysConsole, asScript, asProject);
-  { TActionContext }
+  TActionSource = (asMainMenu, asToolBar, asModuleExplorer, asSysConsole,
+                   asScript, asProject);
+  // ActionContext class
   TActionContext = class
   public
     ActionSource:  TActionSource;
-      // Target module
+    SArg1:  string;
+    SArg2:  string;
+    IArg1:  Integer;
+    IArg2:  Integer;
+    BArg1:  Boolean;
+    BArg2:  Boolean;
+    // ezek megszűnnek
     InstanceName:  string;
     ModuleType:    string;
-    // Common module properties
     Enabled:       Boolean;
     AttachedToBus: Boolean;
-    constructor Create;
-  end;
-  { TIOActionContext }
-  TIOActionContext = class(TActionContext)
-    public
-      // Visual properties
-      PanelCaption: string;
-      PanelLeft:    Integer;
-      PanelTop:     Integer;
-      PanelWidth:   Integer;
-      PanelHeight:  Integer;
-      PanelShow:    Boolean;
-    constructor Create;
-  end;
-  { TMActionContext }
-  TMActionContext = class(TActionContext)
-    public
-    constructor Create;
-  end;
-  { TPActionContext }
-  TPActionContext = class(TActionContext)
-    public
+    PanelCaption: string;
+    PanelLeft:    Integer;
+    PanelTop:     Integer;
+    PanelWidth:   Integer;
+    PanelHeight:  Integer;
+    PanelShow:    Boolean;
     constructor Create;
   end;
 
 implementation
 
-{ TActionContext }
+// CREATE TACTIONCONTEXT INSTANCE
 constructor TActionContext.Create;
 begin
   inherited Create;
   ActionSource := asMainMenu;
+  SArg1 := '';
+  SArg2 := '';
+  IArg1 := -1;
+  IArg2 := -1;
+  BArg1 := false;
+  BArg2 := false;
+  // ezek megszűnnek
   InstanceName := '';
   ModuleType := '';
   Enabled := False;
   AttachedToBus := False;
-end;
-
-{ TIOActionContext }
-constructor TIOActionContext.Create;
-begin
-  inherited Create;
   PanelCaption := 'MyIO';
   PanelHeight := 100;
   PanelLeft := 8;
   PanelShow := True;
   PanelTop := 8;
   PanelWidth := 100;
-end;
-
-{ TPActionContext }
-constructor TMActionContext.Create;
-begin
-  inherited Create;
-end;
-
-{ TMActionContext }
-constructor TPActionContext.Create;
-begin
-  inherited Create;
 end;
 
 end.

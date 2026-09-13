@@ -15,8 +15,7 @@ unit frmcaption;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Spin;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls;
 type
   { TForm13 }
   TForm13 = class(TForm)

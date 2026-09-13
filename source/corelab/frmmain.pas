@@ -21,8 +21,8 @@ uses
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmmoduleexplorer,
-  core_cpu, core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin,
-  uproject, uintelhex, uactcontext;
+  commandengine, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
+  uconfig, uplugin, uproject, uintelhex, uactcontext;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -376,13 +376,16 @@ type
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
   private
-    Memo1:             TSysConsole;
+    // system console's command interpreter
+    CommandEngine1:    TCommandEngine;
     // active component instances
     FProcInstanceDict: TProcInstanceDict;
     FMemInstanceDict:  TMemInstanceDict;
     FPortInstanceDict: TPortInstanceDict;
     // script buffer
     FScriptBuffer:     TStringList;
+    // bridge between SysConsol and CommandEngine
+    procedure SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
     // check name duplication
     function InstanceNameDuplicated(AInstanceDict:  TMemInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict:  TPortInstanceDict; AKeyName: string): Boolean; overload;
@@ -392,39 +395,6 @@ type
     procedure DestroyAllModules(AClose: Boolean);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
     procedure SetPluginDirectory(APluginDirectory: string);
-    // action's operation metods
-    procedure FLoadProjectOperation(AActionContext: TActionContext);
-//    procedure FSaveProjectAsOperation(AActionContext: TActionContext);
-    procedure VShowHexViewerOperation(AMActionContext: TMActionContext);
-    procedure VRenameIOPanelOperation(AIOActionContext: TIOActionContext);
-    procedure VShowIOPanelOperation(AIOActionContext: TIOActionContext);
-    procedure IOCreateOperation(AIOActionContext: TIOActionContext);
-    procedure IODestroyOperation(AIOActionContext: TIOActionContext);
-    procedure IOResetOperation(AIOActionContext: TIOActionContext);
-    procedure IOEnableOperation(AIOActionContext: TIOActionContext);
-    procedure IODisableOperation(AIOActionContext: TIOActionContext);
-    procedure IOAttachToBusOperation(AIOActionContext: TIOActionContext);
-    procedure IODetachFromBusOperation(AIOActionContext: TIOActionContext);
-    procedure IOPropertiesOperation(AIOActionContext: TIOActionContext);
-    procedure MCreateOperation(AMActionContext: TMActionContext);
-    procedure MDestroyOperation(AMActionContext: TMActionContext);
-    procedure MResetOperation(AMActionContext: TMActionContext);
-    procedure MEnableOperation(AMActionContext: TMActionContext);
-    procedure MDisableOperation(AMActionContext: TMActionContext);
-    procedure MAttachToBusOperation(AMActionContext: TMActionContext);
-    procedure MDetachFromBusOperation(AMActionContext: TMActionContext);
-    procedure MPropertiesOperation(AMActionContext: TMActionContext);
-//    procedure MLoadMemoryContentOperation(AMActionContext: TMActionContext);
-    //    procedure MSaveMemoryContentOperation(AMActionContext: TMActionContext);
-    procedure PCreateOperation(APActionContext: TPActionContext);
-    procedure PDestroyOperation(APActionContext: TPActionContext);
-    procedure PResetOperation(APActionContext: TPActionContext);
-    procedure PEnableOperation(APActionContext: TPActionContext);
-    procedure PDisableOperation(APActionContext: TPActionContext);
-    procedure PAttachToBusOperation(APActionContext: TPActionContext);
-    procedure PDetachFromBusOperation(APActionContext: TPActionContext);
-    procedure PPropertiesOperation(APActionContext: TPActionContext);
-
   protected
     FActualProject:        string;                   // actual project directory
     FActualProjectIsSaved: Boolean;                  // actual project directory
@@ -443,6 +413,40 @@ type
     FSystemLanguage:       string;                            // system language
     FUserDirectory:        string;                           // user's directory
   public
+    // system console
+    SysConsole1:       TSysConsole;
+    // action's operation metods
+    procedure FLoadProjectOperation(AActionContext: TActionContext);
+//    procedure FSaveProjectAsOperation(AActionContext: TActionContext);
+    procedure VShowHexViewerOperation(AActionContext: TActionContext);
+    procedure VRenameIOPanelOperation(AActionContext: TActionContext);
+    procedure VShowIOPanelOperation(AActionContext: TActionContext);
+    procedure IOCreateOperation(AActionContext: TActionContext);
+    procedure IODestroyOperation(AActionContext: TActionContext);
+    procedure IOResetOperation(AActionContext: TActionContext);
+    procedure IOEnableOperation(AActionContext: TActionContext);
+    procedure IODisableOperation(AActionContext: TActionContext);
+    procedure IOAttachToBusOperation(AActionContext: TActionContext);
+    procedure IODetachFromBusOperation(AActionContext: TActionContext);
+    procedure IOPropertiesOperation(AActionContext: TActionContext);
+    procedure MCreateOperation(AActionContext: TActionContext);
+    procedure MDestroyOperation(AActionContext: TActionContext);
+    procedure MResetOperation(AActionContext: TActionContext);
+    procedure MEnableOperation(AActionContext: TActionContext);
+    procedure MDisableOperation(AActionContext: TActionContext);
+    procedure MAttachToBusOperation(AActionContext: TActionContext);
+    procedure MDetachFromBusOperation(AActionContext: TActionContext);
+    procedure MPropertiesOperation(AActionContext: TActionContext);
+//    procedure MLoadMemoryContentOperation(AActionContext: TActionContext);
+    //    procedure MSaveMemoryContentOperation(AActionContext: TActionContext);
+    procedure PCreateOperation(AActionContext: TActionContext);
+    procedure PDestroyOperation(AActionContext: TActionContext);
+    procedure PResetOperation(AActionContext: TActionContext);
+    procedure PEnableOperation(AActionContext: TActionContext);
+    procedure PDisableOperation(AActionContext: TActionContext);
+    procedure PAttachToBusOperation(AActionContext: TActionContext);
+    procedure PDetachFromBusOperation(AActionContext: TActionContext);
+    procedure PPropertiesOperation(AActionContext: TActionContext);
     property ActualScriptIsSaved: Boolean read FActualScriptIsSaved write FActualScriptIsSaved;
     property AutoRunScript: Boolean write FAutoRunScript;
     property IgnoreHelp: Boolean write SetIgnoreHelp;
@@ -532,9 +536,25 @@ resourcestring
   MSG83 = 'Script saved to ''%s''.';                                      { SC }
   MSG84 = 'Cannot create backup file.';                                   { SC }
   MSG85 = 'Module named ''%s'' exists.';                                  { SM }
+  MSG86 = 'Unknown command.';                                             { SC }
+  MSG87 = 'Invalid number of arguments.';                                 { SC }
+  MSG88 = 'Cannot be used in command line.';                              { SC }
+  MSG89 = 'Cannot be used in script.';                                    { SC }
+  MSG90 = 'Cannot create %s module named ''%s''.';                        { SC }
 
 // ---- PRIVATE METHODS ----
 
+// BRIDGE BETWEEN SYSCONSOL AND COMMANDENGINE
+procedure TForm1.SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
+begin
+  case CommandEngine1.ExecuteLine(ACommand) of
+    -1 : SysConsole1.WriteMessage(MSG01 + MSG86);
+    -2 : SysConsole1.WriteMessage(MSG01 + MSG88);
+    -3 : SysConsole1.WriteMessage(MSG01 + MSG87);
+  end
+end;
+
+// CHECK NAME DUPLICATION
 function TForm1.InstanceNameDuplicated(AInstanceDict: TMemInstanceDict; AKeyName: string): Boolean; overload;
 var
   KeyName: string;
@@ -660,8 +680,8 @@ begin
         Screen.Forms[i].Visible then Screen.Forms[i].Close;
   // write message to console
   if FOpMode = omInteractive
-    then Memo1.WriteMessage(MSG03 + MSG07)
-    else Memo1.WriteMessage(MSG03 + MSG08);
+    then SysConsole1.WriteMessage(MSG03 + MSG07)
+    else SysConsole1.WriteMessage(MSG03 + MSG08);
 end;
 
 // DESTROY ALL MODULE (AND DICTIONARIES)
@@ -766,8 +786,8 @@ begin
       end;
     end else
     begin
-      if not CHMFileExists then Memo1.WriteMessage(MSG02 + MSG18);
-      if not CHMViewerExists then Memo1.WriteMessage(MSG02 + MSG19);
+      if not CHMFileExists then SysConsole1.WriteMessage(MSG02 + MSG18);
+      if not CHMViewerExists then SysConsole1.WriteMessage(MSG02 + MSG19);
     end;
   end;
   HHelp.Enabled := CHMFileExists and CHMViewerExists and not FIgnoreHelp;
@@ -796,7 +816,7 @@ begin
   begin
     try
       FScriptBuffer.LoadFromFile(FStartupScript);
-      Memo1.WriteMessage(MSG03 + Format(MSG82, [FStartupScript]));
+      SysConsole1.WriteMessage(MSG03 + Format(MSG82, [FStartupScript]));
     except
       ShowMessage(MSG01 + Format(MSG48, [FStartupScript]));
       Exit;
@@ -883,7 +903,7 @@ begin
     // loading
     try
       LoadProject(InstanceName);
-      Memo1.WriteMessage(MSG03 + Format(MSG80, [InstanceName]));
+      SysConsole1.WriteMessage(MSG03 + Format(MSG80, [InstanceName]));
     except
       ShowMessage(MSG01 + Format(MSG55, [InstanceName]));
       exit;
@@ -908,14 +928,14 @@ begin
     try
       if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
     except
-      Memo1.WriteMessage(MSG02 + MSG84);
+      SysConsole1.WriteMessage(MSG02 + MSG84);
     end;
     // save file
     if not SaveProject(FActualProject) then
     begin
       ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
       Exit;
-    end else Memo1.WriteMessage(MSG03 + Format(MSG81, [FActualProject]));
+    end else SysConsole1.WriteMessage(MSG03 + Format(MSG81, [FActualProject]));
     FActualProjectIsSaved := True;                            // no need to save
   end;
 end;
@@ -941,14 +961,14 @@ begin
       try
         if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
       except
-        Memo1.WriteMessage(MSG02 + MSG84);
+        SysConsole1.WriteMessage(MSG02 + MSG84);
       end;
       // save file
       if not SaveProject(Filename) then
       begin
         ShowMessage(MSG01 + Format(MSG56, [Filename]));
         Exit;
-      end else Memo1.WriteMessage(MSG03 + MSG81);
+      end else SysConsole1.WriteMessage(MSG03 + MSG81);
       FActualProject := Filename;                                       // named
       FActualProjectIsSaved := True;                          // no need to save
       Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
@@ -973,9 +993,9 @@ begin
       Form6.RefreshColors;                                       // ScriptEditor
       with SysConsoleConfig do                                     // SysConsole
       begin
-        Memo1.Font.Color := font_color;
-        Memo1.Color := bg_color;
-        Memo1.Invalidate;
+        SysConsole1.Font.Color := font_color;
+        SysConsole1.Color := bg_color;
+        SysConsole1.Invalidate;
       end;
     end;
   end;
@@ -1040,13 +1060,13 @@ procedure TForm1.VShowHexViewerExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1071,18 +1091,18 @@ begin
         StringList.Free;
       end;
     end;
-    VShowHexViewerOperation(MActionContext);
+    VShowHexViewerOperation(ActionContext);
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // VIEW/SHOW HEXVIEWER OPERATION
-procedure TForm1.VShowHexViewerOperation(AMActionContext: TMActionContext);
+procedure TForm1.VShowHexViewerOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // show HexViewer
@@ -1111,14 +1131,14 @@ end;
 procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
 var
   Caller:          TComponent;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   KeyName:         string;
   StringList:      TStringList;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1142,25 +1162,25 @@ begin
           begin
             PanelCaption := SelectedKey;
             Form13.ShowModal;
-            IOActionContext.PanelCaption := PanelCaption;
+            ActionContext.PanelCaption := PanelCaption;
           end;
         end;
       finally
         StringList.Free;
       end;
     end;
-    VRenameIOPanelOperation(IOActionContext);
+    VRenameIOPanelOperation(ActionContext);
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // VIEW/RENAME IO PORT PANEL OPERATION
-procedure TForm1.VRenameIOPanelOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.VRenameIOPanelOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // rename panel
@@ -1175,14 +1195,14 @@ end;
 procedure TForm1.VShowIOPanelExecute(Sender: TObject);
 var
   Caller:          TComponent;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   KeyName:         string;
   StringList:      TStringList;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1206,18 +1226,18 @@ begin
         StringList.Free;
       end;
     end;
-    VShowIOPanelOperation(IOActionContext);
+    VShowIOPanelOperation(ActionContext);
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // VIEW/SHOW IO PORT PANEL OPERATION
-procedure TForm1.VShowIOPanelOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.VShowIOPanelOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // rename panel
@@ -1231,13 +1251,13 @@ procedure TForm1.PCreateExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1259,18 +1279,18 @@ begin
           StringList.Free;
         end;
       end;
-      PCreateOperation(PActionContext);
+      PCreateOperation(ActionContext);
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/CREATE OPERATION
-procedure TForm1.PCreateOperation(APActionContext: TPActionContext);
+procedure TForm1.PCreateOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     // check existing names
     if not InstanceNameDuplicated(FProcInstanceDict, InstanceName) then
@@ -1289,7 +1309,7 @@ begin
       // report
       if ActionSource = asScript
         then Form12.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]))
-        else Memo1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+        else SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
     end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
   end;
 end;
@@ -1299,14 +1319,14 @@ procedure TForm1.PDestroyExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1340,19 +1360,19 @@ begin
           StringList.Free;
         end;
       end;
-      PDestroyOperation(PActionContext);
+      PDestroyOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/DESTROY OPERATION
-procedure TForm1.PDestroyOperation(APActionContext: TPActionContext);
+procedure TForm1.PDestroyOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // destroy
@@ -1364,7 +1384,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
   end;
 end;
 
@@ -1373,14 +1393,14 @@ procedure TForm1.PResetExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1414,19 +1434,19 @@ begin
           StringList.Free;
         end;
       end;
-      PResetOperation(PActionContext);
+      PResetOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/RESET OPERATION
-procedure TForm1.PResetOperation(APActionContext: TPActionContext);
+procedure TForm1.PResetOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // reset
@@ -1434,7 +1454,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
   end;
 end;
 
@@ -1443,14 +1463,14 @@ procedure TForm1.PEnableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1484,19 +1504,19 @@ begin
           StringList.Free;
         end;
       end;
-      PEnableOperation(PActionContext);
+      PEnableOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/ENABLE OPERATION
-procedure TForm1.PEnableOperation(APActionContext: TPActionContext);
+procedure TForm1.PEnableOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // enable
@@ -1504,7 +1524,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
   end;
 end;
 
@@ -1513,14 +1533,14 @@ procedure TForm1.PDisableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1554,19 +1574,19 @@ begin
           StringList.Free;
         end;
       end;
-      PDisableOperation(PActionContext);
+      PDisableOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/DISABLE OPERATION
-procedure TForm1.PDisableOperation(APActionContext: TPActionContext);
+procedure TForm1.PDisableOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // enable
@@ -1574,7 +1594,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
   end;
 end;
 
@@ -1583,14 +1603,14 @@ procedure TForm1.PAttachToBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1624,19 +1644,19 @@ begin
           StringList.Free;
         end;
       end;
-      PAttachToBusOperation(PActionContext);
+      PAttachToBusOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/ATTACH TO BUS OPERATION
-procedure TForm1.PAttachToBusOperation(APActionContext: TPActionContext);
+procedure TForm1.PAttachToBusOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // attach to bus
@@ -1644,7 +1664,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
   end;
 end;
 
@@ -1653,14 +1673,14 @@ procedure TForm1.PDetachFromBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1694,19 +1714,19 @@ begin
           StringList.Free;
         end;
       end;
-      PDetachFromBusOperation(PActionContext);
+      PDetachFromBusOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/DETACH FROM BUS OPERATION
-procedure TForm1.PDetachFromBusOperation(APActionContext: TPActionContext);
+procedure TForm1.PDetachFromBusOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // detach from bus
@@ -1714,7 +1734,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
   end;
 end;
 
@@ -1723,14 +1743,14 @@ procedure TForm1.PPropertiesExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  PActionContext: TPActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  PActionContext := TPActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with PActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1764,19 +1784,19 @@ begin
           StringList.Free;
         end;
       end;
-      PPropertiesOperation(PActionContext);
+      PPropertiesOperation(ActionContext);
     end;
   finally
-    PActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/PROPERTIES OPERATION
-procedure TForm1.PPropertiesOperation(APActionContext: TPActionContext);
+procedure TForm1.PPropertiesOperation(AActionContext: TActionContext);
 var
   ProcInfo: TProcInfo;
 begin
-  with APActionContext do
+  with AActionContext do
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // show properties
@@ -1789,13 +1809,13 @@ procedure TForm1.MCreateExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1817,22 +1837,25 @@ begin
           StringList.Free;
         end;
       end;
-      MCreateOperation(MActionContext);
+      MCreateOperation(ActionContext);
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/CREATE OPERATION
-procedure TForm1.MCreateOperation(AMActionContext: TMActionContext);
+procedure TForm1.MCreateOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  MemInfo:      TMemInfo;
+  ModuleType:   string;
+  InstanceName: string;
 begin
-  with AMActionContext do
+  ModuleType := AActionContext.SArg1;
+  InstanceName := AActionContext.SArg2;
+  // check existing names
+  if not InstanceNameDuplicated(FMemInstanceDict, InstanceName) then
   begin
-    // check existing names
-    if not InstanceNameDuplicated(FMemInstanceDict, InstanceName) then
-    begin
+    try
       // create
       if Assigned(FMemPluginDict[ModuleType].FCreate) then
       begin
@@ -1840,16 +1863,22 @@ begin
         MemInfo.ModuleName := ModuleType;
         MemInfo.AttachedToBus := False;
       end;
-      // store
-      FMemInstanceDict.Add(InstanceName, MemInfo);
-      // add to Module Explorer
-      Form9.AddNode('Memory', InstanceName);
-      // report
-      if ActionSource = asScript
-        then Form12.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]))
-        else Memo1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
-    end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
-  end;
+    except
+      // error
+      if AActionContext.ActionSource = asScript
+        then Form12.WriteMessage(MSG03 + Format(MSG90, ['memory', InstanceName]))
+        else SysConsole1.WriteMessage(MSG03 + Format(MSG90, ['memory', InstanceName]));
+        Exit;
+    end;
+    // store
+    FMemInstanceDict.Add(InstanceName, MemInfo);
+    // add to Module Explorer
+    Form9.AddNode('Memory', InstanceName);
+    // report
+    if AActionContext.ActionSource = asScript
+      then Form12.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]))
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
+  end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
 // MEMORY/DESTROY ACTION
@@ -1857,14 +1886,14 @@ procedure TForm1.MDestroyExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1898,19 +1927,19 @@ begin
           StringList.Free;
         end;
       end;
-      MDestroyOperation(MActionContext);
+      MDestroyOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/DESTROY OPERATION
-procedure TForm1.MDestroyOperation(AMActionContext: TMActionContext);
+procedure TForm1.MDestroyOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // destroy
@@ -1922,7 +1951,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
   end;
 end;
 
@@ -1931,14 +1960,14 @@ procedure TForm1.MResetExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -1972,19 +2001,19 @@ begin
           StringList.Free;
         end;
       end;
-      MResetOperation(MActionContext);
+      MResetOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/RESET OPERATION
-procedure TForm1.MResetOperation(AMActionContext: TMActionContext);
+procedure TForm1.MResetOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // reset
@@ -1992,7 +2021,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
   end;
 end;
 
@@ -2001,14 +2030,14 @@ procedure TForm1.MEnableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2042,19 +2071,19 @@ begin
           StringList.Free;
         end;
       end;
-      MEnableOperation(MActionContext);
+      MEnableOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/ENABLE OPERATION
-procedure TForm1.MEnableOperation(AMActionContext: TMActionContext);
+procedure TForm1.MEnableOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // enable
@@ -2062,7 +2091,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
   end;
 end;
 
@@ -2071,14 +2100,14 @@ procedure TForm1.MDisableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2112,19 +2141,19 @@ begin
           StringList.Free;
         end;
       end;
-      MDisableOperation(MActionContext);
+      MDisableOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/DISABLE OPERATION
-procedure TForm1.MDisableOperation(AMActionContext: TMActionContext);
+procedure TForm1.MDisableOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // enable
@@ -2132,7 +2161,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
   end;
 end;
 
@@ -2141,14 +2170,14 @@ procedure TForm1.MAttachToBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2182,19 +2211,19 @@ begin
           StringList.Free;
         end;
       end;
-      MAttachToBusOperation(MActionContext);
+      MAttachToBusOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/ATTACH TO BUS OPERATION
-procedure TForm1.MAttachToBusOperation(AMActionContext: TMActionContext);
+procedure TForm1.MAttachToBusOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // attach to bus
@@ -2202,7 +2231,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
   end;
 end;
 
@@ -2211,14 +2240,14 @@ procedure TForm1.MDetachFromBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2252,19 +2281,19 @@ begin
           StringList.Free;
         end;
       end;
-      MDetachFromBusOperation(MActionContext);
+      MDetachFromBusOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/DETACH FROM BUS OPERATION
-procedure TForm1.MDetachFromBusOperation(AMActionContext: TMActionContext);
+procedure TForm1.MDetachFromBusOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // detach from bus
@@ -2272,7 +2301,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
   end;
 end;
 
@@ -2281,14 +2310,14 @@ procedure TForm1.MPropertiesExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  MActionContext: TMActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  MActionContext := TMActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with MActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2322,19 +2351,19 @@ begin
           StringList.Free;
         end;
       end;
-      MPropertiesOperation(MActionContext);
+      MPropertiesOperation(ActionContext);
     end;
   finally
-    MActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // MEMORY/PROPERTIES OPERATION
-procedure TForm1.MPropertiesOperation(AMActionContext: TMActionContext);
+procedure TForm1.MPropertiesOperation(AActionContext: TActionContext);
 var
   MemInfo: TMemInfo;
 begin
-  with AMActionContext do
+  with AActionContext do
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // show properties
@@ -2412,7 +2441,7 @@ begin
                   Form7.AddressTo - Form7.AddressFrom + 1);
               end;
               // report
-              Memo1.WriteMessage(MSG03 + Format(MSG73, [Filename, Form17.SelectedKey]));
+              SysConsole1.WriteMessage(MSG03 + Format(MSG73, [Filename, Form17.SelectedKey]));
             finally
               LoadStream.Free;
             end;
@@ -2433,9 +2462,7 @@ end;
 procedure TForm1.MSaveMemoryContentExecute(Sender: TObject);
 var
   CurrentStatus: Boolean;
-  Data:          Byte;
   Filename:      string;
-  i:             DWord;
   KeyName:       string;
   MemInfo:       TMemInfo;
   SaveDialog1:   TSaveDialog;
@@ -2480,7 +2507,7 @@ begin
                 try
                   if FileExists(FileName) then RenameFile(FileName, FileName + '.bak');
                 except
-                  Memo1.WriteMessage(MSG02 + MSG84);
+                  SysConsole1.WriteMessage(MSG02 + MSG84);
                 end;
                 // save to .bin file
                 try
@@ -2499,7 +2526,7 @@ begin
                 end;
               end;
               // report
-              Memo1.WriteMessage(MSG03 + Format(MSG75, [Filename, Form17.SelectedKey]));
+              SysConsole1.WriteMessage(MSG03 + Format(MSG75, [Filename, Form17.SelectedKey]));
             finally
               SaveStream.Free;
             end;
@@ -2557,13 +2584,13 @@ procedure TForm1.IOCreateExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2585,18 +2612,18 @@ begin
           StringList.Free;
         end;
       end;
-      IOCreateOperation(IOActionContext);
+      IOCreateOperation(ActionContext);
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // IO PORT/CREATE OPERATION
-procedure TForm1.IOCreateOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IOCreateOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     // check existing names
     if not InstanceNameDuplicated(FPortInstanceDict, InstanceName) then
@@ -2620,7 +2647,7 @@ begin
       // report
       if ActionSource = asScript
         then Form12.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]))
-        else Memo1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
+        else SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
     end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
   end;
 end;
@@ -2630,14 +2657,14 @@ procedure TForm1.IODestroyExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
   Tree:            TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2671,19 +2698,19 @@ begin
           StringList.Free;
         end;
       end;
-      IODestroyOperation(IOActionContext);
+      IODestroyOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // I/O PORT/DESTROY OPERATION
-procedure TForm1.IODestroyOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IODestroyOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // destroy
@@ -2695,7 +2722,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
   end;
 end;
 
@@ -2704,14 +2731,14 @@ procedure TForm1.IOResetExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
   Tree:            TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2745,19 +2772,19 @@ begin
           StringList.Free;
         end;
       end;
-      IOResetOperation(IOActionContext);
+      IOResetOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // I/O PORT/RESET OPERATION
-procedure TForm1.IOResetOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IOResetOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // reset
@@ -2765,7 +2792,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
   end;
 end;
 
@@ -2774,14 +2801,14 @@ procedure TForm1.IOEnableExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
   Tree:            TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2815,19 +2842,19 @@ begin
           StringList.Free;
         end;
       end;
-      IOEnableOperation(IOActionContext);
+      IOEnableOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // I/O PORT/ENABLE OPERATION
-procedure TForm1.IOEnableOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IOEnableOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // enable
@@ -2835,7 +2862,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
   end;
 end;
 
@@ -2844,14 +2871,14 @@ procedure TForm1.IODisableExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
   Tree:            TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2885,19 +2912,19 @@ begin
           StringList.Free;
         end;
       end;
-      IODisableOperation(IOActionContext);
+      IODisableOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // I/O PORT/DISABLE OPERATION
-procedure TForm1.IODisableOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IODisableOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // enable
@@ -2905,7 +2932,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
   end;
 end;
 
@@ -2914,14 +2941,14 @@ procedure TForm1.IOAttachToBusExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
   Tree:            TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -2955,19 +2982,19 @@ begin
           StringList.Free;
         end;
       end;
-      IOAttachToBusOperation(IOActionContext);
+      IOAttachToBusOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // I/O PORT/ATTACH TO BUS OPERATION
-procedure TForm1.IOAttachToBusOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IOAttachToBusOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // attach to bus
@@ -2975,7 +3002,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
   end;
 end;
 
@@ -2984,14 +3011,14 @@ procedure TForm1.IODetachFromBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -3025,19 +3052,19 @@ begin
           StringList.Free;
         end;
       end;
-      IODetachFromBusOperation(IOActionContext);
+      IODetachFromBusOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // I/O PORT/DETACH FROM BUS OPERATION
-procedure TForm1.IODetachFromBusOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IODetachFromBusOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // detach from bus
@@ -3045,7 +3072,7 @@ begin
     // report
     if ActionSource = asScript
       then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
-      else Memo1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+      else SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
   end;
 end;
 
@@ -3054,14 +3081,14 @@ procedure TForm1.IOPropertiesExecute(Sender: TObject);
 var
   Caller:          TComponent;
   KeyName:         string;
-  IOActionContext: TIOActionContext;
+  ActionContext: TActionContext;
   StringList:      TStringList;
   Tree:            TTreeView;
 begin
-  IOActionContext := TIOActionContext.Create;
+  ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-    with IOActionContext do
+    with ActionContext do
     begin
       // detect action source object
       if (Caller is TMenuItem) then
@@ -3095,19 +3122,19 @@ begin
           StringList.Free;
         end;
       end;
-      IOPropertiesOperation(IOActionContext);
+      IOPropertiesOperation(ActionContext);
     end;
   finally
-    IOActionContext.Free;
+    ActionContext.Free;
   end;
 end;
 
 // PROCESSOR/PROPERTIES OPERATION
-procedure TForm1.IOPropertiesOperation(AIOActionContext: TIOActionContext);
+procedure TForm1.IOPropertiesOperation(AActionContext: TActionContext);
 var
   PortInfo: TPortInfo;
 begin
-  with AIOActionContext do
+  with AActionContext do
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // show properties
@@ -3213,7 +3240,7 @@ begin
       // loading
       try
         FScriptBuffer.LoadFromFile(FileName);
-        Memo1.WriteMessage(MSG03 + Format(MSG82, [FileName]));
+        SysConsole1.WriteMessage(MSG03 + Format(MSG82, [FileName]));
       except
         ShowMessage(MSG01 + Format(MSG48, [FileName]));
         exit;
@@ -3241,12 +3268,12 @@ begin
     try
       if FileExists(FActualScript) then RenameFile(FActualScript, FActualScript + '.bak');
     except
-      Memo1.WriteMessage(MSG02 + MSG84);
+      SysConsole1.WriteMessage(MSG02 + MSG84);
     end;
     // save file
     try
       FScriptBuffer.SaveToFile(FActualScript);
-      Memo1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
+      SysConsole1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
       // refresh ScriptEditor
       Form6.ClearModified;
     except
@@ -3278,12 +3305,12 @@ begin
       try
         if FileExists(FActualScript) then RenameFile(FActualScript, FActualScript + '.bak');
       except
-        Memo1.WriteMessage(MSG02 + MSG84);
+        SysConsole1.WriteMessage(MSG02 + MSG84);
       end;
       // save file
       try
         FScriptBuffer.SaveToFile(FileName);
-        Memo1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
+        SysConsole1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
       except
         ShowMessage(MSG01 + Format(MSG49, [FileName]));
         Exit;
@@ -3355,12 +3382,16 @@ var
   Error: Boolean;
   i:     Integer;
 begin
-  Memo1 := TSysConsole.Create(Self);
-  with Memo1 do
+  // SysConsole and its command interpreter
+  CommandEngine1 := TCommandEngine.Create;
+  SysConsole1 := TSysConsole.Create(Self);
+  SysConsole1.OnCommand := @SysConsole1CmdBridge;
+  with SysConsole1 do
   begin
     Parent := Form1;
     Align := alClient;
   end;
+  // general settings
   Error := False;
   Form1.Caption := Application.Title;
   // set actual project/script property
@@ -3387,7 +3418,7 @@ begin
   ForceDirectories(FConfigDirectory);
   // load settings
   if not LoadConfiguration(FConfigDirectory + CONFIGFILE)
-    then Memo1.WriteMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]))
+    then SysConsole1.WriteMessage(MSG01 + Format(MSG40, [FConfigDirectory + CONFIGFILE]))
     else
       with uconfig.AppConfig do
       begin
@@ -3403,8 +3434,8 @@ begin
         // SysConsole
         with SysConsoleConfig do
         begin
-          Memo1.Font.Color := font_color;
-          Memo1.Color := bg_color;
+          SysConsole1.Font.Color := font_color;
+          SysConsole1.Color := bg_color;
         end;
       end;
   // set plugin directory and load plugins
@@ -3441,7 +3472,7 @@ begin
     begin
       ShowMessage(MSG01 + Format(MSG05, [FPluginDirectory]));
       Error := True;
-    end else Memo1.WriteMessage(MSG03 + Format(MSG06, [IntToStr(i)]));
+    end else SysConsole1.WriteMessage(MSG03 + Format(MSG06, [IntToStr(i)]));
   end;
   if not Error then
   begin
@@ -3460,7 +3491,7 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 begin
   // set SysConsole to active
-  Memo1.SetFocus;
+  SysConsole1.SetFocus;
 end;
 
 // JOBS BEFORE CLOSE FORM
@@ -3505,8 +3536,8 @@ begin
     // SysConsole
     with SysConsoleConfig do
     begin
-      bg_color := Memo1.BGColor;
-      font_color := Memo1.Font.Color;
+      bg_color := SysConsole1.BGColor;
+      font_color := SysConsole1.Font.Color;
     end;
     // Module Explorer
     ModuleExplorerConfig.visible := Form9.Visible;

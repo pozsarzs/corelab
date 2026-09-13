@@ -34,11 +34,11 @@ msgid "Usage"
 msgstr ""
 
 #: corelab.msg09
-msgid "[argument]"
+msgid " [argument]"
 msgstr ""
 
 #: corelab.msg10
-msgid "[directory]"
+msgid " [directory|file]"
 msgstr ""
 
 #: corelab.msg11
@@ -448,6 +448,35 @@ msgstr ""
 msgid "Cannot create backup file."
 msgstr ""
 
+#: frmmain.msg85
+#, object-pascal-format
+msgid "Module named '%s' exists."
+msgstr ""
+
+#: frmmain.msg86
+msgid "Unknown command."
+msgstr ""
+
+#: frmmain.msg87
+msgctxt "frmmain.msg87"
+msgid "Invalid number of arguments."
+msgstr ""
+
+#: frmmain.msg88
+msgctxt "frmmain.msg88"
+msgid "Cannot be used in command line."
+msgstr ""
+
+#: frmmain.msg89
+msgctxt "frmmain.msg89"
+msgid "Cannot be used in script."
+msgstr ""
+
+#: frmmain.msg90
+#, object-pascal-format
+msgid "Cannot create %s module named '%s'."
+msgstr ""
+
 #: frmrunlogger.msg01
 msgctxt "frmrunlogger.msg01"
 msgid "ERROR: "
@@ -631,13 +660,13 @@ msgstr ""
 msgid "Enable I/O module"
 msgstr ""
 
-#: tform1.ioporperties.caption
-msgctxt "tform1.ioporperties.caption"
+#: tform1.ioproperties.caption
+msgctxt "tform1.ioproperties.caption"
 msgid "&Properties..."
 msgstr ""
 
-#: tform1.ioporperties.hint
-msgctxt "tform1.ioporperties.hint"
+#: tform1.ioproperties.hint
+msgctxt "tform1.ioproperties.hint"
 msgid "Properties"
 msgstr ""
 
@@ -1129,22 +1158,18 @@ msgid "Show Module Explorer"
 msgstr ""
 
 #: tform1.vmoveresizeiopanel.caption
-msgctxt "tform1.vmoveresizeiopanel.caption"
 msgid "Move/resize I/O panel..."
 msgstr ""
 
 #: tform1.vmoveresizeiopanel.hint
-msgctxt "tform1.vmoveresizeiopanel.hint"
 msgid "Move/resize I/O panel"
 msgstr ""
 
 #: tform1.vrenameiopanel.caption
-msgctxt "tform1.vrenameiopanel.caption"
 msgid "Rename I/O panel..."
 msgstr ""
 
 #: tform1.vrenameiopanel.hint
-msgctxt "tform1.vrenameiopanel.hint"
 msgid "Rename I/O panel"
 msgstr ""
 
@@ -1173,12 +1198,10 @@ msgid "Show IntLogger"
 msgstr ""
 
 #: tform1.vshowiopanel.caption
-msgctxt "tform1.vshowiopanel.caption"
 msgid "Show I/O panel..."
 msgstr ""
 
 #: tform1.vshowiopanel.hint
-msgctxt "tform1.vshowiopanel.hint"
 msgid "Show I/O panel"
 msgstr ""
 
@@ -1310,7 +1333,6 @@ msgid "Syntax highlighting"
 msgstr ""
 
 #: tform18.label1.caption
-msgctxt "tform18.label1.caption"
 msgid "Instruction:"
 msgstr ""
 
@@ -1351,12 +1373,10 @@ msgid "Gutter font:"
 msgstr ""
 
 #: tform18.label18.caption
-msgctxt "tform18.label18.caption"
 msgid "Sender:"
 msgstr ""
 
 #: tform18.label19.caption
-msgctxt "tform18.label19.caption"
 msgid "Vector:"
 msgstr ""
 
@@ -1366,12 +1386,10 @@ msgid "Address:"
 msgstr ""
 
 #: tform18.label20.caption
-msgctxt "tform18.label20.caption"
 msgid "Status:"
 msgstr ""
 
 #: tform18.label21.caption
-msgctxt "tform18.label21.caption"
 msgid "Flag:"
 msgstr ""
 
@@ -1401,12 +1419,10 @@ msgid "Background:"
 msgstr ""
 
 #: tform18.label3.caption
-msgctxt "tform18.label3.caption"
 msgid "Operation code:"
 msgstr ""
 
 #: tform18.label4.caption
-msgctxt "tform18.label4.caption"
 msgid "Mnemonic:"
 msgstr ""
 
@@ -1607,7 +1623,6 @@ msgid "ScriptEditor"
 msgstr ""
 
 #: tform6.statusbar1.panels[1].text
-msgctxt "tform6.statusbar1.panels[1].text"
 msgid "1:1"
 msgstr ""
 
@@ -1702,6 +1717,34 @@ msgstr ""
 
 #: tform9.editbutton1.buttonhint
 msgid "Search in tree"
+msgstr ""
+
+#: tform9.menuitem1.caption
+msgid "MenuItem1"
+msgstr ""
+
+#: tform9.menuitem2.caption
+msgid "MenuItem2"
+msgstr ""
+
+#: tform9.menuitem3.caption
+msgid "MenuItem3"
+msgstr ""
+
+#: tform9.menuitem4.caption
+msgid "MenuItem4"
+msgstr ""
+
+#: tform9.menuitem5.caption
+msgid "MenuItem5"
+msgstr ""
+
+#: tform9.menuitem6.caption
+msgid "MenuItem6"
+msgstr ""
+
+#: tform9.menuitem7.caption
+msgid "MenuItem7"
 msgstr ""
 
 #: tform9.tabsheet1.caption

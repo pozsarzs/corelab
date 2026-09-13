@@ -17,7 +17,7 @@ interface
 uses
    Generics.Collections;
 type
-  // Abstract token class
+  // Token class
   TToken = class
   protected
     FRawText: string;

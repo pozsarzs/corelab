@@ -4,10 +4,21 @@
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>  
 
-## Command line engine
+## Command engine class for command line
 
 |filename            |base, parent|class            |description                       |
 |--------------------|------------|-----------------|----------------------------------|
+|command.pas         |            |TCommand         |Command class                     |
+|commandengine.pas   |            |TCommandEngine   |Command line engine class         |
+|commandregistry.pas |            |TCommandRegistry |Command registry class            |
+|commandparser.pas   |            |TCommandParser   |Command parser class              |
+|token.pas           |            |TToken           |Token class                       |
+
+
+
+
+
+
 |chkcommandengine.pas|            |                 |Class checker program             |
 |cmd\_data.pas       |TCommand    |TCmd\_commandname|Data handler command classes      |
 |cmd\_general.pas    |TCommand    |TCmd\_commandname|General command classes           |
@@ -17,9 +28,4 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |cmd\_sim.pas        |TCommand    |TCmd\_commandname|Simulation control command classes|
 |cmd\_string.pas     |TCommand    |TCmd\_commandname|String handler command classes    |
 |cmd\_test.pas       |TCommand    |TCmd\_commandname|Test command classes              |
-|command.pas         |            |TCommand         |Command class                     |
 |commandcontext.pas  |            |TCommandContext  |Command context class             |
-|commandengine.pas   |            |TCommandEngine   |Command line engine class         |
-|commandparser.pas   |            |TCommandParser   |Command parser class              |
-|commandregistry.pas |            |TCommandRegistry |Command registry class            |
-|token.pas           |            |TToken           |Token class                       |

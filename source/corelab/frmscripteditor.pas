@@ -15,7 +15,7 @@ unit frmscripteditor;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   ComCtrls, SynEdit, MODSynHighlighterAny, uconfig, SynEditTypes;
 type
   { TForm6 }

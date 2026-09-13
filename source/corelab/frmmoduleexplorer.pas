@@ -16,7 +16,7 @@ unit frmmoduleexplorer;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, EditBtn,
-  ExtCtrls, ValEdit, Menus, uconfig, Types, uactcontext;
+  ExtCtrls, ValEdit, Menus, uconfig, Types;
 type
   { TForm9 }
   TForm9 = class(TForm)

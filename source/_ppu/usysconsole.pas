@@ -16,15 +16,19 @@ unit usysconsole;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  LCLType, Messages, LMessages;
+  LCLType;
 const
   PROMPT = '> ';
 type
+  // Command event type
+  TCommandEvent = procedure(Sender: TObject; const ACommand: string) of object;
+  // SysConsole class
   TSysConsole = class(TMemo)
   private
-    FBGColor:   TColor;
-    FFontColor: TColor;
+    FBGColor:      TColor;
+    FFontColor:    TColor;
     FPromptBorder: Integer;
+    FOnCommand:    TCommandEvent;
     procedure AddPrompt;
     procedure SetBGColor(AColor: TColor);
     procedure SetFontColor(AColor: TColor);
@@ -37,6 +41,7 @@ type
     procedure WriteMessage(const AMsg: string);
   published
     property BGColor: TColor read FBGColor write SetBGColor;
+    property OnCommand: TCommandEvent read FOnCommand write FOnCommand;
     property TextColor: TColor read FFontColor write SetFontColor;
   end;
 
@@ -84,20 +89,20 @@ end;
 // KEY EVENT HANDLER
 procedure TSysConsole.KeyDown(var Key: Word; Shift: TShiftState);
 var
-  Cmd: string;
+  Command: string;
 begin
-  inherited;
   // handling command
   // [Enter]
   if Key = VK_RETURN then
   begin
-    Key := 0; // Ne törjön új sort magától a Memo
-    Cmd := Copy(Text, FPromptBorder + 1, Length(Text));
-//    ProcessCommand(Cmd);
+    // remove linebreak
+    Key := 0;
+    Command := Copy(Text, FPromptBorder + 1, Length(Text));
     AddPrompt;
+    // make command event
+    if Assigned(FOnCommand) then FOnCommand(Self, Command);
     Exit;
   end;
-
   // protections against prompt deletion
   // [Left][Up][Backspace]
   if (Key = VK_LEFT) or (Key = VK_UP) or (Key = VK_BACK) then
@@ -109,6 +114,7 @@ begin
   if (SelLength > 0) and (SelStart < FPromptBorder) then
     if not (Key in [VK_SHIFT, VK_CONTROL, VK_MENU, VK_CAPITAL, VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN])
       then Key := 0;
+  inherited;
 end;
 
 // MOUSE EVENT HANDLER
