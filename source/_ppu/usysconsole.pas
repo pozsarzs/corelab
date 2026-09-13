@@ -15,24 +15,29 @@ unit usysconsole;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, StdCtrls, Controls, Graphics, Messages, LMessages;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  LCLType, Messages, LMessages;
+const
+  PROMPT = '> ';
 type
   TSysConsole = class(TMemo)
   private
-    FOnCommand: TNotifyEvent;
     FBGColor:   TColor;
     FFontColor: TColor;
+    FPromptBorder: Integer;
+    procedure AddPrompt;
     procedure SetBGColor(AColor: TColor);
     procedure SetFontColor(AColor: TColor);
-    procedure WMKeyDown(var Message: TLMKeyDown); message WM_KEYDOWN;
+  protected
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   public
     constructor Create(AOwner: TComponent); override;
     procedure ClearContent;
-    procedure WriteMessage(const AText: string);
+    procedure WriteMessage(const AMsg: string);
   published
     property BGColor: TColor read FBGColor write SetBGColor;
     property TextColor: TColor read FFontColor write SetFontColor;
-    property OnCommand: TNotifyEvent read FOnCommand write FOnCommand;
   end;
 
 procedure Register;
@@ -45,6 +50,18 @@ begin
 end;
 
 // ---- PRIVATE METHODS ----
+
+// ADD PROMPT
+procedure TSysConsole.AddPrompt;
+begin
+  // go to end of text
+  SelStart := Length(Text);
+  if Text <> '' then SelText := sLineBreak + PROMPT else SelText := PROMPT;
+  // end of the prompt
+  FPromptBorder := Length(Text);
+  // go to the character following the prompt
+  SelStart := FPromptBorder;
+end;
 
 // SET BACKGROUND COLOR
 procedure TSysConsole.SetBGColor(AColor: TColor);
@@ -62,17 +79,48 @@ begin
   Invalidate;
 end;
 
-// READ COMMAND FROM CONSOLE
-procedure TSysConsole.WMKeyDown(var Message: TLMKeyDown);
+// ---- PROTECTED METHODS ----
+
+// KEY EVENT HANDLER
+procedure TSysConsole.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  Cmd: string;
 begin
-  if Message.CharCode = $0D then                                      // [ENTER]
+  inherited;
+  // handling command
+  // [Enter]
+  if Key = VK_RETURN then
   begin
-    if Assigned(FOnCommand) then
-      FOnCommand(Self);
-    Message.Result := 0;
+    Key := 0; // Ne törjön új sort magától a Memo
+    Cmd := Copy(Text, FPromptBorder + 1, Length(Text));
+//    ProcessCommand(Cmd);
+    AddPrompt;
     Exit;
   end;
+
+  // protections against prompt deletion
+  // [Left][Up][Backspace]
+  if (Key = VK_LEFT) or (Key = VK_UP) or (Key = VK_BACK) then
+    if SelStart <= FPromptBorder then Key := 0;
+  // [Del]
+  if Key = VK_DELETE then
+    if SelStart < FPromptBorder then  Key := 0;
+  // delete and overwrite with select
+  if (SelLength > 0) and (SelStart < FPromptBorder) then
+    if not (Key in [VK_SHIFT, VK_CONTROL, VK_MENU, VK_CAPITAL, VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN])
+      then Key := 0;
+end;
+
+// MOUSE EVENT HANDLER
+procedure TSysConsole.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
   inherited;
+  // back drop cursor to the line of the prompt
+  if SelStart < FPromptBorder then
+  begin
+    SelStart := FPromptBorder;
+    SelLength := 0;
+  end;
 end;
 
 // ---- PUBLIC METHODS ----
@@ -88,20 +136,37 @@ constructor TSysConsole.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   Align := alClient;
-  ScrollBars := ssAutoBoth;
-  ReadOnly := True;
+  Clear;
+  Color := FBGColor;
   FBGColor := $001E1E1E;
   FFontColor := $00D4D4D4;
-  Color := FBGColor;
   Font.Color := FFontColor;
   Font.Name := 'Courier New';
+  ScrollBars := ssAutoBoth;
+  WordWrap := False;
+  // show prompt
+  if Text = '' then Text := PROMPT;
+  FPromptBorder := Length(Text);
+  SelStart := FPromptBorder;
 end;
 
 // WRITE MESSAGE TO CONSOLE
-procedure TSysConsole.WriteMessage(const AText: string);
+procedure TSysConsole.WriteMessage(const AMsg: string);
+var
+  CurrentInput: string;
+  CurrentPosOffset: Integer;
 begin
-  Lines.Add(AText);
-  SelStart := Length(Text);
+  // save text after prompt and cursor position
+  CurrentInput := Copy(Text, FPromptBorder + 1, Length(Text));
+  CurrentPosOffset := SelStart - FPromptBorder;
+  // insert message before line of the prompt
+  Lines.Insert(Lines.Count - 1, AMsg);
+  // recalculate prompt border
+  FPromptBorder := Length(Text) - Length(CurrentInput);
+  // restore cursor position
+  if CurrentPosOffset > 0
+  then SelStart := FPromptBorder + CurrentPosOffset
+  else SelStart := FPromptBorder;
 end;
 
 initialization

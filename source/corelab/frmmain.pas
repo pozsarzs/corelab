@@ -312,6 +312,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FRestartApplicationExecute(Sender: TObject);
     procedure FSaveProjectAsExecute(Sender: TObject);
     procedure FSaveProjectExecute(Sender: TObject);
@@ -3359,7 +3360,6 @@ begin
   begin
     Parent := Form1;
     Align := alClient;
-    ReadOnly := True;
   end;
   Error := False;
   Form1.Caption := Application.Title;
@@ -3454,6 +3454,13 @@ begin
     // change operation mode
     ChangeOpMode(omInteractive, True, True);
   end else Application.Terminate;
+end;
+
+// SHOW FORM EVENT
+procedure TForm1.FormShow(Sender: TObject);
+begin
+  // set SysConsole to active
+  Memo1.SetFocus;
 end;
 
 // JOBS BEFORE CLOSE FORM
