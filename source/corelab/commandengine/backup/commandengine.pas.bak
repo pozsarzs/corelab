@@ -118,9 +118,9 @@ begin
                     '  ' + Description + LineEnding +
                     '  Syntax: ' + Syntax + LineEnding;
         case Scope of
-          csEverywhere:      InfoText := InfoText + '  Scope: Everywhere';
-          csScriptOnly:      InfoText := InfoText + '  Scope: Script only';
-          csInteractiveOnly: InfoText := InfoText + '  Scope: Interactive only';
+          csEverywhere:      InfoText := InfoText + '  Scope:  Everywhere';
+          csScriptOnly:      InfoText := InfoText + '  Scope:  Script only';
+          csInteractiveOnly: InfoText := InfoText + '  Scope:  Interactive only';
       end;
       end;
       Form1.SysConsole1.WriteMessage(InfoText);
@@ -136,8 +136,8 @@ begin
       Exit;
     end;    
     // cannot be used in this mode
-    if (Command.Scope <> csEverywhere) and
-       (Command.Scope <> FRunningMode) then
+    if (Command.Scope = csEverywhere) or
+       (Command.Scope = csInteractiveOnly) then
     begin
       Result := -2;              
       Exit;

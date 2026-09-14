@@ -168,7 +168,7 @@ msgid "WARNING: "
 msgstr ""
 
 #: frmmain.msg03
-msgid "NOTE:    "
+msgid "NOTE: "
 msgstr ""
 
 #: frmmain.msg04
@@ -475,6 +475,21 @@ msgstr ""
 #: frmmain.msg90
 #, object-pascal-format
 msgid "Cannot create %s module named '%s'."
+msgstr ""
+
+#: frmmain.msg91
+#, object-pascal-format
+msgid "Cannot view module content named '%s'."
+msgstr ""
+
+#: frmmain.msg92
+#, object-pascal-format
+msgid "Cannot rename module content named '%s'."
+msgstr ""
+
+#: frmmain.msg93
+#, object-pascal-format
+msgid "Cannot show module content named '%s'."
 msgstr ""
 
 #: frmrunlogger.msg01

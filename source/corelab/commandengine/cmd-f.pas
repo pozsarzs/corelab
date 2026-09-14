@@ -10,3 +10,38 @@
   This program is distributed in the hope that it will be useful, but WITHOUT
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
+
+RegisterCommand(TCommand.Create('NWPR',
+                                'Change to interactive mode and create new project.',
+                                csInteractiveOnly,
+                                'NWPR',
+                                0,
+                                @Form1.FNewProjectOperation));
+
+RegisterCommand(TCommand.Create('LDPR',
+                                'Change to interactive mode and load project from file.',
+                                csInteractiveOnly,
+                                'LDPR filename.clprj',
+                                1,
+                                @Form1.FLoadProjectOperation));
+
+RegisterCommand(TCommand.Create('SVPR',
+                                'Save project to file.',
+                                csInteractiveOnly,
+                                'SVPR filename.clprj',
+                                1,
+                                @Form1.FSaveProjectAsOperation));
+
+RegisterCommand(TCommand.Create('RSAP',
+                                'Restart application.',
+                                csEverywhere,
+                                'RSAP',
+                                0,
+                                @Form1.FRestartApplicationOperation));
+
+RegisterCommand(TCommand.Create('EXAP',
+                                'Exit from application.',
+                                csEverywhere,
+                                'EXAP',
+                                0,
+                                @Form1.FExitOperation));

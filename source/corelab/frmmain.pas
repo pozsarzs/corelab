@@ -416,11 +416,24 @@ type
     // system console
     SysConsole1:       TSysConsole;
     // action's operation metods
+    // File menu
+    procedure FNewProjectOperation(AActionContext: TActionContext);
     procedure FLoadProjectOperation(AActionContext: TActionContext);
-//    procedure FSaveProjectAsOperation(AActionContext: TActionContext);
+    procedure FSaveProjectAsOperation(AActionContext: TActionContext);
+    procedure FRestartApplicationOperation(AActionContext: TActionContext);
+    procedure FExitOperation(AActionContext: TActionContext);
+    // View menu
+    procedure VShowModuleExplorerOperation(AActionContext: TActionContext);
+    procedure VShowBreakpointManagerOperation(AActionContext: TActionContext);
+    procedure VShowRunLoggerOperation(AActionContext: TActionContext);
+    procedure VShowIntLoggerOperation(AActionContext: TActionContext);
+    procedure VShowRegViewerOperation(AActionContext: TActionContext);
     procedure VShowHexViewerOperation(AActionContext: TActionContext);
+    procedure VShowScriptEditorOperation(AActionContext: TActionContext);
+    procedure VShowScriptConsoleOperation(AActionContext: TActionContext);
     procedure VRenameIOPanelOperation(AActionContext: TActionContext);
     procedure VShowIOPanelOperation(AActionContext: TActionContext);
+    // IO menu
     procedure IOCreateOperation(AActionContext: TActionContext);
     procedure IODestroyOperation(AActionContext: TActionContext);
     procedure IOResetOperation(AActionContext: TActionContext);
@@ -472,7 +485,7 @@ implementation
 resourcestring
   MSG01 = 'ERROR: ';                                                      { SM }
   MSG02 = 'WARNING: ';                                                    { SC }
-  MSG03 = 'NOTE:    ';                                                    { SC }
+  MSG03 = 'NOTE: ';                                                       { SC }
   MSG04 = 'Plugin directory does not exist.';                             { SM }
   MSG05 = 'Cannot load plugins from %s.';                                 { SM }
   MSG06 = '%s plugins loaded.';                                           { SC }
@@ -540,7 +553,10 @@ resourcestring
   MSG87 = 'Invalid number of arguments.';                                 { SC }
   MSG88 = 'Cannot be used in command line.';                              { SC }
   MSG89 = 'Cannot be used in script.';                                    { SC }
-  MSG90 = 'Cannot create %s module named ''%s''.';                        { SC }
+  MSG90 = 'Cannot create %s module named ''%s''.';                        { SM }
+  MSG91 = 'Cannot view module content named ''%s''.';                     { SM }
+  MSG92 = 'Cannot rename module content named ''%s''.';                   { SM }
+  MSG93 = 'Cannot show module content named ''%s''.';                     { SM }
 
 // ---- PRIVATE METHODS ----
 
@@ -833,25 +849,31 @@ end;
 
 // ---- ACTION HANDLER METHODS ----
 
-// FILE/SWITCH TO INTERACTIVE MODE ACTION
+// FILE/SWITCH TO INTERACTIVE MODE ACTION ======================================
 procedure TForm1.FSwitchToInteractiveModeExecute(Sender: TObject);
 begin
   ChangeOpMode(omInteractive, False, True);
 end;
 
-// FILE/SWITCH TO SCRIPT MODE ACTION
+// FILE/SWITCH TO SCRIPT MODE ACTION -------------------------------------------
 procedure TForm1.FSwitchToScriptModeExecute(Sender: TObject);
 begin
   ChangeOpMode(omScript, False, True);
 end;
 
-// FILE/CREATE NEW PROJECT ACTION
+// FILE/CREATE NEW PROJECT ACTION ----------------------------------------------
 procedure TForm1.FNewProjectExecute(Sender: TObject);
 begin
   ChangeOpMode(omInteractive, True, True)
 end;
 
-// FILE/LOAD EXISTING PROJECT ACTION
+// FILE/CREATE NEW PROJECT OPERATION
+procedure TForm1.FNewProjectOperation(AActionContext: TActionContext);
+begin
+  ChangeOpMode(omInteractive, True, False)
+end;
+
+// FILE/LOAD EXISTING PROJECT ACTION -------------------------------------------
 procedure TForm1.FLoadProjectExecute(Sender: TObject);
 var
   ActionContext: TActionContext;
@@ -871,7 +893,6 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       // select file
       OpenDialog := TOpenDialog.Create(Form1);
       try
@@ -881,7 +902,7 @@ begin
           Title := MSG53;
           Filter := MSG52;
         end;
-        if OpenDialog.Execute then InstanceName := OpenDialog.FileName else Exit;
+        if OpenDialog.Execute then SArg1 := OpenDialog.FileName else Exit;
       finally
         OpenDialog.Free;
       end;
@@ -894,31 +915,27 @@ end;
 
 // FILE/LOAD EXISTING PROJECT ACTION
 procedure TForm1.FLoadProjectOperation(AActionContext: TActionContext);
+var
+  Filename: string;
 begin
-  with AActionContext do
-  begin
-    FActualProjectIsSaved := True;
-    // clearing
-    ChangeOpMode(omScript, True, True);
-    // loading
-    try
-      LoadProject(InstanceName);
-      SysConsole1.WriteMessage(MSG03 + Format(MSG80, [InstanceName]));
-    except
-      ShowMessage(MSG01 + Format(MSG55, [InstanceName]));
-      exit;
-    end;
-    FActualProject := InstanceName;                             // with filename
-    FActualProjectIsSaved := True;                            // no need to save
-    Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+  Filename := AActionContext.SArg1;
+  FActualProjectIsSaved := True;
+  // clearing
+  ChangeOpMode(omScript, True, True);
+  // loading
+  try
+    LoadProject(Filename);
+    SysConsole1.WriteMessage(MSG03 + Format(MSG80, [Filename]));
+  except
+    ShowMessage(MSG01 + Format(MSG55, [Filename]));
+    exit;
   end;
+  FActualProject := Filename;                                 // with filename
+  FActualProjectIsSaved := True;                            // no need to save
+  Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
 end;
 
-
-
-
-
-// FILE/SAVE PROJECT ACTION
+// FILE/SAVE PROJECT ACTION ----------------------------------------------------
 procedure TForm1.FSaveProjectExecute(Sender: TObject);
 begin
   if FActualProjectIsSaved then Exit;
@@ -940,45 +957,71 @@ begin
   end;
 end;
 
-// FILE/SAVE PROJECT AS ACTION
+// FILE/SAVE PROJECT AS ACTION -------------------------------------------------
 procedure TForm1.FSaveProjectAsExecute(Sender: TObject);
 var
-  Filename:   string;
-  SaveDialog: TSaveDialog;
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+  Filename:      string;
+  SaveDialog:    TSaveDialog;
 begin
-  SaveDialog := TSaveDialog.Create(Form1);
+  ActionContext := TActionContext.Create;
   try
-    with SaveDialog do
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
     begin
-      InitialDir := GetUserDir;
-      Title := MSG54;
-      Filter := MSG52;
-    end;
-    if SaveDialog.Execute then
-    begin
-      Filename := SaveDialog.FileName;
-      // create backup
-      try
-        if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
-      except
-        SysConsole1.WriteMessage(MSG02 + MSG84);
-      end;
-      // save file
-      if not SaveProject(Filename) then
+      // detect action source object
+      if (Caller is TMenuItem) then
       begin
-        ShowMessage(MSG01 + Format(MSG56, [Filename]));
-        Exit;
-      end else SysConsole1.WriteMessage(MSG03 + MSG81);
-      FActualProject := Filename;                                       // named
-      FActualProjectIsSaved := True;                          // no need to save
-      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      // save file
+      SaveDialog := TSaveDialog.Create(Form1);
+      try
+        with SaveDialog do
+        begin
+          InitialDir := GetUserDir;
+          Title := MSG54;
+          Filter := MSG52;
+        end;
+        if SaveDialog.Execute then SArg1 := SaveDialog.FileName else Exit;
+      finally
+        SaveDialog.Free;
+      end;
+      FSaveProjectAsOperation(ActionContext);
     end;
   finally
-    SaveDialog.Free;
+    ActionContext.Free;
   end;
 end;
 
-// FILE/SETTINGS ACTION
+// FILE/SAVE PROJECT AS OPERATION ----------------------------------------------
+procedure TForm1.FSaveProjectAsOperation(AActionContext: TActionContext);
+var
+  Filename:   string;
+begin
+  Filename := AActionContext.SArg1;
+  // create backup
+  try
+    if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
+  except
+    SysConsole1.WriteMessage(MSG02 + MSG84);
+  end;
+  // save file
+  if not SaveProject(Filename) then
+  begin
+    ShowMessage(MSG01 + Format(MSG56, [Filename]));
+    Exit;
+  end else SysConsole1.WriteMessage(MSG03 + MSG81);
+  FActualProject := Filename;                                           // named
+  FActualProjectIsSaved := True;                              // no need to save
+  Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
+end;
+
+// FILE/SETTINGS ACTION --------------------------------------------------------
 procedure TForm1.FSettingsExecute(Sender: TObject);
 begin
   if Form18.ShowModal = mrOk then
@@ -1001,8 +1044,32 @@ begin
   end;
 end;
 
-// FILE/RESTART APPLICATION ACTION
+// FILE/RESTART APPLICATION ACTION ---------------------------------------------
 procedure TForm1.FRestartApplicationExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      FRestartApplicationOperation(ActionContext);
+    end;
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// FILE/RESTART APPLICATION OPERATION ------------------------------------------
+procedure TForm1.FRestartApplicationOperation(AActionContext: TActionContext);
 var
   NewProcess: TProcess;
 begin
@@ -1016,46 +1083,220 @@ begin
   Application.Terminate;
 end;
 
-// FILE/EXIT TO OS ACTION
+// FILE/EXIT TO OS ACTION ------------------------------------------------------
 procedure TForm1.FExitExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+    // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      FExitOperation(ActionContext);
+    end;
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// FILE/EXIT TO OS OPERATION ---------------------------------------------------
+procedure TForm1.FExitOperation(AActionContext: TActionContext);
 begin
   Close;
 end;
 
-// VIEW/SHOW MODULE MANAGER ACTION
+// VIEW/SHOW MODULE MANAGER ACTION =============================================
 procedure TForm1.VModuleExplorerExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+    end;
+    VShowModuleExplorerOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// VIEW/SHOW MODULE MANAGER OPERATION
+procedure TForm1.VShowModuleExplorerOperation(AActionContext: TActionContext);
 begin
   Form9.Show;
   Form9.BringToFront;
 end;
 
-// VIEW/SHOW BREAKPOINT MANAGER ACTION
+// VIEW/SHOW BREAKPOINT MANAGER ACTION -----------------------------------------
 procedure TForm1.VShowBreakpointManagerExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+    end;
+    VShowBreakpointManagerOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// VIEW/SHOW BREAKPOINT MANAGER OPERATION
+procedure TForm1.VShowBreakpointManagerOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// VIEW/SHOW RUNLOGGER ACTION
+// VIEW/SHOW RUNLOGGER ACTION --------------------------------------------------
 procedure TForm1.VShowRunLoggerExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+    end;
+    VShowRunLoggerOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// VIEW/SHOW RUNLOGGER OPERATION
+procedure TForm1.VShowRunLoggerOperation(AActionContext: TActionContext);
 begin
   Form4.Show;
   Form4.BringToFront;
 end;
 
-// VIEW/SHOW INTLOGGER ACTION
+// VIEW/SHOW INTLOGGER ACTION --------------------------------------------------
 procedure TForm1.VShowIntLoggerExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+    end;
+    VShowIntLoggerOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// VIEW/SHOW INTLOGGER OPERATION
+procedure TForm1.VShowIntLoggerOperation(AActionContext: TActionContext);
 begin
   Form8.Show;
   Form8.BringToFront;
 end;
 
-// VIEW/SHOW REGVIEWER ACTION
+// VIEW/SHOW REGVIEWER ACTION --------------------------------------------------
 procedure TForm1.VShowRegViewerExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
 begin
-  {...}
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      // call from others
+      StringList := TStringList.Create;
+      try
+        for KeyName in FProcInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
+        begin
+          OKButtonCaption := MSG79;
+          ModuleList := StringList;
+          if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+        end;
+      finally
+        StringList.Free;
+      end;
+    end;
+    VShowRegviewerOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
 end;
 
-// VIEW/SHOW HEXVIEWER ACTION
+// VIEW/SHOW REGVIEWER OPERATION
+procedure TForm1.VShowRegviewerOperation(AActionContext: TActionContext);
+var
+  ProcInfo:     TProcInfo;
+  InstanceName: string;
+begin
+  InstanceName := AActionContext.SArg1;
+  try
+    ProcInfo := FProcInstanceDict[InstanceName];
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG91, [InstanceName]));
+    Exit;
+  end;
+  // show HexViewer
+  // Form11.MemInstance := MemInfo.Memory;
+  // Form11.Show;
+end;
+
+// VIEW/SHOW HEXVIEWER ACTION --------------------------------------------------
 procedure TForm1.VShowHexViewerExecute(Sender: TObject);
 var
   Caller:         TComponent;
@@ -1076,7 +1317,6 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       // call from others
       StringList := TStringList.Create;
       try
@@ -1085,7 +1325,7 @@ begin
         begin
           OKButtonCaption := MSG79;
           ModuleList := StringList;
-          if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+          if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
         end;
       finally
         StringList.Free;
@@ -1100,19 +1340,48 @@ end;
 // VIEW/SHOW HEXVIEWER OPERATION
 procedure TForm1.VShowHexViewerOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  MemInfo:      TMemInfo;
+  InstanceName: string;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
-    // show HexViewer
-    Form3.MemInstance := MemInfo.Memory;
-    Form3.Show;
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG91, [InstanceName]));
+    Exit;
+  end;
+  // show HexViewer
+  Form3.MemInstance := MemInfo.Memory;
+  Form3.Show;
+end;
+
+// VIEW/SHOW SCRIPTEDITOR ACTION -----------------------------------------------
+procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+    end;
+    VShowScriptEditorOperation(ActionContext);
+  finally
+    ActionContext.Free;
   end;
 end;
 
-// VIEW/SHOW SCRIPTEDITOR ACTION
-procedure TForm1.VShowScriptEditorExecute(Sender: TObject);
+// VIEW/SHOW SCRIPTEDITOR OPERATION
+procedure TForm1.VShowScriptEditorOperation(AActionContext: TActionContext);
 begin
   Form6.ExtBuffer := FScriptBuffer;
   Form6.CopyBufferToEditor;
@@ -1120,18 +1389,42 @@ begin
   Form6.BringToFront;
 end;
 
-// VIEW/SHOW SCRIPTCONSOLE ACTION
+// VIEW/SHOW SCRIPTCONSOLE ACTION ----------------------------------------------
 procedure TForm1.VShowScriptConsoleExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+    end;
+    VShowScriptConsoleOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// VIEW/SHOW SCRIPTCONSOLE OPERATION
+procedure TForm1.VShowScriptConsoleOperation(AActionContext: TActionContext);
 begin
   Form12.Show;
   Form12.BringToFront;
 end;
 
-// VIEW/RENAME IO PORT PANEL ACTION
+// VIEW/RENAME IO PORT PANEL ACTION --------------------------------------------
 procedure TForm1.VRenameIOPanelExecute(Sender: TObject);
 var
   Caller:          TComponent;
-  ActionContext: TActionContext;
+  ActionContext:   TActionContext;
   KeyName:         string;
   StringList:      TStringList;
 begin
@@ -1148,7 +1441,6 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
       try
         for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
@@ -1156,13 +1448,13 @@ begin
         begin
           OKButtonCaption := MSG76;
           ModuleList := StringList;
-          if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+          if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           // rename panel
           with Form13 do
           begin
             PanelCaption := SelectedKey;
             Form13.ShowModal;
-            ActionContext.PanelCaption := PanelCaption;
+            SArg1 := PanelCaption;
           end;
         end;
       finally
@@ -1178,16 +1470,23 @@ end;
 // VIEW/RENAME IO PORT PANEL OPERATION
 procedure TForm1.VRenameIOPanelOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  NewCaption:      string;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  NewCaption := AActionContext.SArg2;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
     // rename panel
-    if Length(PanelCaption) > 0 then
+    if Length(Caption) > 0 then
       if PortInfo.Port.HasPanel
         then FPortPluginDict[PortInfo.ModuleName].FRenamePanel(PortInfo.Port,
-                                                               PChar(PanelCaption));
+                                                               PChar(NewCaption));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG92, [InstanceName]));
+    Exit;
   end;
 end;
 
@@ -1195,7 +1494,7 @@ end;
 procedure TForm1.VShowIOPanelExecute(Sender: TObject);
 var
   Caller:          TComponent;
-  ActionContext: TActionContext;
+  ActionContext:   TActionContext;
   KeyName:         string;
   StringList:      TStringList;
 begin
@@ -1212,7 +1511,6 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
       try
         for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
@@ -1220,7 +1518,7 @@ begin
         begin
           OKButtonCaption := MSG76;
           ModuleList := StringList;
-          if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+          if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
         end;
       finally
         StringList.Free;
@@ -1235,18 +1533,23 @@ end;
 // VIEW/SHOW IO PORT PANEL OPERATION
 procedure TForm1.VShowIOPanelOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
-    // rename panel
+    // show panel
     if PortInfo.Port.HasPanel
       then FPortPluginDict[PortInfo.ModuleName].FShowPanel(PortInfo.Port);
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+    Exit;
   end;
 end;
 
-// PROCESSOR/CREATE ACTION
+// PROCESSOR/CREATE ACTION =====================================================
 procedure TForm1.PCreateExecute(Sender: TObject);
 var
   Caller:         TComponent;
@@ -1307,9 +1610,7 @@ begin
       // add to Module Explorer
       Form9.AddNode('Processor', InstanceName);
       // report
-      if ActionSource = asScript
-        then Form12.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]))
-        else SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+      SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
     end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
   end;
 end;
@@ -1382,9 +1683,7 @@ begin
     // remove from Module Explorer
     Form9.DeleteNode('Processor', InstanceName);
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
   end;
 end;
 
@@ -1452,9 +1751,7 @@ begin
     // reset
     ProcInfo.Processor.Reset;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
   end;
 end;
 
@@ -1522,9 +1819,7 @@ begin
     // enable
     ProcInfo.Processor.Enabled := True;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
   end;
 end;
 
@@ -1592,9 +1887,7 @@ begin
     // enable
     ProcInfo.Processor.Enabled := False;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
   end;
 end;
 
@@ -1662,9 +1955,7 @@ begin
     // attach to bus
     {...}
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
   end;
 end;
 
@@ -1732,9 +2023,7 @@ begin
     // detach from bus
     {...}
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
   end;
 end;
 
@@ -1830,8 +2119,8 @@ begin
           with Form16 do
           begin
             PluginList := StringList;
-            if ShowModal = mrOk then ModuleType := SelectedKey else Exit;
-            InstanceName := Edit1.Text;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+            SArg2 := Edit1.Text;
           end;
         finally
           StringList.Free;
@@ -1865,19 +2154,15 @@ begin
       end;
     except
       // error
-      if AActionContext.ActionSource = asScript
-        then Form12.WriteMessage(MSG03 + Format(MSG90, ['memory', InstanceName]))
-        else SysConsole1.WriteMessage(MSG03 + Format(MSG90, ['memory', InstanceName]));
-        Exit;
+      ShowMessage(MSG01 + Format(MSG90, ['memory', InstanceName]));
+      Exit;
     end;
     // store
     FMemInstanceDict.Add(InstanceName, MemInfo);
     // add to Module Explorer
     Form9.AddNode('Memory', InstanceName);
     // report
-    if AActionContext.ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
   end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
@@ -1949,9 +2234,7 @@ begin
     // remove from Module Explorer
     Form9.DeleteNode('Memory', InstanceName);
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
   end;
 end;
 
@@ -2019,9 +2302,7 @@ begin
     // reset
     MemInfo.Memory.Reset;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
   end;
 end;
 
@@ -2089,9 +2370,7 @@ begin
     // enable
     MemInfo.Memory.Enabled := True;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
   end;
 end;
 
@@ -2159,9 +2438,7 @@ begin
     // enable
     MemInfo.Memory.Enabled := False;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
   end;
 end;
 
@@ -2229,9 +2506,7 @@ begin
     // attach to bus
     {...}
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
   end;
 end;
 
@@ -2299,9 +2574,7 @@ begin
     // detach from bus
     {...}
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
   end;
 end;
 
@@ -2645,9 +2918,7 @@ begin
       // add to Module Explorer
       Form9.AddNode('I/O port & device', InstanceName);
       // report
-      if ActionSource = asScript
-        then Form12.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]))
-        else SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
+      SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
     end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
   end;
 end;
@@ -2720,9 +2991,7 @@ begin
     // remove from Module Explorer
     Form9.DeleteNode('I/O port & device', InstanceName);
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG60, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
   end;
 end;
 
@@ -2790,9 +3059,7 @@ begin
     // reset
     PortInfo.Port.Reset;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG62, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
   end;
 end;
 
@@ -2860,9 +3127,7 @@ begin
     // enable
     PortInfo.Port.Enabled := True;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG64, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
   end;
 end;
 
@@ -2930,9 +3195,7 @@ begin
     // enable
     PortInfo.Port.Enabled := False;
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG66, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
   end;
 end;
 
@@ -3000,9 +3263,7 @@ begin
     // attach to bus
     {...}
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG68, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
   end;
 end;
 
@@ -3070,9 +3331,7 @@ begin
     // detach from bus
     {...}
     // report
-    if ActionSource = asScript
-      then Form12.WriteMessage(MSG03 + Format(MSG70, [InstanceName]))
-      else SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
   end;
 end;
 
@@ -3485,6 +3744,7 @@ begin
     // change operation mode
     ChangeOpMode(omInteractive, True, True);
   end else Application.Terminate;
+  ActiveControl := SysConsole1;
 end;
 
 // SHOW FORM EVENT

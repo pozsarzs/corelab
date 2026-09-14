@@ -136,8 +136,7 @@ begin
       Exit;
     end;    
     // cannot be used in this mode
-    if (Command.Scope <> csEverywhere) and
-       (Command.Scope <> FRunningMode) then
+    if Command.Scope = csScriptOnly then
     begin
       Result := -2;              
       Exit;

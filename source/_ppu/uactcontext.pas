@@ -32,12 +32,6 @@ type
     ModuleType:    string;
     Enabled:       Boolean;
     AttachedToBus: Boolean;
-    PanelCaption: string;
-    PanelLeft:    Integer;
-    PanelTop:     Integer;
-    PanelWidth:   Integer;
-    PanelHeight:  Integer;
-    PanelShow:    Boolean;
     constructor Create;
   end;
 
@@ -59,12 +53,6 @@ begin
   ModuleType := '';
   Enabled := False;
   AttachedToBus := False;
-  PanelCaption := 'MyIO';
-  PanelHeight := 100;
-  PanelLeft := 8;
-  PanelShow := True;
-  PanelTop := 8;
-  PanelWidth := 100;
 end;
 
 end.
