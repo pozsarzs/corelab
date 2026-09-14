@@ -10,3 +10,60 @@
   This program is distributed in the hope that it will be useful, but WITHOUT
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
+
+RegisterCommand(TCommand.Create('RUN',
+                                'Run simulation.',
+                                csEverywhere,
+                                'RUN',
+                                0,
+                                @Form1.ORunOperation));
+
+RegisterCommand(TCommand.Create('STEP',
+                                'Run simulation step-by-step.',
+                                csEverywhere,
+                                'STEP',
+                                0,
+                                @Form1.OStepOperation));
+
+RegisterCommand(TCommand.Create('STOP',
+                                'Stop simulation.',
+                                csEverywhere,
+                                'STOP',
+                                0,
+                                @Form1.OStopOperation));
+
+RegisterCommand(TCommand.Create('NMI',
+                                'Call non-maskable interrupt.',
+                                csEverywhere,
+                                'NMI',
+                                0,
+                                @Form1.ONMIOperation));
+
+RegisterCommand(TCommand.Create('IRQ',
+                                'Call interrupt.',
+                                csEverywhere,
+                                'IRQ vector',
+                                1,
+                                @Form1.OIRQOperation));
+
+RegisterCommand(TCommand.Create('RST',
+                                'Reset all module.',
+                                csEverywhere,
+                                'RST',
+                                0,
+                                @Form1.OResetAllOperation));
+
+RegisterCommand(TCommand.Create('SVSS',
+                                'Make and save snapshot.',
+                                csEverywhere,
+                                'SVSS',
+                                0,
+                                @Form1.OMakeSnapshotOperation));
+
+RegisterCommand(TCommand.Create('LDSS',
+                                'Load and restore snapshot.',
+                                csEverywhere,
+                                'LDSS',
+                                0,
+                                @Form1.ORestoreSnapshotOperation));
+

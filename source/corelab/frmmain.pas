@@ -464,7 +464,21 @@ type
     procedure IODetachFromBusOperation(AActionContext: TActionContext);
     procedure IOPropertiesOperation(AActionContext: TActionContext);
     // Operation menu
+    procedure ORunOperation(AActionContext: TActionContext);
+    procedure OStepOperation(AActionContext: TActionContext);
+    procedure OStopOperation(AActionContext: TActionContext);
+    procedure ONMIOperation(AActionContext: TActionContext);
+    procedure OIRQOperation(AActionContext: TActionContext);
+    procedure OResetAllOperation(AActionContext: TActionContext);
+    procedure OMakeSnapshotOperation(AActionContext: TActionContext);
+    procedure ORestoreSnapshotOperation(AActionContext: TActionContext);
     // Script menu
+    procedure SNewScriptOperation(AActionContext: TActionContext);
+    procedure SLoadScriptOperation(AActionContext: TActionContext);
+    procedure SSaveScriptAsOperation(AActionContext: TActionContext);
+    procedure SRunScriptOperation(AActionContext: TActionContext);
+    procedure SStepScriptOperation(AActionContext: TActionContext);
+    procedure SStopScriptOperation(AActionContext: TActionContext);
     // other methods and properties
     procedure SetProjectMode;
     procedure SetScriptMode;
@@ -895,17 +909,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
-          then ActionSource := asModuleExplorer;
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
       // select file
       OpenDialog := TOpenDialog.Create(Form1);
       try
@@ -926,7 +941,7 @@ begin
   end;
 end;
 
-// FILE/LOAD EXISTING PROJECT ACTION
+// FILE/LOAD EXISTING PROJECT OPERATION
 procedure TForm1.FLoadProjectOperation(AActionContext: TActionContext);
 var
   Filename: string;
@@ -975,22 +990,22 @@ procedure TForm1.FSaveProjectAsExecute(Sender: TObject);
 var
   ActionContext: TActionContext;
   Caller:        TComponent;
-  Filename:      string;
   SaveDialog:    TSaveDialog;
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
-          then ActionSource := asModuleExplorer;
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
       // save file
       SaveDialog := TSaveDialog.Create(Form1);
       try
@@ -1019,7 +1034,7 @@ begin
   Filename := AActionContext.SArg1;
   // create backup
   try
-    if FileExists(FActualProject) then RenameFile(FActualProject, FActualProject + '.bak');
+    if FileExists(Filename) then RenameFile(Filename, Filename + '.bak');
   except
     SysConsole1.WriteMessage(MSG02 + MSG84);
   end;
@@ -1065,15 +1080,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
         end else ActionSource := asToolBar;
+      end;
       FRestartApplicationOperation(ActionContext);
     end;
   finally
@@ -1104,15 +1122,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-    // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
         end else ActionSource := asToolBar;
+      end;
       FExitOperation(ActionContext);
     end;
   finally
@@ -1134,15 +1155,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
     end;
     VShowModuleExplorerOperation(ActionContext);
   finally
@@ -1165,15 +1189,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
     end;
     VShowBreakpointManagerOperation(ActionContext);
   finally
@@ -1195,15 +1222,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
     end;
     VShowRunLoggerOperation(ActionContext);
   finally
@@ -1226,15 +1256,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
     end;
     VShowIntLoggerOperation(ActionContext);
   finally
@@ -1314,7 +1347,7 @@ procedure TForm1.VShowHexViewerExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
   ActionContext := TActionContext.Create;
@@ -1377,15 +1410,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
     end;
     VShowScriptEditorOperation(ActionContext);
   finally
@@ -1416,15 +1452,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
     end;
     VShowScriptConsoleOperation(ActionContext);
   finally
@@ -1584,15 +1623,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
       StringList := TStringList.Create;
         try
           for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
@@ -2165,15 +2207,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
       StringList := TStringList.Create;
         try
           for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
@@ -2215,7 +2260,7 @@ begin
       end;
     except
       // error
-      ShowMessage(MSG01 + Format(MSG90, ['processor', InstanceName]));
+      ShowMessage(MSG01 + Format(MSG90, ['memory', InstanceName]));
       Exit;
     end;
     // store
@@ -3083,17 +3128,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
-          then ActionSource := asModuleExplorer;
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
       StringList := TStringList.Create;
       try
         for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
@@ -3152,15 +3198,18 @@ var
 begin
   ActionContext := TActionContext.Create;
   try
-    Caller := (Sender as TAction).ActionComponent;
     with ActionContext do
     begin
-      // detect action source object
-      if (Caller is TMenuItem) then
+      ActionSource := asOther;
+      if Sender is TAction then
       begin
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
       StringList := TStringList.Create;
         try
           for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
@@ -3202,7 +3251,7 @@ begin
       end;
     except
       // error
-      ShowMessage(MSG01 + Format(MSG90, ['processor', InstanceName]));
+      ShowMessage(MSG01 + Format(MSG90, ['i/o port', InstanceName]));
       Exit;
     end;
     // store
@@ -3723,123 +3772,395 @@ begin
   end;
 end;
 
-// OPERATION/RUN SIMULATION
+// OPERATION/RUN SIMULATION ACTION =============================================
 procedure TForm1.ORunExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    ORunOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/RUN SIMULATION OPERATION
+procedure TForm1.ORunOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/RUN SIMULATION STEP BY STEP
+// OPERATION/RUN SIMULATION STEP BY STEP ACTION --------------------------------
 procedure TForm1.OStepExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    OStepOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/RUN SIMULATION STEP BY STEP OPERATION
+procedure TForm1.OStepOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/STOP SIMULATION
+// OPERATION/STOP SIMULATION ACTION --------------------------------------------
 procedure TForm1.OStopExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    OStopOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/STOP SIMULATION OPERATION
+procedure TForm1.OStopOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/REQUEST NMI
+// OPERATION/REQUEST NMI ACTION ------------------------------------------------
 procedure TForm1.ONMIExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    ONMIOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/REQUEST NMI OPERATION
+procedure TForm1.ONMIOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/REQUEST IRQ
+// OPERATION/REQUEST IRQ ACTION ------------------------------------------------
 procedure TForm1.OIRQExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    OIRQOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/REQUEST IRQ OPERATION
+procedure TForm1.OIRQOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/RESET SIMULATION
+// OPERATION/RESET SIMULATION ACTION -------------------------------------------
 procedure TForm1.OResetAllExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    OResetAllOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/RESET SIMULATION OPERATION
+procedure TForm1.OResetAllOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/TOGGLE BREAKPOINTS
+// OPERATION/TOGGLE BREAKPOINTS ACTION -----------------------------------------
 procedure TForm1.OToggleBreakpointExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
 begin
-  {...}
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    OClearAllBreakpointsExecute(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
 end;
 
-// OPERATION/CLEAR ALL BREAKPOINT
+// OPERATION/CLEAR ALL BREAKPOINT ACTION ---------------------------------------
 procedure TForm1.OClearAllBreakpointsExecute(Sender: TObject);
 begin
   {...}
 end;
 
-// OPERATION/MAKE SNAPSHOT
+// OPERATION/MAKE SNAPSHOT ACTION ----------------------------------------------
 procedure TForm1.OMakeSnapshotExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    OMakeSnapshotOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/MAKE SNAPSHOT OPERATION
+procedure TForm1.OMakeSnapshotOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// OPERATION/RESTORE SNAPSHOT
+// OPERATION/RESTORE SNAPSHOT ACTION -------------------------------------------
 procedure TForm1.ORestoreSnapshotExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    ORestoreSnapshotOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// OPERATION/RESTORE SNAPSHOT OPERATION
+procedure TForm1.ORestoreSnapshotOperation(AActionContext: TActionContext);
 begin
   {...}
 end;
 
-// SCRIPT/CREATE NEW SCRIPT, CLEAR BUFFER AND OPEN/REFRESH SCRIPTEDITOR
+// SCRIPT/CREATE NEW SCRIPT ACTION =============================================
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
   ChangeOpMode(omScript, True, True);
   // refresh and show ScriptEditor
   Form6.ClearModified;
   Form6.SetFilename('');
-  VShowScriptEditorExecute(Sender);
+  VShowScriptEditorExecute(nil);
 end;
 
-// SCRIPT/LOAD SCRIPT
+// SCRIPT/CREATE NEW SCRIPT OPERATION
+procedure TForm1.SNewScriptOperation(AActionContext: TActionContext);
+begin
+  ChangeOpMode(omScript, True, False);
+  // refresh and show ScriptEditor
+  Form6.ClearModified;
+  Form6.SetFilename('');
+  VShowScriptEditorExecute(nil);
+end;
+
+// SCRIPT/LOAD SCRIPT ACTION ---------------------------------------------------
 procedure TForm1.SLoadScriptExecute(Sender: TObject);
+  var
+    ActionContext: TActionContext;
+    Caller:        TComponent;
+    OpenDialog:    TOpenDialog;
+  begin
+    ActionContext := TActionContext.Create;
+    try
+      with ActionContext do
+      begin
+        ActionSource := asOther;
+        if Sender is TAction then
+        begin
+          Caller := TAction(Sender).ActionComponent;
+          if Caller is TMenuItem then
+          begin
+            if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+              then ActionSource := asMainMenu;
+          end else ActionSource := asToolBar;
+        end;
+        // check actual script status
+        if not FActualScriptIsSaved then
+          if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrNo
+            then Exit;
+        // select file
+        OpenDialog := TOpenDialog.Create(Form1);
+        try
+          with OpenDialog do
+          begin
+            InitialDir := GetUserDir;
+            Title := MSG46;
+            Filter := MSG45;
+          end;
+          if OpenDialog.Execute then SArg1 := OpenDialog.FileName else Exit;
+        finally
+          OpenDialog.Free;
+        end;
+        SLoadScriptOperation(ActionContext);
+      end;
+    finally
+      ActionContext.Free;
+    end;
+end;
+
+// SCRIPT/LOAD SCRIPT OPERATION
+procedure TForm1.SLoadScriptOperation(AActionContext: TActionContext);
 var
   Filename:   string;
-  OpenDialog: TOpenDialog;
 begin
-  // check actual script status
-  if not FActualScriptIsSaved then
-    if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrNo
-      then Exit;
-  // select file
-  OpenDialog := TOpenDialog.Create(Form1);
+  Filename := AActionContext.SArg1;
+  FActualScriptIsSaved := True;
+  // clearing
+  ChangeOpMode(omScript, True, True);
+  // loading
   try
-    with OpenDialog do
-    begin
-      InitialDir := GetUserDir;
-      Title := MSG46;
-      Filter := MSG45;
-    end;
-    if OpenDialog.Execute then
-    begin
-      Filename := OpenDialog.FileName;
-      FActualScriptIsSaved := True;
-      // clearing
-      ChangeOpMode(omScript, True, True);
-      // loading
-      try
-        FScriptBuffer.LoadFromFile(FileName);
-        SysConsole1.WriteMessage(MSG03 + Format(MSG82, [FileName]));
-      except
-        ShowMessage(MSG01 + Format(MSG48, [FileName]));
-        exit;
-      end;
-      FActualScript := Filename;                                // with filename
-      FActualScriptIsSaved := True;                           // no need to save
-      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
-      // refresh and show ScriptEditor
-      Form6.ClearModified;
-      Form6.SetFilename(FActualScript);
-      VShowScriptEditorExecute(Sender);
-    end;
-  finally
-    OpenDialog.Free;
+    FScriptBuffer.LoadFromFile(FileName);
+    SysConsole1.WriteMessage(MSG03 + Format(MSG82, [FileName]));
+  except
+    ShowMessage(MSG01 + Format(MSG48, [FileName]));
+    exit;
   end;
+  FActualScript := Filename;                                // with filename
+  FActualScriptIsSaved := True;                           // no need to save
+  Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+  // refresh and show ScriptEditor
+  Form6.ClearModified;
+  Form6.SetFilename(FActualScript);
+  VShowScriptEditorExecute(nil);
 end;
 
-// SCRIPT/SAVE SCRIPT
+// SCRIPT/SAVE SCRIPT ACTION ---------------------------------------------------
 procedure TForm1.SSaveScriptExecute(Sender: TObject);
 begin
   if FActualScriptIsSaved then Exit;
@@ -3865,51 +4186,104 @@ begin
   end;
 end;
 
-// SCRIPT/SAVE SCRIPT AS
+// SCRIPT/SAVE SCRIPT AS ACTION ------------------------------------------------
 procedure TForm1.SSaveScriptAsExecute(Sender: TObject);
 var
-  Filename:   string;
-  SaveDialog: TSaveDialog;
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+  SaveDialog:    TSaveDialog;
 begin
-  SaveDialog := TSaveDialog.Create(Form1);
+  ActionContext := TActionContext.Create;
   try
-    with SaveDialog do
+    with ActionContext do
     begin
-      InitialDir := GetUserDir;
-      Title := MSG47;
-      Filter := MSG45;
-    end;
-    if SaveDialog.Execute then
-    begin
-      Filename := SaveDialog.FileName;
-      // create backup
-      try
-        if FileExists(FActualScript) then RenameFile(FActualScript, FActualScript + '.bak');
-      except
-        SysConsole1.WriteMessage(MSG02 + MSG84);
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
       end;
       // save file
+      SaveDialog := TSaveDialog.Create(Form1);
       try
-        FScriptBuffer.SaveToFile(FileName);
-        SysConsole1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
-      except
-        ShowMessage(MSG01 + Format(MSG49, [FileName]));
-        Exit;
+        with SaveDialog do
+        begin
+          InitialDir := GetUserDir;
+          Title := MSG47;
+          Filter := MSG45;
+        end;
+        if SaveDialog.Execute then SArg1 := SaveDialog.FileName else Exit;
+      finally
+        SaveDialog.Free;
       end;
-      FActualScript := Filename;                                        // named
-      FActualScriptIsSaved := True;                           // no need to save
-      Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
-      // refresh and show ScriptEditor
-      Form6.ClearModified;
-      Form6.SetFilename(FActualScript);
+      SSaveScriptAsOperation(ActionContext);
     end;
   finally
-    SaveDialog.Free;
+    ActionContext.Free;
   end;
 end;
 
-// SCRIPT/RUN SCRIPT
+// SCRIPT/SAVE SCRIPT AS OPERATION
+procedure TForm1.SSaveScriptAsOperation(AActionContext: TActionContext);
+var
+  Filename:   string;
+begin
+  Filename := AActionContext.SArg1;
+  // create backup
+  try
+    if FileExists(Filename) then RenameFile(Filename, Filename + '.bak');
+  except
+    SysConsole1.WriteMessage(MSG02 + MSG84);
+  end;
+  // save file
+  try
+    FScriptBuffer.SaveToFile(FileName);
+    SysConsole1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
+  except
+    ShowMessage(MSG01 + Format(MSG49, [FileName]));
+    Exit;
+  end;
+  FActualScript := Filename;                                        // named
+  FActualScriptIsSaved := True;                           // no need to save
+  Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+  // refresh and show ScriptEditor
+  Form6.ClearModified;
+  Form6.SetFilename(FActualScript);
+end;
+
+// SCRIPT/RUN SCRIPT ACTION ----------------------------------------------------
 procedure TForm1.SRunScriptExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    SRunScriptOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// SCRIPT/RUN SCRIPT OPERATION
+procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
 begin
   if FScriptIsRunning then Exit;
   // Form6.Store(FScriptBuffer);         // store ScriptEditor content to buffer
@@ -3922,8 +4296,35 @@ begin
   end;
 end;
 
-// SCRIPT/RUN SCRIPT STEP BY STEP
+// SCRIPT/RUN SCRIPT STEP BY STEP ACTION ---------------------------------------
 procedure TForm1.SStepScriptExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    SStepScriptOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
+procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
 begin
   if FScriptIsRunning then Exit;
   // if FScriptInstPointer = 0 then
@@ -3936,20 +4337,47 @@ begin
   end;
 end;
 
-// SCRIPT/STOP SCRIPT
+// SCRIPT/STOP SCRIPT ACTION ---------------------------------------------------
 procedure TForm1.SStopScriptExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    SStopScriptOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// SCRIPT/STOP SCRIPT OPERATION
+procedure TForm1.SStopScriptOperation(AActionContext: TActionContext);
 begin
   FScriptInstPointer := 0;
   {...}
 end;
 
-// ACTIONS/HELP/SHOW HELP
+// HELP/SHOW HELP ACTION =======================================================
 procedure TForm1.HHelpExecute(Sender: TObject);
 begin
   ShowHelpOrErrorForKeyword('','html/framework/index.html');
 end;
 
-// ACTIONS/HELP/SHOW ABOUT
+// HELP/SHOW ABOUT ACTION ------------------------------------------------------
 procedure TForm1.HAboutExecute(Sender: TObject);
 begin
   Form2.ShowModal;

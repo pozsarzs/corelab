@@ -53,6 +53,7 @@ begin
     {$I cmd-m.pas}
     {$I cmd-io.pas}
     {$I cmd-o.pas}
+    {$I cmd-s.pas}
   end;
   FParser := TCommandParser.Create;
 end;
@@ -86,6 +87,15 @@ begin
     if Tokens.Count = 0 then exit;
     // get name of command
     CommandName := LowerCase(Tokens[0].RawText);
+    // at HELP command
+    if CommandName = 'gato' then
+    begin
+      Infotext := LineEnding + '  /\_/\' + LineEnding +' ( o.o )' + LineEnding +
+                  '  > ^ <' + LineEnding +'  /   \' +  LineEnding;
+      Form1.SysConsole1.WriteMessage(InfoText);
+      Result := 0;
+      Exit;
+    end;
     // at HELP command
     if CommandName = 'help' then
     begin

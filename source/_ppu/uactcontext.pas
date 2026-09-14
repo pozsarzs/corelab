@@ -16,7 +16,7 @@ unit uactcontext;
 interface
 type
   TActionSource = (asMainMenu, asToolBar, asModuleExplorer, asSysConsole,
-                   asScript, asProject);
+                   asScript, asProject, asOther);
   // ActionContext class
   TActionContext = class
   public

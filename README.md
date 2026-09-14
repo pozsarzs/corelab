@@ -216,78 +216,125 @@ to be used with other development tools or transferred to real hardware.
 |*.log    |General log file     |CoreLAB, CLProcessor           |
 
 ## VII. Implemented commands  
-**PONTOSÍTANDÓ!**
 
-|name  |description                                                                       |
-|:----:|----------------------------------------------------------------------------------|
-|`ABS` |Replace target value with its absolute value in-place.                            |
-|`ADD` |Add value to target in-place.                                                     |
-|`AND` |Bitwise/logical AND in-place.                                                     |
-|`APPX`|Terminate simulation environment.                                                 |
-|`ASCI`|Convert ASCII character to its byte value.                                        |
-|`ATTH`|Connect a hardware module to the bus.                                             |
-|`BIT` |Check the specified bit.                                                          |
-|`CALL`|Call subroutine.                                                                  |
-|`CALM`|Call object's method.                                                             |
-|`CHAR`|Convert byte size value to its ASCII character representation.                    |
-|`COMP`|Compare target with value by subtraction.                                         |
-|`CONV`|Convert number in different numeral systems in-place.                             |
-|`CRTE`|Instantiate a hardware module or debug form.                                      |
-|`DEC` |Decrement integer target by 1 or by count in-place.                               |
-|`DEPO`|Deposit (write) a value directly into memory, register or bus address.            |
-|`DEST`|Delete an object and free its memory.                                             |
-|`DETH`|Disconnect a module from the bus.                                                 |
-|`END` |End of script.                                                                    |
-|`EXAM`|Examine (read) a value from memory, register or bus address into a variable.      |
-|`EXIT`|Terminate the script.                                                             |
-|`FILL`|Fill an array with a specific byte value.                                         |
-|`GETP`|Get object's property.                                                            |
-|`HELP`|Display general help overview or detailed usage for a specific command.           |
-|`IDV` |Perform integer division on target in-place.                                      |
-|`IMD` |Perform integer division remainder on target in-place.                            |
-|`INC` |Increment integer target by 1 or by count in-place.                               |
-|`INDX`|Search for a value in an array and then return it with its index in the exit code.|
-|`INPW`|Show prompt window and read user input into a variable.                           |
-|`INRG`|Check if value is between min and max.                                            |
-|`JPEQ`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPGE`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPGT`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPLE`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPLT`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPNE`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPNZ`|Jump to the specified label, based on the result of the previous CMP.             |
-|`JPZR`|Jump to the specified label, based on the result of the previous CMP.             |
-|`MSGW`|Show modal message window.                                                        |
-|`MUL` |Multiply target by value in-place in-place.                                       |
-|`NOT` |Bitwise/logical NOT in-place.                                                     |
-|`OR`  |Bitwise/logical OR in-place.                                                      |
-|`PAUS`|Pause the running simulation without resetting state.                             |
-|`POPA`|Retrieve an result from the argument stack after return from subroutine.          |
-|`PRNT`|Write text to console.                                                            |
-|`PSHA`|Store an argument to the argument stack for next `CALL` or `CALM` instruction.    |
-|`RDV` |Perform floating-point division on target in-place.                               |
-|`RSET`|Reset the simulation and all connected hardware modules to initial state.         |
-|`RTRN`|Return from subroutine.                                                           |
-|`SAPP`|Append value or variable to the end of target string in-place.                    |
-|`SDEL`|Delete characters from target starting at index in-place.                         |
-|`SETP`|Set object's property.                                                            |
-|`SETV`|Create variable and/or assign value to variable or array element.                 |
-|`SFND`|Find index of substring in target and store 0-based result.                       |
-|`SHL` |Shift target bits left by count in-place.                                         |
-|`SHR` |Shift target bits right by count in-place.                                        |
-|`SINS`|Insert substring into target at specified index in-place.                         |
-|`SLEN`|Store the character count of target string into a variable.                       |
-|`SLOW`|Convert target string to lowercase in-place.                                      |
-|`SREP`|Replace occurrences of old substring with new substring in target in-place.       |
-|`SSUB`|Extract a substring from target starting at index into result variable.           |
-|`STEP`|Execute a single clock cycle or instruction step in the simulation.               |
-|`STOP`|Halt the simulation and terminate current execution loop.                         |
-|`STRT`|Start or resume simulation execution continuous mode.                             |
-|`SUB` |Subtract value from target in-place.                                              |
-|`SUPP`|Convert target string to uppercase in-place.                                      |
-|`SWAP`|Swap the values of two variables.                                                 |
-|`WAIT`|Wait specified ms.                                                                |
-|`XOR` |Bitwise/logical XOR in-place.                                                     |
+|name|mode             |description                                           |
+|:--:|:---------------:|:-----------------------------------------------------|
+|ATIO|   csEveryWhere  |Attach I/O port or device module to bus.              |
+|ATME|   csEveryWhere  |Attach memory module to bus.                          |
+|ATPU|   csEveryWhere  |Attach processor module to bus.                       |
+|CRIO|   csEveryWhere  |Instantiate a I/O port or device module.              |
+|CRME|   csEveryWhere  |Instantiate a memory module.                          |
+|CRPU|   csEveryWhere  |Instantiate a processor module.                       |
+|DIIO|   csEveryWhere  |Disable I/O port or device module.                    |
+|DIME|   csEveryWhere  |Disable memory module.                                |
+|DIPU|   csEveryWhere  |Disable processor module.                             |
+|DSIO|   csEveryWhere  |Destroy I/O port or device module.                    |
+|DSME|   csEveryWhere  |Destroy memory module.                                |
+|DSPU|   csEveryWhere  |Destroy processor module.                             |
+|DTIO|   csEveryWhere  |Detach I/O port or device module from bus.            |
+|DTME|   csEveryWhere  |Detach memory module from bus.                        |
+|DTPU|   csEveryWhere  |Detach processor module from bus.                     |
+|EDME|csInteractiveOnly|Show examine/deposit window                           |
+|ENIO|   csEveryWhere  |Enable I/O port or device module.                     |
+|ENME|   csEveryWhere  |Enable memory module.                                 |
+|ENPU|   csEveryWhere  |Enable processor module.                              |
+|EXAP|   csEveryWhere  |Exit from application.                                |
+|IRQ |   csEveryWhere  |Call interrupt.                                       |
+|LDME|   csEveryWhere  |Load memory content from file                         |
+|LDPR|csInteractiveOnly|Change to interactive mode and load project from file.|
+|LDSC|csInteractiveOnly|Change to script mode and load script from file.      |
+|LDSS|   csEveryWhere  |Load and restore snapshot.                            |
+|NMI |   csEveryWhere  |Call non-maskable interrupt.                          |
+|NWPR|csInteractiveOnly|Change to interactive mode and create new project.    |
+|NWSC|csInteractiveOnly|Change to script mode and create new script.          |
+|RNIO|   csEveryWhere  |Rename I/O device panel.                              |
+|RSAP|   csEveryWhere  |Restart application.                                  |
+|RSIO|   csEveryWhere  |Reset I/O port or device module.                      |
+|RSME|   csEveryWhere  |Reset memory module.                                  |
+|RSPU|   csEveryWhere  |Reset processor module.                               |
+|RST |   csEveryWhere  |Reset all module.                                     |
+|RUN |   csEveryWhere  |Run simulation.                                       |
+|RUSC|csInteractiveOnly|Run script.                                           |
+|SESC|csInteractiveOnly|Run script step-by-step.                              |
+|SHBM|csInteractiveOnly|Show BreakPoint Manager window.                       |
+|SHHV|csInteractiveOnly|Show HexViewer window.                                |
+|SHIL|csInteractiveOnly|Show IntLogger window.                                |
+|SHIO|   csEveryWhere  |Show I/O device panel.                                |
+|SHME|csInteractiveOnly|Show Module Explorer window.                          |
+|SHRL|csInteractiveOnly|Show RunLogger window.                                |
+|SHRV|csInteractiveOnly|Show RegViewer window.                                |
+|SHSC|csInteractiveOnly|Show ScriptConsole window.                            |
+|SHSE|csInteractiveOnly|Show ScriptEditor window.                             |
+|STEP|   csEveryWhere  |Run simulation step-by-step.                          |
+|STOP|   csEveryWhere  |Stop simulation.                                      |
+|STSC|csInteractiveOnly|Stop script.                                          |
+|SVME|   csEveryWhere  |Save memory content to file                           |
+|SVPR|csInteractiveOnly|Save project to file.                                 |
+|SVSC|csInteractiveOnly|Save script to file.                                  |
+|SVSS|   csEveryWhere  |Make and save snapshot.                               |
+
+**MÉG NEM MEGVALÓSÍTOTT UTASÍTÁSOK**
+
+|name|description                                                                       |
+|:--:|----------------------------------------------------------------------------------|
+|ABS |Replace target value with its absolute value in-place.                            |
+|ADD |Add value to target in-place.                                                     |
+|AND |Bitwise/logical AND in-place.                                                     |
+|ASCI|Convert ASCII character to its byte value.                                        |
+|BIT |Check the specified bit.                                                          |
+|CALL|Call subroutine.                                                                  |
+|CALM|Call object's method.                                                             |
+|CHAR|Convert byte size value to its ASCII character representation.                    |
+|COMP|Compare target with value by subtraction.                                         |
+|CONV|Convert number in different numeral systems in-place.                             |
+|DEC |Decrement integer target by 1 or by count in-place.                               |
+|DEPO|Deposit (write) a value directly into memory, register or bus address.            |
+|END |End of script.                                                                    |
+|EXAM|Examine (read) a value from memory, register or bus address into a variable.      |
+|EXIT|Terminate the script.                                                             |
+|FILL|Fill an array with a specific byte value.                                         |
+|GETP|Get object's property.                                                            |
+|HELP|Display general help overview or detailed usage for a specific command.           |
+|IDV |Perform integer division on target in-place.                                      |
+|IMD |Perform integer division remainder on target in-place.                            |
+|INC |Increment integer target by 1 or by count in-place.                               |
+|INDX|Search for a value in an array and then return it with its index in the exit code.|
+|INPW|Show prompt window and read user input into a variable.                           |
+|INRG|Check if value is between min and max.                                            |
+|JPEQ|Jump to the specified label, based on the result of the previous CMP.             |
+|JPGE|Jump to the specified label, based on the result of the previous CMP.             |
+|JPGT|Jump to the specified label, based on the result of the previous CMP.             |
+|JPLE|Jump to the specified label, based on the result of the previous CMP.             |
+|JPLT|Jump to the specified label, based on the result of the previous CMP.             |
+|JPNE|Jump to the specified label, based on the result of the previous CMP.             |
+|JPNZ|Jump to the specified label, based on the result of the previous CMP.             |
+|JPZR|Jump to the specified label, based on the result of the previous CMP.             |
+|MSGW|Show modal message window.                                                        |
+|MUL |Multiply target by value in-place in-place.                                       |
+|NOT |Bitwise/logical NOT in-place.                                                     |
+|OR  |Bitwise/logical OR in-place.                                                      |
+|POPA|Retrieve an result from the argument stack after return from subroutine.          |
+|PRNT|Write text to console.                                                            |
+|PSHA|Store an argument to the argument stack for next CALL or CALM instruction.    |
+|RDV |Perform floating-point division on target in-place.                               |
+|RTRN|Return from subroutine.                                                           |
+|SAPP|Append value or variable to the end of target string in-place.                    |
+|SDEL|Delete characters from target starting at index in-place.                         |
+|SETP|Set object's property.                                                            |
+|SETV|Create variable and/or assign value to variable or array element.                 |
+|SFND|Find index of substring in target and store 0-based result.                       |
+|SHL |Shift target bits left by count in-place.                                         |
+|SHR |Shift target bits right by count in-place.                                        |
+|SINS|Insert substring into target at specified index in-place.                         |
+|SLEN|Store the character count of target string into a variable.                       |
+|SLOW|Convert target string to lowercase in-place.                                      |
+|SREP|Replace occurrences of old substring with new substring in target in-place.       |
+|SSUB|Extract a substring from target starting at index into result variable.           |
+|SUB |Subtract value from target in-place.                                              |
+|SUPP|Convert target string to uppercase in-place.                                      |
+|SWAP|Swap the values of two variables.                                                 |
+|WAIT|Wait specified ms.                                                                |
+|XOR |Bitwise/logical XOR in-place.                                                     |
 
 ## VIII. Command exit codes
 **PONTOSÍTANDÓ!**
