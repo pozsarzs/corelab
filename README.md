@@ -107,7 +107,9 @@ in mind:
 
 ### CoreLAB framework application
 
-(...)
+![CoreLAB framework application](document/screenshots/corelab_1.png)
+
+![CoreLAB framework application](document/screenshots/corelab_2.png)
 
 ### CLIOPort plugin tester application
 

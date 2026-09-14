@@ -2268,7 +2268,7 @@ begin
     // add to Module Explorer
     Form9.AddNode('Memory', InstanceName);
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
   end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
@@ -3259,7 +3259,7 @@ begin
     // add to Module Explorer
     Form9.AddNode('I/O port & device', InstanceName);
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
   end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
