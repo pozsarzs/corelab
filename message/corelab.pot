@@ -193,6 +193,10 @@ msgstr ""
 msgid "New, empty script has been created."
 msgstr ""
 
+#: frmmain.msg100
+msgid "Cannot use it in this operation mode."
+msgstr ""
+
 #: frmmain.msg18
 msgid "Missing help file."
 msgstr ""
@@ -347,7 +351,7 @@ msgstr ""
 
 #: frmmain.msg62
 #, object-pascal-format
-msgid "The module named '%s' has been restored."
+msgid "The module named '%s' has been reseted."
 msgstr ""
 
 #: frmmain.msg63
@@ -484,12 +488,42 @@ msgstr ""
 
 #: frmmain.msg92
 #, object-pascal-format
-msgid "Cannot rename module content named '%s'."
+msgid "Cannot rename module named '%s'."
 msgstr ""
 
 #: frmmain.msg93
 #, object-pascal-format
-msgid "Cannot show module content named '%s'."
+msgid "Cannot show module named '%s'."
+msgstr ""
+
+#: frmmain.msg94
+#, object-pascal-format
+msgid "Cannot destroy module named '%s'."
+msgstr ""
+
+#: frmmain.msg95
+#, object-pascal-format
+msgid "Cannot reset module named '%s'."
+msgstr ""
+
+#: frmmain.msg96
+#, object-pascal-format
+msgid "Cannot enable module named '%s'."
+msgstr ""
+
+#: frmmain.msg97
+#, object-pascal-format
+msgid "Cannot disable module named '%s'."
+msgstr ""
+
+#: frmmain.msg98
+#, object-pascal-format
+msgid "Cannot attach module named '%s' to bus."
+msgstr ""
+
+#: frmmain.msg99
+#, object-pascal-format
+msgid "Cannot detach module named '%s' from bus."
 msgstr ""
 
 #: frmrunlogger.msg01

@@ -60,16 +60,24 @@ RegisterCommand(TCommand.Create('DTME',
                                 1,
                                 @Form1.MDetachFromBusOperation));
 
-{RegisterCommand(TCommand.Create('LDME',
+RegisterCommand(TCommand.Create('LDME',
                                 'Load memory content from file',
                                 csEverywhere,
                                 'LDME instancename filename',
                                 2,
-                                @Form1.MLoadMemoryContentOperation));}
+                                @Form1.MLoadMemoryContentOperation));
 
-{RegisterCommand(TCommand.Create('SVME',
+RegisterCommand(TCommand.Create('SVME',
                                 'Save memory content to file',
                                 csEverywhere,
                                 'SVME filename instancename',
                                 2,
-                                @Form1.MSaveMemoryContentOperation));}
+                                @Form1.MSaveMemoryContentOperation));
+
+RegisterCommand(TCommand.Create('EDME',
+                                'Show examine/deposit window',
+                                csInteractiveOnly,
+                                'SVME instancename',
+                                1,
+                                @Form1.MExamineDepositOperation));
+

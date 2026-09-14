@@ -27,11 +27,8 @@ type
     IArg2:  Integer;
     BArg1:  Boolean;
     BArg2:  Boolean;
-    // ezek megszűnnek
-    InstanceName:  string;
-    ModuleType:    string;
-    Enabled:       Boolean;
-    AttachedToBus: Boolean;
+    DArg1:  DWord;
+    DArg2:  DWord;
     constructor Create;
   end;
 
@@ -48,11 +45,8 @@ begin
   IArg2 := -1;
   BArg1 := false;
   BArg2 := false;
-  // ezek megszűnnek
-  InstanceName := '';
-  ModuleType := '';
-  Enabled := False;
-  AttachedToBus := False;
+  DArg1 := 0;
+  DArg2 := 0;
 end;
 
 end.

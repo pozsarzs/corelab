@@ -433,6 +433,27 @@ type
     procedure VShowScriptConsoleOperation(AActionContext: TActionContext);
     procedure VRenameIOPanelOperation(AActionContext: TActionContext);
     procedure VShowIOPanelOperation(AActionContext: TActionContext);
+    // Processor menu
+    procedure PCreateOperation(AActionContext: TActionContext);
+    procedure PDestroyOperation(AActionContext: TActionContext);
+    procedure PResetOperation(AActionContext: TActionContext);
+    procedure PEnableOperation(AActionContext: TActionContext);
+    procedure PDisableOperation(AActionContext: TActionContext);
+    procedure PAttachToBusOperation(AActionContext: TActionContext);
+    procedure PDetachFromBusOperation(AActionContext: TActionContext);
+    procedure PPropertiesOperation(AActionContext: TActionContext);
+    // Memory menu
+    procedure MCreateOperation(AActionContext: TActionContext);
+    procedure MDestroyOperation(AActionContext: TActionContext);
+    procedure MResetOperation(AActionContext: TActionContext);
+    procedure MEnableOperation(AActionContext: TActionContext);
+    procedure MDisableOperation(AActionContext: TActionContext);
+    procedure MAttachToBusOperation(AActionContext: TActionContext);
+    procedure MDetachFromBusOperation(AActionContext: TActionContext);
+    procedure MPropertiesOperation(AActionContext: TActionContext);
+    procedure MLoadMemoryContentOperation(AActionContext: TActionContext);
+    procedure MSaveMemoryContentOperation(AActionContext: TActionContext);
+    procedure MExamineDepositOperation(AActionContext: TActionContext);
     // IO menu
     procedure IOCreateOperation(AActionContext: TActionContext);
     procedure IODestroyOperation(AActionContext: TActionContext);
@@ -442,32 +463,17 @@ type
     procedure IOAttachToBusOperation(AActionContext: TActionContext);
     procedure IODetachFromBusOperation(AActionContext: TActionContext);
     procedure IOPropertiesOperation(AActionContext: TActionContext);
-    procedure MCreateOperation(AActionContext: TActionContext);
-    procedure MDestroyOperation(AActionContext: TActionContext);
-    procedure MResetOperation(AActionContext: TActionContext);
-    procedure MEnableOperation(AActionContext: TActionContext);
-    procedure MDisableOperation(AActionContext: TActionContext);
-    procedure MAttachToBusOperation(AActionContext: TActionContext);
-    procedure MDetachFromBusOperation(AActionContext: TActionContext);
-    procedure MPropertiesOperation(AActionContext: TActionContext);
-//    procedure MLoadMemoryContentOperation(AActionContext: TActionContext);
-    //    procedure MSaveMemoryContentOperation(AActionContext: TActionContext);
-    procedure PCreateOperation(AActionContext: TActionContext);
-    procedure PDestroyOperation(AActionContext: TActionContext);
-    procedure PResetOperation(AActionContext: TActionContext);
-    procedure PEnableOperation(AActionContext: TActionContext);
-    procedure PDisableOperation(AActionContext: TActionContext);
-    procedure PAttachToBusOperation(AActionContext: TActionContext);
-    procedure PDetachFromBusOperation(AActionContext: TActionContext);
-    procedure PPropertiesOperation(AActionContext: TActionContext);
+    // Operation menu
+    // Script menu
+    // other methods and properties
+    procedure SetProjectMode;
+    procedure SetScriptMode;
     property ActualScriptIsSaved: Boolean read FActualScriptIsSaved write FActualScriptIsSaved;
     property AutoRunScript: Boolean write FAutoRunScript;
     property IgnoreHelp: Boolean write SetIgnoreHelp;
     property PluginDirectory: string write SetPluginDirectory;
     property StartupProject: string write FStartupProject;
     property StartupScript: string write FStartupScript;
-    procedure SetProjectMode;
-    procedure SetScriptMode;
   end;
 var
   Form1: TForm1;
@@ -525,7 +531,7 @@ resourcestring
   MSG59 = '&Destroy';
   MSG60 = 'The module named ''%s'' was successfully destroyed.';          { SC }
   MSG61 = '&Reset';
-  MSG62 = 'The module named ''%s'' has been restored.';                   { SC }
+  MSG62 = 'The module named ''%s'' has been reseted.';                    { SC }
   MSG63 = '&Enable';
   MSG64 = 'The module named ''%s'' has been enabled.';                    { SC }
   MSG65 = '&Disable';
@@ -555,8 +561,15 @@ resourcestring
   MSG89 = 'Cannot be used in script.';                                    { SC }
   MSG90 = 'Cannot create %s module named ''%s''.';                        { SM }
   MSG91 = 'Cannot view module content named ''%s''.';                     { SM }
-  MSG92 = 'Cannot rename module content named ''%s''.';                   { SM }
-  MSG93 = 'Cannot show module content named ''%s''.';                     { SM }
+  MSG92 = 'Cannot rename module named ''%s''.';                           { SM }
+  MSG93 = 'Cannot show module named ''%s''.';                             { SM }
+  MSG94 = 'Cannot destroy module named ''%s''.';                          { SM }
+  MSG95 = 'Cannot reset module named ''%s''.';                            { SM }
+  MSG96 = 'Cannot enable module named ''%s''.';                           { SM }
+  MSG97 = 'Cannot disable module named ''%s''.';                          { SM }
+  MSG98 = 'Cannot attach module named ''%s'' to bus.';                    { SM }
+  MSG99 = 'Cannot detach module named ''%s'' from bus.';                  { SM }
+  MSG100 = 'Cannot use it in this operation mode.';                       { SC }
 
 // ---- PRIVATE METHODS ----
 
@@ -1383,6 +1396,12 @@ end;
 // VIEW/SHOW SCRIPTEDITOR OPERATION
 procedure TForm1.VShowScriptEditorOperation(AActionContext: TActionContext);
 begin
+  if FOpMode = omInteractive then
+  begin
+    // warning
+    SysConsole1.WriteMessage(MSG02 + MSG100);
+    Exit;
+  end;
   Form6.ExtBuffer := FScriptBuffer;
   Form6.CopyBufferToEditor;
   Form6.Show;
@@ -1416,6 +1435,12 @@ end;
 // VIEW/SHOW SCRIPTCONSOLE OPERATION
 procedure TForm1.VShowScriptConsoleOperation(AActionContext: TActionContext);
 begin
+  if FOpMode = omInteractive then
+  begin
+    // warning
+    SysConsole1.WriteMessage(MSG02 + MSG100);
+    Exit;
+  end;
   Form12.Show;
   Form12.BringToFront;
 end;
@@ -1554,7 +1579,7 @@ procedure TForm1.PCreateExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
   ActionContext := TActionContext.Create;
@@ -1568,15 +1593,14 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
         try
           for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
           with Form16 do
           begin
             PluginList := StringList;
-            if ShowModal = mrOk then ModuleType := SelectedKey else Exit;
-            InstanceName := Edit1.Text;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+            SArg2 := Edit1.Text;
           end;
         finally
           StringList.Free;
@@ -1591,36 +1615,43 @@ end;
 // PROCESSOR/CREATE OPERATION
 procedure TForm1.PCreateOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ModuleType:   string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
+  ModuleType := AActionContext.SArg1;
+  InstanceName := AActionContext.SArg2;
+  // check existing names
+  if not InstanceNameDuplicated(FProcInstanceDict, InstanceName) then
   begin
-    // check existing names
-    if not InstanceNameDuplicated(FProcInstanceDict, InstanceName) then
-    begin
-      // create
+    // create
+    try
       if Assigned(FProcPluginDict[ModuleType].FCreate) then
       begin
         ProcInfo.Processor := FProcPluginDict[ModuleType].FCreate();
         ProcInfo.ModuleName := ModuleType;
         ProcInfo.AttachedToBus := False;
       end;
-      // store
-      FProcInstanceDict.Add(InstanceName, ProcInfo);
-      // add to Module Explorer
-      Form9.AddNode('Processor', InstanceName);
-      // report
-      SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
-    end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
-  end;
+    except
+      // error
+      ShowMessage(MSG01 + Format(MSG90, ['processor', InstanceName]));
+      Exit;
+    end;
+    // store
+    FProcInstanceDict.Add(InstanceName, ProcInfo);
+    // add to Module Explorer
+    Form9.AddNode('Processor', InstanceName);
+    // report
+    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+  end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
-// PROCESSOR/DESTROY ACTION
+// PROCESSOR/DESTROY ACTION ----------------------------------------------------
 procedure TForm1.PDestroyExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -1643,7 +1674,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -1655,7 +1686,7 @@ begin
           begin
             OKButtonCaption := MSG59;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1671,28 +1702,33 @@ end;
 // PROCESSOR/DESTROY OPERATION
 procedure TForm1.PDestroyOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     ProcInfo := FProcInstanceDict[InstanceName];
     // destroy
     FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
-    // remove from dict
-    FProcInstanceDict.Remove(InstanceName);
-    // remove from Module Explorer
-    Form9.DeleteNode('Processor', InstanceName);
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG94, [InstanceName]));
+    Exit;
   end;
+  // remove from dict
+  FProcInstanceDict.Remove(InstanceName);
+  // remove from Module Explorer
+  Form9.DeleteNode('Processor', InstanceName);
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
 end;
 
-// PROCESSOR/RESET ACTION
+// PROCESSOR/RESET ACTION ------------------------------------------------------
 procedure TForm1.PResetExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -1715,7 +1751,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -1727,7 +1763,7 @@ begin
           begin
             OKButtonCaption := MSG61;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1743,24 +1779,29 @@ end;
 // PROCESSOR/RESET OPERATION
 procedure TForm1.PResetOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     ProcInfo := FProcInstanceDict[InstanceName];
     // reset
     ProcInfo.Processor.Reset;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
 end;
 
-// PROCESSOR/ENABLE ACTION
+// PROCESSOR/ENABLE ACTION -----------------------------------------------------
 procedure TForm1.PEnableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -1783,7 +1824,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -1795,7 +1836,7 @@ begin
           begin
             OKButtonCaption := MSG63;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1811,24 +1852,29 @@ end;
 // PROCESSOR/ENABLE OPERATION
 procedure TForm1.PEnableOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     ProcInfo := FProcInstanceDict[InstanceName];
     // enable
     ProcInfo.Processor.Enabled := True;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG96, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
 end;
 
-// PROCESSOR/DISABLE ACTION
+// PROCESSOR/DISABLE ACTION ----------------------------------------------------
 procedure TForm1.PDisableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -1851,7 +1897,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -1863,7 +1909,7 @@ begin
           begin
             OKButtonCaption := MSG65;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1879,24 +1925,29 @@ end;
 // PROCESSOR/DISABLE OPERATION
 procedure TForm1.PDisableOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     ProcInfo := FProcInstanceDict[InstanceName];
-    // enable
+    // disable
     ProcInfo.Processor.Enabled := False;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG97, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
 end;
 
-// PROCESSOR/ATTACH TO BUS ACTION
+// PROCESSOR/ATTACH TO BUS ACTION ----------------------------------------------
 procedure TForm1.PAttachToBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -1919,7 +1970,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -1931,7 +1982,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -1947,24 +1998,29 @@ end;
 // PROCESSOR/ATTACH TO BUS OPERATION
 procedure TForm1.PAttachToBusOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     ProcInfo := FProcInstanceDict[InstanceName];
     // attach to bus
     {...}
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
 end;
 
-// PROCESSOR/DETACH FROM BUS ACTION
+// PROCESSOR/DETACH FROM BUS ACTION --------------------------------------------
 procedure TForm1.PDetachFromBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -1987,7 +2043,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -1999,7 +2055,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2015,19 +2071,24 @@ end;
 // PROCESSOR/DETACH FROM BUS OPERATION
 procedure TForm1.PDetachFromBusOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     ProcInfo := FProcInstanceDict[InstanceName];
-    // detach from bus
+    // detach to bus
     {...}
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
 end;
 
-// PROCESSOR/PROPERTIES ACTION
+// PROCESSOR/PROPERTIES ACTION -------------------------------------------------
 procedure TForm1.PPropertiesExecute(Sender: TObject);
 var
   Caller:         TComponent;
@@ -2055,7 +2116,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2067,7 +2128,7 @@ begin
           begin
             OKButtonCaption := MSG71;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2083,9 +2144,10 @@ end;
 // PROCESSOR/PROPERTIES OPERATION
 procedure TForm1.PPropertiesOperation(AActionContext: TActionContext);
 var
-  ProcInfo: TProcInfo;
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
 begin
-  with AActionContext do
+  InstanceName := AActionContext.SArg1;
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // show properties
@@ -2093,12 +2155,12 @@ begin
   end;
 end;
 
-// MEMORY/CREATE ACTION
+// MEMORY/CREATE ACTION =====================================================
 procedure TForm1.MCreateExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
   ActionContext := TActionContext.Create;
@@ -2112,7 +2174,6 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
         try
           for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
@@ -2135,17 +2196,17 @@ end;
 // MEMORY/CREATE OPERATION
 procedure TForm1.MCreateOperation(AActionContext: TActionContext);
 var
-  MemInfo:      TMemInfo;
-  ModuleType:   string;
   InstanceName: string;
+  ModuleType:   string;
+  MemInfo:      TMemInfo;
 begin
   ModuleType := AActionContext.SArg1;
   InstanceName := AActionContext.SArg2;
   // check existing names
   if not InstanceNameDuplicated(FMemInstanceDict, InstanceName) then
   begin
+    // create
     try
-      // create
       if Assigned(FMemPluginDict[ModuleType].FCreate) then
       begin
         MemInfo.Memory := FMemPluginDict[ModuleType].FCreate();
@@ -2154,7 +2215,7 @@ begin
       end;
     except
       // error
-      ShowMessage(MSG01 + Format(MSG90, ['memory', InstanceName]));
+      ShowMessage(MSG01 + Format(MSG90, ['processor', InstanceName]));
       Exit;
     end;
     // store
@@ -2162,16 +2223,16 @@ begin
     // add to Module Explorer
     Form9.AddNode('Memory', InstanceName);
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
+    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
   end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
-// MEMORY/DESTROY ACTION
+// MEMORY/DESTROY ACTION ----------------------------------------------------
 procedure TForm1.MDestroyExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2194,7 +2255,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2206,7 +2267,7 @@ begin
           begin
             OKButtonCaption := MSG59;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2222,28 +2283,33 @@ end;
 // MEMORY/DESTROY OPERATION
 procedure TForm1.MDestroyOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
     // destroy
     FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
-    // remove from dict
-    FMemInstanceDict.Remove(InstanceName);
-    // remove from Module Explorer
-    Form9.DeleteNode('Memory', InstanceName);
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG94, [InstanceName]));
+    Exit;
   end;
+  // remove from dict
+  FMemInstanceDict.Remove(InstanceName);
+  // remove from Module Explorer
+  Form9.DeleteNode('Memory', InstanceName);
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
 end;
 
-// MEMORY/RESET ACTION
+// MEMORY/RESET ACTION ------------------------------------------------------
 procedure TForm1.MResetExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2266,7 +2332,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2278,7 +2344,7 @@ begin
           begin
             OKButtonCaption := MSG61;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2294,24 +2360,29 @@ end;
 // MEMORY/RESET OPERATION
 procedure TForm1.MResetOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
     // reset
     MemInfo.Memory.Reset;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
 end;
 
-// MEMORY/ENABLE ACTION
+// MEMORY/ENABLE ACTION -----------------------------------------------------
 procedure TForm1.MEnableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2334,7 +2405,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2346,7 +2417,7 @@ begin
           begin
             OKButtonCaption := MSG63;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2362,24 +2433,29 @@ end;
 // MEMORY/ENABLE OPERATION
 procedure TForm1.MEnableOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
     // enable
     MemInfo.Memory.Enabled := True;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG96, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
 end;
 
-// MEMORY/DISABLE ACTION
+// MEMORY/DISABLE ACTION ----------------------------------------------------
 procedure TForm1.MDisableExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2402,7 +2478,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2414,7 +2490,7 @@ begin
           begin
             OKButtonCaption := MSG65;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2430,24 +2506,29 @@ end;
 // MEMORY/DISABLE OPERATION
 procedure TForm1.MDisableOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
-    // enable
+    // disable
     MemInfo.Memory.Enabled := False;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG97, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
 end;
 
-// MEMORY/ATTACH TO BUS ACTION
+// MEMORY/ATTACH TO BUS ACTION ----------------------------------------------
 procedure TForm1.MAttachToBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2470,7 +2551,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2482,7 +2563,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2498,24 +2579,29 @@ end;
 // MEMORY/ATTACH TO BUS OPERATION
 procedure TForm1.MAttachToBusOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
     // attach to bus
     {...}
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
 end;
 
-// MEMORY/DETACH FROM BUS ACTION
+// MEMORY/DETACH FROM BUS ACTION --------------------------------------------
 procedure TForm1.MDetachFromBusExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2538,7 +2624,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2550,7 +2636,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2566,24 +2652,29 @@ end;
 // MEMORY/DETACH FROM BUS OPERATION
 procedure TForm1.MDetachFromBusOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     MemInfo := FMemInstanceDict[InstanceName];
-    // detach from bus
+    // detach to bus
     {...}
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
 end;
 
-// MEMORY/PROPERTIES ACTION
+// MEMORY/PROPERTIES ACTION -------------------------------------------------
 procedure TForm1.MPropertiesExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
-  ActionContext: TActionContext;
+  ActionContext:  TActionContext;
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
@@ -2606,7 +2697,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2618,7 +2709,7 @@ begin
           begin
             OKButtonCaption := MSG71;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2634,9 +2725,10 @@ end;
 // MEMORY/PROPERTIES OPERATION
 procedure TForm1.MPropertiesOperation(AActionContext: TActionContext);
 var
-  MemInfo: TMemInfo;
+  InstanceName: string;
+  MemInfo:      TMemInfo;
 begin
-  with AActionContext do
+  InstanceName := AActionContext.SArg1;
   begin
     MemInfo := FMemInstanceDict[InstanceName];
     // show properties
@@ -2644,221 +2736,419 @@ begin
   end;
 end;
 
-// MEMORY/LOAD MEMORY CONTENT
+// MEMORY/LOAD MEMORY CONTENT ACTION -------------------------------------------
 procedure TForm1.MLoadMemoryContentExecute(Sender: TObject);
 var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
   CurrentStatus: Boolean;
-  Filename:      string;
-  KeyName:       string;
-  LoadStream:    TMemoryStream;
   MemInfo:       TMemInfo;
   OpenDialog1:   TOpenDialog;
   StringList:    TStringList;
-begin
-  StringList := TStringList.Create;
-  try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
-    begin
-      OKButtonCaption := MSG72;
-      ModuleList := StringList;
-    end;
-    if Form17.ShowModal = mrOk then
-    begin
-      MemInfo := FMemInstanceDict[Form17.SelectedKey];
-      // store original status and enable module
-      CurrentStatus := MemInfo.Memory.Enabled;
-      MemInfo.Memory.Enabled := True;
-      // load data from file
-      OpenDialog1 := TOpenDialog.Create(Form1);
-      try
-        with OpenDialog1 do
-        begin
-          InitialDir := GetUserDir;
-          Title := MSG30;
-          Filter := MSG32;
-        end;
-        if OpenDialog1.Execute then
-        begin
-          Filename := OpenDialog1.FileName;
-          Form7.Direction := true;
-          Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
-          if Form7.ShowModal = mrCancel then exit else
-          begin
-            LoadStream := TMemoryStream.Create;
-            try
-              if OpenDialog1.FilterIndex <> 2 then
-              begin
-                // load from .bin file
-                try
-                  LoadStream.LoadFromFile(FileName);
-                  LoadStream.Position := 0;
-                  MemInfo.Memory.LoadFromStream(LoadStream, Form7.AddressFrom,
-                    Form7.AddressTo - Form7.AddressFrom + 1);
-                except
-                  ShowMessage(MSG01 + Format(MSG31, [FileName]));
-                end;
-              end else
-              begin
-                // clear target memory
-                MemInfo.Memory.Reset;
-                // load from .hex file
-                case LoadFromIntelHexToStream(Filename, LoadStream) of
-                  1: ShowMessage(MSG01 + Format(MSG35, [FileName]));
-                  2: ShowMessage(MSG01 + MSG37);
-                  3: ShowMessage(MSG01 + MSG38);
-                  255: ShowMessage(MSG01 + MSG39);
-                end;
-                LoadStream.Position := 0;
-                MemInfo.Memory.LoadFromStream(LoadStream, 0,
-                  Form7.AddressTo - Form7.AddressFrom + 1);
-              end;
-              // report
-              SysConsole1.WriteMessage(MSG03 + Format(MSG73, [Filename, Form17.SelectedKey]));
-            finally
-              LoadStream.Free;
-            end;
-          end;
-        end;
-      finally
-        OpenDialog1.Free;
-      end;
-      // restore original status
-      MemInfo.Memory.Enabled := CurrentStatus;
-    end;
-  finally
-    StringList.Free;
-  end;
-end;
-
-// MEMORY/LOAD MEMORY CONTENT
-procedure TForm1.MSaveMemoryContentExecute(Sender: TObject);
-var
-  CurrentStatus: Boolean;
-  Filename:      string;
   KeyName:       string;
-  MemInfo:       TMemInfo;
-  SaveDialog1:   TSaveDialog;
-  SaveStream:    TMemoryStream;
-  StringList:    TStringList;
 begin
-  StringList := TStringList.Create;
+  ActionContext := TActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+
+    with ActionContext do
     begin
-      OKButtonCaption := MSG74;
-      ModuleList := StringList;
-    end;
-    if Form17.ShowModal = mrOk then
-    begin
-      MemInfo := FMemInstanceDict[Form17.SelectedKey];
-      // store original status and enable module
+      // detect action source object
+      if Caller is TMenuItem then
+      begin
+        if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1 then
+          ActionSource := asMainMenu;
+      end
+      else
+        ActionSource := asToolBar;
+
+      // select memory instance
+      StringList := TStringList.Create;
+      try
+        for KeyName in FMemInstanceDict.Keys do
+          StringList.Add(KeyName);
+
+        with Form17 do
+        begin
+          OKButtonCaption := MSG72;
+          ModuleList := StringList;
+        end;
+
+        if Form17.ShowModal <> mrOk then
+          Exit;
+
+        SArg1 := Form17.SelectedKey;
+      finally
+        StringList.Free;
+      end;
+
+      MemInfo := FMemInstanceDict[SArg1];
+
+      // enable memory module temporarily
       CurrentStatus := MemInfo.Memory.Enabled;
       MemInfo.Memory.Enabled := True;
-      // save data from file
-      Form7.Direction := false;
-      Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
-      if Form7.ShowModal = mrCancel then Exit else
-      begin
-        SaveDialog1 := TSaveDialog.Create(Form1);
+      try
+        // select file
+        OpenDialog1 := TOpenDialog.Create(Form1);
         try
-          with SaveDialog1 do
+          with OpenDialog1 do
           begin
             InitialDir := GetUserDir;
-            Title := MSG28;
+            Title := MSG30;
             Filter := MSG32;
           end;
-          if SaveDialog1.Execute then
+
+          if not OpenDialog1.Execute then
+            Exit;
+
+          SArg2 := OpenDialog1.FileName;
+
+          // HEX: load complete file from address 0
+          if SArg2.EndsWith('.hex', True) then
           begin
-            Filename := SaveDialog1.FileName;
-            SaveStream := TMemoryStream.Create;
-            try
-              if SaveDialog1.FilterIndex <> 2 then
-              begin
-                // create backup
-                try
-                  if FileExists(FileName) then RenameFile(FileName, FileName + '.bak');
-                except
-                  SysConsole1.WriteMessage(MSG02 + MSG84);
-                end;
-                // save to .bin file
-                try
-                  MemInfo.Memory.SaveToStream(SaveStream, Form7.AddressFrom,
-                                      Form7.AddressTo - Form7.AddressFrom + 1);
-                  SaveStream.SaveToFile(FileName);
-                except
-                  ShowMessage(MSG01 + Format(MSG29, [FileName]));
-                end;
-              end else
-              begin
-                MemInfo.Memory.SaveToStream(SaveStream, 0, MemInfo.Memory.AddressRangeSize - 1);
-                case SaveToIntelHexFromStream(Filename, SaveStream) of
-                  1: ShowMessage(MSG01 + Format(MSG36, [FileName]));
-                  255: ShowMessage(MSG01 + MSG39);
-                end;
-              end;
-              // report
-              SysConsole1.WriteMessage(MSG03 + Format(MSG75, [Filename, Form17.SelectedKey]));
-            finally
-              SaveStream.Free;
-            end;
+            DArg1 := 0;
+            DArg2 := 0;
+          end
+          else
+          begin
+            // BIN: select address range
+            Form7.Direction := True;
+            Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
+
+            if Form7.ShowModal <> mrOk then
+              Exit;
+
+            DArg1 := Form7.AddressFrom;
+            DArg2 := Form7.AddressTo - Form7.AddressFrom + 1;
           end;
+
+          // execute operation
+          MLoadMemoryContentOperation(ActionContext);
         finally
-          SaveDialog1.Free;
+          OpenDialog1.Free;
         end;
-        // restore original status
+      finally
+        // restore original module state
         MemInfo.Memory.Enabled := CurrentStatus;
       end;
     end;
   finally
-    StringList.Free;
+    ActionContext.Free;
   end;
 end;
 
-// MEMORY/EXAMINE-DEPOSIT
-procedure TForm1.MExamineDepositExecute(Sender: TObject);
+// MEMORY/LOAD MEMORY CONTENT OPERATION ---------------------------------------
+procedure TForm1.MLoadMemoryContentOperation(
+  AActionContext: TActionContext);
 var
-  CurrentStatus: Boolean;
+  AddressFrom:  DWord;
+  ByteCount:    DWord;
+  Filename:     string;
+  InstanceName: string;
+  LoadStream:   TMemoryStream;
+  MemInfo:      TMemInfo;
+begin
+  InstanceName := AActionContext.SArg1;
+  Filename := AActionContext.SArg2;
+  try
+    MemInfo := FMemInstanceDict[InstanceName];
+  except
+    on E: Exception do
+    begin
+      ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+      Exit;
+    end;
+  end;
+  LoadStream := TMemoryStream.Create;
+  try
+    if not Filename.EndsWith('.hex', True) then
+    begin
+      // load from .bin
+      try
+        LoadStream.LoadFromFile(Filename);
+        // 0,0 = complete file from address 0
+        if (AActionContext.DArg1 = 0) and (AActionContext.DArg2 = 0) then
+        begin
+          AddressFrom := 0;
+          ByteCount := LoadStream.Size;
+        end else
+        begin
+          AddressFrom := AActionContext.DArg1;
+          ByteCount := AActionContext.DArg2;
+          // do not read beyond file
+          if ByteCount > LoadStream.Size then ByteCount := LoadStream.Size;
+        end;
+        // do not write beyond memory
+        if AddressFrom >= MemInfo.Memory.AddressRangeSize then ByteCount := 0 else
+          if ByteCount > MemInfo.Memory.AddressRangeSize - AddressFrom
+            then ByteCount := MemInfo.Memory.AddressRangeSize - AddressFrom;
+        LoadStream.Position := 0;
+        if ByteCount > 0 then MemInfo.Memory.LoadFromStream(LoadStream,
+                                                            AddressFrom,
+                                                            ByteCount);
+      except
+        ShowMessage(MSG01 + Format(MSG31, [Filename]));
+        Exit;
+      end;
+    end else
+    begin
+      // load from .hex
+      MemInfo.Memory.Reset;
+      case LoadFromIntelHexToStream(Filename, LoadStream) of
+        1: begin ShowMessage(MSG01 + Format(MSG35, [Filename])); Exit; end;
+        2: begin ShowMessage(MSG01 + MSG37); Exit; end;
+        3: begin ShowMessage(MSG01 + MSG38); Exit; end;
+      255: begin ShowMessage(MSG01 + MSG39); Exit; end;
+      end;
+      LoadStream.Position := 0;
+      // DArg1/DArg2 are ignored.
+      ByteCount := LoadStream.Size;
+      if ByteCount > MemInfo.Memory.AddressRangeSize
+        then ByteCount := MemInfo.Memory.AddressRangeSize;
+      if ByteCount > 0
+        then MemInfo.Memory.LoadFromStream(LoadStream, 0, ByteCount);
+    end;
+    // report
+    SysConsole1.WriteMessage(MSG03 + Format(MSG73, [Filename, InstanceName]));
+  finally
+    LoadStream.Free;
+  end;
+end;
+
+// MEMORY/SAVE MEMORY CONTENT ACTION -------------------------------------------
+procedure TForm1.MSaveMemoryContentExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
   KeyName:       string;
   MemInfo:       TMemInfo;
+  SaveDialog1:   TSaveDialog;
   StringList:    TStringList;
 begin
-  StringList := TStringList.Create;
+  ActionContext := TActionContext.Create;
   try
-    for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-    with Form17 do
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
     begin
-      OKButtonCaption := MSG79;
-      ModuleList := StringList;
-    end;
-    if Form17.ShowModal = mrOk then
-    begin
-      MemInfo := FMemInstanceDict[Form17.SelectedKey];
-      // store original status and enable module
-      CurrentStatus := MemInfo.Memory.Enabled;
-      MemInfo.Memory.Enabled := True;
-      // examine/deposit
-      With Form5 do
+      // detect action source object
+      if Caller is TMenuItem then
       begin
-        MemInstance := MemInfo.Memory;
-        ShowModal;
+        if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      // select memory instance
+      StringList := TStringList.Create;
+      try
+        for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
+        begin
+          OKButtonCaption := MSG74;
+          ModuleList := StringList;
+        end;
+        if Form17.ShowModal <> mrOk then Exit;
+        SArg2 := Form17.SelectedKey;
+      finally
+        StringList.Free;
       end;
-      // restore original status
-      MemInfo.Memory.Enabled := CurrentStatus;
+      MemInfo := FMemInstanceDict[SArg2];
+      // select output file
+      SaveDialog1 := TSaveDialog.Create(Form1);
+      try
+        with SaveDialog1 do
+        begin
+          InitialDir := GetUserDir;
+          Title := MSG28;
+          Filter := MSG32;
+        end;
+        if not SaveDialog1.Execute then Exit;
+        SArg1 := SaveDialog1.FileName;
+        // .hex: complete memory, no address selection
+        if SArg1.EndsWith('.hex', True) then
+        begin
+          DArg1 := 0;
+          DArg2 := 0;
+        end else
+        begin
+          // .bin: select address range
+          Form7.Direction := False;
+          Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
+          if Form7.ShowModal <> mrOk then Exit;
+          DArg1 := Form7.AddressFrom;
+          DArg2 := Form7.AddressTo - Form7.AddressFrom + 1;
+        end;
+        // execute operation
+        MSaveMemoryContentOperation(ActionContext);
+      finally
+        SaveDialog1.Free;
+      end;
     end;
   finally
-    StringList.Free;
+    ActionContext.Free;
   end;
 end;
 
-// IO PORT/CREATE ACTION
+
+// MEMORY/SAVE MEMORY CONTENT OPERATION ----------------------------------------
+procedure TForm1.MSaveMemoryContentOperation(
+  AActionContext: TActionContext);
+var
+  AddressFrom:   DWord;
+  ByteCount:     DWord;
+  CurrentStatus: Boolean;
+  Filename:      string;
+  InstanceName:  string;
+  SaveStream:    TMemoryStream;
+  MemInfo:       TMemInfo;
+begin
+  Filename := AActionContext.SArg1;
+  InstanceName := AActionContext.SArg2;
+  try
+    MemInfo := FMemInstanceDict[InstanceName];
+  except
+    on E: Exception do
+    begin
+      ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+      Exit;
+    end;
+  end;
+  CurrentStatus := MemInfo.Memory.Enabled;
+  MemInfo.Memory.Enabled := True;
+  try
+    SaveStream := TMemoryStream.Create;
+    try
+      if not Filename.EndsWith('.hex', True) then
+      begin
+        // save to .bin
+        if (AActionContext.DArg1 = 0) and (AActionContext.DArg2 = 0) then
+        begin
+          // complete memory from address 0
+          AddressFrom := 0;
+          ByteCount := MemInfo.Memory.AddressRangeSize;
+        end else
+        begin
+          AddressFrom := AActionContext.DArg1;
+          ByteCount := AActionContext.DArg2;
+          // do not read beyond memory
+          if AddressFrom >= MemInfo.Memory.AddressRangeSize
+            then ByteCount := 0
+            else
+              if ByteCount > MemInfo.Memory.AddressRangeSize - AddressFrom
+                then ByteCount := MemInfo.Memory.AddressRangeSize - AddressFrom;
+        end;
+        if ByteCount > 0 then
+        begin
+          // create backup
+          try
+            if FileExists(Filename) then RenameFile(Filename, Filename + '.bak');
+          except
+            SysConsole1.WriteMessage(MSG02 + MSG84);
+          end;
+          try
+            SaveStream.Clear;
+            MemInfo.Memory.SaveToStream(SaveStream, AddressFrom, ByteCount);
+            SaveStream.SaveToFile(Filename);
+          except
+            ShowMessage(MSG01 + Format(MSG29, [Filename]));
+            Exit;
+          end;
+        end;
+      end else
+      begin
+        // save to .hex
+        // complete memory image
+        MemInfo.Memory.SaveToStream(SaveStream, 0, MemInfo.Memory.AddressRangeSize);
+        case SaveToIntelHexFromStream(Filename, SaveStream) of
+          1: begin ShowMessage(MSG01 + Format(MSG36, [Filename])); Exit; end;
+        255: begin ShowMessage(MSG01 + MSG39); Exit; end;
+        end;
+      end;
+      // report
+      SysConsole1.WriteMessage(MSG03 + Format(MSG75, [Filename, InstanceName]));
+    finally
+      SaveStream.Free;
+    end;
+  finally
+    // restore original module state
+    MemInfo.Memory.Enabled := CurrentStatus;
+  end;
+end;
+
+// MEMORY/EXAMINE-DEPOSIT ------------------------------------------------------
+procedure TForm1.MExamineDepositExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      StringList := TStringList.Create;
+      try
+        for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
+        begin
+          OKButtonCaption := MSG79;
+          ModuleList := StringList;
+          if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+        end;
+      finally
+        StringList.Free;
+      end;
+    end;
+    MExamineDepositOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// MEMORY/EXAMINE-DEPOSIT OPERATION
+procedure TForm1.MExamineDepositOperation(AActionContext: TActionContext);
+var
+  CurrentStatus: Boolean;
+  InstanceName:  string;
+  MemInfo:       TMemInfo;
+begin
+  InstanceName := AActionContext.SArg1;
+  try
+    MemInfo := FMemInstanceDict[InstanceName];
+    // store original status and enable module
+    CurrentStatus := MemInfo.Memory.Enabled;
+    MemInfo.Memory.Enabled := True;
+    // examine/deposit
+    With Form5 do
+    begin
+      MemInstance := MemInfo.Memory;
+      ShowModal;
+    end;
+    // restore original status
+    MemInfo.Memory.Enabled := CurrentStatus;
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+    MemInfo.Memory.Enabled := CurrentStatus;
+    Exit;
+  end;
+end;
+
+// IO PORT/CREATE ACTION =====================================================
 procedure TForm1.IOCreateExecute(Sender: TObject);
 var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
 begin
   ActionContext := TActionContext.Create;
   try
@@ -2871,15 +3161,14 @@ begin
         if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
           then ActionSource := asMainMenu;
       end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then Exit;
       StringList := TStringList.Create;
         try
           for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
           with Form16 do
           begin
             PluginList := StringList;
-            if ShowModal = mrOk then ModuleType := SelectedKey else Exit;
-            InstanceName := Edit1.Text;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+            SArg2 := Edit1.Text;
           end;
         finally
           StringList.Free;
@@ -2894,43 +3183,45 @@ end;
 // IO PORT/CREATE OPERATION
 procedure TForm1.IOCreateOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  ModuleType:   string;
+  PortInfo:      TPortInfo;
 begin
-  with AActionContext do
+  ModuleType := AActionContext.SArg1;
+  InstanceName := AActionContext.SArg2;
+  // check existing names
+  if not InstanceNameDuplicated(FPortInstanceDict, InstanceName) then
   begin
-    // check existing names
-    if not InstanceNameDuplicated(FPortInstanceDict, InstanceName) then
-    begin
+    // create
+    try
       if Assigned(FPortPluginDict[ModuleType].FCreate) then
       begin
-        // create module
         PortInfo.Port := FPortPluginDict[ModuleType].FCreate();
         PortInfo.ModuleName := ModuleType;
         PortInfo.AttachedToBus := False;
-        // create and show panel
-        if PortInfo.Port.HasPanel
-          then FPortPluginDict[ModuleType].FCreatePanel(PortInfo.Port);
-        if PortInfo.Port.HasPanel
-          then FPortPluginDict[ModuleType].FShowPanel(PortInfo.Port);
       end;
-      // store
-      FPortInstanceDict.Add(InstanceName, PortInfo);
-      // add to Module Explorer
-      Form9.AddNode('I/O port & device', InstanceName);
-      // report
-      SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
-    end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
-  end;
+    except
+      // error
+      ShowMessage(MSG01 + Format(MSG90, ['processor', InstanceName]));
+      Exit;
+    end;
+    // store
+    FPortInstanceDict.Add(InstanceName, PortInfo);
+    // add to Module Explorer
+    Form9.AddNode('I/O port & device', InstanceName);
+    // report
+    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
+  end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
 end;
 
-// I/O PORT/DESTROY ACTION
+// IO PORT/DESTROY ACTION ----------------------------------------------------
 procedure TForm1.IODestroyExecute(Sender: TObject);
 var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
-  Tree:            TTreeView;
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
   ActionContext := TActionContext.Create;
   try
@@ -2951,7 +3242,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -2963,7 +3254,7 @@ begin
           begin
             OKButtonCaption := MSG59;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -2976,33 +3267,38 @@ begin
   end;
 end;
 
-// I/O PORT/DESTROY OPERATION
+// IO PORT/DESTROY OPERATION
 procedure TForm1.IODestroyOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
     // destroy
     FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
-    // remove from dict
-    FPortInstanceDict.Remove(InstanceName);
-    // remove from Module Explorer
-    Form9.DeleteNode('I/O port & device', InstanceName);
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG94, [InstanceName]));
+    Exit;
   end;
+  // remove from dict
+  FPortInstanceDict.Remove(InstanceName);
+  // remove from Module Explorer
+  Form9.DeleteNode('I/O port & device', InstanceName);
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
 end;
 
-// I/O PORT/RESET ACTION
+// IO PORT/RESET ACTION ------------------------------------------------------
 procedure TForm1.IOResetExecute(Sender: TObject);
 var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
-  Tree:            TTreeView;
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
   ActionContext := TActionContext.Create;
   try
@@ -3023,7 +3319,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -3035,7 +3331,7 @@ begin
           begin
             OKButtonCaption := MSG61;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -3048,29 +3344,34 @@ begin
   end;
 end;
 
-// I/O PORT/RESET OPERATION
+// IO PORT/RESET OPERATION
 procedure TForm1.IOResetOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
     // reset
     PortInfo.Port.Reset;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
 end;
 
-// I/O PORT/ENABLE ACTION
+// IO PORT/ENABLE ACTION -----------------------------------------------------
 procedure TForm1.IOEnableExecute(Sender: TObject);
 var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
-  Tree:            TTreeView;
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
   ActionContext := TActionContext.Create;
   try
@@ -3091,7 +3392,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -3103,7 +3404,7 @@ begin
           begin
             OKButtonCaption := MSG63;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -3116,29 +3417,34 @@ begin
   end;
 end;
 
-// I/O PORT/ENABLE OPERATION
+// IO PORT/ENABLE OPERATION
 procedure TForm1.IOEnableOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
     // enable
     PortInfo.Port.Enabled := True;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG96, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
 end;
 
-// I/O PORT/DISABLE ACTION
+// IO PORT/DISABLE ACTION ----------------------------------------------------
 procedure TForm1.IODisableExecute(Sender: TObject);
 var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
-  Tree:            TTreeView;
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
   ActionContext := TActionContext.Create;
   try
@@ -3159,7 +3465,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -3171,7 +3477,7 @@ begin
           begin
             OKButtonCaption := MSG65;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -3184,29 +3490,34 @@ begin
   end;
 end;
 
-// I/O PORT/DISABLE OPERATION
+// IO PORT/DISABLE OPERATION
 procedure TForm1.IODisableOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
-    // enable
+    // disable
     PortInfo.Port.Enabled := False;
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG97, [InstanceName]));
+    Exit;
   end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
 end;
 
-// I/O PORT/ATTACH TO BUS ACTION
+// IO PORT/ATTACH TO BUS ACTION ----------------------------------------------
 procedure TForm1.IOAttachToBusExecute(Sender: TObject);
 var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
-  Tree:            TTreeView;
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
 begin
   ActionContext := TActionContext.Create;
   try
@@ -3227,7 +3538,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -3239,7 +3550,7 @@ begin
           begin
             OKButtonCaption := MSG67;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -3252,23 +3563,101 @@ begin
   end;
 end;
 
-// I/O PORT/ATTACH TO BUS OPERATION
+// IO PORT/ATTACH TO BUS OPERATION
 procedure TForm1.IOAttachToBusOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:     TPortInfo;
 begin
-  with AActionContext do
-  begin
+  InstanceName := AActionContext.SArg1;
+  try
     PortInfo := FPortInstanceDict[InstanceName];
     // attach to bus
     {...}
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+    Exit;
+  end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+end;
+
+// IO PORT/DETACH FROM BUS ACTION --------------------------------------------
+procedure TForm1.IODetachFromBusExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+  Tree:           TTreeView;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    Caller := (Sender as TAction).ActionComponent;
+    with ActionContext do
+    begin
+      // detect action source object
+      if (Caller is TMenuItem) then
+      begin
+        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
+          then ActionSource := asModuleExplorer;
+        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
+      if ActionSource = asModuleExplorer then
+      begin
+        // call from Module Explorer
+        if Form9.PopupMenu1.PopupComponent is TTreeView then
+        begin
+          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
+        end;
+      end else
+      begin
+        // call from others
+        StringList := TStringList.Create;
+        try
+          for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+          with Form17 do
+          begin
+            OKButtonCaption := MSG67;
+            ModuleList := StringList;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+          end;
+        finally
+          StringList.Free;
+        end;
+      end;
+      IODetachFromBusOperation(ActionContext);
+    end;
+  finally
+    ActionContext.Free;
   end;
 end;
 
-// I/O PORT/DETACH FROM BUS ACTION
-procedure TForm1.IODetachFromBusExecute(Sender: TObject);
+// IO PORT/DETACH FROM BUS OPERATION
+procedure TForm1.IODetachFromBusOperation(AActionContext: TActionContext);
+var
+  InstanceName: string;
+  PortInfo:     TPortInfo;
+begin
+  InstanceName := AActionContext.SArg1;
+  try
+    PortInfo := FPortInstanceDict[InstanceName];
+    // detach to bus
+    {...}
+  except
+    // error
+    ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
+    Exit;
+  end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+end;
+
+// IO PORT/PROPERTIES ACTION -------------------------------------------------
+procedure TForm1.IOPropertiesExecute(Sender: TObject);
 var
   Caller:         TComponent;
   KeyName:        string;
@@ -3295,7 +3684,7 @@ begin
         if Form9.PopupMenu1.PopupComponent is TTreeView then
         begin
           Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
+          if Assigned(Tree.Selected) then SArg1 := Tree.Selected.Text;
         end;
       end else
       begin
@@ -3305,77 +3694,9 @@ begin
           for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
           with Form17 do
           begin
-            OKButtonCaption := MSG67;
-            ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
-          end;
-        finally
-          StringList.Free;
-        end;
-      end;
-      IODetachFromBusOperation(ActionContext);
-    end;
-  finally
-    ActionContext.Free;
-  end;
-end;
-
-// I/O PORT/DETACH FROM BUS OPERATION
-procedure TForm1.IODetachFromBusOperation(AActionContext: TActionContext);
-var
-  PortInfo: TPortInfo;
-begin
-  with AActionContext do
-  begin
-    PortInfo := FPortInstanceDict[InstanceName];
-    // detach from bus
-    {...}
-    // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
-  end;
-end;
-
-// PROCESSOR/PROPERTIES ACTION
-procedure TForm1.IOPropertiesExecute(Sender: TObject);
-var
-  Caller:          TComponent;
-  KeyName:         string;
-  ActionContext: TActionContext;
-  StringList:      TStringList;
-  Tree:            TTreeView;
-begin
-  ActionContext := TActionContext.Create;
-  try
-    Caller := (Sender as TAction).ActionComponent;
-    with ActionContext do
-    begin
-      // detect action source object
-      if (Caller is TMenuItem) then
-      begin
-        if (TMenuItem(Caller).GetParentMenu = Form9.PopupMenu1)
-          then ActionSource := asModuleExplorer;
-        if (TMenuItem(Caller).GetParentMenu = Form1.MainMenu1)
-          then ActionSource := asMainMenu;
-      end else ActionSource := asToolBar;
-      if ActionSource = asModuleExplorer then
-      begin
-        // call from Module Explorer
-        if Form9.PopupMenu1.PopupComponent is TTreeView then
-        begin
-          Tree := TTreeView(Form9.PopupMenu1.PopupComponent);
-          if Assigned(Tree.Selected) then InstanceName := Tree.Selected.Text;
-        end;
-      end else
-      begin
-        // call from others
-        StringList := TStringList.Create;
-        try
-          for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
-          with Form17 do
-          begin
             OKButtonCaption := MSG71;
             ModuleList := StringList;
-            if ShowModal = mrOk then InstanceName := SelectedKey else Exit;
+            if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
           end;
         finally
           StringList.Free;
@@ -3388,12 +3709,13 @@ begin
   end;
 end;
 
-// PROCESSOR/PROPERTIES OPERATION
+// IO PORT/PROPERTIES OPERATION
 procedure TForm1.IOPropertiesOperation(AActionContext: TActionContext);
 var
-  PortInfo: TPortInfo;
+  InstanceName: string;
+  PortInfo:      TPortInfo;
 begin
-  with AActionContext do
+  InstanceName := AActionContext.SArg1;
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // show properties

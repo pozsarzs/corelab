@@ -17,10 +17,8 @@ uses
   CMem, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils, StdCtrls,
   lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
   frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
-  frmmoduleexplorer, command, commandengine, commandparser, commandregistry,
-  token, uconfig, ucommon, uintelhex, uplugin, uproject, usysconsole,
-  uactcontext;
+  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmmoduleexplorer,
+  commandengine, uconfig, ucommon, uintelhex, uplugin, uproject, usysconsole;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -131,6 +129,7 @@ begin
   ProjectFile := '';
   RunScript := False;
   ScriptFile := '';
+
   // arguments and operation modes
   if ParamCount > 0 then
   begin
