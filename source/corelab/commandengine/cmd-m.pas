@@ -81,3 +81,10 @@ RegisterCommand(TCommand.Create('EDME',
                                 1,
                                 @Form1.MExamineDepositOperation));
 
+RegisterCommand(TCommand.Create('CFME',
+                                'Configure memory module.',
+                                csEverywhere,
+                                'CFME instancename.property value',
+                                2,
+                                @Form1.MConfigureOperation));
+

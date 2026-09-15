@@ -479,6 +479,10 @@ type
     procedure SRunScriptOperation(AActionContext: TActionContext);
     procedure SStepScriptOperation(AActionContext: TActionContext);
     procedure SStopScriptOperation(AActionContext: TActionContext);
+    // Other Operation-style methods
+    procedure IOConfigureOperation(AActionContext: TActionContext);
+    procedure MConfigureOperation(AActionContext: TActionContext);
+    procedure PConfigureOperation(AActionContext: TActionContext);
     // other methods and properties
     procedure SetProjectMode;
     procedure SetScriptMode;
@@ -584,6 +588,10 @@ resourcestring
   MSG98 = 'Cannot attach module named ''%s'' to bus.';                    { SM }
   MSG99 = 'Cannot detach module named ''%s'' from bus.';                  { SM }
   MSG100 = 'Cannot use it in this operation mode.';                       { SC }
+  MSG101 = 'Module named ''%s'' not exists.';                             { SM }
+  MSG102 = 'Property ''%s'' is read only or not exists.';                 { SM }
+  MSG103 = 'Value ''%s'' is bad.';                                        { SM }
+  MSG104 = 'Property ''%s'' set to value ''%s''.';                        { SC }
 
 // ---- PRIVATE METHODS ----
 
@@ -4381,6 +4389,165 @@ end;
 procedure TForm1.HAboutExecute(Sender: TObject);
 begin
   Form2.ShowModal;
+end;
+
+// CONFIGURE I/O PORT MODULE
+procedure TForm1.IOConfigureOperation(AActionContext: TActionContext);
+var
+  InstanceName: string;
+  PortInfo:     TPortInfo;
+  PropertyName: string;
+  Value:        string;
+begin
+  InstanceName := Copy(AActionContext.SArg1, 1, Pos('.', AActionContext.SArg1) - 1);
+  PropertyName := Copy(AActionContext.SArg1, Pos('.', AActionContext.SArg1) + 1, MaxInt);
+  Value := AActionContext.SArg2;
+  // find instance
+  try
+    PortInfo := FPortInstanceDict[InstanceName];
+  except
+    ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+    Exit;
+  end;
+  // set property
+  try
+    with PortInfo.Port do
+    begin
+      if SameText(PropertyName, 'DataInMode')
+        then DataInMode := DataInMode.FromString(Value)
+
+      else if SameText(PropertyName, 'DataInNegation') then
+        DataInNegation := StrToBool(Value)
+
+      else if SameText(PropertyName, 'DataOutMode') then
+        DataOutMode := DataOutMode.FromString(Value)
+
+      else if SameText(PropertyName, 'DataOutNegation') then
+        DataOutNegation := StrToBool(Value)
+
+      else if SameText(PropertyName, 'Enabled') then
+        Enabled := StrToBool(Value)
+
+      else if SameText(PropertyName, 'IntVector') then
+        IntVector := StrToInt(Value)
+
+      else if SameText(PropertyName, 'InstanceID') then
+        InstanceID := StrToInt(Value)
+
+      else if SameText(PropertyName, 'SelMode') then
+        SelMode := SelMode.FromString(Value)
+
+      else if SameText(PropertyName, 'SelNegation') then
+        SelNegation := StrToBool(Value)
+      else
+      begin
+        // property does not exist or is read-only
+        ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
+        Exit;
+      end;
+    end;
+  except
+    // invalid value
+    ShowMessage(MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]));
+    Exit;
+  end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG104, [InstanceName + '.' +
+                           PropertyName, Value]));
+end;
+
+// CONFIGURE MEMORY MODULE
+procedure TForm1.MConfigureOperation(AActionContext: TActionContext);
+var
+  InstanceName: string;
+  MemInfo:      TMemInfo;
+  PropertyName: string;
+  Value:        string;
+begin
+  InstanceName := Copy(AActionContext.SArg1, 1, Pos('.', AActionContext.SArg1) - 1);
+  PropertyName := Copy(AActionContext.SArg1, Pos('.', AActionContext.SArg1) + 1, MaxInt);
+  Value := AActionContext.SArg2;
+  // find instance
+  try
+    MemInfo := FMemInstanceDict[InstanceName];
+  except
+    ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+    Exit;
+  end;
+  // set property
+  try
+    with MemInfo.Memory do
+    begin
+      if SameText(PropertyName, 'AddressRangeSize') then
+        AddressRangeSize := StrToInt(Value)
+
+      else if SameText(PropertyName, 'Enabled') then
+        Enabled := StrToBool(Value)
+
+      else if SameText(PropertyName, 'InstanceID') then
+        InstanceID := StrToInt(Value)
+
+      else if SameText(PropertyName, 'MemoryMode') then
+        MemoryMode := MemoryMode.FromString(Value)
+      else
+      begin
+        // property does not exist or is read-only
+        ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
+        Exit;
+      end;
+    end;
+  except
+    // invalid value
+    ShowMessage(MSG01 + Format(MSG103, [Value]));
+    Exit;
+  end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG104, [InstanceName + '.' +
+                           PropertyName, Value]));
+end;
+
+// CONFIGURE CPU MODULE
+procedure TForm1.PConfigureOperation(AActionContext: TActionContext);
+var
+  InstanceName: string;
+  ProcInfo:     TProcInfo;
+  PropertyName: string;
+  Value:        string;
+begin
+  InstanceName := Copy(AActionContext.SArg1, 1, Pos('.', AActionContext.SArg1) - 1);
+  PropertyName := Copy(AActionContext.SArg1, Pos('.', AActionContext.SArg1) + 1, MaxInt);
+  Value := AActionContext.SArg2;
+  // find instance
+  try
+    ProcInfo := FProcInstanceDict[InstanceName];
+  except
+    ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+    Exit;
+  end;
+  // set property
+  try
+    with ProcInfo.Processor do
+    begin
+      if SameText(PropertyName, 'Enabled') then
+        Enabled := StrToBool(Value)
+
+      else if SameText(PropertyName, 'InstanceID') then
+        InstanceID := StrToInt(Value)
+      else
+      begin
+        // property does not exist or is read-only
+        ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
+        Exit;
+      end;
+    end;
+  except
+    // invalid value
+    ShowMessage(MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]));
+    Exit;
+  end;
+  // report
+  SysConsole1.WriteMessage(MSG03 + Format(MSG104, [InstanceName + '.' +
+                           PropertyName, Value]));
 end;
 
 // ---- CREATE AND DESTROY EVENT HANDLERS ----

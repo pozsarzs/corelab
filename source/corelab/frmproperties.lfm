@@ -1,0 +1,59 @@
+object Form15: TForm15
+  Left = 456
+  Height = 330
+  Top = 260
+  Width = 556
+  Caption = 'Form14'
+  ClientHeight = 330
+  ClientWidth = 556
+  LCLVersion = '2.2.6.0'
+  object Button1: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 473
+    Height = 25
+    Top = 297
+    Width = 75
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = '&Close'
+    TabOrder = 0
+  end
+  object Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Button1
+    Left = 8
+    Height = 4
+    Top = 285
+    Width = 540
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Around = 8
+    Shape = bsBottomLine
+  end
+  object ValueListEditor1: TValueListEditor
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Bevel1
+    Left = 8
+    Height = 269
+    Top = 8
+    Width = 540
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 8
+    FixedCols = 0
+    RowCount = 2
+    TabOrder = 1
+    ColWidths = (
+      64
+      474
+    )
+  end
+end

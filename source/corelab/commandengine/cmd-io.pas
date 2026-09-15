@@ -59,3 +59,11 @@ RegisterCommand(TCommand.Create('DTIO',
                                 'DTIO instancename',
                                 1,
                                 @Form1.IODetachFromBusOperation));
+
+RegisterCommand(TCommand.Create('CFIO',
+                                'Configure I/O port module.',
+                                csEverywhere,
+                                'CFIO instancename.property value',
+                                2,
+                                @Form1.IOConfigureOperation));
+

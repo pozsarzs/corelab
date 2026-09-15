@@ -59,3 +59,11 @@ RegisterCommand(TCommand.Create('DTPU',
                                 'DTPU instancename',
                                 1,
                                 @Form1.PDetachFromBusOperation));
+
+RegisterCommand(TCommand.Create('CFPU',
+                                'Configure processor module.',
+                                csEverywhere,
+                                'CFPU instancename.property value',
+                                2,
+                                @Form1.PConfigureOperation));
+

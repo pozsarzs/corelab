@@ -225,6 +225,9 @@ to be used with other development tools or transferred to real hardware.
 |ATME|   csEveryWhere  |Attach memory module to bus.                          |
 |ATPU|   csEveryWhere  |Attach processor module to bus.                       |
 |CRIO|   csEveryWhere  |Instantiate a I/O port or device module.              |
+|CFIO|   csEveryWhere  |Configure I/O port module                             |
+|CFME|   csEveryWhere  |Configure memory module                               |
+|CFPU|   csEveryWhere  |Configure processor module                            |
 |CRME|   csEveryWhere  |Instantiate a memory module.                          |
 |CRPU|   csEveryWhere  |Instantiate a processor module.                       |
 |DIIO|   csEveryWhere  |Disable I/O port or device module.                    |
@@ -275,7 +278,7 @@ to be used with other development tools or transferred to real hardware.
 |SVSC|csInteractiveOnly|Save script to file.                                  |
 |SVSS|   csEveryWhere  |Make and save snapshot.                               |
 
-**MÉG NEM MEGVALÓSÍTOTT UTASÍTÁSOK**
+**NEM MEGVALÓSÍTOTT UTASÍTÁSOK**
 
 |name|description                                                                       |
 |:--:|----------------------------------------------------------------------------------|
@@ -339,6 +342,7 @@ to be used with other development tools or transferred to real hardware.
 |XOR |Bitwise/logical XOR in-place.                                                     |
 
 ## VIII. Command exit codes
+
 **PONTOSÍTANDÓ!**
 
 | v.|category        |description                 |
