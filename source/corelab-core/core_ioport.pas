@@ -68,7 +68,7 @@ type
     procedure Reset; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
-    // Properties
+    // properties
     property AddressRangeSize: Word read FAddressRangeSize;
     property DataInMode: TLineMode read FDataInMode write FDataInMode;
     property DataInNegation: Boolean read FDataInNegation write FDataInNegation;

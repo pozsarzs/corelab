@@ -41,6 +41,7 @@ type
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
+    procedure MemInstanceDestroy(Sender: TMemory);       // Memory destroy event
     procedure SetFMemInstance(AMemInstance: TMemory);
   public
     procedure RefreshColors;
@@ -61,19 +62,31 @@ implementation
 
 // ---- PRIVATE METHODS ----
 
+// MEMORY DESTROY EVENT
+procedure TForm3.MemInstanceDestroy(Sender: TMemory);
+begin
+  if Sender = FMemInstance then
+  begin
+    FMemInstance := nil;
+    FMemSize := 0;
+    ShowMessage(MSG01 + MSG03);
+    Hide;
+  end;
+end;
+
 // SET INSTANCE AND MEMORY SIZE (16 BYTES PER ROW)
 procedure TForm3.SetFMemInstance(AMemInstance: TMemory);
 begin
-  if Assigned(AMemInstance) then
-  begin
-    FMemInstance := AMemInstance;
-    FMemSize := FMemInstance.AddressRangeSize;
-    if FMemSize = 0 then Exit;
-    DrawGrid1.RowCount := ((FMemSize + 15) div 16) + 1;
-  end else
+  if not Assigned(AMemInstance) then
   begin
     ShowMessage(MSG01 + MSG03);
+    Exit;
   end;
+  FMemInstance := AMemInstance;
+  FMemInstance.OnDestroy := @MemInstanceDestroy;
+  FMemSize := FMemInstance.AddressRangeSize;
+  if FMemSize = 0 then Exit;
+  DrawGrid1.RowCount := ((FMemSize + 15) div 16) + 1;
 end;
 
 // ---- PUBLIC METHODS ----

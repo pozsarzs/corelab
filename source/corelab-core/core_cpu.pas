@@ -116,7 +116,7 @@ type
     procedure Reset; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual; abstract;
     function SaveState(AStream: TStream): Boolean; virtual; abstract;
-    // Public properties
+    // properties
     property AddressWidth: Byte read FAddressWidth;
     property Architecture: TArchitecture read FArchitecture;
     property Cycles: QWord read FCycles;

@@ -18,6 +18,9 @@ interface
 uses
   Classes, SysUtils, TypInfo;
 type
+  TMemory = class;
+  // Destroy event type
+  TMemoryDestroyEvent = procedure(Sender: TMemory) of object;
   // Operation mode
   TMemoryMode = (mmRAM, mmROM);
   TMemoryModeHelper = type helper for TMemoryMode
@@ -45,6 +48,7 @@ type
     FMemCells:         array of Byte;                            // Memory cells
     FModname:          PChar;                                     // Module name
     FVersion:          TSemanticVersion;                       // Module version
+    FOnDestroy:        TMemoryDestroyEvent;
     procedure SetFAddressRangeSize(AAddressRangeSize: DWord);
   public
     constructor Create; virtual;
@@ -58,7 +62,7 @@ type
     function SaveState(AStream: TStream): Boolean; virtual;
     procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
-    // Properties
+    // properties
     property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
@@ -66,6 +70,7 @@ type
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
     property ModName: PChar read FModname;
     property Version: TSemanticVersion read FVersion;
+    property OnDestroy: TMemoryDestroyEvent read FOnDestroy write FOnDestroy;
   end;
 
 implementation
@@ -140,6 +145,7 @@ end;
 // DESTROY TMEMORY INSTANCE
 destructor TMemory.Destroy;
 begin
+  if Assigned(FOnDestroy) then FOnDestroy(Self);
   inherited Destroy;
 end;
 

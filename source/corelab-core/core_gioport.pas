@@ -42,7 +42,7 @@ type
     function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
-    // Properties
+    // properties
     property PanelCaption: PChar read FPanelCaption;
     property PanelHeight: integer read FPanelHeight;
     property PanelLeft: integer read FPanelLeft;

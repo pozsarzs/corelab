@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | uconfig                                                                  | }
+{ | uconfig.pas                                                              | }
 { | Configuration file handler                                               | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
@@ -38,8 +38,8 @@ type
     left, top, height, width, splitter: Integer;
   end;
   TModuleExplorerConfig = record
-    left, top, height, width, splitter: Integer;
-    visible:                            Boolean;
+    column0_width, left, top, height, width, splitter: Integer;
+    visible:                                           Boolean;
   end;
   TModulePropertiesConfig = record
     left, top, height, width: Integer;
@@ -178,6 +178,7 @@ begin
     LoadSave(section, 'width', AAppConfig.ModuleExplorerConfig.width, 265);
     LoadSave(section, 'splitter', AAppConfig.ModuleExplorerConfig.splitter, 160);
     LoadSave(section, 'visible', AAppConfig.ModuleExplorerConfig.visible, True);
+    LoadSave(section, 'column0_width', AAppConfig.ModuleExplorerConfig.column0_width, 127);
     // Module properties
     section := 'ModuleProperties';
     LoadSave(section, 'height', AAppConfig.ModulePropertiesConfig.height, 300);

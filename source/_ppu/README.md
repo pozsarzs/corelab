@@ -14,4 +14,5 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |uintelhex.pas  |Intel hex file handler              |
 |uplugin.pas    |plugin handler                      |
 |uproject.pas   |load/save project data              |
+|uproperties.pas|useable properties                  |
 |usysconsole.pas|TSysConsole class (visual component)|

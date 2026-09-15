@@ -383,6 +383,7 @@ object Form9: TForm9
     ReadOnly = True
     RightClickSelect = True
     TabOrder = 1
+    OnClick = TreeView1Click
     OnContextPopup = TreeView1ContextPopup
     Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoRightClickSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
     Items.Data = {
@@ -422,59 +423,24 @@ object Form9: TForm9
     Align = alTop
     ResizeAnchor = akTop
   end
-  object PageControl1: TPageControl
+  object ValueListEditor1: TValueListEditor
     Left = 8
     Height = 399
     Top = 221
     Width = 249
-    ActivePage = TabSheet2
     Align = alClient
     BorderSpacing.Left = 8
     BorderSpacing.Top = 4
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    TabIndex = 1
+    FixedCols = 0
+    RowCount = 2
     TabOrder = 3
-    object TabSheet1: TTabSheet
-      Caption = 'Instance'
-      ClientHeight = 368
-      ClientWidth = 239
-      object ValueListEditor2: TValueListEditor
-        Left = 0
-        Height = 368
-        Top = 0
-        Width = 239
-        Align = alClient
-        FixedCols = 0
-        RowCount = 2
-        TabOrder = 0
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goAlwaysShowEditor, goThumbTracking]
-        ColWidths = (
-          64
-          171
-        )
-      end
-    end
-    object TabSheet2: TTabSheet
-      Caption = 'System'
-      ClientHeight = 368
-      ClientWidth = 239
-      object ValueListEditor1: TValueListEditor
-        Left = 0
-        Height = 368
-        Top = 0
-        Width = 239
-        Align = alClient
-        FixedCols = 0
-        RowCount = 2
-        TabOrder = 0
-        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goAlwaysShowEditor, goThumbTracking]
-        ColWidths = (
-          64
-          173
-        )
-      end
-    end
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goAlwaysShowEditor, goThumbTracking, goDblClickAutoSize]
+    ColWidths = (
+      64
+      183
+    )
   end
   object PopupMenu1: TPopupMenu
     Images = Form1.ImageList1

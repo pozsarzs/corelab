@@ -197,6 +197,26 @@ msgstr ""
 msgid "Cannot use it in this operation mode."
 msgstr ""
 
+#: frmmain.msg101
+#, object-pascal-format
+msgid "Module named '%s' not exists."
+msgstr ""
+
+#: frmmain.msg102
+#, object-pascal-format
+msgid "Property '%s' is read only or not exists."
+msgstr ""
+
+#: frmmain.msg103
+#, object-pascal-format
+msgid "Value '%s' is bad."
+msgstr ""
+
+#: frmmain.msg104
+#, object-pascal-format
+msgid "Property '%s' set to value '%s'."
+msgstr ""
+
 #: frmmain.msg18
 msgid "Missing help file."
 msgstr ""
@@ -462,17 +482,14 @@ msgid "Unknown command."
 msgstr ""
 
 #: frmmain.msg87
-msgctxt "frmmain.msg87"
 msgid "Invalid number of arguments."
 msgstr ""
 
 #: frmmain.msg88
-msgctxt "frmmain.msg88"
 msgid "Cannot be used in command line."
 msgstr ""
 
 #: frmmain.msg89
-msgctxt "frmmain.msg89"
 msgid "Cannot be used in script."
 msgstr ""
 
@@ -524,6 +541,14 @@ msgstr ""
 #: frmmain.msg99
 #, object-pascal-format
 msgid "Cannot detach module named '%s' from bus."
+msgstr ""
+
+#: frmmoduleexplorer.msg01
+msgid "Property"
+msgstr ""
+
+#: frmmoduleexplorer.msg02
+msgid "Value"
 msgstr ""
 
 #: frmrunlogger.msg01
@@ -1286,6 +1311,14 @@ msgstr ""
 msgid "Show ScriptEditor"
 msgstr ""
 
+#: tform10.caption
+msgid "Form10"
+msgstr ""
+
+#: tform11.caption
+msgid "Form11"
+msgstr ""
+
 #: tform12.button1.caption
 msgctxt "tform12.button1.caption"
 msgid "&Close"
@@ -1317,6 +1350,15 @@ msgstr ""
 
 #: tform13.label1.caption
 msgid "New caption:"
+msgstr ""
+
+#: tform15.button1.caption
+msgctxt "tform15.button1.caption"
+msgid "&Close"
+msgstr ""
+
+#: tform15.caption
+msgid "Form14"
 msgstr ""
 
 #: tform16.button1.caption
@@ -1794,13 +1836,5 @@ msgstr ""
 
 #: tform9.menuitem7.caption
 msgid "MenuItem7"
-msgstr ""
-
-#: tform9.tabsheet1.caption
-msgid "Instance"
-msgstr ""
-
-#: tform9.tabsheet2.caption
-msgid "System"
 msgstr ""
 

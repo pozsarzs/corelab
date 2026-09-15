@@ -22,7 +22,7 @@ uses
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmmoduleexplorer,
   commandengine, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
-  uconfig, uplugin, uproject, uintelhex, uactcontext;
+  uconfig, uplugin, uproject, uintelhex, uactcontext, uproperties;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -378,10 +378,6 @@ type
   private
     // system console's command interpreter
     CommandEngine1:    TCommandEngine;
-    // active component instances
-    FProcInstanceDict: TProcInstanceDict;
-    FMemInstanceDict:  TMemInstanceDict;
-    FPortInstanceDict: TPortInstanceDict;
     // script buffer
     FScriptBuffer:     TStringList;
     // bridge between SysConsol and CommandEngine
@@ -413,6 +409,10 @@ type
     FSystemLanguage:       string;                            // system language
     FUserDirectory:        string;                           // user's directory
   public
+    // active component instances
+    FProcInstanceDict: TProcInstanceDict;
+    FMemInstanceDict:  TMemInstanceDict;
+    FPortInstanceDict: TPortInstanceDict;
     // system console
     SysConsole1:       TSysConsole;
     // action's operation metods
@@ -1769,6 +1769,7 @@ begin
   FProcInstanceDict.Remove(InstanceName);
   // remove from Module Explorer
   Form9.DeleteNode('Processor', InstanceName);
+  Form9.ValueListEditor1.Clear;
   // report
   SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
 end;
@@ -2353,6 +2354,7 @@ begin
   FMemInstanceDict.Remove(InstanceName);
   // remove from Module Explorer
   Form9.DeleteNode('Memory', InstanceName);
+  Form9.ValueListEditor1.Clear;
   // report
   SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
 end;
@@ -3344,6 +3346,7 @@ begin
   FPortInstanceDict.Remove(InstanceName);
   // remove from Module Explorer
   Form9.DeleteNode('I/O port & device', InstanceName);
+  Form9.ValueListEditor1.Clear;
   // report
   SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
 end;
@@ -4413,32 +4416,29 @@ begin
   try
     with PortInfo.Port do
     begin
-      if SameText(PropertyName, 'DataInMode')
-        then DataInMode := DataInMode.FromString(Value)
+      if SameText(PropertyName, uproperties.IOPropertyInfoArray[2].Name)
+        then Enabled := StrToBool(Value)
 
-      else if SameText(PropertyName, 'DataInNegation') then
-        DataInNegation := StrToBool(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[6].Name)
+             then IntVector := StrToInt(Value)
 
-      else if SameText(PropertyName, 'DataOutMode') then
-        DataOutMode := DataOutMode.FromString(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[7].Name)
+             then DataInMode := DataInMode.FromString(Value)
 
-      else if SameText(PropertyName, 'DataOutNegation') then
-        DataOutNegation := StrToBool(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[8].Name)
+             then DataInNegation := StrToBool(Value)
 
-      else if SameText(PropertyName, 'Enabled') then
-        Enabled := StrToBool(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[9].Name)
+             then DataOutMode := DataOutMode.FromString(Value)
 
-      else if SameText(PropertyName, 'IntVector') then
-        IntVector := StrToInt(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[10].Name)
+             then DataOutNegation := StrToBool(Value)
 
-      else if SameText(PropertyName, 'InstanceID') then
-        InstanceID := StrToInt(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[11].Name)
+             then SelMode := SelMode.FromString(Value)
 
-      else if SameText(PropertyName, 'SelMode') then
-        SelMode := SelMode.FromString(Value)
-
-      else if SameText(PropertyName, 'SelNegation') then
-        SelNegation := StrToBool(Value)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[12].Name)
+             then SelNegation := StrToBool(Value)
       else
       begin
         // property does not exist or is read-only
@@ -4478,17 +4478,14 @@ begin
   try
     with MemInfo.Memory do
     begin
-      if SameText(PropertyName, 'AddressRangeSize') then
-        AddressRangeSize := StrToInt(Value)
+      if SameText(PropertyName, uproperties.MPropertyInfoArray[3].Name)
+        then Enabled := StrToBool(Value)
 
-      else if SameText(PropertyName, 'Enabled') then
-        Enabled := StrToBool(Value)
+      else if SameText(PropertyName, uproperties.MPropertyInfoArray[5].Name)
+             then AddressRangeSize := StrToInt(Value)
 
-      else if SameText(PropertyName, 'InstanceID') then
-        InstanceID := StrToInt(Value)
-
-      else if SameText(PropertyName, 'MemoryMode') then
-        MemoryMode := MemoryMode.FromString(Value)
+      else if SameText(PropertyName, uproperties.MPropertyInfoArray[6].Name)
+             then MemoryMode := MemoryMode.FromString(Value)
       else
       begin
         // property does not exist or is read-only
@@ -4528,12 +4525,8 @@ begin
   try
     with ProcInfo.Processor do
     begin
-      if SameText(PropertyName, 'Enabled') then
-        Enabled := StrToBool(Value)
-
-      else if SameText(PropertyName, 'InstanceID') then
-        InstanceID := StrToInt(Value)
-      else
+      if SameText(PropertyName, uproperties.PPropertyInfoArray[3].Name)
+        then Enabled := StrToBool(Value) else
       begin
         // property does not exist or is read-only
         ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
@@ -4717,7 +4710,16 @@ begin
       font_color := SysConsole1.Font.Color;
     end;
     // Module Explorer
-    ModuleExplorerConfig.visible := Form9.Visible;
+    with ModuleExplorerConfig do
+    begin
+      visible := Form9.Visible;
+      top := Form9.Top;
+      left := Form9.Left;
+      height := Form9.Height;
+      width := Form9.Width;
+      splitter := Form9.TreeView1.Height;
+      column0_width := Form9.ValueListEditor1.ColWidths[0];
+    end;
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE)
     then ShowMessage(MSG01 + Format(MSG41, [FConfigDirectory + CONFIGFILE]));
