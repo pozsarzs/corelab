@@ -20,7 +20,7 @@ uses
 type
   { TForm12 }
   TForm12 = class(TForm)
-    Bevel1: TBevel;
+    Bevel1:  TBevel;
     Button1: TButton;
     Button2: TButton;
     procedure Button1Click(Sender: TObject);

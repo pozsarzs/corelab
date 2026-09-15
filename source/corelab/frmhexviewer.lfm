@@ -449,8 +449,4 @@ object Form3: TForm3
     TabOrder = 1
     OnDrawCell = DrawGrid1DrawCell
   end
-  object FindDialog1: TFindDialog
-    Left = 8
-    Top = 272
-  end
 end

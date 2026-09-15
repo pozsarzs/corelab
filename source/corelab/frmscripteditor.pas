@@ -22,7 +22,7 @@ type
   TForm6 = class(TForm)
     StatusBar1: TStatusBar;
     SynAnySyn1: TSynAnySyn;
-    SynEdit1: TSynEdit;
+    SynEdit1:   TSynEdit;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormHide(Sender: TObject);

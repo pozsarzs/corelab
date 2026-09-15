@@ -559,7 +559,6 @@ msgid "ERROR: "
 msgstr ""
 
 #: frmproperties.msg02
-msgctxt "frmproperties.msg02"
 msgid "Cannot open memory modulka."
 msgstr ""
 
@@ -579,6 +578,24 @@ msgstr ""
 
 #: frmproperties.msg06
 msgid "Data conversion error at save."
+msgstr ""
+
+#: frmregviewer.msg01
+msgctxt "frmregviewer.msg01"
+msgid "ERROR: "
+msgstr ""
+
+#: frmregviewer.msg02
+msgid "Cannot open processor modul."
+msgstr ""
+
+#: frmregviewer.msg03
+msgid "Register"
+msgstr ""
+
+#: frmregviewer.msg04
+msgctxt "frmregviewer.msg04"
+msgid "Value"
 msgstr ""
 
 #: frmrunlogger.msg01
@@ -1345,8 +1362,13 @@ msgstr ""
 msgid "Form10"
 msgstr ""
 
+#: tform11.button1.caption
+msgctxt "tform11.button1.caption"
+msgid "&Close"
+msgstr ""
+
 #: tform11.caption
-msgid "Form11"
+msgid "RegViewer"
 msgstr ""
 
 #: tform12.button1.caption
@@ -1383,7 +1405,6 @@ msgid "New caption:"
 msgstr ""
 
 #: tform15.button1.caption
-msgctxt "tform15.button1.caption"
 msgid "&Apply"
 msgstr ""
 

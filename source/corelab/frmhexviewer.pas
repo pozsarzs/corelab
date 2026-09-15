@@ -24,7 +24,6 @@ type
     Button1:     TButton;
     DrawGrid1:   TDrawGrid;
     EditButton1: TEditButton;
-    FindDialog1: TFindDialog;
     procedure Button1Click(Sender: TObject);
     procedure DrawGrid1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure EditButton1ButtonClick(Sender: TObject);

@@ -20,10 +20,10 @@ uses
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmproperties,
-  frmmoduleexplorer, commandengine, core_cpu, core_memory, core_ioport,
-  usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext,
-  uproperties;
+  frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
+  frmproperties, frmmoduleexplorer, commandengine, core_cpu, core_memory,
+  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex,
+  uactcontext, uproperties;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -1347,8 +1347,8 @@ begin
     Exit;
   end;
   // show HexViewer
-  // Form11.MemInstance := MemInfo.Memory;
-  // Form11.Show;
+  Form11.ProcInstance := ProcInfo.Processor;
+  Form11.Show;
 end;
 
 // VIEW/SHOW HEXVIEWER ACTION --------------------------------------------------

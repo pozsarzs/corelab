@@ -22,11 +22,11 @@ const
 type
   { TForm8 }
   TForm8 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
-    Button2: TButton;
-    Button3: TButton;
-    DrawGrid1: TDrawGrid;
+    Bevel1:      TBevel;
+    Button1:     TButton;
+    Button2:     TButton;
+    Button3:     TButton;
+    DrawGrid1:   TDrawGrid;
     EditButton1: TEditButton;
     SaveDialog1: TSaveDialog;
     procedure Button1Click(Sender: TObject);

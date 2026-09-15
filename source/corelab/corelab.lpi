@@ -223,6 +223,7 @@
         <Filename Value="frmregviewer.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form11"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>

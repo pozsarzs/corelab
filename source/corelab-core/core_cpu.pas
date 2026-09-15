@@ -18,6 +18,9 @@ interface
 uses
   CMem, Classes, SysUtils, TypInfo, sysbus;
 type
+  TCPU = class;
+  // Destroy event type
+  TProcessorDestroyEvent = procedure(Sender: TCPU) of object;
   // Defines type of architecture
   TArchitecture = (arHarvard, arNeumann);
   TArchitectureHelper = type helper for TArchitecture
@@ -91,6 +94,7 @@ type
     // Execution statistics
     FCycles:           QWord;                                    // Total cycles
     FInstructions:     QWord;                     // Total executed instructions
+    FOnDestroy:        TProcessorDestroyEvent;
     var FRegPtr:       array of ^Word;
     procedure EmitEvent(AEvent: TCPUEvent); virtual;
     procedure DoInterrupt(AEvent: TCPUEvent); virtual;
@@ -135,6 +139,7 @@ type
     property OnEvent: TCPUEventHandler read FOnEvent write FOnEvent;
     property Running: Boolean read FRunning;
     property Version: TSemanticVersion read FVersion;
+    property OnDestroy: TProcessorDestroyEvent read FOnDestroy write FOnDestroy;
   end;
 
 implementation
@@ -233,6 +238,7 @@ end;
 // DESTROY TCPU INSTANCE
 destructor TCPU.Destroy;
 begin
+  if Assigned(FOnDestroy) then FOnDestroy(Self);
   inherited Destroy;
 end;
 

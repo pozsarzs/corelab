@@ -1,3 +1,4 @@
 {"version":1,"strings":[
-{"hash":81170497,"name":"tform11.caption","sourcebytes":[70,111,114,109,49,49],"value":"Form11"}
+{"hash":214930802,"name":"tform11.caption","sourcebytes":[82,101,103,86,105,101,119,101,114],"value":"RegViewer"},
+{"hash":44709525,"name":"tform11.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"}
 ]}

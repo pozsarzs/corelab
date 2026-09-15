@@ -45,7 +45,7 @@ type
     column0_width,left, top, height, width: Integer;
   end;
   TRegViewerConfig = record
-    left, top, height, width: Integer;
+    column0_width, left, top, height, width: Integer;
   end;
   TRunLoggerConfig = record
     left, top, height, width:                                     Integer;
@@ -192,6 +192,7 @@ begin
     LoadSave(section, 'left', AAppConfig.RegViewerConfig.left, 8);
     LoadSave(section, 'top', AAppConfig.RegViewerConfig.top, 8);
     LoadSave(section, 'width', AAppConfig.RegViewerConfig.width, 480);
+    LoadSave(section, 'column0_width', AAppConfig.RegViewerConfig.column0_width, 150);
     // RunLogger
     section := 'RunLogger';
     LoadSave(section, 'height', AAppConfig.RunLoggerConfig.height, 300);

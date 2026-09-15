@@ -20,9 +20,9 @@ uses
 type
   { TForm15 }
   TForm15 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
-    Button2: TButton;
+    Bevel1:           TBevel;
+    Button1:          TButton;
+    Button2:          TButton;
     ValueListEditor1: TValueListEditor;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -32,9 +32,9 @@ type
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
     procedure ValueListEditor1ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
   private
-    FMemInstance:  TMemory;
-    FProcInstance: TCPU;
-    FPortInstance: TIOPort;
+    FMemInstance:      TMemory;
+    FProcInstance:     TCPU;
+    FPortInstance:     TIOPort;
     FSelectModuleType: Byte;                                              // 0-3
     procedure SetMemInstance(AMemInstance: TMemory);                        // 1
     procedure SetProcInstance(AProcInstance: TCPU);                         // 2

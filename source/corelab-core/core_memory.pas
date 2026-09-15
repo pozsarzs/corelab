@@ -16,7 +16,7 @@ unit core_memory;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  Classes, SysUtils, TypInfo;
+  CMem, Classes, SysUtils, TypInfo;
 type
   TMemory = class;
   // Destroy event type

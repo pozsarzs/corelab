@@ -21,20 +21,20 @@ uses
 type
   { TForm9 }
   TForm9 = class(TForm)
-    EditButton1: TEditButton;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
-    MenuItem4: TMenuItem;
-    MenuItem5: TMenuItem;
-    MenuItem6: TMenuItem;
-    MenuItem7: TMenuItem;
-    PopupMenu1: TPopupMenu;
-    Separator1: TMenuItem;
-    Separator2: TMenuItem;
-    Separator3: TMenuItem;
-    Splitter1: TSplitter;
-    TreeView1: TTreeView;
+    EditButton1:      TEditButton;
+    MenuItem1:        TMenuItem;
+    MenuItem2:        TMenuItem;
+    MenuItem3:        TMenuItem;
+    MenuItem4:        TMenuItem;
+    MenuItem5:        TMenuItem;
+    MenuItem6:        TMenuItem;
+    MenuItem7:        TMenuItem;
+    PopupMenu1:       TPopupMenu;
+    Separator1:       TMenuItem;
+    Separator2:       TMenuItem;
+    Separator3:       TMenuItem;
+    Splitter1:        TSplitter;
+    TreeView1:        TTreeView;
     ValueListEditor1: TValueListEditor;
     procedure EditButton1ButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);

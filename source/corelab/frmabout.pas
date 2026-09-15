@@ -29,7 +29,7 @@ type
   end;
   TForm2 = class(TForm)
     Bevel1:  TBevel;
-    Bevel2: TBevel;
+    Bevel2:  TBevel;
     Button1: TButton;
     Image1:  TImage;
     Label1:  TLabel;

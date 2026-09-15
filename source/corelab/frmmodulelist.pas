@@ -19,14 +19,14 @@ uses
 type
   { TForm17 }
   TForm17 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
-    Button5: TButton;
-    Label2: TLabel;
+    Bevel1:   TBevel;
+    Button1:  TButton;
+    Button5:  TButton;
+    Label2:   TLabel;
     ListBox1: TListBox;
     procedure Button5Click(Sender: TObject);
   private
-    FModuleList: TStringList;
+    FModuleList:  TStringList;
     FSelectedKey: string;
     procedure SetOKButtonCaption(ACaption: string);
     procedure SetFModuleList(AStringList: TStringList);

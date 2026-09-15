@@ -19,12 +19,12 @@ uses
 type
   { TForm16 }
   TForm16 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
-    Button5: TButton;
-    Edit1: TEdit;
-    Label1: TLabel;
-    Label2: TLabel;
+    Bevel1:   TBevel;
+    Button1:  TButton;
+    Button5:  TButton;
+    Edit1:    TEdit;
+    Label1:   TLabel;
+    Label2:   TLabel;
     ListBox1: TListBox;
     procedure Button5Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
