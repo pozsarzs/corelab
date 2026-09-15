@@ -1,4 +1,5 @@
 {"version":1,"strings":[
-{"hash":81170500,"name":"tform15.caption","sourcebytes":[70,111,114,109,49,52],"value":"Form14"},
-{"hash":44709525,"name":"tform15.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"}
+{"hash":114087587,"name":"tform15.caption","sourcebytes":[80,114,111,112,101,114,116,105,101,115],"value":"Properties"},
+{"hash":44595001,"name":"tform15.button1.caption","sourcebytes":[38,65,112,112,108,121],"value":"&Apply"},
+{"hash":177752476,"name":"tform15.button2.caption","sourcebytes":[38,67,97,110,99,101,108],"value":"&Cancel"}
 ]}

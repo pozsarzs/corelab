@@ -120,6 +120,8 @@ var
         InsertRow(uproperties.IOPropertyInfoArray[13].Name, BoolToStr(PortInfo.Port.SelNegation, True), True);
         InsertRow(uproperties.IOPropertyInfoArray[14].Name, BoolToStr(PortInfo.Port.LatchedOutput, True), True);
         InsertRow(uproperties.IOPropertyInfoArray[15].Name, BoolToStr(PortInfo.Port.ReadBackOutput, True), True);
+        InsertRow('Attached to bus', BoolToStr(PortInfo.AttachedToBus, 'true', 'false'), True);
+        ValueListEditor1.TopRow := 1;
       end;
     except
     end;
@@ -144,6 +146,8 @@ var
         InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(MemInfo.Memory.InstanceID, 2), True);
         InsertRow(uproperties.MPropertyInfoArray[5].Name, IntToStr(MemInfo.Memory.AddressRangeSize), True);
         InsertRow(uproperties.MPropertyInfoArray[6].Name, MemInfo.Memory.MemoryMode.ToString, True);
+        InsertRow('Attached to bus', BoolToStr(MemInfo.AttachedToBus, 'true', 'false'), True);
+        ValueListEditor1.TopRow := 1;
       end;
     except
     end;
@@ -173,6 +177,8 @@ var
         InsertRow(uproperties.PPropertyInfoArray[9].Name, IntToHex(ProcInfo.Processor.MaxIOPortAddress, 4), True);
         InsertRow(uproperties.PPropertyInfoArray[10].Name, IntToHex(ProcInfo.Processor.MaxMemAddress, 6), True);
         InsertRow(uproperties.PPropertyInfoArray[11].Name, IntToHex(ProcInfo.Processor.MaxCodeAddress, 6), True);
+        InsertRow('Attached to bus', BoolToStr(ProcInfo.AttachedToBus, 'true', 'false'), True);
+        ValueListEditor1.TopRow := 1;
       end;
     except
     end;

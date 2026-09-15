@@ -42,7 +42,7 @@ type
     visible:                                           Boolean;
   end;
   TModulePropertiesConfig = record
-    left, top, height, width: Integer;
+    column0_width,left, top, height, width: Integer;
   end;
   TRegViewerConfig = record
     left, top, height, width: Integer;
@@ -185,6 +185,7 @@ begin
     LoadSave(section, 'left', AAppConfig.ModulePropertiesConfig.left, 8);
     LoadSave(section, 'top', AAppConfig.ModulePropertiesConfig.top, 8);
     LoadSave(section, 'width', AAppConfig.ModulePropertiesConfig.width, 480);
+    LoadSave(section, 'column0_width', AAppConfig.ModulePropertiesConfig.column0_width, 150);
     // RegViewer
     section := 'RegViewer';
     LoadSave(section, 'height', AAppConfig.RegViewerConfig.height, 300);

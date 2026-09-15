@@ -19,7 +19,7 @@ uses
   frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
   frmmoduleexplorer, commandengine, uconfig, ucommon, uintelhex, uplugin,
-  uproject, usysconsole, frmbpmanager, frmregviewer, frmproperties;
+  uproject, usysconsole, uproperties, frmbpmanager, frmregviewer, frmproperties;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -212,12 +212,12 @@ begin
     CreateForm(TForm6, Form6);                                   // ScriptEditor
     CreateForm(TForm7, Form7);                                 // LoadSaveMemory
     CreateForm(TForm8, Form8);                                      // IntLogger
-    CreateForm(TForm9, Form9);                               // Module Manager
-    CreateForm(TForm10, Form10);                         // Breakpoint Manager
-    CreateForm(TForm11, Form11);                                  // RegViewer
+    CreateForm(TForm9, Form9);                                // Module Explorer
+    CreateForm(TForm10, Form10);                           // Breakpoint Manager
+    CreateForm(TForm11, Form11);                                    // RegViewer
     CreateForm(TForm12, Form12);                                // ScriptConsole
     CreateForm(TForm13, Form13);                      // Rename I/O plugin panel
-    CreateForm(TForm15, Form15);                          // Module properties
+    CreateForm(TForm15, Form15);                            // Module properties
     CreateForm(TForm16, Form16);                   // Class list for instantiate
     CreateForm(TForm17, Form17);                     // Instantiated module list
     CreateForm(TForm18, Form18);                                     // Settings

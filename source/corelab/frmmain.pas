@@ -20,9 +20,10 @@ uses
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmmoduleexplorer,
-  commandengine, core_cpu, core_memory, core_ioport, usysconsole, ucommon,
-  uconfig, uplugin, uproject, uintelhex, uactcontext, uproperties;
+  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmproperties,
+  frmmoduleexplorer, commandengine, core_cpu, core_memory, core_ioport,
+  usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext,
+  uproperties;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -2202,7 +2203,11 @@ begin
   begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // show properties
-    {...}
+    with Form15 do
+    begin
+      ProcInstance := ProcInfo.Processor;
+      ShowModal;
+    end;
   end;
 end;
 
@@ -2785,9 +2790,18 @@ var
 begin
   InstanceName := AActionContext.SArg1;
   begin
-    MemInfo := FMemInstanceDict[InstanceName];
+    try
+      MemInfo := FMemInstanceDict[InstanceName];
+    except
+      ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+      Exit;
+    end;
     // show properties
-    {...}
+    with Form15 do
+    begin
+      MemInstance := MemInfo.Memory;
+      ShowModal;
+    end;
   end;
 end;
 
@@ -2805,40 +2819,29 @@ begin
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
-
     with ActionContext do
     begin
       // detect action source object
       if Caller is TMenuItem then
       begin
-        if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1 then
-          ActionSource := asMainMenu;
-      end
-      else
-        ActionSource := asToolBar;
-
+        if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+          then ActionSource := asMainMenu;
+      end else ActionSource := asToolBar;
       // select memory instance
       StringList := TStringList.Create;
       try
-        for KeyName in FMemInstanceDict.Keys do
-          StringList.Add(KeyName);
-
+        for KeyName in FMemInstanceDict.Keys do StringList.Add(KeyName);
         with Form17 do
         begin
           OKButtonCaption := MSG72;
           ModuleList := StringList;
         end;
-
-        if Form17.ShowModal <> mrOk then
-          Exit;
-
+        if Form17.ShowModal <> mrOk then  Exit;
         SArg1 := Form17.SelectedKey;
       finally
         StringList.Free;
       end;
-
       MemInfo := FMemInstanceDict[SArg1];
-
       // enable memory module temporarily
       CurrentStatus := MemInfo.Memory.Enabled;
       MemInfo.Memory.Enabled := True;
@@ -2852,31 +2855,22 @@ begin
             Title := MSG30;
             Filter := MSG32;
           end;
-
-          if not OpenDialog1.Execute then
-            Exit;
-
+          if not OpenDialog1.Execute then Exit;
           SArg2 := OpenDialog1.FileName;
-
           // HEX: load complete file from address 0
           if SArg2.EndsWith('.hex', True) then
           begin
             DArg1 := 0;
             DArg2 := 0;
-          end
-          else
+          end else
           begin
             // BIN: select address range
             Form7.Direction := True;
             Form7.MemSize := MemInfo.Memory.AddressRangeSize - 1;
-
-            if Form7.ShowModal <> mrOk then
-              Exit;
-
+            if Form7.ShowModal <> mrOk then Exit;
             DArg1 := Form7.AddressFrom;
             DArg2 := Form7.AddressTo - Form7.AddressFrom + 1;
           end;
-
           // execute operation
           MLoadMemoryContentOperation(ActionContext);
         finally
@@ -3258,6 +3252,11 @@ begin
         PortInfo.Port := FPortPluginDict[ModuleType].FCreate();
         PortInfo.ModuleName := ModuleType;
         PortInfo.AttachedToBus := False;
+        // create and show panel
+        if PortInfo.Port.HasPanel
+          then FPortPluginDict[ModuleType].FCreatePanel(PortInfo.Port);
+        if PortInfo.Port.HasPanel
+          then FPortPluginDict[ModuleType].FShowPanel(PortInfo.Port);
       end;
     except
       // error
@@ -3779,7 +3778,11 @@ begin
   begin
     PortInfo := FPortInstanceDict[InstanceName];
     // show properties
-    {...}
+    with Form15 do
+    begin
+      PortInstance := PortInfo.Port;
+      ShowModal;
+    end;
   end;
 end;
 

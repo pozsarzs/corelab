@@ -68,7 +68,7 @@ begin
   begin
     Name := 'InstanceID';
     DataType := dtInteger;
-    Writable := True;
+    Writable := False;
   end;
   with IOPropertyInfoArray[6] do
   begin
@@ -160,7 +160,7 @@ begin
   begin
     Name := 'InstanceID';
     DataType := dtInteger;
-    Writable := True;
+    Writable := False;
   end;
   with MPropertyInfoArray[5] do
   begin
@@ -204,7 +204,7 @@ begin
   begin
     Name := 'InstanceID';
     DataType := dtInteger;
-    Writable := True;
+    Writable := False;
   end;
   with PPropertyInfoArray[5] do
   begin
