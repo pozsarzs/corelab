@@ -29,10 +29,8 @@ type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer;
-      aRect: TRect; aState: TGridDrawState);
-    procedure ValueListEditor1ValidateEntry(Sender: TObject; aCol,
-      aRow: Integer; const OldValue: string; var NewValue: String);
+    procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
+    procedure ValueListEditor1ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
   private
     FMemInstance:  TMemory;
     FProcInstance: TCPU;
@@ -58,6 +56,8 @@ resourcestring
   MSG02 = 'Cannot open memory modulka.';
   MSG03 = 'Property';
   MSG04 = 'Value';
+  MSG05 = 'The memory size can be 16 B-16 MB';
+  MSG06 = 'Data conversion error at save.';
 
 { TForm15 }
 
@@ -107,8 +107,66 @@ end;
 
 // APPLY AND CLOSE FORM
 procedure TForm15.Button1Click(Sender: TObject);
+
+  // LOAD FROM I/O PORT MODULE
+  procedure SaveIOProperties(APortInstance: TIOPort);
+  var
+    lm: TLineMode;
+  begin
+    try
+      // save properties
+      with ValueListEditor1 do
+      begin
+        APortInstance.Enabled := StrToBool(Values['Enabled']);
+        APortInstance.DataInMode := lm.fromString(Values['DataInMode']);
+        APortInstance.DataInNegation := StrToBool(Values['DataInNegation']);
+        APortInstance.DataOutMode := lm.fromString(Values['DataOutMode']);
+        APortInstance.DataOutNegation := StrToBool(Values['DataOutNegation']);
+        APortInstance.SelMode := lm.fromString(Values['SelMode']);
+        APortInstance.SelNegation := StrToBool(Values['SelNegation']);
+      end;
+    except
+      ShowMessage(MSG01 + MSG06);
+    end;
+  end;
+
+  // LOAD FROM MEMORY MODULE
+  procedure SaveMProperties(AMemInstance: TMemory);
+  var
+     mm: TMemoryMode;
+  begin
+    try
+      // save properties
+      with ValueListEditor1 do
+      begin
+        AMemInstance.Enabled := StrToBool(Values['Enabled']);
+        AMemInstance.AddressRangeSize := StrToInt(Values['AddressRangeSize']);
+        AMemInstance.MemoryMode := mm.fromString(Values['MemoryMode']);
+      end;
+    except
+      ShowMessage(MSG01 + MSG06);
+    end;
+  end;
+
+  // LOAD FROM PROCESSOR MODULE
+  procedure SavePProperties(AProcInstance: TCPU);
+  begin
+    try
+      // save properties
+      with ValueListEditor1 do
+        AProcInstance.Enabled := StrToBool(Values['Enabled']);
+    except
+      ShowMessage(MSG01 + MSG06);
+    end;
+  end;
+
 begin
-  // mentés ide
+  // save properties
+  case FSelectModuleType of
+    1: SaveMProperties(FMemInstance);
+    2: SavePProperties(FProcInstance);
+    3: SaveIOProperties(FPortInstance);
+  end;
   ModalResult := mrOk;
 end;
 
@@ -356,13 +414,28 @@ end;
 // VALIDATE ENTRY
 procedure TForm15.ValueListEditor1ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
 begin
-
+  begin
+    if (aCol = 1) and (FSelectModuleType = 1)then
+    begin
+      // memory address range
+      if ValueListEditor1.Keys[aRow] = 'AddressRangeSize' then
+      begin
+        NewValue := Trim(NewValue);
+        if NewValue = '' then NewValue := '0';
+        if (StrToInt(NewValue) < 16) or (StrToInt(NewValue) > (1 shl 24)) then
+        begin
+          ShowMessage(MSG01 + MSG05);
+          NewValue := OldValue;
+        end;
+      end;
+    end;
+  end;
 end;
 
 // CLOSE FORM
 procedure TForm15.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-    // store changeable setting
+  // store changeable setting
   with uconfig.AppConfig.ModulePropertiesConfig do
   begin
     top := Form15.Top;

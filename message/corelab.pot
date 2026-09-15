@@ -544,11 +544,41 @@ msgid "Cannot detach module named '%s' from bus."
 msgstr ""
 
 #: frmmoduleexplorer.msg01
+msgctxt "frmmoduleexplorer.msg01"
 msgid "Property"
 msgstr ""
 
 #: frmmoduleexplorer.msg02
+msgctxt "frmmoduleexplorer.msg02"
 msgid "Value"
+msgstr ""
+
+#: frmproperties.msg01
+msgctxt "frmproperties.msg01"
+msgid "ERROR: "
+msgstr ""
+
+#: frmproperties.msg02
+msgctxt "frmproperties.msg02"
+msgid "Cannot open memory modulka."
+msgstr ""
+
+#: frmproperties.msg03
+msgctxt "frmproperties.msg03"
+msgid "Property"
+msgstr ""
+
+#: frmproperties.msg04
+msgctxt "frmproperties.msg04"
+msgid "Value"
+msgstr ""
+
+#: frmproperties.msg05
+msgid "The memory size can be 16 B-16 MB"
+msgstr ""
+
+#: frmproperties.msg06
+msgid "Data conversion error at save."
 msgstr ""
 
 #: frmrunlogger.msg01
@@ -1354,11 +1384,17 @@ msgstr ""
 
 #: tform15.button1.caption
 msgctxt "tform15.button1.caption"
-msgid "&Close"
+msgid "&Apply"
+msgstr ""
+
+#: tform15.button2.caption
+msgctxt "tform15.button2.caption"
+msgid "&Cancel"
 msgstr ""
 
 #: tform15.caption
-msgid "Form14"
+msgctxt "tform15.caption"
+msgid "Properties"
 msgstr ""
 
 #: tform16.button1.caption
