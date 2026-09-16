@@ -365,7 +365,6 @@ object Form10: TForm10
     0000
   }
   OnClose = FormClose
-  OnCreate = FormCreate
   OnShow = FormShow
   Position = poDefault
   LCLVersion = '2.2.6.0'
@@ -396,7 +395,7 @@ object Form10: TForm10
     BorderSpacing.Bottom = 8
     Caption = '&Apply'
     OnClick = Button1Click
-    TabOrder = 1
+    TabOrder = 2
   end
   object ScrollBox1: TScrollBox
     AnchorSideLeft.Control = Owner
@@ -429,7 +428,7 @@ object Form10: TForm10
     BorderSpacing.Bottom = 8
     Caption = '&Add new'
     OnClick = Button2Click
-    TabOrder = 2
+    TabOrder = 1
   end
   object Button3: TButton
     AnchorSideRight.Control = Button1

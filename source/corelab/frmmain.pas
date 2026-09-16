@@ -23,7 +23,7 @@ uses
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
   frmproperties, frmmoduleexplorer, frmbpmanager, commandengine, core_cpu,
   core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject,
-  uintelhex, uactcontext, uproperties;
+  uintelhex, uactcontext, uproperties, ubreakpoint;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -405,6 +405,8 @@ type
     FProcInstanceDict: TProcInstanceDict;
     FMemInstanceDict:  TMemInstanceDict;
     FPortInstanceDict: TPortInstanceDict;
+    // breakpoint list
+    FBreakpointList:   TBreakpointList;
     // system console
     SysConsole1:       TSysConsole;
     // action's operation metods
@@ -1210,6 +1212,7 @@ end;
 // VIEW/SHOW BREAKPOINT MANAGER OPERATION
 procedure TForm1.VShowBreakpointManagerOperation(AActionContext: TActionContext);
 begin
+  Form10.BreakpointList := FBreakpointList;
   Form10.ShowModal;
 end;
 
@@ -4611,6 +4614,8 @@ begin
     FPortInstanceDict := TPortInstanceDict.Create;
     // create script buffer
     FScriptBuffer := TStringList.Create;
+    // create breakpoint list
+    FBreakpointList := TBreakpointList.Create(True);
     // change operation mode
     ChangeOpMode(omInteractive, True, True);
   end else Application.Terminate;
@@ -4763,6 +4768,12 @@ procedure TForm1.FormDestroy(Sender: TObject);
 begin
   // destroy modules and theirs dictionaries
   DestroyAllModules(True);
+  // clear and destroy breakpoint list
+  if Assigned(FBreakpointList) then
+  begin
+    FBreakpointList.Clear;
+    FBreakpointList.Free;
+  end;
   // clear and destroy script buffer
   if Assigned(FScriptBuffer) then
   begin

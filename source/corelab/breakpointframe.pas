@@ -15,7 +15,7 @@ unit breakpointframe;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls;
+  Classes, SysUtils, Forms, Controls, StdCtrls, ucommon;
 type
   { TFrame1 }
   TFrame1 = class(TFrame)
@@ -23,6 +23,7 @@ type
     CheckBox1: TCheckBox;
     Edit1:     TEdit;
     procedure Button3Click(Sender: TObject);
+    procedure Edit1EditingDone(Sender: TObject);
   private
   public
   end;
@@ -37,6 +38,16 @@ implementation
 procedure TFrame1.Button3Click(Sender: TObject);
 begin
   Free;
+end;
+
+// VALIDATE ADDRESS VALUE
+procedure TFrame1.Edit1EditingDone(Sender: TObject);
+var
+  NewText: string;
+begin
+  NewText := '';
+  if FormatHexValue(Edit1.Text, 6, NewText)
+  then Edit1.Text := NewText else Edit1.Text := '00 00 00';
 end;
 
 end.

@@ -21,6 +21,7 @@ object Frame1: TFrame1
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 4
     BorderSpacing.Around = 4
+    OnEditingDone = Edit1EditingDone
     TabOrder = 0
   end
   object CheckBox1: TCheckBox
