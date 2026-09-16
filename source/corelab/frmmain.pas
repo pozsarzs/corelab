@@ -21,9 +21,9 @@ uses
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
-  frmproperties, frmmoduleexplorer, commandengine, core_cpu, core_memory,
-  core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex,
-  uactcontext, uproperties;
+  frmproperties, frmmoduleexplorer, frmbpmanager, commandengine, core_cpu,
+  core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject,
+  uintelhex, uactcontext, uproperties;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -715,7 +715,6 @@ begin
   if Assigned(Form4) then Form4.ClearContent;                       // RunLogger
   if Assigned(Form6) then Form6.CopyBufferToEditor;              // ScriptEditor
   if Assigned(Form8) then Form8.ClearContent;                       // IntLogger
-  // if Assigned(Form11) then Form11.ClearContent;                  // RegViewer
   if Assigned(Form12) then Form12.ClearContent;                 // ScriptConsole
   // close internal modules
   for i := Screen.FormCount - 1 downto 0 do
@@ -1211,7 +1210,7 @@ end;
 // VIEW/SHOW BREAKPOINT MANAGER OPERATION
 procedure TForm1.VShowBreakpointManagerOperation(AActionContext: TActionContext);
 begin
-  {...}
+  Form10.ShowModal;
 end;
 
 // VIEW/SHOW RUNLOGGER ACTION --------------------------------------------------
@@ -4681,13 +4680,76 @@ begin
       splitter := Form9.TreeView1.Height;
       column0_width := Form9.ValueListEditor1.ColWidths[0];
     end;
-    with uconfig.AppConfig.RegViewerConfig do
+    // BreakPoint Manager
+    with BPManagerConfig do
+    begin
+      top := Form10.Top;
+      left := Form10.Left;
+      height := Form10.Height;
+      width := Form10.Width;
+    end;
+    // RunLogger
+    with RunLoggerConfig do
+    begin
+      top := Form4.Top;
+      left := Form4.Left;
+      height := Form4.Height;
+      width := Form4.Width;
+      with Form4.DrawGrid1.Columns do
+      begin
+        column0_width := Items[0].Width;
+        column1_width := Items[1].Width;
+        column2_width := Items[2].Width;
+        column3_width := Items[3].Width;
+      end;
+    end;
+    // IntLogger
+    with IntLoggerConfig do
+    begin
+      top := Form8.Top;
+      left := Form8.Left;
+      height := Form8.Height;
+      width := Form8.Width;
+      with Form8.DrawGrid1.Columns do
+      begin
+        column0_width := Items[0].Width;
+        column1_width := Items[1].Width;
+        column2_width := Items[2].Width;
+        column3_width := Items[3].Width;
+      end;
+    end;
+    // RegViewer
+    with RegViewerConfig do
     begin
       top := Form11.Top;
       left := Form11.Left;
       height := Form11.Height;
       width := Form11.Width;
       column0_width := Form11.ValueListEditor1.ColWidths[0];
+    end;
+    // HexViewer
+    with HexViewerConfig do
+    begin
+      top := Form3.Top;
+      left := Form3.Left;
+      height := Form3.Height;
+      width := Form3.Width;
+    end;
+    // ScriptEditor
+    with ScriptEditorConfig do
+    begin
+      top := Form6.Top;
+      left := Form6.Left;
+      height := Form6.Height;
+      width := Form6.Width;
+    end;
+    // ScriptConsole
+    with ScriptConsoleConfig do
+    begin
+      top := Form12.Top;
+      left := Form12.Left;
+      height := Form12.Height;
+      width := Form12.Width;
     end;
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE)

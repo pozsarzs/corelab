@@ -19,7 +19,8 @@ uses
   frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
   frmmoduleexplorer, commandengine, uconfig, ucommon, uintelhex, uplugin,
-  uproject, usysconsole, uproperties, frmbpmanager, frmregviewer, frmproperties;
+  uproject, usysconsole, uproperties, frmbpmanager, frmregviewer, frmproperties,
+  breakpointframe;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';

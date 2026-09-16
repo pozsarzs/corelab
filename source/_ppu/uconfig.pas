@@ -131,10 +131,10 @@ begin
   try
     // Breakpoint Manager
     section := 'BreakPointManager';
-    LoadSave(section, 'height', AAppConfig.BPManagerConfig.height, 300);
+    LoadSave(section, 'height', AAppConfig.BPManagerConfig.height, 208);
     LoadSave(section, 'left', AAppConfig.BPManagerConfig.left, 8);
     LoadSave(section, 'top', AAppConfig.BPManagerConfig.top, 8);
-    LoadSave(section, 'width', AAppConfig.BPManagerConfig.width, 480);
+    LoadSave(section, 'width', AAppConfig.BPManagerConfig.width, 290);
     // HexViewer
     section := 'HexViewer';
     LoadSave(section, 'height', AAppConfig.HexViewerConfig.height, 300);

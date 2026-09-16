@@ -932,14 +932,6 @@ msgstr ""
 msgid "Save memory content"
 msgstr ""
 
-#: tform1.oclearallbreakpoints.caption
-msgid "&Clear all breakpoints"
-msgstr ""
-
-#: tform1.oclearallbreakpoints.hint
-msgid "Clear all breakpoints"
-msgstr ""
-
 #: tform1.oirq.caption
 msgid "IR&Q..."
 msgstr ""
@@ -1002,14 +994,6 @@ msgstr ""
 
 #: tform1.ostop.hint
 msgid "Stop"
-msgstr ""
-
-#: tform1.otogglebreakpoint.caption
-msgid "To&ggle breakpoint..."
-msgstr ""
-
-#: tform1.otogglebreakpoint.hint
-msgid "Toggle breakpoint"
 msgstr ""
 
 #: tform1.pattachtobus.caption
@@ -1194,10 +1178,6 @@ msgstr ""
 msgid "ToolBar7"
 msgstr ""
 
-#: tform1.toolbutton11.caption
-msgid "ToolButton11"
-msgstr ""
-
 #: tform1.toolbutton16.caption
 msgid "ToolButton16"
 msgstr ""
@@ -1358,13 +1338,35 @@ msgstr ""
 msgid "Show ScriptEditor"
 msgstr ""
 
+#: tform10.button1.caption
+msgctxt "tform10.button1.caption"
+msgid "&Apply"
+msgstr ""
+
+#: tform10.button2.caption
+msgid "&Add new"
+msgstr ""
+
+#: tform10.button3.caption
+msgctxt "tform10.button3.caption"
+msgid "&Cancel"
+msgstr ""
+
 #: tform10.caption
-msgid "Form10"
+msgid "Breakpoint Manager"
 msgstr ""
 
 #: tform11.button1.caption
 msgctxt "tform11.button1.caption"
 msgid "&Close"
+msgstr ""
+
+#: tform11.button2.caption
+msgid "&Put"
+msgstr ""
+
+#: tform11.button3.caption
+msgid "&Get"
 msgstr ""
 
 #: tform11.caption
@@ -1405,6 +1407,7 @@ msgid "New caption:"
 msgstr ""
 
 #: tform15.button1.caption
+msgctxt "tform15.button1.caption"
 msgid "&Apply"
 msgstr ""
 
@@ -1893,5 +1896,13 @@ msgstr ""
 
 #: tform9.menuitem7.caption
 msgid "MenuItem7"
+msgstr ""
+
+#: tframe1.button3.caption
+msgid "Remove"
+msgstr ""
+
+#: tframe1.checkbox1.caption
+msgid "Enable"
 msgstr ""
 
