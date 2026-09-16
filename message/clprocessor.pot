@@ -1,777 +1,260 @@
-msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
-
-#: clprocessor.msg01
+#: clprocessor:msg01
 msgid "CoreLAB Processor plugin tester"
 msgstr ""
 
-#: clprocessor.msg02
+#: clprocessor:msg02
 msgid "Build date:  "
 msgstr ""
 
-#: clprocessor.msg03
+#: clprocessor:msg03
 msgid "Builder:     "
 msgstr ""
 
-#: clprocessor.msg04
+#: clprocessor:msg04
 msgid "FPC version: "
 msgstr ""
 
-#: clprocessor.msg05
+#: clprocessor:msg05
 msgid "Target OS:   "
 msgstr ""
 
-#: clprocessor.msg06
+#: clprocessor:msg06
 msgid "Target CPU:  "
 msgstr ""
 
-#: clprocessor.msg07
+#: clprocessor:msg07
 msgid "There are one or more bad arguments in command line."
 msgstr ""
 
-#: clprocessor.msg08
+#: clprocessor:msg08
 msgid "Usage"
 msgstr ""
 
-#: clprocessor.msg09
+#: clprocessor:msg09
 msgid "[argument]"
 msgstr ""
 
-#: clprocessor.msg10
+#: clprocessor:msg10
 msgid "[directory]"
 msgstr ""
 
-#: clprocessor.msg11
+#: clprocessor:msg11
 msgid "arguments:"
 msgstr ""
 
-#: frmabout.msg01
+#: frmabout:msg01
 msgid "Cannot open URL."
 msgstr ""
 
-#: frmexdepmemory.msg01
-msgctxt "frmexdepmemory.msg01"
+#: frmexdepmemory:msg01 frmloadsavememory:msg01 frmmain:msg01
+#: frmrunlogger:msg01
 msgid "ERROR: "
 msgstr ""
 
-#: frmexdepmemory.msg02
-msgctxt "frmexdepmemory.msg02"
+#: frmexdepmemory:msg02 frmloadsavememory:msg02
 msgid "Only hexadecimal values can be entered for address value!"
 msgstr ""
 
-#: frmexdepmemory.msg03
+#: frmexdepmemory:msg03
 msgid "Only hexadecimal values can be entered for data value!"
 msgstr ""
 
-#: frmexdepmemory.msg04
-#, object-pascal-format
-msgctxt "frmexdepmemory.msg04"
+#: frmexdepmemory:msg04 frmloadsavememory:msg03
 msgid "Memory address too high! (> %s)"
 msgstr ""
 
-#: frmhexviewer.msg01
-msgctxt "frmhexviewer.msg01"
+#: frmhexviewer:msg01 frmrunlogger:msg06
 msgid "Address"
 msgstr ""
 
-#: frmloadsavememory.msg01
-msgctxt "frmloadsavememory.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmloadsavememory.msg02
-msgctxt "frmloadsavememory.msg02"
-msgid "Only hexadecimal values can be entered for address value!"
-msgstr ""
-
-#: frmloadsavememory.msg03
-#, object-pascal-format
-msgctxt "frmloadsavememory.msg03"
-msgid "Memory address too high! (> %s)"
-msgstr ""
-
-#: frmloadsavememory.msg04
+#: frmloadsavememory:msg04
 msgid "&Save"
 msgstr ""
 
-#: frmloadsavememory.msg05
+#: frmloadsavememory:msg05
 msgid "&Load"
 msgstr ""
 
-#: frmloadsavememory.msg06
+#: frmloadsavememory:msg06
 msgid "Save parameters"
 msgstr ""
 
-#: frmloadsavememory.msg07
+#: frmloadsavememory:msg07
 msgid "Load parameters"
 msgstr ""
 
-#: frmmain.msg01
-msgctxt "frmmain.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmmain.msg02
+#: frmmain:msg02
 msgid "Data type conversion error."
 msgstr ""
 
-#: frmmain.msg03
-#, object-pascal-format
+#: frmmain:msg03
 msgid "Directory '%s' does not exist."
 msgstr ""
 
-#: frmmain.msg04
-#, object-pascal-format
+#: frmmain:msg04
 msgid "Cannot load '%s' plugin%s(%s)."
 msgstr ""
 
-#: frmmain.msg05
+#: frmmain:msg05
 msgid "It is not a CoreLAB processor plugin."
 msgstr ""
 
-#: frmmain.msg06
+#: frmmain:msg06
 msgid "Filename"
 msgstr ""
 
-#: frmmain.msg07
+#: frmmain:msg07
 msgid "Size"
 msgstr ""
 
-#: frmmain.msg08
+#: frmmain:msg08
 msgid "Type"
 msgstr ""
 
-#: frmmain.msg09
+#: frmmain:msg09
 msgid "Property"
 msgstr ""
 
-#: frmmain.msg10
+#: frmmain:msg10
 msgid "Value"
 msgstr ""
 
-#: frmmain.msg11
+#: frmmain:msg11
 msgid "Reg."
 msgstr ""
 
-#: frmmain.msg12
-#, object-pascal-format
+#: frmmain:msg12
 msgid "INT required (vector: %sh)"
 msgstr ""
 
-#: frmmain.msg13
-#, object-pascal-format
+#: frmmain:msg13
 msgid " %sh read from address %sh."
 msgstr ""
 
-#: frmmain.msg14
-#, object-pascal-format
+#: frmmain:msg14
 msgid " %sh write to address %sh."
 msgstr ""
 
-#: frmmain.msg15
+#: frmmain:msg15
 msgid "Only hexadecimal values can be entered!"
 msgstr ""
 
-#: frmmain.msg16
+#: frmmain:msg16
 msgid "Out of range!"
 msgstr ""
 
-#: frmmain.msg17
+#: frmmain:msg17
 msgid "Value (Hex)"
 msgstr ""
 
-#: frmmain.msg18
+#: frmmain:msg18
 msgid "Missing help file."
 msgstr ""
 
-#: frmmain.msg19
+#: frmmain:msg19
 msgid "Missing help viewer."
 msgstr ""
 
-#: frmmain.msg20
+#: frmmain:msg20
 msgid "Cannot read state data from plugin."
 msgstr ""
 
-#: frmmain.msg21
+#: frmmain:msg21
 msgid "Save plugin state to file"
 msgstr ""
 
-#: frmmain.msg22
-#, object-pascal-format
+#: frmmain:msg22
 msgid "Cannot save '%s' plugin data."
 msgstr ""
 
-#: frmmain.msg23
+#: frmmain:msg23
 msgid "Load plugin state from file"
 msgstr ""
 
-#: frmmain.msg24
-#, object-pascal-format
+#: frmmain:msg24
 msgid "Cannot load '%s' plugin data."
 msgstr ""
 
-#: frmmain.msg25
+#: frmmain:msg25
 msgid "Cannot write state data to plugin."
 msgstr ""
 
-#: frmmain.msg26
+#: frmmain:msg26
 msgid "CoreLAB plugin status file|*.clpst|All file|*.*"
 msgstr ""
 
-#: frmmain.msg27
+#: frmmain:msg27
 msgid "Read-only!"
 msgstr ""
 
-#: frmmain.msg28
+#: frmmain:msg28
 msgid "Save memory content to file"
 msgstr ""
 
-#: frmmain.msg29
-#, object-pascal-format
+#: frmmain:msg29
 msgid "Cannot save memory content to '%s' binary file."
 msgstr ""
 
-#: frmmain.msg30
+#: frmmain:msg30
 msgid "Load memory content from file"
 msgstr ""
 
-#: frmmain.msg31
-#, object-pascal-format
+#: frmmain:msg31
 msgid "Cannot load memory content from '%s' binary file."
 msgstr ""
 
-#: frmmain.msg32
+#: frmmain:msg32
 msgid "Binary file|*.bin|Intel hexa file|*.hex|All file|*.*"
 msgstr ""
 
-#: frmmain.msg33
-#, object-pascal-format
+#: frmmain:msg33
 msgid "ASCII console (address: %sh)"
 msgstr ""
 
-#: frmmain.msg34
-#, object-pascal-format
+#: frmmain:msg34
 msgid "I/O port (address: %sh)"
 msgstr ""
 
-#: frmmain.msg35
-#, object-pascal-format
-msgctxt "frmmain.msg35"
+#: frmmain:msg35
 msgid "Cannot load memory content from '%s' Intel hexa file."
 msgstr ""
 
-#: frmmain.msg36
-#, object-pascal-format
-msgctxt "frmmain.msg36"
+#: frmmain:msg36
 msgid "Cannot save memory content to '%s' Intel hexa file."
 msgstr ""
 
-#: frmmain.msg37
+#: frmmain:msg37
 msgid "Data converting error."
 msgstr ""
 
-#: frmmain.msg38
+#: frmmain:msg38
 msgid "Checksum error."
 msgstr ""
 
-#: frmmain.msg39
+#: frmmain:msg39
 msgid "Unexpected error."
 msgstr ""
 
-#: frmrunlogger.msg01
-msgctxt "frmrunlogger.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmrunlogger.msg02
+#: frmrunlogger:msg02
 msgid "Save log to file"
 msgstr ""
 
-#: frmrunlogger.msg03
-#, object-pascal-format
+#: frmrunlogger:msg03
 msgid "Cannot save '%s' log file."
 msgstr ""
 
-#: frmrunlogger.msg04
+#: frmrunlogger:msg04
 msgid "Log file|*.log|All file|*.*"
 msgstr ""
 
-#: frmrunlogger.msg05
+#: frmrunlogger:msg05
 msgid "Counter"
 msgstr ""
 
-#: frmrunlogger.msg06
-msgctxt "frmrunlogger.msg06"
-msgid "Address"
-msgstr ""
-
-#: frmrunlogger.msg07
-msgctxt "frmrunlogger.msg07"
+#: frmrunlogger:msg07
 msgid "Opcode"
 msgstr ""
 
-#: frmrunlogger.msg08
-msgctxt "frmrunlogger.msg08"
+#: frmrunlogger:msg08
 msgid "Mnemonic"
 msgstr ""
-
-#: tform1.about.caption
-msgid "&About"
-msgstr ""
-
-#: tform1.asciiconsole.caption
-msgid "ASCII &console..."
-msgstr ""
-
-#: tform1.caption
-msgid "Form1"
-msgstr ""
-
-#: tform1.clearcodememory.caption
-msgid "Clear (&code) memory"
-msgstr ""
-
-#: tform1.cleardatamemory.caption
-msgid "Clear &data memory"
-msgstr ""
-
-#: tform1.directoryedit1.buttonhint
-msgctxt "tform1.directoryedit1.buttonhint"
-msgid "Select plugin directory"
-msgstr ""
-
-#: tform1.edit1.hint
-msgid "Interrupt vector for ASCII console"
-msgstr ""
-
-#: tform1.edit1.text
-msgctxt "tform1.edit1.text"
-msgid "00"
-msgstr ""
-
-#: tform1.examinedeposit.caption
-msgid "&Examine/Deposit..."
-msgstr ""
-
-#: tform1.examinedeposit.hint
-msgid "Memory content handling"
-msgstr ""
-
-#: tform1.help.caption
-msgctxt "tform1.help.caption"
-msgid "&Help"
-msgstr ""
-
-#: tform1.irq.caption
-msgid "IR&Q"
-msgstr ""
-
-#: tform1.irq.hint
-msgid "Request IRQ"
-msgstr ""
-
-#: tform1.label1.caption
-msgid "I/O IRQ vector (Hex):"
-msgstr ""
-
-#: tform1.label2.caption
-msgid "Delay (ms):"
-msgstr ""
-
-#: tform1.loadchangeplugin.caption
-msgid "Load/change p&lugin"
-msgstr ""
-
-#: tform1.loadchangeplugin.hint
-msgid "Load/change plugin"
-msgstr ""
-
-#: tform1.loadmemorycontent.caption
-msgid "&Load memory content..."
-msgstr ""
-
-#: tform1.loadregistervaluesfromcpu.caption
-msgid "Loa&d register values from CPU"
-msgstr ""
-
-#: tform1.loadregistervaluesfromcpu.hint
-msgid "Load register values from CPU"
-msgstr ""
-
-#: tform1.loadstatus.caption
-msgid "Load status..."
-msgstr ""
-
-#: tform1.menuitem1.caption
-msgid "&File"
-msgstr ""
-
-#: tform1.menuitem11.caption
-msgid "Us&ual places"
-msgstr ""
-
-#: tform1.menuitem14.caption
-msgid "./"
-msgstr ""
-
-#: tform1.menuitem15.caption
-msgid "/usr/lib/corelab/"
-msgstr ""
-
-#: tform1.menuitem16.caption
-msgid "./plugins/"
-msgstr ""
-
-#: tform1.menuitem17.caption
-msgid "/usr/local/lib/corelab/"
-msgstr ""
-
-#: tform1.menuitem18.caption
-msgid "~/.local/lib/corelab/"
-msgstr ""
-
-#: tform1.menuitem27.caption
-msgid "&Memory"
-msgstr ""
-
-#: tform1.menuitem31.caption
-msgid "&Clear memory"
-msgstr ""
-
-#: tform1.menuitem38.caption
-msgid "Send i&nterrupt"
-msgstr ""
-
-#: tform1.menuitem4.caption
-msgid "&Processor"
-msgstr ""
-
-#: tform1.menuitem5.caption
-msgctxt "tform1.menuitem5.caption"
-msgid "&Help"
-msgstr ""
-
-#: tform1.menuitem7.caption
-msgid "I/&O port"
-msgstr ""
-
-#: tform1.nmi.caption
-msgid "NMI"
-msgstr ""
-
-#: tform1.nmi.hint
-msgid "Request NMI"
-msgstr ""
-
-#: tform1.panel1.caption
-msgid "Panel1"
-msgstr ""
-
-#: tform1.quit.caption
-msgid "E&xit"
-msgstr ""
-
-#: tform1.quit.hint
-msgid "Exit from application"
-msgstr ""
-
-#: tform1.refreshpluginlist.caption
-msgid "Re&fresh plugin list"
-msgstr ""
-
-#: tform1.refreshpluginlist.hint
-msgid "Refresh plugin list"
-msgstr ""
-
-#: tform1.reset.caption
-msgid "Reset"
-msgstr ""
-
-#: tform1.reset.hint
-msgid "Reset processor"
-msgstr ""
-
-#: tform1.resetports.caption
-msgid "&Reset ports"
-msgstr ""
-
-#: tform1.restartapplication.caption
-msgid "Restart &application"
-msgstr ""
-
-#: tform1.restartapplication.hint
-msgid "Restart application"
-msgstr ""
-
-#: tform1.run.caption
-msgid "Run"
-msgstr ""
-
-#: tform1.run.hint
-msgid "Run program"
-msgstr ""
-
-#: tform1.savememorycontent.caption
-msgid "&Save memory content..."
-msgstr ""
-
-#: tform1.saveregistervaluestocpu.caption
-msgid "Sa&ve register values to CPU"
-msgstr ""
-
-#: tform1.saveregistervaluestocpu.hint
-msgid "Save register values to CPU"
-msgstr ""
-
-#: tform1.savestatus.caption
-msgid "Save status..."
-msgstr ""
-
-#: tform1.selectplugindirectory.caption
-msgid "Select plugin &directory..."
-msgstr ""
-
-#: tform1.selectplugindirectory.hint
-msgctxt "tform1.selectplugindirectory.hint"
-msgid "Select plugin directory"
-msgstr ""
-
-#: tform1.showhexviewer.caption
-msgid "&HexViewer..."
-msgstr ""
-
-#: tform1.showhexviewer.hint
-msgid "Show hexadecimal memory viewer"
-msgstr ""
-
-#: tform1.showrunlogger.caption
-msgid "RunLogger..."
-msgstr ""
-
-#: tform1.showrunlogger.hint
-msgid "Show run logger"
-msgstr ""
-
-#: tform1.standardport.caption
-msgid "&Standard port..."
-msgstr ""
-
-#: tform1.step.caption
-msgid "Step"
-msgstr ""
-
-#: tform1.step.hint
-msgid "Run program step by step"
-msgstr ""
-
-#: tform1.stop.caption
-msgid "Stop"
-msgstr ""
-
-#: tform1.stop.hint
-msgid "Stop program"
-msgstr ""
-
-#: tform1.toolbar1.caption
-msgid "ToolBar1"
-msgstr ""
-
-#: tform1.toolbutton3.caption
-msgid "ToolButton3"
-msgstr ""
-
-#: tform1.toolbutton5.caption
-msgid "ToolButton5"
-msgstr ""
-
-#: tform1.toolbutton6.caption
-msgid "ToolButton6"
-msgstr ""
-
-#: tform1.trackbar1.hint
-msgid "Delay between steps"
-msgstr ""
-
-#: tform2.button1.caption
-msgctxt "tform2.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform2.caption
-msgid "About"
-msgstr ""
-
-#: tform2.label1.caption
-msgid "Label1"
-msgstr ""
-
-#: tform2.label2.caption
-msgid "Label2"
-msgstr ""
-
-#: tform2.label3.caption
-msgid "Label3"
-msgstr ""
-
-#: tform2.label4.caption
-msgid "Label4"
-msgstr ""
-
-#: tform2.label5.caption
-msgid "Label5"
-msgstr ""
-
-#: tform2.label6.caption
-msgid "Homepage:"
-msgstr ""
-
-#: tform2.label7.caption
-msgid "E-mail:"
-msgstr ""
-
-#: tform2.label8.caption
-msgid "Label8"
-msgstr ""
-
-#: tform3.button1.caption
-msgctxt "tform3.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform3.caption
-msgid "HexViewer"
-msgstr ""
-
-#: tform3.drawgrid1.columns[0].title.caption
-msgid "Title"
-msgstr ""
-
-#: tform3.editbutton1.hint
-msgid "Search in dump"
-msgstr ""
-
-#: tform3.radiogroup1.hint
-msgctxt "tform3.radiogroup1.hint"
-msgid "Select memory type of the Harvard architecture"
-msgstr ""
-
-#: tform4.button1.caption
-msgctxt "tform4.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform4.button2.caption
-msgid "Clea&r"
-msgstr ""
-
-#: tform4.button3.caption
-msgid "&Save..."
-msgstr ""
-
-#: tform4.caption
-msgid "RunLogger"
-msgstr ""
-
-#: tform4.drawgrid1.columns[0].title.caption
-msgid "Count"
-msgstr ""
-
-#: tform4.drawgrid1.columns[1].title.caption
-msgctxt "tform4.drawgrid1.columns[1].title.caption"
-msgid "Address"
-msgstr ""
-
-#: tform4.drawgrid1.columns[2].title.caption
-msgctxt "tform4.drawgrid1.columns[2].title.caption"
-msgid "Opcode"
-msgstr ""
-
-#: tform4.drawgrid1.columns[3].title.caption
-msgctxt "tform4.drawgrid1.columns[3].title.caption"
-msgid "Mnemonic"
-msgstr ""
-
-#: tform4.editbutton1.hint
-msgid "Search in log records"
-msgstr ""
-
-#: tform5.button3.caption
-msgid "&Examine"
-msgstr ""
-
-#: tform5.button4.caption
-msgid "&Deposit"
-msgstr ""
-
-#: tform5.button5.caption
-msgctxt "tform5.button5.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform5.caption
-msgid "Examine/deposit"
-msgstr ""
-
-#: tform5.editbutton1.text
-msgctxt "tform5.editbutton1.text"
-msgid "00 00 00"
-msgstr ""
-
-#: tform5.editbutton2.text
-msgctxt "tform5.editbutton2.text"
-msgid "00"
-msgstr ""
-
-#: tform5.label1.caption
-msgctxt "tform5.label1.caption"
-msgid "Address"
-msgstr ""
-
-#: tform5.label2.caption
-msgid "Data"
-msgstr ""
-
-#: tform5.radiogroup1.hint
-msgctxt "tform5.radiogroup1.hint"
-msgid "Select memory type of the Harvard architecture"
-msgstr ""
-
-#: tform7.button1.caption
-msgid "&Cancel"
-msgstr ""
-
-#: tform7.button5.caption
-msgid "Button5"
-msgstr ""
-
-#: tform7.caption
-msgid "Form7"
-msgstr ""
-
-#: tform7.editbutton1.text
-msgctxt "tform7.editbutton1.text"
-msgid "00 00 00"
-msgstr ""
-
-#: tform7.editbutton2.text
-msgctxt "tform7.editbutton2.text"
-msgid "00 00 00"
-msgstr ""
-
-#: tform7.label1.caption
-msgid "Start address"
-msgstr ""
-
-#: tform7.label2.caption
-msgid "End address"
-msgstr ""
-
-#: tform7.label3.caption
-msgid "Bytes"
-msgstr ""
-
-#: tform7.radiogroup1.hint
-msgctxt "tform7.radiogroup1.hint"
-msgid "Select memory type of the Harvard architecture"
-msgstr ""
-

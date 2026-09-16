@@ -44,6 +44,13 @@ type
   TProcInstanceDict = specialize TDictionary<string, TProcInfo>;
   TMemInstanceDict = specialize TDictionary<string, TMemInfo>;
   TPortInstanceDict = specialize TDictionary<string, TPortInfo>;
+  { SysBus interface }
+{  TSysBus = class(TInterfacedObject, ISysBus)
+    function ReadMemory(AAddress: DWord): Byte;
+    procedure WriteMemory(AAddress: DWord; AValue: Byte);
+    function ReadPort(APort: Word): Byte;
+    procedure WritePort(APort: Word; AValue: Byte);
+  end;}
   // operation mode type
   TOpMode = (omInteractive, omScript, omInterpreter);
   { TForm1 }
@@ -368,10 +375,9 @@ type
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
   private
-    // system console's command interpreter
-    CommandEngine1:    TCommandEngine;
-    // script buffer
-    FScriptBuffer:     TStringList;
+//    FSysBus:        ISysBus;                             // system bus interface
+    CommandEngine1: TCommandEngine;      // system console's command interpreter
+    FScriptBuffer:  TStringList;                                // script buffer
     // bridge between SysConsol and CommandEngine
     procedure SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
     // check name duplication

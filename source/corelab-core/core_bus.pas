@@ -15,8 +15,7 @@ unit core_bus;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  CMem, Classes, SysUtils, sysbus, svcapi, ctlapi, core_cpu, core_ioport,
-  core_memory;
+  CMem, Classes, SysUtils, sysbus, core_cpu, core_ioport, core_memory;
 type
   // Device description record
   TBusDevice = record
@@ -28,7 +27,7 @@ type
     IODevice: TIOPort;
   end;
   // Bus and API class
-  TBus = class(TInterfacedObject, ISysBus, ISvcAPI, ICtlAPI)
+  TBus = class(TInterfacedObject, ISysBus)
   private
     FDevices: array of TBusDevice;                       // Attached device list
     FNextID: Integer;              // Internal counter for distribute InstanceID
@@ -47,29 +46,6 @@ type
     procedure WriteMemory(AAddress: DWord; AValue: Byte); virtual;
     function ReadPort(APort: Word): Byte; virtual;
     procedure WritePort(APort: Word; AValue: Byte); virtual;
-    // Used via the ISvcAPI by TSupervisor class
-    procedure Reset; virtual;
-    function LoadState(AStream: TStream): Boolean; virtual;
-    function SaveState(AStream: TStream): Boolean; virtual;
-    procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord); virtual;
-    procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
-    procedure CreatePanel; virtual;
-    procedure FreePanel; virtual;
-    procedure ShowPanel; virtual;
-    procedure HidePanel; virtual;
-    procedure RenamePanel(ACaption: PChar); virtual;
-    function ResizePanel(AWidth, AHeight: Integer): Boolean; virtual;
-    function MovePanel(ALeft, ATop: Integer): Boolean; virtual;
-    // Used via the ICtlAPI by TSupervisor class
-    procedure SetRegister(const RegName: PChar; AValue: Byte); virtual;
-    function  GetRegister(const RegName: PChar): Byte; virtual;
-    procedure Run; virtual;
-    procedure Step; virtual;
-    procedure Stop; virtual;
-    function  GetCurrentInstruction: PChar; virtual;
-    procedure IRQ; virtual;
-    procedure NMI; virtual;
-    function  CheckInterrupts: Boolean; virtual;
   end;
 
 implementation
@@ -137,102 +113,6 @@ end;
 
 procedure TBus.WritePort(APort: Word; AValue: Byte);
 begin
-end;
-
-// -- ISvcAPI --
-
-procedure TBus.Reset;
-begin
-end;
-
-function TBus.LoadState(AStream: TStream): Boolean;
-begin
-  Result := false;
-end;
-
-function TBus.SaveState(AStream: TStream): Boolean;
-begin
-  Result := false;
-end;
-
-procedure TBus.LoadFromStream(AStream: TStream; AAddress, ACount: DWord);
-begin
-end;
-
-procedure TBus.SaveToStream(AStream: TStream; AAddress, ACount: DWord);
-begin
-end;
-
-procedure TBus.CreatePanel;
-begin
-end;
-
-procedure TBus.FreePanel;
-begin
-end;
-
-procedure TBus.ShowPanel;
-begin
-end;
-
-procedure TBus.HidePanel;
-begin
-end;
-
-procedure TBus.RenamePanel(ACaption: PChar);
-begin
-end;
-
-function TBus.ResizePanel(AWidth, AHeight: Integer): Boolean;
-begin
-  Result := false;
-end;
-
-function TBus.MovePanel(ALeft, ATop: Integer): Boolean;
-begin
-  Result := false;
-end;
-
-// -- ICtlAPI --
-
-procedure TBus.SetRegister(const RegName: PChar; AValue: Byte);
-begin
-end;
-
-function TBus.GetRegister(const RegName: PChar): Byte;
-begin
-  Result := 0;
-end;
-
-procedure TBus.Run;
-begin
-end;
-
-procedure TBus.Step;
-begin
-end;
-
-procedure TBus.Stop;
-begin
-end;
-
-function TBus.GetCurrentInstruction: PChar;
-begin
-  Result := nil;
-end;
-
-procedure TBus.IRQ;
-begin
-end;
-
-
-procedure TBus.NMI;
-begin
-end;
-
-function TBus.CheckInterrupts: Boolean;
-begin
-  Result := false;
 end;
 
 end.
