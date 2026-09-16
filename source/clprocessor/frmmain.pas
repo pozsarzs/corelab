@@ -21,8 +21,8 @@ uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
   Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_cpu,
-  core_ioport, frmabout, frmhexviewer, frmrunlogger, frmexdepmemory,
-  frmloadsavememory, sysbus, ioport_console, ioport_standard, ucommon, uintelhex;
+  core_bus, core_ioport, frmabout, frmhexviewer, frmrunlogger, frmexdepmemory,
+  frmloadsavememory, ioport_console, ioport_standard, ucommon, uintelhex;
 const
   MEM_SIZE = 1024;
   IOADD_CONSOLE = $A0;

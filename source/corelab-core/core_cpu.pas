@@ -16,7 +16,7 @@ unit core_cpu;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  CMem, Classes, SysUtils, TypInfo, sysbus;
+  CMem, Classes, SysUtils, TypInfo, core_bus;
 type
   TCPU = class;
   // Destroy event type

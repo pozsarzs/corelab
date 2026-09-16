@@ -22,8 +22,8 @@ uses
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
   frmproperties, frmmoduleexplorer, frmbpmanager, commandengine, core_cpu,
-  core_memory, core_ioport, usysconsole, ucommon, uconfig, uplugin, uproject,
-  uintelhex, uactcontext, uproperties, ubreakpoint;
+  core_memory, core_ioport, core_bus, usysconsole, ucommon, uconfig, uplugin,
+  uproject, uintelhex, uactcontext, uproperties, ubreakpoint;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -44,15 +44,42 @@ type
   TProcInstanceDict = specialize TDictionary<string, TProcInfo>;
   TMemInstanceDict = specialize TDictionary<string, TMemInfo>;
   TPortInstanceDict = specialize TDictionary<string, TPortInfo>;
-  { SysBus interface }
-{  TSysBus = class(TInterfacedObject, ISysBus)
+  // operation mode type
+  TOpMode = (omInteractive, omScript, omInterpreter);
+  // attached device description record types
+  TBusMem = record
+    ModuleName:  string;
+    Memory:     TMemory;
+    BaseAddress: DWord;
+    AddressRange: DWord;
+  end;
+  TBusPort = record
+    ModuleName:  string;
+    IOPort:     TIOPort;
+    BaseAddress: Word;
+    AddressRange: Word;
+  end;
+  TBusProc = record
+    ModuleName: string;
+    CPU:        TCPU;
+  end;
+  { TSysBus }
+  TSysBus = class(TInterfacedObject, ISysBus)
+    FCPUs:     array of TBusProc;
+    FMemories: array of TBusMem;
+    FIOPorts:  array of TBusPort;
+  public
+    function AttachCPU(const AModuleName: string; ACPU: TCPU): Boolean;
+    function AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Boolean;
+    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Boolean;
+    function DetachCPU(const AModuleName: string): Boolean;
+    function DetachMemory(const AModuleName: string): Boolean;
+    function DetachIOPort(const AModuleName: string): Boolean;
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
     function ReadPort(APort: Word): Byte;
     procedure WritePort(APort: Word; AValue: Byte);
-  end;}
-  // operation mode type
-  TOpMode = (omInteractive, omScript, omInterpreter);
+  end;
   { TForm1 }
   TForm1 = class(TForm)
     MenuItem55: TMenuItem;
@@ -375,7 +402,7 @@ type
     procedure VShowScriptConsoleExecute(Sender: TObject);
     procedure VShowScriptEditorExecute(Sender: TObject);
   private
-//    FSysBus:        ISysBus;                             // system bus interface
+    FSysBus:        TSysBus;                             // system bus interface
     CommandEngine1: TCommandEngine;      // system console's command interpreter
     FScriptBuffer:  TStringList;                                // script buffer
     // bridge between SysConsol and CommandEngine
@@ -592,6 +619,74 @@ resourcestring
   MSG102 = 'Property ''%s'' is read only or not exists.';                 { SM }
   MSG103 = 'Value ''%s'' is bad.';                                        { SM }
   MSG104 = 'Property ''%s'' set to value ''%s''.';                        { SC }
+
+{ TSysBus }
+
+// ---- PUBLIC METHODS ----
+
+function TSysBus.AttachCPU(const AModuleName: string; ACPU: TCPU): Boolean;
+var
+  i: Integer;
+begin
+  Result := False;
+  if (AModuleName = '') or not Assigned(ACPU) then Exit;
+  // already attached?
+  for i := 0 to High(FCPUs) do
+    if FCPUs[I].ModuleName = AModuleName then Exit;
+  // create record and store
+  SetLength(FCPUs, Length(FCPUs) + 1);
+  with FCPUs[High(FCPUs)] do
+  begin
+    ModuleName := AModuleName;
+    CPU := ACPU;
+  end;
+  Result := True;
+end;
+
+function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Boolean;
+begin
+  Result := False;
+end;
+
+function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Boolean;
+begin
+  Result := False;
+end;
+
+function TSysBus.DetachCPU(const AModuleName: string): Boolean;
+begin
+  Result := False;
+end;
+
+function TSysBus.DetachMemory(const AModuleName: string): Boolean;
+begin
+  Result := False;
+end;
+
+function TSysBus.DetachIOPort(const AModuleName: string): Boolean;
+begin
+  Result := False;
+end;
+
+function TSysBus.ReadMemory(AAddress: DWord): Byte;
+begin
+  Result := 0;
+end;
+
+procedure TSysBus.WriteMemory(AAddress: DWord; AValue: Byte);
+begin
+end;
+
+function TSysBus.ReadPort(APort: Word): Byte;
+begin
+  Result := 0;
+end;
+
+procedure TSysBus.WritePort(APort: Word; AValue: Byte);
+begin
+end;
+
+{ TForm1 }
 
 // ---- PRIVATE METHODS ----
 
@@ -2056,7 +2151,14 @@ begin
   try
     ProcInfo := FProcInstanceDict[InstanceName];
     // attach to bus
-    {...}
+    if not FSysBus.AttachCPU(InstanceName, ProcInfo.Processor)
+    then
+    begin
+      ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+      Exit;
+    end;
+    ProcInfo.AttachedToBus := True;
+    FProcInstanceDict[InstanceName] := ProcInfo;
   except
     // error
     ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
@@ -4520,6 +4622,8 @@ var
   Error: Boolean;
   i:     Integer;
 begin
+  // system bus
+  FSysBus := TSysBus.Create;
   // SysConsole and its command interpreter
   CommandEngine1 := TCommandEngine.Create;
   SysConsole1 := TSysConsole.Create(Self);
@@ -4774,6 +4878,8 @@ procedure TForm1.FormDestroy(Sender: TObject);
 begin
   // destroy modules and theirs dictionaries
   DestroyAllModules(True);
+  // destroy system bus
+  FSysBus.Free;
   // clear and destroy breakpoint list
   if Assigned(FBreakpointList) then
   begin
