@@ -37,13 +37,13 @@ type
     function ToString: string;
     function Compare(AOther: TSemanticVersion): Integer;
   end;
-  // Abstract memory class
+  { TMemory }
   TMemory = class
   protected
     FAddressRangeSize: DWord;                              // Address range size
+    FBaseAddress:      DWord;                                    // Base address
     FDescription:      PChar;                               // Short description
     FEnabled:          Boolean;         // Enable memory without detach from bus
-    FInstanceID:       Integer;                            // Module instance ID
     FMemoryMode:       TMemoryMode;                      //Memory operation mode
     FMemCells:         array of Byte;                            // Memory cells
     FModname:          PChar;                                     // Module name
@@ -53,10 +53,8 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // Used via the ISysBus by TCPU class
     function ReadMemory(AAddress: DWord): Byte; virtual;
     procedure WriteMemory(AAddress: DWord; AValue: Byte); virtual;
-    // Used via the ISvcAPI by TSupervisor class
     procedure Reset; virtual;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
@@ -64,9 +62,9 @@ type
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     // properties
     property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
+    property BaseAddress: DWord read FBaseAddress write FBaseAddress;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
-    property InstanceID: Integer read FInstanceID write FInstanceID;
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
     property ModName: PChar read FModname;
     property Version: TSemanticVersion read FVersion;
@@ -105,6 +103,8 @@ begin
       if AOther.Patch < Patch then Result := 1;
 end;
 
+{ TMemory }
+
 // ---- PROTECTED METHODS ----
 
 // SET MEMORY SIZE
@@ -129,6 +129,7 @@ begin
   inherited Create;
   // Initial state
   SetFAddressRangeSize(1024);
+  FBaseAddress := 0;
   FEnabled := false;
   FMemoryMode := mmRAM;
   FModname := PChar('RAM/ROM');
@@ -149,8 +150,6 @@ begin
   inherited Destroy;
 end;
 
-// -- ISysBUS --
-
 // READ VIRTUAL MEMORY
 function TMemory.ReadMemory(AAddress: DWord): Byte;
 begin
@@ -167,8 +166,6 @@ begin
   if FEnabled and (FMemoryMode = mmRAM) then
     if AAddress < FAddressRangeSize then FMemCells[AAddress] := AValue;
 end;
-
-// -- ISvcAPI --
 
 // FILL MEMORY WITH ZERO
 procedure TMemory.Reset;
@@ -203,18 +200,17 @@ end;
 function TMemory.SaveState(AStream: TStream): Boolean;
 begin
   Result := false;
-  if FInstanceID > -1 then
-    with AStream do
-    begin
-      // common fields
-      WriteBuffer(FEnabled, SizeOf(FEnabled));
-      // common fields related to IOPort
-      WriteBuffer(FMemoryMode, SizeOf(FMemoryMode));
-      WriteBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
-      if FAddressRangeSize > 0 then
-        WriteBuffer(FMemCells[0], FAddressRangeSize);
-      Result := true;
-    end;
+  with AStream do
+  begin
+    // common fields
+    WriteBuffer(FEnabled, SizeOf(FEnabled));
+    // common fields related to IOPort
+    WriteBuffer(FMemoryMode, SizeOf(FMemoryMode));
+    WriteBuffer(FAddressRangeSize, SizeOf(FAddressRangeSize));
+    if FAddressRangeSize > 0 then
+      WriteBuffer(FMemCells[0], FAddressRangeSize);
+    Result := true;
+  end;
 end;
 
 // LOAD MEMORY CONTENT FROM STREAM

@@ -15,9 +15,9 @@ left to right direction
 
 abstract class TMemory {
   # FAddressRangeSize : DWord
+  # FBaseAddress : DWord
   # FDescription : PChar
   # FEnabled : Boolean
-  # FInstanceID : Integer
   # FMemoryMode : TMemoryMode
   # FMemCells : array of Byte
   # FModname : PChar
@@ -38,7 +38,6 @@ abstract class TMemory {
   + AddressRangeSize : DWord
   + Description : PChar
   + Enabled : Boolean
-  + InstanceID : Integer
   + MemoryMode : TMemoryMode
   + ModName : PChar
   + Version : TSemanticVersion

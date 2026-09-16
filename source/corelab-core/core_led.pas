@@ -24,7 +24,7 @@ type
     OnColor:  TColor;
     OffColor: TColor;
   end;
-  // LED base class
+  { TLED }
   TLED = class
   protected  
     FModname:     PChar;                                          // Module name
@@ -62,6 +62,8 @@ const
   );
 
 implementation
+
+{ TLED }
 
 // ---- PUBLIC METHODS ----
 

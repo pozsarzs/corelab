@@ -49,9 +49,9 @@ persistence.
 |name               |type              |description                                  |default                                 |
 |-------------------|------------------|---------------------------------------------|----------------------------------------|
 |`FAddressRangeSize`|`DWord`           |Number of addressable memory cells.          |`1024`                                  |
+|`FBaseAddress`     |`DWord`           |Base address.                                |`0`                                     |
 |`FDescription`     |`PChar`           |Short module description.                    |`Standard memory with 8 bit data width.`|
 |`FEnabled`         |`Boolean`         |Enables memory access without bus detachment.|`False`                                 |
-|`FInstanceID`      |`Integer`         |Module instance identifier.                  |not explicitly initialized              |
 |`FMemoryMode`      |`TMemoryMode`     |RAM or ROM operation mode.                   |`mmRAM`                                 |
 |`FMemCells`        |`array of Byte`   |Internal byte-addressable memory storage.    |1024 bytes initially                    |
 |`FModname`         |`PChar`           |Module name.                                 |`RAM/ROM`                               |

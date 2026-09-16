@@ -66,9 +66,9 @@ begin
   end;
   with IOPropertyInfoArray[5] do
   begin
-    Name := 'InstanceID';
-    DataType := dtInteger;
-    Writable := False;
+    Name := 'BaseAddress';
+    DataType := dtDWord;
+    Writable := True;
   end;
   with IOPropertyInfoArray[6] do
   begin
@@ -158,9 +158,9 @@ begin
   end;
   with MPropertyInfoArray[4] do
   begin
-    Name := 'InstanceID';
-    DataType := dtInteger;
-    Writable := False;
+    Name := 'BaseAddress';
+    DataType := dtDWord;
+    Writable := True;
   end;
   with MPropertyInfoArray[5] do
   begin
@@ -202,7 +202,7 @@ begin
   end;
   with PPropertyInfoArray[4] do
   begin
-    Name := 'InstanceID';
+    Name := '';
     DataType := dtInteger;
     Writable := False;
   end;

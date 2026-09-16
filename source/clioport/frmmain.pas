@@ -32,7 +32,6 @@ type
     PEnabled:          Boolean;          // disable port without detach from bus
     PHasPanel:         Boolean;           // does the implementation have a GUI?
     PIntVector:        Byte;                          // plugin interrupt vector
-    PInstanceID:       Integer;                            // Module instance ID
     PLatchedOutput:    Boolean;                                // latched output
     PModname:          string;                                    // module name
     PReadBackOutput:   Boolean;         // output port with read-back capability
@@ -248,7 +247,6 @@ begin
       PEnabled := CurrentPort.Enabled;
       PHasPanel := CurrentPort.HasPanel;
       PIntVector := CurrentPort.IntVector;
-      PInstanceID := CurrentPort.InstanceID;
       PLatchedOutput := CurrentPort.LatchedOutput;
       PReadBackOutput := CurrentPort.ReadBackOutput;
       PSelMode := CurrentPort.SelMode;
@@ -297,8 +295,6 @@ begin
       ItemProps['Modname'].ReadOnly := True;
       InsertRow('Description', LoadedPlugin.PDescription, True);
       ItemProps['Description'].ReadOnly := True;
-      InsertRow('InstanceID (Hex)', IntToHex(LoadedPlugin.PInstanceID, 2), True);
-      ItemProps['InstanceID (Hex)'].ReadOnly := True;
       InsertRow('Int. vector (Hex)', IntToHex(LoadedPlugin.PIntVector, 2), True);
       ItemProps['Int. vector (Hex)'].ReadOnly := True;
       InsertRow('HasPanel', BoolToStr(LoadedPlugin.PHasPanel, 'true', 'false'), True);
@@ -642,8 +638,6 @@ begin
     begin
       CurrentPort := CreatePort();
       LoadedPlugin.PFilename := SelectedFile;
-      // set InstanceID
-      CurrentPort.InstanceID := 0;
       // set interrupt handler
       SetIntHandler(CurrentPort, @InterruptHandler, $32);
       // get properties

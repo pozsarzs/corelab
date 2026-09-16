@@ -65,11 +65,10 @@ type
     Status: string[31];
     Flag:   string[31];
   end;
-  // Abstract base CPU class
+  { TCPU }
   TCPU = class
   protected
     FBus:              ISysBus;                        // Connected external bus
-    FInstanceID:       Integer;                            // Module instance ID
     FOnEvent:          TCPUEventHandler;                       // Event callback
     // CPU identity information
     FModname:          PChar;
@@ -103,7 +102,6 @@ type
     // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
-    // Used via the ICtlAPI by TSupervisor class
     procedure SetRegister(const RegName: PChar; AValue: Word); virtual; abstract;
     function GetRegister(const RegName: PChar): Word; virtual; abstract;
     function GetRegisterCount: Byte; virtual; abstract;
@@ -116,7 +114,6 @@ type
     procedure IRQ(AVector: Byte); virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;
-    // Used via the ISvcAPI by TSupervisor class
     procedure Reset; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual; abstract;
     function SaveState(AStream: TStream): Boolean; virtual; abstract;
@@ -129,7 +126,6 @@ type
     property Endianness: TEndianness read FEndianness;
     property Halted: Boolean read FHalted;
     property HasSeparateIOBus: Boolean read FHasSeparateIOBus;
-    property InstanceID: Integer read FInstanceID write FInstanceID;
     property Instructions: QWord read FInstructions;
     property InterruptEnabled: Boolean read FInterruptEnabled;
     property MaxCodeAddress: DWord read FMaxCodeAddress;
@@ -194,6 +190,8 @@ begin
       if AOther.Patch < Patch then Result := 1;
 end;
 
+{ TCPU }
+
 // ---- PROTECTED METHODS ----
 
 // SENDS A CPU EVENT TO THE HOST APPLICATION
@@ -214,7 +212,6 @@ end;
 constructor TCPU.Create;
 begin
   inherited Create;
-  FInstanceID := -1;
   FEnabled := false;
   // Initial execution state
   FRunning := false;
@@ -241,8 +238,6 @@ begin
   if Assigned(FOnDestroy) then FOnDestroy(Self);
   inherited Destroy;
 end;
-
-// -- ICtlAPI --
 
 // START CPU EXECUTION
 procedure TCPU.Run;

@@ -18,7 +18,7 @@ interface
 uses
   Classes, Forms, SysUtils, TypInfo, core_ioport;
 type
-  // Graphical I/O port (device) class
+  { TGIOPort }
   TGIOPort = class(TIOPort)
   private
     SPanelCaption: String;                // Internal variable for panel caption
@@ -51,6 +51,8 @@ type
   end;
 
 implementation
+
+{ TGIOPort }
 
 // ---- PUBLIC METHODS ----
 

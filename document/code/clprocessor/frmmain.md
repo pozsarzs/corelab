@@ -29,7 +29,6 @@ state files.
 |`PFilename`        |string       |Filename of the loaded module.          |
 |`PDescription`     |string       |Short module description.               |
 |`PEnabled`         |Boolean      |Enables or disables the processor.      |
-|`PInstanceID`      |Integer      |Module instance identifier.             |
 |`PModname`         |string       |Module name.                            |
 |`PAddressWidth`    |Byte         |Processor address bus width in bits.    |
 |`PArchitecture`    |TArchitecture|Processor memory architecture.          |

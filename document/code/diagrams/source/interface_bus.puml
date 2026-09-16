@@ -1,0 +1,26 @@
+@startuml
+title CoreLAB Bus Interface
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+skinparam monochrome true
+left to right direction
+
+package "CoreLAB system bus" {
+
+  interface ISysBus {
+    + ReadMemory(AAddress: DWord): QWord
+    + WriteMemory(AAddress: DWord; AValue: QWord)
+    + ReadPort(APort: Word): Byte
+    + WritePort(APort: Word; AValue: Byte)
+  }
+
+}
+
+@enduml

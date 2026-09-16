@@ -43,7 +43,6 @@ class TCPU <<abstract>> {
   Endianness: TEndianness {read}
   Halted: Boolean {read}
   HasSeparateIOBus: Boolean {read}
-  InstanceID: Integer {read/write}
   Instructions: QWord {read}
   InterruptEnabled: Boolean {read}
   MaxCodeAddress: DWord {read}

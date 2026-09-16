@@ -58,6 +58,7 @@ resourcestring
   MSG04 = 'Value';
   MSG05 = 'The memory size can be 16 B-16 MB';
   MSG06 = 'Data conversion error at save.';
+  MSG07 = 'Wrong base address value';
 
 { TForm15 }
 
@@ -219,10 +220,10 @@ procedure TForm15.FormShow(Sender: TObject);
           PickList.CommaText := 'true,false';
           ReadOnly := True;
         end;
-        InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(APortInstance.InstanceID, 2), True);
-        ItemProps[uproperties.IOPropertyInfoArray[5].Name].ReadOnly := not uproperties.IOPropertyInfoArray[5].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[6].Name, IntToStr(APortInstance.AddressRangeSize), True);
         ItemProps[uproperties.IOPropertyInfoArray[6].Name].ReadOnly := not uproperties.IOPropertyInfoArray[6].Writable;
+        InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(APortInstance.BaseAddress, 2), True);
+        ItemProps[uproperties.IOPropertyInfoArray[5].Name].ReadOnly := not uproperties.IOPropertyInfoArray[5].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[7].Name, IntToHex(APortInstance.IntVector, 2), True);
         ItemProps[uproperties.IOPropertyInfoArray[7].Name].ReadOnly := not uproperties.IOPropertyInfoArray[7].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[8].Name, APortInstance.DataInMode.ToString, True);
@@ -308,10 +309,10 @@ procedure TForm15.FormShow(Sender: TObject);
           PickList.CommaText := 'true,false';
           ReadOnly := True;
         end;
-        InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(AMemInstance.InstanceID, 2), True);
-        ItemProps[uproperties.MPropertyInfoArray[4].Name].ReadOnly := not uproperties.MPropertyInfoArray[4].Writable;
         InsertRow(uproperties.MPropertyInfoArray[5].Name, IntToStr(AMemInstance.AddressRangeSize), True);
         ItemProps[uproperties.MPropertyInfoArray[5].Name].ReadOnly := not uproperties.MPropertyInfoArray[5].Writable;
+        InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(AMemInstance.BaseAddress, 4), True);
+        ItemProps[uproperties.MPropertyInfoArray[4].Name].ReadOnly := not uproperties.MPropertyInfoArray[4].Writable;
         InsertRow(uproperties.MPropertyInfoArray[6].Name, AMemInstance.MemoryMode.ToString, True);
         ItemProps[uproperties.MPropertyInfoArray[6].Name].ReadOnly := not uproperties.MPropertyInfoArray[6].Writable;
         with ItemProps[uproperties.MPropertyInfoArray[6].Name] do
@@ -349,8 +350,6 @@ procedure TForm15.FormShow(Sender: TObject);
           PickList.CommaText := 'true,false';
           ReadOnly := True;
         end;
-        InsertRow(uproperties.PPropertyInfoArray[4].Name, IntToHex(AProcInstance.InstanceID, 2), True);
-        ItemProps[uproperties.PPropertyInfoArray[4].Name].ReadOnly := not uproperties.PPropertyInfoArray[4].Writable;
         InsertRow(uproperties.PPropertyInfoArray[5].Name, IntToStr(AProcInstance.AddressWidth), True);
         ItemProps[uproperties.PPropertyInfoArray[5].Name].ReadOnly := not uproperties.PPropertyInfoArray[5].Writable;
         InsertRow(uproperties.PPropertyInfoArray[6].Name, AProcInstance.Architecture.ToString, True);
@@ -425,6 +424,16 @@ begin
         if (StrToInt(NewValue) < 16) or (StrToInt(NewValue) > (1 shl 24)) then
         begin
           ShowMessage(MSG01 + MSG05);
+          NewValue := OldValue;
+        end;
+      end;
+      if ValueListEditor1.Keys[aRow] = 'BaseAddress' then
+      begin
+        NewValue := Trim(NewValue);
+        if NewValue = '' then NewValue := '0';
+        if (StrToInt(NewValue) < 1) or (StrToInt(NewValue) > (1 shl 24)) then
+        begin
+          ShowMessage(MSG01 + MSG07);
           NewValue := OldValue;
         end;
       end;

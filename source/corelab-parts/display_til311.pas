@@ -30,7 +30,7 @@ interface
 uses
   Graphics, core_display;
 type
-  // TIL311 display class
+  { TDisplayTIL311 }
   TDisplayTIL311 = class(TDisplay)
   protected
     procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);
@@ -63,6 +63,8 @@ var
   FrameY: Byte = 28;
     
 implementation
+
+{ TDisplayTIL311 }
 
 // ---- PROTECTED METHODS ----
 

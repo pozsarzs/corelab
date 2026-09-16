@@ -17,7 +17,7 @@ interface
 uses
   Graphics, core_led;
 type
-  // TLEDSquare display class
+  { TLEDSquare }
   TLEDSquare = class(TLED)
   protected
   public
@@ -30,6 +30,8 @@ var
   FrameY: Byte = 1;
     
 implementation
+
+{ TLEDSquare }
 
 // ---- PUBLIC METHODS ----
 

@@ -20,9 +20,9 @@ skinparam monochrome true
 class TPluginAttributes <<record>> {
     PFilename: string
     PAddressRangeSize: DWord
+    PBaseAddress: DWord
     PDescription: string
     PEnabled: Boolean
-    PInstanceID: Integer
     PMemoryMode: TMemoryMode
     PModname: string
 }
@@ -65,8 +65,8 @@ interface TSaveStateProc {
 ' ============================================================
 
 class TMemory <<plugin / external>> {
-    +InstanceID: Integer
     +AddressRangeSize: DWord
+    +BaseAddress: DWord
     +Enabled: Boolean
     +MemoryMode: TMemoryMode
     +Modname: PChar

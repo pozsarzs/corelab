@@ -83,7 +83,6 @@ The CPU stores an `ISysBus` reference in `FBus`.
 |name               |type              |description                               |initial value  |
 |-------------------|------------------|------------------------------------------|---------------|
 |`FBus`             |`ISysBus`         |Connected external bus.                   |`nil`          |
-|`FInstanceID`      |`Integer`         |Module instance identifier.               |`-1`           |
 |`FOnEvent`         |`TCPUEventHandler`|CPU event callback.                       |`nil`          |
 |`FModname`         |`PChar`           |Module name.                              |not initialized|
 |`FDescription`     |`PChar`           |Short description.                        |not initialized|

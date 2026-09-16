@@ -34,7 +34,6 @@ type
     PFilename:         string;                         // filename of the module
     PDescription:      string;                              // short description
     PEnabled:          Boolean;     // disable processor without detach from bus
-    PInstanceID:       Integer;                            // Module instance ID
     PModname:          string;                                    // module name
     PAddressWidth:     Byte;                        // Address bus width in bits
     PArchitecture:     TArchitecture;                    // Type of architecture
@@ -421,8 +420,6 @@ begin
       ItemProps['Modname'].ReadOnly := True;
       InsertRow('Description', LoadedPlugin.PDescription, True);
       ItemProps['Description'].ReadOnly := True;
-      InsertRow('InstanceID (Hex)', IntToHex(LoadedPlugin.PInstanceID, 2), True);
-      ItemProps['InstanceID (Hex)'].ReadOnly := True;
       InsertRow('Enabled', BoolToStr(LoadedPlugin.PEnabled, 'true', 'false'), True);
       with ItemProps['Enabled'] do
       begin
@@ -785,8 +782,6 @@ begin
       CurrentProcessor.ConnectBus(FTestSysBus);
       // get filename
       LoadedPlugin.PFilename := SelectedFile;
-      // set InstanceID
-      CurrentProcessor.InstanceID := 0;
       // get properties
       ImpExpProperties(opPlugin2Var);
       // show properties

@@ -17,7 +17,7 @@ interface
 uses
   Graphics, core_led;
 type
-  // TLEDRound display class
+  { TLEDRound }
   TLEDRound = class(TLED)
   protected
   public
@@ -30,6 +30,8 @@ var
   FrameY: Byte = 9;
     
 implementation
+
+{ TLEDRound }
 
 // ---- PUBLIC METHODS ----
 

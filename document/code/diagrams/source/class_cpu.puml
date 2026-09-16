@@ -72,7 +72,6 @@ interface ISysBus <<external>> {
 
 abstract class TCPU {
     #FBus: ISysBus
-    #FInstanceID: Integer
     #FOnEvent: TCPUEventHandler
 
     #FModname: PChar
@@ -136,7 +135,6 @@ abstract class TCPU {
     +Endianness: TEndianness
     +Halted: Boolean
     +HasSeparateIOBus: Boolean
-    +InstanceID: Integer
     +Instructions: QWord
     +InterruptEnabled: Boolean
     +MaxCodeAddress: DWord

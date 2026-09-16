@@ -33,6 +33,7 @@ port read, and port write operations.
 |name               |type                |description                                         |initial value       |
 |-------------------|--------------------|----------------------------------------------------|--------------------|
 |`FAddressRangeSize`|`Word`              |Address range size                                  |`1`                 |
+|`FBaseAddress`     |`Word`              |Base address.                                       |`0`                 |
 |`FDataInMode`      |`TLineMode`         |Input data-line decoding mode                       |`lmBCD`             |
 |`FDataInNegation`  |`Boolean`           |Input data-bit negation                             |`false`             |
 |`FDataOutMode`     |`TLineMode`         |Output data-line decoding mode                      |`lmBCD`             |
@@ -40,7 +41,6 @@ port read, and port write operations.
 |`FDescription`     |`PChar`             |Short description                                   |not initialized here|
 |`FEnabled`         |`Boolean`           |Enable the port without detaching it from the bus   |`false`             |
 |`FHasPanel`        |`Boolean`           |Indicates whether the implementation has a GUI panel|`false`             |
-|`FInstanceID`      |`Integer`           |Module instance ID                                  |`-1`                |
 |`FIntVector`       |`Byte`              |Interrupt vector                                    |`0`                 |
 |`FLatchedOutput`   |`Boolean`           |Indicates latched output capability/state           |`false`             |
 |`FModname`         |`PChar`             |Module name                                         |`MyIO`              |

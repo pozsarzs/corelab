@@ -18,6 +18,7 @@ GUI panels, handles port I/O, interrupts and plugin state files.
 |-------------------|-----------|-------------------------------|
 |`PFilename`        |`string`   |Plugin module filename.        |
 |`PAddressRangeSize`|`Byte`     |Port address range size.       |
+|`PBaseAddress`     |`Byte`     |Base address.                  |
 |`PDataInMode`      |`TLineMode`|Input data-line decoding mode. |
 |`PDataInNegation`  |`Boolean`  |Negates port-to-CPU data bits. |
 |`PDataOutMode`     |`TLineMode`|Output data-line decoding mode.|
@@ -26,7 +27,6 @@ GUI panels, handles port I/O, interrupts and plugin state files.
 |`PEnabled`         |`Boolean`  |Enables or disables the port.  |
 |`PHasPanel`        |`Boolean`  |Plugin provides a GUI panel.   |
 |`PIntVector`       |`Byte`     |Plugin interrupt vector.       |
-|`PInstanceID`      |`Integer`  |Plugin instance identifier.    |
 |`PLatchedOutput`   |`Boolean`  |Output is latched.             |
 |`PModname`         |`string`   |Plugin module name.            |
 |`PReadBackOutput`  |`Boolean`  |Output supports read-back.     |

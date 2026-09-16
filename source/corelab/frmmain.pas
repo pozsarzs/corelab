@@ -69,12 +69,12 @@ type
     FMemories: array of TBusMem;
     FIOPorts:  array of TBusPort;
   public
-    function AttachCPU(const AModuleName: string; ACPU: TCPU): Boolean;
-    function AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Boolean;
-    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Boolean;
-    function DetachCPU(const AModuleName: string): Boolean;
-    function DetachMemory(const AModuleName: string): Boolean;
-    function DetachIOPort(const AModuleName: string): Boolean;
+    function AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
+    function AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Byte;
+    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Byte;
+    function DetachCPU(const AModuleName: string): Byte;
+    function DetachMemory(const AModuleName: string): Byte;
+    function DetachIOPort(const AModuleName: string): Byte;
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
     function ReadPort(APort: Word): Byte;
@@ -619,69 +619,164 @@ resourcestring
   MSG102 = 'Property ''%s'' is read only or not exists.';                 { SM }
   MSG103 = 'Value ''%s'' is bad.';                                        { SM }
   MSG104 = 'Property ''%s'' set to value ''%s''.';                        { SC }
+  MSG105 = 'Module named ''%s'' has been already attached.';              { SM }
+  MSG106 = 'Module named ''%s'' has been already detached.';              { SM }
 
 { TSysBus }
 
 // ---- PUBLIC METHODS ----
 
-function TSysBus.AttachCPU(const AModuleName: string; ACPU: TCPU): Boolean;
+// ATTACH CPU TO SYSTEM BUS
+function TSysBus.AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
 var
   i: Integer;
 begin
-  Result := False;
+  // module name valid?
+  Result := 1;
   if (AModuleName = '') or not Assigned(ACPU) then Exit;
   // already attached?
+  Result := 2;
   for i := 0 to High(FCPUs) do
     if FCPUs[I].ModuleName = AModuleName then Exit;
-  // create record and store
+  // create entry
   SetLength(FCPUs, Length(FCPUs) + 1);
   with FCPUs[High(FCPUs)] do
   begin
     ModuleName := AModuleName;
     CPU := ACPU;
   end;
-  Result := True;
+  Result := 0;
 end;
 
-function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Boolean;
+// ATTACH MEMORY TO SYSTEM BUS
+function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Byte;
+var
+  i: Integer;
 begin
-  Result := False;
+  // module name valid?
+  Result := 1;
+  if (AModuleName = '') or not Assigned(AMemory) then Exit;
+  // already attached?
+  Result := 2;
+  for i := 0 to High(FMemories) do
+    if FMemories[I].ModuleName = AModuleName then Exit;
+  // create entry
+  SetLength(FMemories, Length(FMemories) + 1);
+  with FMemories[High(FMemories)] do
+  begin
+    ModuleName := AModuleName;
+    Memory := AMemory;
+    BaseAddress := ABaseAddress;
+    AddressRange := AAddressRange;
+  end;
+  Result := 0;
 end;
 
-function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Boolean;
+// ATTACH I/O PORT TO SYSTEM BUS
+function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Byte;
+var
+  i: Integer;
 begin
-  Result := False;
+  // module name valid?
+  Result := 1;
+  if (AModuleName = '') or not Assigned(AIOPort) then Exit;
+  // already attached?
+  Result := 2;
+  for i := 0 to High(FIOPorts) do
+    if FIOPorts[I].ModuleName = AModuleName then Exit;
+  // create entry
+  SetLength(FIOPorts, Length(FIOPorts) + 1);
+  with FIOPorts[High(FIOPorts)] do
+  begin
+    ModuleName := AModuleName;
+    IOPort := AIOPort;
+    BaseAddress := ABaseAddress;
+    AddressRange := AAddressRange;
+  end;
+  Result := 0;
 end;
 
-function TSysBus.DetachCPU(const AModuleName: string): Boolean;
+// DETACH CPU FROM SYSTEM BUS
+function TSysBus.DetachCPU(const AModuleName: string): Byte;
+var
+  i: Integer;
 begin
-  Result := False;
+  // module name valid?
+  Result := 1;
+  if AModuleName = '' then Exit;
+  // already attached?
+  Result := 2;
+  for i := 0 to High(FCPUs) do
+    if FCPUs[i].ModuleName = AModuleName then
+    begin
+      // remove entry
+      if i < High(FCPUs) then FCPUs[i] := FCPUs[High(FCPUs)];
+      SetLength(FCPUs, Length(FCPUs) - 1);
+      Result := 0;
+      Exit;
+    end;
 end;
 
-function TSysBus.DetachMemory(const AModuleName: string): Boolean;
+// DETACH MEMORY FROM SYSTEM BUS
+function TSysBus.DetachMemory(const AModuleName: string): Byte;
+var
+  i: Integer;
 begin
-  Result := False;
+  // module name valid?
+  Result := 1;
+  if AModuleName = '' then Exit;
+  // already attached?
+  Result := 2;
+  for i := 0 to High(FMemories) do
+    if FMemories[i].ModuleName = AModuleName then
+    begin
+      // remove entry
+      if i < High(FMemories) then FMemories[i] := FMemories[High(FMemories)];
+      SetLength(FMemories, Length(FMemories) - 1);
+      Result := 0;
+      Exit;
+    end;
 end;
 
-function TSysBus.DetachIOPort(const AModuleName: string): Boolean;
+// DETACH I/O PORT FROM SYSTEM BUS
+function TSysBus.DetachIOPort(const AModuleName: string): Byte;
+var
+  i: Integer;
 begin
-  Result := False;
+  // module name valid?
+  Result := 1;
+  if AModuleName = '' then Exit;
+  // already attached?
+  Result := 2;
+  for i := 0 to High(FIOPorts) do
+    if FIOPorts[i].ModuleName = AModuleName then
+    begin
+      // remove entry
+      if i < High(FIOPorts) then FIOPorts[i] := FIOPorts[High(FIOPorts)];
+      SetLength(FIOPorts, Length(FIOPorts) - 1);
+      Result := 0;
+      Exit;
+    end;
 end;
 
+// READ MEMORY
 function TSysBus.ReadMemory(AAddress: DWord): Byte;
 begin
   Result := 0;
 end;
 
+// WRITE MEMORY
 procedure TSysBus.WriteMemory(AAddress: DWord; AValue: Byte);
 begin
 end;
 
+// READ I/O PORT
 function TSysBus.ReadPort(APort: Word): Byte;
 begin
   Result := 0;
 end;
 
+// WRITE I/O PORT
 procedure TSysBus.WritePort(APort: Word; AValue: Byte);
 begin
 end;
@@ -2151,16 +2246,15 @@ begin
   try
     ProcInfo := FProcInstanceDict[InstanceName];
     // attach to bus
-    if not FSysBus.AttachCPU(InstanceName, ProcInfo.Processor)
-    then
-    begin
-      ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
-      Exit;
+    case FSysBus.AttachCPU(InstanceName, ProcInfo.Processor) of
+      1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
+      2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
+    else
+      ProcInfo.AttachedToBus := True;
+      FProcInstanceDict[InstanceName] := ProcInfo;
     end;
-    ProcInfo.AttachedToBus := True;
-    FProcInstanceDict[InstanceName] := ProcInfo;
   except
-    // error
+    // other error
     ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
     Exit;
   end;
@@ -2230,15 +2324,20 @@ begin
   InstanceName := AActionContext.SArg1;
   try
     ProcInfo := FProcInstanceDict[InstanceName];
-    // detach to bus
-    {...}
+    case FSysBus.DetachCPU(InstanceName) of
+      1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
+      2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
+    else
+      ProcInfo.AttachedToBus := False;
+      FProcInstanceDict[InstanceName] := ProcInfo;
+    end;
   except
-    // error
+    // other error
     ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  SysConsole1.WriteMessage(MSG03 + Format(MSG69, [InstanceName]));
 end;
 
 // PROCESSOR/PROPERTIES ACTION -------------------------------------------------

@@ -25,7 +25,7 @@ type
     Segments: Byte; { bits 0-6 }
     Value:    Byte; { bits 0-3 }
   end;
-  // Display base class
+  { TDisplay }
   TDisplay = class
   protected  
     FModname:             PChar;                                  // Module name
@@ -55,6 +55,8 @@ type
   end;
     
 implementation
+
+{ TDisplay }
 
 // CREATE TDISPLAY INSTANCE
 constructor TDisplay.Create;

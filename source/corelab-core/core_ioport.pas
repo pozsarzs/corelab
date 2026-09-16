@@ -37,10 +37,11 @@ type
   end;
   // Callback procedure for interrupt
   TInterruptCallback = procedure(Sender: TIOPort; Vector: Byte) of object;
-  // I/O port (device) base class
+  { TIOPort }
   TIOPort = class
   protected
     FAddressRangeSize: Word;                               // Address range size
+    FBaseAddress:      Word;                                     // Base address
     FDataInMode:       TLineMode;                   // Decoding input data lines
     FDataInNegation:   Boolean;             // Negation of databit (port -> CPU)
     FDataOutMode:      TLineMode;                  // Decoding output data lines
@@ -61,15 +62,14 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-    // Used via the ISysBus by TCPU class
     function ReadPort(APort: Word): Byte; virtual; abstract;
     procedure WritePort(APort: Word; AValue: Byte); virtual; abstract;
-    // Used via the ISvcAPI by TSupervisor class
     procedure Reset; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual;
     function SaveState(AStream: TStream): Boolean; virtual;
     // properties
     property AddressRangeSize: Word read FAddressRangeSize;
+    property BaseAddress: Word read FBaseAddress write FBaseAddress;
     property DataInMode: TLineMode read FDataInMode write FDataInMode;
     property DataInNegation: Boolean read FDataInNegation write FDataInNegation;
     property DataOutMode: TLineMode read FDataOutMode write FDataOutMode;
@@ -78,7 +78,6 @@ type
     property Enabled: Boolean read FEnabled write FEnabled;
     property HasPanel: Boolean read FHasPanel;
     property IntVector: Byte read FIntVector write FIntVector;
-    property InstanceID: Integer read FInstanceID write FInstanceID;
     property LatchedOutput: Boolean read FLatchedOutput;
     property ModName: PChar read FModname;
     property OnInterrupt: TInterruptCallback read FOnInterrupt write FOnInterrupt;
@@ -120,6 +119,8 @@ begin
       if AOther.Patch < Patch then Result := 1;
 end;
 
+{ TIOPort }
+
 // ---- PROTECTED METHODS ----
 
 // REQUEST INTERRUPT
@@ -137,13 +138,13 @@ begin
   inherited Create;
   // Initial state
   FAddressRangeSize := 1;
+  FBaseAddress := 0;
   FDataInMode := lmBCD;
   FDataInNegation := false;
   FDataOutMode := lmBCD;
   FDataOutNegation := false;
   FEnabled := false;
   FHasPanel := false;
-  FInstanceID := -1;
   FIntVector := 0;
   FLatchedOutput := false;
   FModname := 'MyIO';
@@ -163,8 +164,6 @@ destructor TIOPort.Destroy;
 begin
   inherited Destroy;
 end;
-
-// -- ISvcAPI --
 
 // LOAD SAVED STATE
 function TIOPort.LoadState(AStream: TStream): Boolean;

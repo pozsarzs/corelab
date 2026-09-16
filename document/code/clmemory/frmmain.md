@@ -21,9 +21,9 @@ read/write operations, and saves or restores plugin state.
 |-------------------|-----------|---------------------------------------|
 |`PFilename`        |string     |Filename of the module.                |
 |`PAddressRangeSize`|DWord      |Configured memory address range.       |
+|`PBaseAddress`     |DWord      |Base address.                          |
 |`PDescription`     |string     |Short module description.              |
 |`PEnabled`         |Boolean    |Enables or disables memory access.     |
-|`PInstanceID`      |Integer    |Module instance identifier.            |
 |`PMemoryMode`      |TMemoryMode|Memory operation mode, e.g. RAM or ROM.|
 |`PModname`         |string     |Module name.                           |
 
