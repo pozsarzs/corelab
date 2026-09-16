@@ -7,8 +7,7 @@
       <Unit>
         <Filename Value="clprocessor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="6" Y="2"/>
+        <CursorPos X="13" Y="9"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -18,8 +17,10 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="7" Y="3"/>
+        <TopLine Value="329"/>
+        <CursorPos X="30" Y="332"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -154,14 +155,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="1049" Column="57" TopLine="1037"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/ucommon.pas"/>
-        <Caret Line="197" Column="71" TopLine="190"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="314" Column="3" TopLine="295"/>
       </Position>
       <Position>
@@ -270,6 +263,14 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="60" Column="56" TopLine="40"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="3" Column="7"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="57" Column="22" TopLine="33"/>
       </Position>
     </JumpHistory>
     <RunParams>

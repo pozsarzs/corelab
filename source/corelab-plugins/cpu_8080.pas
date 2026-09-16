@@ -48,11 +48,9 @@ type
     procedure DoInterrupt(AEvent: TCPUEvent); override;
   public
     constructor Create; override;
-    // Used via the ISvcAPI by TSupervisor class
     procedure Reset; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
-    // Used via the ICtlAPI by TSupervisor class
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
     function GetRegister(const RegName: PChar): Word; override;
@@ -164,8 +162,6 @@ begin
   Reset;
 end;
 
-// -- ISvcAPI --
-
 // RESET CPU
 procedure T8080CPU.Reset;
 begin
@@ -212,25 +208,22 @@ end;
 function T8080CPU.SaveState(AStream: TStream): Boolean;
 begin
   Result := false;
-  if FInstanceID > -1 then
-    with AStream do
-    begin
-      // common fields
-      WriteBuffer(FEnabled, SizeOf(FEnabled));
-      // common fields related to CPU
-      WriteBuffer(FRegs, SizeOf(FRegs));
-      WriteBuffer(FRunning, SizeOf(FRunning));
-      WriteBuffer(FHalted, SizeOf(FHalted));
-      WriteBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
-      WriteBuffer(FIRQPending, SizeOf(FIRQPending));
-      WriteBuffer(FNMIPending, SizeOf(FNMIPending));
-      WriteBuffer(FCycles, SizeOf(FCycles));
-      WriteBuffer(FInstructions, SizeOf(FInstructions));
-      Result := true;
-    end;
+  with AStream do
+  begin
+    // common fields
+    WriteBuffer(FEnabled, SizeOf(FEnabled));
+    // common fields related to CPU
+    WriteBuffer(FRegs, SizeOf(FRegs));
+    WriteBuffer(FRunning, SizeOf(FRunning));
+    WriteBuffer(FHalted, SizeOf(FHalted));
+    WriteBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
+    WriteBuffer(FIRQPending, SizeOf(FIRQPending));
+    WriteBuffer(FNMIPending, SizeOf(FNMIPending));
+    WriteBuffer(FCycles, SizeOf(FCycles));
+    WriteBuffer(FInstructions, SizeOf(FInstructions));
+    Result := true;
+  end;
 end;
-
-// -- ICtlAPI --
 
 // EXECUTING AN INSTRUCTION
 procedure T8080CPU.Step;

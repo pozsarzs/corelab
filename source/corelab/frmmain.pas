@@ -50,14 +50,10 @@ type
   TBusMem = record
     ModuleName:   string;
     Memory:       TMemory;
-    BaseAddress:  DWord;
-    AddressRange: DWord;
   end;
   TBusPort = record
     ModuleName:   string;
     IOPort:       TIOPort;
-    BaseAddress:  DWord;
-    AddressRange: DWord;
   end;
   TBusProc = record
     ModuleName: string;
@@ -334,6 +330,7 @@ type
     VShowRunLogger:           TAction;
     VShowScriptConsole:       TAction;
     VShowScriptEditor:        TAction;
+    procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
     procedure FExitExecute(Sender: TObject);
     procedure FLoadProjectExecute(Sender: TObject);
     procedure FNewProjectExecute(Sender: TObject);
@@ -631,13 +628,13 @@ function TSysBus.AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
 var
   i: Integer;
 begin
-  // module name valid?
+  // module name is valid?
   Result := 1;
   if (AModuleName = '') or not Assigned(ACPU) then Exit;
-  // already attached?
+  // already is attached?
   Result := 2;
   for i := 0 to High(FCPUs) do
-    if FCPUs[I].ModuleName = AModuleName then Exit;
+    if FCPUs[i].ModuleName = AModuleName then Exit;
   // create entry
   SetLength(FCPUs, Length(FCPUs) + 1);
   with FCPUs[High(FCPUs)] do
@@ -653,21 +650,19 @@ function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory; ABase
 var
   i: Integer;
 begin
-  // module name valid?
+  // module name is valid?
   Result := 1;
   if (AModuleName = '') or not Assigned(AMemory) then Exit;
-  // already attached?
+  // already is attached?
   Result := 2;
   for i := 0 to High(FMemories) do
-    if FMemories[I].ModuleName = AModuleName then Exit;
+    if FMemories[i].ModuleName = AModuleName then Exit;
   // create entry
   SetLength(FMemories, Length(FMemories) + 1);
   with FMemories[High(FMemories)] do
   begin
     ModuleName := AModuleName;
     Memory := AMemory;
-    BaseAddress := ABaseAddress;
-    AddressRange := AAddressRange;
   end;
   Result := 0;
 end;
@@ -677,21 +672,19 @@ function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABase
 var
   i: Integer;
 begin
-  // module name valid?
+  // module name is valid?
   Result := 1;
   if (AModuleName = '') or not Assigned(AIOPort) then Exit;
-  // already attached?
+  // already is attached?
   Result := 2;
   for i := 0 to High(FIOPorts) do
-    if FIOPorts[I].ModuleName = AModuleName then Exit;
+    if FIOPorts[i].ModuleName = AModuleName then Exit;
   // create entry
   SetLength(FIOPorts, Length(FIOPorts) + 1);
   with FIOPorts[High(FIOPorts)] do
   begin
     ModuleName := AModuleName;
     IOPort := AIOPort;
-    BaseAddress := ABaseAddress;
-    AddressRange := AAddressRange;
   end;
   Result := 0;
 end;
@@ -701,10 +694,10 @@ function TSysBus.DetachCPU(const AModuleName: string): Byte;
 var
   i: Integer;
 begin
-  // module name valid?
+  // module name is valid?
   Result := 1;
   if AModuleName = '' then Exit;
-  // already attached?
+  // already is detached?
   Result := 2;
   for i := 0 to High(FCPUs) do
     if FCPUs[i].ModuleName = AModuleName then
@@ -722,10 +715,10 @@ function TSysBus.DetachMemory(const AModuleName: string): Byte;
 var
   i: Integer;
 begin
-  // module name valid?
+  // module name is valid?
   Result := 1;
   if AModuleName = '' then Exit;
-  // already attached?
+  // already is detached?
   Result := 2;
   for i := 0 to High(FMemories) do
     if FMemories[i].ModuleName = AModuleName then
@@ -743,10 +736,10 @@ function TSysBus.DetachIOPort(const AModuleName: string): Byte;
 var
   i: Integer;
 begin
-  // module name valid?
+  // module name is valid?
   Result := 1;
   if AModuleName = '' then Exit;
-  // already attached?
+  // already detached?
   Result := 2;
   for i := 0 to High(FIOPorts) do
     if FIOPorts[i].ModuleName = AModuleName then
@@ -761,24 +754,72 @@ end;
 
 // READ MEMORY
 function TSysBus.ReadMemory(AAddress: DWord): Byte;
+var
+  i: Integer;
 begin
   Result := 0;
+  // check address-conflict
+  for i := 0 to High(FMemories) do
+    with FMemories[i].Memory do
+      if Enabled and
+       (AAddress >= BaseAddress) and
+       (AAddress < BaseAddress + AddressRangeSize) then
+      begin
+        Result := ReadMemory(AAddress - BaseAddress);
+        Exit;
+      end;
 end;
 
 // WRITE MEMORY
 procedure TSysBus.WriteMemory(AAddress: DWord; AValue: Byte);
+var
+  i: Integer;
 begin
+  // check address-conflict
+  for i := 0 to High(FMemories) do
+    with FMemories[i].Memory do
+      if Enabled and
+       (AAddress >= BaseAddress) and
+       (AAddress < BaseAddress + AddressRangeSize) then
+      begin
+        WriteMemory(AAddress - BaseAddress, AValue);
+        Exit;
+      end;
 end;
 
 // READ I/O PORT
 function TSysBus.ReadPort(APort: DWord): Byte;
+var
+  i: Integer;
 begin
   Result := 0;
+  // check address-conflict
+  for i := 0 to High(FIOPorts) do
+    with FIOPorts[i].IOPort do
+      if Enabled and
+       (APort >= BaseAddress) and
+       (APort < BaseAddress + AddressRangeSize) then
+      begin
+        Result := ReadPort(APort - BaseAddress);
+        Exit;
+      end;
 end;
 
 // WRITE I/O PORT
 procedure TSysBus.WritePort(APort: DWord; AValue: Byte);
+var
+  i: Integer;
 begin
+  // check address-conflict
+  for i := 0 to High(FIOPorts) do
+    with FIOPorts[i].IOPort do
+      if Enabled and
+       (APort >= BaseAddress) and
+       (APort < BaseAddress + AddressRangeSize) then
+      begin
+        WritePort(APort - BaseAddress, AValue);
+        Exit;
+      end;
 end;
 
 { TForm1 }
@@ -2250,6 +2291,8 @@ begin
       1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
       2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
     else
+      ProcInfo.Processor.ConnectBus(FSysBus);
+      ProcInfo.Processor.OnEvent := @CPUEventHandler;
       ProcInfo.AttachedToBus := True;
       FProcInstanceDict[InstanceName] := ProcInfo;
     end;
@@ -4075,7 +4118,7 @@ end;
 // OPERATION/RUN SIMULATION STEP BY STEP OPERATION
 procedure TForm1.OStepOperation(AActionContext: TActionContext);
 begin
-  {...}
+  FSysBus.FCPUs[0].CPU.Step;
 end;
 
 // OPERATION/STOP SIMULATION ACTION --------------------------------------------
@@ -4740,6 +4783,13 @@ begin
 end;
 
 // ---- CREATE AND DESTROY EVENT HANDLERS ----
+
+// CPU EVENT HANDLER
+procedure TForm1.CPUEventHandler(Sender: TObject; Event: TCPUEvent);
+begin
+  if (Event = ceInstructionBoundary) { and (Sender is TCPU) } then
+    Form4.AppendRecord(TCPU(Sender).GetCurrentInstruction);
+end;
 
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
