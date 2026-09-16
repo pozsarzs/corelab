@@ -17,8 +17,8 @@ package "CoreLAB system bus" {
   interface ISysBus {
     + ReadMemory(AAddress: DWord): QWord
     + WriteMemory(AAddress: DWord; AValue: QWord)
-    + ReadPort(APort: Word): Byte
-    + WritePort(APort: Word; AValue: Byte)
+    + ReadPort(APort: DWord): Byte
+    + WritePort(APort: DWord; AValue: Byte)
   }
 
 }

@@ -48,16 +48,16 @@ type
   TOpMode = (omInteractive, omScript, omInterpreter);
   // attached device description record types
   TBusMem = record
-    ModuleName:  string;
-    Memory:     TMemory;
-    BaseAddress: DWord;
+    ModuleName:   string;
+    Memory:       TMemory;
+    BaseAddress:  DWord;
     AddressRange: DWord;
   end;
   TBusPort = record
-    ModuleName:  string;
-    IOPort:     TIOPort;
-    BaseAddress: Word;
-    AddressRange: Word;
+    ModuleName:   string;
+    IOPort:       TIOPort;
+    BaseAddress:  DWord;
+    AddressRange: DWord;
   end;
   TBusProc = record
     ModuleName: string;
@@ -71,14 +71,14 @@ type
   public
     function AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
     function AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Byte;
-    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Byte;
+    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: DWord): Byte;
     function DetachCPU(const AModuleName: string): Byte;
     function DetachMemory(const AModuleName: string): Byte;
     function DetachIOPort(const AModuleName: string): Byte;
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
-    function ReadPort(APort: Word): Byte;
-    procedure WritePort(APort: Word; AValue: Byte);
+    function ReadPort(APort: DWord): Byte;
+    procedure WritePort(APort: DWord; AValue: Byte);
   end;
   { TForm1 }
   TForm1 = class(TForm)
@@ -408,9 +408,9 @@ type
     // bridge between SysConsol and CommandEngine
     procedure SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
     // check name duplication
-    function InstanceNameDuplicated(AInstanceDict:  TMemInstanceDict; AKeyName: string): Boolean; overload;
-    function InstanceNameDuplicated(AInstanceDict:  TPortInstanceDict; AKeyName: string): Boolean; overload;
-    function InstanceNameDuplicated(AInstanceDict:  TProcInstanceDict; AKeyName: string): Boolean; overload;
+    function InstanceNameDuplicated(AInstanceDict: TMemInstanceDict; AKeyName: string): Boolean; overload;
+    function InstanceNameDuplicated(AInstanceDict: TPortInstanceDict; AKeyName: string): Boolean; overload;
+    function InstanceNameDuplicated(AInstanceDict: TProcInstanceDict; AKeyName: string): Boolean; overload;
     // others
     procedure ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean); // change opmode
     procedure DestroyAllModules(AClose: Boolean);
@@ -673,7 +673,7 @@ begin
 end;
 
 // ATTACH I/O PORT TO SYSTEM BUS
-function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: Word): Byte;
+function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: DWord): Byte;
 var
   i: Integer;
 begin
@@ -771,13 +771,13 @@ begin
 end;
 
 // READ I/O PORT
-function TSysBus.ReadPort(APort: Word): Byte;
+function TSysBus.ReadPort(APort: DWord): Byte;
 begin
   Result := 0;
 end;
 
 // WRITE I/O PORT
-procedure TSysBus.WritePort(APort: Word; AValue: Byte);
+procedure TSysBus.WritePort(APort: DWord; AValue: Byte);
 begin
 end;
 
@@ -2337,7 +2337,7 @@ begin
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG69, [InstanceName]));
+  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
 end;
 
 // PROCESSOR/PROPERTIES ACTION -------------------------------------------------
@@ -2844,11 +2844,19 @@ var
 begin
   InstanceName := AActionContext.SArg1;
   try
-    MemInfo := FMemInstanceDict[InstanceName];
+    MemInfo := FmemInstanceDict[InstanceName];
     // attach to bus
-    {...}
+    case FSysBus.AttachMemory(InstanceName, MemInfo.Memory,
+                              MemInfo.Memory.BaseAddress,
+                              MemInfo.Memory.AddressRangeSize) of
+      1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
+      2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
+    else
+      MemInfo.AttachedToBus := True;
+      FMemInstanceDict[InstanceName] := MemInfo;
+    end;
   except
-    // error
+    // other error
     ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
     Exit;
   end;
@@ -2918,10 +2926,15 @@ begin
   InstanceName := AActionContext.SArg1;
   try
     MemInfo := FMemInstanceDict[InstanceName];
-    // detach to bus
-    {...}
+    case FSysBus.DetachCPU(InstanceName) of
+      1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
+      2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
+    else
+      MemInfo.AttachedToBus := False;
+      FMemInstanceDict[InstanceName] := MemInfo;
+    end;
   except
-    // error
+    // other error
     ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
     Exit;
   end;
@@ -3832,9 +3845,17 @@ begin
   try
     PortInfo := FPortInstanceDict[InstanceName];
     // attach to bus
-    {...}
+    case FSysBus.AttachIOPort(InstanceName, PortInfo.Port,
+                              PortInfo.Port.BaseAddress,
+                              PortInfo.Port.AddressRangeSize) of
+      1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
+      2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
+    else
+      PortInfo.AttachedToBus := True;
+      FPortInstanceDict[InstanceName] := PortInfo;
+    end;
   except
-    // error
+    // other error
     ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
     Exit;
   end;
@@ -3904,10 +3925,15 @@ begin
   InstanceName := AActionContext.SArg1;
   try
     PortInfo := FPortInstanceDict[InstanceName];
-    // detach to bus
-    {...}
+    case FSysBus.DetachCPU(InstanceName) of
+      1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
+      2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
+    else
+      PortInfo.AttachedToBus := False;
+      FPortInstanceDict[InstanceName] := PortInfo;
+    end;
   except
-    // error
+    // other error
     ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
     Exit;
   end;

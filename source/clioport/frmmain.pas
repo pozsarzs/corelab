@@ -23,7 +23,7 @@ uses
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
-    PAddressRangeSize: Byte;                               // address range size
+    PAddressRangeSize: DWord;                              // address range size
     PDataInMode:       TLineMode;                   // decoding input data lines
     PDataInNegation:   Boolean;             // negation of databit (port -> CPU)
     PDataOutMode:      TLineMode;                  // decoding output data lines

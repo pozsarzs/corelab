@@ -22,8 +22,8 @@ class TPluginAttributes <<record>> {
     PFilename: string
     PModname: string
     PDescription: string
-    PAddressRangeSize: Byte
-    PBaseAddress: Byte
+    PAddressRangeSize: DWord
+    PBaseAddress: DWord
     PIntVector: Byte
     PHasPanel: Boolean
     PEnabled: Boolean
@@ -119,8 +119,8 @@ interface TSaveStateProc {
 ' ============================================================
 
 class TIOPort <<external>> {
-    +AddressRangeSize: Byte
-    +BaseAddress: Byte
+    +AddressRangeSize: DWord
+    +BaseAddress: DWord
     +DataInMode: TLineMode
     +DataInNegation: Boolean
     +DataOutMode: TLineMode

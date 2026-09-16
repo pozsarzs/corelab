@@ -65,26 +65,26 @@ persistence.
 
 ### Public methods
 
-|name                                                                  |flags|description                                                                                                                          |
-|----------------------------------------------------------------------|-----|-------------------------------------------------------------------------------------------------------------------------------------|
-|`constructor Create;`                                                 |Vi   |Initializes a 1024-byte RAM memory module, disables it, sets its module information and clears its memory contents.                  |
-|`destructor Destroy;`                                                 |Or   |Destroys the memory object.                                                                                                          |
-|`procedure Reset;`                                                    |Vi   |Fills all allocated memory cells with zero.                                                                                          |
-|`function ReadMemory(AAddress: DWord): Byte;`                         |Vi   |Returns the byte at the specified address when enabled and inside the configured range. Otherwise returns `0`.                       |
-|`procedure WriteMemory(AAddress: DWord; AValue: Byte);`               |Vi   |Writes a byte when enabled, in `mmRAM` mode and inside the configured range.                                                         |
-|`function LoadState(AStream: TStream): Boolean;`                      |Vi   |Loads enabled state, memory mode, address-range size and memory contents from a stream. Returns `False` on a stream read exception.  |
-|`function SaveState(AStream: TStream): Boolean;`                      |Vi   |Saves enabled state, memory mode, address-range size and memory contents. Returns `True` when `InstanceID > -1` and writing succeeds.|
-|`procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);`|Vi   |Loads `ACount` bytes from the current stream position into memory when enabled and both memory and stream bounds are valid.          |
-|`procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);`  |Vi   |Writes `ACount` bytes from memory to the current stream position when enabled and memory bounds are valid.                           |
+|name                                                                  |flags|description                                                                                                                        |
+|----------------------------------------------------------------------|-----|-----------------------------------------------------------------------------------------------------------------------------------|
+|`constructor Create;`                                                 |Vi   |Initializes a 1024-byte RAM memory module, disables it, sets its module information and clears its memory contents.                |
+|`destructor Destroy;`                                                 |Or   |Destroys the memory object.                                                                                                        |
+|`procedure Reset;`                                                    |Vi   |Fills all allocated memory cells with zero.                                                                                        |
+|`function ReadMemory(AAddress: DWord): Byte;`                         |Vi   |Returns the byte at the specified address when enabled and inside the configured range. Otherwise returns `0`.                     |
+|`procedure WriteMemory(AAddress: DWord; AValue: Byte);`               |Vi   |Writes a byte when enabled, in `mmRAM` mode and inside the configured range.                                                       |
+|`function LoadState(AStream: TStream): Boolean;`                      |Vi   |Loads enabled state, memory mode, address-range size and memory contents from a stream. Returns `False` on a stream read exception.|
+|`function SaveState(AStream: TStream): Boolean;`                      |Vi   |Saves enabled state, memory mode, address-range size and memory contents.                                                          |
+|`procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);`|Vi   |Loads `ACount` bytes from the current stream position into memory when enabled and both memory and stream bounds are valid.        |
+|`procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);`  |Vi   |Writes `ACount` bytes from memory to the current stream position when enabled and memory bounds are valid.                         |
 
 ### Public properties
 
-|name              |type              |access    |description                                                                                                                                  |
-|------------------|------------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------|
-|`AddressRangeSize`|`DWord`           |read/write|Configured memory address-space size. The setter resizes the memory array and limits the size to `2^24` bytes; values below `16` are ignored.|
-|`Description`     |`PChar`           |read      |Short module description.                                                                                                                    |
-|`Enabled`         |`Boolean`         |read/write|Enables or disables memory access.                                                                                                           |
-|`InstanceID`      |`Integer`         |read/write|Module instance identifier.                                                                                                                  |
-|`MemoryMode`      |`TMemoryMode`     |read/write|Selects RAM or ROM operation.                                                                                                                |
-|`ModName`         |`PChar`           |read      |Module name.                                                                                                                                 |
-|`Version`         |`TSemanticVersion`|read      |Module version.                                                                                                                              |
+|name              |type              |access    |description                          |
+|------------------|------------------|----------|-------------------------------------|
+|`AddressRangeSize`|`DWord`           |read/write|Configured memory address-space size.|
+|`BaseAddress`     |`DWord`           |read/write|Global start address.                |
+|`Description`     |`PChar`           |read      |Short module description.            |
+|`Enabled`         |`Boolean`         |read/write|Enables or disables memory access.   |
+|`MemoryMode`      |`TMemoryMode`     |read/write|Selects RAM or ROM operation.        |
+|`ModName`         |`PChar`           |read      |Module name.                         |
+|`Version`         |`TSemanticVersion`|read      |Module version.                      |

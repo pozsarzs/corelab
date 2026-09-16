@@ -1,1908 +1,1328 @@
-msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
-
-#: corelab.msg01
+#: corelab:msg01
 msgid "CoreLAB Processor simulation framework"
 msgstr ""
 
-#: corelab.msg02
+#: corelab:msg02
 msgid "Build date:  "
 msgstr ""
 
-#: corelab.msg03
+#: corelab:msg03
 msgid "Builder:     "
 msgstr ""
 
-#: corelab.msg04
+#: corelab:msg04
 msgid "FPC version: "
 msgstr ""
 
-#: corelab.msg05
+#: corelab:msg05
 msgid "Target OS:   "
 msgstr ""
 
-#: corelab.msg06
+#: corelab:msg06
 msgid "Target CPU:  "
 msgstr ""
 
-#: corelab.msg07
+#: corelab:msg07
 msgid "There are one or more bad arguments in command line."
 msgstr ""
 
-#: corelab.msg08
+#: corelab:msg08
 msgid "Usage"
 msgstr ""
 
-#: corelab.msg09
+#: corelab:msg09
 msgid " [argument]"
 msgstr ""
 
-#: corelab.msg10
+#: corelab:msg10
 msgid " [directory|file]"
 msgstr ""
 
-#: corelab.msg11
+#: corelab:msg11
 msgid "arguments:"
 msgstr ""
 
-#: frmabout.msg01
+#: frmabout:msg01
 msgid "Cannot open URL."
 msgstr ""
 
-#: frmexdepmemory.msg01
-msgctxt "frmexdepmemory.msg01"
+#: frmexdepmemory:msg01 frmhexviewer:msg01 frmintlogger:msg01
+#: frmloadsavememory:msg01 frmmain:msg01 frmproperties:msg01 frmregviewer:msg01
+#: frmrunlogger:msg01
 msgid "ERROR: "
 msgstr ""
 
-#: frmexdepmemory.msg02
+#: frmexdepmemory:msg02
 msgid "Only hexadecimal values can be entered for address value."
 msgstr ""
 
-#: frmexdepmemory.msg03
+#: frmexdepmemory:msg03
 msgid "Only hexadecimal values can be entered for data value."
 msgstr ""
 
-#: frmexdepmemory.msg04
-#, object-pascal-format
+#: frmexdepmemory:msg04
 msgid "Memory address too high. (> %s)"
 msgstr ""
 
-#: frmexdepmemory.msg05
-msgctxt "frmexdepmemory.msg05"
+#: frmexdepmemory:msg05 frmhexviewer:msg03
 msgid "Cannot open memory modul."
 msgstr ""
 
-#: frmhexviewer.msg01
-msgctxt "frmhexviewer.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmhexviewer.msg02
-msgctxt "frmhexviewer.msg02"
+#: frmhexviewer:msg02 frmrunlogger:msg06
 msgid "Address"
 msgstr ""
 
-#: frmhexviewer.msg03
-msgctxt "frmhexviewer.msg03"
-msgid "Cannot open memory modul."
-msgstr ""
-
-#: frmintlogger.msg01
-msgctxt "frmintlogger.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmintlogger.msg02
-msgctxt "frmintlogger.msg02"
+#: frmintlogger:msg02 frmrunlogger:msg02
 msgid "Save log to file"
 msgstr ""
 
-#: frmintlogger.msg03
-#, object-pascal-format
-msgctxt "frmintlogger.msg03"
+#: frmintlogger:msg03 frmrunlogger:msg03
 msgid "Cannot save '%s' log file."
 msgstr ""
 
-#: frmintlogger.msg04
-msgctxt "frmintlogger.msg04"
+#: frmintlogger:msg04 frmrunlogger:msg04
 msgid "Log file|*.log|All file|*.*"
 msgstr ""
 
-#: frmintlogger.msg05
-msgctxt "frmintlogger.msg05"
+#: frmintlogger:msg05
 msgid "Sender"
 msgstr ""
 
-#: frmintlogger.msg06
-msgctxt "frmintlogger.msg06"
+#: frmintlogger:msg06
 msgid "Vector"
 msgstr ""
 
-#: frmintlogger.msg07
-msgctxt "frmintlogger.msg07"
+#: frmintlogger:msg07
 msgid "Status"
 msgstr ""
 
-#: frmintlogger.msg08
-msgctxt "frmintlogger.msg08"
+#: frmintlogger:msg08
 msgid "Flag"
 msgstr ""
 
-#: frmloadsavememory.msg01
-msgctxt "frmloadsavememory.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmloadsavememory.msg02
+#: frmloadsavememory:msg02
 msgid "Only hexadecimal values can be entered for address value!"
 msgstr ""
 
-#: frmloadsavememory.msg03
-#, object-pascal-format
+#: frmloadsavememory:msg03
 msgid "Memory address too high! (> %s)"
 msgstr ""
 
-#: frmloadsavememory.msg04
+#: frmloadsavememory:msg04
 msgid "&Save"
 msgstr ""
 
-#: frmloadsavememory.msg05
+#: frmloadsavememory:msg05
 msgid "&Load"
 msgstr ""
 
-#: frmloadsavememory.msg06
+#: frmloadsavememory:msg06
 msgid "Save parameters"
 msgstr ""
 
-#: frmloadsavememory.msg07
+#: frmloadsavememory:msg07
 msgid "Load parameters"
 msgstr ""
 
-#: frmmain.msg01
-msgctxt "frmmain.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmmain.msg02
+#: frmmain:msg02
 msgid "WARNING: "
 msgstr ""
 
-#: frmmain.msg03
+#: frmmain:msg03
 msgid "NOTE: "
 msgstr ""
 
-#: frmmain.msg04
+#: frmmain:msg04
 msgid "Plugin directory does not exist."
 msgstr ""
 
-#: frmmain.msg05
-#, object-pascal-format
+#: frmmain:msg05
 msgid "Cannot load plugins from %s."
 msgstr ""
 
-#: frmmain.msg06
-#, object-pascal-format
+#: frmmain:msg06
 msgid "%s plugins loaded."
 msgstr ""
 
-#: frmmain.msg07
+#: frmmain:msg07
 msgid "New, empty project has been created."
 msgstr ""
 
-#: frmmain.msg08
+#: frmmain:msg08
 msgid "New, empty script has been created."
 msgstr ""
 
-#: frmmain.msg100
-msgid "Cannot use it in this operation mode."
-msgstr ""
-
-#: frmmain.msg101
-#, object-pascal-format
-msgid "Module named '%s' not exists."
-msgstr ""
-
-#: frmmain.msg102
-#, object-pascal-format
-msgid "Property '%s' is read only or not exists."
-msgstr ""
-
-#: frmmain.msg103
-#, object-pascal-format
-msgid "Value '%s' is bad."
-msgstr ""
-
-#: frmmain.msg104
-#, object-pascal-format
-msgid "Property '%s' set to value '%s'."
-msgstr ""
-
-#: frmmain.msg18
+#: frmmain:msg18
 msgid "Missing help file."
 msgstr ""
 
-#: frmmain.msg19
+#: frmmain:msg19
 msgid "Missing help viewer."
 msgstr ""
 
-#: frmmain.msg28
+#: frmmain:msg28
 msgid "Save memory content to file"
 msgstr ""
 
-#: frmmain.msg29
-#, object-pascal-format
+#: frmmain:msg29
 msgid "Cannot save memory content to '%s' binary file."
 msgstr ""
 
-#: frmmain.msg30
+#: frmmain:msg30
 msgid "Load memory content from file"
 msgstr ""
 
-#: frmmain.msg31
-#, object-pascal-format
+#: frmmain:msg31
 msgid "Cannot load memory content from '%s' binary file."
 msgstr ""
 
-#: frmmain.msg32
+#: frmmain:msg32
 msgid "Binary file|*.bin|Intel hexa file|*.hex|All file|*.*"
 msgstr ""
 
-#: frmmain.msg35
-#, object-pascal-format
+#: frmmain:msg35
 msgid "Cannot load memory content from '%s' Intel hexa file."
 msgstr ""
 
-#: frmmain.msg36
-#, object-pascal-format
+#: frmmain:msg36
 msgid "Cannot save memory content to '%s' Intel hexa file."
 msgstr ""
 
-#: frmmain.msg37
+#: frmmain:msg37
 msgid "Data converting error."
 msgstr ""
 
-#: frmmain.msg38
+#: frmmain:msg38
 msgid "Checksum error."
 msgstr ""
 
-#: frmmain.msg39
+#: frmmain:msg39
 msgid "Unexpected error."
 msgstr ""
 
-#: frmmain.msg40
-#, object-pascal-format
+#: frmmain:msg40
 msgid "Cannot load '%s' configuration file, using default values."
 msgstr ""
 
-#: frmmain.msg41
-#, object-pascal-format
+#: frmmain:msg41
 msgid "Cannot save '%s' configuration file."
 msgstr ""
 
-#: frmmain.msg42
+#: frmmain:msg42
 msgid "No script, create or load one."
 msgstr ""
 
-#: frmmain.msg43
+#: frmmain:msg43
 msgid "Confirmation"
 msgstr ""
 
-#: frmmain.msg44
+#: frmmain:msg44
 msgid "There is already a script, do you want to delete it?"
 msgstr ""
 
-#: frmmain.msg45
+#: frmmain:msg45
 msgid "CoreLAB scriptembly file|*.clsce|All file|*.*"
 msgstr ""
 
-#: frmmain.msg46
-msgctxt "frmmain.msg46"
+#: frmmain:msg46
 msgid "Load script"
 msgstr ""
 
-#: frmmain.msg47
-msgctxt "frmmain.msg47"
+#: frmmain:msg47
 msgid "Save script"
 msgstr ""
 
-#: frmmain.msg48
-#, object-pascal-format
+#: frmmain:msg48
 msgid "Cannot load script from '%s' file."
 msgstr ""
 
-#: frmmain.msg49
-#, object-pascal-format
+#: frmmain:msg49
 msgid "Cannot save script to '%s' file."
 msgstr ""
 
-#: frmmain.msg50
+#: frmmain:msg50
 msgid "The script is unsaved, should I continue?"
 msgstr ""
 
-#: frmmain.msg51
+#: frmmain:msg51
 msgid "There is already a project, do you want to delete it?"
 msgstr ""
 
-#: frmmain.msg52
+#: frmmain:msg52
 msgid "CoreLAB project file|*.clprj|All file|*.*"
 msgstr ""
 
-#: frmmain.msg53
-msgctxt "frmmain.msg53"
+#: frmmain:msg53
 msgid "Load project"
 msgstr ""
 
-#: frmmain.msg54
-msgctxt "frmmain.msg54"
+#: frmmain:msg54
 msgid "Save project"
 msgstr ""
 
-#: frmmain.msg55
-#, object-pascal-format
+#: frmmain:msg55
 msgid "Cannot load project from '%s' file."
 msgstr ""
 
-#: frmmain.msg56
-#, object-pascal-format
+#: frmmain:msg56
 msgid "Cannot save project to '%s' file."
 msgstr ""
 
-#: frmmain.msg57
+#: frmmain:msg57
 msgid "The project is unsaved, should I continue?"
 msgstr ""
 
-#: frmmain.msg58
-#, object-pascal-format
+#: frmmain:msg58
 msgid "The %s module named '%s' was successfully created."
 msgstr ""
 
-#: frmmain.msg59
+#: frmmain:msg59
 msgid "&Destroy"
 msgstr ""
 
-#: frmmain.msg60
-#, object-pascal-format
+#: frmmain:msg60
 msgid "The module named '%s' was successfully destroyed."
 msgstr ""
 
-#: frmmain.msg61
+#: frmmain:msg61
 msgid "&Reset"
 msgstr ""
 
-#: frmmain.msg62
-#, object-pascal-format
+#: frmmain:msg62
 msgid "The module named '%s' has been reseted."
 msgstr ""
 
-#: frmmain.msg63
+#: frmmain:msg63
 msgid "&Enable"
 msgstr ""
 
-#: frmmain.msg64
-#, object-pascal-format
+#: frmmain:msg64
 msgid "The module named '%s' has been enabled."
 msgstr ""
 
-#: frmmain.msg65
+#: frmmain:msg65
 msgid "&Disable"
 msgstr ""
 
-#: frmmain.msg66
-#, object-pascal-format
+#: frmmain:msg66
 msgid "The module named '%s' has been disabled."
 msgstr ""
 
-#: frmmain.msg67
+#: frmmain:msg67
 msgid "&Attach to the bus"
 msgstr ""
 
-#: frmmain.msg68
-#, object-pascal-format
+#: frmmain:msg68
 msgid "The module named '%s' has been attached to the bus."
 msgstr ""
 
-#: frmmain.msg69
+#: frmmain:msg69
 msgid "&Detach from the bus"
 msgstr ""
 
-#: frmmain.msg70
-#, object-pascal-format
+#: frmmain:msg70
 msgid "The module named '%s' has been detached from the bus."
 msgstr ""
 
-#: frmmain.msg71
+#: frmmain:msg71
 msgid "Edit properties"
 msgstr ""
 
-#: frmmain.msg72
+#: frmmain:msg72
 msgid "&Load content"
 msgstr ""
 
-#: frmmain.msg73
-#, object-pascal-format
+#: frmmain:msg73
 msgid "Data loaded from '%s' into the module named '%s'."
 msgstr ""
 
-#: frmmain.msg74
+#: frmmain:msg74
 msgid "&Save content"
 msgstr ""
 
-#: frmmain.msg75
-#, object-pascal-format
+#: frmmain:msg75
 msgid "Data saved from the module named '%s' to '%s'."
 msgstr ""
 
-#: frmmain.msg76
+#: frmmain:msg76
 msgid "&Rename panel"
 msgstr ""
 
-#: frmmain.msg77
+#: frmmain:msg77
 msgid "&Move/resize panel"
 msgstr ""
 
-#: frmmain.msg78
+#: frmmain:msg78
 msgid "&Show panel"
 msgstr ""
 
-#: frmmain.msg79
+#: frmmain:msg79
 msgid "&Show"
 msgstr ""
 
-#: frmmain.msg80
-#, object-pascal-format
+#: frmmain:msg80
 msgid "Project loaded from '%s'."
 msgstr ""
 
-#: frmmain.msg81
-#, object-pascal-format
+#: frmmain:msg81
 msgid "Project saved to '%s'."
 msgstr ""
 
-#: frmmain.msg82
-#, object-pascal-format
+#: frmmain:msg82
 msgid "Script loaded from '%s'."
 msgstr ""
 
-#: frmmain.msg83
-#, object-pascal-format
+#: frmmain:msg83
 msgid "Script saved to '%s'."
 msgstr ""
 
-#: frmmain.msg84
+#: frmmain:msg84
 msgid "Cannot create backup file."
 msgstr ""
 
-#: frmmain.msg85
-#, object-pascal-format
+#: frmmain:msg85
 msgid "Module named '%s' exists."
 msgstr ""
 
-#: frmmain.msg86
+#: frmmain:msg86
 msgid "Unknown command."
 msgstr ""
 
-#: frmmain.msg87
+#: frmmain:msg87
 msgid "Invalid number of arguments."
 msgstr ""
 
-#: frmmain.msg88
+#: frmmain:msg88
 msgid "Cannot be used in command line."
 msgstr ""
 
-#: frmmain.msg89
+#: frmmain:msg89
 msgid "Cannot be used in script."
 msgstr ""
 
-#: frmmain.msg90
-#, object-pascal-format
+#: frmmain:msg90
 msgid "Cannot create %s module named '%s'."
 msgstr ""
 
-#: frmmain.msg91
-#, object-pascal-format
+#: frmmain:msg91
 msgid "Cannot view module content named '%s'."
 msgstr ""
 
-#: frmmain.msg92
-#, object-pascal-format
+#: frmmain:msg92
 msgid "Cannot rename module named '%s'."
 msgstr ""
 
-#: frmmain.msg93
-#, object-pascal-format
+#: frmmain:msg93
 msgid "Cannot show module named '%s'."
 msgstr ""
 
-#: frmmain.msg94
-#, object-pascal-format
+#: frmmain:msg94
 msgid "Cannot destroy module named '%s'."
 msgstr ""
 
-#: frmmain.msg95
-#, object-pascal-format
+#: frmmain:msg95
 msgid "Cannot reset module named '%s'."
 msgstr ""
 
-#: frmmain.msg96
-#, object-pascal-format
+#: frmmain:msg96
 msgid "Cannot enable module named '%s'."
 msgstr ""
 
-#: frmmain.msg97
-#, object-pascal-format
+#: frmmain:msg97
 msgid "Cannot disable module named '%s'."
 msgstr ""
 
-#: frmmain.msg98
-#, object-pascal-format
+#: frmmain:msg98
 msgid "Cannot attach module named '%s' to bus."
 msgstr ""
 
-#: frmmain.msg99
-#, object-pascal-format
+#: frmmain:msg99
 msgid "Cannot detach module named '%s' from bus."
 msgstr ""
 
-#: frmmoduleexplorer.msg01
-msgctxt "frmmoduleexplorer.msg01"
+#: frmmain:msg100
+msgid "Cannot use it in this operation mode."
+msgstr ""
+
+#: frmmain:msg101
+msgid "Module named '%s' not exists."
+msgstr ""
+
+#: frmmain:msg102
+msgid "Property '%s' is read only or not exists."
+msgstr ""
+
+#: frmmain:msg103
+msgid "Value '%s' is bad."
+msgstr ""
+
+#: frmmain:msg104
+msgid "Property '%s' set to value '%s'."
+msgstr ""
+
+#: frmmain:msg105
+msgid "Module named '%s' has been already attached."
+msgstr ""
+
+#: frmmain:msg106
+msgid "Module named '%s' has been already detached."
+msgstr ""
+
+#: frmmoduleexplorer:msg01 frmproperties:msg03
 msgid "Property"
 msgstr ""
 
-#: frmmoduleexplorer.msg02
-msgctxt "frmmoduleexplorer.msg02"
+#: frmmoduleexplorer:msg02 frmproperties:msg04 frmregviewer:msg04
+#: syneditstrconst:syns_attrvalue
 msgid "Value"
 msgstr ""
 
-#: frmproperties.msg01
-msgctxt "frmproperties.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmproperties.msg02
+#: frmproperties:msg02
 msgid "Cannot open memory modulka."
 msgstr ""
 
-#: frmproperties.msg03
-msgctxt "frmproperties.msg03"
-msgid "Property"
-msgstr ""
-
-#: frmproperties.msg04
-msgctxt "frmproperties.msg04"
-msgid "Value"
-msgstr ""
-
-#: frmproperties.msg05
+#: frmproperties:msg05
 msgid "The memory size can be 16 B-16 MB"
 msgstr ""
 
-#: frmproperties.msg06
+#: frmproperties:msg06
 msgid "Data conversion error at save."
 msgstr ""
 
-#: frmregviewer.msg01
-msgctxt "frmregviewer.msg01"
-msgid "ERROR: "
+#: frmproperties:msg07
+msgid "The address value be 0-2^24"
 msgstr ""
 
-#: frmregviewer.msg02
+#: frmregviewer:msg02
 msgid "Cannot open processor modul."
 msgstr ""
 
-#: frmregviewer.msg03
+#: frmregviewer:msg03 syneditstrconst:syns_attrregister
 msgid "Register"
 msgstr ""
 
-#: frmregviewer.msg04
-msgctxt "frmregviewer.msg04"
-msgid "Value"
-msgstr ""
-
-#: frmrunlogger.msg01
-msgctxt "frmrunlogger.msg01"
-msgid "ERROR: "
-msgstr ""
-
-#: frmrunlogger.msg02
-msgctxt "frmrunlogger.msg02"
-msgid "Save log to file"
-msgstr ""
-
-#: frmrunlogger.msg03
-#, object-pascal-format
-msgctxt "frmrunlogger.msg03"
-msgid "Cannot save '%s' log file."
-msgstr ""
-
-#: frmrunlogger.msg04
-msgctxt "frmrunlogger.msg04"
-msgid "Log file|*.log|All file|*.*"
-msgstr ""
-
-#: frmrunlogger.msg05
+#: frmrunlogger:msg05
 msgid "Counter"
 msgstr ""
 
-#: frmrunlogger.msg06
-msgctxt "frmrunlogger.msg06"
-msgid "Address"
-msgstr ""
-
-#: frmrunlogger.msg07
-msgctxt "frmrunlogger.msg07"
+#: frmrunlogger:msg07
 msgid "Opcode"
 msgstr ""
 
-#: frmrunlogger.msg08
-msgctxt "frmrunlogger.msg08"
+#: frmrunlogger:msg08
 msgid "Mnemonic"
 msgstr ""
 
-#: tform1.caption
-msgid "Form1"
+#: syneditstrconst:syns_untitled
+msgid "Untitled"
 msgstr ""
 
-#: tform1.fexit.caption
-msgid "E&xit"
+#: syneditstrconst:syns_attrasp
+msgid "Asp"
 msgstr ""
 
-#: tform1.fexit.hint
-msgid "Exit from application"
+#: syneditstrconst:syns_attrcdata
+msgid "CDATA"
 msgstr ""
 
-#: tform1.floadproject.caption
-msgid "&Load project..."
+#: syneditstrconst:syns_attrdoctype
+msgid "DOCTYPE"
 msgstr ""
 
-#: tform1.floadproject.hint
-msgctxt "tform1.floadproject.hint"
-msgid "Load project"
+#: syneditstrconst:syns_attrannotation
+msgid "Annotation"
 msgstr ""
 
-#: tform1.fnewproject.caption
-msgid "&New project"
+#: syneditstrconst:syns_attrassembler
+msgid "Assembler"
 msgstr ""
 
-#: tform1.fnewproject.hint
-msgid "Create new project"
+#: syneditstrconst:syns_attrattributename
+msgid "Attribute Name"
 msgstr ""
 
-#: tform1.frestartapplication.caption
-msgid "&Restart application"
+#: syneditstrconst:syns_attrattributevalue
+msgid "Attribute Value"
 msgstr ""
 
-#: tform1.frestartapplication.hint
-msgid "Restart application"
+#: syneditstrconst:syns_attrblock
+msgid "Block"
 msgstr ""
 
-#: tform1.fsaveproject.caption
-msgid "&Save project"
+#: syneditstrconst:syns_attrbrackets
+msgid "Brackets"
 msgstr ""
 
-#: tform1.fsaveproject.hint
-msgctxt "tform1.fsaveproject.hint"
-msgid "Save project"
+#: syneditstrconst:syns_attrcdatasection
+msgid "CDATA Section"
 msgstr ""
 
-#: tform1.fsaveprojectas.caption
-msgid "Save project &as..."
+#: syneditstrconst:syns_attrcharacter
+msgid "Character"
 msgstr ""
 
-#: tform1.fsaveprojectas.hint
-msgid "Save project as"
+#: syneditstrconst:syns_attrclass
+msgid "Class"
 msgstr ""
 
-#: tform1.fsettings.caption
-msgid "Set&tings..."
+#: syneditstrconst:syns_attrcomment
+msgid "Comment"
 msgstr ""
 
-#: tform1.fsettings.hint
-msgctxt "tform1.fsettings.hint"
-msgid "Settings"
+#: syneditstrconst:syns_attridedirective
+msgid "IDE Directive"
 msgstr ""
 
-#: tform1.fswitchtointeractivemode.caption
-msgid "Switch to &interactive mode"
+#: syneditstrconst:syns_attrcondition
+msgid "Condition"
 msgstr ""
 
-#: tform1.fswitchtointeractivemode.hint
-msgid "Switch to interactive mode"
+#: syneditstrconst:syns_attrdatatype
+msgid "Data type"
 msgstr ""
 
-#: tform1.fswitchtoscriptmode.caption
-msgid "Switch to s&cript mode"
+#: syneditstrconst:syns_attrdefaultpackage
+msgid "Default packages"
 msgstr ""
 
-#: tform1.fswitchtoscriptmode.hint
-msgid "Switch to script mode"
+#: syneditstrconst:syns_attrdir
+msgid "Direction"
 msgstr ""
 
-#: tform1.habout.caption
-msgid "&About"
+#: syneditstrconst:syns_attrdirective
+msgid "Directive"
 msgstr ""
 
-#: tform1.hhelp.caption
-msgctxt "tform1.hhelp.caption"
-msgid "&Help"
+#: syneditstrconst:syns_attrdoctypesection
+msgid "DOCTYPE Section"
 msgstr ""
 
-#: tform1.ioattachtobus.caption
-msgctxt "tform1.ioattachtobus.caption"
-msgid "&Attach to bus..."
+#: syneditstrconst:syns_attrdocumentation
+msgid "Documentation"
 msgstr ""
 
-#: tform1.ioattachtobus.hint
-msgctxt "tform1.ioattachtobus.hint"
-msgid "Attach to bus"
+#: syneditstrconst:syns_attrelementname
+msgid "Element Name"
 msgstr ""
 
-#: tform1.iocreate.caption
-msgctxt "tform1.iocreate.caption"
-msgid "&Create..."
+#: syneditstrconst:syns_attrembedsql
+msgid "Embedded SQL"
 msgstr ""
 
-#: tform1.iocreate.hint
-msgid "Create I/O port or device"
+#: syneditstrconst:syns_attrembedtext
+msgid "Embedded text"
 msgstr ""
 
-#: tform1.iodestroy.caption
-msgid "&Destroy..."
+#: syneditstrconst:syns_attrentityreference
+msgid "Entity Reference"
 msgstr ""
 
-#: tform1.iodestroy.hint
-msgid "Destroy I/O port or device"
+#: syneditstrconst:syns_attrescapeampersand
+msgid "Escape ampersand"
 msgstr ""
 
-#: tform1.iodetachfrombus.caption
-msgctxt "tform1.iodetachfrombus.caption"
-msgid "&Detach from bus..."
+#: syneditstrconst:syns_attrevent
+msgid "Event"
 msgstr ""
 
-#: tform1.iodetachfrombus.hint
-msgctxt "tform1.iodetachfrombus.hint"
-msgid "Detach from bus"
+#: syneditstrconst:syns_attrexception
+msgid "Exception"
 msgstr ""
 
-#: tform1.iodisable.caption
-msgctxt "tform1.iodisable.caption"
-msgid "&Disable..."
+#: syneditstrconst:syns_attrfloat
+msgid "Float"
 msgstr ""
 
-#: tform1.iodisable.hint
-msgid "Disable I/O module"
+#: syneditstrconst:syns_attrform
+msgid "Form"
 msgstr ""
 
-#: tform1.ioenable.caption
-msgctxt "tform1.ioenable.caption"
-msgid "&Enable..."
+#: syneditstrconst:syns_attrfunction
+msgid "Function"
 msgstr ""
 
-#: tform1.ioenable.hint
-msgid "Enable I/O module"
+#: syneditstrconst:syns_attrhexadecimal
+msgid "Hexadecimal"
 msgstr ""
 
-#: tform1.ioproperties.caption
-msgctxt "tform1.ioproperties.caption"
-msgid "&Properties..."
+#: syneditstrconst:syns_attricon
+msgid "Icon reference"
 msgstr ""
 
-#: tform1.ioproperties.hint
-msgctxt "tform1.ioproperties.hint"
-msgid "Properties"
+#: syneditstrconst:syns_attridentifier
+msgid "Identifier"
 msgstr ""
 
-#: tform1.ioreset.caption
-msgctxt "tform1.ioreset.caption"
-msgid "&Reset..."
+#: syneditstrconst:syns_attrillegalchar
+msgid "Illegal char"
 msgstr ""
 
-#: tform1.ioreset.hint
-msgid "Reset I/O port or device"
+#: syneditstrconst:syns_attrinclude
+msgid "Include"
 msgstr ""
 
-#: tform1.mattachtobus.caption
-msgctxt "tform1.mattachtobus.caption"
-msgid "&Attach to bus..."
+#: syneditstrconst:syns_attrindirect
+msgid "Indirect"
 msgstr ""
 
-#: tform1.mattachtobus.hint
-msgctxt "tform1.mattachtobus.hint"
-msgid "Attach to bus"
+#: syneditstrconst:syns_attrinvalidsymbol
+msgid "Invalid symbol"
 msgstr ""
 
-#: tform1.mcreate.caption
-msgctxt "tform1.mcreate.caption"
-msgid "&Create..."
+#: syneditstrconst:syns_attrinternalfunction
+msgid "Internal function"
 msgstr ""
 
-#: tform1.mcreate.hint
-msgid "Create memory"
+#: syneditstrconst:syns_attrkey
+msgid "Key"
 msgstr ""
 
-#: tform1.mdestroy.caption
-msgctxt "tform1.mdestroy.caption"
-msgid "Destro&y..."
+#: syneditstrconst:syns_attrlabel
+msgid "Label"
 msgstr ""
 
-#: tform1.mdestroy.hint
-msgid "Destroy memory"
+#: syneditstrconst:syns_attrmacro
+msgid "Macro"
 msgstr ""
 
-#: tform1.mdetachfrombus.caption
-msgctxt "tform1.mdetachfrombus.caption"
-msgid "&Detach from bus..."
+#: syneditstrconst:syns_attrmarker
+msgid "Marker"
 msgstr ""
 
-#: tform1.mdetachfrombus.hint
-msgctxt "tform1.mdetachfrombus.hint"
-msgid "Detach from bus"
+#: syneditstrconst:syns_attrmessage
+msgid "Message"
 msgstr ""
 
-#: tform1.mdisable.caption
-msgctxt "tform1.mdisable.caption"
-msgid "&Disable..."
+#: syneditstrconst:syns_attrmiscellaneous
+msgid "Miscellaneous"
 msgstr ""
 
-#: tform1.mdisable.hint
-msgid "Disable memory modul"
+#: syneditstrconst:syns_attrnamespaceattrname
+msgid "Namespace Attribute Name"
 msgstr ""
 
-#: tform1.menable.caption
-msgctxt "tform1.menable.caption"
-msgid "&Enable..."
+#: syneditstrconst:syns_attrnamespaceattrvalue
+msgid "Namespace Attribute Value"
 msgstr ""
 
-#: tform1.menable.hint
-msgid "Enable memory modul"
+#: syneditstrconst:syns_attrnonreservedkeyword
+msgid "Non-reserved keyword"
 msgstr ""
 
-#: tform1.menuitem1.caption
-msgid "&File"
+#: syneditstrconst:syns_attrnull
+msgid "Null"
 msgstr ""
 
-#: tform1.menuitem2.caption
-msgid "&View"
+#: syneditstrconst:syns_attrnumber
+msgid "Number"
 msgstr ""
 
-#: tform1.menuitem3.caption
-msgid "&Processor"
+#: syneditstrconst:syns_attroctal
+msgid "Octal"
 msgstr ""
 
-#: tform1.menuitem4.caption
-msgid "&Memory"
+#: syneditstrconst:syns_attroperator
+msgid "Operator"
 msgstr ""
 
-#: tform1.menuitem5.caption
-msgid "&I/O port"
+#: syneditstrconst:syns_attrplsql
+msgid "Reserved word (PL/SQL)"
 msgstr ""
 
-#: tform1.menuitem6.caption
-msgid "&Operation"
+#: syneditstrconst:syns_attrpragma
+msgid "Pragma"
 msgstr ""
 
-#: tform1.menuitem7.caption
-msgid "&Script"
+#: syneditstrconst:syns_attrpreprocessor
+msgid "Preprocessor"
 msgstr ""
 
-#: tform1.menuitem8.caption
-msgctxt "tform1.menuitem8.caption"
-msgid "&Help"
+#: syneditstrconst:syns_attrprocessinginstr
+msgid "Processing Instruction"
 msgstr ""
 
-#: tform1.mexaminedeposit.caption
-msgid "E&xamine/deposit..."
+#: syneditstrconst:syns_attrqualifier
+msgid "Qualifier"
 msgstr ""
 
-#: tform1.mexaminedeposit.hint
-msgid "Examine/deposit memory cell"
+#: syneditstrconst:syns_attrreservedword
+msgid "Reserved word"
 msgstr ""
 
-#: tform1.mloadmemorycontent.caption
-msgid "&Load memory content..."
+#: syneditstrconst:syns_attrrpl
+msgid "Rpl"
 msgstr ""
 
-#: tform1.mloadmemorycontent.hint
-msgid "Load memory content"
+#: syneditstrconst:syns_attrrplkey
+msgid "Rpl key"
 msgstr ""
 
-#: tform1.mproperties.caption
-msgctxt "tform1.mproperties.caption"
-msgid "&Properties..."
+#: syneditstrconst:syns_attrrplcomment
+msgid "Rpl comment"
 msgstr ""
 
-#: tform1.mproperties.hint
-msgctxt "tform1.mproperties.hint"
-msgid "Properties"
+#: syneditstrconst:syns_attrsasm
+msgid "SASM"
 msgstr ""
 
-#: tform1.mreset.caption
-msgctxt "tform1.mreset.caption"
-msgid "&Reset..."
+#: syneditstrconst:syns_attrsasmcomment
+msgid "SASM Comment"
 msgstr ""
 
-#: tform1.mreset.hint
-msgid "Reset I/O port"
+#: syneditstrconst:syns_attrsasmkey
+msgid "SASM Key"
 msgstr ""
 
-#: tform1.msavememorycontent.caption
-msgid "&Save memory content..."
+#: syneditstrconst:syns_attrsecondreservedword
+msgid "Second reserved word"
 msgstr ""
 
-#: tform1.msavememorycontent.hint
-msgid "Save memory content"
+#: syneditstrconst:syns_attrsection
+msgid "Section"
 msgstr ""
 
-#: tform1.oirq.caption
-msgid "IR&Q..."
+#: syneditstrconst:syns_attrspace
+msgid "Space"
 msgstr ""
 
-#: tform1.oirq.hint
-msgid "IRQ"
+#: syneditstrconst:syns_attrspecialvariable
+msgid "Special variable"
 msgstr ""
 
-#: tform1.omakesnapshot.caption
-msgid "Make snaps&hot"
+#: syneditstrconst:syns_attrsqlkey
+msgid "SQL keyword"
 msgstr ""
 
-#: tform1.omakesnapshot.hint
-msgid "Make snapshot"
+#: syneditstrconst:syns_attrsqlplus
+msgid "SQL*Plus command"
 msgstr ""
 
-#: tform1.onmi.caption
-msgid "&NMI"
+#: syneditstrconst:syns_attrstring
+msgid "String"
 msgstr ""
 
-#: tform1.onmi.hint
-msgid "NMI"
+#: syneditstrconst:syns_attrsymbol
+msgid "Symbol"
 msgstr ""
 
-#: tform1.oresetall.caption
-msgid "R&eset all"
+#: syneditstrconst:syns_attrprocedureheadername
+msgid "Procedure header name"
 msgstr ""
 
-#: tform1.oresetall.hint
-msgid "Reset all"
+#: syneditstrconst:syns_attrcaselabel
+msgid "Case label"
 msgstr ""
 
-#: tform1.orestoresnapshot.caption
-msgid "Rest&ore snapshot..."
+#: syneditstrconst:syns_attrsyntaxerror
+msgid "SyntaxError"
 msgstr ""
 
-#: tform1.orestoresnapshot.hint
-msgid "Rest&ore snapshot"
+#: syneditstrconst:syns_attrsystem
+msgid "System functions and variables"
 msgstr ""
 
-#: tform1.orun.caption
-msgid "&Run"
+#: syneditstrconst:syns_attrsystemvalue
+msgid "System value"
 msgstr ""
 
-#: tform1.orun.hint
-msgid "Run"
+#: syneditstrconst:syns_attrterminator
+msgid "Terminator"
 msgstr ""
 
-#: tform1.ostep.caption
-msgid "S&tep"
+#: syneditstrconst:syns_attrtext
+msgid "Text"
 msgstr ""
 
-#: tform1.ostep.hint
-msgid "Step"
+#: syneditstrconst:syns_attrunknownword
+msgid "Unknown word"
 msgstr ""
 
-#: tform1.ostop.caption
-msgid "&Stop"
+#: syneditstrconst:syns_attruser
+msgid "User functions and variables"
 msgstr ""
 
-#: tform1.ostop.hint
-msgid "Stop"
+#: syneditstrconst:syns_attruserfunction
+msgid "User functions"
 msgstr ""
 
-#: tform1.pattachtobus.caption
-msgctxt "tform1.pattachtobus.caption"
-msgid "&Attach to bus..."
+#: syneditstrconst:syns_attrvariable
+msgid "Variable"
 msgstr ""
 
-#: tform1.pattachtobus.hint
-msgctxt "tform1.pattachtobus.hint"
-msgid "Attach to bus"
+#: syneditstrconst:syns_attrwhitespace
+msgid "Whitespace"
 msgstr ""
 
-#: tform1.pcreate.caption
-msgctxt "tform1.pcreate.caption"
-msgid "&Create..."
+#: syneditstrconst:syns_attrtablename
+msgid "Table Name"
 msgstr ""
 
-#: tform1.pcreate.hint
-msgid "Create processor"
+#: syneditstrconst:syns_attrmathmode
+msgid "Math Mode"
 msgstr ""
 
-#: tform1.pdestroy.caption
-msgctxt "tform1.pdestroy.caption"
-msgid "Destro&y..."
+#: syneditstrconst:syns_attrtextmathmode
+msgid "Text in Math Mode"
 msgstr ""
 
-#: tform1.pdestroy.hint
-msgid "Destroy processor"
+#: syneditstrconst:syns_attrsquarebracket
+msgid "Square Bracket"
 msgstr ""
 
-#: tform1.pdetachfrombus.caption
-msgctxt "tform1.pdetachfrombus.caption"
-msgid "&Detach from bus..."
+#: syneditstrconst:syns_attrroundbracket
+msgid "Round Bracket"
 msgstr ""
 
-#: tform1.pdetachfrombus.hint
-msgctxt "tform1.pdetachfrombus.hint"
-msgid "Detach from bus"
+#: syneditstrconst:syns_attrtexcommand
+msgid "TeX Command"
 msgstr ""
 
-#: tform1.pdisable.caption
-msgctxt "tform1.pdisable.caption"
-msgid "&Disable..."
+#: syneditstrconst:syns_attrorigfile
+msgid "Diff Original File"
 msgstr ""
 
-#: tform1.pdisable.hint
-msgid "Disable processor module"
+#: syneditstrconst:syns_attrnewfile
+msgid "Diff New File"
 msgstr ""
 
-#: tform1.penable.caption
-msgctxt "tform1.penable.caption"
-msgid "&Enable..."
+#: syneditstrconst:syns_attrchunkmarker
+msgid "Diff Chunk Marker"
 msgstr ""
 
-#: tform1.penable.hint
-msgid "Enable processor module"
+#: syneditstrconst:syns_attrchunkorig
+msgid "Diff Chunk Original Line Count"
 msgstr ""
 
-#: tform1.pproperties.caption
-msgctxt "tform1.pproperties.caption"
-msgid "&Properties..."
+#: syneditstrconst:syns_attrchunknew
+msgid "Diff Chunk New Line Count"
 msgstr ""
 
-#: tform1.pproperties.hint
-msgctxt "tform1.pproperties.hint"
-msgid "Properties"
+#: syneditstrconst:syns_attrchunkmixed
+msgid "Diff Chunk Line Counts"
 msgstr ""
 
-#: tform1.preset.caption
-msgctxt "tform1.preset.caption"
-msgid "&Reset..."
+#: syneditstrconst:syns_attrlineadded
+msgid "Diff Added line"
 msgstr ""
 
-#: tform1.preset.hint
-msgid "Reset processor"
+#: syneditstrconst:syns_attrlineremoved
+msgid "Diff Removed Line"
 msgstr ""
 
-#: tform1.sloadscript.caption
-msgid "&Load script..."
+#: syneditstrconst:syns_attrlinechanged
+msgid "Diff Changed Line"
 msgstr ""
 
-#: tform1.sloadscript.hint
-msgctxt "tform1.sloadscript.hint"
-msgid "Load script"
+#: syneditstrconst:syns_attrlinecontext
+msgid "Diff Context Line"
 msgstr ""
 
-#: tform1.snewscript.caption
-msgid "&New script"
+#: syneditstrconst:syns_attrprevvalue
+msgid "Previous value"
 msgstr ""
 
-#: tform1.snewscript.hint
-msgid "New script"
+#: syneditstrconst:syns_attrmeasurementunitvalue
+msgid "Measurement unit"
 msgstr ""
 
-#: tform1.srunscript.caption
-msgid "&Run script"
+#: syneditstrconst:syns_attrselectorvalue
+msgid "Selector"
 msgstr ""
 
-#: tform1.srunscript.hint
-msgid "Run script"
+#: syneditstrconst:syns_attrflags
+msgid "Flags"
 msgstr ""
 
-#: tform1.ssavescript.caption
-msgctxt "tform1.ssavescript.caption"
-msgid "Save script"
+#: syneditstrconst:syns_exporterformathtml
+msgid "HTML"
 msgstr ""
 
-#: tform1.ssavescript.hint
-msgctxt "tform1.ssavescript.hint"
-msgid "Save script"
+#: syneditstrconst:syns_exporterformatrtf
+msgid "RTF"
 msgstr ""
 
-#: tform1.ssavescriptas.caption
-msgid "S&ave script as..."
+#: syneditstrconst:syns_scrollinfofmt
+msgid "%d - %d"
 msgstr ""
 
-#: tform1.ssavescriptas.hint
-msgid "Save script as"
+#: syneditstrconst:syns_scrollinfofmttop
+msgid "Top Line: %d"
 msgstr ""
 
-#: tform1.sstepscript.caption
-msgid "St&ep script"
+#: syneditstrconst:syns_previewscrollinfofmt
+msgid "Page: %d"
 msgstr ""
 
-#: tform1.sstepscript.hint
-msgid "Step script"
+#: syneditstrconst:syns_eduplicateshortcut
+msgid "Mouse-Shortcut already exists"
 msgstr ""
 
-#: tform1.sstopscript.caption
-msgid "S&top script"
+#: syneditstrconst:syns_shortcutnone
+msgid "<none>"
 msgstr ""
 
-#: tform1.sstopscript.hint
-msgid "Stop script"
+#: syneditstrconst:syns_duplicateshortcutmsg
+msgid ""
+"The keystroke \"%s\" is already assigned to another editor command. (%s)"
 msgstr ""
 
-#: tform1.tabsheet1.caption
-msgid "Operation"
+#: syneditstrconst:syns_filterpascal
+msgid "Pascal Files (*.pas,*.dpr,*.dpk,*.inc)|*.pas;*.dpr;*.dpk;*.inc"
 msgstr ""
 
-#: tform1.tabsheet2.caption
-msgid "Processor"
+#: syneditstrconst:syns_filterhp48
+msgid "HP48 Files (*.s,*.sou,*.a,*.hp)|*.s;*.sou;*.a;*.hp"
 msgstr ""
 
-#: tform1.tabsheet3.caption
-msgid "Memory"
+#: syneditstrconst:syns_filtercaclipper
+msgid "CA-Clipper Files (*.prg,*.ch,*.inc)|*.prg;*.ch;*.inc"
 msgstr ""
 
-#: tform1.tabsheet4.caption
-msgid "I/O port"
+#: syneditstrconst:syns_filtercorbaidl
+msgid "CORBA IDL files (*.idl)|*.idl"
 msgstr ""
 
-#: tform1.tabsheet5.caption
-msgid "Script"
+#: syneditstrconst:syns_filtercpm
+msgid "CPM reports (*.rdf,*.rif,*.rmf,*.rxf)|*.rdf;*.rif;*.rmf;*.rxf"
 msgstr ""
 
-#: tform1.toolbar1.caption
-msgid "ToolBar1"
+#: syneditstrconst:syns_filtercpp
+msgid "C++ Files (*.c,*.cpp,*.h,*.hpp,*.hh)|*.c;*.cpp;*.h;*.hpp;*.hh"
 msgstr ""
 
-#: tform1.toolbar2.caption
-msgid "ToolBar2"
+#: syneditstrconst:syns_filterjava
+msgid "Java Files (*.java)|*.java"
 msgstr ""
 
-#: tform1.toolbar3.caption
-msgid "ToolBar3"
+#: syneditstrconst:syns_filterperl
+msgid "Perl Files (*.pl,*.pm,*.cgi)|*.pl;*.pm;*.cgi"
 msgstr ""
 
-#: tform1.toolbar4.caption
-msgid "ToolBar4"
+#: syneditstrconst:syns_filterawk
+msgid "AWK Script (*.awk)|*.awk"
 msgstr ""
 
-#: tform1.toolbar5.caption
-msgid "ToolBar5"
+#: syneditstrconst:syns_filterhtml
+msgid "HTML Document (*.htm,*.html)|*.htm;*.html"
 msgstr ""
 
-#: tform1.toolbar6.caption
-msgid "ToolBar6"
+#: syneditstrconst:syns_filtervbscript
+msgid "VBScript Files (*.vbs)|*.vbs"
 msgstr ""
 
-#: tform1.toolbar7.caption
-msgid "ToolBar7"
+#: syneditstrconst:syns_filtergalaxy
+msgid "Galaxy Files (*.gtv,*.galrep,*.txt)|*.gtv;*.galrep;*.txt"
 msgstr ""
 
-#: tform1.toolbutton16.caption
-msgid "ToolButton16"
+#: syneditstrconst:syns_filterpython
+msgid "Python Files (*.py)|*.py"
 msgstr ""
 
-#: tform1.toolbutton22.caption
-msgid "ToolButton22"
+#: syneditstrconst:syns_filtersql
+msgid "SQL Files (*.sql)|*.sql"
 msgstr ""
 
-#: tform1.toolbutton25.caption
-msgid "ToolButton25"
+#: syneditstrconst:syns_filtertcltk
+msgid "Tcl/Tk Files (*.tcl)|*.tcl"
 msgstr ""
 
-#: tform1.toolbutton27.caption
-msgid "ToolButton27"
+#: syneditstrconst:syns_filterrtf
+msgid "Rich Text Format (*.rtf)|*.rtf"
 msgstr ""
 
-#: tform1.toolbutton33.caption
-msgid "ToolButton33"
+#: syneditstrconst:syns_filterbatch
+msgid "MS-DOS Batch Files (*.bat;*.cmd)|*.bat;*.cmd"
 msgstr ""
 
-#: tform1.toolbutton37.caption
-msgid "ToolButton37"
+#: syneditstrconst:syns_filterdfm
+msgid "Borland Form Files (*.dfm;*.xfm)|*.dfm;*.xfm"
 msgstr ""
 
-#: tform1.toolbutton44.caption
-msgid "ToolButton44"
+#: syneditstrconst:syns_filterlfm
+msgid "Lazarus Form Files (*.lfm)|*.lfm"
 msgstr ""
 
-#: tform1.toolbutton47.caption
-msgid "ToolButton47"
+#: syneditstrconst:syns_filterx86asm
+msgid "x86 Assembly Files (*.asm)|*.ASM"
 msgstr ""
 
-#: tform1.toolbutton51.caption
-msgid "ToolButton51"
+#: syneditstrconst:syns_filtergembase
+msgid "GEMBASE Files (*.dml,*.gem)|*.DML;*.GEM"
 msgstr ""
 
-#: tform1.toolbutton55.caption
-msgid "ToolButton55"
+#: syneditstrconst:syns_filterini
+msgid "INI Files (*.ini)|*.ini"
 msgstr ""
 
-#: tform1.toolbutton57.caption
-msgid "ToolButton57"
+#: syneditstrconst:syns_filtersml
+msgid "Standard ML Files (*.sml)|*.sml"
 msgstr ""
 
-#: tform1.toolbutton60.caption
-msgid "ToolButton60"
+#: syneditstrconst:syns_filtervisualbasic
+msgid "Visual Basic Files (*.bas)|*.bas"
 msgstr ""
 
-#: tform1.toolbutton63.caption
-msgid "ToolButton63"
+#: syneditstrconst:syns_filteradsp21xx
+msgid "DSP Files (*.dsp,*.inc)|*.DSP;*.INC"
 msgstr ""
 
-#: tform1.toolbutton68.caption
-msgid "ToolButton68"
+#: syneditstrconst:syns_filterphp
+msgid "PHP Files (*.php,*.php3,*.phtml,*.inc)|*.php;*.php3;*.phtml;*.inc"
 msgstr ""
 
-#: tform1.toolbutton71.caption
-msgid "ToolButton71"
+#: syneditstrconst:syns_filtercache
+msgid "Cache Files (*.mac,*.inc,*.int)|*.mac;*.inc;*.int"
 msgstr ""
 
-#: tform1.toolbutton74.caption
-msgid "ToolButton74"
+#: syneditstrconst:syns_filtercss
+msgid "Cascading Stylesheets (*.css)|*.css"
 msgstr ""
 
-#: tform1.toolbutton75.caption
-msgid "ToolButton75"
+#: syneditstrconst:syns_filterjscript
+msgid "Javascript Files (*.js)|*.js"
 msgstr ""
 
-#: tform1.toolbutton9.caption
-msgid "ToolButton9"
+#: syneditstrconst:syns_filterkix
+msgid "KiXtart scripts (*.kix)|*.kix"
 msgstr ""
 
-#: tform1.vmoduleexplorer.caption
-msgid "Show Module Explorer..."
+#: syneditstrconst:syns_filterbaan
+msgid "Baan 4GL Files (*.cln)|*.cln"
 msgstr ""
 
-#: tform1.vmoduleexplorer.hint
-msgid "Show Module Explorer"
+#: syneditstrconst:syns_filterfoxpro
+msgid "Foxpro Files (*.prg)|*.prg"
 msgstr ""
 
-#: tform1.vmoveresizeiopanel.caption
-msgid "Move/resize I/O panel..."
+#: syneditstrconst:syns_filterfortran
+msgid "Fortran Files (*.for)|*.for"
 msgstr ""
 
-#: tform1.vmoveresizeiopanel.hint
-msgid "Move/resize I/O panel"
+#: syneditstrconst:syns_filterasm68hc11
+msgid "68HC11 Assembler Files (*.hc11,*.asm,*.asc)|*.HC11;*.ASM;*.ASC"
 msgstr ""
 
-#: tform1.vrenameiopanel.caption
-msgid "Rename I/O panel..."
+#: syneditstrconst:syns_filterprogress
+msgid "Progress Files (*.w,*.p,*.i)|*.w;*.p;*.i"
 msgstr ""
 
-#: tform1.vrenameiopanel.hint
-msgid "Rename I/O panel"
+#: syneditstrconst:syns_filterinno
+msgid "Inno Setup Script Files (*.iss)|*.iss"
 msgstr ""
 
-#: tform1.vshowbreakpointmanager.caption
-msgid "Show &Breakpoint Manager..."
+#: syneditstrconst:syns_filtermodelica
+msgid "Modelica Files (*.mo)|*.mo"
 msgstr ""
 
-#: tform1.vshowbreakpointmanager.hint
-msgid "Show Breakpoint Manager"
+#: syneditstrconst:syns_filtermodula3
+msgid "Modula-3 Files (*.m3)|*.m3"
 msgstr ""
 
-#: tform1.vshowhexviewer.caption
-msgid "Show He&xViewer..."
+#: syneditstrconst:syns_filtersdd
+msgid "Semanta DD files (*.sdd)|*.sdd"
 msgstr ""
 
-#: tform1.vshowhexviewer.hint
-msgid "Show HexViewer"
+#: syneditstrconst:syns_filterxml
+msgid ""
+"XML Document (*.xml,*.xsd,*.xsl,*.xslt,*.dtd)|*.xml;*.xsd;*.xsl;*.xslt;*.dtd"
 msgstr ""
 
-#: tform1.vshowintlogger.caption
-msgid "Show &IntLogger..."
+#: syneditstrconst:syns_filtergws
+msgid "GW-TEL Script Files (*.gws)|*.gws"
 msgstr ""
 
-#: tform1.vshowintlogger.hint
-msgid "Show IntLogger"
+#: syneditstrconst:syns_filtersyngenmsgfiles
+msgid "Msg files (*.msg)|*.msg"
 msgstr ""
 
-#: tform1.vshowiopanel.caption
-msgid "Show I/O panel..."
+#: syneditstrconst:syns_filterunixshellscript
+msgid "UNIX Shell Scripts (*.sh)|*.sh"
 msgstr ""
 
-#: tform1.vshowiopanel.hint
-msgid "Show I/O panel"
+#: syneditstrconst:syns_filtertex
+msgid "TeX Files (*.tex)|*.tex"
 msgstr ""
 
-#: tform1.vshowregviewer.caption
-msgid "Show Re&gViewer..."
+#: syneditstrconst:syns_filterpo
+msgid "Po Files (*.po)|*.po"
 msgstr ""
 
-#: tform1.vshowregviewer.hint
-msgid "Show RegViewer"
+#: syneditstrconst:syns_emcnone
+msgid "No Action"
 msgstr ""
 
-#: tform1.vshowrunlogger.caption
-msgid "Show &RunLogger..."
+#: syneditstrconst:syns_emcstartselection
+msgid "Selection"
 msgstr ""
 
-#: tform1.vshowrunlogger.hint
-msgid "Show RunLogger"
+#: syneditstrconst:syns_emcstartcolumnselections
+msgid "Column Selection"
 msgstr ""
 
-#: tform1.vshowscriptconsole.caption
-msgid "Show Scrip&tConsole..."
+#: syneditstrconst:syns_emcstartlineselections
+msgid "Line Selection"
 msgstr ""
 
-#: tform1.vshowscriptconsole.hint
-msgid "Show ScriptConsole"
+#: syneditstrconst:syns_emcstartlineselectionsnoneempty
+msgid "Line Selection (select immediate)"
 msgstr ""
 
-#: tform1.vshowscripteditor.caption
-msgid "Show S&criptEditor..."
+#: syneditstrconst:syns_emcselection_opt
+msgid "Mode,Begin,Continue"
 msgstr ""
 
-#: tform1.vshowscripteditor.hint
-msgid "Show ScriptEditor"
+#: syneditstrconst:syns_emcselectword
+msgid "Select Word"
 msgstr ""
 
-#: tform10.button1.caption
-msgctxt "tform10.button1.caption"
-msgid "&Apply"
+#: syneditstrconst:syns_emcselectline
+msgid "Select Line"
 msgstr ""
 
-#: tform10.button2.caption
-msgid "&Add new"
+#: syneditstrconst:syns_emcselectline_opt
+msgid "\"Include spaces\",no,yes"
 msgstr ""
 
-#: tform10.button3.caption
-msgctxt "tform10.button3.caption"
-msgid "&Cancel"
+#: syneditstrconst:syns_emcselectpara
+msgid "Select Paragraph"
 msgstr ""
 
-#: tform10.caption
-msgid "Breakpoint Manager"
+#: syneditstrconst:syns_emcstartdragmove
+msgid "Drag Selection"
 msgstr ""
 
-#: tform11.button1.caption
-msgctxt "tform11.button1.caption"
-msgid "&Close"
+#: syneditstrconst:syns_emcpasteselection
+msgid "Quick Paste Selection"
 msgstr ""
 
-#: tform11.button2.caption
-msgid "&Put"
+#: syneditstrconst:syns_emcmouselink
+msgid "Source Link"
 msgstr ""
 
-#: tform11.button3.caption
-msgid "&Get"
+#: syneditstrconst:syns_emcmouselink_opt
+msgid "Underline,yes, no"
 msgstr ""
 
-#: tform11.caption
-msgid "RegViewer"
+#: syneditstrconst:syns_emcstartdragmove_opt
+msgid "\"Caret on up if not dragged\",yes,no"
 msgstr ""
 
-#: tform12.button1.caption
-msgctxt "tform12.button1.caption"
-msgid "&Close"
+#: syneditstrconst:syns_emccontextmenu
+msgid "Popup Menu"
 msgstr ""
 
-#: tform12.button2.caption
-msgctxt "tform12.button2.caption"
-msgid "Clea&r"
+#: syneditstrconst:syns_emcbreakpointtoggle
+msgid "Toggle Breakpoint"
 msgstr ""
 
-#: tform12.caption
-msgctxt "tform12.caption"
-msgid "ScriptConsole"
+#: syneditstrconst:syns_emccodefoldcollaps
+msgid "Fold Code"
 msgstr ""
 
-#: tform13.button1.caption
-msgctxt "tform13.button1.caption"
-msgid "&Set"
+#: syneditstrconst:syns_emccodefoldcollaps_opt
+msgid "Nodes,One,\"All on line\",\"At Caret\",\"Current Node\""
 msgstr ""
 
-#: tform13.button2.caption
-msgctxt "tform13.button2.caption"
-msgid "&Cancel"
+#: syneditstrconst:syns_emccodefoldexpand
+msgid "Unfold Code"
 msgstr ""
 
-#: tform13.caption
-msgid "Set panel caption"
+#: syneditstrconst:syns_emccodefoldexpand_opt
+msgid "Nodes,One,\"All on line\""
 msgstr ""
 
-#: tform13.label1.caption
-msgid "New caption:"
+#: syneditstrconst:syns_emccodefoldcontextmenu
+msgid "Fold Menu"
 msgstr ""
 
-#: tform15.button1.caption
-msgctxt "tform15.button1.caption"
-msgid "&Apply"
+#: syneditstrconst:syns_emcsyneditcommand
+msgid "IDE Command"
 msgstr ""
 
-#: tform15.button2.caption
-msgctxt "tform15.button2.caption"
-msgid "&Cancel"
+#: syneditstrconst:syns_emcwheelscrolldown
+msgid "Wheel scroll down"
 msgstr ""
 
-#: tform15.caption
-msgctxt "tform15.caption"
-msgid "Properties"
+#: syneditstrconst:syns_emcwheelscrollup
+msgid "Wheel scroll up"
 msgstr ""
 
-#: tform16.button1.caption
-msgctxt "tform16.button1.caption"
-msgid "&Cancel"
+#: syneditstrconst:syns_emcwheelhorizscrolldown
+msgid "Wheel scroll down (Horizontal)"
 msgstr ""
 
-#: tform16.button5.caption
-msgid "&Instantiate"
+#: syneditstrconst:syns_emcwheelhorizscrollup
+msgid "Wheel scroll up (Horizontal)"
 msgstr ""
 
-#: tform16.caption
-msgid "Select plugin"
+#: syneditstrconst:syns_emcwheelvertscrolldown
+msgid "Wheel scroll down (Vertical)"
 msgstr ""
 
-#: tform16.label1.caption
-msgid "Name:"
+#: syneditstrconst:syns_emcwheelvertscrollup
+msgid "Wheel scroll up (Vertical)"
 msgstr ""
 
-#: tform16.label2.caption
-msgid "Available plugins:"
+#: syneditstrconst:syns_emcwheelzoomout
+msgid "Wheel zoom out"
 msgstr ""
 
-#: tform17.button1.caption
-msgctxt "tform17.button1.caption"
-msgid "&Cancel"
+#: syneditstrconst:syns_emcwheelzoomin
+msgid "Wheel zoom in"
 msgstr ""
 
-#: tform17.button5.caption
-msgctxt "tform17.button5.caption"
-msgid "Button5"
+#: syneditstrconst:syns_emcwheelzoomnorm
+msgid "Wheel zoom default"
 msgstr ""
 
-#: tform17.caption
-msgid "Select module"
+#: syneditstrconst:syns_emcstartselecttokens
+msgid "Selection (tokens) "
 msgstr ""
 
-#: tform17.label2.caption
-msgid "Available modules:"
+#: syneditstrconst:syns_emcstartselectwords
+msgid "Selection (words)"
 msgstr ""
 
-#: tform18.button1.caption
-msgctxt "tform18.button1.caption"
-msgid "&Cancel"
+#: syneditstrconst:syns_emcstartselectlines
+msgid "Selection (lines)"
 msgstr ""
 
-#: tform18.button5.caption
-msgctxt "tform18.button5.caption"
-msgid "&Set"
+#: syneditstrconst:syns_emcoverviewguttergotomark
+msgid "Jump to Mark (Overview Gutter)"
 msgstr ""
 
-#: tform18.caption
-msgctxt "tform18.caption"
-msgid "Settings"
+#: syneditstrconst:syns_emcoverviewgutterscrollto
+msgid "Scroll (Overview Gutter)"
 msgstr ""
 
-#: tform18.checkbox1.caption
-msgid "Line numbering"
+#: syneditstrconst:syns_emccontextmenucaretmove_opt
+msgid "\"Move caret, when selection exists\", Never, \"Click outside\", Always"
 msgstr ""
 
-#: tform18.checkbox2.caption
-msgid "Syntax highlighting"
+#: syneditstrconst:syns_emcwheelscroll_opt
+msgid "Speed,\"System settings\",Lines,Pages,\"Pages (less one line)\""
 msgstr ""
 
-#: tform18.label1.caption
-msgid "Instruction:"
+#: syneditstrconst:syns_emcpluginmulticarettogglecaret
+msgid "Toggle extra caret"
 msgstr ""
 
-#: tform18.label10.caption
-msgctxt "tform18.label10.caption"
-msgid "Address:"
+#: syneditstrconst:syns_emcpluginmulticaretselectiontocarets
+msgid "Set carets at EOL in selected lines"
 msgstr ""
 
-#: tform18.label11.caption
-msgid "Data:"
+#: syneditstrconst:scannotrecord
+msgid "Cannot record macro when recording"
 msgstr ""
 
-#: tform18.label12.caption
-msgctxt "tform18.label12.caption"
-msgid "Line selector:"
+#: syneditstrconst:scannotplay
+msgid "Cannot playback macro when recording"
 msgstr ""
 
-#: tform18.label13.caption
-msgctxt "tform18.label13.caption"
-msgid "Odd lines background:"
+#: syneditstrconst:scannotpause
+msgid "Can only pause when recording"
 msgstr ""
 
-#: tform18.label14.caption
-msgctxt "tform18.label14.caption"
-msgid "Even lines background:"
+#: syneditstrconst:scannotresume
+msgid "Can only resume when paused"
 msgstr ""
-
-#: tform18.label15.caption
-msgid "Editor font:"
-msgstr ""
-
-#: tform18.label16.caption
-msgid "Editor background:"
-msgstr ""
-
-#: tform18.label17.caption
-msgid "Gutter font:"
-msgstr ""
-
-#: tform18.label18.caption
-msgid "Sender:"
-msgstr ""
-
-#: tform18.label19.caption
-msgid "Vector:"
-msgstr ""
-
-#: tform18.label2.caption
-msgctxt "tform18.label2.caption"
-msgid "Address:"
-msgstr ""
-
-#: tform18.label20.caption
-msgid "Status:"
-msgstr ""
-
-#: tform18.label21.caption
-msgid "Flag:"
-msgstr ""
-
-#: tform18.label22.caption
-msgctxt "tform18.label22.caption"
-msgid "Line selector:"
-msgstr ""
-
-#: tform18.label23.caption
-msgctxt "tform18.label23.caption"
-msgid "Odd lines background:"
-msgstr ""
-
-#: tform18.label24.caption
-msgctxt "tform18.label24.caption"
-msgid "Even lines background:"
-msgstr ""
-
-#: tform18.label25.caption
-msgctxt "tform18.label25.caption"
-msgid "Font:"
-msgstr ""
-
-#: tform18.label26.caption
-msgctxt "tform18.label26.caption"
-msgid "Background:"
-msgstr ""
-
-#: tform18.label3.caption
-msgid "Operation code:"
-msgstr ""
-
-#: tform18.label4.caption
-msgid "Mnemonic:"
-msgstr ""
-
-#: tform18.label5.caption
-msgctxt "tform18.label5.caption"
-msgid "Line selector:"
-msgstr ""
-
-#: tform18.label6.caption
-msgctxt "tform18.label6.caption"
-msgid "Odd lines background:"
-msgstr ""
-
-#: tform18.label7.caption
-msgctxt "tform18.label7.caption"
-msgid "Even lines background:"
-msgstr ""
-
-#: tform18.label8.caption
-msgctxt "tform18.label8.caption"
-msgid "Font:"
-msgstr ""
-
-#: tform18.label9.caption
-msgctxt "tform18.label9.caption"
-msgid "Background:"
-msgstr ""
-
-#: tform18.tabsheet1.caption
-msgctxt "tform18.tabsheet1.caption"
-msgid "RunLogger"
-msgstr ""
-
-#: tform18.tabsheet2.caption
-msgid "SysConsole"
-msgstr ""
-
-#: tform18.tabsheet3.caption
-msgctxt "tform18.tabsheet3.caption"
-msgid "HexViewer"
-msgstr ""
-
-#: tform18.tabsheet4.caption
-msgctxt "tform18.tabsheet4.caption"
-msgid "ScriptEditor"
-msgstr ""
-
-#: tform18.tabsheet5.caption
-msgctxt "tform18.tabsheet5.caption"
-msgid "ScriptConsole"
-msgstr ""
-
-#: tform18.tabsheet6.caption
-msgctxt "tform18.tabsheet6.caption"
-msgid "IntLogger"
-msgstr ""
-
-#: tform2.button1.caption
-msgctxt "tform2.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform2.caption
-msgid "About"
-msgstr ""
-
-#: tform2.label1.caption
-msgid "Label1"
-msgstr ""
-
-#: tform2.label2.caption
-msgid "Label2"
-msgstr ""
-
-#: tform2.label3.caption
-msgid "Label3"
-msgstr ""
-
-#: tform2.label4.caption
-msgid "Label4"
-msgstr ""
-
-#: tform2.label5.caption
-msgid "Label5"
-msgstr ""
-
-#: tform2.label6.caption
-msgid "Homepage:"
-msgstr ""
-
-#: tform2.label7.caption
-msgid "E-mail:"
-msgstr ""
-
-#: tform2.label8.caption
-msgid "Label8"
-msgstr ""
-
-#: tform3.button1.caption
-msgctxt "tform3.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform3.caption
-msgctxt "tform3.caption"
-msgid "HexViewer"
-msgstr ""
-
-#: tform3.drawgrid1.columns[0].title.caption
-msgid "Title"
-msgstr ""
-
-#: tform3.editbutton1.hint
-msgid "Search in dump"
-msgstr ""
-
-#: tform4.button1.caption
-msgctxt "tform4.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform4.button2.caption
-msgctxt "tform4.button2.caption"
-msgid "Clea&r"
-msgstr ""
-
-#: tform4.button3.caption
-msgctxt "tform4.button3.caption"
-msgid "&Save..."
-msgstr ""
-
-#: tform4.caption
-msgctxt "tform4.caption"
-msgid "RunLogger"
-msgstr ""
-
-#: tform4.drawgrid1.columns[0].title.caption
-msgid "Count"
-msgstr ""
-
-#: tform4.drawgrid1.columns[1].title.caption
-msgctxt "tform4.drawgrid1.columns[1].title.caption"
-msgid "Address"
-msgstr ""
-
-#: tform4.drawgrid1.columns[2].title.caption
-msgctxt "tform4.drawgrid1.columns[2].title.caption"
-msgid "Opcode"
-msgstr ""
-
-#: tform4.drawgrid1.columns[3].title.caption
-msgctxt "tform4.drawgrid1.columns[3].title.caption"
-msgid "Mnemonic"
-msgstr ""
-
-#: tform4.editbutton1.hint
-msgctxt "tform4.editbutton1.hint"
-msgid "Search in log records"
-msgstr ""
-
-#: tform5.button3.caption
-msgid "&Examine"
-msgstr ""
-
-#: tform5.button4.caption
-msgid "&Deposit"
-msgstr ""
-
-#: tform5.button5.caption
-msgctxt "tform5.button5.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform5.caption
-msgid "Examine/deposit"
-msgstr ""
-
-#: tform5.editbutton1.text
-msgctxt "tform5.editbutton1.text"
-msgid "00 00 00"
-msgstr ""
-
-#: tform5.editbutton2.text
-msgid "00"
-msgstr ""
-
-#: tform5.label1.caption
-msgid "Relative address"
-msgstr ""
-
-#: tform5.label2.caption
-msgid "Data"
-msgstr ""
-
-#: tform6.caption
-msgctxt "tform6.caption"
-msgid "ScriptEditor"
-msgstr ""
-
-#: tform6.statusbar1.panels[1].text
-msgid "1:1"
-msgstr ""
-
-#: tform6.statusbar1.panels[2].text
-msgid "INS"
-msgstr ""
-
-#: tform7.button1.caption
-msgctxt "tform7.button1.caption"
-msgid "&Cancel"
-msgstr ""
-
-#: tform7.button5.caption
-msgctxt "tform7.button5.caption"
-msgid "Button5"
-msgstr ""
-
-#: tform7.caption
-msgid "Form7"
-msgstr ""
-
-#: tform7.editbutton1.text
-msgctxt "tform7.editbutton1.text"
-msgid "00 00 00"
-msgstr ""
-
-#: tform7.editbutton2.text
-msgctxt "tform7.editbutton2.text"
-msgid "00 00 00"
-msgstr ""
-
-#: tform7.label1.caption
-msgid "Start address"
-msgstr ""
-
-#: tform7.label2.caption
-msgid "End address"
-msgstr ""
-
-#: tform7.label3.caption
-msgid "Bytes"
-msgstr ""
-
-#: tform8.button1.caption
-msgctxt "tform8.button1.caption"
-msgid "&Close"
-msgstr ""
-
-#: tform8.button2.caption
-msgctxt "tform8.button2.caption"
-msgid "Clea&r"
-msgstr ""
-
-#: tform8.button3.caption
-msgctxt "tform8.button3.caption"
-msgid "&Save..."
-msgstr ""
-
-#: tform8.caption
-msgctxt "tform8.caption"
-msgid "IntLogger"
-msgstr ""
-
-#: tform8.drawgrid1.columns[0].title.caption
-msgctxt "tform8.drawgrid1.columns[0].title.caption"
-msgid "Sender"
-msgstr ""
-
-#: tform8.drawgrid1.columns[1].title.caption
-msgctxt "tform8.drawgrid1.columns[1].title.caption"
-msgid "Vector"
-msgstr ""
-
-#: tform8.drawgrid1.columns[2].title.caption
-msgctxt "tform8.drawgrid1.columns[2].title.caption"
-msgid "Status"
-msgstr ""
-
-#: tform8.drawgrid1.columns[3].title.caption
-msgctxt "tform8.drawgrid1.columns[3].title.caption"
-msgid "Flag"
-msgstr ""
-
-#: tform8.editbutton1.hint
-msgctxt "tform8.editbutton1.hint"
-msgid "Search in log records"
-msgstr ""
-
-#: tform9.caption
-msgid "Module Explorer"
-msgstr ""
-
-#: tform9.editbutton1.buttonhint
-msgid "Search in tree"
-msgstr ""
-
-#: tform9.menuitem1.caption
-msgid "MenuItem1"
-msgstr ""
-
-#: tform9.menuitem2.caption
-msgid "MenuItem2"
-msgstr ""
-
-#: tform9.menuitem3.caption
-msgid "MenuItem3"
-msgstr ""
-
-#: tform9.menuitem4.caption
-msgid "MenuItem4"
-msgstr ""
-
-#: tform9.menuitem5.caption
-msgid "MenuItem5"
-msgstr ""
-
-#: tform9.menuitem6.caption
-msgid "MenuItem6"
-msgstr ""
-
-#: tform9.menuitem7.caption
-msgid "MenuItem7"
-msgstr ""
-
-#: tframe1.button3.caption
-msgid "Remove"
-msgstr ""
-
-#: tframe1.checkbox1.caption
-msgid "Enable"
-msgstr ""
-

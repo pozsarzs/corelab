@@ -110,7 +110,7 @@ var
         InsertRow(uproperties.IOPropertyInfoArray[3].Name, BoolToStr(PortInfo.Port.Enabled, 'true', 'false'), True);
         InsertRow(uproperties.IOPropertyInfoArray[4].Name, BoolToStr(PortInfo.Port.HasPanel, 'true', 'false'), True);
         InsertRow(uproperties.IOPropertyInfoArray[6].Name, IntToStr(PortInfo.Port.AddressRangeSize), True);
-        InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(PortInfo.Port.BaseAddress, 2), True);
+        InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(PortInfo.Port.BaseAddress, 4), True);
         InsertRow(uproperties.IOPropertyInfoArray[7].Name, IntToHex(PortInfo.Port.IntVector, 2), True);
         InsertRow(uproperties.IOPropertyInfoArray[8].Name, PortInfo.Port.DataInMode.ToString, True);
         InsertRow(uproperties.IOPropertyInfoArray[9].Name, BoolToStr(PortInfo.Port.DataInNegation, True), True);
@@ -144,7 +144,7 @@ var
         InsertRow(uproperties.MPropertyInfoArray[2].Name, MemInfo.Memory.Version.ToString, True);
         InsertRow(uproperties.MPropertyInfoArray[3].Name, BoolToStr(MemInfo.Memory.Enabled, 'true', 'false'), True);
         InsertRow(uproperties.MPropertyInfoArray[5].Name, IntToStr(MemInfo.Memory.AddressRangeSize), True);
-        InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(MemInfo.Memory.BaseAddress, 2), True);
+        InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(MemInfo.Memory.BaseAddress, 4), True);
         InsertRow(uproperties.MPropertyInfoArray[6].Name, MemInfo.Memory.MemoryMode.ToString, True);
         InsertRow('Attached to bus', BoolToStr(MemInfo.AttachedToBus, 'true', 'false'), True);
         ValueListEditor1.TopRow := 1;

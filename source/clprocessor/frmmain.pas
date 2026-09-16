@@ -54,8 +54,8 @@ type
   TTestSysBus = class(TInterfacedObject, ISysBus)
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
-    function ReadPort(APort: Word): Byte;
-    procedure WritePort(APort: Word; AValue: Byte);
+    function ReadPort(APort: DWord): Byte;
+    procedure WritePort(APort: DWord; AValue: Byte);
   end;
   { TForm1 }
   TForm1 = class(TForm)
@@ -329,7 +329,7 @@ begin
 end;
 
 // READ PORT METHOD OF THE SYSTEM BUS
-function TTestSysBus.ReadPort(APort: Word): Byte;
+function TTestSysBus.ReadPort(APort: DWord): Byte;
 begin
   case APort of
     IOADD_CONSOLE: Result := Form1.FPortConsole.ReadPort(0);
@@ -340,7 +340,7 @@ begin
 end;
 
 // WRITE PORT METHOD OF THE SYSTEM BUS
-procedure TTestSysBus.WritePort(APort: Word; AValue: Byte);
+procedure TTestSysBus.WritePort(APort: DWord; AValue: Byte);
 begin
   case APort of
     IOADD_CONSOLE: Form1.FPortConsole.WritePort(APort, AValue);

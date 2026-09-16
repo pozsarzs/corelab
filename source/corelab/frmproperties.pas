@@ -58,7 +58,7 @@ resourcestring
   MSG04 = 'Value';
   MSG05 = 'The memory size can be 16 B-16 MB';
   MSG06 = 'Data conversion error at save.';
-  MSG07 = 'Wrong base address value';
+  MSG07 = 'The address value be 0-2^24';
 
 { TForm15 }
 
@@ -118,6 +118,7 @@ procedure TForm15.Button1Click(Sender: TObject);
       // save properties
       with ValueListEditor1 do
       begin
+        APortInstance.BaseAddress := StrToInt('$' + Values['BaseAddress']);
         APortInstance.Enabled := StrToBool(Values['Enabled']);
         APortInstance.DataInMode := lm.fromString(Values['DataInMode']);
         APortInstance.DataInNegation := StrToBool(Values['DataInNegation']);
@@ -142,6 +143,7 @@ procedure TForm15.Button1Click(Sender: TObject);
       begin
         AMemInstance.Enabled := StrToBool(Values['Enabled']);
         AMemInstance.AddressRangeSize := StrToInt(Values['AddressRangeSize']);
+        AMemInstance.BaseAddress := StrToInt('$' + Values['BaseAddress']);
         AMemInstance.MemoryMode := mm.fromString(Values['MemoryMode']);
       end;
     except
@@ -222,7 +224,7 @@ procedure TForm15.FormShow(Sender: TObject);
         end;
         InsertRow(uproperties.IOPropertyInfoArray[6].Name, IntToStr(APortInstance.AddressRangeSize), True);
         ItemProps[uproperties.IOPropertyInfoArray[6].Name].ReadOnly := not uproperties.IOPropertyInfoArray[6].Writable;
-        InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(APortInstance.BaseAddress, 2), True);
+        InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(APortInstance.BaseAddress, 4), True);
         ItemProps[uproperties.IOPropertyInfoArray[5].Name].ReadOnly := not uproperties.IOPropertyInfoArray[5].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[7].Name, IntToHex(APortInstance.IntVector, 2), True);
         ItemProps[uproperties.IOPropertyInfoArray[7].Name].ReadOnly := not uproperties.IOPropertyInfoArray[7].Writable;
@@ -431,7 +433,7 @@ begin
       begin
         NewValue := Trim(NewValue);
         if NewValue = '' then NewValue := '0';
-        if (StrToInt(NewValue) < 1) or (StrToInt(NewValue) > (1 shl 24)) then
+        if (StrToInt('$' + NewValue) < 1) or (StrToInt('$' + NewValue) > (1 shl 24)) then
         begin
           ShowMessage(MSG01 + MSG07);
           NewValue := OldValue;

@@ -22,8 +22,8 @@ type
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
-    function ReadPort(APort: Word): Byte;
-    procedure WritePort(APort: Word; AValue: Byte);
+    function ReadPort(APort: DWord): Byte;
+    procedure WritePort(APort: DWord; AValue: Byte);
   end;
 
 implementation

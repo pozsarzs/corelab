@@ -32,8 +32,8 @@ port read, and port write operations.
 
 |name               |type                |description                                         |initial value       |
 |-------------------|--------------------|----------------------------------------------------|--------------------|
-|`FAddressRangeSize`|`Word`              |Address range size                                  |`1`                 |
-|`FBaseAddress`     |`Word`              |Base address.                                       |`0`                 |
+|`FAddressRangeSize`|`DWord`             |Address range size                                  |`1`                 |
+|`FBaseAddress`     |`DWord`             |Base address.                                       |`0`                 |
 |`FDataInMode`      |`TLineMode`         |Input data-line decoding mode                       |`lmBCD`             |
 |`FDataInNegation`  |`Boolean`           |Input data-bit negation                             |`false`             |
 |`FDataOutMode`     |`TLineMode`         |Output data-line decoding mode                      |`lmBCD`             |
@@ -74,7 +74,8 @@ port read, and port write operations.
 
 |name              |type                |access|description                               |
 |------------------|--------------------|------|------------------------------------------|
-|`AddressRangeSize`|`Word`              |Re    |Address range size                        |
+|`AddressRangeSize`|`DWord`             |Re    |Address range size                        |
+|`BaseAddress`     |`DWord`             |Re/Wr |Global start address                      |
 |`DataInMode`      |`TLineMode`         |Re/Wr |Input data-line decoding mode             |
 |`DataInNegation`  |`Boolean`           |Re/Wr |Input data-bit negation                   |
 |`DataOutMode`     |`TLineMode`         |Re/Wr |Output data-line decoding mode            |
@@ -83,7 +84,6 @@ port read, and port write operations.
 |`Enabled`         |`Boolean`           |Re/Wr |Enable the port                           |
 |`HasPanel`        |`Boolean`           |Re    |Whether the implementation has a GUI panel|
 |`IntVector`       |`Byte`              |Re/Wr |Interrupt vector                          |
-|`InstanceID`      |`Integer`           |Re/Wr |Module instance ID                        |
 |`LatchedOutput`   |`Boolean`           |Re    |Latched-output property                   |
 |`ModName`         |`PChar`             |Re    |Module name                               |
 |`OnInterrupt`     |`TInterruptCallback`|Re/Wr |Interrupt callback                        |

@@ -17,8 +17,8 @@ GUI panels, handles port I/O, interrupts and plugin state files.
 |name               |type       |description                    |
 |-------------------|-----------|-------------------------------|
 |`PFilename`        |`string`   |Plugin module filename.        |
-|`PAddressRangeSize`|`Byte`     |Port address range size.       |
-|`PBaseAddress`     |`Byte`     |Base address.                  |
+|`PAddressRangeSize`|`DWord`    |Port address range size.       |
+|`PBaseAddress`     |`DWord`    |Base address.                  |
 |`PDataInMode`      |`TLineMode`|Input data-line decoding mode. |
 |`PDataInNegation`  |`Boolean`  |Negates port-to-CPU data bits. |
 |`PDataOutMode`     |`TLineMode`|Output data-line decoding mode.|
