@@ -89,8 +89,6 @@ type
     MenuItem14:               TMenuItem;
     MenuItem15:               TMenuItem;
     MenuItem16:               TMenuItem;
-    MenuItem17:               TMenuItem;
-    MenuItem18:               TMenuItem;
     MenuItem19:               TMenuItem;
     MenuItem2:                TMenuItem;
     MenuItem20:               TMenuItem;
@@ -158,7 +156,6 @@ type
     MProperties:              TAction;
     MReset:                   TAction;
     MSaveMemoryContent:       TAction;
-    OClearAllBreakpoints:     TAction;
     OIRQ:                     TAction;
     OMakeSnapshot:            TAction;
     ONMI:                     TAction;
@@ -167,7 +164,6 @@ type
     ORun:                     TAction;
     OStep:                    TAction;
     OStop:                    TAction;
-    OToggleBreakpoint:        TAction;
     PageControl1:             TPageControl;
     Panel1:                   TPanel;
     Panel2:                   TPanel;
@@ -190,7 +186,6 @@ type
     Separator17:              TMenuItem;
     Separator18:              TMenuItem;
     Separator19:              TMenuItem;
-    Separator2:               TMenuItem;
     Separator20:              TMenuItem;
     Separator21:              TMenuItem;
     Separator22:              TMenuItem;
@@ -223,8 +218,6 @@ type
     ToolBar6:                 TToolBar;
     ToolBar7:                 TToolBar;
     ToolButton1:              TToolButton;
-    ToolButton10:             TToolButton;
-    ToolButton11:             TToolButton;
     ToolButton12:             TToolButton;
     ToolButton13:             TToolButton;
     ToolButton14:             TToolButton;
@@ -341,7 +334,6 @@ type
     procedure MPropertiesExecute(Sender: TObject);
     procedure MResetExecute(Sender: TObject);
     procedure MSaveMemoryContentExecute(Sender: TObject);
-    procedure OClearAllBreakpointsExecute(Sender: TObject);
     procedure OIRQExecute(Sender: TObject);
     procedure OMakeSnapshotExecute(Sender: TObject);
     procedure ONMIExecute(Sender: TObject);
@@ -350,7 +342,6 @@ type
     procedure ORunExecute(Sender: TObject);
     procedure OStepExecute(Sender: TObject);
     procedure OStopExecute(Sender: TObject);
-    procedure OToggleBreakpointExecute(Sender: TObject);
     procedure PAttachToBusExecute(Sender: TObject);
     procedure PCreateExecute(Sender: TObject);
     procedure PDestroyExecute(Sender: TObject);
@@ -3984,39 +3975,6 @@ begin
   {...}
 end;
 
-// OPERATION/TOGGLE BREAKPOINTS ACTION -----------------------------------------
-procedure TForm1.OToggleBreakpointExecute(Sender: TObject);
-var
-  ActionContext: TActionContext;
-  Caller:        TComponent;
-begin
-  ActionContext := TActionContext.Create;
-  try
-    with ActionContext do
-    begin
-      ActionSource := asOther;
-      if Sender is TAction then
-      begin
-        Caller := TAction(Sender).ActionComponent;
-        if Caller is TMenuItem then
-        begin
-          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
-            then ActionSource := asMainMenu;
-        end else ActionSource := asToolBar;
-      end;
-    end;
-    OClearAllBreakpointsExecute(ActionContext);
-  finally
-    ActionContext.Free;
-  end;
-end;
-
-// OPERATION/CLEAR ALL BREAKPOINT ACTION ---------------------------------------
-procedure TForm1.OClearAllBreakpointsExecute(Sender: TObject);
-begin
-  {...}
-end;
-
 // OPERATION/MAKE SNAPSHOT ACTION ----------------------------------------------
 procedure TForm1.OMakeSnapshotExecute(Sender: TObject);
 var
@@ -4722,6 +4680,14 @@ begin
       width := Form9.Width;
       splitter := Form9.TreeView1.Height;
       column0_width := Form9.ValueListEditor1.ColWidths[0];
+    end;
+    with uconfig.AppConfig.RegViewerConfig do
+    begin
+      top := Form11.Top;
+      left := Form11.Left;
+      height := Form11.Height;
+      width := Form11.Width;
+      column0_width := Form11.ValueListEditor1.ColWidths[0];
     end;
   end;
   if not SaveConfiguration(FConfigDirectory + CONFIGFILE)

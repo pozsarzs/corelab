@@ -1,11 +1,12 @@
 object Form11: TForm11
-  Left = 455
+  Left = 477
   Height = 380
-  Top = 239
-  Width = 234
+  Top = 211
+  Width = 255
   Caption = 'RegViewer'
   ClientHeight = 380
-  ClientWidth = 234
+  ClientWidth = 255
+  Constraints.MinWidth = 255
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -363,7 +364,6 @@ object Form11: TForm11
     1ABA00000000002200AA00000000000000000000000000000000000000000000
     0000
   }
-  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
@@ -373,14 +373,13 @@ object Form11: TForm11
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 151
+    Left = 172
     Height = 25
     Top = 347
     Width = 75
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 8
     BorderSpacing.Bottom = 8
-    Cancel = True
     Caption = '&Close'
     OnClick = Button1Click
     TabOrder = 0
@@ -393,7 +392,7 @@ object Form11: TForm11
     Left = 8
     Height = 4
     Top = 335
-    Width = 218
+    Width = 239
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     Shape = bsBottomLine
@@ -407,15 +406,49 @@ object Form11: TForm11
     Left = 8
     Height = 319
     Top = 8
-    Width = 218
+    Width = 239
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     FixedCols = 0
     RowCount = 2
     TabOrder = 1
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAlwaysShowEditor, goThumbTracking, goDblClickAutoSize]
     ColWidths = (
       64
-      152
+      173
     )
+  end
+  object Button2: TButton
+    AnchorSideLeft.Control = Button3
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 91
+    Height = 25
+    Top = 347
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Right = 8
+    BorderSpacing.Bottom = 8
+    Caption = '&Put'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+  object Button3: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 25
+    Top = 347
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 8
+    BorderSpacing.Bottom = 8
+    Cancel = True
+    Caption = '&Get'
+    OnClick = Button3Click
+    TabOrder = 3
   end
 end

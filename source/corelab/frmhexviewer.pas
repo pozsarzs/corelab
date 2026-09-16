@@ -68,7 +68,6 @@ begin
   begin
     FMemInstance := nil;
     FMemSize := 0;
-    ShowMessage(MSG01 + MSG03);
     Hide;
   end;
 end;

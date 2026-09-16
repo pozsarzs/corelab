@@ -385,9 +385,9 @@ object Form1: TForm1
       Height = 58
       Top = 1
       Width = 717
-      ActivePage = TabSheet4
+      ActivePage = TabSheet1
       Align = alClient
-      TabIndex = 3
+      TabIndex = 0
       TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Operation'
@@ -431,25 +431,13 @@ object Form1: TForm1
             Caption = 'ToolButton9'
             Style = tbsDivider
           end
-          object ToolButton10: TToolButton
-            Left = 98
-            Top = 2
-            Action = OToggleBreakpoint
-          end
-          object ToolButton11: TToolButton
-            Left = 121
-            Height = 22
-            Top = 2
-            Caption = 'ToolButton11'
-            Style = tbsDivider
-          end
           object ToolButton12: TToolButton
-            Left = 126
+            Left = 98
             Top = 2
             Action = OMakeSnapshot
           end
           object ToolButton13: TToolButton
-            Left = 149
+            Left = 121
             Top = 2
             Action = ORestoreSnapshot
           end
@@ -1158,15 +1146,6 @@ object Form1: TForm1
       object MenuItem15: TMenuItem
         Action = OResetAll
       end
-      object Separator2: TMenuItem
-        Caption = '-'
-      end
-      object MenuItem17: TMenuItem
-        Action = OToggleBreakpoint
-      end
-      object MenuItem18: TMenuItem
-        Action = OClearAllBreakpoints
-      end
       object Separator3: TMenuItem
         Caption = '-'
       end
@@ -1551,18 +1530,6 @@ object Form1: TForm1
       Hint = 'Reset all'
       ImageIndex = 11
       OnExecute = OResetAllExecute
-    end
-    object OToggleBreakpoint: TAction
-      Caption = 'To&ggle breakpoint...'
-      Hint = 'Toggle breakpoint'
-      ImageIndex = 31
-      OnExecute = OToggleBreakpointExecute
-    end
-    object OClearAllBreakpoints: TAction
-      Caption = '&Clear all breakpoints'
-      Hint = 'Clear all breakpoints'
-      ImageIndex = 69
-      OnExecute = OClearAllBreakpointsExecute
     end
     object OMakeSnapshot: TAction
       Caption = 'Make snaps&hot'
