@@ -115,6 +115,7 @@ function LoadAllPlugins(ADirectory: string): Integer;
 var
   i:              Integer;
   LibList:        TStringList;
+  LibName:        string;
   ProcPluginItem: TProcPluginItem;
   MemPluginItem:  TMemPluginItem;
   PortPluginItem: TPortPluginItem;
@@ -147,7 +148,10 @@ begin
               GetProcedureAddress(ProcPluginItem.FHandle, 'cpu_loadstate');
             Pointer(ProcPluginItem.FSaveState) :=
               GetProcedureAddress(ProcPluginItem.FHandle, 'cpu_savestate');
-            FProcPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), ProcPluginItem);
+            LibName := ChangeFileExt(ExtractFileName(LibList.Strings[i]), '');
+            if LibName.StartsWith('lib', True)
+              then LibName := Copy(LibName, 4, Length(LibName));
+            FProcPluginDict.Add(LibName, ProcPluginItem);
             Inc(Result);
           end else ProcPluginItem.Free;
         end;
@@ -183,7 +187,10 @@ begin
               GetProcedureAddress(PortPluginItem.FHandle, 'ioport_movepanel');
             Pointer(PortPluginItem.FSetIntHandler) :=
               GetProcedureAddress(PortPluginItem.FHandle, 'ioport_setinthandler');
-            FPortPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), PortPluginItem);
+            LibName := ChangeFileExt(ExtractFileName(LibList.Strings[i]), '');
+            if LibName.StartsWith('lib', True)
+              then LibName := Copy(LibName, 4, Length(LibName));
+            FPortPluginDict.Add(LibName, PortPluginItem);
             Inc(Result);
           end else PortPluginItem.Free;
         end;
@@ -202,7 +209,10 @@ begin
               GetProcedureAddress(MemPluginItem.FHandle, 'memory_loadstate');
             Pointer(MemPluginItem.FSaveState) :=
               GetProcedureAddress(MemPluginItem.FHandle, 'memory_savestate');
-            FMemPluginDict.Add(ChangeFileExt(ExtractFileName(LibList.Strings[i]), ''), MemPluginItem);
+            LibName := ChangeFileExt(ExtractFileName(LibList.Strings[i]), '');
+            if LibName.StartsWith('lib', True)
+              then LibName := Copy(LibName, 4, Length(LibName));
+            FMemPluginDict.Add(LibName, MemPluginItem);
             Inc(Result);
           end else MemPluginItem.Free;
         end;

@@ -620,7 +620,7 @@ resourcestring
   MSG104 = 'Property ''%s'' set to value ''%s''.';                        { SC }
   MSG105 = 'Module named ''%s'' has been already attached.';              { SM }
   MSG106 = 'Module named ''%s'' has been already detached.';              { SM }
-
+  MSG107 = 'Only one CPU connection is allowed.';                         { SM }
 { TSysBus }
 
 // ---- PUBLIC METHODS ----
@@ -633,6 +633,9 @@ begin
   // module name is valid?
   Result := 1;
   if (AModuleName = '') or not Assigned(ACPU) then Exit;
+  // one CPU is allowed
+  Result := 3;
+  if Length(FCPUs) >= 1 then Exit;
   // already is attached?
   Result := 2;
   for i := 0 to High(FCPUs) do
@@ -1878,7 +1881,10 @@ begin
       end;
       StringList := TStringList.Create;
         try
-          for KeyName in FProcPluginDict.Keys do StringList.Add(KeyName);
+          for KeyName in FProcPluginDict.Keys do
+            if KeyName.StartsWith('lib', True)
+              then StringList.Add(Copy(KeyName, 4, Length(KeyName)))
+              else StringList.Add(KeyName);
           with Form16 do
           begin
             PluginList := StringList;
@@ -2076,6 +2082,9 @@ begin
     ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
     Exit;
   end;
+  // RegViewer refresh
+  if Assigned(Form11) and Form11.Visible and
+    (Form11.ProcInstance = ProcInfo.Processor) then Form11.UpdateValues;
   // report
   SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
 end;
@@ -2292,6 +2301,7 @@ begin
     case FSysBus.AttachCPU(InstanceName, ProcInfo.Processor) of
       1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
       2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
+      3: begin ShowMessage(MSG01 + Format(MSG107, [InstanceName])); Exit; end;
     else
       ProcInfo.Processor.ConnectBus(FSysBus);
       ProcInfo.AttachedToBus := True;
@@ -2481,7 +2491,10 @@ begin
       end;
       StringList := TStringList.Create;
         try
-          for KeyName in FMemPluginDict.Keys do StringList.Add(KeyName);
+          for KeyName in FMemPluginDict.Keys do
+            if KeyName.StartsWith('lib', True)
+              then StringList.Add(Copy(KeyName, 4, Length(KeyName)))
+              else StringList.Add(KeyName);
           with Form16 do
           begin
             PluginList := StringList;
@@ -2972,7 +2985,7 @@ begin
   InstanceName := AActionContext.SArg1;
   try
     MemInfo := FMemInstanceDict[InstanceName];
-    case FSysBus.DetachCPU(InstanceName) of
+    case FSysBus.DetachMemory(InstanceName) of
       1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
       2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
     else
@@ -3475,7 +3488,10 @@ begin
       end;
       StringList := TStringList.Create;
         try
-          for KeyName in FPortPluginDict.Keys do StringList.Add(KeyName);
+          for KeyName in FPortPluginDict.Keys do
+            if KeyName.StartsWith('lib', True)
+              then StringList.Add(Copy(KeyName, 4, Length(KeyName)))
+              else StringList.Add(KeyName);
           with Form16 do
           begin
             PluginList := StringList;
@@ -4806,6 +4822,7 @@ end;
 procedure TForm1.InterruptHandler(Sender: TIOPort; AVector: Byte);
 var
   IntLogRec: TIntLogRec;
+  DictValue: TPortInfo;
 begin
   if Assigned(FSysBus.FCPUs[0].CPU) then
   begin
@@ -4813,7 +4830,12 @@ begin
     FSysBus.FCPUs[0].CPU.IRQ(AVector);
     // IntLogger
     IntLogRec := FSysBus.FCPUs[0].CPU.GetCurrentInterrupt;
-    IntLogRec.Sender := Sender.ClassName;
+    for DictValue in FPortInstanceDict.Values do
+    if DictValue.Port = Sender then
+    begin
+      IntLogRec.Sender := DictValue.ModuleName;
+      Break;
+    end;
     if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
     // RegViewer
     if Assigned(Form11) and Form11.Visible and

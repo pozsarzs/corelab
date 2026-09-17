@@ -434,7 +434,7 @@ begin
       begin
         NewValue := Trim(NewValue);
         if NewValue = '' then NewValue := '0';
-        if (StrToInt('$' + NewValue) < 1) or (StrToInt('$' + NewValue) > (1 shl 24)) then
+        if StrToInt('$' + NewValue) > (1 shl 24) then
         begin
           ShowMessage(MSG01 + MSG07);
           NewValue := OldValue;
