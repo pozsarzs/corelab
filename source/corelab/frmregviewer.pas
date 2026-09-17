@@ -40,7 +40,8 @@ type
     procedure ProcInstanceDestroy(Sender: TCPU);      // Processor destroy event
     procedure SetFProcInstance(AProcInstance: TCPU);
   public
-    property ProcInstance: TCPU write SetFProcInstance;
+    property ProcInstance: TCPU read FProcInstance write SetFProcInstance;
+    procedure UpdateValues;
   end;
 var
   Form11: TForm11;
@@ -78,6 +79,14 @@ begin
   end;
   FProcInstance := AProcInstance;
   FProcInstance.OnDestroy := @ProcInstanceDestroy;
+end;
+
+// ---- PUBLIC METHODS ----
+
+// UPDATE REGISTER CONTENTS
+procedure TForm11.UpdateValues;
+begin
+  Button3Click(nil);
 end;
 
 // ---- EVENT HANDLER METHODS ----

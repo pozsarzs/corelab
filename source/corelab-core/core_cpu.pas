@@ -58,7 +58,7 @@ type
     OpCode:    string[31];
     Mnemonic:  string[127];
   end;
-  // Last executed instruction record for RunLogger
+  // Last interrupt record for IntLogger
   TIntLogRec = record
     Sender: string[31];
     Vector: string[31];
@@ -111,6 +111,7 @@ type
     procedure Step; virtual; abstract;
     procedure Stop; virtual;
     function GetCurrentInstruction: TLogRec; virtual; abstract;
+    function GetCurrentInterrupt: TIntLogRec; virtual; abstract;
     procedure IRQ(AVector: Byte); virtual;
     procedure NMI; virtual;
     function  CheckInterrupts: Boolean;

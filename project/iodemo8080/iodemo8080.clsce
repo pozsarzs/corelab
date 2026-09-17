@@ -1,0 +1,69 @@
+#!/usr/bin/corelab -r
+; +----------------------------------------------------------------------------+
+; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+; | demo8080.clsce                                                             |
+; | CoreLAB 8080 Demo program                                                  |
+; +----------------------------------------------------------------------------+
+
+; Show internal modules
+	SHRL					; Open RunLogger
+	SHIL					; Open IntLogger
+
+; Create, initialize and attach modules to system bus
+	CRIO	ioport_console Console		; module name
+	CFIO	Console.BaseAddress 80		; base address
+	CFIO	Console.IntVector 10		; interrupt vector
+	RNIO	Console "Console"		; panel caption
+	ATIO	Console				; attach to bus
+
+	CRIO	ioport_button16bcd Keyboard	; module name
+	CFIO	Keyboard.BaseAddress 81		; base address
+	CFIO	Console.IntVector 08		; interrupt vector
+	RNIO	Keyboard "Keyboard"		; panel caption
+	ATIO	Keyboard			; attach to bus
+	
+	CRIO	ioport_disp1hexbcd Display	; module name
+	CFIO	Display.BaseAddress 90		; base address
+	RNIO	Display "Display"		; panel caption
+	ATIO	Display				; attach to bus
+
+	CRME	memory_standard RAM		; module name
+	CFME	RAM.BaseAddress 0		; base address
+	CFME	RAM.AddressRangeSize 1024	; size
+	CFME	RAM.MemoryMode mmRAM		; mode
+	LOAD	RAM demo8080.hex		; load program
+	ATME	RAM				; attach to bus
+	
+	CRPU	cpu_8080 Processor		; module name
+	ATPU	Processor			; attach to bus
+
+; Enable modules
+	ENIO	Console
+	ENIO	Keyboard
+	ENIO	Display
+	ENME	RAM
+	ENPU	Processor
+
+; Run simulation
+	RUNDisplay
+
+; Disable modules
+	DIIO	Console
+	DIIO	Keyboard
+	DIIO	Display
+	DIME	RAM
+	DIPU	Processor
+
+; Detach from bus and destroy modules
+	DTIO	Console
+	DSIO	Console
+	DTIO	Keyboard
+	DSIO	Keyboard
+	DTIO	Display
+	DSIO	Display
+	DTME	RAM
+	DSME	RAM
+	DTPU	Processor
+	DSPU	Processor
+	END

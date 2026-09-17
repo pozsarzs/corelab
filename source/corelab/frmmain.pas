@@ -21,9 +21,9 @@ uses
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
-  frmproperties, frmmoduleexplorer, frmbpmanager, commandengine, core_cpu,
-  core_memory, core_ioport, core_bus, usysconsole, ucommon, uconfig, uplugin,
-  uproject, uintelhex, uactcontext, uproperties, ubreakpoint;
+  frmproperties, frmmoduleexplorer, frmbpmanager, commandengine, scriptengine,
+  core_cpu, core_memory, core_ioport, core_bus, usysconsole, ucommon, uconfig,
+  uplugin, uproject, uintelhex, uactcontext, uproperties, ubreakpoint;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -331,6 +331,7 @@ type
     VShowScriptConsole:       TAction;
     VShowScriptEditor:        TAction;
     procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
+    procedure InterruptHandler(Sender: TIOPort; AVector: Byte);
     procedure FExitExecute(Sender: TObject);
     procedure FLoadProjectExecute(Sender: TObject);
     procedure FNewProjectExecute(Sender: TObject);
@@ -401,6 +402,7 @@ type
   private
     FSysBus:        TSysBus;                             // system bus interface
     CommandEngine1: TCommandEngine;      // system console's command interpreter
+    CommandEngine2: TScriptEngine;        // script handling command interpreter
     FScriptBuffer:  TStringList;                                // script buffer
     // bridge between SysConsol and CommandEngine
     procedure SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
@@ -2292,9 +2294,9 @@ begin
       2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
     else
       ProcInfo.Processor.ConnectBus(FSysBus);
-      ProcInfo.Processor.OnEvent := @CPUEventHandler;
       ProcInfo.AttachedToBus := True;
       FProcInstanceDict[InstanceName] := ProcInfo;
+      ProcInfo.Processor.OnEvent := @CPUEventHandler;
     end;
   except
     // other error
@@ -2373,6 +2375,7 @@ begin
     else
       ProcInfo.AttachedToBus := False;
       FProcInstanceDict[InstanceName] := ProcInfo;
+      ProcInfo.Processor.OnEvent := nil;
     end;
   except
     // other error
@@ -3896,6 +3899,7 @@ begin
     else
       PortInfo.AttachedToBus := True;
       FPortInstanceDict[InstanceName] := PortInfo;
+      PortInfo.Port.OnInterrupt:= @InterruptHandler;
     end;
   except
     // other error
@@ -3974,6 +3978,7 @@ begin
     else
       PortInfo.AttachedToBus := False;
       FPortInstanceDict[InstanceName] := PortInfo;
+      PortInfo.Port.OnInterrupt:= nil;
     end;
   except
     // other error
@@ -4788,7 +4793,32 @@ end;
 procedure TForm1.CPUEventHandler(Sender: TObject; Event: TCPUEvent);
 begin
   if (Event = ceInstructionBoundary) { and (Sender is TCPU) } then
+  begin
+    // RunLogger
     Form4.AppendRecord(TCPU(Sender).GetCurrentInstruction);
+    // RegViewer
+    if Assigned(Form11) and Form11.Visible and
+      (Form11.ProcInstance = TCPU(Sender)) then Form11.UpdateValues;
+  end;
+end;
+
+// INTERRUPT HANDLER
+procedure TForm1.InterruptHandler(Sender: TIOPort; AVector: Byte);
+var
+  IntLogRec: TIntLogRec;
+begin
+  if Assigned(FSysBus.FCPUs[0].CPU) then
+  begin
+    // current processor
+    FSysBus.FCPUs[0].CPU.IRQ(AVector);
+    // IntLogger
+    IntLogRec := FSysBus.FCPUs[0].CPU.GetCurrentInterrupt;
+    IntLogRec.Sender := Sender.ClassName;
+    if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
+    // RegViewer
+    if Assigned(Form11) and Form11.Visible and
+      (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.UpdateValues;
+  end;
 end;
 
 // ONCREATE EVENT
@@ -4799,8 +4829,10 @@ var
 begin
   // system bus
   FSysBus := TSysBus.Create;
-  // SysConsole and its command interpreter
+  // command interpreters
   CommandEngine1 := TCommandEngine.Create;
+  CommandEngine2 := TScriptEngine.Create;
+  // SysConsole
   SysConsole1 := TSysConsole.Create(Self);
   SysConsole1.OnCommand := @SysConsole1CmdBridge;
   with SysConsole1 do
@@ -5067,6 +5099,9 @@ begin
     FScriptBuffer.Clear;
     FScriptBuffer.Free;
   end;
+  // command interpreters
+  if Assigned(CommandEngine1) then CommandEngine1.Free;
+  if Assigned(CommandEngine2) then CommandEngine2.Free;
   // unload plugins
   UnLoadAllPlugins;
 end;

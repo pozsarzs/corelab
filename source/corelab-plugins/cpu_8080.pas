@@ -53,6 +53,7 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
+    function GetCurrentInterrupt: TIntLogRec; override;
     function GetRegister(const RegName: PChar): Word; override;
     procedure SetRegister(const RegName: PChar; Value: Word); override;
     function GetRegisterCount: Byte; override;
@@ -270,6 +271,19 @@ begin
     Address := IntToHex(LogRecord.Address, 4);
     Opcode := RawCode;
     Mnemonic := AsmText;
+  end;
+end;
+
+// QUERY FOR THE LAST INTERRUPT DATA
+function T8080CPU.GetCurrentInterrupt: TIntLogRec;
+begin
+  with Result do
+  begin
+    Sender := '';
+    Vector := IntToHex(FIRQVector, 2);
+    Status := '';
+    if FInterruptEnabled then Flag := 'EI' else Flag := 'DI';
+    if FIRQPending then Status := 'Pending' else Status := '';
   end;
 end;
 

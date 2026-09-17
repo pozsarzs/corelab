@@ -109,7 +109,7 @@ end;
 // APPLY AND CLOSE FORM
 procedure TForm15.Button1Click(Sender: TObject);
 
-  // LOAD FROM I/O PORT MODULE
+  // SAVE TO I/O PORT MODULE
   procedure SaveIOProperties(APortInstance: TIOPort);
   var
     lm: TLineMode;
@@ -119,6 +119,7 @@ procedure TForm15.Button1Click(Sender: TObject);
       with ValueListEditor1 do
       begin
         APortInstance.BaseAddress := StrToInt('$' + Values['BaseAddress']);
+        APortInstance.IntVector := StrToInt('$' + Values['IntVector']);
         APortInstance.Enabled := StrToBool(Values['Enabled']);
         APortInstance.DataInMode := lm.fromString(Values['DataInMode']);
         APortInstance.DataInNegation := StrToBool(Values['DataInNegation']);
@@ -132,7 +133,7 @@ procedure TForm15.Button1Click(Sender: TObject);
     end;
   end;
 
-  // LOAD FROM MEMORY MODULE
+  // SAVE TO MEMORY MODULE
   procedure SaveMProperties(AMemInstance: TMemory);
   var
      mm: TMemoryMode;
@@ -151,7 +152,7 @@ procedure TForm15.Button1Click(Sender: TObject);
     end;
   end;
 
-  // LOAD FROM PROCESSOR MODULE
+  // SAVE TO PROCESSOR MODULE
   procedure SavePProperties(AProcInstance: TCPU);
   begin
     try
