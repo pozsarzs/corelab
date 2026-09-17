@@ -134,6 +134,7 @@ procedure TForm8.AppendRecord(AIntLogRec: TIntLogRec);
 begin
   WriteBuffer(AIntLogRec);
   if Form8.Visible then DrawGrid1.RowCount := FRecordCount + 1;
+  DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // CLEAR LOGS

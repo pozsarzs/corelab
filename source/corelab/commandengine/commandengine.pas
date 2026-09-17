@@ -73,15 +73,20 @@ var
   Command:       TCommand;  
   CommandName:   string;
   i:             Integer;
+  Line:          string;
   Tokens:        TTokenList;
   InfoText:      string;
   InfoList:      TStringList;
 begin
   Result := 0;
   // empty line or comment
-  if (Trim(ALine) = '') or (ALine[1] = '#') then exit;
+  if (Trim(ALine) = '') or (ALine[1] = '#') or (ALine[1] = ';') then exit;
+  // remove comment at end of line
+  Line := ALine;
+  i := Pos(';', Line);
+  if i > 0 then Delete(Line, i, MaxInt);
   // get tokens to a TTokenList instance
-  Tokens := FParser.Tokenize(ALine);
+  Tokens := FParser.Tokenize(Line);
   try
     // if no any token
     if Tokens.Count = 0 then exit;

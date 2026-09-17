@@ -900,9 +900,6 @@ begin
   // enable/disable MenuItems and ToolBars for required OpMode
   if FOpMode = omInteractive then
   begin
-    MenuItem3.Enabled := True;
-    MenuItem4.Enabled := True;
-    MenuItem5.Enabled := True;
     MenuItem6.Enabled := True;
     MenuItem7.Enabled := False;
     MenuItem37.Enabled := True;
@@ -912,17 +909,11 @@ begin
     MenuItem51.Enabled := False;
     MenuItem52.Enabled := False;
     ToolBar2.Enabled := True;
-    ToolBar3.Enabled := True;
-    ToolBar4.Enabled := True;
-    ToolBar5.Enabled := True;
     ToolBar6.Enabled := False;
     ToolButton64.Enabled := False;
     ToolButton65.Enabled := False;
   end else
   begin
-    MenuItem3.Enabled := False;
-    MenuItem4.Enabled := False;
-    MenuItem5.Enabled := False;
     MenuItem6.Enabled := False;
     MenuItem7.Enabled := True;
     MenuItem37.Enabled := False;
@@ -932,9 +923,6 @@ begin
     MenuItem51.Enabled := True;
     MenuItem52.Enabled := True;
     ToolBar2.Enabled := False;
-    ToolBar3.Enabled := False;
-    ToolBar4.Enabled := False;
-    ToolBar5.Enabled := False;
     ToolBar6.Enabled := True;
     ToolButton64.Enabled := True;
     ToolButton65.Enabled := True;
@@ -4555,15 +4543,26 @@ end;
 
 // SCRIPT/RUN SCRIPT OPERATION
 procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
+var
+  i: integer;
 begin
   if FScriptIsRunning then Exit;
-  // Form6.Store(FScriptBuffer);         // store ScriptEditor content to buffer
+  Form6.CopyEditorToBuffer;         // store ScriptEditor content
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
   begin
-    // Form12.Clear;                                      // clear ScriptConsole
-    // if not Form12.Visible then Form12.Show;             // show ScriptConsole
+    Form12.ClearContent;                                  // clear ScriptConsole
+    if not Form12.Visible then Form12.Show;                // show ScriptConsole
     FScriptInstPointer := 0;
-    {...}
+    FScriptIsRunning := True;
+    try
+      for i := 0 to FScriptBuffer.Count - 1 do
+      begin
+        CommandEngine2.ExecuteLine(FScriptBuffer.Strings[FScriptInstPointer]);
+        FScriptInstPointer := i + 1;
+      end;
+    finally
+      FScriptIsRunning := False;
+    end;
   end;
 end;
 
@@ -4596,15 +4595,23 @@ end;
 
 // SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
 procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
+var
+  i: integer;
 begin
   if FScriptIsRunning then Exit;
-  // if FScriptInstPointer = 0 then
-  //   Form6.Store(FScriptBuffer);       // store ScriptEditor content to buffer
+  Form6.CopyEditorToBuffer;                        // store ScriptEditor content
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
   begin
-    // Form12.Clear;                                      // clear ScriptConsole
-    // if not Form12.Visible then Form12.Show;             // show ScriptConsole
-    {...}
+    if not Form12.Visible then Form12.Show;                // show ScriptConsole
+    FScriptIsRunning := True;
+    try
+      Form12.WriteMessage(IntToStr(FScriptInstPointer));
+      CommandEngine2.ExecuteLine(FScriptBuffer.Strings[FScriptInstPointer]);
+      if FScriptInstPointer < FScriptBuffer.Count - 1
+        then Inc(FScriptInstPointer);
+    finally
+      FScriptIsRunning := False;
+    end;
   end;
 end;
 
@@ -4639,7 +4646,8 @@ end;
 procedure TForm1.SStopScriptOperation(AActionContext: TActionContext);
 begin
   FScriptInstPointer := 0;
-  {...}
+  FScriptIsRunning := False;
+  Form12.ClearContent;                                    // clear ScriptConsole
 end;
 
 // HELP/SHOW HELP ACTION =======================================================
@@ -4678,6 +4686,9 @@ begin
     begin
       if SameText(PropertyName, uproperties.IOPropertyInfoArray[2].Name)
         then Enabled := StrToBool(Value)
+
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[5].Name)
+             then BaseAddress := StrToInt(Value)
 
       else if SameText(PropertyName, uproperties.IOPropertyInfoArray[6].Name)
              then IntVector := StrToInt(Value)
@@ -4740,6 +4751,9 @@ begin
     begin
       if SameText(PropertyName, uproperties.MPropertyInfoArray[3].Name)
         then Enabled := StrToBool(Value)
+
+      else if SameText(PropertyName, uproperties.MPropertyInfoArray[4].Name)
+             then BaseAddress := StrToInt(Value)
 
       else if SameText(PropertyName, uproperties.MPropertyInfoArray[5].Name)
              then AddressRangeSize := StrToInt(Value)

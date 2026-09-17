@@ -281,7 +281,6 @@ begin
   begin
     Sender := '';
     Vector := IntToHex(FIRQVector, 2);
-    Status := '';
     if FInterruptEnabled then Flag := 'EI' else Flag := 'DI';
     if FIRQPending then Status := 'Pending' else Status := '';
   end;
