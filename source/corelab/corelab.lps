@@ -7,7 +7,6 @@
       <Unit>
         <Filename Value="corelab.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -71,6 +70,7 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <UsageCount Value="206"/>
         <Loaded Value="True"/>
@@ -83,8 +83,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="211"/>
-        <CursorPos Y="223"/>
+        <TopLine Value="51"/>
+        <CursorPos X="28" Y="54"/>
         <UsageCount Value="200"/>
       </Unit>
       <Unit>
@@ -417,7 +417,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
+    <JumpHistory HistoryIndex="26">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="4835" Column="41" TopLine="4822"/>
@@ -468,10 +468,6 @@
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="4636" Column="3" TopLine="4648"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="4555" Column="16" TopLine="4547"/>
       </Position>
       <Position>
@@ -504,10 +500,6 @@
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="926" TopLine="927"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="74" Column="18" TopLine="61"/>
       </Position>
       <Position>
@@ -532,7 +524,6 @@
       </Position>
       <Position>
         <Filename Value="corelab.lpr"/>
-        <Caret Line="14" Column="24" TopLine="55"/>
       </Position>
     </JumpHistory>
     <RunParams>

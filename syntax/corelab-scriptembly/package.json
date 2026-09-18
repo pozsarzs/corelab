@@ -35,7 +35,7 @@
     }],
     "grammars": [{
       "language": "clse",
-      "scopeName": "source.clse",
+      "scopeName": "source.clsce",
       "path": "./syntaxes/clse.tmLanguage.json"
     }]
   }

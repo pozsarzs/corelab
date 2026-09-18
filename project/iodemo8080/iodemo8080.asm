@@ -1,7 +1,7 @@
 ; +----------------------------------------------------------------------------+
 ; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 ; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-; | demo8080.asm                                                               |
+; | iodemo8080.asm                                                             |
 ; | CoreLAB 8080 Demo program                                                  |
 ; +----------------------------------------------------------------------------+
 

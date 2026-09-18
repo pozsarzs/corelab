@@ -48,30 +48,22 @@ type
     property ExtBuffer: TStringList write SetExtBuffer;
   end;
   const
-    SEConstants: array[0..12] of string = ('ARG', 'ARGCNT', 'DATE', 'FC', 'FZ',
-                                           'HOME', 'INSCNT', 'PRJDIR', 'RNDB', 'RNDI',
-                                           'RNDW', 'TIME', 'VER');
-    SEKeyWords: array[0..67] of string = ('ABS', 'ADD', 'AND', 'APPX', 'ASCI',
-                                          'ATTH', 'BIT', 'CALL', 'CALM', 'CHAR',
-                                          'COMP', 'CONV', 'CRTE', 'DEC', 'DEPO',
-                                          'DEST', 'DETH', 'END', 'EXAM', 'EXIT',
-                                          'FILL', 'GETP', 'HELP', 'IDV', 'IMD',
-                                          'INC', 'INDX', 'INPW', 'INRG', 'JPEQ',
-                                          'JPGE', 'JPGT', 'JPLE', 'JPLT', 'JPNE',
-                                          'JPNZ', 'JPZR', 'MSGW', 'MUL', 'NOT',
-                                          'OR', 'PAUS', 'POPA', 'PRNT', 'PSHA',
-                                          'RDV', 'RSET', 'RTRN', 'SAPP', 'SDEL',
-                                          'SETP', 'SETV', 'SFND', 'SHL', 'SHR',
-                                          'SINS', 'SLEN', 'SLOW', 'SREP', 'SSUB',
-                                          'STEP', 'STOP', 'STRT', 'SUB', 'SUPP',
-                                          'SWAP', 'WAIT', 'XOR');
+    SEConstants: array[0..15] of string = (
+      'R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7',
+      'R8', 'R9', 'RA', 'RB', 'RC', 'RD', 'RE', 'RF');
+    SEKeyWords: array[0..88] of string = (
+    'ATIO', 'ATME', 'ATPU', 'CRIO', 'CFIO', 'CFME', 'CFPU', 'CRME', 'CRPU',
+    'DIIO', 'DIME', 'DIPU', 'DSIO', 'DSME', 'DSPU', 'DTIO', 'DTME', 'DTPU',
+    'EDME', 'ENIO', 'ENME', 'ENPU', 'EXAP', 'IRQ', 'LDME', 'LDPR', 'LDSC',
+    'LDSS', 'NMI', 'NWPR', 'NWSC', 'RNIO', 'RSAP', 'RSIO', 'RSME', 'RSPU',
+    'RST', 'RUN', 'RUSC', 'SESC', 'SHBM', 'SHHV', 'SHIL', 'SHIO', 'SHME',
+    'SHRL', 'SHRV', 'SHSC', 'SHSE', 'STEP', 'STOP', 'STSC', 'SVME', 'SVPR',
+    'SVSC', 'SVSS', 'ADD', 'AND', 'BIT', 'CALL', 'COMP', 'CONV', 'DEC', 'DEPO',
+    'END', 'EXAM', 'EXIT', 'HELP', 'INC', 'INRG', 'JPEQ', 'JPZR', 'JPGE', 'JPGT',
+    'JPLE', 'JPLT', 'JPNE', 'JPNZ', 'MUL', 'NOT', 'OR', 'PRNT', 'RTRN', 'SHL',
+    'SHR', 'SUB', 'SWAP', 'WAIT', 'XOR');
 var
   Form6: TForm6;
-
-
-
-ATIO|ATME|ATPU|CRIO|CFIO|CFME|CFPU|CRME|CRPU|DIIO|DIME|DIPU|DSIO|DSME|DSPU|DTIO|DTME|DTPU|EDME|ENIO|ENME|ENPU|EXAP|IRQ|LDME|LDPR|LDSC|LDSS|NMI|NWPR|NWSC|RNIO|RSAP|RSIO|RSME|RSPU|RST|RUN|RUSC|SESC|SHBM|SHHV|SHIL|SHIO|SHME|SHRL|SHRV|SHSC|SHSE|STEP|STOP|STSC|SVME|SVPR|SVSC|SVSS|ADD|AND|BIT|CALL|COMP|CONV|DEC|DEPO|END|EXAM|EXIT|HELP|INC|INRG|JPEQ|JPZR|JPGE|JPGT|JPLE|JPLT|JPNE|JPNZ|MUL|NOT|OR|PRNT|RTRN|SHL|SHR|SUB|SWAP|WAIT|XOR
-
 
 implementation
 uses frmmain;

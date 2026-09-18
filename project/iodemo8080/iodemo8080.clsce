@@ -2,7 +2,7 @@
 ; +----------------------------------------------------------------------------+
 ; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 ; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-; | demo8080.clsce                                                             |
+; | iodemo8080.clsce                                                           |
 ; | CoreLAB 8080 Demo program                                                  |
 ; +----------------------------------------------------------------------------+
 
@@ -32,7 +32,7 @@
 	CFME	RAM.BaseAddress 0		; base address
 	CFME	RAM.AddressRangeSize 1024	; size
 	CFME	RAM.MemoryMode mmRAM		; mode
-	LOAD	RAM demo8080.hex		; load program
+	LDME	RAM "iodemo8080.hex"		; load program
 	ATME	RAM				; attach to bus
 	
 	CRPU	cpu_8080 Processor		; module name
@@ -45,7 +45,7 @@
 	ENPU	Processor
 
 ; Run simulation
-	RUNDisplay
+	RUN
 
 ; Disable modules
 	DIIO	Console

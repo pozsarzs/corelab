@@ -1,2 +1,2 @@
-file ..\*\\.(bat|)$ CoreLAB\sscriptembly ^#!.\*([\s/]corelab|corelab.exe)
+file ..\*\\.(bat|)$ CoreLAB\scriptembly ^#!.\*([\s/]corelab|corelab.exe)
 include corelab.syntax
