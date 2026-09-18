@@ -54,40 +54,37 @@ in mind:
 
 ### General features
 
-|Features                  |Specification / Description                                                      |
-|--------------------------|---------------------------------------------------------------------------------|
-|**project type**          |Functional processor simulator                                                   |
-|**actual version**        |v0.1                                                                             |
-|**licence**               |EUPL v1.2                                                                        |
-|**language**              |en, hu                                                                           |
-|**architecture**          |amd64, armhf, i386, x86_64                                                       |
-|**operation system**      |FreeBSD, Linux, Windows                                                          |
-|**user interface**        |Graphical User Interface (GUI) with scriptable command-line control              |
-|**running modes**         |Normal or interpreter                                                            |
-|**simulation type**       |Instruction-level operation (not cycle-accurate)                                 |
-|**supported architecture**|Neumann and Harvard architectures                                                |
-|**supported processors**  |Byte based uPs and simple MCUs                                                   |
-|**simulation environment**|Configurable memory space and virtual I/O ports or devices                       |
-|**modular architecture**  |Dynamically loadable CPUs and peripherals                                        |
-|**dump**                  |Displaying memory and register contents, with export to binary or Intel HEX files|
-|**logging**               |Runtime log exportable to file                                                   |
-|**debug features**        |Breakpoints, memory monitoring, single-stepping, and commentable memory addresses|
-|**program loading**       |Via keyboard entry or from binary/Intel HEX files                                |
-|**state saving**          |Saving and restoring full environment state                                      |
+|Features                  |Specification / Description                                        |
+|--------------------------|-------------------------------------------------------------------|
+|**project type**          |Functional processor simulator                                     |
+|**actual version**        |v0.1                                                               |
+|**licence**               |EUPL v1.2                                                          |
+|**language**              |en, hu                                                             |
+|**architecture**          |amd64, armhf, i386, x86_64                                         |
+|**operation system**      |FreeBSD, Linux, Windows                                            |
+|**user interface**        |Graphical User Interface (GUI) with scriptable command-line control|
+|**running modes**         |Normal or interpreter                                              |
+|**simulation type**       |Instruction-level operation (not cycle-accurate)                   |
+|**supported architecture**|Neumann and Harvard architectures                                  |
+|**supported processors**  |Byte based uPs and simple MCUs                                     |
+|**simulation environment**|Configurable memory space and virtual I/O ports or devices         |
+|**modular architecture**  |Dynamically loadable CPUs and peripherals                          |
+|**state saving**          |Saving and restoring full environment state                        |
 
 ### Integrated modules
 
-|Features              |Specification / Description                                        |
-|----------------------|-------------------------------------------------------------------|
-|**Breakpoint Manager**|Managing breakpoints                                               |
-|**HexViewer**         |Memory viewer component                                            |
-|**IntLogger**         |Logging interrupt requests                                         |
-|**Module Explorer**   |Managing module instances                                          |
-|**RegViewer**         |Real-time inspection of registers, program counter, and flag status|
-|**RunLogger**         |Real-time output of address, machine code, and mnemonic            |
-|**ScriptConsole**     |Console for show running script output                             |
-|**ScriptEditor**      |Built-in environment for writing and executing control scripts     |
-|**SysConsole**        |Console for system messages and command line interface             |
+|Features              |Specification / Description                            |
+|----------------------|-------------------------------------------------------|
+|**Breakpoint Manager**|Managing breakpoints                                   |
+|**BusLogger**         |Logging system bus traffic                             |
+|**HexViewer**         |Memory viewer component                                |
+|**IntLogger**         |Logging interrupt requests                             |
+|**Module Explorer**   |Managing module instances                              |
+|**RegViewer**         |Real-time inspection of registers                      |
+|**RunLogger**         |Real-time output of address, machine code, and mnemonic|
+|**ScriptConsole**     |Console for show running script output                 |
+|**ScriptEditor**      |Built-in environment for writing control scripts       |
+|**SysConsole**        |Console for system messages and command line interface |
 
 ### Plug-in modules
 
@@ -108,8 +105,6 @@ in mind:
 ### CoreLAB framework application
 
 ![CoreLAB framework application](document/screenshots/corelab_1.png)
-
-![CoreLAB framework application](document/screenshots/corelab_2.png)
 
 ### CLIOPort plugin tester application
 
@@ -205,183 +200,125 @@ Runtime events and execution logs can be saved to files for later analysis.
 Memory contents can be exported in binary or Intel HEX format, allowing results
 to be used with other development tools or transferred to real hardware.
 
-## VI. Used filetypes
+#### Used filetypes
 
 |extension|type                 |application                    |
 |:-------:|:--------------------|:------------------------------|
-|*.clprj  |CoreLAB project      |CoreLAB                        |
-|*.clsht  |CoreLAB snapshot     |CoreLAB                        |
-|*.clsce  |CoreLAB scriptembly  |CoreLAB                        |
-|*.clpst  |CoreLAB plugin status|CLIOPort, CLMemory, CLProcessor|
 |*.bin    |General binary file  |CoreLAB, CLProcessor           |
+|*.clprj  |CoreLAB project      |CoreLAB                        |
+|*.clpst  |CoreLAB plugin status|CLIOPort, CLMemory, CLProcessor|
+|*.clsce  |CoreLAB scriptembly  |CoreLAB                        |
+|*.clsht  |CoreLAB snapshot     |CoreLAB                        |
 |*.hex    |Intel hexa file      |CoreLAB, CLProcessor           |
 |*.log    |General log file     |CoreLAB, CLProcessor           |
 
-## VII. Implemented commands  
+## VI. Internal registers
 
-|name|mode             |description                                           |
-|:--:|:---------------:|:-----------------------------------------------------|
-|ATIO|   csEveryWhere  |Attach I/O port or device module to bus.              |
-|ATME|   csEveryWhere  |Attach memory module to bus.                          |
-|ATPU|   csEveryWhere  |Attach processor module to bus.                       |
-|CRIO|   csEveryWhere  |Instantiate a I/O port or device module.              |
-|CFIO|   csEveryWhere  |Configure I/O port module                             |
-|CFME|   csEveryWhere  |Configure memory module                               |
-|CFPU|   csEveryWhere  |Configure processor module                            |
-|CRME|   csEveryWhere  |Instantiate a memory module.                          |
-|CRPU|   csEveryWhere  |Instantiate a processor module.                       |
-|DIIO|   csEveryWhere  |Disable I/O port or device module.                    |
-|DIME|   csEveryWhere  |Disable memory module.                                |
-|DIPU|   csEveryWhere  |Disable processor module.                             |
-|DSIO|   csEveryWhere  |Destroy I/O port or device module.                    |
-|DSME|   csEveryWhere  |Destroy memory module.                                |
-|DSPU|   csEveryWhere  |Destroy processor module.                             |
-|DTIO|   csEveryWhere  |Detach I/O port or device module from bus.            |
-|DTME|   csEveryWhere  |Detach memory module from bus.                        |
-|DTPU|   csEveryWhere  |Detach processor module from bus.                     |
-|EDME|csInteractiveOnly|Show examine/deposit window                           |
-|ENIO|   csEveryWhere  |Enable I/O port or device module.                     |
-|ENME|   csEveryWhere  |Enable memory module.                                 |
-|ENPU|   csEveryWhere  |Enable processor module.                              |
-|EXAP|   csEveryWhere  |Exit from application.                                |
-|IRQ |   csEveryWhere  |Call interrupt.                                       |
-|LDME|   csEveryWhere  |Load memory content from file                         |
-|LDPR|csInteractiveOnly|Change to interactive mode and load project from file.|
-|LDSC|csInteractiveOnly|Change to script mode and load script from file.      |
-|LDSS|   csEveryWhere  |Load and restore snapshot.                            |
-|NMI |   csEveryWhere  |Call non-maskable interrupt.                          |
-|NWPR|csInteractiveOnly|Change to interactive mode and create new project.    |
-|NWSC|csInteractiveOnly|Change to script mode and create new script.          |
-|RNIO|   csEveryWhere  |Rename I/O device panel.                              |
-|RSAP|   csEveryWhere  |Restart application.                                  |
-|RSIO|   csEveryWhere  |Reset I/O port or device module.                      |
-|RSME|   csEveryWhere  |Reset memory module.                                  |
-|RSPU|   csEveryWhere  |Reset processor module.                               |
-|RST |   csEveryWhere  |Reset all module.                                     |
-|RUN |   csEveryWhere  |Run simulation.                                       |
-|RUSC|csInteractiveOnly|Run script.                                           |
-|SESC|csInteractiveOnly|Run script step-by-step.                              |
-|SHBM|csInteractiveOnly|Show BreakPoint Manager window.                       |
-|SHHV|csInteractiveOnly|Show HexViewer window.                                |
-|SHIL|csInteractiveOnly|Show IntLogger window.                                |
-|SHIO|   csEveryWhere  |Show I/O device panel.                                |
-|SHME|csInteractiveOnly|Show Module Explorer window.                          |
-|SHRL|csInteractiveOnly|Show RunLogger window.                                |
-|SHRV|csInteractiveOnly|Show RegViewer window.                                |
-|SHSC|csInteractiveOnly|Show ScriptConsole window.                            |
-|SHSE|csInteractiveOnly|Show ScriptEditor window.                             |
-|STEP|   csEveryWhere  |Run simulation step-by-step.                          |
-|STOP|   csEveryWhere  |Stop simulation.                                      |
-|STSC|csInteractiveOnly|Stop script.                                          |
-|SVME|   csEveryWhere  |Save memory content to file                           |
-|SVPR|csInteractiveOnly|Save project to file.                                 |
-|SVSC|csInteractiveOnly|Save script to file.                                  |
-|SVSS|   csEveryWhere  |Make and save snapshot.                               |
+|registers|description                |access|
+|:-------:|:--------------------------|:----:|
+|R0-9     |general register           | R/W  | 
+|RA       |work register (accumulator)| R/W  | 
+|RB       |                           | R/W  | 
+|RC       |instruction counter        | RO   | 
+|RD       |                           | R/W  | 
+|RE       |random byte                | RO   | 
+|RF       |Flags                      | RO   |
 
-**NEM MEGVALÓSÍTOTT UTASÍTÁSOK**
+**Note:** Flag's 0 bit is ZERO, 1 bit is CARRY.  
 
-|name|description                                                                       |
-|:--:|----------------------------------------------------------------------------------|
-|ABS |Replace target value with its absolute value in-place.                            |
-|ADD |Add value to target in-place.                                                     |
-|AND |Bitwise/logical AND in-place.                                                     |
-|ASCI|Convert ASCII character to its byte value.                                        |
-|BIT |Check the specified bit.                                                          |
-|CALL|Call subroutine.                                                                  |
-|CALM|Call object's method.                                                             |
-|CHAR|Convert byte size value to its ASCII character representation.                    |
-|COMP|Compare target with value by subtraction.                                         |
-|CONV|Convert number in different numeral systems in-place.                             |
-|DEC |Decrement integer target by 1 or by count in-place.                               |
-|DEPO|Deposit (write) a value directly into memory, register or bus address.            |
-|END |End of script.                                                                    |
-|EXAM|Examine (read) a value from memory, register or bus address into a variable.      |
-|EXIT|Terminate the script.                                                             |
-|FILL|Fill an array with a specific byte value.                                         |
-|GETP|Get object's property.                                                            |
-|HELP|Display general help overview or detailed usage for a specific command.           |
-|IDV |Perform integer division on target in-place.                                      |
-|IMD |Perform integer division remainder on target in-place.                            |
-|INC |Increment integer target by 1 or by count in-place.                               |
-|INDX|Search for a value in an array and then return it with its index in the exit code.|
-|INPW|Show prompt window and read user input into a variable.                           |
-|INRG|Check if value is between min and max.                                            |
-|JPEQ|Jump to the specified label, based on the result of the previous CMP.             |
-|JPGE|Jump to the specified label, based on the result of the previous CMP.             |
-|JPGT|Jump to the specified label, based on the result of the previous CMP.             |
-|JPLE|Jump to the specified label, based on the result of the previous CMP.             |
-|JPLT|Jump to the specified label, based on the result of the previous CMP.             |
-|JPNE|Jump to the specified label, based on the result of the previous CMP.             |
-|JPNZ|Jump to the specified label, based on the result of the previous CMP.             |
-|JPZR|Jump to the specified label, based on the result of the previous CMP.             |
-|MSGW|Show modal message window.                                                        |
-|MUL |Multiply target by value in-place in-place.                                       |
-|NOT |Bitwise/logical NOT in-place.                                                     |
-|OR  |Bitwise/logical OR in-place.                                                      |
-|POPA|Retrieve an result from the argument stack after return from subroutine.          |
-|PRNT|Write text to console.                                                            |
-|PSHA|Store an argument to the argument stack for next CALL or CALM instruction.    |
-|RDV |Perform floating-point division on target in-place.                               |
-|RTRN|Return from subroutine.                                                           |
-|SAPP|Append value or variable to the end of target string in-place.                    |
-|SDEL|Delete characters from target starting at index in-place.                         |
-|SETP|Set object's property.                                                            |
-|SETV|Create variable and/or assign value to variable or array element.                 |
-|SFND|Find index of substring in target and store 0-based result.                       |
-|SHL |Shift target bits left by count in-place.                                         |
-|SHR |Shift target bits right by count in-place.                                        |
-|SINS|Insert substring into target at specified index in-place.                         |
-|SLEN|Store the character count of target string into a variable.                       |
-|SLOW|Convert target string to lowercase in-place.                                      |
-|SREP|Replace occurrences of old substring with new substring in target in-place.       |
-|SSUB|Extract a substring from target starting at index into result variable.           |
-|SUB |Subtract value from target in-place.                                              |
-|SUPP|Convert target string to uppercase in-place.                                      |
-|SWAP|Swap the values of two variables.                                                 |
-|WAIT|Wait specified ms.                                                                |
-|XOR |Bitwise/logical XOR in-place.                                                     |
+## VII. Implemented commands
 
-## VIII. Command exit codes
+|instruction  |mode             |use RA|flags|description                                                            |
+|:-----------:|:---------------:|:----:|:---:|-----------------------------------------------------------------------|
+|**ADD**      |csScript         |Yes   |C, Z |Add value to target in-place.                                          |
+|**AND**      |csScript         |Yes   |Z    |Bitwise/logical AND in-place.                                          |
+|**ATIO**     |csEveryWhere     |-     |-    |Attach I/O port or device module to bus.                               |
+|**ATME**     |csEveryWhere     |-     |-    |Attach memory module to bus.                                           |
+|**ATPU**     |csEveryWhere     |-     |-    |Attach processor module to bus.                                        |
+|**BIT**      |csScript         |Yes   |Z    |Check the specified bit.                                               |
+|**CALL**     |csScript         |-     |-    |Call subroutine.                                                       |
+|**CFIO**     |csEveryWhere     |-     |-    |Configure I/O port module.                                             |
+|**CFME**     |csEveryWhere     |-     |-    |Configure memory module.                                               |
+|**CFPU**     |csEveryWhere     |-     |-    |Configure processor module.                                            |
+|**COMP**     |csScript         |Yes   |C, Z |Compare target with value by subtraction.                              |
+|**CONV**     |csScript         |Yes   |-    |Convert number in different numeral systems in-place.                  |
+|**CRIO**     |csEveryWhere     |-     |-    |Instantiate a I/O port or device module.                               |
+|**CRME**     |csEveryWhere     |-     |-    |Instantiate a memory module.                                           |
+|**CRPU**     |csEveryWhere     |-     |-    |Instantiate a processor module.                                        |
+|**DEC**      |csScript         |Yes   |Z    |Decrement integer target by 1 or by count in-place.                    |
+|**DEPO**     |csScript         |Yes   |-    |Deposit a value directly into memory, register or bus address.         |
+|**DIIO**     |csEveryWhere     |-     |-    |Disable I/O port or device module.                                     |
+|**DIME**     |csEveryWhere     |-     |-    |Disable memory module.                                                 |
+|**DIPU**     |csEveryWhere     |-     |-    |Disable processor module.                                              |
+|**DSIO**     |csEveryWhere     |-     |-    |Destroy I/O port or device module.                                     |
+|**DSME**     |csEveryWhere     |-     |-    |Destroy memory module.                                                 |
+|**DSPU**     |csEveryWhere     |-     |-    |Destroy processor module.                                              |
+|**DTIO**     |csEveryWhere     |-     |-    |Detach I/O port or device module from bus.                             |
+|**DTME**     |csEveryWhere     |-     |-    |Detach memory module from bus.                                         |
+|**DTPU**     |csEveryWhere     |-     |-    |Detach processor module from bus.                                      |
+|**EDME**     |csInteractiveOnly|-     |-    |Show examine/deposit window.                                           |
+|**END**      |csScript         |-     |-    |End of script.                                                         |
+|**ENIO**     |csEveryWhere     |-     |-    |Enable I/O port or device module.                                      |
+|**ENME**     |csEveryWhere     |-     |-    |Enable memory module.                                                  |
+|**ENPU**     |csEveryWhere     |-     |-    |Enable processor module.                                               |
+|**EXAM**     |csScript         |Yes   |-    |Examine a value from memory, register or bus address into a variable.  |
+|**EXAP**     |csEveryWhere     |-     |-    |Exit from application.                                                 |
+|**EXIT**     |csScript         |-     |-    |Terminate the script.                                                  |
+|**HELP**     |csScript         |-     |-    |Display general help overview or detailed usage for a specific command.|
+|**INC**      |csScript         |Yes   |Z    |Increment integer target by 1 or by count in-place.                    |
+|**INRG**     |csScript         |Yes   |Z    |Check if value is between min and max.                                 |
+|**IRQ**      |csEveryWhere     |-     |-    |Call interrupt.                                                        |
+|**JPEQ/JPZR**|csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPGE**     |csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPGT**     |csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPLE**     |csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPLT**     |csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPNE/JPNZ**|csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**LDME**     |csEveryWhere     |-     |-    |Load memory content from file.                                         |
+|**LDPR**     |csInteractiveOnly|-     |-    |Change to interactive mode and load project from file.                 |
+|**LDSC**     |csInteractiveOnly|-     |-    |Change to script mode and load script from file.                       |
+|**LDSS**     |csEveryWhere     |-     |-    |Load and restore snapshot.                                             |
+|**MUL**      |csScript         |Yes   |C, Z |Multiply target by value in-place.                                     |
+|**NMI**      |csEveryWhere     |-     |-    |Call non-maskable interrupt.                                           |
+|**NOT**      |csScript         |Yes   |Z    |Bitwise/logical NOT in-place.                                          |
+|**NWPR**     |csInteractiveOnly|-     |-    |Change to interactive mode and create new project.                     |
+|**NWSC**     |csInteractiveOnly|-     |-    |Change to script mode and create new script.                           |
+|**OR**       |csScript         |Yes   |Z    |Bitwise/logical OR in-place.                                           |
+|**PRNT**     |csScript         |-     |-    |Write text to console.                                                 |
+|**RNIO**     |csEveryWhere     |-     |-    |Rename I/O device panel.                                               |
+|**RSAP**     |csEveryWhere     |-     |-    |Restart application.                                                   |
+|**RSIO**     |csEveryWhere     |-     |-    |Reset I/O port or device module.                                       |
+|**RSME**     |csEveryWhere     |-     |-    |Reset memory module.                                                   |
+|**RSPU**     |csEveryWhere     |-     |-    |Reset processor module.                                                |
+|**RST**      |csEveryWhere     |-     |-    |Reset all module.                                                      |
+|**RTRN**     |csScript         |-     |-    |Return from subroutine.                                                |
+|**RUN**      |csEveryWhere     |-     |-    |Run simulation.                                                        |
+|**RUSC**     |csInteractiveOnly|-     |-    |Run script.                                                            |
+|**SESC**     |csInteractiveOnly|-     |-    |Run script step-by-step.                                               |
+|**SHBM**     |csInteractiveOnly|-     |-    |Show BreakPoint Manager window.                                        |
+|**SHHV**     |csInteractiveOnly|-     |-    |Show HexViewer window.                                                 |
+|**SHIL**     |csInteractiveOnly|-     |-    |Show IntLogger window.                                                 |
+|**SHIO**     |csEveryWhere     |-     |-    |Show I/O device panel.                                                 |
+|**SHL**      |csScript         |Yes   |C, Z |Shift target bits left by count in-place.                              |
+|**SHME**     |csInteractiveOnly|-     |-    |Show Module Explorer window.                                           |
+|**SHR**      |csScript         |Yes   |C, Z |Shift target bits right by count in-place.                             |
+|**SHRL**     |csInteractiveOnly|-     |-    |Show RunLogger window.                                                 |
+|**SHRV**     |csInteractiveOnly|-     |-    |Show RegViewer window.                                                 |
+|**SHSC**     |csInteractiveOnly|-     |-    |Show ScriptConsole window.                                             |
+|**SHSE**     |csInteractiveOnly|-     |-    |Show ScriptEditor window.                                              |
+|**STEP**     |csEveryWhere     |-     |-    |Run simulation step-by-step.                                           |
+|**STOP**     |csEveryWhere     |-     |-    |Stop simulation.                                                       |
+|**STSC**     |csInteractiveOnly|-     |-    |Stop script.                                                           |
+|**SUB**      |csScript         |Yes   |C, Z |Subtract value from target in-place.                                   |
+|**SVME**     |csEveryWhere     |-     |-    |Save memory content to file.                                           |
+|**SVPR**     |csInteractiveOnly|-     |-    |Save project to file.                                                  |
+|**SVSC**     |csInteractiveOnly|-     |-    |Save script to file.                                                   |
+|**SVSS**     |csEveryWhere     |-     |-    |Make and save snapshot.                                                |
+|**SWAP**     |csScript         |Yes   |-    |Swap the values of two variables.                                      |
+|**WAIT**     |csScript         |-     |-    |Wait specified ms.                                                     |
+|**XOR**      |csScript         |Yes   |Z    |Bitwise/logical XOR in-place.                                          |
 
-**PONTOSÍTANDÓ!**
-
-| v.|category        |description                 |
-|:-:|:---------------|----------------------------|
-| 0 |                |Sucess                      |
-| 1 |General error   |General error               |
-| 2 |General error   |Wrong parameter number      |
-| 3 |General error   |Invalid syntax              |
-|10 |Data error      |Variable not found          |
-|11 |Data error      |Type error                  |
-|12 |Data error      |Read-only target            |
-|13 |Data error      |Index error / array boundary|
-|14 |Data error      |Class not found             |
-|15 |Data error      |Object not found            |
-|16 |Data error      |Property not found          |
-|17 |Data error      |Method not found            |
-|20 |Simulation error|General error               |
-|21 |Simulation error|Attach/Detach error         |
-
-## IX. System constants  
-
-|name     |value                                    |
-|:--------|:----------------------------------------|
-|`$?`     |exit value of the commands               |
-|`$ARGCNT`|number of the OS command line arguments  |
-|`$ARG[n]`|OS command line arguments                |
-|`$DATE`  |date                                     |
-|`$FC`    |carry flag                               |
-|`$FZ`    |zero flag                                |
-|`$HOME`  |user's home directory                    |
-|`$INSCNT`|total number of executed CPU instructions|
-|`$PRJDIR`|directory of the actual project          |
-|`$RNDB`  |gives a random byte                      |
-|`$RNDI`  |gives a random integer                   |
-|`$RNDW`  |gives a random word                      |
-|`$TIME`  |time                                     |
-|`$VER`   |application version                      |
-
-## X. Documentation and Help  
+## VIII. Documentation and Help  
 
 CoreLAB features built-in help and comprehensive documentation, accessible
 through the following channels:
@@ -396,14 +333,14 @@ through the following channels:
 - Additionally, you can view the manual page from *nix shell (_man corelab_) or
   _corelab.txt_ on other systems.  
 
-## XI. Contributing  
+## IX. Contributing  
 
 If you find any bugs, please report them! I am also happy to accept pull
 requests from anyone. You can use the GitHub issue tracker to report bugs, ask
 questions, or suggest new features. See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 for details.  
 
-## XII. Links  
+## X. Links  
 
  - [Homepage](https://www.pozsarzs.hu/60_myprogcom/corelab/)  
  - [GitHub repository](https://github.com/pozsarzs/corelab/tree/CoreLAB8)  
