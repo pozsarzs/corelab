@@ -10,16 +10,11 @@ endif
 syn case ignore
 syn sync lines=250
 
-" keywords:
-syn keyword corelabStatement ABS ADD AND APPX ASCI ATTH BIT CALL CALM CHAR COMP CONV CRTE DEC DEPO DEST DETH END EXAM EXIT FILL GETP HELP IDV IMD INC INDX INPW INRG JPEQ JPGE JPGT JPLE JPLT JPNE JPNZ JPZR 
-syn keyword corelabStatement MSGW MUL NOT OR PAUS POPA PRNT PSHA RDV RSET RTRN SAPP SDEL SETP SETV SFND SHL SHR SINS SLEN SLOW SREP SSUB STEP STOP STRT SUB SUPP SWAP WAIT XOR 
+" instructions:
+syn keyword corelabStatement ATIO ATME ATPU CRIO CFIO CFME CFPU CRME CRPU DIIO DIME DIPU DSIO DSME DSPU DTIO DTME DTPU EDME ENIO ENME ENPU EXAP IRQ LDME LDPR LDSC LDSS NMI NWPR NWSC RNIO RSAP RSIO RSME RSPU RST RUN RUSC SESC SHBM SHHV SHIL SHIO SHME SHRL SHRV SHSC SHSE STEP STOP STSC SVME SVPR SVSC SVSS ADD AND BIT CALL COMP CONV DEC DEPO END EXAM EXIT HELP INC INRG JPEQ JPZR JPGE JPGT JPLE JPLT JPNE JPNZ MUL NOT OR PRNT RTRN SHL SHR SUB SWAP WAIT XOR
 
-" system constants:
-syn match   corelabConstant "\$[?]"
-syn match   corelabConstant "\$\(ARG\|ARGCNT\|DATE\|FC\|FZ\|HOME\|INSCNT\|PRJDIR\|RNDB\|RNDI\|RNDW\|TIME\|VER\)\>"
-
-" variables:
-syn match   corelabIdentifier "\$\w\+\(\.\w\+\)*\>"
+" registers:
+syn match   corelabConstant "\$R[0-9A-F]"
 
 " strings:
 syn region  corelabString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=corelabStringEscape

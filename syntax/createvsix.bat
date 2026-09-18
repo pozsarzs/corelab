@@ -2,7 +2,7 @@
 
 rem Create .vsix file
 
-cd corelab-script
+cd corelab-scriptembly
 vsce package
 move *.vsix ..
 cd ..

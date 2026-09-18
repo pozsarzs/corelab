@@ -3,7 +3,7 @@
   "displayName": "CoreLAB scriptembly",
   "description": "Control language for CoreLAB application",
   "version": "0.0.1",
-  "icon": "images/corelab-orange.png",
+  "icon": "images/application-x-corelab-scriptembly.png",
   "author": "Pozsar Zsolt",
   "publisher": "pozsarzs",
   "license": "MIT",

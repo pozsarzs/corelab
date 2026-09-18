@@ -6,6 +6,15 @@
 ; | CoreLAB 8080 Demo program                                                  |
 ; +----------------------------------------------------------------------------+
 
+	R0 RA R0 ro
+	TAaaas
+	taaa
+	tAsss
+	Taa
+	r0 $R0 $r0 r0 RO
+	
+	
+
 ; Show internal modules
 	SHRL					; Open RunLogger
 	SHIL					; Open IntLogger

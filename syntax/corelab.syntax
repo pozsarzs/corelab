@@ -7,95 +7,97 @@
 
 context default
     caseinsensitive
-
-# system constants:
-    keyword $\? brightred
-    keyword $ARG brightred
-    keyword $ARGCNT brightred
-    keyword $DATE brightred
-    keyword $FC brightred
-    keyword $FZ brightred
-    keyword $HOME brightred
-    keyword $INSCNT brightred
-    keyword $PRJDIR brightred
-    keyword $RNDB brightred
-    keyword $RNDI brightred
-    keyword $RNDW brightred
-    keyword $TIME brightred
-    keyword $VER brightred
     
-# variables:
-    keyword $\[a-zA-Z0-9_.\]+ yellow
+# registers:
+    keyword whole $R\[A-F0-9\] brightblue
 
-# classes:
-    keyword whole T\[A-Z\]\[a-zA-Z0-9_\]* brightred
-
-# keywords:
-    keyword whole ABS white
+# instructions:
+    keyword whole ATIO white
+    keyword whole ATME white
+    keyword whole ATPU white
+    keyword whole CRIO white
+    keyword whole CFIO white
+    keyword whole CFME white
+    keyword whole CFPU white
+    keyword whole CRME white
+    keyword whole CRPU white
+    keyword whole DIIO white
+    keyword whole DIME white
+    keyword whole DIPU white
+    keyword whole DSIO white
+    keyword whole DSME white
+    keyword whole DSPU white
+    keyword whole DTIO white
+    keyword whole DTME white
+    keyword whole DTPU white
+    keyword whole EDME white
+    keyword whole ENIO white
+    keyword whole ENME white
+    keyword whole ENPU white
+    keyword whole EXAP white
+    keyword whole IRQ white
+    keyword whole LDME white
+    keyword whole LDPR white
+    keyword whole LDSC white
+    keyword whole LDSS white
+    keyword whole NMI white
+    keyword whole NWPR white
+    keyword whole NWSC white
+    keyword whole RNIO white
+    keyword whole RSAP white
+    keyword whole RSIO white
+    keyword whole RSME white
+    keyword whole RSPU white
+    keyword whole RST white
+    keyword whole RUN white
+    keyword whole RUSC white
+    keyword whole SESC white
+    keyword whole SHBM white
+    keyword whole SHHV white
+    keyword whole SHIL white
+    keyword whole SHIO white
+    keyword whole SHME white
+    keyword whole SHRL white
+    keyword whole SHRV white
+    keyword whole SHSC white
+    keyword whole SHSE white
+    keyword whole STEP white
+    keyword whole STOP white
+    keyword whole STSC white
+    keyword whole SVME white
+    keyword whole SVPR white
+    keyword whole SVSC white
+    keyword whole SVSS white
     keyword whole ADD white
     keyword whole AND white
-    keyword whole APPX white
-    keyword whole ASCI white
-    keyword whole ATTH white
     keyword whole BIT white
     keyword whole CALL white
-    keyword whole CALM white
-    keyword whole CHAR white
     keyword whole COMP white
     keyword whole CONV white
-    keyword whole CRTE white
     keyword whole DEC white
     keyword whole DEPO white
-    keyword whole DEST white
-    keyword whole DETH white
     keyword whole END white
     keyword whole EXAM white
     keyword whole EXIT white
-    keyword whole FILL white
-    keyword whole GETP white
     keyword whole HELP white
-    keyword whole IDV white
-    keyword whole IMD white
     keyword whole INC white
-    keyword whole INDX white
-    keyword whole INPW white
     keyword whole INRG white
     keyword whole JPEQ white
+    keyword whole JPZR white
     keyword whole JPGE white
     keyword whole JPGT white
     keyword whole JPLE white
     keyword whole JPLT white
     keyword whole JPNE white
     keyword whole JPNZ white
-    keyword whole JPZR white
-    keyword whole MSGW white
     keyword whole MUL white
     keyword whole NOT white
     keyword whole OR white
-    keyword whole PAUS white
-    keyword whole POPA white
     keyword whole PRNT white
-    keyword whole PSHA white
-    keyword whole RDV white
-    keyword whole RSET white
     keyword whole RTRN white
-    keyword whole SAPP white
-    keyword whole SDEL white
-    keyword whole SETP white
-    keyword whole SETV white
-    keyword whole SFND white
     keyword whole SHL white
     keyword whole SHR white
-    keyword whole SINS white
-    keyword whole SLEN white
-    keyword whole SLOW white
-    keyword whole SREP white
-    keyword whole SSUB white
-    keyword whole STEP white
-    keyword whole STOP white
-    keyword whole STRT white
     keyword whole SUB white
-    keyword whole SUPP white
     keyword whole SWAP white
     keyword whole WAIT white
     keyword whole XOR white

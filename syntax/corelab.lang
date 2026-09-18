@@ -6,7 +6,6 @@
   <styles>
     <style id="comment" name="Comment" map-to="def:comment"/>
     <style id="string" name="String" map-to="def:string"/>
-    <style id="identifier" name="Identifier" map-to="def:identifier"/>
     <style id="keyword" name="Keyword" map-to="def:keyword"/>
     <style id="constant" name="Constant" map-to="def:constant"/>
     <style id="type" name="Type" map-to="def:type"/>
@@ -27,98 +26,105 @@
     </context>
     <!-- instructions: -->
     <context id="keyword" style-ref="keyword">
-      <keyword>ABS</keyword>
+      <keyword>ATIO</keyword>
+      <keyword>ATME</keyword>
+      <keyword>ATPU</keyword>
+      <keyword>CRIO</keyword>
+      <keyword>CFIO</keyword>
+      <keyword>CFME</keyword>
+      <keyword>CFPU</keyword>
+      <keyword>CRME</keyword>
+      <keyword>CRPU</keyword>
+      <keyword>DIIO</keyword>
+      <keyword>DIME</keyword>
+      <keyword>DIPU</keyword>
+      <keyword>DSIO</keyword>
+      <keyword>DSME</keyword>
+      <keyword>DSPU</keyword>
+      <keyword>DTIO</keyword>
+      <keyword>DTME</keyword>
+      <keyword>DTPU</keyword>
+      <keyword>EDME</keyword>
+      <keyword>ENIO</keyword>
+      <keyword>ENME</keyword>
+      <keyword>ENPU</keyword>
+      <keyword>EXAP</keyword>
+      <keyword>IRQ</keyword>
+      <keyword>LDME</keyword>
+      <keyword>LDPR</keyword>
+      <keyword>LDSC</keyword>
+      <keyword>LDSS</keyword>
+      <keyword>NMI</keyword>
+      <keyword>NWPR</keyword>
+      <keyword>NWSC</keyword>
+      <keyword>RNIO</keyword>
+      <keyword>RSAP</keyword>
+      <keyword>RSIO</keyword>
+      <keyword>RSME</keyword>
+      <keyword>RSPU</keyword>
+      <keyword>RST</keyword>
+      <keyword>RUN</keyword>
+      <keyword>RUSC</keyword>
+      <keyword>SESC</keyword>
+      <keyword>SHBM</keyword>
+      <keyword>SHHV</keyword>
+      <keyword>SHIL</keyword>
+      <keyword>SHIO</keyword>
+      <keyword>SHME</keyword>
+      <keyword>SHRL</keyword>
+      <keyword>SHRV</keyword>
+      <keyword>SHSC</keyword>
+      <keyword>SHSE</keyword>
+      <keyword>STEP</keyword>
+      <keyword>STOP</keyword>
+      <keyword>STSC</keyword>
+      <keyword>SVME</keyword>
+      <keyword>SVPR</keyword>
+      <keyword>SVSC</keyword>
+      <keyword>SVSS</keyword>
       <keyword>ADD</keyword>
       <keyword>AND</keyword>
-      <keyword>APPX</keyword>
-      <keyword>ASCI</keyword>
-      <keyword>ATTH</keyword>
       <keyword>BIT</keyword>
       <keyword>CALL</keyword>
-      <keyword>CALM</keyword>
-      <keyword>CHAR</keyword>
       <keyword>COMP</keyword>
       <keyword>CONV</keyword>
-      <keyword>CRTE</keyword>
       <keyword>DEC</keyword>
       <keyword>DEPO</keyword>
-      <keyword>DEST</keyword>
-      <keyword>DETH</keyword>
       <keyword>END</keyword>
       <keyword>EXAM</keyword>
       <keyword>EXIT</keyword>
-      <keyword>FILL</keyword>
-      <keyword>GETP</keyword>
       <keyword>HELP</keyword>
-      <keyword>IDV</keyword>
-      <keyword>IMD</keyword>
       <keyword>INC</keyword>
-      <keyword>INDX</keyword>
-      <keyword>INPW</keyword>
       <keyword>INRG</keyword>
       <keyword>JPEQ</keyword>
+      <keyword>JPZR</keyword>
       <keyword>JPGE</keyword>
       <keyword>JPGT</keyword>
       <keyword>JPLE</keyword>
       <keyword>JPLT</keyword>
       <keyword>JPNE</keyword>
       <keyword>JPNZ</keyword>
-      <keyword>JPZR</keyword>
-      <keyword>MSGW</keyword>
       <keyword>MUL</keyword>
       <keyword>NOT</keyword>
       <keyword>OR</keyword>
-      <keyword>PAUS</keyword>
-      <keyword>POPA</keyword>
       <keyword>PRNT</keyword>
-      <keyword>PSHA</keyword>
-      <keyword>RDV</keyword>
-      <keyword>RSET</keyword>
       <keyword>RTRN</keyword>
-      <keyword>SAPP</keyword>
-      <keyword>SDEL</keyword>
-      <keyword>SETP</keyword>
-      <keyword>SETV</keyword>
-      <keyword>SFND</keyword>
       <keyword>SHL</keyword>
       <keyword>SHR</keyword>
-      <keyword>SINS</keyword>
-      <keyword>SLEN</keyword>
-      <keyword>SLOW</keyword>
-      <keyword>SREP</keyword>
-      <keyword>SSUB</keyword>
-      <keyword>STEP</keyword>
-      <keyword>STOP</keyword>
-      <keyword>STRT</keyword>
       <keyword>SUB</keyword>
-      <keyword>SUPP</keyword>
       <keyword>SWAP</keyword>
       <keyword>WAIT</keyword>
       <keyword>XOR</keyword>
     </context>
-    <!-- system constants: -->
-    <context id="sys-exitcode" style-ref="constant">
-      <match>\$\?</match>
-    </context>
+    <!-- registers: -->
     <context id="constant" style-ref="constant">
-      <match>\$(?:ARG|ARGCNT|DATE|FC|FZ|HOME|INSCNT|PRJDIR|RNDB|RNDI|RNDW|TIME|VER)\b</match>
-    </context>
-    <!-- parent classes: -->
-    <context id="type" style-ref="type">
-      <match>\bT[A-Z,0-9]\w*\b</match>
-    </context>
-    <!-- constants, variables, classes, objects: -->
-    <context id="identifier" style-ref="identifier">
-      <match>\$\w+(?:\.\w+)*\b</match>
+      <match>(?i)\$R[A-F0-9]\b</match>
     </context>
     <context id="corelab" class="no-spell-check">
       <include>
         <context ref="comment"/>
         <context ref="string"/>
-        <context ref="sys-exitcode"/>
         <context ref="constant"/>
-        <context ref="type"/>
-        <context ref="identifier"/>
         <context ref="keyword"/>
       </include>
     </context>
