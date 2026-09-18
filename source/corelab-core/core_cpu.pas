@@ -102,22 +102,22 @@ type
     // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
-    procedure SetRegister(const RegName: PChar; AValue: Word); virtual; abstract;
+    function CheckInterrupts: Boolean;
+    function GetCurrentInstruction: TLogRec; virtual; abstract;
+    function GetCurrentInterrupt: TIntLogRec; virtual; abstract;
     function GetRegister(const RegName: PChar): Word; virtual; abstract;
     function GetRegisterCount: Byte; virtual; abstract;
     function GetRegisterName(AIndex: Byte): PChar; virtual; abstract;
     function GetRegisterSize(AIndex: Byte): Byte; virtual; abstract;
-    procedure Run; virtual;
-    procedure Step; virtual; abstract;
-    procedure Stop; virtual;
-    function GetCurrentInstruction: TLogRec; virtual; abstract;
-    function GetCurrentInterrupt: TIntLogRec; virtual; abstract;
-    procedure IRQ(AVector: Byte); virtual;
-    procedure NMI; virtual;
-    function  CheckInterrupts: Boolean;
-    procedure Reset; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual; abstract;
     function SaveState(AStream: TStream): Boolean; virtual; abstract;
+    procedure IRQ(AVector: Byte); virtual;
+    procedure NMI; virtual;
+    procedure Reset; virtual; abstract;
+    procedure Run; virtual;
+    procedure SetRegister(const RegName: PChar; AValue: Word); virtual; abstract;
+    procedure Step; virtual; abstract;
+    procedure Stop; virtual;
     // properties
     property AddressWidth: Byte read FAddressWidth;
     property Architecture: TArchitecture read FArchitecture;

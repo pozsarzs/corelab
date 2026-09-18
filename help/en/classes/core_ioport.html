@@ -98,57 +98,57 @@ vector</td>
 <tbody>
 <tr class="odd">
 <td><code>FAddressRangeSize</code></td>
-<td><code>Word</code></td>
+<td><code>DWord</code></td>
 <td>Address range size</td>
 <td><code>1</code></td>
 </tr>
 <tr class="even">
+<td><code>FBaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>Base address.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
 <td><code>FDataInMode</code></td>
 <td><code>TLineMode</code></td>
 <td>Input data-line decoding mode</td>
 <td><code>lmBCD</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FDataInNegation</code></td>
 <td><code>Boolean</code></td>
 <td>Input data-bit negation</td>
 <td><code>false</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FDataOutMode</code></td>
 <td><code>TLineMode</code></td>
 <td>Output data-line decoding mode</td>
 <td><code>lmBCD</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FDataOutNegation</code></td>
 <td><code>Boolean</code></td>
 <td>Output data-bit negation</td>
 <td><code>false</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FDescription</code></td>
 <td><code>PChar</code></td>
 <td>Short description</td>
 <td>not initialized here</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FEnabled</code></td>
 <td><code>Boolean</code></td>
 <td>Enable the port without detaching it from the bus</td>
 <td><code>false</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FHasPanel</code></td>
 <td><code>Boolean</code></td>
 <td>Indicates whether the implementation has a GUI panel</td>
 <td><code>false</code></td>
-</tr>
-<tr class="odd">
-<td><code>FInstanceID</code></td>
-<td><code>Integer</code></td>
-<td>Module instance ID</td>
-<td><code>-1</code></td>
 </tr>
 <tr class="even">
 <td><code>FIntVector</code></td>
@@ -299,63 +299,63 @@ ID</td>
 <tbody>
 <tr class="odd">
 <td><code>AddressRangeSize</code></td>
-<td><code>Word</code></td>
+<td><code>DWord</code></td>
 <td>Re</td>
 <td>Address range size</td>
 </tr>
 <tr class="even">
+<td><code>BaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>Re/Wr</td>
+<td>Global start address</td>
+</tr>
+<tr class="odd">
 <td><code>DataInMode</code></td>
 <td><code>TLineMode</code></td>
 <td>Re/Wr</td>
 <td>Input data-line decoding mode</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>DataInNegation</code></td>
 <td><code>Boolean</code></td>
 <td>Re/Wr</td>
 <td>Input data-bit negation</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>DataOutMode</code></td>
 <td><code>TLineMode</code></td>
 <td>Re/Wr</td>
 <td>Output data-line decoding mode</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>DataOutNegation</code></td>
 <td><code>Boolean</code></td>
 <td>Re/Wr</td>
 <td>Output data-bit negation</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
 <td>Re</td>
 <td>Short description</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
 <td>Re/Wr</td>
 <td>Enable the port</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>HasPanel</code></td>
 <td><code>Boolean</code></td>
 <td>Re</td>
 <td>Whether the implementation has a GUI panel</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>IntVector</code></td>
 <td><code>Byte</code></td>
 <td>Re/Wr</td>
 <td>Interrupt vector</td>
-</tr>
-<tr class="even">
-<td><code>InstanceID</code></td>
-<td><code>Integer</code></td>
-<td>Re/Wr</td>
-<td>Module instance ID</td>
 </tr>
 <tr class="odd">
 <td><code>LatchedOutput</code></td>

@@ -1,0 +1,4 @@
+#!/bin/bash
+# convert Intel hexa files to raw binary
+
+objcopy -I ihex -O binary $1 $1.bin

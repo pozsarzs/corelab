@@ -38,8 +38,7 @@
 	CRPU	cpu_8080 Processor		; module name
 	ATPU	Processor			; attach to bus
 
-; Enable modules
-	ENIO	Console
+	ENIO	Console				; enable modules
 	ENIO	Keyboard
 	ENIO	Display
 	ENME	RAM

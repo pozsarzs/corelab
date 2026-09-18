@@ -44,9 +44,10 @@ stores the resulting exit code.
 
 ### ExecuteLine result codes
 
-|code |condition                                                                            |
-|----:|-------------------------------------------------------------------------------------|
-|`0`  |Empty/comment line, no tokens, or successful command execution with return value `0`.|
-|`-1` |Command name is not registered.                                                      |
-|`-2` |The command is not permitted in the current running mode.                            |
-|other|Return value supplied by the command's `Execute` method.                             |
+|code |condition                                                |
+|----:|---------------------------------------------------------|
+|`0`  |Empty/comment line or successful command execution.      |
+|`-1` |Command name is not registered.                          |
+|`-2` |The command is not permitted in the current running mode.|
+|`-3` |Argument number error.                                   |  
+|other|Return value supplied by the command's `Execute` method. |

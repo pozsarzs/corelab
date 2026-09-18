@@ -22,9 +22,6 @@ classes/core_gioport.html
 classes/core_ioport.html
 classes/core_led.html
 classes/core_memory.html
-interfaces/ctlapi.html
-interfaces/svcapi.html
-interfaces/sysbus.html
 parts/display_til302.html
 parts/display_til311.html
 parts/led_round.html

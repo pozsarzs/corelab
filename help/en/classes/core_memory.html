@@ -6,7 +6,8 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-<h2 id="tmemory-from-core_memory-unit">TMemory from core_memory unit</h2>
+<h2 id="tmemory-from-core_memory-unit">TMemory from core_memory
+unit</h2>
 <p><code>TMemory</code> is the base memory component of the CoreLAB
 framework. It provides byte-addressable memory storage with configurable
 address-space size, RAM/ROM operation mode, enable state, instance
@@ -134,22 +135,22 @@ older.</td>
 <td><code>1024</code></td>
 </tr>
 <tr class="even">
+<td><code>FBaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>Base address.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
 <td><code>FDescription</code></td>
 <td><code>PChar</code></td>
 <td>Short module description.</td>
 <td><code>Standard memory with 8 bit data width.</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FEnabled</code></td>
 <td><code>Boolean</code></td>
 <td>Enables memory access without bus detachment.</td>
 <td><code>False</code></td>
-</tr>
-<tr class="even">
-<td><code>FInstanceID</code></td>
-<td><code>Integer</code></td>
-<td>Module instance identifier.</td>
-<td>not explicitly initialized</td>
 </tr>
 <tr class="odd">
 <td><code>FMemoryMode</code></td>
@@ -252,8 +253,7 @@ exception.</td>
 <td><code>function SaveState(AStream: TStream): Boolean;</code></td>
 <td>Vi</td>
 <td>Saves enabled state, memory mode, address-range size and memory
-contents. Returns <code>True</code> when <code>InstanceID &gt; -1</code>
-and writing succeeds.</td>
+contents.</td>
 </tr>
 <tr class="even">
 <td><code>procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
@@ -273,10 +273,10 @@ position when enabled and memory bounds are valid.</td>
 <h3 id="public-properties">Public properties</h3>
 <table>
 <colgroup>
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 5%" />
-<col style="width: 75%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 12%" />
+<col style="width: 44%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -291,27 +291,25 @@ position when enabled and memory bounds are valid.</td>
 <td><code>AddressRangeSize</code></td>
 <td><code>DWord</code></td>
 <td>read/write</td>
-<td>Configured memory address-space size. The setter resizes the memory
-array and limits the size to <code>2^24</code> bytes; values below
-<code>16</code> are ignored.</td>
+<td>Configured memory address-space size.</td>
 </tr>
 <tr class="even">
+<td><code>BaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>read/write</td>
+<td>Global start address.</td>
+</tr>
+<tr class="odd">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
 <td>read</td>
 <td>Short module description.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
 <td>read/write</td>
 <td>Enables or disables memory access.</td>
-</tr>
-<tr class="even">
-<td><code>InstanceID</code></td>
-<td><code>Integer</code></td>
-<td>read/write</td>
-<td>Module instance identifier.</td>
 </tr>
 <tr class="odd">
 <td><code>MemoryMode</code></td>

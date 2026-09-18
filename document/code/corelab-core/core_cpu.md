@@ -24,8 +24,7 @@ CPU classes.
 |`TCPUEventHandler`|procedure type|CPU event callback.                             |
 |`TSemanticVersion`|record        |Major, minor and patch version information.     |
 |`TLogRec`         |record        |Information about the last executed instruction.|
-
-`TArchitecture` contains `arHarvard` and `arNeumann`.
+|`TIntLogRec`      |record        |Information about the last interrupt request.   |
 
 ### Enumeration values
 
@@ -65,19 +64,6 @@ CPU classes.
 |`TSemanticVersionHelper.ToString`|Formats a version as `Major.Minor.Patch`.              |
 |`TSemanticVersionHelper.Compare` |Compares two versions and returns `-1`, `0` or `1`.    |
 
-### `ISysBus` interface
-
-The CPU stores an `ISysBus` reference in `FBus`.
-
-|method                                     |description                   |
-|-------------------------------------------|------------------------------|
-|`MemRead(AAddress: UInt64): Byte`          |Reads a byte from data memory.|
-|`MemWrite(AAddress: UInt64; AValue: Byte)` |Writes a byte to data memory. |
-|`CodeRead(AAddress: UInt64): Byte`         |Reads a byte from code memory.|
-|`CodeWrite(AAddress: UInt64; AValue: Byte)`|Writes a byte to code memory. |
-|`IORead(APort: UInt64): Byte`              |Reads a byte from an I/O port.|
-|`IOWrite(APort: UInt64; AValue: Byte)`     |Writes a byte to an I/O port. |
-
 ### Protected fields
 
 |name               |type              |description                               |initial value  |
@@ -116,24 +102,25 @@ The CPU stores an `ISysBus` reference in `FBus`.
 
 |name                                                        |flags|description                                                  |
 |------------------------------------------------------------|-----|-------------------------------------------------------------|
-|`procedure ConnectBus(const Bus: ISysBus);`                 |Vi   |Connects the CPU to an external system bus.                  |
 |`constructor Create;`                                       |Vi   |Initializes CPU state, interrupt flags, counters and version.|
 |`destructor Destroy;`                                       |Or   |Destroys the CPU instance.                                   |
-|`procedure SetRegister(const RegName: PChar; AValue: Word);`|Ab,Vi|Sets a processor register; implemented by derived classes.   |
+|`function CheckInterrupts: Boolean;`                        |     |Accepts a pending interrupt when applicable.                 |
+|`function GetCurrentInstruction: TLogRec;`                  |Ab,Vi|Returns information about the current instruction.           |
+|`function GetCurrentInterrupt: TIntLogRec;`                 |Ab,Vi|Returns information about the current interrupt reequest.    |
 |`function GetRegister(const RegName: PChar): Word;`         |Ab,Vi|Reads a processor register; implemented by derived classes.  |
 |`function GetRegisterCount: Byte;`                          |Ab,Vi|Returns the number of processor registers.                   |
 |`function GetRegisterName(AIndex: Byte): PChar;`            |Ab,Vi|Returns a register name by index.                            |
 |`function GetRegisterSize(AIndex: Byte): Byte;`             |Ab,Vi|Returns a register size by index.                            |
-|`procedure Run;`                                            |Vi   |Starts execution when the CPU is enabled.                    |
-|`procedure Step;`                                           |Ab,Vi|Executes one processor step; implemented by derived classes. |
-|`procedure Stop;`                                           |Vi   |Stops CPU execution.                                         |
-|`function GetCurrentInstruction: TLogRec;`                  |Ab,Vi|Returns information about the current instruction.           |
-|`procedure IRQ(AVector: Byte);`                             |Vi   |Sets the pending IRQ and stores its vector.                  |
-|`procedure NMI;`                                            |Vi   |Sets the pending non-maskable interrupt.                     |
-|`function CheckInterrupts: Boolean;`                        |     |Accepts a pending interrupt when applicable.                 |
-|`procedure Reset;`                                          |Ab,Vi|Resets the processor; implemented by derived classes.        |
 |`function LoadState(AStream: TStream): Boolean;`            |Ab,Vi|Loads processor state; implemented by derived classes.       |
 |`function SaveState(AStream: TStream): Boolean;`            |Ab,Vi|Saves processor state; implemented by derived classes.       |
+|`procedure ConnectBus(const Bus: ISysBus);`                 |Vi   |Connects the CPU to an external system bus.                  |
+|`procedure IRQ(AVector: Byte);`                             |Vi   |Sets the pending IRQ and stores its vector.                  |
+|`procedure NMI;`                                            |Vi   |Sets the pending non-maskable interrupt.                     |
+|`procedure Reset;`                                          |Ab,Vi|Resets the processor; implemented by derived classes.        |
+|`procedure Run;`                                            |Vi   |Starts execution when the CPU is enabled.                    |
+|`procedure SetRegister(const RegName: PChar; AValue: Word);`|Ab,Vi|Sets a processor register; implemented by derived classes.   |
+|`procedure Step;`                                           |Ab,Vi|Executes one processor step; implemented by derived classes. |
+|`procedure Stop;`                                           |Vi   |Stops CPU execution.                                         |
 
 ### Public properties
 
@@ -147,7 +134,6 @@ The CPU stores an `ISysBus` reference in `FBus`.
 |`Endianness`      |`TEndianness`     |read      |CPU byte order.                           |
 |`Halted`          |`Boolean`         |read      |Current CPU HALT state.                   |
 |`HasSeparateIOBus`|`Boolean`         |read      |Whether memory and I/O buses are separate.|
-|`InstanceID`      |`Integer`         |read/write|Module instance identifier.               |
 |`Instructions`    |`QWord`           |read      |Total executed instruction counter.       |
 |`InterruptEnabled`|`Boolean`         |read      |Global maskable-interrupt state.          |
 |`MaxCodeAddress`  |`DWord`           |read      |Highest code memory address.              |

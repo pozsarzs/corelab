@@ -22,7 +22,7 @@
 	<param name="Local" value="applications/clprocessor.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
-	<param name="Name" value="TBus">
+	<param name="Name" value="ISysBus">
 	<param name="Local" value="classes/core_bus.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
@@ -68,10 +68,6 @@
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TZ80CPU">
 	<param name="Local" value="plugins/cpu_z80.html">
-	</OBJECT>
-<LI> <OBJECT type="text/sitemap">
-	<param name="Name" value="ICtlAPI">
-	<param name="Local" value="interfaces/ctlapi.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TDisplayTIL302">
@@ -200,14 +196,6 @@
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TStandardMemory">
 	<param name="Local" value="plugins/memory_standard.html">
-	</OBJECT>
-<LI> <OBJECT type="text/sitemap">
-	<param name="Name" value="ISvcAPI">
-	<param name="Local" value="interfaces/svcapi.html">
-	</OBJECT>
-<LI> <OBJECT type="text/sitemap">
-	<param name="Name" value="ISysBus">
-	<param name="Local" value="interfaces/sysbus.html">
 	</OBJECT>
 </UL>
 </BODY></HTML>

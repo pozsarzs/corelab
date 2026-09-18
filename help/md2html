@@ -1,4 +1,5 @@
 #!/bin/bash
+# convert .md files to .html
 
 files=`ls *.md`
 

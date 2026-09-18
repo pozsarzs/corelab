@@ -470,6 +470,19 @@ sets <code>SP</code> to <code>$FFFF</code>, clears running and halt
 states, and emits <code>ceReset</code>.</td>
 </tr>
 <tr class="odd">
+<td><code>function GetCurrentInstruction: PChar;</code></td>
+<td>Or</td>
+<td>Returns a formatted representation of the most recently fetched
+instruction.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): QWord;</code></td>
+<td>Or</td>
+<td>Returns the value of the named <code>A</code>, <code>F</code>,
+<code>BC</code>, <code>DE</code>, <code>HL</code>, <code>PC</code> or
+<code>SP</code> register.</td>
+</tr>
+<tr class="odd">
 <td><code>function LoadState(AStream: TStream): Boolean;</code></td>
 <td>Or</td>
 <td>Loads the enabled state, complete register set, execution state,
@@ -482,31 +495,18 @@ interrupt state and execution counters from a stream.</td>
 state and execution counters when the CPU has a valid instance ID.</td>
 </tr>
 <tr class="odd">
-<td><code>procedure Step;</code></td>
-<td>Or</td>
-<td>Fetches and executes one Intel 8080 instruction, including interrupt
-checking, opcode fetch, instruction-boundary notification and
-instruction counting.</td>
-</tr>
-<tr class="even">
-<td><code>function GetCurrentInstruction: PChar;</code></td>
-<td>Or</td>
-<td>Returns a formatted representation of the most recently fetched
-instruction.</td>
-</tr>
-<tr class="odd">
-<td><code>function GetRegister(const RegName: PChar): QWord;</code></td>
-<td>Or</td>
-<td>Returns the value of the named <code>A</code>, <code>F</code>,
-<code>BC</code>, <code>DE</code>, <code>HL</code>, <code>PC</code> or
-<code>SP</code> register.</td>
-</tr>
-<tr class="even">
 <td><code>procedure SetRegister(const RegName: PChar; Value: QWord);</code></td>
 <td>Or</td>
 <td>Sets the named <code>A</code>, <code>F</code>, <code>BC</code>,
 <code>DE</code>, <code>HL</code>, <code>PC</code> or <code>SP</code>
 register, masking the value to the register width.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td>Or</td>
+<td>Fetches and executes one Intel 8080 instruction, including interrupt
+checking, opcode fetch, instruction-boundary notification and
+instruction counting.</td>
 </tr>
 </tbody>
 </table>
