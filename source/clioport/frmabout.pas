@@ -28,10 +28,10 @@ type
     Version:     string[32];
   end;
   TForm2 = class(TForm)
-    Bevel1: TBevel;
-    Bevel2: TBevel;
+    Bevel1:  TBevel;
+    Bevel2:  TBevel;
     Button1: TButton;
-    Image1: TImage;
+    Image1:  TImage;
     Label1:  TLabel;
     Label2:  TLabel;
     Label3:  TLabel;

@@ -41,25 +41,29 @@ type
   TProcessorLoadStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   TProcessorSaveStateFunc = function(Processor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   // loaded processor plugin modules
+  { TProcPluginItem }
   TProcPluginItem = class
+    destructor Destroy; override;
     FHandle:    TLibHandle;
     FCreate:    TProcessorCreateFunc;
     FDestroy:   TProcessorDestroyProc;
     FLoadState: TProcessorLoadStateFunc;
     FSaveState: TProcessorSaveStateFunc;
-    destructor Destroy; override;
   end;
   // loaded memory plugin modules
+  { TMemPluginItem }
   TMemPluginItem = class
+    destructor Destroy; override;
     FHandle:    TLibHandle;
     FCreate:    TMemoryCreateFunc;
     FDestroy:   TMemoryDestroyProc;
     FLoadState: TMemoryLoadStateFunc;
     FSaveState: TMemorySaveStateFunc;
-    destructor Destroy; override;
   end;
   // loaded i/o port plugin modules
+  { TPortPluginItem }
   TPortPluginItem = class
+    destructor Destroy; override;
     FHandle:        TLibHandle;
     FCreate:        TIOPortCreateFunc;
     FDestroy:       TIOPortDestroyProc;
@@ -73,7 +77,6 @@ type
     FResizePanel:   TIOPortResizePanelFunc;
     FMovePanel:     TIOPortMovePanelFunc;
     FSetIntHandler: TIOPortSetIntHandlerProc;
-    destructor Destroy; override;
   end;
   // plugin dictionary types
   TProcPluginDict = specialize TObjectDictionary<string, TProcPluginItem>;
@@ -88,27 +91,6 @@ function LoadAllPlugins(ADirectory: string): Integer;
 function UnLoadAllPlugins: Boolean;
 
 implementation
-
-// DESTROY PROCESSOR DICTIONARY ITEM
-destructor TProcPluginItem.Destroy;
-begin
-  if FHandle <> NilHandle then UnloadLibrary(FHandle);
-  inherited Destroy;
-end;
-
-// DESTROY MEMORY DICTIONARY ITEM
-destructor TMemPluginItem.Destroy;
-begin
-  if FHandle <> NilHandle then UnloadLibrary(FHandle);
-  inherited Destroy;
-end;
-
-// DESTROY I/O PORT DICTIONARY ITEM
-destructor TPortPluginItem.Destroy;
-begin
-  if FHandle <> NilHandle then UnloadLibrary(FHandle);
-  inherited Destroy;
-end;
 
 // LOAD ALL PLUGIN
 function LoadAllPlugins(ADirectory: string): Integer;
@@ -232,5 +214,31 @@ begin
   Result := True;
 end;
 
-end.
+{ TProcPluginItem }
 
+// DESTROY PROCESSOR DICTIONARY ITEM
+destructor TProcPluginItem.Destroy;
+begin
+  if FHandle <> NilHandle then UnloadLibrary(FHandle);
+  inherited Destroy;
+end;
+
+{ TMemPluginItem }
+
+// DESTROY MEMORY DICTIONARY ITEM
+destructor TMemPluginItem.Destroy;
+begin
+  if FHandle <> NilHandle then UnloadLibrary(FHandle);
+  inherited Destroy;
+end;
+
+{ TPortPluginItem }
+
+// DESTROY I/O PORT DICTIONARY ITEM
+destructor TPortPluginItem.Destroy;
+begin
+  if FHandle <> NilHandle then UnloadLibrary(FHandle);
+  inherited Destroy;
+end;
+
+end.

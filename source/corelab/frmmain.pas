@@ -2372,8 +2372,8 @@ begin
       2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
     else
       ProcInfo.AttachedToBus := False;
-      FProcInstanceDict[InstanceName] := ProcInfo;
       ProcInfo.Processor.OnEvent := nil;
+      FProcInstanceDict[InstanceName] := ProcInfo;
     end;
   except
     // other error
@@ -4836,7 +4836,7 @@ end;
 procedure TForm1.InterruptHandler(Sender: TIOPort; AVector: Byte);
 var
   IntLogRec: TIntLogRec;
-  DictValue: TPortInfo;
+  Pair: specialize TPair<string, TPortInfo>;
 begin
   if Assigned(FSysBus.FCPUs[0].CPU) then
   begin
@@ -4844,12 +4844,12 @@ begin
     FSysBus.FCPUs[0].CPU.IRQ(AVector);
     // IntLogger
     IntLogRec := FSysBus.FCPUs[0].CPU.GetCurrentInterrupt;
-    for DictValue in FPortInstanceDict.Values do
-    if DictValue.Port = Sender then
-    begin
-      IntLogRec.Sender := DictValue.ModuleName;
-      Break;
-    end;
+    for Pair in FPortInstanceDict do
+      if Pair.Value.Port = Sender then
+      begin
+        IntLogRec.Sender := Pair.Key;
+        Break;
+      end;
     if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
     // RegViewer
     if Assigned(Form11) and Form11.Visible and

@@ -20,12 +20,10 @@ uses
     CSIDL_PROFILE = 40;
     SHGFP_TYPE_CURRENT = 0;
   {$ENDIF}
-  {$IFDEF WINDOWS}
-var
+{$IFDEF WINDOWS}
+  var
     Buffer: array[0..MAX_PATH] of Char;
-  {$ENDIF}
-
-{$DEFINE SLASH := DirectorySeparator}
+{$ENDIF}
 
 function GetLang: string;
 function GetExeDir: string;
@@ -96,10 +94,10 @@ begin
     Result := GetExeDir;
   {$ELSE}
     {$IFDEF WINDOWS}
-      Result := GetUserProfile + SLASH;
+      Result := GetUserProfile + DirectorySeparator;
     {$ELSE}
       {$IFDEF UNIX}
-        Result := GetEnvironmentVariable('HOME') + SLASH;
+        Result := GetEnvironmentVariable('HOME') + DirectorySeparator;
       {$ELSE}
         {$FATAL Not supported operation system!}
       {$ENDIF}
@@ -114,7 +112,8 @@ var
 begin
   Result := '';
   for b := 1 to Length(AString) do
-    if (AString[b] <> #32) and (AString[b] <> #9) then Result := Result + UpCase(AString[b]);
+    if (AString[b] <> #32) and (AString[b] <> #9)
+      then Result := Result + UpCase(AString[b]);
 end;
 
 // FORMAT HEXADECIMAL VALUE

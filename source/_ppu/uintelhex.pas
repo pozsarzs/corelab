@@ -19,6 +19,7 @@ uses
 const
   EMPTY_RAM_BYTE = $00;
 type
+  { EIntelHexError }
   EIntelHexError = class(Exception);                       // own exception type
   THexRecord = record                                   // Intel hex record type 
     ByteCount:  Byte;

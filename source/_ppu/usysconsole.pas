@@ -22,7 +22,7 @@ const
 type
   // Command event type
   TCommandEvent = procedure(Sender: TObject; const ACommand: string) of object;
-  // SysConsole class
+  { TSysConsole }
   TSysConsole = class(TMemo)
   private
     FBGColor:      TColor;
@@ -53,6 +53,8 @@ procedure Register;
 begin
   RegisterComponents('CoreLab', [TSysConsole]);
 end;
+
+{ TSysConsole }
 
 // ---- PRIVATE METHODS ----
 

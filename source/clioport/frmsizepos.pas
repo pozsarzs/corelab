@@ -20,15 +20,15 @@ uses
 type
   { TForm4 }
   TForm4 = class(TForm)
-    Bevel1: TBevel;
-    Button1: TButton;
-    Button2: TButton;
+    Bevel1:    TBevel;
+    Button1:   TButton;
+    Button2:   TButton;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
+    Label1:    TLabel;
+    Label2:    TLabel;
+    Label3:    TLabel;
+    Label4:    TLabel;
     SpinEdit1: TSpinEdit;
     SpinEdit2: TSpinEdit;
     SpinEdit3: TSpinEdit;
@@ -56,6 +56,7 @@ var
 implementation
 
 {$R *.lfm}
+{ TForm4 }
 
 // -- PRIVATE METHODS ---
 
@@ -114,4 +115,3 @@ begin
 end;
 
 end.
-

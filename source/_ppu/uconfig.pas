@@ -13,7 +13,6 @@
 
 unit uconfig;
 {$MODE OBJFPC}{$H+}
-{ $ define.pas}
 {$I defcolors.pas}
 interface
 uses

@@ -102,6 +102,7 @@ procedure TForm11.Button2Click(Sender: TObject);
 var
   b: Byte;
 begin
+  if not Assigned(FProcInstance) then Exit;
   for b := 0 to FRegCount - 1 do
   begin
     // ValueListEditor1 to array
@@ -116,6 +117,7 @@ procedure TForm11.Button3Click(Sender: TObject);
 var
   b: Byte;
 begin
+  if not Assigned(FProcInstance) then Exit;
   with ValueListEditor1 do
   begin
     Col := 0;

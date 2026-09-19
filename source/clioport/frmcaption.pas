@@ -20,11 +20,11 @@ uses
 type
   { TForm3 }
   TForm3 = class(TForm)
-    Bevel1: TBevel;
+    Bevel1:  TBevel;
     Button1: TButton;
     Button2: TButton;
-    Edit1: TEdit;
-    Label1: TLabel;
+    Edit1:   TEdit;
+    Label1:  TLabel;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Edit1EditingDone(Sender: TObject);
@@ -40,6 +40,7 @@ var
 implementation
 
 {$R *.lfm}
+{ TForm3 }
 
 // ---- PRIVATE METHODS ----
 

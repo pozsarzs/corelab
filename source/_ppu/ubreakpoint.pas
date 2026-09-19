@@ -2,7 +2,7 @@
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
 { | ubreakpoint.pas                                                          | }
-{ | Breakpoint class                                                         | }
+{ | TBreakpoint class                                                        | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
   under the terms of the European Union Public License 1.2 version.
@@ -16,19 +16,22 @@ unit ubreakpoint;
 interface
 uses Generics.Collections;
 type
+  { TBreakpoint }
   TBreakpoint = class
   private
     FAddress: DWord;
     FEnabled: Boolean;
   public
+    constructor Create;
     property Address: DWord read FAddress write FAddress;
     property Enabled: Boolean read FEnabled write FEnabled;
-    constructor Create;
   end;
   // breakpoint list type
   TBreakpointList = specialize TObjectList<TBreakpoint>;
 
 implementation
+
+{ TBreakpoint }
 
 // CREATE TACTIONCONTEXT INSTANCE
 constructor TBreakpoint.Create;
@@ -39,4 +42,3 @@ begin
 end;
 
 end.
-
