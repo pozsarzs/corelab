@@ -20,7 +20,7 @@ uses
 const
   MAXX = 1;
 type
-  // 7 segment display output class
+  { TDisp27segMUX }
   TDisp27segMUX = class(TGIOPort)
   private
     FValue:    array[0..MAXX] of Byte;
@@ -42,6 +42,8 @@ type
   end;
 
 {$I BCD7seg_7447.pas}
+
+{ TDisp27segMUX }
 
 // ---- PROTECTED METHODS ----
 

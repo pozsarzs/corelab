@@ -22,8 +22,8 @@ type
     TInp32 = function(Address: SmallInt): SmallInt; stdcall;
     TOut32 = procedure(Address: SmallInt; Data: SmallInt); stdcall;
   {$ENDIF}
-  // RealPort device class
-  TREALPort = class(TIOPort)
+  { TRealPort }
+  TRealPort = class(TIOPort)
   private
   {$IFDEF WINDOWS}
     InpOut32: THandle;
@@ -48,10 +48,12 @@ type
            cdecl; external 'libc';
 {$ENDIF}
 
+{ TRealPort }
+
 // ---- PRIVATE METHODS ----
 
 // LOAD 'INPOUT32.DLL'
-function TREALPort.LoadIODLL(ALibDir: string): Boolean;
+function TRealPort.LoadIODLL(ALibDir: string): Boolean;
 {$IFDEF WINDOWS}
   {$IFDEF WIN64}
     const IODLL: string = 'inpoutx64.dll';
@@ -88,7 +90,7 @@ begin
 end;
 
 // UNLOAD 'INPOUT32.DLL'
-function TREALPort.UnLoadIODLL: Boolean;
+function TRealPort.UnLoadIODLL: Boolean;
 begin
   {$IFDEF WINDOWS}
     Result := true;
@@ -106,7 +108,7 @@ end;
 // ---- PROTECTED METHODS ----
 
 // READ A BYTE FROM I/O PORT
-function TREALPort.ReadByteFromIOPort(AAddress: Word; var AData: Byte): Boolean;
+function TRealPort.ReadByteFromIOPort(AAddress: Word; var AData: Byte): Boolean;
 begin
   Result := true;
   try
@@ -123,7 +125,7 @@ begin
 end;
 
 // WRITE A BYTE TO I/O PORT
-function TREALPort.WriteByteToIOPort(AAddress: Word; AData: Byte): Boolean;
+function TRealPort.WriteByteToIOPort(AAddress: Word; AData: Byte): Boolean;
 begin
   Result := true;
   try
@@ -142,7 +144,7 @@ end;
 // ---- PUBLIC METHODS ----
   
 // CREATE TREALPORT INSTANCE
-constructor TREALPort.Create;
+constructor TRealPort.Create;
 begin
   inherited Create;
   FModname := 'Real I/O port';
@@ -152,19 +154,19 @@ begin
 end;
 
 // DESTROY TREALPORT INSTANCE
-destructor TREALPort.Destroy;
+destructor TRealPort.Destroy;
 begin
   UnLoadIODLL;
   inherited Destroy;
 end;
 
 // RESET VIRTUAL PORT
-procedure TREALPort.Reset;
+procedure TRealPort.Reset;
 begin
 end;
 
 // READ VIRTUAL PORT
-function TREALPort.ReadPort(APort: Word): Byte;
+function TRealPort.ReadPort(APort: Word): Byte;
 var
   LData: Byte;
 begin
@@ -174,7 +176,7 @@ begin
 end;
 
 // WRITE VIRTUAL PORT
-procedure TREALPort.WritePort(APort: Word; AValue: Byte);
+procedure TRealPort.WritePort(APort: Word; AValue: Byte);
 begin
   WriteByteToIOPort(APort, AValue);
 end;
@@ -183,7 +185,7 @@ end;
 
 function CreatePort: TIOPort; CALLTYPE; export;
 begin
-  Result := TREALPort.Create;
+  Result := TRealPort.Create;
 end;
 
 procedure DestroyPort(APort: TIOPort); CALLTYPE; export;

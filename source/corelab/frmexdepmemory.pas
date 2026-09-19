@@ -46,15 +46,16 @@ var
 
 implementation
 
-{$R *.lfm}
-{ TForm5 }
-
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Only hexadecimal values can be entered for address value.';
   MSG03 = 'Only hexadecimal values can be entered for data value.';
   MSG04 = 'Memory address too high. (> %s)';
   MSG05 = 'Cannot open memory modul.';
+
+{$R *.lfm}
+
+{ TForm5 }
 
 // ----  PRIVATE METHODS ----
 

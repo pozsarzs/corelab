@@ -19,10 +19,16 @@ all:
 	@mkdir -p $(podir)/
 	@if ls $(outdir)/*.rsj >/dev/null 2>&1; then \
 	  rm -f $(outdir)/*.po; \
+	  for lrj in *.lrj; do \
+	    cp "$$lrj" $(outdir)/form-"$${lrj%.lrj}.rsj"; \
+	  done; \
 	  for rsj in $(outdir)/*.rsj; do \
 	    $(rstconv) -f po -p utf-8 -i "$$rsj" -o "$${rsj%.rsj}.po"; \
 	  done; \
-	  msgcat $(outdir)/*.po -o $(podir)/$(project).pot; \
+	  for po in $(outdir)/*.po; do \
+	    msguniq "$$po" -o "$${po%.po}.unique.po"; \
+	  done; \
+	  msgcat --unique $(outdir)/*.unique.po -o $(podir)/$(project).pot; \
 	  rm -f $(outdir)/*.po; \
 	fi
 	@if [ -f $(podir)/$(project).pot ]; then \

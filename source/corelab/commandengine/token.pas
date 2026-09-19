@@ -17,7 +17,7 @@ interface
 uses
    Generics.Collections;
 type
-  // Token class
+  { TToken }
   TToken = class
   protected
     FRawText: string;
@@ -30,6 +30,8 @@ type
   TTokenList = specialize TObjectList<TToken>;
 
 implementation
+
+{ TToken }
 
 // CREATE TTOKEN INSTANCE
 constructor TToken.Create(const ARawText: string);

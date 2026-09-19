@@ -43,6 +43,7 @@ var
 implementation
 
 {$R *.lfm}
+
 { TForm12 }
 
 // ---- PUBLIC METHODS ----

@@ -20,7 +20,7 @@ uses
 const
   MAXX = 7;                               // Index of the last button in the row
 type
-  // 8-button input class
+  { TButton8 }
   TButton8 = class(TGIOPort)
   protected
     FSB: array[0..MAXX] of TSpeedButton;
@@ -33,6 +33,8 @@ type
     procedure WritePort(APort: Word; AValue: Byte); override;
     procedure CreatePanel; override;
   end;
+
+{ TButton8 }
 
 // ---- PROTECTED METHODS ----
 

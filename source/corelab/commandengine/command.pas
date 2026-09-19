@@ -21,7 +21,7 @@ type
   TActionOperation = procedure(AActionContext: TActionContext) of object;
   // Command scope type
   TCommandScope = (csEverywhere, csScriptOnly, csInteractiveOnly);
-  // Command class
+  { TCommand }
   TCommand = class
   protected
     FName:         string;
@@ -47,6 +47,8 @@ type
   end;
 
 implementation
+
+{ TCommand }
 
 // CREATE TCOMMAND INSTANCE
 constructor TCommand.Create(const AName: string; const ADescription: string;

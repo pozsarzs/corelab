@@ -61,12 +61,15 @@ type
 var
   Form3: TForm3;
 
+implementation
+uses frmmain;
+
 resourcestring
   MSG01 = 'Address';
 
-implementation
-uses frmmain;
 {$R *.lfm}
+
+{ TForm3 }
 
 // ---- PROTECTED METHODS ----
 

@@ -32,7 +32,6 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
-    // Used via the ISvcAPI by TSupervisor class
     procedure CreatePanel; virtual; abstract;
     procedure FreePanel; virtual;
     procedure ShowPanel; virtual;

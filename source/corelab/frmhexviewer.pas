@@ -49,14 +49,15 @@ type
 var
   Form3: TForm3;
 
+implementation
+
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Address';
   MSG03 = 'Cannot open memory modul.';
 
-implementation
-
 {$R *.lfm}
+
 { TForm3 }
 
 // ---- PRIVATE METHODS ----

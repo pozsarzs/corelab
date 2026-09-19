@@ -24,7 +24,7 @@ uses
   CMem, Classes, Controls, Graphics, Interfaces, ComCtrls, ExtCtrls, Forms,
   StdCtrls, SysUtils, core_ioport, core_gioport;
 type
-  // Console port class
+  { TConsole }
   TConsole = class(TGIOPort)
   protected
     FConFace:   TMemo;
@@ -50,6 +50,8 @@ const
 implementation
 {$ELSE}
 {$ENDIF}
+
+{ TConsole }
 
 // ---- PROTECTED METHODS ----
 

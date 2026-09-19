@@ -56,9 +56,6 @@ var
 
 implementation
 
-{$R *.lfm}
-{ TForm7 }
-
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Only hexadecimal values can be entered for address value!';
@@ -67,6 +64,10 @@ resourcestring
   MSG05 = '&Load';
   MSG06 = 'Save parameters';
   MSG07 = 'Load parameters';
+
+{$R *.lfm}
+
+{ TForm7 }
 
 // SET OPERATION'S DIRECTION
 procedure TForm7.SetFDirection(ADirection: Boolean);

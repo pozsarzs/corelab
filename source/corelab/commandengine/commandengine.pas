@@ -17,7 +17,7 @@ interface
 uses
   SysUtils, Classes, command, commandparser, commandregistry, uactcontext, token;
 type
-  // Command engine class
+  { TCommandEngine }
   TCommandEngine = class
   protected
     FExitRequested: Boolean;
@@ -38,6 +38,8 @@ type
 implementation
 uses
   frmmain;
+
+{ TCommandEngine }
 
 // CREATE TCOMMANDENGINE INSTANCE
 constructor TCommandEngine.Create;

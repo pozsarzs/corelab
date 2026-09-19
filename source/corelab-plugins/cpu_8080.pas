@@ -37,7 +37,7 @@ type
         PCL, PCH, SPL, SPH:     Byte;
       );
   end;
-  // 8080 CPU implementation
+  { T8080CPU }
   T8080CPU = class(TCPU)
   private
     LogRecord:   TLastInstruction;                       // Raw running log data
@@ -65,6 +65,8 @@ const
   PubRegNames: array[0..9] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
                                         'F', 'PC','SP');
   PubRegSize: array[0..9] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4);
+
+{ T8080CPU }
                                            
 // ---- PROTECTED METHODS ----
 

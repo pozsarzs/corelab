@@ -17,13 +17,15 @@ library memory_standard;
 uses
    CMem, Classes, core_memory;
 type
-  // Standard memory class
+  { TStandardMemory } 
   TStandardMemory = class(TMemory)
   protected
   public
     constructor Create; override;
     destructor Destroy; override;
   end;
+
+{ TStandardMemory } 
   
 // CREATE TSTANDARDMEMORY INSTANCE
 constructor TStandardMemory.Create;

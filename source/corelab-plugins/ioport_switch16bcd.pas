@@ -21,7 +21,7 @@ const
   MAXX = 3;                               // Index of the last switch in the row
   MAXY = 3;                            // Index of the last switch in the column
 type
-  // 4x4 switch input class
+  { TSwitch16BCD }
   TSwitch16BCD = class(TGIOPort)
   protected
     FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                    // switches
@@ -37,6 +37,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TSwitch16BCD }
 
 // ---- PROTECTED METHODS ----
 

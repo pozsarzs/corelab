@@ -24,7 +24,7 @@ uses
   CMem, Classes, Interfaces, Forms, StdCtrls, SysUtils, core_ioport,
   core_gioport;
 type
-  // Standard port class
+  { TStandardPort }
   TStandardPort = class(TGIOPort)
   protected
     FEditRx: TEdit;
@@ -42,6 +42,8 @@ type
 implementation
 {$ELSE}
 {$ENDIF}
+
+{ TStandardPort }
 
 // ---- PUBLIC METHODS ----
   

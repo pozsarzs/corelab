@@ -58,9 +58,10 @@ type
     procedure RefreshColors;
     procedure AppendRecord(AIntLogRec: TIntLogRec);
   end;
-
 var
   Form8: TForm8;
+
+implementation
 
 resourcestring
   MSG01 = 'ERROR: ';
@@ -72,9 +73,8 @@ resourcestring
   MSG07 = 'Status';
   MSG08 = 'Flag';
 
-implementation
-
 {$R *.lfm}
+
 { TForm8 }
 
 // ---- PRIVATE METHODS ----

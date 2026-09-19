@@ -62,6 +62,8 @@ type
 var
   Form4: TForm4;
 
+implementation
+
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Save log to file';
@@ -72,9 +74,8 @@ resourcestring
   MSG07 = 'Opcode';
   MSG08 = 'Mnemonic';
 
-implementation
-
 {$R *.lfm}
+
 { TForm4 }
 
 // ---- PRIVATE METHODS ----

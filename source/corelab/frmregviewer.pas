@@ -46,15 +46,16 @@ type
 var
   Form11: TForm11;
 
+implementation
+
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Cannot open processor modul.';
   MSG03 = 'Register';
   MSG04 = 'Value';
 
-implementation
-
 {$R *.lfm}
+
 { TForm11 }
 
 // ---- PRIVATE METHODS ----

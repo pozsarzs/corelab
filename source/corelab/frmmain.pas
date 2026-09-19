@@ -524,9 +524,6 @@ var
 
 implementation
 
-{$R *.lfm}
-{ TForm1 }
-
 // Message targets:
 // - MD: MsgDialog
 // - SC: SysConsole
@@ -621,6 +618,9 @@ resourcestring
   MSG105 = 'Module named ''%s'' has been already attached.';              { SM }
   MSG106 = 'Module named ''%s'' has been already detached.';              { SM }
   MSG107 = 'Only one CPU connection is allowed.';                         { SM }
+
+{$R *.lfm}
+
 { TSysBus }
 
 // ---- PUBLIC METHODS ----

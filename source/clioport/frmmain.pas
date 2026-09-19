@@ -189,9 +189,6 @@ var
 
 implementation
 
-{$R *.lfm}
-{ TForm1 }
-
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Data type conversion error.';
@@ -220,6 +217,10 @@ resourcestring
   MSG25 = 'Cannot write state data to plugin.';
   MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Interrupt request received with vector %s.';
+
+{$R *.lfm}
+
+{ TForm1 }
 
 // ---- PRIVATE METHODS ----
 

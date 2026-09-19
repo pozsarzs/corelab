@@ -20,7 +20,7 @@ uses
 const
   MAXX = 3;
 type
-  // Hexadecimal display output class
+  { TDisp4HexMUXBCD }
   TDisp4HexMUXBCD = class(TGIOPort)
   private
     FValue:    array[0..MAXX] of Byte;
@@ -40,6 +40,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TDisp4HexMUXBCD }
 
 // ---- PROTECTED METHODS ----
 

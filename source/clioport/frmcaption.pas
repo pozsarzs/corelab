@@ -40,6 +40,7 @@ var
 implementation
 
 {$R *.lfm}
+
 { TForm3 }
 
 // ---- PRIVATE METHODS ----

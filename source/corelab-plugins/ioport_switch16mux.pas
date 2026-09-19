@@ -21,7 +21,7 @@ const
   MAXX = 3;
   MAXY = 3;
 type
-  // 4x4 switch matrix input class
+  { TSwitch16MUX }
   TSwitch16MUX = class(TGIOPort)
   protected
     FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                    // Switches
@@ -38,6 +38,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TSwitch16MUX }
 
 // ---- PROTECTED METHODS ----
 

@@ -17,7 +17,7 @@ library ioport_null;
 uses
   CMem, Classes, core_ioport;
 type
-  // NULL device class
+  { TNULLPort }
   TNULLPort = class(TIOPort)
   protected
   public
@@ -27,6 +27,8 @@ type
     function ReadPort(APort: Word): Byte; override;
     procedure WritePort(APort: Word; AValue: Byte); override;
   end;
+
+{ TNULLPort }
 
 // ---- PUBLIC METHODS ----
   

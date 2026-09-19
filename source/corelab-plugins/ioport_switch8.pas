@@ -20,7 +20,7 @@ uses
 const
   MAXX = 7;                               // Index of the last switch in the row
 type
-  // 8-switch input class
+  { TSwitch8 }
   TSwitch8 = class(TGIOPort)
   protected
     FSB: array[0..MAXX] of TSpeedButton;
@@ -36,6 +36,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TSwitch8 }
 
 // ---- PROTECTED METHODS ----
 

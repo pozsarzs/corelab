@@ -21,7 +21,6 @@ type
   { TActionContext }
   TActionContext = class
   public
-    constructor Create;
     ActionSource:  TActionSource;                            // source of action
     SArg1:  string;                 // arguments from to ...Operation procedures
     SArg2:  string;
@@ -31,6 +30,7 @@ type
     BArg2:  Boolean;
     DArg1:  DWord;
     DArg2:  DWord;
+    constructor Create;
   end;
 
 implementation

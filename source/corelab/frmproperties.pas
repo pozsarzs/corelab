@@ -49,8 +49,6 @@ var
 
 implementation
 
-{$R *.lfm}
-
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Cannot open memory modulka.';
@@ -59,6 +57,8 @@ resourcestring
   MSG05 = 'The memory size can be 16 B-16 MB';
   MSG06 = 'Data conversion error at save.';
   MSG07 = 'The address value be 0-2^24';
+
+{$R *.lfm}
 
 { TForm15 }
 

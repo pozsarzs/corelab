@@ -35,13 +35,13 @@ type
   public
     property BreakpointList: TBreakpointList write FBreakpointList;
   end;
-
 var
   Form10: TForm10;
 
 implementation
 
 {$R *.lfm}
+
 { TForm10 }
 
 // ---- EVENT HANDLER METHODS ----

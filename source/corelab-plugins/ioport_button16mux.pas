@@ -21,7 +21,7 @@ const
   MAXX = 3;
   MAXY = 3;
 type
-  // 4x4 button matrix input class
+  { TButton16MUX }
   TButton16MUX = class(TGIOPort)
   protected
     FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                     // Buttons
@@ -36,6 +36,8 @@ type
     procedure WritePort(APort: Word; AValue: Byte); override;
     procedure CreatePanel; override;
   end;
+
+{ TButton16MUX }
 
 // ---- PROTECTED METHODS ----
 

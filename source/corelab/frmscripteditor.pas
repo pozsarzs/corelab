@@ -69,6 +69,7 @@ implementation
 uses frmmain;
 
 {$R *.lfm}
+
 { TForm6 }
 
 // ---- PRIVATE METHODS ----

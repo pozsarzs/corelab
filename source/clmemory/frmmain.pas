@@ -151,9 +151,6 @@ var
 
 implementation
 
-{$R *.lfm}
-{ TForm1 }
-
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Data type conversion error.';
@@ -183,6 +180,10 @@ resourcestring
   MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Read-only!';
   MSG28 = 'The memory size can be 16 B-16 MB';
+
+{$R *.lfm}
+
+{ TForm1 }
   
 // ---- PRIVATE METHODS ----
 

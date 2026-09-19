@@ -60,6 +60,7 @@ resourcestring
   MSG01 = 'Cannot open URL.';
 
 {$R *.lfm}
+
 { TForm2 }
 
 // ---- PRIVATE METHODS ----

@@ -18,7 +18,7 @@ uses
   CMem, Classes, Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils,
   Buttons, core_ioport, core_gioport, display_til311;
 type
-  // Hexadecimal display output class
+  { TDisp1HexBCD }
   TDisp1HexBCD = class(TGIOPort)
   private
     FValue:     Byte;
@@ -37,6 +37,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TDisp1HexBCD }
 
 // ---- PROTECTED METHODS ----
 

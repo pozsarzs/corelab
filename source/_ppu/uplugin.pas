@@ -43,27 +43,26 @@ type
   // loaded processor plugin modules
   { TProcPluginItem }
   TProcPluginItem = class
-    destructor Destroy; override;
     FHandle:    TLibHandle;
     FCreate:    TProcessorCreateFunc;
     FDestroy:   TProcessorDestroyProc;
     FLoadState: TProcessorLoadStateFunc;
     FSaveState: TProcessorSaveStateFunc;
+    destructor Destroy; override;
   end;
   // loaded memory plugin modules
   { TMemPluginItem }
   TMemPluginItem = class
-    destructor Destroy; override;
     FHandle:    TLibHandle;
     FCreate:    TMemoryCreateFunc;
     FDestroy:   TMemoryDestroyProc;
     FLoadState: TMemoryLoadStateFunc;
     FSaveState: TMemorySaveStateFunc;
+    destructor Destroy; override;
   end;
   // loaded i/o port plugin modules
   { TPortPluginItem }
   TPortPluginItem = class
-    destructor Destroy; override;
     FHandle:        TLibHandle;
     FCreate:        TIOPortCreateFunc;
     FDestroy:       TIOPortDestroyProc;
@@ -77,6 +76,7 @@ type
     FResizePanel:   TIOPortResizePanelFunc;
     FMovePanel:     TIOPortMovePanelFunc;
     FSetIntHandler: TIOPortSetIntHandlerProc;
+    destructor Destroy; override;
   end;
   // plugin dictionary types
   TProcPluginDict = specialize TObjectDictionary<string, TProcPluginItem>;

@@ -41,6 +41,7 @@ var
 implementation
 
 {$R *.lfm}
+
 { TForm17 }
 
 // ---- PRIVATE METHODS ----

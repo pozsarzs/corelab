@@ -270,9 +270,6 @@ var
 
 implementation
 
-{$R *.lfm}
-{ TForm1 }
-
 resourcestring
   MSG01 = 'ERROR: ';
   MSG02 = 'Data type conversion error.';
@@ -314,7 +311,9 @@ resourcestring
   MSG38 = 'Checksum error.';
   MSG39 = 'Unexpected error.';
 
-// ----  TESTSYSBUS CLASS'S METHODS ----
+{$R *.lfm}
+
+{ TTestSysBus }
 
 // READ MEMORY METHOD OF THE SYSTEM BUS
 function TTestSysBus.ReadMemory(AAddress: DWord): Byte;
@@ -348,7 +347,7 @@ begin
   end;
 end;
 
-// ---- TFORM1 CLASS'S METHODS ----
+{ TForm1 }
 
 // ---- PRIVATE METHODS ----
 

@@ -21,7 +21,7 @@ const
   MAXX = 7;
   MAXY = 7;
 type
-  // 8x8-LED output class
+  { TLEDRed64MUX }
   TLEDRed64MUX = class(TGIOPort)
   private
     FValue:    array[0..MAXX] of Byte;
@@ -41,6 +41,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TLEDRed64MUX }
 
 // ---- PROTECTED METHODS ----
 

@@ -20,7 +20,7 @@ uses
 const
   MAXX = 7;
 type
-  // 8-LED output class
+  { TLEDGreen8 }
   TLEDGreen8 = class(TGIOPort)
   private
     FValue:    Byte;
@@ -39,6 +39,8 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure CreatePanel; override;
   end;
+
+{ TLEDGreen8 }
 
 // ---- PROTECTED METHODS ----
 

@@ -18,7 +18,7 @@ uses
   CMem, Classes, Interfaces, Forms, Controls, StdCtrls, ExtCtrls, SysUtils,
   Buttons, core_ioport, core_gioport, display_til302;
 type
-  // 7 segments display output class
+  { TDisp17seg }
   TDisp17seg = class(TGIOPort)
   private
     FValue:     Byte;
@@ -39,6 +39,8 @@ type
   end;
 
 {$I BCD7seg_7447.pas}
+
+{ TDisp17seg }
 
 // ---- PROTECTED METHODS ----
 

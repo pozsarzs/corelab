@@ -19,7 +19,7 @@ uses
 type
   // Dictionary with <command name, command object> elements
   TCommandDict = specialize TDictionary<string, TCommand>;
-  // Command registry class
+  { TCommandRegistry }
   TCommandRegistry = class
   protected
     FCommands: TCommandDict;                           // Dictionary of commands
@@ -32,6 +32,8 @@ type
   end;
 
 implementation
+
+{ TCommandRegistry }
 
 // CREATE TCOMMANDREGISTRY INSTANCE
 constructor TCommandRegistry.Create;

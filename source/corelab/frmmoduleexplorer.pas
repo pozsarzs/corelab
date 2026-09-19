@@ -50,14 +50,15 @@ type
 var
   Form9: TForm9;
 
+implementation
+uses frmmain;
+
 resourcestring
   MSG01 = 'Property';
   MSG02 = 'Value';
 
-implementation
-uses frmmain;
-
 {$R *.lfm}
+
 { TForm9 }
 
 // ---- PUBLIC METHODS ----

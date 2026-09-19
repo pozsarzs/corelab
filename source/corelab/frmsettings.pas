@@ -99,13 +99,13 @@ type
   private
   public
   end;
-
 var
   Form18: TForm18;
 
 implementation
 
 {$R *.lfm}
+
 { TForm18 }
 
 // ---- EVENT HANDLER METHODS ----

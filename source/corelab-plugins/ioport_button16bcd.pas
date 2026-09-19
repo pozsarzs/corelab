@@ -21,7 +21,7 @@ const
   MAXX = 3;                               // Index of the last button in the row
   MAXY = 3;                            // Index of the last button in the column
 type
-  // 4x4 button input class
+  { TButton16BCD }
   TButton16BCD = class(TGIOPort)
   protected
     FSB: array[0..MAXX, 0..MAXY] of TSpeedButton;                     // Buttons
@@ -35,6 +35,8 @@ type
     procedure WritePort(APort: Word; AValue: Byte); override;
     procedure CreatePanel; override;
   end;
+
+{ TButton16BCD }
 
 // ---- PROTECTED METHODS ----
 

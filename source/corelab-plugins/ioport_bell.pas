@@ -17,7 +17,7 @@ library ioport_bell;
 uses
   CMem, Classes, SysUtils, core_ioport;
 type
-  // BELL device class
+  { TBELLPort }
   TBELLPort = class(TIOPort)
   protected
   public
@@ -27,6 +27,8 @@ type
     function ReadPort(APort: Word): Byte; override;
     procedure WritePort(APort: Word; AValue: Byte); override;
   end;
+
+{ TBELLPort }
 
 // ---- PUBLIC METHODS ----
  

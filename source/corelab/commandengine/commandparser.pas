@@ -17,7 +17,7 @@ interface
 uses
    token;
 type
-  // Command parser class
+  { TCommandParser }
   TCommandParser = class
   protected
   public
@@ -27,6 +27,8 @@ type
   end;
 
 implementation
+
+{ TCommandParser }
 
 // CREATE TCOMMANDPARSER INSTANCE
 constructor TCommandParser.Create;
