@@ -526,7 +526,7 @@ begin
   {$ELSE}
     CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm','.\;.\help\');
     if Length(CHMFile) = 0 then
-      CHMFile := FileSearch('modshell_en.chm','.\;.\help\');
+      CHMFile := FileSearch('corelab_en.chm','.\;.\help\');
   {$ENDIF}
   // - search LHelp application
   {$IFDEF UNIX}
@@ -535,7 +535,7 @@ begin
     CHMViewer := FileSearch('lhelp.exe', GetEnvironmentVariable('PATH'));
   {$ENDIF}
     CHMFileExists := FileExists(CHMFile);
-    CHMViewerExists := FileExists(CHMFile);
+    CHMViewerExists := FileExists(CHMViewer);
     if CHMFileExists and CHMViewerExists then
     begin
       CreateLCLHelpSystem;

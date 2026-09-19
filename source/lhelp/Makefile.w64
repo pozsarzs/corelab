@@ -17,9 +17,9 @@ fpcargs = -T$(os) \
           -O1 \
           -v0 \
           -Fu. \
-          -Fu../_ext/* \
-          -Fu../corelab-core/ \
+          -Fu$(lcldir)/../components/chmhelp/packages/help/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
+          -Fu$(lcldir)/../components/turbopower_ipro/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \
           -Fu$(lcldir)/units/$(architecture)-$(os)/ \

@@ -1034,7 +1034,7 @@ begin
   {$ELSE}
     CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm','.\;.\help\');
     if Length(CHMFile) = 0 then
-      CHMFile := FileSearch('modshell_en.chm','.\;.\help\');
+      CHMFile := FileSearch('corelab_en.chm','.\;.\help\');
   {$ENDIF}
   // - search LHelp application
   {$IFDEF UNIX}
@@ -1043,7 +1043,7 @@ begin
     CHMViewer := FileSearch('lhelp.exe', GetEnvironmentVariable('PATH'));
   {$ENDIF}
     CHMFileExists := FileExists(CHMFile);
-    CHMViewerExists := FileExists(CHMFile);
+    CHMViewerExists := FileExists(CHMViewer);
     if CHMFileExists and CHMViewerExists then
     begin
       CreateLCLHelpSystem;
@@ -4933,7 +4933,7 @@ begin
         FPluginDirectory := '/usr/lib/corelab';
         if not DirectoryExists(FPluginDirectory) then
         begin
-          FPluginDirectory := './lib';
+          FPluginDirectory := './library';
           if not DirectoryExists(FPluginDirectory) then
           begin
             ShowMessage(MSG01 + MSG04);
@@ -4942,7 +4942,7 @@ begin
         end;
       end;
     {$ELSE}
-      FPluginDirectory := '.\lib';
+      FPluginDirectory := '.\library';
       if not DirectoryExists(FPluginDirectory) then
       begin
         ShowMessage(MSG01 + MSG04);

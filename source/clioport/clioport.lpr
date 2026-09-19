@@ -56,10 +56,11 @@ resourcestring
 procedure Help(Mode: Boolean);
 var
   b: Byte;
-  Caption: string;
+  {$IFNDEF UNIX}
+    Caption: string;
+  {$ENDIF}
   Message: string;
 begin
-  Caption := MSG08;
   if Mode then Message := MSG07 else
   begin
     Message := MSG08 + ':' + #13 + #10;
@@ -72,6 +73,7 @@ begin
   {$IFDEF UNIX}
     writeln(Message);
   {$ELSE}
+    Caption := MSG01;
     Application.MessageBox(PChar(Message), PChar(Caption));
   {$ENDIF}
 end;
@@ -104,7 +106,7 @@ begin
   {$IFDEF UNIX}
     writeln(Message);
   {$ELSE}
-    Caption := fn + ' --version';
+    Caption := MSG01;
     Application.MessageBox(PChar(Message), PChar(Caption));
   {$ENDIF}
 end;

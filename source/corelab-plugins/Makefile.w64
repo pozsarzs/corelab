@@ -5,26 +5,28 @@
 # | Makefile for 64 bit Windows                                                |
 # +----------------------------------------------------------------------------+
 
-name = $(shell dir /B /A:D | findstr /V /I "Makefile Makefile.w32 Makefile.w64")
+name = $(shell cmd /c dir /B /A:-D *.pas)
 architecture = x86_64
 os = win64
 fpc = ppcx64
 lcldir = c:\lazarus\lcl
-outdir = ..\..\_lib\$(architecture)-$(os)
+outdir = .\lib\$(architecture)-$(os)
 fpcargs = -T$(os) \
           -MObjFPC \
           -Scgi \
           -O1 \
           -v0 \
-          -Fi../_inc/ \
-          -Fi../_inc/* \
+          -Fi../_inc \
           -Fi../corelab-parts/ \
+          -Fu. \
           -Fu../_ext/* \
-          -Fu../_ppu/* \
+          -Fu../_ppu \
           -Fu../corelab-core/ \
           -Fu../corelab-parts/ \
-          -Fu. \
+          -Fu../corelab-plugins/ \
+          -Fu$(lcldir)/../components/chmhelp/packages/help/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
+          -Fu$(lcldir)/../components/turbopower_ipro/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \
           -Fu$(lcldir)/units/$(architecture)-$(os)/ \
@@ -38,9 +40,8 @@ fpcargs = -T$(os) \
 all:
 	@if not exist ..\_lib\nul md ..\_lib
 	@if not exist $(outdir)\nul md $(outdir)
-	  for %%x in ($(name)) do \
-	    $(fpc) $(fpcargs) %%x/%%x.pas \
-	@copy $(outdir)\*.dll ..\..
+	@for %%x in ($(name)) do $(fpc) $(fpcargs) %%x
+	@copy $(outdir)\*.dll ..\..\library
 
 clean:
 	@erase $(outdir)\*.*

@@ -16,11 +16,10 @@ unit ucommon;
 interface
 uses
   {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils;
-  {$IFDEF WINDOWS}
+{$IFDEF WINDOWS}
+  const
     CSIDL_PROFILE = 40;
     SHGFP_TYPE_CURRENT = 0;
-  {$ENDIF}
-{$IFDEF WINDOWS}
   var
     Buffer: array[0..MAX_PATH] of Char;
 {$ENDIF}

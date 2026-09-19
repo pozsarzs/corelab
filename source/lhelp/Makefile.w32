@@ -7,8 +7,8 @@
 
 name = lhelp
 architecture = i386
-fpc = ppc386
 os = win32
+fpc = ppc386
 lcldir = c:\lazarus\lcl
 outdir = .\lib\$(architecture)-$(os)
 fpcargs = -T$(os) \
@@ -17,10 +17,9 @@ fpcargs = -T$(os) \
           -O1 \
           -v0 \
           -Fu. \
-          -Fu../../_ext/* \
-          -Fu../../$(name)-core/ \
-          -Fu../../$(name)-parts/ \
+          -Fu$(lcldir)/../components/chmhelp/packages/help/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
+          -Fu$(lcldir)/../components/turbopower_ipro/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \
           -Fu$(lcldir)/units/$(architecture)-$(os)/ \
@@ -34,9 +33,8 @@ fpcargs = -T$(os) \
 all:
 	@if not exist .\lib\nul md .\_lib
 	@if not exist $(outdir)\nul md $(outdir)
-	  for %%x in ($(project)) do \
-	    $(fpc) $(fpcargs) %%x/%%x.pas \
-	@copy $(outdir)\*.exe ..\..
+	@$(fpc) $(fpcargs) $(name).lpr
+	@copy $(outdir)\$(name).exe ..\..
 
 clean:
 	@erase $(outdir)\*.*

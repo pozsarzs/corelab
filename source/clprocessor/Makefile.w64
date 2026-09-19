@@ -5,7 +5,7 @@
 # | Makefile for 64 bit Windows                                                |
 # +----------------------------------------------------------------------------+
 
-name = clioport
+name = clprocessor
 architecture = x86_64
 os = win64
 fpc = ppcx64
@@ -16,13 +16,16 @@ fpcargs = -T$(os) \
           -Scgi \
           -O1 \
           -v0 \
-          -Fi../_inc/* \
+          -Fi../_inc \
           -Fu. \
           -Fu../_ext/* \
-          -Fu../_ppu/* \
-          -Fu../$(name)-core/ \
-          -Fu../$(name)-parts/ \
+          -Fu../_ppu \
+          -Fu../corelab-core/ \
+          -Fu../corelab-parts/ \
+          -Fu../corelab-plugins/ \
+          -Fu$(lcldir)/../components/chmhelp/packages/help/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \
+          -Fu$(lcldir)/../components/turbopower_ipro/ \
           -Fu$(lcldir)/../components/synedit/ \
           -Fu$(lcldir)/../packager/units/$(architecture)-$(os)/ \
           -Fu$(lcldir)/units/$(architecture)-$(os)/ \
@@ -31,8 +34,8 @@ fpcargs = -T$(os) \
           -FE$(outdir) \
           -dLCL \
           -dLCLwin32 \
-          -WG \
-          -dNOT_A_LIBRARY_BUT_A_UNIT
+          -dNOT_A_LIBRARY_BUT_A_UNIT \
+          -WG
 
 all:
 	@if not exist .\lib\nul md .\_lib
