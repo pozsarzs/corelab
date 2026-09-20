@@ -9,6 +9,8 @@ include ../../Makefile.global
 
 project=clprocessor
 logfile=../../build.log
+HOSTNAME=$(shell hostname)
+export HOSTNAME
 
 all:
 	@mkdir -p $(outdir)/

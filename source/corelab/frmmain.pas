@@ -954,8 +954,8 @@ begin
         Screen.Forms[i].Visible then Screen.Forms[i].Close;
   // write message to console
   if FOpMode = omInteractive
-    then SysConsole1.WriteMessage(MSG03 + MSG07)
-    else SysConsole1.WriteMessage(MSG03 + MSG08);
+    then SysConsole1.WriteMessage(MSG07)
+    else SysConsole1.WriteMessage(MSG08);
 end;
 
 // DESTROY ALL MODULE (AND DICTIONARIES)
@@ -1084,15 +1084,19 @@ end;
 
 // SET SCRIPT MODE AT STARTUP
 procedure TForm1.SetScriptMode;
+var
+  Message: string;
 begin
   ChangeOpMode(omScript, False, False);
   if Length(FStartupScript) > 0 then
   begin
     try
       FScriptBuffer.LoadFromFile(FStartupScript);
-      SysConsole1.WriteMessage(MSG03 + Format(MSG82, [FStartupScript]));
+      SysConsole1.WriteMessage(Format(MSG82, [FStartupScript]));
     except
-      ShowMessage(MSG01 + Format(MSG48, [FStartupScript]));
+      Message := MSG01 + Format(MSG48, [FStartupScript]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
     FActualScript := FStartupScript;
@@ -1176,6 +1180,7 @@ end;
 procedure TForm1.FLoadProjectOperation(AActionContext: TActionContext);
 var
   Filename: string;
+  Message:  string;
 begin
   Filename := AActionContext.SArg1;
   FActualProjectIsSaved := True;
@@ -1184,10 +1189,12 @@ begin
   // loading
   try
     LoadProject(Filename);
-    SysConsole1.WriteMessage(MSG03 + Format(MSG80, [Filename]));
+    SysConsole1.WriteMessage(Format(MSG80, [Filename]));
   except
-    ShowMessage(MSG01 + Format(MSG55, [Filename]));
-    exit;
+    Message := MSG01 + Format(MSG55, [Filename]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    Exit;
   end;
   FActualProject := Filename;                                 // with filename
   FActualProjectIsSaved := True;                            // no need to save
@@ -1196,6 +1203,8 @@ end;
 
 // FILE/SAVE PROJECT ACTION ----------------------------------------------------
 procedure TForm1.FSaveProjectExecute(Sender: TObject);
+var
+  Message: string;
 begin
   if FActualProjectIsSaved then Exit;
   if Length(FActualProject) = 0 then FSaveProjectAsExecute(Sender) else
@@ -1209,9 +1218,11 @@ begin
     // save file
     if not SaveProject(FActualProject) then
     begin
-      ShowMessage(MSG01 + Format(MSG56, [FActualProject]));
+      Message := MSG01 + Format(MSG56, [FActualProject]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
-    end else SysConsole1.WriteMessage(MSG03 + Format(MSG81, [FActualProject]));
+    end else SysConsole1.WriteMessage(Format(MSG81, [FActualProject]));
     FActualProjectIsSaved := True;                            // no need to save
   end;
 end;
@@ -1261,6 +1272,7 @@ end;
 procedure TForm1.FSaveProjectAsOperation(AActionContext: TActionContext);
 var
   Filename:   string;
+  Message: string;
 begin
   Filename := AActionContext.SArg1;
   // create backup
@@ -1272,9 +1284,11 @@ begin
   // save file
   if not SaveProject(Filename) then
   begin
-    ShowMessage(MSG01 + Format(MSG56, [Filename]));
+    Message := MSG01 + Format(MSG56, [Filename]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
-  end else SysConsole1.WriteMessage(MSG03 + MSG81);
+  end else SysConsole1.WriteMessage(MSG81);
   FActualProject := Filename;                                           // named
   FActualProjectIsSaved := True;                              // no need to save
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
@@ -1560,13 +1574,16 @@ procedure TForm1.VShowRegviewerOperation(AActionContext: TActionContext);
 var
   ProcInfo:     TProcInfo;
   InstanceName: string;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
     ProcInfo := FProcInstanceDict[InstanceName];
   except
     // error
-    ShowMessage(MSG01 + Format(MSG91, [InstanceName]));
+    Message := MSG01 + Format(MSG91, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // show HexViewer
@@ -1619,6 +1636,7 @@ end;
 procedure TForm1.VShowHexViewerOperation(AActionContext: TActionContext);
 var
   MemInfo:      TMemInfo;
+  Message:      string;
   InstanceName: string;
 begin
   InstanceName := AActionContext.SArg1;
@@ -1626,7 +1644,9 @@ begin
     MemInfo := FMemInstanceDict[InstanceName];
   except
     // error
-    ShowMessage(MSG01 + Format(MSG91, [InstanceName]));
+    Message := MSG01 + Format(MSG91, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // show HexViewer
@@ -1766,8 +1786,9 @@ end;
 // VIEW/RENAME IO PORT PANEL OPERATION
 procedure TForm1.VRenameIOPanelOperation(AActionContext: TActionContext);
 var
-  NewCaption:      string;
+  NewCaption:   string;
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -1781,7 +1802,9 @@ begin
                                                                PChar(NewCaption));
   except
     // error
-    ShowMessage(MSG01 + Format(MSG92, [InstanceName]));
+    Message := MSG01 + Format(MSG92, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
 end;
@@ -1830,6 +1853,7 @@ end;
 procedure TForm1.VShowIOPanelOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -1840,7 +1864,9 @@ begin
       then FPortPluginDict[PortInfo.ModuleName].FShowPanel(PortInfo.Port);
   except
     // error
-    ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+    Message := MSG01 + Format(MSG93, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
 end;
@@ -1893,6 +1919,7 @@ end;
 procedure TForm1.PCreateOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ModuleType:   string;
   ProcInfo:     TProcInfo;
 begin
@@ -1911,7 +1938,9 @@ begin
       end;
     except
       // error
-      ShowMessage(MSG01 + Format(MSG90, ['processor', InstanceName]));
+      Message := MSG01 + Format(MSG90, ['processor', InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
     // store
@@ -1919,8 +1948,13 @@ begin
     // add to Module Explorer
     Form9.AddNode('Processor', InstanceName);
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['cpu', InstanceName]));
-  end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
+    SysConsole1.WriteMessage(Format(MSG58, ['cpu', InstanceName]));
+  end else
+  begin
+    Message := MSG01 + Format(MSG85, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+  end;
 end;
 
 // PROCESSOR/DESTROY ACTION ----------------------------------------------------
@@ -1980,6 +2014,7 @@ end;
 procedure TForm1.PDestroyOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -1989,7 +2024,9 @@ begin
     FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
   except
     // error
-    ShowMessage(MSG01 + Format(MSG94, [InstanceName]));
+    Message := MSG01 + Format(MSG94, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // remove from dict
@@ -1998,7 +2035,7 @@ begin
   Form9.DeleteNode('Processor', InstanceName);
   Form9.ValueListEditor1.Clear;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG60, [InstanceName]));
 end;
 
 // PROCESSOR/RESET ACTION ------------------------------------------------------
@@ -2058,6 +2095,7 @@ end;
 procedure TForm1.PResetOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -2067,14 +2105,16 @@ begin
     ProcInfo.Processor.Reset;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
+    Message := MSG01 + Format(MSG95, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // RegViewer refresh
   if Assigned(Form11) and Form11.Visible and
     (Form11.ProcInstance = ProcInfo.Processor) then Form11.UpdateValues;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG62, [InstanceName]));
 end;
 
 // PROCESSOR/ENABLE ACTION -----------------------------------------------------
@@ -2134,6 +2174,7 @@ end;
 procedure TForm1.PEnableOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -2143,11 +2184,13 @@ begin
     ProcInfo.Processor.Enabled := True;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG96, [InstanceName]));
+    Message := MSG01 + Format(MSG96, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG64, [InstanceName]));
 end;
 
 // PROCESSOR/DISABLE ACTION ----------------------------------------------------
@@ -2207,6 +2250,7 @@ end;
 procedure TForm1.PDisableOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -2216,11 +2260,13 @@ begin
     ProcInfo.Processor.Enabled := False;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG97, [InstanceName]));
+    Message := MSG01 + Format(MSG97, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG66, [InstanceName]));
 end;
 
 // PROCESSOR/ATTACH TO BUS ACTION ----------------------------------------------
@@ -2280,6 +2326,7 @@ end;
 procedure TForm1.PAttachToBusOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -2287,9 +2334,24 @@ begin
     ProcInfo := FProcInstanceDict[InstanceName];
     // attach to bus
     case FSysBus.AttachCPU(InstanceName, ProcInfo.Processor) of
-      1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
-      2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
-      3: begin ShowMessage(MSG01 + Format(MSG107, [InstanceName])); Exit; end;
+      1: begin
+           Message := MSG01 + Format(MSG98, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
+      2: begin
+           Message := MSG01 + Format(MSG105, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
+      3: begin
+           Message := MSG01 + Format(MSG107, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
     else
       ProcInfo.Processor.ConnectBus(FSysBus);
       ProcInfo.AttachedToBus := True;
@@ -2298,11 +2360,13 @@ begin
     end;
   except
     // other error
-    ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+    Message := MSG01 + Format(MSG98, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG68, [InstanceName]));
 end;
 
 // PROCESSOR/DETACH FROM BUS ACTION --------------------------------------------
@@ -2362,14 +2426,25 @@ end;
 procedure TForm1.PDetachFromBusOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
   try
     ProcInfo := FProcInstanceDict[InstanceName];
     case FSysBus.DetachCPU(InstanceName) of
-      1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
-      2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
+      1: begin
+           Message := MSG01 + Format(MSG99, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
+      2: begin
+           Message := MSG01 + Format(MSG106, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
     else
       ProcInfo.AttachedToBus := False;
       ProcInfo.Processor.OnEvent := nil;
@@ -2377,11 +2452,13 @@ begin
     end;
   except
     // other error
-    ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
+    Message := MSG01 + Format(MSG99, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG70, [InstanceName]));
 end;
 
 // PROCESSOR/PROPERTIES ACTION -------------------------------------------------
@@ -2505,6 +2582,7 @@ var
   InstanceName: string;
   ModuleType:   string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   ModuleType := AActionContext.SArg1;
   InstanceName := AActionContext.SArg2;
@@ -2521,7 +2599,9 @@ begin
       end;
     except
       // error
-      ShowMessage(MSG01 + Format(MSG90, ['memory', InstanceName]));
+      Message := MSG01 + Format(MSG90, ['memory', InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
     // store
@@ -2529,8 +2609,13 @@ begin
     // add to Module Explorer
     Form9.AddNode('Memory', InstanceName);
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['memory', InstanceName]));
-  end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
+    SysConsole1.WriteMessage(Format(MSG58, ['memory', InstanceName]));
+  end else
+  begin
+    Message := MSG01 + Format(MSG85, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+  end;
 end;
 
 // MEMORY/DESTROY ACTION ----------------------------------------------------
@@ -2591,6 +2676,7 @@ procedure TForm1.MDestroyOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
@@ -2599,7 +2685,9 @@ begin
     FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
   except
     // error
-    ShowMessage(MSG01 + Format(MSG94, [InstanceName]));
+    Message := MSG01 + Format(MSG94, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // remove from dict
@@ -2608,7 +2696,7 @@ begin
   Form9.DeleteNode('Memory', InstanceName);
   Form9.ValueListEditor1.Clear;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG60, [InstanceName]));
 end;
 
 // MEMORY/RESET ACTION ------------------------------------------------------
@@ -2669,6 +2757,7 @@ procedure TForm1.MResetOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
@@ -2677,11 +2766,13 @@ begin
     MemInfo.Memory.Reset;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
+    Message := MSG01 + Format(MSG95, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG62, [InstanceName]));
 end;
 
 // MEMORY/ENABLE ACTION -----------------------------------------------------
@@ -2742,6 +2833,7 @@ procedure TForm1.MEnableOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
@@ -2750,11 +2842,13 @@ begin
     MemInfo.Memory.Enabled := True;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG96, [InstanceName]));
+    Message := MSG01 + Format(MSG96, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG64, [InstanceName]));
 end;
 
 // MEMORY/DISABLE ACTION ----------------------------------------------------
@@ -2815,6 +2909,7 @@ procedure TForm1.MDisableOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
@@ -2823,11 +2918,13 @@ begin
     MemInfo.Memory.Enabled := False;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG97, [InstanceName]));
+    Message := MSG01 + Format(MSG97, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG66, [InstanceName]));
 end;
 
 // MEMORY/ATTACH TO BUS ACTION ----------------------------------------------
@@ -2888,6 +2985,7 @@ procedure TForm1.MAttachToBusOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
@@ -2896,19 +2994,31 @@ begin
     case FSysBus.AttachMemory(InstanceName, MemInfo.Memory,
                               MemInfo.Memory.BaseAddress,
                               MemInfo.Memory.AddressRangeSize) of
-      1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
-      2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
+      1: begin
+           Message := MSG01 + Format(MSG98, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
+      2: begin
+           Message := MSG01 + Format(MSG105, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
     else
       MemInfo.AttachedToBus := True;
       FMemInstanceDict[InstanceName] := MemInfo;
     end;
   except
     // other error
-    ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+    Message := MSG01 + Format(MSG98, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG68, [InstanceName]));
 end;
 
 // MEMORY/DETACH FROM BUS ACTION --------------------------------------------
@@ -2969,24 +3079,37 @@ procedure TForm1.MDetachFromBusOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   try
     MemInfo := FMemInstanceDict[InstanceName];
     case FSysBus.DetachMemory(InstanceName) of
-      1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
-      2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
+      1: begin
+           Message := MSG01 + Format(MSG99, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
+      2: begin
+           Message := MSG01 + Format(MSG106, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
     else
       MemInfo.AttachedToBus := False;
       FMemInstanceDict[InstanceName] := MemInfo;
     end;
   except
     // other error
-    ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
+    Message := MSG01 + Format(MSG99, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG70, [InstanceName]));
 end;
 
 // MEMORY/PROPERTIES ACTION -------------------------------------------------
@@ -3047,13 +3170,16 @@ procedure TForm1.MPropertiesOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   begin
     try
       MemInfo := FMemInstanceDict[InstanceName];
     except
-      ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+      Message := MSG01 + Format(MSG101, [InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
     // show properties
@@ -3147,8 +3273,7 @@ begin
 end;
 
 // MEMORY/LOAD MEMORY CONTENT OPERATION ---------------------------------------
-procedure TForm1.MLoadMemoryContentOperation(
-  AActionContext: TActionContext);
+procedure TForm1.MLoadMemoryContentOperation(AActionContext: TActionContext);
 var
   AddressFrom:  DWord;
   ByteCount:    DWord;
@@ -3156,6 +3281,7 @@ var
   InstanceName: string;
   LoadStream:   TMemoryStream;
   MemInfo:      TMemInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   Filename := AActionContext.SArg2;
@@ -3164,7 +3290,9 @@ begin
   except
     on E: Exception do
     begin
-      ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+      Message := MSG01 + Format(MSG93, [InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
   end;
@@ -3196,7 +3324,9 @@ begin
                                                             AddressFrom,
                                                             ByteCount);
       except
-        ShowMessage(MSG01 + Format(MSG31, [Filename]));
+        Message := MSG01 + Format(MSG31, [Filename]);
+        ShowMessage(Message);
+        SysConsole1.WriteMessage(Message);
         Exit;
       end;
     end else
@@ -3204,10 +3334,30 @@ begin
       // load from .hex
       MemInfo.Memory.Reset;
       case LoadFromIntelHexToStream(Filename, LoadStream) of
-        1: begin ShowMessage(MSG01 + Format(MSG35, [Filename])); Exit; end;
-        2: begin ShowMessage(MSG01 + MSG37); Exit; end;
-        3: begin ShowMessage(MSG01 + MSG38); Exit; end;
-      255: begin ShowMessage(MSG01 + MSG39); Exit; end;
+        1: begin
+             Message := MSG01 + Format(MSG35, [Filename]);
+             ShowMessage(Message);
+             SysConsole1.WriteMessage(Message);
+             Exit;
+           end;
+        2: begin
+             Message := MSG01 + MSG37;
+             ShowMessage(Message);
+             SysConsole1.WriteMessage(Message);
+             Exit;
+           end;
+        3: begin
+             Message := MSG01 + MSG38;
+             ShowMessage(Message);
+             SysConsole1.WriteMessage(Message);
+             Exit;
+           end;
+      255: begin
+             Message := MSG01 + MSG39;
+             ShowMessage(Message);
+             SysConsole1.WriteMessage(Message);
+             Exit;
+           end;
       end;
       LoadStream.Position := 0;
       // DArg1/DArg2 are ignored.
@@ -3218,7 +3368,7 @@ begin
         then MemInfo.Memory.LoadFromStream(LoadStream, 0, ByteCount);
     end;
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG73, [Filename, InstanceName]));
+    SysConsole1.WriteMessage(Format(MSG73, [Filename, InstanceName]));
   finally
     LoadStream.Free;
   end;
@@ -3308,6 +3458,7 @@ var
   InstanceName:  string;
   SaveStream:    TMemoryStream;
   MemInfo:       TMemInfo;
+  Message:       string;
 begin
   Filename := AActionContext.SArg1;
   InstanceName := AActionContext.SArg2;
@@ -3316,7 +3467,9 @@ begin
   except
     on E: Exception do
     begin
-      ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+      Message := MSG01 + Format(MSG93, [InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
   end;
@@ -3357,7 +3510,9 @@ begin
             MemInfo.Memory.SaveToStream(SaveStream, AddressFrom, ByteCount);
             SaveStream.SaveToFile(Filename);
           except
-            ShowMessage(MSG01 + Format(MSG29, [Filename]));
+            Message := MSG01 + Format(MSG29, [Filename]);
+            ShowMessage(Message);
+            SysConsole1.WriteMessage(Message);
             Exit;
           end;
         end;
@@ -3367,12 +3522,22 @@ begin
         // complete memory image
         MemInfo.Memory.SaveToStream(SaveStream, 0, MemInfo.Memory.AddressRangeSize);
         case SaveToIntelHexFromStream(Filename, SaveStream) of
-          1: begin ShowMessage(MSG01 + Format(MSG36, [Filename])); Exit; end;
-        255: begin ShowMessage(MSG01 + MSG39); Exit; end;
+          1: begin
+               Message := MSG01 + Format(MSG36, [Filename]);
+               ShowMessage(Message);
+               SysConsole1.WriteMessage(Message);
+               Exit;
+             end;
+        255: begin
+               Message := MSG01 + MSG39;
+               ShowMessage(Message);
+               SysConsole1.WriteMessage(Message);
+               Exit;
+             end;
         end;
       end;
       // report
-      SysConsole1.WriteMessage(MSG03 + Format(MSG75, [Filename, InstanceName]));
+      SysConsole1.WriteMessage(Format(MSG75, [Filename, InstanceName]));
     finally
       SaveStream.Free;
     end;
@@ -3429,6 +3594,7 @@ var
   CurrentStatus: Boolean;
   InstanceName:  string;
   MemInfo:       TMemInfo;
+  Message:       string;
 begin
   InstanceName := AActionContext.SArg1;
   try
@@ -3446,7 +3612,9 @@ begin
     MemInfo.Memory.Enabled := CurrentStatus;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG93, [InstanceName]));
+    Message := MSG01 + Format(MSG93, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     MemInfo.Memory.Enabled := CurrentStatus;
     Exit;
   end;
@@ -3500,8 +3668,9 @@ end;
 procedure TForm1.IOCreateOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ModuleType:   string;
-  PortInfo:      TPortInfo;
+  PortInfo:     TPortInfo;
 begin
   ModuleType := AActionContext.SArg1;
   InstanceName := AActionContext.SArg2;
@@ -3523,7 +3692,9 @@ begin
       end;
     except
       // error
-      ShowMessage(MSG01 + Format(MSG90, ['i/o port', InstanceName]));
+      Message := MSG01 + Format(MSG90, ['i/o port', InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
     // store
@@ -3531,8 +3702,13 @@ begin
     // add to Module Explorer
     Form9.AddNode('I/O port & device', InstanceName);
     // report
-    SysConsole1.WriteMessage(MSG03 + Format(MSG58, ['i/o port', InstanceName]));
-  end else ShowMessage(MSG01 + Format(MSG85, [InstanceName]));
+    SysConsole1.WriteMessage(Format(MSG58, ['i/o port', InstanceName]));
+  end else
+  begin
+    Message := MSG01 + Format(MSG85, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+  end;
 end;
 
 // IO PORT/DESTROY ACTION ----------------------------------------------------
@@ -3592,6 +3768,7 @@ end;
 procedure TForm1.IODestroyOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -3601,7 +3778,9 @@ begin
     FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
   except
     // error
-    ShowMessage(MSG01 + Format(MSG94, [InstanceName]));
+    Message := MSG01 + Format(MSG94, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // remove from dict
@@ -3610,7 +3789,7 @@ begin
   Form9.DeleteNode('I/O port & device', InstanceName);
   Form9.ValueListEditor1.Clear;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG60, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG60, [InstanceName]));
 end;
 
 // IO PORT/RESET ACTION ------------------------------------------------------
@@ -3670,6 +3849,7 @@ end;
 procedure TForm1.IOResetOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -3679,11 +3859,13 @@ begin
     PortInfo.Port.Reset;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG95, [InstanceName]));
+    Message := MSG01 + Format(MSG95, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG62, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG62, [InstanceName]));
 end;
 
 // IO PORT/ENABLE ACTION -----------------------------------------------------
@@ -3743,6 +3925,7 @@ end;
 procedure TForm1.IOEnableOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -3752,11 +3935,13 @@ begin
     PortInfo.Port.Enabled := True;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG96, [InstanceName]));
+    Message := MSG01 + Format(MSG96, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG64, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG64, [InstanceName]));
 end;
 
 // IO PORT/DISABLE ACTION ----------------------------------------------------
@@ -3816,6 +4001,7 @@ end;
 procedure TForm1.IODisableOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -3825,11 +4011,13 @@ begin
     PortInfo.Port.Enabled := False;
   except
     // error
-    ShowMessage(MSG01 + Format(MSG97, [InstanceName]));
+    Message := MSG01 + Format(MSG97, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG66, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG66, [InstanceName]));
 end;
 
 // IO PORT/ATTACH TO BUS ACTION ----------------------------------------------
@@ -3889,6 +4077,7 @@ end;
 procedure TForm1.IOAttachToBusOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
@@ -3898,8 +4087,18 @@ begin
     case FSysBus.AttachIOPort(InstanceName, PortInfo.Port,
                               PortInfo.Port.BaseAddress,
                               PortInfo.Port.AddressRangeSize) of
-      1: begin ShowMessage(MSG01 + Format(MSG98, [InstanceName])); Exit; end;
-      2: begin ShowMessage(MSG01 + Format(MSG105, [InstanceName])); Exit; end;
+      1: begin
+           Message := MSG01 + Format(MSG98, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+      end;
+      2: begin
+           Message := MSG01 + Format(MSG105, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
     else
       PortInfo.AttachedToBus := True;
       FPortInstanceDict[InstanceName] := PortInfo;
@@ -3907,11 +4106,13 @@ begin
     end;
   except
     // other error
-    ShowMessage(MSG01 + Format(MSG98, [InstanceName]));
+    Message := MSG01 + Format(MSG98, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG68, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG68, [InstanceName]));
 end;
 
 // IO PORT/DETACH FROM BUS ACTION --------------------------------------------
@@ -3971,14 +4172,25 @@ end;
 procedure TForm1.IODetachFromBusOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
   try
     PortInfo := FPortInstanceDict[InstanceName];
     case FSysBus.DetachCPU(InstanceName) of
-      1: begin ShowMessage(MSG01 + Format(MSG99, [InstanceName])); Exit; end;
-      2: begin ShowMessage(MSG01 + Format(MSG106, [InstanceName])); Exit; end;
+      1: begin
+           Message := MSG01 + Format(MSG99, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
+      2: begin
+           Message := MSG01 + Format(MSG106, [InstanceName]);
+           ShowMessage(Message);
+           SysConsole1.WriteMessage(Message);
+           Exit;
+         end;
     else
       PortInfo.AttachedToBus := False;
       FPortInstanceDict[InstanceName] := PortInfo;
@@ -3986,11 +4198,13 @@ begin
     end;
   except
     // other error
-    ShowMessage(MSG01 + Format(MSG99, [InstanceName]));
+    Message := MSG01 + Format(MSG99, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG70, [InstanceName]));
+  SysConsole1.WriteMessage(Format(MSG70, [InstanceName]));
 end;
 
 // IO PORT/PROPERTIES ACTION -------------------------------------------------
@@ -4397,6 +4611,7 @@ end;
 procedure TForm1.SLoadScriptOperation(AActionContext: TActionContext);
 var
   Filename:   string;
+  Message:    string;
 begin
   Filename := AActionContext.SArg1;
   FActualScriptIsSaved := True;
@@ -4405,9 +4620,11 @@ begin
   // loading
   try
     FScriptBuffer.LoadFromFile(FileName);
-    SysConsole1.WriteMessage(MSG03 + Format(MSG82, [FileName]));
+    SysConsole1.WriteMessage(Format(MSG82, [FileName]));
   except
-    ShowMessage(MSG01 + Format(MSG48, [FileName]));
+    Message := MSG01 + Format(MSG48, [FileName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     exit;
   end;
   FActualScript := Filename;                                // with filename
@@ -4421,6 +4638,8 @@ end;
 
 // SCRIPT/SAVE SCRIPT ACTION ---------------------------------------------------
 procedure TForm1.SSaveScriptExecute(Sender: TObject);
+var
+  Message: string;
 begin
   if FActualScriptIsSaved then Exit;
   if Length(FActualScript) = 0 then SSaveScriptAsExecute(Sender) else
@@ -4434,11 +4653,13 @@ begin
     // save file
     try
       FScriptBuffer.SaveToFile(FActualScript);
-      SysConsole1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
+      SysConsole1.WriteMessage(Format(MSG83, [FActualScript]));
       // refresh ScriptEditor
       Form6.ClearModified;
     except
-      ShowMessage(MSG01 + Format(MSG49, [FActualScript]));
+      Message := MSG01 + Format(MSG49, [FActualScript]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
       Exit;
     end;
     FActualScriptIsSaved := True;                             // no need to save
@@ -4489,7 +4710,8 @@ end;
 // SCRIPT/SAVE SCRIPT AS OPERATION
 procedure TForm1.SSaveScriptAsOperation(AActionContext: TActionContext);
 var
-  Filename:   string;
+  Filename: string;
+  Message:  string;
 begin
   Filename := AActionContext.SArg1;
   // create backup
@@ -4501,9 +4723,11 @@ begin
   // save file
   try
     FScriptBuffer.SaveToFile(FileName);
-    SysConsole1.WriteMessage(MSG03 + Format(MSG83, [FActualScript]));
+    SysConsole1.WriteMessage(Format(MSG83, [FActualScript]));
   except
-    ShowMessage(MSG01 + Format(MSG49, [FileName]));
+    Message := MSG01 + Format(MSG49, [FileName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   FActualScript := Filename;                                        // named
@@ -4666,6 +4890,7 @@ end;
 procedure TForm1.IOConfigureOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   PortInfo:     TPortInfo;
   PropertyName: string;
   Value:        string;
@@ -4677,7 +4902,9 @@ begin
   try
     PortInfo := FPortInstanceDict[InstanceName];
   except
-    ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+    Message := MSG01 + Format(MSG101, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // set property
@@ -4713,17 +4940,21 @@ begin
       else
       begin
         // property does not exist or is read-only
-        ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
+        Message := MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]);
+        ShowMessage(Message);
+        SysConsole1.WriteMessage(Message);
         Exit;
       end;
     end;
   except
     // invalid value
-    ShowMessage(MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]));
+    Message := MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG104, [InstanceName + '.' +
+  SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
 end;
 
@@ -4732,6 +4963,7 @@ procedure TForm1.MConfigureOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   MemInfo:      TMemInfo;
+  Message:      string;
   PropertyName: string;
   Value:        string;
 begin
@@ -4742,7 +4974,9 @@ begin
   try
     MemInfo := FMemInstanceDict[InstanceName];
   except
-    ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+    Message := MSG01 + Format(MSG101, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // set property
@@ -4763,17 +4997,21 @@ begin
       else
       begin
         // property does not exist or is read-only
-        ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
+        Message := MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]);
+        ShowMessage(Message);
+        SysConsole1.WriteMessage(Message);
         Exit;
       end;
     end;
   except
     // invalid value
-    ShowMessage(MSG01 + Format(MSG103, [Value]));
+    Message := MSG01 + Format(MSG103, [Value]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG104, [InstanceName + '.' +
+  SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
 end;
 
@@ -4781,6 +5019,7 @@ end;
 procedure TForm1.PConfigureOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
+  Message:      string;
   ProcInfo:     TProcInfo;
   PropertyName: string;
   Value:        string;
@@ -4792,7 +5031,9 @@ begin
   try
     ProcInfo := FProcInstanceDict[InstanceName];
   except
-    ShowMessage(MSG01 + Format(MSG101, [InstanceName]));
+    Message := MSG01 + Format(MSG101, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // set property
@@ -4803,17 +5044,21 @@ begin
         then Enabled := StrToBool(Value) else
       begin
         // property does not exist or is read-only
-        ShowMessage(MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]));
+        Message := MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]);
+        ShowMessage(Message);
+        SysConsole1.WriteMessage(Message);
         Exit;
       end;
     end;
   except
     // invalid value
-    ShowMessage(MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]));
+    Message := MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
     Exit;
   end;
   // report
-  SysConsole1.WriteMessage(MSG03 + Format(MSG104, [InstanceName + '.' +
+  SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
 end;
 
@@ -4860,8 +5105,8 @@ end;
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 var
-  Error: Boolean;
-  i:     Integer;
+  Error:   Boolean;
+  i:       Integer;
 begin
   // system bus
   FSysBus := TSysBus.Create;
@@ -4957,7 +5202,7 @@ begin
     begin
       ShowMessage(MSG01 + Format(MSG05, [FPluginDirectory]));
       Error := True;
-    end else SysConsole1.WriteMessage(MSG03 + Format(MSG06, [IntToStr(i)]));
+    end else SysConsole1.WriteMessage(Format(MSG06, [IntToStr(i)]));
   end;
   if not Error then
   begin

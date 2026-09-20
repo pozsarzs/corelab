@@ -8,6 +8,8 @@
 include ../../Makefile.global
 
 project=clioport
+HOSTNAME=$(shell hostname)
+export HOSTNAME
 
 all:
 	@mkdir -p $(outdir)/

@@ -8,6 +8,8 @@
 include ../../Makefile.global
 
 project=corelab
+HOSTNAME=$(shell hostname)
+export HOSTNAME
 
 all:
 	@mkdir -p $(outdir)/
