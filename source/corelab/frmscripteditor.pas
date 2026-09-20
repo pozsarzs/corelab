@@ -51,17 +51,18 @@ type
     SEConstants: array[0..15] of string = (
       'R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7',
       'R8', 'R9', 'RA', 'RB', 'RC', 'RD', 'RE', 'RF');
-    SEKeyWords: array[0..88] of string = (
-    'ATIO', 'ATME', 'ATPU', 'CRIO', 'CFIO', 'CFME', 'CFPU', 'CRME', 'CRPU',
-    'DIIO', 'DIME', 'DIPU', 'DSIO', 'DSME', 'DSPU', 'DTIO', 'DTME', 'DTPU',
-    'EDME', 'ENIO', 'ENME', 'ENPU', 'EXAP', 'IRQ', 'LDME', 'LDPR', 'LDSC',
-    'LDSS', 'NMI', 'NWPR', 'NWSC', 'RNIO', 'RSAP', 'RSIO', 'RSME', 'RSPU',
-    'RST', 'RUN', 'RUSC', 'SESC', 'SHBM', 'SHHV', 'SHIL', 'SHIO', 'SHME',
-    'SHRL', 'SHRV', 'SHSC', 'SHSE', 'STEP', 'STOP', 'STSC', 'SVME', 'SVPR',
-    'SVSC', 'SVSS', 'ADD', 'AND', 'BIT', 'CALL', 'COMP', 'CONV', 'DEC', 'DEPO',
-    'END', 'EXAM', 'EXIT', 'HELP', 'INC', 'INRG', 'JPEQ', 'JPZR', 'JPGE', 'JPGT',
-    'JPLE', 'JPLT', 'JPNE', 'JPNZ', 'MUL', 'NOT', 'OR', 'PRNT', 'RTRN', 'SHL',
-    'SHR', 'SUB', 'SWAP', 'WAIT', 'XOR');
+    SEKeyWords: array[0..90] of string = (
+    'ATIO', 'ATME', 'ATPU', 'CRIO', 'CFIO', 'CFME', 'CFPU', 'CHWD', 'CRME',
+    'CRPU', 'DIIO', 'DIME', 'DIPU', 'DSIO', 'DSME', 'DSPU', 'DTIO', 'DTME',
+    'DTPU', 'EDME', 'ENIO', 'ENME', 'ENPU', 'EXAP', 'IRQ',  'LDME', 'LDPR',
+    'LDSC', 'LDSS', 'NMI',  'NWPR', 'NWSC', 'RNIO', 'RSAP', 'RSIO', 'RSME',
+    'RSPU', 'RST',  'RUN',  'RUSC', 'SESC', 'SHBL', 'SHBM', 'SHHV', 'SHIL',
+    'SHIO', 'SHME', 'SHRL', 'SHRV', 'SHSC', 'SHSE', 'STEP', 'STOP', 'STSC',
+    'SVME', 'SVPR', 'SVSC', 'SVSS', 'ADD',  'AND',  'BIT',  'CALL', 'COMP',
+    'CONV', 'DEC', 'DEPO',  'END',  'EXAM', 'EXIT', 'HELP', 'INC',  'INRG',
+    'JPEQ', 'JPZR', 'JPGE', 'JPGT', 'JPLE', 'JPLT', 'JPNE', 'JPNZ', 'MUL',
+    'NOT',  'OR',   'PRNT', 'RTRN', 'SHL',  'SHR',  'SUB',  'SWAP', 'WAIT',
+    'XOR');
 var
   Form6: TForm6;
 

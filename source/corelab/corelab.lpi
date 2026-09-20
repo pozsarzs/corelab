@@ -249,6 +249,13 @@
         <Filename Value="scriptengine/scriptengine.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="frmbuslogger.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form14"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -27,6 +27,12 @@ type
     address_color, data_color, lineselector_color: TColor;
     bgodd_color, bgeven_color:                     TColor;
   end;
+  TBusLoggerConfig = record
+    left, top, height, width:                      Integer;
+    column0_width, column1_width, column2_width:   Integer;
+    operation_color, address_color, data_color:    TColor;
+    lineselector_color, bgodd_color, bgeven_color: TColor;
+  end;
   TIntLoggerConfig = record
     left, top, height, width:                                   Integer;
     column0_width, column1_width, column2_width, column3_width: Integer;
@@ -70,6 +76,7 @@ type
   end;
   TAppConfig = record
     BPManagerConfig:        TBPManagerConfig;
+    BusLoggerConfig:        TBusLoggerConfig;
     HexViewerConfig:        THexViewerConfig;
     IntLoggerConfig:        TIntLoggerConfig;
     MainFormConfig:         TMainFormConfig;
@@ -128,6 +135,18 @@ var
 begin
   Result := True;
   try
+    // BusLogger
+    section := 'BusLogger';
+    LoadSave(section, 'height', AAppConfig.BusLoggerConfig.height, 280);
+    LoadSave(section, 'left', AAppConfig.BusLoggerConfig.left, 8);
+    LoadSave(section, 'top', AAppConfig.BusLoggerConfig.top, 8);
+    LoadSave(section, 'width', AAppConfig.BusLoggerConfig.width, 280);
+    LoadSave(section, 'operation_color', AAppConfig.BusLoggerConfig.address_color, BUSLOGGER_OPERATION_DEFAULT);
+    LoadSave(section, 'address_color', AAppConfig.BusLoggerConfig.address_color, BUSLOGGER_ADDRESS_DEFAULT);
+    LoadSave(section, 'data_color', AAppConfig.BusLoggerConfig.data_color, BUSLOGGER_DATA_DEFAULT);
+    LoadSave(section, 'lineselector_color', AAppConfig.BusLoggerConfig.lineselector_color, BUSLOGGER_LINESELECTOR_DEFAULT);
+    LoadSave(section, 'bgodd_color', AAppConfig.BusLoggerConfig.bgodd_color, BUSLOGGER_BGCOLOR_ODD_DEFAULT);
+    LoadSave(section, 'bgeven_color', AAppConfig.BusLoggerConfig.bgeven_color, BUSLOGGER_BGCOLOR_EVEN_DEFAULT);
     // Breakpoint Manager
     section := 'BreakPointManager';
     LoadSave(section, 'height', AAppConfig.BPManagerConfig.height, 208);

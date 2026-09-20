@@ -26,6 +26,7 @@
 {"hash":151863766,"name":"tform1.toolbutton16.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,49,54],"value":"ToolButton16"},
 {"hash":106991073,"name":"tform1.toolbar1.caption","sourcebytes":[84,111,111,108,66,97,114,49],"value":"ToolBar1"},
 {"hash":151863780,"name":"tform1.toolbutton44.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,52,52],"value":"ToolButton44"},
+{"hash":151863792,"name":"tform1.toolbutton30.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,51,48],"value":"ToolButton30"},
 {"hash":106991079,"name":"tform1.toolbar7.caption","sourcebytes":[84,111,111,108,66,97,114,55],"value":"ToolBar7"},
 {"hash":151863575,"name":"tform1.toolbutton57.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,53,55],"value":"ToolButton57"},
 {"hash":151863552,"name":"tform1.toolbutton60.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,54,48],"value":"ToolButton60"},

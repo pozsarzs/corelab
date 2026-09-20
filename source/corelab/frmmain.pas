@@ -21,9 +21,10 @@ uses
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
-  frmproperties, frmmoduleexplorer, frmbpmanager, commandengine, scriptengine,
-  core_cpu, core_memory, core_ioport, core_bus, usysconsole, ucommon, uconfig,
-  uplugin, uproject, uintelhex, uactcontext, uproperties, ubreakpoint;
+  frmproperties, frmmoduleexplorer, frmbpmanager, frmbuslogger, commandengine,
+  scriptengine, core_cpu, core_memory, core_ioport, core_bus, usysconsole,
+  ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext, uproperties,
+  ubreakpoint;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -78,6 +79,10 @@ type
   end;
   { TForm1 }
   TForm1 = class(TForm)
+    ToolButton10: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton30: TToolButton;
+    ToolButton59: TToolButton;
     VShowBusLogger: TAction;
     FChangeWorkDirectory: TAction;
     MenuItem17: TMenuItem;
@@ -301,7 +306,6 @@ type
     ToolButton56:             TToolButton;
     ToolButton57:             TToolButton;
     ToolButton58:             TToolButton;
-    ToolButton59:             TToolButton;
     ToolButton6:              TToolButton;
     ToolButton60:             TToolButton;
     ToolButton61:             TToolButton;
@@ -397,6 +401,7 @@ type
     procedure VModuleExplorerExecute(Sender: TObject);
     procedure VRenameIOPanelExecute(Sender: TObject);
     procedure VShowBreakpointManagerExecute(Sender: TObject);
+    procedure VShowBusLoggerExecute(Sender: TObject);
     procedure VShowHexViewerExecute(Sender: TObject);
     procedure VShowIntLoggerExecute(Sender: TObject);
     procedure VShowIOPanelExecute(Sender: TObject);
@@ -457,6 +462,7 @@ type
     // View menu
     procedure VShowModuleExplorerOperation(AActionContext: TActionContext);
     procedure VShowBreakpointManagerOperation(AActionContext: TActionContext);
+    procedure VShowBusLoggerOperation(AActionContext: TActionContext);
     procedure VShowRunLoggerOperation(AActionContext: TActionContext);
     procedure VShowIntLoggerOperation(AActionContext: TActionContext);
     procedure VShowRegViewerOperation(AActionContext: TActionContext);
@@ -1517,6 +1523,40 @@ procedure TForm1.VShowBreakpointManagerOperation(AActionContext: TActionContext)
 begin
   Form10.BreakpointList := FBreakpointList;
   Form10.ShowModal;
+end;
+
+// VIEW/SHOW BUSLOGGER ACTION --------------------------------------------------
+procedure TForm1.VShowBusLoggerExecute(Sender: TObject);
+var
+  ActionContext: TActionContext;
+  Caller:        TComponent;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+    end;
+    VShowBusLoggerOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// VIEW/SHOW BUSLOGGER OPERATION
+procedure TForm1.VShowBusLoggerOperation(AActionContext: TActionContext);
+begin
+  Form14.Show;
+  Form14.BringToFront;
 end;
 
 // VIEW/SHOW RUNLOGGER ACTION --------------------------------------------------
@@ -5427,6 +5467,20 @@ begin
       left := Form10.Left;
       height := Form10.Height;
       width := Form10.Width;
+    end;
+    // BusLogger
+    with BusLoggerConfig do
+    begin
+      top := Form14.Top;
+      left := Form14.Left;
+      height := Form14.Height;
+      width := Form14.Width;
+      with Form14.DrawGrid1.Columns do
+      begin
+        column0_width := Items[0].Width;
+        column1_width := Items[1].Width;
+        column2_width := Items[2].Width;
+      end;
     end;
     // RunLogger
     with RunLoggerConfig do

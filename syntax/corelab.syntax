@@ -19,6 +19,7 @@ context default
     keyword whole CFIO white
     keyword whole CFME white
     keyword whole CFPU white
+    keyword whole CHWD white
     keyword whole CRME white
     keyword whole CRPU white
     keyword whole DIIO white
@@ -52,6 +53,7 @@ context default
     keyword whole RUN white
     keyword whole RUSC white
     keyword whole SESC white
+    keyword whole SHBL white
     keyword whole SHBM white
     keyword whole SHHV white
     keyword whole SHIL white

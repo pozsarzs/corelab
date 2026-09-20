@@ -17,6 +17,12 @@ interface
 uses
   CMem;
 type
+  // Last bus operation record for BusLogger
+  TBusLogRec = record
+    Operation: string[31];
+    Address:   string[31];
+    Data:      string[31];
+  end;
   { ISysBus }
   ISysBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
