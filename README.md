@@ -218,11 +218,11 @@ to be used with other development tools or transferred to real hardware.
 |:-------:|:--------------------------|:----:|
 |R0-9     |general register           | R/W  | 
 |RA       |work register (accumulator)| R/W  | 
-|RB       |                           | R/W  | 
-|RC       |instruction counter        | RO   | 
-|RD       |                           | R/W  | 
+|RB       |work directory             | RO   | 
+|RC       |script instruction counter | RO   | 
+|RD       |CPU instruction counter    | RO   | 
 |RE       |random byte                | RO   | 
-|RF       |Flags                      | RO   |
+|RF       |flags                      | RO   |
 
 **Note:** Flag's 0 bit is ZERO, 1 bit is CARRY.  
 
@@ -240,6 +240,7 @@ to be used with other development tools or transferred to real hardware.
 |**CFIO**     |csEveryWhere     |-     |-    |Configure I/O port module.                                             |
 |**CFME**     |csEveryWhere     |-     |-    |Configure memory module.                                               |
 |**CFPU**     |csEveryWhere     |-     |-    |Configure processor module.                                            |
+|**CHWD**     |csEveryWhere     |-     |-    |Change work directory.                                                 |
 |**COMP**     |csScript         |Yes   |C, Z |Compare target with value by subtraction.                              |
 |**CONV**     |csScript         |Yes   |-    |Convert number in different numeral systems in-place.                  |
 |**CRIO**     |csEveryWhere     |-     |-    |Instantiate a I/O port or device module.                               |
@@ -317,7 +318,7 @@ to be used with other development tools or transferred to real hardware.
 |**SWAP**     |csScript         |Yes   |-    |Swap the values of two variables.                                      |
 |**WAIT**     |csScript         |-     |-    |Wait specified ms.                                                     |
 |**XOR**      |csScript         |Yes   |Z    |Bitwise/logical XOR in-place.                                          |
-
+TScriptRuntime
 ## VIII. Documentation and Help  
 
 CoreLAB features built-in help and comprehensive documentation, accessible

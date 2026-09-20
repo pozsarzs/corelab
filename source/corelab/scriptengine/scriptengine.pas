@@ -15,14 +15,16 @@ unit scriptengine;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, commandengine;
+  SysUtils, Classes, commandengine, scriptruntime;
 type
   { TScriptEngine }
   TScriptEngine = class(TCommandEngine)
   protected
   public
-    constructor Create; virtual;
+    FScriptRuntime: TScriptRuntime;
+    constructor Create; override;
     destructor Destroy; override;
+    function ExecuteLine(const ALine: string): Integer; override;
   end;
 
 implementation
@@ -33,18 +35,22 @@ implementation
 constructor TScriptEngine.Create;
 begin
   inherited Create;
+  FScriptRuntime := TScriptRuntime.Create;
   // commands
   with FRegistry do
   begin
-
-    { $I cmd-aritmetic.pas}
-    { $I cmd-logic.pas}
-    { $I cmd-access.pas}
-    { $I cmd-control.pas}
-    { $I cmd-other.pas}
-//      if HasError then Exit;                              // command run error
-
+    {$I cmd-arithmetic.pas}
+    {$I cmd-logic.pas}
+    {$I cmd-access.pas}
+    {$I cmd-control.pas}
+    {$I cmd-other.pas}
   end;
+end;
+
+ // EXECUTE COMMAND WITH PARAMETERS
+function TScriptEngine.ExecuteLine(const ALine: string): Integer;
+begin
+// if HasError then Exit;                              // command run error
 end;
 
 // DESTROY TSCRIPTENGINE INSTANCE

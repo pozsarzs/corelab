@@ -78,6 +78,10 @@ type
   end;
   { TForm1 }
   TForm1 = class(TForm)
+    VShowBusLogger: TAction;
+    FChangeWorkDirectory: TAction;
+    MenuItem17: TMenuItem;
+    MenuItem18: TMenuItem;
     MenuItem55: TMenuItem;
     ToolButton29: TToolButton;
     VModuleExplorer: TAction;
@@ -331,6 +335,7 @@ type
     VShowScriptConsole:       TAction;
     VShowScriptEditor:        TAction;
     procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
+    procedure FChangeWorkDirectoryExecute(Sender: TObject);
     procedure InterruptHandler(Sender: TIOPort; AVector: Byte);
     procedure FExitExecute(Sender: TObject);
     procedure FLoadProjectExecute(Sender: TObject);
@@ -426,12 +431,12 @@ type
     FIgnoreHelp:           Boolean;                   // ignore search help file
     FOpMode:               TOpMode;                            // operation mode
     FPluginDirectory:      string;                   // directory of the plugins
-    FScriptInstPointer:    integer;                   // next instruction number
     FScriptIsRunning:      Boolean;                      // script running state
     FStartupProject:       string;        // project file name from command line
     FStartupScript:        string;         // script file name from command line
     FSystemLanguage:       string;                            // system language
     FUserDirectory:        string;                           // user's directory
+    FWorkDirectory:        string;                           // user's directory
   public
     // active component instances
     FProcInstanceDict: TProcInstanceDict;
@@ -446,6 +451,7 @@ type
     procedure FNewProjectOperation(AActionContext: TActionContext);
     procedure FLoadProjectOperation(AActionContext: TActionContext);
     procedure FSaveProjectAsOperation(AActionContext: TActionContext);
+    procedure FChangeWorkDirectoryOperation(AActionContext: TActionContext);
     procedure FRestartApplicationOperation(AActionContext: TActionContext);
     procedure FExitOperation(AActionContext: TActionContext);
     // View menu
@@ -618,6 +624,8 @@ resourcestring
   MSG105 = 'Module named ''%s'' has been already attached.';              { SM }
   MSG106 = 'Module named ''%s'' has been already detached.';              { SM }
   MSG107 = 'Only one CPU connection is allowed.';                         { SM }
+  MSG108 = 'Select new work directory';                                   { SC }
+  MSG109 = 'Work directory is set to ''%s''.';                            { SC }
 
 {$R *.lfm}
 
@@ -934,7 +942,7 @@ begin
   FActualProjectIsSaved := False;
   FActualScript := '';
   FActualScriptIsSaved := False;
-  FScriptInstPointer := 0;
+  CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
   // clear active component instances
   DestroyAllModules(False);
   FProcInstanceDict.Clear;
@@ -1161,7 +1169,7 @@ begin
       try
         with OpenDialog do
         begin
-          InitialDir := GetUserDir;
+          InitialDir := FWorkDirectory;
           Title := MSG53;
           Filter := MSG52;
         end;
@@ -1254,7 +1262,7 @@ begin
       try
         with SaveDialog do
         begin
-          InitialDir := GetUserDir;
+          InitialDir := FWorkDirectory;
           Title := MSG54;
           Filter := MSG52;
         end;
@@ -1294,6 +1302,55 @@ begin
   FActualProject := Filename;                                           // named
   FActualProjectIsSaved := True;                              // no need to save
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
+end;
+
+// FILE/CHANGE WORK DIRECTORY ACTION -------------------------------------------
+procedure TForm1.FChangeWorkDirectoryExecute(Sender: TObject);
+var
+  ActionContext:         TActionContext;
+  Caller:                TComponent;
+  SelectDirectoryDialog: TSelectDirectoryDialog;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+      // select directory
+      SelectDirectoryDialog := TSelectDirectoryDialog.Create(Form1);
+      try
+        with SelectDirectoryDialog do
+        begin
+          InitialDir := FWorkDirectory;
+          Title := MSG108;
+        end;
+        if SelectDirectoryDialog.Execute
+          then SArg1 := SelectDirectoryDialog.FileName else Exit;
+      finally
+        SelectDirectoryDialog.Free;
+      end;
+      FChangeWorkDirectoryOperation(ActionContext);
+    end;
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// FILE/CHANGE WORK DIRECTORY OPERATION
+procedure TForm1.FChangeWorkDirectoryOperation(AActionContext: TActionContext);
+begin
+  FWorkDirectory := AActionContext.SArg1;
+  CommandEngine2.FScriptRuntime.SetRegister('B', FWorkDirectory, True);
+  SysConsole1.WriteMessage(Format(MSG109, [FWorkDirectory]));
 end;
 
 // FILE/SETTINGS ACTION --------------------------------------------------------
@@ -3269,7 +3326,7 @@ begin
         try
           with OpenDialog1 do
           begin
-            InitialDir := GetUserDir;
+            InitialDir := FWorkDirectory;
             Title := MSG30;
             Filter := MSG32;
           end;
@@ -3453,7 +3510,7 @@ begin
       try
         with SaveDialog1 do
         begin
-          InitialDir := GetUserDir;
+          InitialDir := FWorkDirectory;
           Title := MSG28;
           Filter := MSG32;
         end;
@@ -4647,7 +4704,7 @@ procedure TForm1.SLoadScriptExecute(Sender: TObject);
         try
           with OpenDialog do
           begin
-            InitialDir := GetUserDir;
+            InitialDir := FWorkDirectory;
             Title := MSG46;
             Filter := MSG45;
           end;
@@ -4748,7 +4805,7 @@ begin
       try
         with SaveDialog do
         begin
-          InitialDir := GetUserDir;
+          InitialDir := FWorkDirectory;
           Title := MSG47;
           Filter := MSG45;
         end;
@@ -4825,21 +4882,26 @@ end;
 // SCRIPT/RUN SCRIPT OPERATION
 procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
 var
-  i: integer;
+  Counter: Integer;
+  i:       Integer;
 begin
   if FScriptIsRunning then Exit;
   Form6.CopyEditorToBuffer;                        // store ScriptEditor content
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
   begin
+    Counter := 0;
     Form12.ClearContent;                                  // clear ScriptConsole
     if not Form12.Visible then Form12.Show;                // show ScriptConsole
-    FScriptInstPointer := 0;
+    CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
     FScriptIsRunning := True;
     try
       for i := 0 to FScriptBuffer.Count - 1 do
+      with CommandEngine2 do
       begin
-        CommandEngine2.ExecuteLine(FScriptBuffer.Strings[FScriptInstPointer]);
-        FScriptInstPointer := i + 1;
+        FScriptRuntime.GetRegister('C', Counter);
+        ExecuteLine(FScriptBuffer.Strings[Counter]);
+        Inc(Counter);
+        FScriptRuntime.SetRegister('C', Counter, True);
       end;
     finally
       FScriptIsRunning := False;
@@ -4877,8 +4939,10 @@ end;
 // SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
 procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
 var
-  i: integer;
+  Counter: Integer;
+  i:       Integer;
 begin
+  Counter := 0;
   if FScriptIsRunning then Exit;
   Form6.CopyEditorToBuffer;                        // store ScriptEditor content
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
@@ -4886,10 +4950,13 @@ begin
     if not Form12.Visible then Form12.Show;                // show ScriptConsole
     FScriptIsRunning := True;
     try
-      Form12.WriteMessage(IntToStr(FScriptInstPointer));
-      CommandEngine2.ExecuteLine(FScriptBuffer.Strings[FScriptInstPointer]);
-      if FScriptInstPointer < FScriptBuffer.Count - 1
-        then Inc(FScriptInstPointer);
+      with CommandEngine2 do
+      begin
+        FScriptRuntime.GetRegister('C', Counter);
+        ExecuteLine(FScriptBuffer.Strings[Counter]);
+        if Counter < FScriptBuffer.Count - 1 then Inc(Counter);
+        FScriptRuntime.SetRegister('C', Counter, True);
+      end;
     finally
       FScriptIsRunning := False;
     end;
@@ -4926,7 +4993,7 @@ end;
 // SCRIPT/STOP SCRIPT OPERATION
 procedure TForm1.SStopScriptOperation(AActionContext: TActionContext);
 begin
-  FScriptInstPointer := 0;
+  CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
   FScriptIsRunning := False;
   Form12.ClearContent;                                    // clear ScriptConsole
 end;
@@ -5195,11 +5262,15 @@ begin
   FActualProjectIsSaved := True;
   FActualScript := '';
   FActualScriptIsSaved := True;
-  FScriptInstPointer := 0;
-  // set general fields
-  FEXEDirectory := GetExeDir;
+  CommandEngine2.FScriptRuntime.SetRegister('C', '0', True);
+  // system language
   FSystemLanguage := GetLang;
+  // directories
+  FEXEDirectory := GetExeDir;
   FUserDirectory := GetUserDir;
+  FWorkDirectory := FUserDirectory;
+  SysConsole1.WriteMessage(Format(MSG109, [FWorkDirectory]));
+  CommandEngine2.FScriptRuntime.SetRegister('B', FWorkDirectory, True);
   // set directory and load configuration
   {$IFDEF WINDOWS}
     FConfigDirectory := FUserDirectory + DirectorySeparator +

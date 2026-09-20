@@ -94,7 +94,7 @@ begin
     if Tokens.Count = 0 then exit;
     // get name of command
     CommandName := LowerCase(Tokens[0].RawText);
-    // at HELP command
+    // some internal commands
     if CommandName = 'gato' then
     begin
       Infotext := LineEnding + '  /\_/\' + LineEnding +' ( o.o )' + LineEnding +

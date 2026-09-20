@@ -32,6 +32,13 @@ RegisterCommand(TCommand.Create('SVPR',
                                 1,
                                 @Form1.FSaveProjectAsOperation));
 
+RegisterCommand(TCommand.Create('CHWD',
+                                'Change work directory.',
+                                csEveryWhere,
+                                'CHWD directory',
+                                1,
+                                @Form1.FChangeWorkDirectoryOperation));
+
 RegisterCommand(TCommand.Create('RSAP',
                                 'Restart application.',
                                 csEverywhere,

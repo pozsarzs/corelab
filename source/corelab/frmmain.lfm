@@ -942,6 +942,9 @@ object Form1: TForm1
       object Separator11: TMenuItem
         Caption = '-'
       end
+      object MenuItem17: TMenuItem
+        Action = FChangeWorkDirectory
+      end
       object MenuItem42: TMenuItem
         Action = FSettings
       end
@@ -965,9 +968,13 @@ object Form1: TForm1
       end
       object MenuItem62: TMenuItem
         Action = VShowBreakpointManager
+        ShortCut = 16459
       end
       object Separator13: TMenuItem
         Caption = '-'
+      end
+      object MenuItem18: TMenuItem
+        Action = VShowBusLogger
       end
       object MenuItem43: TMenuItem
         Action = VShowRunLogger
@@ -1240,6 +1247,13 @@ object Form1: TForm1
       ImageIndex = 32
       OnExecute = FSaveProjectAsExecute
     end
+    object FChangeWorkDirectory: TAction
+      Caption = '&Change work directory'
+      Hint = 'Change work directory'
+      ImageIndex = 0
+      OnExecute = FChangeWorkDirectoryExecute
+      ShortCut = 16452
+    end
     object FSettings: TAction
       Caption = 'Set&tings...'
       Hint = 'Settings'
@@ -1271,6 +1285,11 @@ object Form1: TForm1
       Hint = 'Show Breakpoint Manager'
       ImageIndex = 56
       OnExecute = VShowBreakpointManagerExecute
+      ShortCut = 16450
+    end
+    object VShowBusLogger: TAction
+      Caption = 'Show &BusLogger'
+      Hint = ' &BusLogger'
       ShortCut = 16450
     end
     object VShowRunLogger: TAction
@@ -1526,8 +1545,8 @@ object Form1: TForm1
       OnExecute = OIRQExecute
     end
     object OResetAll: TAction
-      Caption = 'R&eset all'
-      Hint = 'Reset all'
+      Caption = 'R&eset all attached module'
+      Hint = 'Reset all attached module'
       ImageIndex = 11
       OnExecute = OResetAllExecute
     end

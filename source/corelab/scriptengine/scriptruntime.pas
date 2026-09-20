@@ -11,31 +11,46 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{ |registers|description                |access|
+  |:-------:|:--------------------------|:----:|
+  |R0-9     |general register           | R/W  | 
+  |RA       |work register (accumulator)| R/W  | 
+  |RB       |work directory             | RO   | 
+  |RC       |script instruction counter | RO   | 
+  |RD       |CPU instruction counter    | RO   | 
+  |RE       |random byte                | RO   | 
+  |RF       |flags                      | RO   | }
+  
 unit scriptruntime;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, commandengine, scriptruntime;
+  SysUtils, Classes;
 type
   { TScriptRuntime }
   TScriptRuntime = class
   protected
-    FRegArray = array[0..15] of string;
+    FRegsGen: array['0'..'9'] of string;
+    FRegsSys: array['A'..'F'] of string;
   public
     constructor Create; virtual;
-    destructor Destroy;
+    destructor Destroy; override;
     function GetFlag(const ARegName: Char): Boolean;
-    function GetRegister(const ARegName: Char): string;
+    function GetRegister(ARegName: Char; var ATarget: string): Boolean; overload;
+    function GetRegister(ARegName: Char; var ATarget: Integer): Boolean; overload;
     procedure ClearFlags;
-    procedure IncrementPC;
-    procedure Reset;
+    procedure ResetAll;
     procedure SetFlag(const ARegName: Char; AState: Boolean);
-    procedure SetPC(AValue: integer);
-    procedure SetRegister(const ARegName: Char; AValue: string);
+    function SetRegister(ARegName: Char; AValue: string; AForce: Boolean): Boolean; overload;
+    function SetRegister(ARegName: Char; AValue: Integer; AForce: Boolean): Boolean; overload;
   end;
 const
-  FReg = array[0..15] of Boolean = (...);
-  FlagNames: string[8] = '??????CZ';
+  FlagNames:         string[8] = '??????CZ';
+  FRegsGenWriteable: array['0'..'9'] of Boolean = (true, true, true, true,
+                                                  true, true, true, true,
+                                                  true, true);
+  FRegsSysWriteable: array['A'..'F'] of Boolean = (true, false, false, false,
+                                                  false, false);
 
 implementation
 
@@ -45,6 +60,7 @@ implementation
 constructor TScriptRuntime.Create;
 begin
   inherited Create;
+  ResetAll;
 end;
 
 // DESTROY TSCRIPTRUNTIME INSTANCE
@@ -53,84 +69,154 @@ begin
   inherited Destroy;
 end;
 
-
-function TScriptRuntime.GetFlag(const AFlagName: Char; var ATarget: Boolean): Boolean;
+// GET FLAG
+function TScriptRuntime.GetFlag(const ARegName: Char): Boolean;
 var
-  b: Byte;
-  rf: string;
-  s: string;
+  i, bit:   Integer;
+  s:        string;
+  FlagsVal: Integer;
 begin
-  result:=false;
-  for b := 1 to 8 do
-   if FlagNames[b] = AFlagName then Break;
-  b := (8 - b);
-  if getregister('f', s) then
+  Result := False;
+  bit := -1;
+  // search flag
+  for i := 1 to 8 do
   begin
-    rf := TryStrToInt(s, 0);
-    rf := rf shl b
-    if rf = 1 then ATarget := true else ATarget := false;
-    result := true;
+    if FlagNames[i] = UpCase(ARegName) then
+    begin
+      bit := 8 - i;
+      Break;
+    end;
+  end;
+  // no such flag
+  if bit < 0 then Exit;
+  // return with flag status
+  if GetRegister('F', s) then
+  begin
+    FlagsVal := StrToIntDef(s, 0); 
+    Result := (FlagsVal and (1 shl bit)) <> 0; 
   end;
 end;
 
-
-
-// GET FLAG STATUS
-function TScriptRuntime.GetFlag(const AFlagName: Char): Boolean;
+// GET REGISTER CONTENT
+function TScriptRuntime.GetRegister(ARegName: Char; var ATarget: string): Boolean;
 var
-  b: Byte;
-  rf: string;
-begin
-  for b := 1 to 8 do
-   if FlagNames[b] = AFlagName then Break;
-  b := (8 - b);
-  rf := TryStrToInt(GetRegister('F'), 0);
-  rf := rf and 2**b
-  if rf = 1 then result := true else result := false;
-end;
-
-function GetRegister(ARegName: Char; var ATarget: string): Boolean;
-var
-  b: Byte;
+  c: Char;
 begin
   Result := False;
-  b := Ord(UpCase(ARegName));
-  if (b < 48) or (b > 70) then Exit;
-  if (b > 58) or (b < 65) then Exit;
-  if b >= 65 then b := b - 55 else b := b - 48;
-  ATarget := FReg[b];
+  c := UpCase(ARegName);
+  if not (c in ['0'..'9', 'A'..'F']) then Exit;
+  if c = 'E' then FRegsSys['E'] := IntToStr(Random(256));
+  if c < 'A' then ATarget := FRegsGen[c] else ATarget := FRegsSys[c];
   Result := True;
 end;
 
-function SetRegister(ARegName: Char; AValue: string): Boolean;
+function TScriptRuntime.GetRegister(ARegName: Char; var ATarget: Integer): Boolean;
 var
-  b: Byte;
+  c: Char;
 begin
   Result := False;
-  b := Ord(UpCase(ARegName));
-  if (b < 48) or (b > 70) then Exit;
-  if (b > 58) or (b < 65) then Exit;
-  if b >= 65 then b := b - 55 else b := b - 48;
-  if FRegWritable[b] then
-  begin
-   FReg[b] := ATarget;
-   Result := True;
+  c := UpCase(ARegName);
+  if not (c in ['0'..'9', 'A'..'F']) then Exit;
+  if c = 'E' then FRegsSys['E'] := IntToStr(Random(256));
+  try
+    if c < 'A'
+      then ATarget := StrToInt(FRegsGen[c])
+      else ATarget := StrToInt(FRegsSys[c]);
+  except
+    ATarget := 0;
+    Exit;
   end;
+  Result := True;
 end;
 
+// RESET ALL FLAGS
+procedure TScriptRuntime.ClearFlags;
+begin
+  FRegsSys['F'] := '0';
+end;
 
+// RESET ALL REGISTER
+procedure TScriptRuntime.ResetAll;
+var
+  c: Char;
+begin
+  // R0-9
+  for c:='0' to '9' do FRegsGen[c] := '';
+  // RA-F
+  for c:='A' to 'B' do FRegsSys[c] := '';
+  for c:='C' to 'F' do FRegsSys[c] := '0';
+end;
 
+// SET FLAG
+procedure TScriptRuntime.SetFlag(const ARegName: Char; AState: Boolean);
+var
+  i, bit:   Integer;
+  s:        string;
+  FlagsVal: Integer;
+begin
+  bit := -1;
+  // search flag
+  for i := 1 to 8 do
+  begin
+    if FlagNames[i] = UpCase(ARegName) then
+    begin
+      bit := 8 - i;
+      Break;
+    end;
+  end;
+  // no such flag
+  if bit < 0 then Exit;
+  // set flag status
+  if not GetRegister('F', s) then s := '0';
+  FlagsVal := StrToIntDef(s, 0);
+  if AState
+    then FlagsVal := FlagsVal or (1 shl bit)
+    else FlagsVal := FlagsVal and not (1 shl bit);
+  SetRegister('F', IntToStr(FlagsVal), True);
+end;
 
+// SET REGISTER CONTENT
+function TScriptRuntime.SetRegister(ARegName: Char; AValue: string; AForce: Boolean): Boolean;
+var
+  c: Char;
+begin
+  Result := False;
+  c := UpCase(ARegName);
+  if not (c in ['0'..'9', 'A'..'F']) then Exit;
+  if c = 'E' then Exit else
+  begin
+    if c < 'A' then
+    begin
+      if AForce or FRegsGenWriteable[c] then FRegsGen[c] := AValue;
+    end else
+    begin
+      if AForce or FRegsSysWriteable[c] then FRegsSys[c] := AValue;
+    end;
+  end;
+  Result := True;
+end;
 
-procedure ClearFlags;
-procedure IncrementPC;
-procedure Reset;
-procedure SetFlag(const ARegName: Char; AState: Boolean);
-procedure SetPC(AValue: integer);
-procedure SetRegister(const ARegName: Char; AValue: string);
+function TScriptRuntime.SetRegister(ARegName: Char; AValue: Integer; AForce: Boolean): Boolean;
+var
+  c: Char;
+begin
+  Result := False;
+  c := UpCase(ARegName);
+  if not (c in ['0'..'9', 'A'..'F']) then Exit;
+  if c = 'E' then Exit else
+  begin
+    if c < 'A' then
+    begin
+      if AForce or FRegsGenWriteable[c] then FRegsGen[c] := IntToStr(AValue);
+    end else
+    begin
+      if AForce or FRegsSysWriteable[c] then FRegsSys[c] := IntToStr(AValue);
+    end;
+  end;
+  Result := True;
+end;
 
-
-
-
+initialization
+  Randomize;
 
 end.
