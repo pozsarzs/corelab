@@ -36,7 +36,14 @@ begin
   // commands
   with FRegistry do
   begin
-//    {$I cmd-script.pas}
+
+    { $I cmd-aritmetic.pas}
+    { $I cmd-logic.pas}
+    { $I cmd-access.pas}
+    { $I cmd-control.pas}
+    { $I cmd-other.pas}
+//      if HasError then Exit;                              // command run error
+
   end;
 end;
 

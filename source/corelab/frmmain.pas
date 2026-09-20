@@ -1194,6 +1194,7 @@ begin
     Message := MSG01 + Format(MSG55, [Filename]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   FActualProject := Filename;                                 // with filename
@@ -1287,6 +1288,7 @@ begin
     Message := MSG01 + Format(MSG56, [Filename]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end else SysConsole1.WriteMessage(MSG81);
   FActualProject := Filename;                                           // named
@@ -1584,6 +1586,7 @@ begin
     Message := MSG01 + Format(MSG91, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // show HexViewer
@@ -1647,6 +1650,7 @@ begin
     Message := MSG01 + Format(MSG91, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // show HexViewer
@@ -1805,6 +1809,7 @@ begin
     Message := MSG01 + Format(MSG92, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
 end;
@@ -1867,6 +1872,7 @@ begin
     Message := MSG01 + Format(MSG93, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
 end;
@@ -1941,6 +1947,7 @@ begin
       Message := MSG01 + Format(MSG90, ['processor', InstanceName]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
       Exit;
     end;
     // store
@@ -1954,6 +1961,7 @@ begin
     Message := MSG01 + Format(MSG85, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
   end;
 end;
 
@@ -2027,6 +2035,7 @@ begin
     Message := MSG01 + Format(MSG94, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // remove from dict
@@ -2108,6 +2117,7 @@ begin
     Message := MSG01 + Format(MSG95, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // RegViewer refresh
@@ -2187,6 +2197,7 @@ begin
     Message := MSG01 + Format(MSG96, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2263,6 +2274,7 @@ begin
     Message := MSG01 + Format(MSG97, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2338,18 +2350,21 @@ begin
            Message := MSG01 + Format(MSG98, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
       2: begin
            Message := MSG01 + Format(MSG105, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
       3: begin
            Message := MSG01 + Format(MSG107, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
     else
@@ -2363,6 +2378,7 @@ begin
     Message := MSG01 + Format(MSG98, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2437,12 +2453,14 @@ begin
            Message := MSG01 + Format(MSG99, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
       2: begin
            Message := MSG01 + Format(MSG106, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
     else
@@ -2455,6 +2473,7 @@ begin
     Message := MSG01 + Format(MSG99, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2602,6 +2621,7 @@ begin
       Message := MSG01 + Format(MSG90, ['memory', InstanceName]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
       Exit;
     end;
     // store
@@ -2615,6 +2635,7 @@ begin
     Message := MSG01 + Format(MSG85, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
   end;
 end;
 
@@ -2688,6 +2709,7 @@ begin
     Message := MSG01 + Format(MSG94, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // remove from dict
@@ -2769,6 +2791,7 @@ begin
     Message := MSG01 + Format(MSG95, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2845,6 +2868,7 @@ begin
     Message := MSG01 + Format(MSG96, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2921,6 +2945,7 @@ begin
     Message := MSG01 + Format(MSG97, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -2998,12 +3023,14 @@ begin
            Message := MSG01 + Format(MSG98, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
       2: begin
            Message := MSG01 + Format(MSG105, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
     else
@@ -3015,6 +3042,7 @@ begin
     Message := MSG01 + Format(MSG98, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -3089,12 +3117,14 @@ begin
            Message := MSG01 + Format(MSG99, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
       2: begin
            Message := MSG01 + Format(MSG106, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
     else
@@ -3106,6 +3136,7 @@ begin
     Message := MSG01 + Format(MSG99, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -3180,6 +3211,7 @@ begin
       Message := MSG01 + Format(MSG101, [InstanceName]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
       Exit;
     end;
     // show properties
@@ -3293,6 +3325,7 @@ begin
       Message := MSG01 + Format(MSG93, [InstanceName]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
       Exit;
     end;
   end;
@@ -3327,6 +3360,7 @@ begin
         Message := MSG01 + Format(MSG31, [Filename]);
         ShowMessage(Message);
         SysConsole1.WriteMessage(Message);
+        AActionContext.HasError := True;
         Exit;
       end;
     end else
@@ -3338,24 +3372,28 @@ begin
              Message := MSG01 + Format(MSG35, [Filename]);
              ShowMessage(Message);
              SysConsole1.WriteMessage(Message);
+             AActionContext.HasError := True;
              Exit;
            end;
         2: begin
              Message := MSG01 + MSG37;
              ShowMessage(Message);
              SysConsole1.WriteMessage(Message);
+             AActionContext.HasError := True;
              Exit;
            end;
         3: begin
              Message := MSG01 + MSG38;
              ShowMessage(Message);
              SysConsole1.WriteMessage(Message);
+             AActionContext.HasError := True;
              Exit;
            end;
       255: begin
              Message := MSG01 + MSG39;
              ShowMessage(Message);
              SysConsole1.WriteMessage(Message);
+             AActionContext.HasError := True;
              Exit;
            end;
       end;
@@ -3470,6 +3508,7 @@ begin
       Message := MSG01 + Format(MSG93, [InstanceName]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
       Exit;
     end;
   end;
@@ -3513,6 +3552,7 @@ begin
             Message := MSG01 + Format(MSG29, [Filename]);
             ShowMessage(Message);
             SysConsole1.WriteMessage(Message);
+            AActionContext.HasError := True;
             Exit;
           end;
         end;
@@ -3526,12 +3566,14 @@ begin
                Message := MSG01 + Format(MSG36, [Filename]);
                ShowMessage(Message);
                SysConsole1.WriteMessage(Message);
+               AActionContext.HasError := True;
                Exit;
              end;
         255: begin
                Message := MSG01 + MSG39;
                ShowMessage(Message);
                SysConsole1.WriteMessage(Message);
+               AActionContext.HasError := True;
                Exit;
              end;
         end;
@@ -3616,6 +3658,7 @@ begin
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
     MemInfo.Memory.Enabled := CurrentStatus;
+    AActionContext.HasError := True;
     Exit;
   end;
 end;
@@ -3695,6 +3738,7 @@ begin
       Message := MSG01 + Format(MSG90, ['i/o port', InstanceName]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
       Exit;
     end;
     // store
@@ -3708,6 +3752,7 @@ begin
     Message := MSG01 + Format(MSG85, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
   end;
 end;
 
@@ -3781,6 +3826,7 @@ begin
     Message := MSG01 + Format(MSG94, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // remove from dict
@@ -3862,6 +3908,7 @@ begin
     Message := MSG01 + Format(MSG95, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -3938,6 +3985,7 @@ begin
     Message := MSG01 + Format(MSG96, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -4014,6 +4062,7 @@ begin
     Message := MSG01 + Format(MSG97, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -4091,12 +4140,14 @@ begin
            Message := MSG01 + Format(MSG98, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
       end;
       2: begin
            Message := MSG01 + Format(MSG105, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
     else
@@ -4109,6 +4160,7 @@ begin
     Message := MSG01 + Format(MSG98, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -4183,12 +4235,14 @@ begin
            Message := MSG01 + Format(MSG99, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
       2: begin
            Message := MSG01 + Format(MSG106, [InstanceName]);
            ShowMessage(Message);
            SysConsole1.WriteMessage(Message);
+           AActionContext.HasError := True;
            Exit;
          end;
     else
@@ -4201,6 +4255,7 @@ begin
     Message := MSG01 + Format(MSG99, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -4625,6 +4680,7 @@ begin
     Message := MSG01 + Format(MSG48, [FileName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     exit;
   end;
   FActualScript := Filename;                                // with filename
@@ -4728,6 +4784,7 @@ begin
     Message := MSG01 + Format(MSG49, [FileName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   FActualScript := Filename;                                        // named
@@ -4771,7 +4828,7 @@ var
   i: integer;
 begin
   if FScriptIsRunning then Exit;
-  Form6.CopyEditorToBuffer;         // store ScriptEditor content
+  Form6.CopyEditorToBuffer;                        // store ScriptEditor content
   if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
   begin
     Form12.ClearContent;                                  // clear ScriptConsole
@@ -4905,6 +4962,7 @@ begin
     Message := MSG01 + Format(MSG101, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // set property
@@ -4943,6 +5001,7 @@ begin
         Message := MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]);
         ShowMessage(Message);
         SysConsole1.WriteMessage(Message);
+        AActionContext.HasError := True;
         Exit;
       end;
     end;
@@ -4951,6 +5010,7 @@ begin
     Message := MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -4977,6 +5037,7 @@ begin
     Message := MSG01 + Format(MSG101, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // set property
@@ -5000,6 +5061,7 @@ begin
         Message := MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]);
         ShowMessage(Message);
         SysConsole1.WriteMessage(Message);
+        AActionContext.HasError := True;
         Exit;
       end;
     end;
@@ -5008,6 +5070,7 @@ begin
     Message := MSG01 + Format(MSG103, [Value]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report
@@ -5034,6 +5097,7 @@ begin
     Message := MSG01 + Format(MSG101, [InstanceName]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // set property
@@ -5047,6 +5111,7 @@ begin
         Message := MSG01 + Format(MSG102, [InstanceName + '.' + PropertyName]);
         ShowMessage(Message);
         SysConsole1.WriteMessage(Message);
+        AActionContext.HasError := True;
         Exit;
       end;
     end;
@@ -5055,6 +5120,7 @@ begin
     Message := MSG01 + Format(MSG103, [InstanceName + '.' + PropertyName, Value]);
     ShowMessage(Message);
     SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
     Exit;
   end;
   // report

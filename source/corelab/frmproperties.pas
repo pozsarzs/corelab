@@ -51,7 +51,7 @@ implementation
 
 resourcestring
   MSG01 = 'ERROR: ';
-  MSG02 = 'Cannot open memory modulka.';
+  MSG02 = 'Cannot open memory module.';
   MSG03 = 'Property';
   MSG04 = 'Value';
   MSG05 = 'The memory size can be 16 B-16 MB';

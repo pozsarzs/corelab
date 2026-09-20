@@ -22,14 +22,15 @@ type
   TActionContext = class
   public
     ActionSource:  TActionSource;                            // source of action
-    SArg1:  string;                 // arguments from to ...Operation procedures
-    SArg2:  string;
-    IArg1:  Integer;
-    IArg2:  Integer;
-    BArg1:  Boolean;
-    BArg2:  Boolean;
-    DArg1:  DWord;
-    DArg2:  DWord;
+    SArg1:    string;               // arguments from to ...Operation procedures
+    SArg2:    string;
+    IArg1:    Integer;
+    IArg2:    Integer;
+    BArg1:    Boolean;
+    BArg2:    Boolean;
+    DArg1:    DWord;
+    DArg2:    DWord;
+    HasError: Boolean;                                      // command run error
     constructor Create;
   end;
 
@@ -50,6 +51,7 @@ begin
   BArg2 := false;
   DArg1 := 0;
   DArg2 := 0;
+  HasError := False;
 end;
 
 end.

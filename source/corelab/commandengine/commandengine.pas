@@ -180,9 +180,9 @@ begin
         if not TryStrToBool(SArg2, BArg2) then BArg2 := False;
         if not TryStrToInt(SArg1, IArg1) then IArg1 := -1;
         if not TryStrToInt(SArg2, IArg2) then IArg2 := -1;
+        Command.Operation(ActionContext);
+        Result := 0;
       end;
-      Command.Operation(ActionContext);
-      Result := 0;
     finally
       ActionContext.Free;
     end;
