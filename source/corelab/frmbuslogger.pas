@@ -41,8 +41,11 @@ type
   private
     // colors
     FOperationColor:    TColor;                              // Operation column
+    FDeviceColor:       TColor;                                 // Device column
     FAddressColor:      TColor;                                // Address column
-    FDataColor:         TColor;                                 // Opcode column
+    FRelAddressColor:   TColor;                       // Relative address column
+    FDataColor:         TColor;                                   // Data column
+    FStatusColor:       TColor;                                 // Status column
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
@@ -69,8 +72,11 @@ resourcestring
   MSG03 = 'Cannot save ''%s'' log file.';
   MSG04 = 'Log file|*.log|All file|*.*';
   MSG05 = 'Operation';
-  MSG06 = 'Address';
-  MSG07 = 'Data';
+  MSG06 = 'Device';
+  MSG07 = 'Address';
+  MSG08 = 'Rel. address';
+  MSG09 = 'Data';
+  MSG10 = 'Status';
 
 {$R *.lfm}
 
@@ -86,10 +92,12 @@ begin
   for i := 0 to MAX_LOG - 1 do
     with FRingBuffer[i] do
     begin
-//      InstCount := -1;
       Operation := '';
+      Device := '';
       Address := '';
+      RelAddress := '';
       Data := '';
+      Status := '';
     end;
   FRecordCount := 0;
   FWriteMarker := 0;
@@ -103,10 +111,12 @@ begin
   if (ALine < 0) or (ALine >= FRecordCount) then
   with Result do
   begin
-//    InstCount := -1;
-      Operation := '';
-      Address := '';
-      Data := '';
+    Operation := '';
+    Device := '';
+    Address := '';
+    RelAddress := '';
+    Data := '';
+    Status := '';
   end else
   begin
     if FRecordCount < MAX_LOG
@@ -146,8 +156,11 @@ begin
   with uconfig.AppConfig.BusLoggerConfig do
   begin
     Form14.FOperationColor := operation_color;
+    Form14.FDeviceColor := device_color;
     Form14.FAddressColor := address_color;
+    Form14.FRelAddressColor := reladdress_color;
     Form14.FDataColor := data_color;
+    Form14.FStatusColor := status_color;
     Form14.FLineSelectorColor := lineselector_color;
     Form14.FBGColorOddLines := bgodd_color;
     Form14.FBGColorEvenLines := bgeven_color;
@@ -173,6 +186,9 @@ begin
       column0_width := Items[0].Width;
       column1_width := Items[1].Width;
       column2_width := Items[2].Width;
+      column3_width := Items[3].Width;
+      column4_width := Items[4].Width;
+      column5_width := Items[5].Width;
     end;
   end;
   Form14.Hide;
@@ -209,8 +225,11 @@ begin
         with ReadBuffer(i) do
           StringList1.Add(
             Operation + #9 +
+            Device + #9 +
             Address + #9 +
-            Data);
+            RelAddress + #9 +
+            Data + #9 +
+            Status);
         StringList1.SaveToFile(Filename);
       except
         ShowMessage(MSG01 + Format(MSG03, [FileName]));
@@ -239,8 +258,11 @@ begin
     // text color
     case ACol of
       0: Font.Color := FOperationColor;
-      1: Font.Color := FAddressColor;
-      2: Font.Color := FDataColor;
+      1: Font.Color := FDeviceColor;
+      2: Font.Color := FAddressColor;
+      3: Font.Color := FRelAddressColor;
+      4: Font.Color := FDataColor;
+      5: Font.Color := FStatusColor;
     end;
     // text alignment
     Style := TextStyle;
@@ -249,13 +271,19 @@ begin
       0: Style.Alignment := taLeftJustify;
       1: Style.Alignment := taCenter;
       2: Style.Alignment := taCenter;
+      3: Style.Alignment := taCenter;
+      4: Style.Alignment := taCenter;
+      5: Style.Alignment := taCenter;
     end;
     TextStyle := Style;
     // write content
     case ACol of
-      0: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.Operation);
-      1: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.Address);
-      2: TextRect(aRect, aRect.Left + 4, aRect.Top, BusLogRec.Data);
+      0: TextRect(aRect, aRect.Left + 4, aRect.Top, BusLogRec.Operation);
+      1: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.Device);
+      2: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.Address);
+      3: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.RelAddress);
+      4: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.Data);
+      5: TextRect(aRect, aRect.Left, aRect.Top, BusLogRec.Status);
     end;
   end;
 end;
@@ -271,9 +299,12 @@ begin
   begin
     with ReadBuffer(i) do
       s := LowerCase(
-             Operation + #9 +
-             Address + #9 +
-             Data);
+            Operation + #9 +
+            Device + #9 +
+            Address + #9 +
+            RelAddress + #9 +
+            Data + #9 +
+            Status);
     if Pos(LowerCase(EditButton1.Text), s) > 0 then
     begin
       DrawGrid1.Row := i + 1;
@@ -300,6 +331,9 @@ begin
       Items[0].Title.Caption := MSG05;
       Items[1].Title.Caption := MSG06;
       Items[2].Title.Caption := MSG07;
+      Items[3].Title.Caption := MSG08;
+      Items[4].Title.Caption := MSG09;
+      Items[5].Title.Caption := MSG10;
     end;
     Color := FBGColorOddLines;
     RowCount := 1;
@@ -322,6 +356,9 @@ begin
       Items[0].Width := column0_width;
       Items[1].Width := column1_width;
       Items[2].Width := column2_width;
+      Items[3].Width := column3_width;
+      Items[4].Width := column4_width;
+      Items[5].Width := column5_width;
     end;
   end;
   RefreshColors;
@@ -343,6 +380,9 @@ begin
       column0_width := Items[0].Width;
       column1_width := Items[1].Width;
       column2_width := Items[2].Width;
+      column3_width := Items[3].Width;
+      column4_width := Items[4].Width;
+      column5_width := Items[5].Width;
     end;
   end;
 end;

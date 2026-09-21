@@ -632,6 +632,9 @@ resourcestring
   MSG107 = 'Only one CPU connection is allowed.';                         { SM }
   MSG108 = 'Select new work directory';                                   { SC }
   MSG109 = 'Work directory is set to ''%s''.';                            { SC }
+  MSG110 = 'none';
+  MSG111 = 'Success';
+  MSG112 = 'Unsuccess';
 
 {$R *.lfm}
 
@@ -774,9 +777,22 @@ end;
 // READ MEMORY
 function TSysBus.ReadMemory(AAddress: DWord): Byte;
 var
-  i: Integer;
+  BusLogRec: TBusLogRec;
+  i:         Integer;
+  s:         string;
 begin
+  s := '';
+  // default output values
   Result := 0;
+  with BusLogRec do
+  begin
+    Operation := 'MEMRD';
+    Device := MSG110;                                                 { 'none' }
+    Address := IntToStr(AAddress);
+    RelAddress := MSG110;
+    Data := MSG110;
+    Status := MSG112;                                            { 'Unsuccess' }
+  end;
   // check address-conflict
   for i := 0 to High(FMemories) do
     with FMemories[i].Memory do
@@ -784,9 +800,22 @@ begin
        (AAddress >= BaseAddress) and
        (AAddress < BaseAddress + AddressRangeSize) then
       begin
+        // operation
         Result := ReadMemory(AAddress - BaseAddress);
-        Exit;
+        with BusLogRec do
+        begin
+          Device := FMemories[i].ModuleName;
+          FormatHexValue(IntToHex(AAddress, 6), 6, s);
+          Address := s;
+          FormatHexValue(IntToHex(AAddress - FMemories[i].Memory.BaseAddress, 6), 6, s);
+          RelAddress := s;
+          FormatHexValue(IntToHex(Data, 2), 2, s);
+          Data := s;
+          Status := MSG111;                                        { 'Success' }
+        end;
+        Break;
       end;
+  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
 end;
 
 // WRITE MEMORY
@@ -962,6 +991,7 @@ begin
   if Assigned(Form6) then Form6.CopyBufferToEditor;              // ScriptEditor
   if Assigned(Form8) then Form8.ClearContent;                       // IntLogger
   if Assigned(Form12) then Form12.ClearContent;                 // ScriptConsole
+  if Assigned(Form14) then Form14.ClearContent;                     // BusLogger
   // close internal modules
   for i := Screen.FormCount - 1 downto 0 do
     if (Screen.Forms[i] <> Application.MainForm) and
@@ -1368,10 +1398,11 @@ begin
     with uconfig.AppConfig do
     begin
       Form3.RefreshColors;                                          // HexViewer
-      Form8.RefreshColors;                                          // IntLogger
       Form4.RefreshColors;                                          // RunLogger
-      Form12.RefreshColors;                                     // ScriptConsole
       Form6.RefreshColors;                                       // ScriptEditor
+      Form8.RefreshColors;                                          // IntLogger
+      Form12.RefreshColors;                                     // ScriptConsole
+      Form14.RefreshColors;                                         // BusLogger
       with SysConsoleConfig do                                     // SysConsole
       begin
         SysConsole1.Font.Color := font_color;
@@ -5480,6 +5511,9 @@ begin
         column0_width := Items[0].Width;
         column1_width := Items[1].Width;
         column2_width := Items[2].Width;
+        column3_width := Items[3].Width;
+        column4_width := Items[4].Width;
+        column5_width := Items[5].Width;
       end;
     end;
     // RunLogger

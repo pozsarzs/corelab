@@ -5,6 +5,9 @@
 {"hash":44709525,"name":"tform14.button1.caption","sourcebytes":[38,67,108,111,115,101],"value":"&Close"},
 {"hash":4640403,"name":"tform14.editbutton1.hint","sourcebytes":[83,101,97,114,99,104,32,105,110,32,108,111,103,32,114,101,99,111,114,100,115],"value":"Search in log records"},
 {"hash":210303550,"name":"tform14.drawgrid1.columns[0].title.caption","sourcebytes":[79,112,101,114,97,116,105,111,110],"value":"Operation"},
-{"hash":128683235,"name":"tform14.drawgrid1.columns[1].title.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
-{"hash":305313,"name":"tform14.drawgrid1.columns[2].title.caption","sourcebytes":[68,97,116,97],"value":"Data"}
+{"hash":78434197,"name":"tform14.drawgrid1.columns[1].title.caption","sourcebytes":[68,101,118,105,99,101],"value":"Device"},
+{"hash":128683235,"name":"tform14.drawgrid1.columns[2].title.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
+{"hash":35683523,"name":"tform14.drawgrid1.columns[3].title.caption","sourcebytes":[82,101,108,46,32,97,100,100,114,101,115,115],"value":"Rel. address"},
+{"hash":305313,"name":"tform14.drawgrid1.columns[4].title.caption","sourcebytes":[68,97,116,97],"value":"Data"},
+{"hash":95062979,"name":"tform14.drawgrid1.columns[5].title.caption","sourcebytes":[83,116,97,116,117,115],"value":"Status"}
 ]}

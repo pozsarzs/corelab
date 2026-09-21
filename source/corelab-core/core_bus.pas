@@ -19,9 +19,12 @@ uses
 type
   // Last bus operation record for BusLogger
   TBusLogRec = record
-    Operation: string[31];
-    Address:   string[31];
-    Data:      string[31];
+    Operation:  string[31];
+    Device:     string[31];
+    Address:    string[31];
+    RelAddress: string[31];
+    Data:       string[31];
+    Status:     string[31];
   end;
   { ISysBus }
   ISysBus = interface

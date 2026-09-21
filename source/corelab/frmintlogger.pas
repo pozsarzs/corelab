@@ -87,7 +87,6 @@ begin
   for i := 0 to MAX_LOG - 1 do
     with FRingBuffer[i] do
     begin
-//      InstCount := -1;
       Sender := '';
       Vector := '';
       Status := '';
@@ -105,7 +104,6 @@ begin
   if (ALine < 0) or (ALine >= FRecordCount) then
   with Result do
   begin
-//    InstCount := -1;
     Sender := '';
     Vector := '';
     Status := '';

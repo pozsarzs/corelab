@@ -30,7 +30,9 @@ type
   TBusLoggerConfig = record
     left, top, height, width:                      Integer;
     column0_width, column1_width, column2_width:   Integer;
-    operation_color, address_color, data_color:    TColor;
+    column3_width, column4_width, column5_width:   Integer;
+    operation_color, device_color, address_color:  TColor;
+    reladdress_color, data_color, status_color:    TColor;
     lineselector_color, bgodd_color, bgeven_color: TColor;
   end;
   TIntLoggerConfig = record
@@ -140,10 +142,19 @@ begin
     LoadSave(section, 'height', AAppConfig.BusLoggerConfig.height, 280);
     LoadSave(section, 'left', AAppConfig.BusLoggerConfig.left, 8);
     LoadSave(section, 'top', AAppConfig.BusLoggerConfig.top, 8);
-    LoadSave(section, 'width', AAppConfig.BusLoggerConfig.width, 280);
-    LoadSave(section, 'operation_color', AAppConfig.BusLoggerConfig.address_color, BUSLOGGER_OPERATION_DEFAULT);
+    LoadSave(section, 'width', AAppConfig.BusLoggerConfig.width, 518);
+    LoadSave(section, 'column0_width', AAppConfig.BusLoggerConfig.column0_width, 80);
+    LoadSave(section, 'column1_width', AAppConfig.BusLoggerConfig.column1_width, 80);
+    LoadSave(section, 'column2_width', AAppConfig.BusLoggerConfig.column2_width, 80);
+    LoadSave(section, 'column3_width', AAppConfig.BusLoggerConfig.column3_width, 100);
+    LoadSave(section, 'column4_width', AAppConfig.BusLoggerConfig.column4_width, 80);
+    LoadSave(section, 'column5_width', AAppConfig.BusLoggerConfig.column5_width, 80);
+    LoadSave(section, 'operation_color', AAppConfig.BusLoggerConfig.operation_color, BUSLOGGER_OPERATION_DEFAULT);
+    LoadSave(section, 'device_color', AAppConfig.BusLoggerConfig.device_color, BUSLOGGER_DEVICE_DEFAULT);
     LoadSave(section, 'address_color', AAppConfig.BusLoggerConfig.address_color, BUSLOGGER_ADDRESS_DEFAULT);
+    LoadSave(section, 'reladdress_color', AAppConfig.BusLoggerConfig.reladdress_color, BUSLOGGER_RELADDRESS_DEFAULT);
     LoadSave(section, 'data_color', AAppConfig.BusLoggerConfig.data_color, BUSLOGGER_DATA_DEFAULT);
+    LoadSave(section, 'status_color', AAppConfig.BusLoggerConfig.status_color, BUSLOGGER_STATUS_DEFAULT);
     LoadSave(section, 'lineselector_color', AAppConfig.BusLoggerConfig.lineselector_color, BUSLOGGER_LINESELECTOR_DEFAULT);
     LoadSave(section, 'bgodd_color', AAppConfig.BusLoggerConfig.bgodd_color, BUSLOGGER_BGCOLOR_ODD_DEFAULT);
     LoadSave(section, 'bgeven_color', AAppConfig.BusLoggerConfig.bgeven_color, BUSLOGGER_BGCOLOR_EVEN_DEFAULT);
