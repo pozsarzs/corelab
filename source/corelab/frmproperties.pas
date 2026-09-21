@@ -196,7 +196,7 @@ procedure TForm15.FormShow(Sender: TObject);
     lm: TLineMode;
   begin
     try
-      // load properies
+      // load properties
       with ValueListEditor1 do
       begin
         Clear;
@@ -293,7 +293,7 @@ procedure TForm15.FormShow(Sender: TObject);
     mm: TMemoryMode;
   begin
     try
-      // load properies
+      // load properties
       with ValueListEditor1 do
       begin
         Clear;
@@ -334,7 +334,7 @@ procedure TForm15.FormShow(Sender: TObject);
   procedure LoadPProperties(AProcInstance: TCPU);
   begin
     try
-      // load properies
+      // load properties
       with ValueListEditor1 do
       begin
         Clear;

@@ -22,6 +22,8 @@ type
   TForm18 = class(TForm)
     Bevel1:       TBevel;
     Bevel10:      TBevel;
+    Bevel11: TBevel;
+    Bevel12: TBevel;
     Bevel2:       TBevel;
     Bevel3:       TBevel;
     Bevel4:       TBevel;
@@ -53,7 +55,16 @@ type
     ColorBox24:   TColorBox;
     ColorBox25:   TColorBox;
     ColorBox26:   TColorBox;
+    ColorBox27: TColorBox;
+    ColorBox28: TColorBox;
+    ColorBox29: TColorBox;
     ColorBox3:    TColorBox;
+    ColorBox30: TColorBox;
+    ColorBox31: TColorBox;
+    ColorBox32: TColorBox;
+    ColorBox33: TColorBox;
+    ColorBox34: TColorBox;
+    ColorBox35: TColorBox;
     ColorBox4:    TColorBox;
     ColorBox5:    TColorBox;
     ColorBox6:    TColorBox;
@@ -79,7 +90,16 @@ type
     Label24:      TLabel;
     Label25:      TLabel;
     Label26:      TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    Label29: TLabel;
     Label3:       TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    Label32: TLabel;
+    Label33: TLabel;
+    Label34: TLabel;
+    Label35: TLabel;
     Label4:       TLabel;
     Label5:       TLabel;
     Label6:       TLabel;
@@ -93,6 +113,7 @@ type
     TabSheet4:    TTabSheet;
     TabSheet5:    TTabSheet;
     TabSheet6:    TTabSheet;
+    TabSheet7: TTabSheet;
     procedure Button5Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -116,7 +137,19 @@ begin
   // retrieve settings
   with uconfig.AppConfig do
   begin
-    // Breakpoint Manager
+    // BusLogger
+    with BusLoggerConfig do
+    begin
+      operation_color := ColorBox33.Selected;
+      device_color := ColorBox27.Selected;
+      address_color := ColorBox28.Selected;
+      reladdress_color := ColorBox29.Selected;
+      data_color := ColorBox35.Selected;
+      status_color := ColorBox30.Selected;
+      lineselector_color := ColorBox31.Selected;
+      bgodd_color := ColorBox32.Selected;
+      bgeven_color := ColorBox34.Selected;
+    end;
     // HexViewer
     with HexViewerConfig do
     begin
@@ -137,9 +170,6 @@ begin
       bgodd_color := ColorBox23.Selected;
       bgeven_color := ColorBox24.Selected;
     end;
-    // Module Manager
-    // Plugin properties
-    // RegViewer
     // RunLogger
     with RunLoggerConfig do
     begin
@@ -190,7 +220,19 @@ begin
   // store settings
   with uconfig.AppConfig do
   begin
-    // Breakpoint Manager
+    // BusLogger
+    with BusLoggerConfig do
+    begin
+      ColorBox33.Selected := operation_color;
+      ColorBox27.Selected := device_color;
+      ColorBox28.Selected := address_color;
+      ColorBox29.Selected := reladdress_color;
+      ColorBox35.Selected := data_color;
+      ColorBox30.Selected := status_color;
+      ColorBox31.Selected := lineselector_color;
+      ColorBox32.Selected := bgodd_color;
+      ColorBox34.Selected := bgeven_color;
+    end;
     // HexViewer
     with HexViewerConfig do
     begin
@@ -211,9 +253,6 @@ begin
       ColorBox23.Selected := bgodd_color;
       ColorBox24.Selected := bgeven_color;
     end;
-    // Module Manager
-    // Plugin properties
-    // RegViewer
     // RunLogger
     with RunLoggerConfig do
     begin
@@ -253,7 +292,6 @@ end;
 procedure TForm18.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   // store settings
-  // Settings
   with uconfig.AppConfig.SettingsConfig do
   begin
     top := Form18.Top;

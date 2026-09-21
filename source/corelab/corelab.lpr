@@ -67,7 +67,7 @@ resourcestring
 // SHOW USAGE
 procedure Help(Mode: Boolean);
 var
-  b:       Byte;
+  b:         Byte;
   {$IFNDEF UNIX}
     Caption: string;
   {$ENDIF}

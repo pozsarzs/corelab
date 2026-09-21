@@ -134,10 +134,6 @@ msgstr ""
 msgid "Relative address"
 msgstr ""
 
-#: tform5:label2.caption
-msgid "Data"
-msgstr ""
-
 #: tform5:editbutton2.text
 msgid "00"
 msgstr ""
@@ -168,10 +164,6 @@ msgstr ""
 
 #: tform1:caption
 msgid "Form1"
-msgstr ""
-
-#: tform1:tabsheet1.caption
-msgid "Operation"
 msgstr ""
 
 #: tform1:toolbar2.caption
@@ -274,6 +266,10 @@ msgstr ""
 msgid "ToolButton44"
 msgstr ""
 
+#: tform1:toolbutton30.caption
+msgid "ToolButton30"
+msgstr ""
+
 #: tform1:toolbar7.caption
 msgid "ToolBar7"
 msgstr ""
@@ -362,6 +358,14 @@ msgstr ""
 msgid "Save project as"
 msgstr ""
 
+#: tform1:fchangeworkdirectory.caption
+msgid "&Change work directory"
+msgstr ""
+
+#: tform1:fchangeworkdirectory.hint
+msgid "Change work directory"
+msgstr ""
+
 #: tform1:fsettings.caption
 msgid "Set&tings..."
 msgstr ""
@@ -396,6 +400,14 @@ msgstr ""
 
 #: tform1:vshowbreakpointmanager.hint
 msgid "Show Breakpoint Manager"
+msgstr ""
+
+#: tform1:vshowbuslogger.caption
+msgid "Show &BusLogger"
+msgstr ""
+
+#: tform1:vshowbuslogger.hint
+msgid " &BusLogger"
 msgstr ""
 
 #: tform1:vshowrunlogger.caption
@@ -643,11 +655,11 @@ msgid "IRQ"
 msgstr ""
 
 #: tform1:oresetall.caption
-msgid "R&eset all"
+msgid "R&eset all attached module"
 msgstr ""
 
 #: tform1:oresetall.hint
-msgid "Reset all"
+msgid "Reset all attached module"
 msgstr ""
 
 #: tform1:omakesnapshot.caption
@@ -782,24 +794,55 @@ msgstr ""
 msgid "INS"
 msgstr ""
 
-#: tform18:label10.caption tform18:label2.caption
+#: tform18:label27.caption
+msgid "Operation:"
+msgstr ""
+
+#: tform18:label28.caption
+msgid "Device:"
+msgstr ""
+
+#: tform18:label29.caption tform18:label10.caption tform18:label2.caption
 msgid "Address:"
 msgstr ""
 
-#: tform18:label11.caption
-msgid "Data:"
+#: tform18:label30.caption
+msgid "Relative address:"
 msgstr ""
 
-#: tform18:label12.caption tform18:label5.caption tform18:label22.caption
+#: tform18:label31.caption tform18:label20.caption
+msgid "Status:"
+msgstr ""
+
+#: tform18:label32.caption tform18:label12.caption tform18:label22.caption
+#: tform18:label5.caption
 msgid "Line selector:"
 msgstr ""
 
-#: tform18:label13.caption tform18:label6.caption tform18:label23.caption
+#: tform18:label33.caption tform18:label13.caption tform18:label23.caption
+#: tform18:label6.caption
 msgid "Odd lines background:"
 msgstr ""
 
-#: tform18:label14.caption tform18:label7.caption tform18:label24.caption
+#: tform18:label34.caption tform18:label14.caption tform18:label24.caption
+#: tform18:label7.caption
 msgid "Even lines background:"
+msgstr ""
+
+#: tform18:label35.caption tform18:label11.caption
+msgid "Data:"
+msgstr ""
+
+#: tform18:label18.caption
+msgid "Sender:"
+msgstr ""
+
+#: tform18:label19.caption
+msgid "Vector:"
+msgstr ""
+
+#: tform18:label21.caption
+msgid "Flag:"
 msgstr ""
 
 #: tform18:label1.caption
@@ -814,20 +857,12 @@ msgstr ""
 msgid "Mnemonic:"
 msgstr ""
 
-#: tform18:label18.caption
-msgid "Sender:"
+#: tform18:label25.caption tform18:label8.caption
+msgid "Font:"
 msgstr ""
 
-#: tform18:label19.caption
-msgid "Vector:"
-msgstr ""
-
-#: tform18:label20.caption
-msgid "Status:"
-msgstr ""
-
-#: tform18:label21.caption
-msgid "Flag:"
+#: tform18:label26.caption tform18:label9.caption
+msgid "Background:"
 msgstr ""
 
 #: tform18:label15.caption
@@ -848,14 +883,6 @@ msgstr ""
 
 #: tform18:checkbox2.caption
 msgid "Syntax highlighting"
-msgstr ""
-
-#: tform18:label25.caption tform18:label8.caption
-msgid "Font:"
-msgstr ""
-
-#: tform18:label26.caption tform18:label9.caption
-msgid "Background:"
 msgstr ""
 
 #: tform18:tabsheet2.caption
@@ -1234,8 +1261,28 @@ msgstr ""
 msgid "Only one CPU connection is allowed."
 msgstr ""
 
+#: frmmain:msg108
+msgid "Select new work directory"
+msgstr ""
+
+#: frmmain:msg109
+msgid "Work directory is set to '%s'."
+msgstr ""
+
+#: frmmain:msg110
+msgid "none"
+msgstr ""
+
+#: frmmain:msg111
+msgid "Success"
+msgstr ""
+
+#: frmmain:msg112
+msgid "Unsuccess"
+msgstr ""
+
 #: frmproperties:msg02
-msgid "Cannot open memory modulka."
+msgid "Cannot open memory module."
 msgstr ""
 
 #: frmproperties:msg05

@@ -788,7 +788,8 @@ begin
   begin
     Operation := 'MEMRD';
     Device := MSG110;                                                 { 'none' }
-    Address := IntToStr(AAddress);
+    FormatHexValue(IntToHex(AAddress, 6), 6, s);
+    Address := s;
     RelAddress := MSG110;
     Data := MSG110;
     Status := MSG112;                                            { 'Unsuccess' }
@@ -805,11 +806,9 @@ begin
         with BusLogRec do
         begin
           Device := FMemories[i].ModuleName;
-          FormatHexValue(IntToHex(AAddress, 6), 6, s);
-          Address := s;
           FormatHexValue(IntToHex(AAddress - FMemories[i].Memory.BaseAddress, 6), 6, s);
           RelAddress := s;
-          FormatHexValue(IntToHex(Data, 2), 2, s);
+          FormatHexValue(IntToHex(Result, 2), 2, s);
           Data := s;
           Status := MSG111;                                        { 'Success' }
         end;
@@ -821,8 +820,23 @@ end;
 // WRITE MEMORY
 procedure TSysBus.WriteMemory(AAddress: DWord; AValue: Byte);
 var
-  i: Integer;
+  BusLogRec: TBusLogRec;
+  i:         Integer;
+  s:         string;
 begin
+  s := '';
+  // default output values
+  with BusLogRec do
+  begin
+    Operation := 'MEMWR';
+    Device := MSG110;                                                 { 'none' }
+    FormatHexValue(IntToHex(AAddress, 6), 6, s);
+    Address := s;
+    RelAddress := MSG110;
+    FormatHexValue(IntToHex(AValue, 2), 2, s);
+    Data := s;
+    Status := MSG112;                                            { 'Unsuccess' }
+  end;
   // check address-conflict
   for i := 0 to High(FMemories) do
     with FMemories[i].Memory do
@@ -831,16 +845,38 @@ begin
        (AAddress < BaseAddress + AddressRangeSize) then
       begin
         WriteMemory(AAddress - BaseAddress, AValue);
-        Exit;
+        with BusLogRec do
+        begin
+          Device := FMemories[i].ModuleName;
+          FormatHexValue(IntToHex(AAddress - FMemories[i].Memory.BaseAddress, 6), 6, s);
+          RelAddress := s;
+          Status := MSG111;                                        { 'Success' }
+        end;
+        Break;
       end;
+  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
 end;
 
 // READ I/O PORT
 function TSysBus.ReadPort(APort: DWord): Byte;
 var
-  i: Integer;
+  BusLogRec: TBusLogRec;
+  i:         Integer;
+  s:         string;
 begin
+  s := '';
+  // default output values
   Result := 0;
+  with BusLogRec do
+  begin
+    Operation := 'IORD';
+    Device := MSG110;                                                 { 'none' }
+    FormatHexValue(IntToHex(APort, 6), 6, s);
+    Address := s;
+    RelAddress := MSG110;
+    Data := MSG110;
+    Status := MSG112;                                            { 'Unsuccess' }
+  end;
   // check address-conflict
   for i := 0 to High(FIOPorts) do
     with FIOPorts[i].IOPort do
@@ -849,15 +885,40 @@ begin
        (APort < BaseAddress + AddressRangeSize) then
       begin
         Result := ReadPort(APort - BaseAddress);
-        Exit;
+        with BusLogRec do
+        begin
+          Device := FIOPorts[i].ModuleName;
+          FormatHexValue(IntToHex(APort - FIOPorts[i].IOPort.BaseAddress, 6), 6, s);
+          RelAddress := s;
+          FormatHexValue(IntToHex(Result, 2), 2, s);
+          Data := s;
+          Status := MSG111;                                        { 'Success' }
+        end;
+        Break;
       end;
+  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
 end;
 
 // WRITE I/O PORT
 procedure TSysBus.WritePort(APort: DWord; AValue: Byte);
 var
-  i: Integer;
+  BusLogRec: TBusLogRec;
+  i:         Integer;
+  s:         string;
 begin
+  s := '';
+  // default output values
+  with BusLogRec do
+  begin
+    Operation := 'IOWR';
+    Device := MSG110;                                                 { 'none' }
+    FormatHexValue(IntToHex(APort, 6), 6, s);
+    Address := s;
+    RelAddress := MSG110;
+    FormatHexValue(IntToHex(AValue, 2), 2, s);
+    Data := s;
+    Status := MSG112;                                            { 'Unsuccess' }
+  end;
   // check address-conflict
   for i := 0 to High(FIOPorts) do
     with FIOPorts[i].IOPort do
@@ -866,8 +927,16 @@ begin
        (APort < BaseAddress + AddressRangeSize) then
       begin
         WritePort(APort - BaseAddress, AValue);
-        Exit;
+        with BusLogRec do
+        begin
+          Device := FIOPorts[i].ModuleName;
+          FormatHexValue(IntToHex(APort - FIOPorts[i].IOPort.BaseAddress, 6), 6, s);
+          RelAddress := s;
+          Status := MSG111;                                        { 'Success' }
+        end;
+        Break;
       end;
+  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
 end;
 
 { TForm1 }

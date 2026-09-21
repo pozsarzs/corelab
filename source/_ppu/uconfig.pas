@@ -260,10 +260,10 @@ begin
     LoadSave(section, 'syntax', AAppConfig.ScriptEditorConfig.syntax, True);
     // Settings
     section := 'Settings';
-    LoadSave(section, 'height', AAppConfig.SettingsConfig.height, 350);
+    LoadSave(section, 'height', AAppConfig.SettingsConfig.height, 411);
     LoadSave(section, 'left', AAppConfig.SettingsConfig.left, 8);
     LoadSave(section, 'top', AAppConfig.SettingsConfig.top, 8);
-    LoadSave(section, 'width', AAppConfig.SettingsConfig.width, 363);
+    LoadSave(section, 'width', AAppConfig.SettingsConfig.width, 366);
     // SysConsole
     section := 'SysConsole';
     LoadSave(section, 'height', AAppConfig.SysConsoleConfig.height, 300);
