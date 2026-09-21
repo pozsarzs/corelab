@@ -60,6 +60,13 @@ RegisterCommand(TCommand.Create('DTIO',
                                 1,
                                 @Form1.IODetachFromBusOperation));
 
+RegisterCommand(TCommand.Create('RWIO',
+                                'Show read/write window',
+                                csInteractiveOnly,
+                                'RWIO instancename',
+                                1,
+                                @Form1.IOReadWriteOperation));
+
 RegisterCommand(TCommand.Create('CFIO',
                                 'Configure I/O port module.',
                                 csEverywhere,

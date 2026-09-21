@@ -28,8 +28,8 @@ type
     EditButton2: TEditButton;
     Label1:      TLabel;
     Label2:      TLabel;
-    procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject); virtual;
+    procedure Button4Click(Sender: TObject); virtual;
     procedure Button5Click(Sender: TObject);
     procedure EditButton1ButtonClick(Sender: TObject);
     procedure EditButton1EditingDone(Sender: TObject);

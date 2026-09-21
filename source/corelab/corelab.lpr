@@ -20,7 +20,7 @@ uses
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmbuslogger,
   frmmoduleexplorer, commandengine, scriptengine, uconfig, ucommon, uintelhex,
   uplugin, uproject, usysconsole, uproperties, frmbpmanager, frmregviewer,
-  frmproperties, breakpointframe;
+  frmproperties, breakpointframe, frmrdwrioport;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
@@ -225,6 +225,7 @@ begin
     CreateForm(TForm16, Form16);                   // Class list for instantiate
     CreateForm(TForm17, Form17);                     // Instantiated module list
     CreateForm(TForm18, Form18);                                     // Settings
+    CreateForm(TForm51, Form51);
   end;
   // set properties
   Form2.AboutLabels := AboutLabels;

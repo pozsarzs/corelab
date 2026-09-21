@@ -77,7 +77,7 @@ RegisterCommand(TCommand.Create('SVME',
 RegisterCommand(TCommand.Create('EDME',
                                 'Show examine/deposit window',
                                 csInteractiveOnly,
-                                'SVME instancename',
+                                'EDME instancename',
                                 1,
                                 @Form1.MExamineDepositOperation));
 

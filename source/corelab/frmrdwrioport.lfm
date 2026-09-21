@@ -1,0 +1,29 @@
+inherited Form51: TForm51
+  inherited Bevel1: TBevel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+  end
+  inherited Button3: TButton
+    AnchorSideRight.Control = Owner
+  end
+  inherited Button4: TButton
+    AnchorSideRight.Control = Owner
+  end
+  inherited Button5: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideBottom.Control = Owner
+  end
+  inherited Label1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+  end
+  inherited Label2: TLabel
+    AnchorSideLeft.Control = Owner
+  end
+  inherited EditButton1: TEditButton
+    AnchorSideLeft.Control = Owner
+  end
+  inherited EditButton2: TEditButton
+    AnchorSideLeft.Control = Owner
+  end
+end

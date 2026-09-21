@@ -25,6 +25,13 @@ RegisterCommand(TCommand.Create('SHBM',
                                 0,
                                 @Form1.VShowBreakPointManagerOperation));
 
+RegisterCommand(TCommand.Create('SHBL',
+                                'Show BusLogger window.',
+                                csInteractiveOnly,
+                                'SHBL',
+                                0,
+                                @Form1.VShowBusLoggerOperation));
+
 RegisterCommand(TCommand.Create('SHRL',
                                 'Show RunLogger window.',
                                 csInteractiveOnly,

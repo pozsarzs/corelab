@@ -21,10 +21,10 @@ uses
   Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
-  frmproperties, frmmoduleexplorer, frmbpmanager, frmbuslogger, commandengine,
-  scriptengine, core_cpu, core_memory, core_ioport, core_bus, usysconsole,
-  ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext, uproperties,
-  ubreakpoint;
+  frmproperties, frmmoduleexplorer, frmbpmanager, frmbuslogger, frmrdwrioport,
+  commandengine, scriptengine, core_cpu, core_memory, core_ioport, core_bus,
+  usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext,
+  uproperties, ubreakpoint;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -79,10 +79,15 @@ type
   end;
   { TForm1 }
   TForm1 = class(TForm)
+    IOReadWrite: TAction;
+    MenuItem74: TMenuItem;
+    Separator2: TMenuItem;
     ToolButton10: TToolButton;
     ToolButton11: TToolButton;
     ToolButton30: TToolButton;
     ToolButton59: TToolButton;
+    ToolButton78: TToolButton;
+    ToolButton79: TToolButton;
     VShowBusLogger: TAction;
     FChangeWorkDirectory: TAction;
     MenuItem17: TMenuItem;
@@ -363,6 +368,7 @@ type
     procedure IODisableExecute(Sender: TObject);
     procedure IOEnableExecute(Sender: TObject);
     procedure IOPropertiesExecute(Sender: TObject);
+    procedure IOReadWriteExecute(Sender: TObject);
     procedure IOResetExecute(Sender: TObject);
     procedure MAttachToBusExecute(Sender: TObject);
     procedure MCreateExecute(Sender: TObject);
@@ -501,6 +507,7 @@ type
     procedure IOAttachToBusOperation(AActionContext: TActionContext);
     procedure IODetachFromBusOperation(AActionContext: TActionContext);
     procedure IOPropertiesOperation(AActionContext: TActionContext);
+    procedure IOReadWriteOperation(AActionContext: TActionContext);
     // Operation menu
     procedure ORunOperation(AActionContext: TActionContext);
     procedure OStepOperation(AActionContext: TActionContext);
@@ -1971,7 +1978,7 @@ begin
           begin
             PanelCaption := SelectedKey;
             Form13.ShowModal;
-            SArg1 := PanelCaption;
+            SArg2 := PanelCaption;
           end;
         end;
       finally
@@ -3786,7 +3793,7 @@ begin
   end;
 end;
 
-// MEMORY/EXAMINE-DEPOSIT ------------------------------------------------------
+// MEMORY/EXAMINE-DEPOSIT ACTION -----------------------------------------------
 procedure TForm1.MExamineDepositExecute(Sender: TObject);
 var
   Caller:         TComponent;
@@ -3842,7 +3849,7 @@ begin
     CurrentStatus := MemInfo.Memory.Enabled;
     MemInfo.Memory.Enabled := True;
     // examine/deposit
-    With Form5 do
+    with Form5 do
     begin
       MemInstance := MemInfo.Memory;
       ShowModal;
@@ -4527,6 +4534,80 @@ begin
       PortInstance := PortInfo.Port;
       ShowModal;
     end;
+  end;
+end;
+
+// I/O PORT/READ-WRITE ACTION --------------------------------------------------
+procedure TForm1.IOReadWriteExecute(Sender: TObject);
+var
+  Caller:         TComponent;
+  KeyName:        string;
+  ActionContext:  TActionContext;
+  StringList:     TStringList;
+begin
+  ActionContext := TActionContext.Create;
+  try
+    with ActionContext do
+    begin
+      ActionSource := asOther;
+      if Sender is TAction then
+      begin
+        Caller := TAction(Sender).ActionComponent;
+        if Caller is TMenuItem then
+        begin
+          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
+            then ActionSource := asMainMenu;
+        end else ActionSource := asToolBar;
+      end;
+      StringList := TStringList.Create;
+      try
+        for KeyName in FPortInstanceDict.Keys do StringList.Add(KeyName);
+        with Form17 do
+        begin
+          OKButtonCaption := MSG79;
+          ModuleList := StringList;
+          if ShowModal = mrOk then SArg1 := SelectedKey else Exit;
+        end;
+      finally
+        StringList.Free;
+      end;
+    end;
+    IOReadWriteOperation(ActionContext);
+  finally
+    ActionContext.Free;
+  end;
+end;
+
+// I/O PORT/READ-WRITE OPERATION
+procedure TForm1.IOReadWriteOperation(AActionContext: TActionContext);
+var
+  CurrentStatus: Boolean;
+  InstanceName:  string;
+  PortInfo:      TPortInfo;
+  Message:       string;
+begin
+  InstanceName := AActionContext.SArg1;
+  try
+    PortInfo := FPortInstanceDict[InstanceName];
+    // store original status and enable module
+    CurrentStatus := PortInfo.Port.Enabled;
+    PortInfo.Port.Enabled := True;
+    // read/write
+    with Form51 do
+    begin
+      PortInstance := PortInfo.Port;
+      ShowModal;
+    end;
+    // restore original status
+    PortInfo.Port.Enabled := CurrentStatus;
+  except
+    // error
+    Message := MSG01 + Format(MSG93, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    PortInfo.Port.Enabled := CurrentStatus;
+    AActionContext.HasError := True;
+    Exit;
   end;
 end;
 
