@@ -419,6 +419,7 @@ type
     FSysBus:        TSysBus;                             // system bus interface
     CommandEngine1: TCommandEngine;      // system console's command interpreter
     CommandEngine2: TScriptEngine;        // script handling command interpreter
+    SimulationThread1: TSimulationThread;                   // simulation thread
     FScriptBuffer:  TStringList;                                // script buffer
     // bridge between SysConsol and CommandEngine
     procedure SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
@@ -4676,7 +4677,9 @@ end;
 // OPERATION/RUN SIMULATION STEP BY STEP OPERATION
 procedure TForm1.OStepOperation(AActionContext: TActionContext);
 begin
-  FSysBus.FCPUs[0].CPU.Step;
+  //  FSysBus.FCPUs[0].CPU.Step;
+  SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+  SimulationThread1.CPUStep;
 end;
 
 // OPERATION/STOP SIMULATION ACTION --------------------------------------------
@@ -5477,6 +5480,9 @@ begin
     Parent := Form1;
     Align := alClient;
   end;
+  // simulation thread
+  SimulationThread1 := TSimulationThread.Create;
+  SimulationThread1.Start;
   // general settings
   Error := False;
   Form1.Caption := Application.Title;
@@ -5757,6 +5763,8 @@ begin
     FScriptBuffer.Clear;
     FScriptBuffer.Free;
   end;
+  // simulation thread
+  SimulationThread1.Free;
   // command interpreters
   if Assigned(CommandEngine1) then CommandEngine1.Free;
   if Assigned(CommandEngine2) then CommandEngine2.Free;

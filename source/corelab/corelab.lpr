@@ -21,7 +21,7 @@ uses
   frmintlogger, frmcaption, frmbuslogger, frmmoduleexplorer, commandengine,
   scriptengine, uconfig, ucommon, uintelhex, uplugin, uproject, usysconsole,
   uproperties, frmbpmanager, frmregviewer, frmproperties, breakpointframe,
-  frmrdwrioport;
+  frmrdwrioport, simulationthread;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'http://www.pozsarzs.hu';
