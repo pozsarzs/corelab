@@ -141,8 +141,6 @@ end;
 procedure TForm14.AppendRecord(ABusLogRec: TBusLogRec);
 begin
   WriteBuffer(ABusLogRec);
-//  if Form14.Visible then DrawGrid1.RowCount := FRecordCount + 1;
-//  DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // CLEAR LOGS

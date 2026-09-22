@@ -22,9 +22,9 @@ type
   { TSimulationThread }
   TSimulationThread = class(TThread)
   private
-    FCPU:  TCPU;                                                    // processor
-    FMode: TSimulationMode;                                  // simulation state
+    FCPU:   TCPU;                                                   // processor
     FEvent: PRTLEvent;                                      // event for wake up
+    FMode:  TSimulationMode;                                 // simulation state
   protected
     procedure Execute; override;
   public

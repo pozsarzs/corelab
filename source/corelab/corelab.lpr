@@ -226,7 +226,7 @@ begin
     CreateForm(TForm16, Form16);                   // Class list for instantiate
     CreateForm(TForm17, Form17);                     // Instantiated module list
     CreateForm(TForm18, Form18);                                     // Settings
-    CreateForm(TForm51, Form51);
+    CreateForm(TForm51, Form51);                                   // RdWrIOPort
   end;
   // set properties
   Form2.AboutLabels := AboutLabels;

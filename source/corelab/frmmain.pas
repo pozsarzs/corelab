@@ -1249,18 +1249,21 @@ end;
 // FILE/SWITCH TO INTERACTIVE MODE ACTION ======================================
 procedure TForm1.FSwitchToInteractiveModeExecute(Sender: TObject);
 begin
+  if ActionNotAllowedUnderCPURun('NWPR') then Exit;
   ChangeOpMode(omInteractive, False, True);
 end;
 
 // FILE/SWITCH TO SCRIPT MODE ACTION -------------------------------------------
 procedure TForm1.FSwitchToScriptModeExecute(Sender: TObject);
 begin
+  if ActionNotAllowedUnderCPURun('NWSC') then Exit;
   ChangeOpMode(omScript, False, True);
 end;
 
 // FILE/CREATE NEW PROJECT ACTION ----------------------------------------------
 procedure TForm1.FNewProjectExecute(Sender: TObject);
 begin
+  if ActionNotAllowedUnderCPURun('NWPR') then Exit;
   ChangeOpMode(omInteractive, True, True)
 end;
 
@@ -1277,6 +1280,7 @@ var
   Caller:        TComponent;
   OpenDialog:    TOpenDialog;
 begin
+  if ActionNotAllowedUnderCPURun('LDPR') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1342,6 +1346,7 @@ procedure TForm1.FSaveProjectExecute(Sender: TObject);
 var
   Message: string;
 begin
+  if ActionNotAllowedUnderCPURun('SVPR') then Exit;
   if FActualProjectIsSaved then Exit;
   if Length(FActualProject) = 0 then FSaveProjectAsExecute(Sender) else
   begin
@@ -1370,6 +1375,7 @@ var
   Caller:        TComponent;
   SaveDialog:    TSaveDialog;
 begin
+  if ActionNotAllowedUnderCPURun('SVPR') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1438,6 +1444,7 @@ var
   Caller:                TComponent;
   SelectDirectoryDialog: TSelectDirectoryDialog;
 begin
+  if ActionNotAllowedUnderCPURun('CHWD') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1510,6 +1517,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('RSAP') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1552,6 +1560,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('EXAP') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1585,6 +1594,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHME') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1619,6 +1629,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHBM') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1653,6 +1664,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHBL') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1687,6 +1699,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHRL') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1721,6 +1734,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHIL') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1757,6 +1771,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('SHRV') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -1821,6 +1836,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('SHHV') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -1883,6 +1899,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHSE') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -1925,6 +1942,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SHSC') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -2104,6 +2122,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('CRPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -2193,6 +2212,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DSPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2275,6 +2295,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('RSPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2355,6 +2376,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('ENPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2432,6 +2454,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DIPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2509,6 +2532,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('ATPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2613,6 +2637,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DTPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2708,6 +2733,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('CFPU') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2778,6 +2804,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('CRME') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -2867,6 +2894,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DSME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -2949,6 +2977,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('RSME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3026,6 +3055,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('ENME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3103,6 +3133,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DIME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3180,6 +3211,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('ATME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3277,6 +3309,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DTME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3371,6 +3404,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('CFME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3453,6 +3487,7 @@ var
   StringList:    TStringList;
   KeyName:       string;
 begin
+  if ActionNotAllowedUnderCPURun('LDME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3641,6 +3676,7 @@ var
   SaveDialog1:   TSaveDialog;
   StringList:    TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('SVME') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -3816,6 +3852,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('EDME') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4641,6 +4678,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('RUN') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4674,6 +4712,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('STEP') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4709,6 +4748,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('STOP') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4742,6 +4782,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('NMI') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4775,6 +4816,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('IRQ') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4808,6 +4850,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('RST') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4841,6 +4884,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SVSS') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4874,6 +4918,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('LDSS') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -4904,6 +4949,7 @@ end;
 // SCRIPT/CREATE NEW SCRIPT ACTION =============================================
 procedure TForm1.SNewScriptExecute(Sender: TObject);
 begin
+  if ActionNotAllowedUnderCPURun('NWSC') then Exit;
   ChangeOpMode(omScript, True, True);
   // refresh and show ScriptEditor
   Form6.ClearModified;
@@ -4928,6 +4974,7 @@ procedure TForm1.SLoadScriptExecute(Sender: TObject);
     Caller:        TComponent;
     OpenDialog:    TOpenDialog;
   begin
+    if ActionNotAllowedUnderCPURun('LDSC') then Exit;
     ActionContext := TActionContext.Create;
     try
       with ActionContext do
@@ -5001,6 +5048,7 @@ procedure TForm1.SSaveScriptExecute(Sender: TObject);
 var
   Message: string;
 begin
+  if ActionNotAllowedUnderCPURun('SVSC') then Exit;
   if FActualScriptIsSaved then Exit;
   if Length(FActualScript) = 0 then SSaveScriptAsExecute(Sender) else
   begin
@@ -5033,6 +5081,7 @@ var
   Caller:        TComponent;
   SaveDialog:    TSaveDialog;
 begin
+  if ActionNotAllowedUnderCPURun('SVSC') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -5105,6 +5154,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('RUSC') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -5162,6 +5212,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('SESC') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -5216,6 +5267,7 @@ var
   ActionContext: TActionContext;
   Caller:        TComponent;
 begin
+  if ActionNotAllowedUnderCPURun('STSC') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -5485,8 +5537,11 @@ end;
 // GLOBAL REFRESH TICK FOR LOGS AND OTHERS
 procedure TForm1.RefreshTimerTimer(Sender: TObject);
 begin
-  // ide jönnek a frissítendők buffer -> gui
-  if Assigned(Form14) then Form14.RefreshContent;                                            // BusLogger
+  //if Assigned(Form3) then Form3.RefreshContent;                     // HexViewer
+  //if Assigned(Form4) then Form4.RefreshContent;                     // RunLogger
+  //if Assigned(Form8) then Form8.RefreshContent;                     // IntLogger
+  //if Assigned(Form11) then Form11.RefreshContent;                   // RegViewer
+  if Assigned(Form14) then Form14.RefreshContent;                   // BusLogger
 end;
 
 // ONCREATE EVENT
