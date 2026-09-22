@@ -24,7 +24,7 @@ uses
   frmproperties, frmmoduleexplorer, frmbpmanager, frmbuslogger, frmrdwrioport,
   commandengine, scriptengine, core_cpu, core_memory, core_ioport, core_bus,
   usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext,
-  uproperties, ubreakpoint;
+  uproperties, ubreakpoint, simulationthread;
 type
   // allocated simulation objects and its types
   TProcInfo = record
@@ -642,6 +642,7 @@ resourcestring
   MSG110 = 'none';
   MSG111 = 'Success';
   MSG112 = 'Unsuccess';
+  MSG113 = 'Command ''%S'' is not available while simulation is running.';{ SC }
 
 {$R *.lfm}
 
@@ -954,9 +955,10 @@ end;
 procedure TForm1.SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
 begin
   case CommandEngine1.ExecuteLine(ACommand) of
-    -1 : SysConsole1.WriteMessage(MSG01 + MSG86);
-    -2 : SysConsole1.WriteMessage(MSG01 + MSG88);
-    -3 : SysConsole1.WriteMessage(MSG01 + MSG87);
+    -1: SysConsole1.WriteMessage(MSG01 + MSG86);
+    -2: SysConsole1.WriteMessage(MSG01 + MSG88);
+    -3: SysConsole1.WriteMessage(MSG01 + MSG87);
+    -4: SysConsole1.WriteMessage(MSG02 + Format(MSG113, [ACommand]));
   end
 end;
 

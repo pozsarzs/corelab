@@ -16,75 +16,86 @@ RegisterCommand(TCommand.Create('SHME',
                                 csInteractiveOnly,
                                 'SHME',
                                 0,
-                                @Form1.VShowModuleExplorerOperation));
+                                @Form1.VShowModuleExplorerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHBM',
                                 'Show BreakPoint Manager window.',
                                 csInteractiveOnly,
                                 'SHBM',
                                 0,
-                                @Form1.VShowBreakPointManagerOperation));
+                                @Form1.VShowBreakPointManagerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHBL',
                                 'Show BusLogger window.',
                                 csInteractiveOnly,
                                 'SHBL',
                                 0,
-                                @Form1.VShowBusLoggerOperation));
+                                @Form1.VShowBusLoggerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHRL',
                                 'Show RunLogger window.',
                                 csInteractiveOnly,
                                 'SHRL',
                                 0,
-                                @Form1.VShowRunLoggerOperation));
+                                @Form1.VShowRunLoggerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHIL',
                                 'Show IntLogger window.',
                                 csInteractiveOnly,
                                 'SHIL',
                                 0,
-                                @Form1.VShowIntLoggerOperation));
+                                @Form1.VShowIntLoggerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHRV',
                                 'Show RegViewer window.',
                                 csInteractiveOnly,
                                 'SHRV instancename',
                                 1,
-                                @Form1.VShowRegViewerOperation));
+                                @Form1.VShowRegViewerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHHV',
                                 'Show HexViewer window.',
                                 csInteractiveOnly,
                                 'SHHV instancename',
                                 1,
-                                @Form1.VShowHexViewerOperation));
+                                @Form1.VShowHexViewerOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHSE',
                                 'Show ScriptEditor window.',
                                 csInteractiveOnly,
                                 'SHSE',
                                 0,
-                                @Form1.VShowScriptEditorOperation));
+                                @Form1.VShowScriptEditorOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHSC',
                                 'Show ScriptConsole window.',
                                 csInteractiveOnly,
                                 'SHSC',
                                 0,
-                                @Form1.VShowScriptConsoleOperation));
+                                @Form1.VShowScriptConsoleOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('RNIO',
                                 'Rename I/O device panel.',
                                 csEveryWhere,
                                 'RNIO instancename caption',
                                 2,
-                                @Form1.VRenameIOPanelOperation));
+                                @Form1.VRenameIOPanelOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SHIO',
                                 'Show I/O device panel.',
                                 csEveryWhere,
                                 'SHIO instancename',
                                 1,
-                                @Form1.VShowIOPanelOperation));
+                                @Form1.VShowIOPanelOperation,
+                                True));
 

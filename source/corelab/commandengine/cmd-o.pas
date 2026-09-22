@@ -16,54 +16,61 @@ RegisterCommand(TCommand.Create('RUN',
                                 csEverywhere,
                                 'RUN',
                                 0,
-                                @Form1.ORunOperation));
+                                @Form1.ORunOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('STEP',
                                 'Run simulation step-by-step.',
                                 csEverywhere,
                                 'STEP',
                                 0,
-                                @Form1.OStepOperation));
+                                @Form1.OStepOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('STOP',
                                 'Stop simulation.',
                                 csEverywhere,
                                 'STOP',
                                 0,
-                                @Form1.OStopOperation));
+                                @Form1.OStopOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('NMI',
                                 'Call non-maskable interrupt.',
                                 csEverywhere,
                                 'NMI',
                                 0,
-                                @Form1.ONMIOperation));
+                                @Form1.ONMIOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('IRQ',
                                 'Call interrupt.',
                                 csEverywhere,
                                 'IRQ vector',
                                 1,
-                                @Form1.OIRQOperation));
+                                @Form1.OIRQOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('RST',
                                 'Reset all module.',
                                 csEverywhere,
                                 'RST',
                                 0,
-                                @Form1.OResetAllOperation));
+                                @Form1.OResetAllOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('SVSS',
                                 'Make and save snapshot.',
                                 csEverywhere,
                                 'SVSS',
                                 0,
-                                @Form1.OMakeSnapshotOperation));
+                                @Form1.OMakeSnapshotOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('LDSS',
                                 'Load and restore snapshot.',
                                 csEverywhere,
                                 'LDSS',
                                 0,
-                                @Form1.ORestoreSnapshotOperation));
-
+                                @Form1.ORestoreSnapshotOperation,
+                                False));

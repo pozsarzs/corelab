@@ -58,17 +58,44 @@ end;
 
 // READ DATA FROM PORT
 procedure TForm51.Button3Click(Sender: TObject);
+var
+  Address, MaxAddress: DWord;
+  Data:                Byte;
+  PrevText, NewText:   string;
 begin
+  // set highest address
+  MaxAddress := FPortInstance.AddressRangeSize - 1;
+  // validate address
+  PrevText := EditButton1.Text;
+  NewText := '';
+  if not FormatHexValue(EditButton1.Text, 6, NewText) then
+  begin
+    ShowMessage(MSG01 + MSG02);
+    EditButton1.Text := PrevText;
+    Exit;
+  end else
+  begin
+    EditButton1.Text := NewText;
+    // convert and store strings
+    Address := StrToDWord('$' + RemoveSpace(EditButton1.Text));
+    if Address > MaxAddress then
+    begin
+      ShowMessage(MSG01 + Format(MSG06, [MaxAddress.ToString]));
+      Exit;
+    end else Data := FPortInstance.ReadPort(Address);
+    if FormatHexValue(IntToHex(Data, 2), 2, NewText)
+      then EditButton2.Text := NewText
+      else EditButton2ButtonClick(Sender);
+  end;
 end;
 
 // WRITE DATA TO PORT
 procedure TForm51.Button4Click(Sender: TObject);
 var
-  Address, BaseAddress, MaxAddress: DWord;
+  Address, MaxAddress: DWord;
   Data:                             Byte;
   PrevText, NewText:                string;
 begin
-  BaseAddress := FPortInstance.BaseAddress;
   MaxAddress := FPortInstance.AddressRangeSize - 1;
   // validate address
   PrevText := EditButton1.Text;
@@ -94,7 +121,7 @@ begin
       // convert and store strings
       Address := StrToDWord('$' + RemoveSpace(EditButton1.Text));
       Data := StrToInt('$' + RemoveSpace(EditButton2.Text));
-      if Address > BaseAddress + MaxAddress then
+      if Address > MaxAddress then
       begin
         ShowMessage(MSG01 + Format(MSG06, [MaxAddress.ToString]));
         Exit;

@@ -24,19 +24,21 @@ type
   { TCommand }
   TCommand = class
   protected
-    FName:         string;
-    FDescription:  string;
-    FScope:        TCommandScope;
-    FSyntax:       string;
-    FOperation:    TActionOperation;
-    FRequiredArgs: Integer;
+    FName:               string;
+    FDescription:        string;
+    FScope:              TCommandScope;
+    FSyntax:             string;
+    FOperation:          TActionOperation;
+    FRequiredArgs:       Integer;
+    FAllowedUnderCPURun: Boolean;
   public
     constructor Create(const AName: string;
                        const ADescription: string;
                        AScope: TCommandScope;
                        const ASyntax: string;
                        ARequiredArgs: Byte;
-                       AOperation: TActionOperation); virtual;
+                       AOperation: TActionOperation;
+                       AAllowedUnderCPURun: Boolean); virtual;
     destructor Destroy; override;
     property Name: string read FName;
     property Description: string read FDescription;
@@ -44,6 +46,7 @@ type
     property Syntax: string read FSyntax;
     property Operation: TActionOperation read FOperation;
     property RequiredArgs: Integer read FRequiredArgs;
+    property AllowedUnderCPURun: Boolean read FAllowedUnderCPURun;
   end;
 
 implementation
@@ -51,9 +54,13 @@ implementation
 { TCommand }
 
 // CREATE TCOMMAND INSTANCE
-constructor TCommand.Create(const AName: string; const ADescription: string;
-                            AScope: TCommandScope; const ASyntax: string;
-                            ARequiredArgs: Byte; AOperation: TActionOperation);
+constructor TCommand.Create(const AName: string;
+                            const ADescription: string;
+                            AScope: TCommandScope;
+                            const ASyntax: string;
+                            ARequiredArgs: Byte;
+                            AOperation: TActionOperation;
+                            AAllowedUnderCPURun: Boolean);
 begin
   inherited Create;
   FName := AName;
@@ -62,6 +69,7 @@ begin
   FSyntax := ASyntax;
   FOperation := AOperation;
   FRequiredArgs :=  ARequiredArgs;
+  FAllowedUnderCPURun := AAllowedUnderCPURun;
 end;
 
 // DESTROY TCOMMAND INSTANCE

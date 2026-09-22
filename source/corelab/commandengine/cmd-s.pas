@@ -16,40 +16,46 @@ RegisterCommand(TCommand.Create('NWSC',
                                 csInteractiveOnly,
                                 'NWSC',
                                 0,
-                                @Form1.SNewScriptOperation));
+                                @Form1.SNewScriptOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('LDSC',
                                 'Change to script mode and load script from file.',
                                 csInteractiveOnly,
                                 'LDSC filename.clsce',
                                 1,
-                                @Form1.SLoadScriptOperation));
+                                @Form1.SLoadScriptOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('SVSC',
                                 'Save script to file.',
                                 csInteractiveOnly,
                                 'SVSC filename.clsce',
                                 1,
-                                @Form1.SSaveScriptAsOperation));
+                                @Form1.SSaveScriptAsOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('RUSC',
                                 'Run script.',
                                 csInteractiveOnly,
                                 'RUN',
                                 0,
-                                @Form1.SRunScriptOperation));
+                                @Form1.SRunScriptOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('SESC',
                                 'Run script step-by-step.',
                                 csInteractiveOnly,
                                 'SESC',
                                 0,
-                                @Form1.SStepScriptOperation));
+                                @Form1.SStepScriptOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('STSC',
                                 'Stop script.',
                                 csInteractiveOnly,
                                 'STSC',
                                 0,
-                                @Form1.SStopScriptOperation));
+                                @Form1.SStopScriptOperation,
+                                True));
 

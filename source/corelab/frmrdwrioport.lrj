@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":124459989,"name":"tform51.caption","sourcebytes":[82,101,97,100,47,119,114,105,116,101],"value":"Read/write"},
+{"hash":2853748,"name":"tform51.button3.caption","sourcebytes":[38,82,101,97,100],"value":"&Read"},
+{"hash":46043301,"name":"tform51.button4.caption","sourcebytes":[38,87,114,105,116,101],"value":"&Write"}
+]}

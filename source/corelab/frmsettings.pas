@@ -22,8 +22,8 @@ type
   TForm18 = class(TForm)
     Bevel1:       TBevel;
     Bevel10:      TBevel;
-    Bevel11: TBevel;
-    Bevel12: TBevel;
+    Bevel11:      TBevel;
+    Bevel12:      TBevel;
     Bevel2:       TBevel;
     Bevel3:       TBevel;
     Bevel4:       TBevel;
@@ -55,16 +55,16 @@ type
     ColorBox24:   TColorBox;
     ColorBox25:   TColorBox;
     ColorBox26:   TColorBox;
-    ColorBox27: TColorBox;
-    ColorBox28: TColorBox;
-    ColorBox29: TColorBox;
+    ColorBox27:   TColorBox;
+    ColorBox28:   TColorBox;
+    ColorBox29:   TColorBox;
     ColorBox3:    TColorBox;
-    ColorBox30: TColorBox;
-    ColorBox31: TColorBox;
-    ColorBox32: TColorBox;
-    ColorBox33: TColorBox;
-    ColorBox34: TColorBox;
-    ColorBox35: TColorBox;
+    ColorBox30:   TColorBox;
+    ColorBox31:   TColorBox;
+    ColorBox32:   TColorBox;
+    ColorBox33:   TColorBox;
+    ColorBox34:   TColorBox;
+    ColorBox35:   TColorBox;
     ColorBox4:    TColorBox;
     ColorBox5:    TColorBox;
     ColorBox6:    TColorBox;
@@ -90,16 +90,16 @@ type
     Label24:      TLabel;
     Label25:      TLabel;
     Label26:      TLabel;
-    Label27: TLabel;
-    Label28: TLabel;
-    Label29: TLabel;
+    Label27:      TLabel;
+    Label28:      TLabel;
+    Label29:      TLabel;
     Label3:       TLabel;
-    Label30: TLabel;
-    Label31: TLabel;
-    Label32: TLabel;
-    Label33: TLabel;
-    Label34: TLabel;
-    Label35: TLabel;
+    Label30:      TLabel;
+    Label31:      TLabel;
+    Label32:      TLabel;
+    Label33:      TLabel;
+    Label34:      TLabel;
+    Label35:      TLabel;
     Label4:       TLabel;
     Label5:       TLabel;
     Label6:       TLabel;
@@ -113,7 +113,7 @@ type
     TabSheet4:    TTabSheet;
     TabSheet5:    TTabSheet;
     TabSheet6:    TTabSheet;
-    TabSheet7: TTabSheet;
+    TabSheet7:    TTabSheet;
     procedure Button5Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
@@ -300,7 +300,6 @@ begin
     width := Form18.Width;
   end;
 end;
-
 
 end.
 

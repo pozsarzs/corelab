@@ -1,13 +1,18 @@
 inherited Form51: TForm51
+  Caption = 'Read/write'
   inherited Bevel1: TBevel
     AnchorSideLeft.Control = Owner
     AnchorSideRight.Control = Owner
   end
   inherited Button3: TButton
     AnchorSideRight.Control = Owner
+    Caption = '&Read'
+    OnClick = Button3Click
   end
   inherited Button4: TButton
     AnchorSideRight.Control = Owner
+    Caption = '&Write'
+    OnClick = Button4Click
   end
   inherited Button5: TButton
     AnchorSideRight.Control = Owner

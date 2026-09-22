@@ -16,61 +16,70 @@ RegisterCommand(TCommand.Create('CRIO',
                                 csEverywhere,
                                 'CRIO library instancename',
                                 2,
-                                @Form1.IOCreateOperation));
+                                @Form1.IOCreateOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('DSIO',
                                 'Destroy I/O port or device module.',
                                 csEverywhere,
                                 'DSIO instancename',
                                 1,
-                                @Form1.IODestroyOperation));
+                                @Form1.IODestroyOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('RSIO',
                                 'Reset I/O port or device module.',
                                 csEverywhere,
                                 'RSIO instancename',
                                 1,
-                                @Form1.IOResetOperation));
+                                @Form1.IOResetOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('ENIO',
                                 'Enable I/O port or device module.',
                                 csEverywhere,
                                 'ENIO instancename',
                                 1,
-                                @Form1.IOEnableOperation));
+                                @Form1.IOEnableOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('DIIO',
                                 'Disable I/O port or device module.',
                                 csEverywhere,
                                 'DIIO instancename',
                                 1,
-                                @Form1.IODisableOperation));
+                                @Form1.IODisableOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('ATIO',
                                 'Attach I/O port or device module to bus.',
                                 csEverywhere,
                                 'ATIO instancename',
                                 1,
-                                @Form1.IOAttachToBusOperation));
+                                @Form1.IOAttachToBusOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('DTIO',
                                 'Detach I/O port or device module from bus.',
                                 csEverywhere,
                                 'DTIO instancename',
                                 1,
-                                @Form1.IODetachFromBusOperation));
+                                @Form1.IODetachFromBusOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('RWIO',
                                 'Show read/write window',
                                 csInteractiveOnly,
                                 'RWIO instancename',
                                 1,
-                                @Form1.IOReadWriteOperation));
+                                @Form1.IOReadWriteOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('CFIO',
                                 'Configure I/O port module.',
                                 csEverywhere,
                                 'CFIO instancename.property value',
                                 2,
-                                @Form1.IOConfigureOperation));
+                                @Form1.IOConfigureOperation,
+                                False));
 

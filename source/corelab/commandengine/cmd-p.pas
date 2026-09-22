@@ -16,54 +16,62 @@ RegisterCommand(TCommand.Create('CRPU',
                                 csEverywhere,
                                 'CRPU library instancename',
                                 2,
-                                @Form1.PCreateOperation));
+                                @Form1.PCreateOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('DSPU',
                                 'Destroy processor module.',
                                 csEverywhere,
                                 'DSPU instancename',
                                 1,
-                                @Form1.PDestroyOperation));
+                                @Form1.PDestroyOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('RSPU',
                                 'Reset processor module.',
                                 csEverywhere,
                                 'RSPU instancename',
                                 1,
-                                @Form1.PResetOperation));
+                                @Form1.PResetOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('ENPU',
                                 'Enable processor module.',
                                 csEverywhere,
                                 'ENPU instancename',
                                 1,
-                                @Form1.PEnableOperation));
+                                @Form1.PEnableOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('DIPU',
                                 'Disable processor module.',
                                 csEverywhere,
                                 'DIPU instancename',
                                 1,
-                                @Form1.PDisableOperation));
+                                @Form1.PDisableOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('ATPU',
                                 'Attach processor module to bus.',
                                 csEverywhere,
                                 'ATPU instancename',
                                 1,
-                                @Form1.PAttachToBusOperation));
+                                @Form1.PAttachToBusOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('DTPU',
                                 'Detach processor module from bus.',
                                 csEverywhere,
                                 'DTPU instancename',
                                 1,
-                                @Form1.PDetachFromBusOperation));
+                                @Form1.PDetachFromBusOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('CFPU',
                                 'Configure processor module.',
                                 csEverywhere,
                                 'CFPU instancename.property value',
                                 2,
-                                @Form1.PConfigureOperation));
+                                @Form1.PConfigureOperation,
+                                False));
 

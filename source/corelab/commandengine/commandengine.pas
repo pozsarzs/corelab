@@ -164,6 +164,12 @@ begin
       Result := -3;
       Exit;
     end;
+    // cannot run under simulation
+    if not Command.AllowedUnderCPURun then
+    begin
+      Result := -4;
+      Exit;
+    end;
     // arguments and calling
     ActionContext := TActionContext.Create;
     try

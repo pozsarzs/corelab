@@ -16,39 +16,45 @@ RegisterCommand(TCommand.Create('NWPR',
                                 csInteractiveOnly,
                                 'NWPR',
                                 0,
-                                @Form1.FNewProjectOperation));
+                                @Form1.FNewProjectOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('LDPR',
                                 'Change to interactive mode and load project from file.',
                                 csInteractiveOnly,
                                 'LDPR filename.clprj',
                                 1,
-                                @Form1.FLoadProjectOperation));
-
+                                @Form1.FLoadProjectOperation,
+                                False));
+                                
 RegisterCommand(TCommand.Create('SVPR',
                                 'Save project to file.',
                                 csInteractiveOnly,
                                 'SVPR filename.clprj',
                                 1,
-                                @Form1.FSaveProjectAsOperation));
+                                @Form1.FSaveProjectAsOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('CHWD',
                                 'Change work directory.',
                                 csEveryWhere,
                                 'CHWD directory',
                                 1,
-                                @Form1.FChangeWorkDirectoryOperation));
+                                @Form1.FChangeWorkDirectoryOperation,
+                                False));
 
 RegisterCommand(TCommand.Create('RSAP',
                                 'Restart application.',
                                 csEverywhere,
                                 'RSAP',
                                 0,
-                                @Form1.FRestartApplicationOperation));
+                                @Form1.FRestartApplicationOperation,
+                                True));
 
 RegisterCommand(TCommand.Create('EXAP',
                                 'Exit from application.',
                                 csEverywhere,
                                 'EXAP',
                                 0,
-                                @Form1.FExitOperation));
+                                @Form1.FExitOperation,
+                                True));
