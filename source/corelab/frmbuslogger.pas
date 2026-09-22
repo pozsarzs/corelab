@@ -58,6 +58,7 @@ type
     procedure WriteBuffer(ABusLogRec: TBusLogRec);
   public
     procedure ClearContent;
+    procedure RefreshContent;
     procedure RefreshColors;
     procedure AppendRecord(ABusLogRec: TBusLogRec);
   end;
@@ -140,14 +141,21 @@ end;
 procedure TForm14.AppendRecord(ABusLogRec: TBusLogRec);
 begin
   WriteBuffer(ABusLogRec);
-  if Form14.Visible then DrawGrid1.RowCount := FRecordCount + 1;
-  DrawGrid1.Row := DrawGrid1.RowCount - 1;
+//  if Form14.Visible then DrawGrid1.RowCount := FRecordCount + 1;
+//  DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // CLEAR LOGS
 procedure TForm14.ClearContent;
 begin
   Button2Click(Nil);
+end;
+
+// REFRESH CONTENT
+procedure TForm14.RefreshContent;
+begin
+  DrawGrid1.RowCount := FRecordCount + 1;
+  if DrawGrid1.RowCount > 1 then DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // REFRESH COLORS

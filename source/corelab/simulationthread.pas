@@ -34,6 +34,7 @@ type
     procedure CPUStep;
     procedure CPUStop;
     property CPU: TCPU write FCPU;
+    property Mode: TSimulationMode read FMode;
   end;
 
 implementation

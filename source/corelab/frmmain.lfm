@@ -2337,4 +2337,9 @@ object Form1: TForm1
       73A0499582B962B0DCB2E7B9AA04C83910FAB30499A3FA6F55FC0E62
     }
   end
+  object RefreshTimer: TTimer
+    Interval = 500
+    OnTimer = RefreshTimerTimer
+    Left = 656
+  end
 end

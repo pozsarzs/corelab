@@ -82,6 +82,7 @@ type
     IOReadWrite: TAction;
     MenuItem74: TMenuItem;
     Separator2: TMenuItem;
+    RefreshTimer: TTimer;
     ToolButton10: TToolButton;
     ToolButton11: TToolButton;
     ToolButton30: TToolButton;
@@ -404,6 +405,7 @@ type
     procedure SSaveScriptExecute(Sender: TObject);
     procedure SStepScriptExecute(Sender: TObject);
     procedure SStopScriptExecute(Sender: TObject);
+    procedure RefreshTimerTimer(Sender: TObject);
     procedure VModuleExplorerExecute(Sender: TObject);
     procedure VRenameIOPanelExecute(Sender: TObject);
     procedure VShowBreakpointManagerExecute(Sender: TObject);
@@ -419,8 +421,9 @@ type
     FSysBus:        TSysBus;                             // system bus interface
     CommandEngine1: TCommandEngine;      // system console's command interpreter
     CommandEngine2: TScriptEngine;        // script handling command interpreter
-    SimulationThread1: TSimulationThread;                   // simulation thread
     FScriptBuffer:  TStringList;                                // script buffer
+    // check if command is not allowed to run under simulation
+    function ActionNotAllowedUnderCPURun(const ACommand: string): Boolean;
     // bridge between SysConsol and CommandEngine
     procedure SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
     // check name duplication
@@ -454,10 +457,9 @@ type
     FProcInstanceDict: TProcInstanceDict;
     FMemInstanceDict:  TMemInstanceDict;
     FPortInstanceDict: TPortInstanceDict;
-    // breakpoint list
-    FBreakpointList:   TBreakpointList;
-    // system console
-    SysConsole1:       TSysConsole;
+    FBreakpointList:   TBreakpointList;                       // breakpoint list
+    SysConsole1:       TSysConsole;                            // system console
+    SimulationThread1: TSimulationThread;                   // simulation thread
     // action's operation metods
     // File menu
     procedure FNewProjectOperation(AActionContext: TActionContext);
@@ -951,6 +953,16 @@ end;
 { TForm1 }
 
 // ---- PRIVATE METHODS ----
+
+// CHECK IF COMMAND IS NOT ALLOWED TO RUN UNDER SIMULATION
+function TForm1.ActionNotAllowedUnderCPURun(const ACommand: string): Boolean;
+begin
+  Result := (SimulationThread1.Mode = smCPURun) and
+            not CommandEngine1.Registry.FindCommand(ACommand).AllowedUnderCPURun;
+
+  if Result then
+    SysConsole1.WriteMessage(MSG02 + Format(MSG113, [ACommand]));
+end;
 
 // BRIDGE BETWEEN SYSCONSOL AND COMMANDENGINE
 procedure TForm1.SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
@@ -3878,6 +3890,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('CRIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -3972,6 +3985,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DTIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4054,6 +4068,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('RSIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4131,6 +4146,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('ENIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4208,6 +4224,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DIIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4285,6 +4302,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('ATIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4383,6 +4401,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('DTIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4478,6 +4497,7 @@ var
   StringList:     TStringList;
   Tree:           TTreeView;
 begin
+  if ActionNotAllowedUnderCPURun('CFIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     Caller := (Sender as TAction).ActionComponent;
@@ -4548,6 +4568,7 @@ var
   ActionContext:  TActionContext;
   StringList:     TStringList;
 begin
+  if ActionNotAllowedUnderCPURun('RWIO') then Exit;
   ActionContext := TActionContext.Create;
   try
     with ActionContext do
@@ -5459,6 +5480,13 @@ begin
     if Assigned(Form11) and Form11.Visible and
       (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.UpdateValues;
   end;
+end;
+
+// GLOBAL REFRESH TICK FOR LOGS AND OTHERS
+procedure TForm1.RefreshTimerTimer(Sender: TObject);
+begin
+  // ide jönnek a frissítendők buffer -> gui
+  if Assigned(Form14) then Form14.RefreshContent;                                            // BusLogger
 end;
 
 // ONCREATE EVENT

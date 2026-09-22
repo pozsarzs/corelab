@@ -37,7 +37,7 @@ type
 
 implementation
 uses
-  frmmain;
+  frmmain, simulationthread;
 
 { TCommandEngine }
 
@@ -165,11 +165,13 @@ begin
       Exit;
     end;
     // cannot run under simulation
-    if not Command.AllowedUnderCPURun then
-    begin
-      Result := -4;
-      Exit;
-    end;
+    if not ((Form1.SimulationThread1.Mode = smNone) or
+           ((Form1.SimulationThread1.Mode <> smNone) and Command.AllowedUnderCPURun))
+      then 
+      begin
+        Result := -4;
+        Exit;
+      end;
     // arguments and calling
     ActionContext := TActionContext.Create;
     try
