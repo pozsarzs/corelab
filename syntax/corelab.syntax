@@ -52,6 +52,7 @@ context default
     keyword whole RST white
     keyword whole RUN white
     keyword whole RUSC white
+    keyword whole RWIO white
     keyword whole SESC white
     keyword whole SHBL white
     keyword whole SHBM white

@@ -295,6 +295,7 @@ to be used with other development tools or transferred to real hardware.
 |**RTRN**     |csScript         |-     |-    |Return from subroutine.                                                |
 |**RUN**      |csEveryWhere     |-     |-    |Run simulation.                                                        |
 |**RUSC**     |csInteractiveOnly|-     |-    |Run script.                                                            |
+|**RWIO**     |csInteractiveOnly|-     |-    |Show read/write window.                                                |
 |**SESC**     |csInteractiveOnly|-     |-    |Run script step-by-step.                                               |
 |**SHBM**     |csInteractiveOnly|-     |-    |Show BreakPoint Manager window.                                        |
 |**SHHV**     |csInteractiveOnly|-     |-    |Show HexViewer window.                                                 |
