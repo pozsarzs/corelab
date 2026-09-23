@@ -58,6 +58,7 @@ type
     procedure AppendRecord(ALogRec: TLogRec);
     procedure ClearContent;
     procedure RefreshColors;
+    procedure RefreshContent;
   end;
 var
   Form4: TForm4;
@@ -132,8 +133,6 @@ end;
 procedure TForm4.AppendRecord(ALogRec: TLogRec);
 begin
   WriteBuffer(ALogRec);
-  if Form4.Visible then DrawGrid1.RowCount := FRecordCount + 1;
-  DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // CLEAR LOGS
@@ -157,6 +156,13 @@ begin
     DrawGrid1.Color := FBGColorOddLines;
     DrawGrid1.Invalidate;
   end;
+end;
+
+// REFRESH CONTENT
+procedure TForm4.RefreshContent;
+begin
+  DrawGrid1.RowCount := FRecordCount + 1;
+  if DrawGrid1.RowCount > 1 then DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // ---- EVENT HANDLER METHODS ----

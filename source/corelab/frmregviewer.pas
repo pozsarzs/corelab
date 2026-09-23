@@ -41,7 +41,7 @@ type
     procedure SetFProcInstance(AProcInstance: TCPU);
   public
     property ProcInstance: TCPU read FProcInstance write SetFProcInstance;
-    procedure UpdateValues;
+    procedure RefreshContent;
   end;
 var
   Form11: TForm11;
@@ -85,7 +85,7 @@ end;
 // ---- PUBLIC METHODS ----
 
 // UPDATE REGISTER CONTENTS
-procedure TForm11.UpdateValues;
+procedure TForm11.RefreshContent;
 begin
   Button3Click(nil);
 end;

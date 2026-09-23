@@ -44,6 +44,7 @@ type
     procedure SetFMemInstance(AMemInstance: TMemory);
   public
     procedure RefreshColors;
+    procedure RefreshContent;
     property MemInstance: TMemory write SetFMemInstance;
   end;
 var
@@ -103,6 +104,11 @@ begin
     DrawGrid1.Color := FBGColorOddLines;
     DrawGrid1.Invalidate;
   end;
+end;
+// REFRESH GRID CONTENT
+procedure TForm3.RefreshContent;
+begin
+  Form3.Invalidate;
 end;
 
 // ---- EVENT HANDLER METHODS ----

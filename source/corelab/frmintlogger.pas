@@ -54,9 +54,10 @@ type
     function ReadBuffer(ALine: Integer): TIntLogRec;
     procedure WriteBuffer(AIntLogRec: TIntLogRec);
   public
-    procedure ClearContent;
-    procedure RefreshColors;
     procedure AppendRecord(AIntLogRec: TIntLogRec);
+    procedure ClearContent;
+    procedure RefreshContent;
+    procedure RefreshColors;
   end;
 var
   Form8: TForm8;
@@ -156,6 +157,13 @@ begin
     DrawGrid1.Color := FBGColorOddLines;
     DrawGrid1.Invalidate;
   end;
+end;
+
+// REFRESH CONTENT
+procedure TForm8.RefreshContent;
+begin
+  DrawGrid1.RowCount := FRecordCount + 1;
+  if DrawGrid1.RowCount > 1 then  DrawGrid1.Row := DrawGrid1.RowCount - 1;
 end;
 
 // EVENT HANDLER METHODS

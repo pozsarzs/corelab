@@ -57,10 +57,10 @@ type
     function ReadBuffer(ALine: Integer): TBusLogRec;
     procedure WriteBuffer(ABusLogRec: TBusLogRec);
   public
+    procedure AppendRecord(ABusLogRec: TBusLogRec);
     procedure ClearContent;
     procedure RefreshContent;
     procedure RefreshColors;
-    procedure AppendRecord(ABusLogRec: TBusLogRec);
   end;
 var
   Form14: TForm14;

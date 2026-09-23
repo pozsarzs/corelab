@@ -79,6 +79,7 @@ type
   end;
   { TForm1 }
   TForm1 = class(TForm)
+    ComboBox1: TComboBox;
     IOReadWrite: TAction;
     MenuItem74: TMenuItem;
     Separator2: TMenuItem;
@@ -89,6 +90,7 @@ type
     ToolButton59: TToolButton;
     ToolButton78: TToolButton;
     ToolButton79: TToolButton;
+    ToolButton80: TToolButton;
     VShowBusLogger: TAction;
     FChangeWorkDirectory: TAction;
     MenuItem17: TMenuItem;
@@ -2362,7 +2364,7 @@ begin
   end;
   // RegViewer refresh
   if Assigned(Form11) and Form11.Visible and
-    (Form11.ProcInstance = ProcInfo.Processor) then Form11.UpdateValues;
+    (Form11.ProcInstance = ProcInfo.Processor) then Form11.RefreshContent;
   // report
   SysConsole1.WriteMessage(Format(MSG62, [InstanceName]));
 end;
@@ -4703,7 +4705,8 @@ end;
 // OPERATION/RUN SIMULATION OPERATION
 procedure TForm1.ORunOperation(AActionContext: TActionContext);
 begin
-  {...}
+  SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+  SimulationThread1.CPURun;
 end;
 
 // OPERATION/RUN SIMULATION STEP BY STEP ACTION --------------------------------
@@ -4737,7 +4740,6 @@ end;
 // OPERATION/RUN SIMULATION STEP BY STEP OPERATION
 procedure TForm1.OStepOperation(AActionContext: TActionContext);
 begin
-  //  FSysBus.FCPUs[0].CPU.Step;
   SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
   SimulationThread1.CPUStep;
 end;
@@ -4773,7 +4775,11 @@ end;
 // OPERATION/STOP SIMULATION OPERATION
 procedure TForm1.OStopOperation(AActionContext: TActionContext);
 begin
-  {...}
+  try
+    SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+    SimulationThread1.CPUStop;
+  except
+  end;
 end;
 
 // OPERATION/REQUEST NMI ACTION ------------------------------------------------
@@ -5505,7 +5511,7 @@ begin
     Form4.AppendRecord(TCPU(Sender).GetCurrentInstruction);
     // RegViewer
     if Assigned(Form11) and Form11.Visible and
-      (Form11.ProcInstance = TCPU(Sender)) then Form11.UpdateValues;
+      (Form11.ProcInstance = TCPU(Sender)) then Form11.RefreshContent;
   end;
 end;
 
@@ -5530,17 +5536,17 @@ begin
     if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
     // RegViewer
     if Assigned(Form11) and Form11.Visible and
-      (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.UpdateValues;
+      (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.RefreshContent;
   end;
 end;
 
 // GLOBAL REFRESH TICK FOR LOGS AND OTHERS
 procedure TForm1.RefreshTimerTimer(Sender: TObject);
 begin
-  //if Assigned(Form3) then Form3.RefreshContent;                     // HexViewer
-  //if Assigned(Form4) then Form4.RefreshContent;                     // RunLogger
-  //if Assigned(Form8) then Form8.RefreshContent;                     // IntLogger
-  //if Assigned(Form11) then Form11.RefreshContent;                   // RegViewer
+  if Assigned(Form3) then Form3.RefreshContent;                     // HexViewer
+  if Assigned(Form4) then Form4.RefreshContent;                     // RunLogger
+  if Assigned(Form8) then Form8.RefreshContent;                     // IntLogger
+  if Assigned(Form11) then Form11.RefreshContent;                   // RegViewer
   if Assigned(Form14) then Form14.RefreshContent;                   // BusLogger
 end;
 

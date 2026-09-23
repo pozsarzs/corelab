@@ -23,6 +23,7 @@ type
   TSimulationThread = class(TThread)
   private
     FCPU:   TCPU;                                                   // processor
+    FDelay: Integer;                              // Running delay between steps
     FEvent: PRTLEvent;                                      // event for wake up
     FMode:  TSimulationMode;                                 // simulation state
   protected
@@ -35,6 +36,7 @@ type
     procedure CPUStop;
     property CPU: TCPU write FCPU;
     property Mode: TSimulationMode read FMode;
+    property Delay: Integer read FDelay write FDelay;
   end;
 
 implementation
@@ -45,6 +47,8 @@ implementation
 constructor TSimulationThread.Create;
 begin
   inherited Create(True);
+  FCPU := nil;
+  FDelay := 1000;
   FEvent := RTLEventCreate;
   FMode := smNone;
 end;
@@ -85,19 +89,33 @@ procedure TSimulationThread.Execute;
 begin
   while not Terminated do
   begin
+    // wait for event
     RTLEventWaitFor(FEvent);
-    case FMode of
-      smCPURun:  FCPU.Step;
-      smCPUStep: begin
-                   FCPU.Step;
-                   FMode := smNone;
-                 end;
-      smCPUStop: begin
-                   FCPU.Stop;
-                   FMode := smNone;
-                 end;
+    // run
+    if FMode = smCPURun then
+    begin
+      while FMode = smCPURun do
+      begin
+        FCPU.Step;
+        Sleep(FDelay);
+      end;
+    end else
+    begin
+      // step
+      if FMode = smCPUStep then
+      begin
+        FCPU.Step;
+        FMode := smNone;
+      end;
+      // stop
+      if FMode = smCPUStop then
+      begin
+        FCPU.Stop;
+        FMode := smNone;
+      end;
+      // clear previous event
+      RTLEventResetEvent(FEvent);
     end;
-    RTLEventResetEvent(FEvent);
   end;
 end;
 

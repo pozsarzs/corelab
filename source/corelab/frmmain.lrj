@@ -3,6 +3,8 @@
 {"hash":210303550,"name":"tform1.tabsheet1.caption","sourcebytes":[79,112,101,114,97,116,105,111,110],"value":"Operation"},
 {"hash":106991074,"name":"tform1.toolbar2.caption","sourcebytes":[84,111,111,108,66,97,114,50],"value":"ToolBar2"},
 {"hash":160486425,"name":"tform1.toolbutton9.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,57],"value":"ToolButton9"},
+{"hash":151863584,"name":"tform1.toolbutton80.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,56,48],"value":"ToolButton80"},
+{"hash":119904432,"name":"tform1.combobox1.text","sourcebytes":[49,48,48,48,32,109,115,47,115,116,101,112],"value":"1000 ms/step"},
 {"hash":94175218,"name":"tform1.tabsheet2.caption","sourcebytes":[80,114,111,99,101,115,115,111,114],"value":"Processor"},
 {"hash":106991075,"name":"tform1.toolbar3.caption","sourcebytes":[84,111,111,108,66,97,114,51],"value":"ToolBar3"},
 {"hash":151863795,"name":"tform1.toolbutton33.caption","sourcebytes":[84,111,111,108,66,117,116,116,111,110,51,51],"value":"ToolButton33"},

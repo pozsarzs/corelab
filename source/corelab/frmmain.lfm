@@ -386,10 +386,10 @@ object Form1: TForm1
       Height = 58
       Top = 1
       Width = 687
-      ActivePage = TabSheet5
+      ActivePage = TabSheet1
       Align = alClient
-      TabIndex = 4
-      TabOrder = 1
+      TabIndex = 0
+      TabOrder = 2
       object TabSheet1: TTabSheet
         Caption = 'Operation'
         ClientHeight = 27
@@ -441,6 +441,38 @@ object Form1: TForm1
             Left = 121
             Top = 2
             Action = ORestoreSnapshot
+          end
+          object ToolButton80: TToolButton
+            Left = 144
+            Height = 22
+            Top = 2
+            Caption = 'ToolButton80'
+            Style = tbsDivider
+          end
+          object ComboBox1: TComboBox
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideBottom.Control = ToolBar2
+            AnchorSideBottom.Side = asrBottom
+            Left = 149
+            Height = 22
+            Top = 2
+            Width = 147
+            AutoSize = False
+            BorderSpacing.Left = 4
+            ItemHeight = 0
+            ItemIndex = 0
+            Items.Strings = (
+              '1000 ms/step'
+              '500 ms/step'
+              '200 ms/step'
+              '100 ms/step'
+              '50 ms/step'
+              '20 ms/step'
+              '10 ms/step'
+            )
+            ReadOnly = True
+            TabOrder = 0
+            Text = '1000 ms/step'
           end
         end
       end
@@ -802,7 +834,7 @@ object Form1: TForm1
       Align = alLeft
       ClientHeight = 58
       ClientWidth = 240
-      TabOrder = 2
+      TabOrder = 1
       object ToolBar1: TToolBar
         Left = 1
         Height = 26
