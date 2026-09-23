@@ -43,14 +43,6 @@ RegisterCommand(TCommand.Create('NMI',
                                 @Form1.ONMIOperation,
                                 True));
 
-RegisterCommand(TCommand.Create('IRQ',
-                                'Call interrupt.',
-                                csEverywhere,
-                                'IRQ vector',
-                                1,
-                                @Form1.OIRQOperation,
-                                True));
-
 RegisterCommand(TCommand.Create('RST',
                                 'Reset all module.',
                                 csEverywhere,

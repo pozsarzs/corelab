@@ -22,10 +22,11 @@ type
   { TSimulationThread }
   TSimulationThread = class(TThread)
   private
-    FCPU:   TCPU;                                                   // processor
-    FDelay: Integer;                              // Running delay between steps
-    FEvent: PRTLEvent;                                      // event for wake up
-    FMode:  TSimulationMode;                                 // simulation state
+    FCPU:        TCPU;                                              // processor
+    FDelay:      Integer;                         // Running delay between steps
+    FEvent:      PRTLEvent;                                 // event for wake up
+    FMode:       TSimulationMode;                            // simulation state
+    FPendingNMI: Boolean;                                 // pending NMI request
   protected
     procedure Execute; override;
   public
@@ -34,6 +35,7 @@ type
     procedure CPURun;
     procedure CPUStep;
     procedure CPUStop;
+    procedure CPUNMI;
     property CPU: TCPU write FCPU;
     property Mode: TSimulationMode read FMode;
     property Delay: Integer read FDelay write FDelay;
@@ -51,6 +53,7 @@ begin
   FDelay := 1000;
   FEvent := RTLEventCreate;
   FMode := smNone;
+  FPendingNMI := False;
 end;
 
 //DESTROY INSTANCE
@@ -84,6 +87,13 @@ begin
   RTLEventSetEvent(FEvent);
 end;
 
+// REQUEST NMI
+procedure TSimulationThread.CPUNMI;
+begin
+  FPendingNMI := True;
+  RTLEventSetEvent(FEvent);
+end;
+
 // EXECUTE THREAD
 procedure TSimulationThread.Execute;
 begin
@@ -91,6 +101,12 @@ begin
   begin
     // wait for event
     RTLEventWaitFor(FEvent);
+    // NMI request
+    if FPendingNMI then
+    begin
+      FCPU.NMI;
+      FPendingNMI := False;
+    end;
     // run
     if FMode = smCPURun then
     begin

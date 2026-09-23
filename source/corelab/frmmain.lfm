@@ -462,17 +462,21 @@ object Form1: TForm1
             ItemHeight = 0
             ItemIndex = 0
             Items.Strings = (
-              '1000 ms/step'
-              '500 ms/step'
-              '200 ms/step'
-              '100 ms/step'
-              '50 ms/step'
-              '20 ms/step'
-              '10 ms/step'
+              '1000 ms'
+              '500 ms'
+              '200 ms'
+              '100 ms'
+              '50 ms'
+              '20 ms'
+              '10 ms'
             )
+            OnChange = ComboBox1Change
+            ParentShowHint = False
             ReadOnly = True
+            ShowHint = True
             TabOrder = 0
-            Text = '1000 ms/step'
+            Text = '1000 ms'
+            TextHint = 'Run delay between steps in ms'
           end
         end
       end
@@ -1215,9 +1219,6 @@ object Form1: TForm1
       object MenuItem13: TMenuItem
         Action = ONMI
       end
-      object MenuItem14: TMenuItem
-        Action = OIRQ
-      end
       object MenuItem15: TMenuItem
         Action = OResetAll
       end
@@ -1613,12 +1614,6 @@ object Form1: TForm1
       Hint = 'NMI'
       ImageIndex = 12
       OnExecute = ONMIExecute
-    end
-    object OIRQ: TAction
-      Caption = 'IR&Q...'
-      Hint = 'IRQ'
-      ImageIndex = 28
-      OnExecute = OIRQExecute
     end
     object OResetAll: TAction
       Caption = 'R&eset all attached module'

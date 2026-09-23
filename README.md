@@ -268,7 +268,6 @@ to be used with other development tools or transferred to real hardware.
 |**HELP**     |csScript         |-     |-    |Display general help overview or detailed usage for a specific command.|
 |**INC**      |csScript         |Yes   |Z    |Increment integer target by 1 or by count in-place.                    |
 |**INRG**     |csScript         |Yes   |Z    |Check if value is between min and max.                                 |
-|**IRQ**      |csEveryWhere     |-     |-    |Call interrupt.                                                        |
 |**JPEQ/JPZR**|csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
 |**JPGE**     |csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
 |**JPGT**     |csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |

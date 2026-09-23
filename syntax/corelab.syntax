@@ -36,7 +36,6 @@ context default
     keyword whole ENME white
     keyword whole ENPU white
     keyword whole EXAP white
-    keyword whole IRQ white
     keyword whole LDME white
     keyword whole LDPR white
     keyword whole LDSC white

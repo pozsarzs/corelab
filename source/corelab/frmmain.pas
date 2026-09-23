@@ -133,7 +133,6 @@ type
     MenuItem11:               TMenuItem;
     MenuItem12:               TMenuItem;
     MenuItem13:               TMenuItem;
-    MenuItem14:               TMenuItem;
     MenuItem15:               TMenuItem;
     MenuItem16:               TMenuItem;
     MenuItem19:               TMenuItem;
@@ -203,7 +202,6 @@ type
     MProperties:              TAction;
     MReset:                   TAction;
     MSaveMemoryContent:       TAction;
-    OIRQ:                     TAction;
     OMakeSnapshot:            TAction;
     ONMI:                     TAction;
     OResetAll:                TAction;
@@ -346,6 +344,7 @@ type
     VShowRunLogger:           TAction;
     VShowScriptConsole:       TAction;
     VShowScriptEditor:        TAction;
+    procedure ComboBox1Change(Sender: TObject);
     procedure CPUEventHandler(Sender: TObject; Event: TCPUEvent);
     procedure FChangeWorkDirectoryExecute(Sender: TObject);
     procedure InterruptHandler(Sender: TIOPort; AVector: Byte);
@@ -384,7 +383,6 @@ type
     procedure MPropertiesExecute(Sender: TObject);
     procedure MResetExecute(Sender: TObject);
     procedure MSaveMemoryContentExecute(Sender: TObject);
-    procedure OIRQExecute(Sender: TObject);
     procedure OMakeSnapshotExecute(Sender: TObject);
     procedure ONMIExecute(Sender: TObject);
     procedure OResetAllExecute(Sender: TObject);
@@ -518,7 +516,6 @@ type
     procedure OStepOperation(AActionContext: TActionContext);
     procedure OStopOperation(AActionContext: TActionContext);
     procedure ONMIOperation(AActionContext: TActionContext);
-    procedure OIRQOperation(AActionContext: TActionContext);
     procedure OResetAllOperation(AActionContext: TActionContext);
     procedure OMakeSnapshotOperation(AActionContext: TActionContext);
     procedure ORestoreSnapshotOperation(AActionContext: TActionContext);
@@ -648,8 +645,13 @@ resourcestring
   MSG111 = 'Success';
   MSG112 = 'Unsuccess';
   MSG113 = 'Command ''%S'' is not available while simulation is running.';{ SC }
+  MSG114 = 'All attached modules have been reseted.';                     { SC }
+  MSG115 = 'Run simulation.';                                             { SC }
+  MSG116 = 'Step simulation.';                                            { SC }
+  MSG117 = 'Stop simulation.';                                            { SC }
+  MSG118 = 'Non-maskable interrupt requested.';                           { SC }
 
-{$R *.lfm}
+  {$R *.lfm}
 
 { TSysBus }
 
@@ -4705,8 +4707,13 @@ end;
 // OPERATION/RUN SIMULATION OPERATION
 procedure TForm1.ORunOperation(AActionContext: TActionContext);
 begin
-  SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
-  SimulationThread1.CPURun;
+  try
+    SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+    SimulationThread1.CPURun;
+    //report
+    SysConsole1.WriteMessage(MSG115);
+  except
+  end;
 end;
 
 // OPERATION/RUN SIMULATION STEP BY STEP ACTION --------------------------------
@@ -4740,8 +4747,13 @@ end;
 // OPERATION/RUN SIMULATION STEP BY STEP OPERATION
 procedure TForm1.OStepOperation(AActionContext: TActionContext);
 begin
-  SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
-  SimulationThread1.CPUStep;
+  try
+    SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+    SimulationThread1.CPUStep;
+    //report
+    SysConsole1.WriteMessage(MSG116);
+  except
+  end;
 end;
 
 // OPERATION/STOP SIMULATION ACTION --------------------------------------------
@@ -4778,6 +4790,8 @@ begin
   try
     SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
     SimulationThread1.CPUStop;
+    //report
+    SysConsole1.WriteMessage(MSG117);
   except
   end;
 end;
@@ -4813,41 +4827,13 @@ end;
 // OPERATION/REQUEST NMI OPERATION
 procedure TForm1.ONMIOperation(AActionContext: TActionContext);
 begin
-  {...}
-end;
-
-// OPERATION/REQUEST IRQ ACTION ------------------------------------------------
-procedure TForm1.OIRQExecute(Sender: TObject);
-var
-  ActionContext: TActionContext;
-  Caller:        TComponent;
-begin
-  if ActionNotAllowedUnderCPURun('IRQ') then Exit;
-  ActionContext := TActionContext.Create;
   try
-    with ActionContext do
-    begin
-      ActionSource := asOther;
-      if Sender is TAction then
-      begin
-        Caller := TAction(Sender).ActionComponent;
-        if Caller is TMenuItem then
-        begin
-          if TMenuItem(Caller).GetParentMenu = Form1.MainMenu1
-            then ActionSource := asMainMenu;
-        end else ActionSource := asToolBar;
-      end;
-    end;
-    OIRQOperation(ActionContext);
-  finally
-    ActionContext.Free;
+    SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+    SimulationThread1.CPUNMI;
+    //report
+    SysConsole1.WriteMessage(MSG118);
+  except
   end;
-end;
-
-// OPERATION/REQUEST IRQ OPERATION
-procedure TForm1.OIRQOperation(AActionContext: TActionContext);
-begin
-  {...}
 end;
 
 // OPERATION/RESET SIMULATION ACTION -------------------------------------------
@@ -4880,8 +4866,24 @@ end;
 
 // OPERATION/RESET SIMULATION OPERATION
 procedure TForm1.OResetAllOperation(AActionContext: TActionContext);
+var
+  i: Integer;
 begin
-  {...}
+  // reset modules
+  with FSysBus do
+  begin
+    for i := 0 to High(FMemories) do with FMemories[i].Memory do Reset;
+    for i := 0 to High(FCPUs) do with FCPUs[i].CPU do Reset;
+    for i := 0 to High(FIOPorts) do with FIOPorts[i].IOPort do Reset;
+  end;
+  // clear loggers and viewers
+  if Assigned(Form3) then Form3.RefreshContent;                     // HexViewer
+  if Assigned(Form4) then Form4.ClearContent;                       // RunLogger
+  if Assigned(Form8) then Form8.ClearContent;                       // IntLogger
+  if Assigned(Form11) then Form11.RefreshContent;                   // RegViewer
+  if Assigned(Form14) then Form14.ClearContent  ;                   // BusLogger
+  //report
+  SysConsole1.WriteMessage(MSG114);
 end;
 
 // OPERATION/MAKE SNAPSHOT ACTION ----------------------------------------------
@@ -5550,6 +5552,16 @@ begin
   if Assigned(Form14) then Form14.RefreshContent;                   // BusLogger
 end;
 
+// CHANGE RUN DELAY
+procedure TForm1.ComboBox1Change(Sender: TObject);
+var
+  s: string;
+begin
+  s := ComboBox1.Items[ComboBox1.ItemIndex];
+  s := Copy(ComboBox1.Items[ComboBox1.ItemIndex], 1, Length(s) - 3);
+  SimulationThread1.Delay := StrToInt(s);
+end;
+
 // ONCREATE EVENT
 procedure TForm1.FormCreate(Sender: TObject);
 var
@@ -5572,6 +5584,7 @@ begin
   // simulation thread
   SimulationThread1 := TSimulationThread.Create;
   SimulationThread1.Start;
+  ComboBox1Change(Sender);                                 // running delay time
   // general settings
   Error := False;
   Form1.Caption := Application.Title;
