@@ -3,32 +3,24 @@
 ; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 ; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
 ; | iodemo8080.clsce                                                           |
-; | CoreLAB 8080 Demo program                                                  |
+; | Run CoreLAB 8080 Demo program with script                                  |
 ; +----------------------------------------------------------------------------+
 
-	R0 RA R0 ro
-	TAaaas
-	taaa
-	tAsss
-	Taa
-	r0 $R0 $r0 r0 RO
-	
-	
-
 ; Show internal modules
-	SHRL					; Open RunLogger
-	SHIL					; Open IntLogger
+	SHBL					; open BusLogger
+	SHRL					; open RunLogger
+	SHIL					; open IntLogger
 
 ; Create, initialize and attach modules to system bus
 	CRIO	ioport_console Console		; module name
 	CFIO	Console.BaseAddress 80		; base address
-	CFIO	Console.IntVector 10		; interrupt vector
+	CFIO	Console.IntVector D7		; interrupt vector
 	RNIO	Console "Console"		; panel caption
 	ATIO	Console				; attach to bus
 
 	CRIO	ioport_button16bcd Keyboard	; module name
 	CFIO	Keyboard.BaseAddress 81		; base address
-	CFIO	Console.IntVector 08		; interrupt vector
+	CFIO	Console.IntVector CF		; interrupt vector
 	RNIO	Keyboard "Keyboard"		; panel caption
 	ATIO	Keyboard			; attach to bus
 	
@@ -53,8 +45,12 @@
 	ENME	RAM
 	ENPU	Processor
 
+; Show internal modules
+	SHRV	Processor			; open RegViewer
+	SHHV	RAM				; open HexViewer
+
 ; Run simulation
-	RUN
+	RUN	100				; run with 100 ms delay
 
 ; Disable modules
 	DIIO	Console

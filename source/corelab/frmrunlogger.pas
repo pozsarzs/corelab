@@ -18,7 +18,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, EditBtn, Grids, Types, core_cpu, uconfig;
 const
-  MAX_LOG = 1024;
+  MAX_LOG = 32768;
 type
   { TForm4 }
   TForm4 = class(TForm)

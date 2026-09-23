@@ -7,6 +7,7 @@
       <Unit>
         <Filename Value="corelab.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <CursorPos X="12" Y="3"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
@@ -29,7 +30,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="34"/>
+        <TopLine Value="4"/>
         <CursorPos X="33" Y="48"/>
         <UsageCount Value="206"/>
       </Unit>
@@ -40,8 +41,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="148"/>
-        <CursorPos Y="167"/>
+        <CursorPos X="18" Y="21"/>
         <UsageCount Value="206"/>
       </Unit>
       <Unit>
@@ -70,10 +70,8 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="375"/>
-        <CursorPos Y="386"/>
+        <CursorPos X="41" Y="12"/>
         <UsageCount Value="206"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -84,11 +82,10 @@
         <ComponentName Value="Form6"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="52"/>
         <CursorPos X="28" Y="54"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="frmclasslist.pas"/>
@@ -185,8 +182,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="145"/>
-        <CursorPos X="17" Y="163"/>
+        <CursorPos X="18" Y="21"/>
         <UsageCount Value="200"/>
       </Unit>
       <Unit>
@@ -243,7 +239,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="33"/>
         <CursorPos X="63" Y="41"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/commandparser.pas"/>
@@ -251,14 +247,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="7" Y="52"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/commandengine.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="8" Y="2"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/commandregistry.pas"/>
@@ -266,14 +262,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="38"/>
         <CursorPos Y="63"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/token.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="25"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="frmbpmanager.pas"/>
@@ -283,7 +279,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
-        <UsageCount Value="152"/>
+        <UsageCount Value="154"/>
       </Unit>
       <Unit>
         <Filename Value="frmregviewer.pas"/>
@@ -294,7 +290,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="33" Y="88"/>
-        <UsageCount Value="152"/>
+        <UsageCount Value="154"/>
       </Unit>
       <Unit>
         <Filename Value="frmproperties.pas"/>
@@ -305,7 +301,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="354"/>
         <CursorPos Y="368"/>
-        <UsageCount Value="152"/>
+        <UsageCount Value="154"/>
       </Unit>
       <Unit>
         <Filename Value="../_ppu/uproperties.pas"/>
@@ -313,7 +309,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="96"/>
         <CursorPos X="20" Y="65"/>
-        <UsageCount Value="113"/>
+        <UsageCount Value="115"/>
       </Unit>
       <Unit>
         <Filename Value="breakpointframe.pas"/>
@@ -324,7 +320,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos Y="51"/>
-        <UsageCount Value="107"/>
+        <UsageCount Value="109"/>
       </Unit>
       <Unit>
         <Filename Value="scriptengine/scriptengine.pas"/>
@@ -332,7 +328,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos Y="24"/>
-        <UsageCount Value="77"/>
+        <UsageCount Value="79"/>
       </Unit>
       <Unit>
         <Filename Value="frmbuslogger.pas"/>
@@ -341,9 +337,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="151"/>
-        <CursorPos X="27" Y="60"/>
-        <UsageCount Value="53"/>
+        <CursorPos X="18" Y="21"/>
+        <UsageCount Value="55"/>
       </Unit>
       <Unit>
         <Filename Value="frmrdwrioport.pas"/>
@@ -353,16 +348,15 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="13" Y="3"/>
-        <UsageCount Value="44"/>
+        <UsageCount Value="46"/>
       </Unit>
       <Unit>
         <Filename Value="simulationthread.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="45"/>
         <CursorPos Y="57"/>
-        <UsageCount Value="37"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="39"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/packages/rtl-generics/src/generics.collections.pas"/>
@@ -455,11 +449,7 @@
         <UsageCount Value="5"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="5557" Column="3" TopLine="5548"/>
-      </Position>
+    <JumpHistory HistoryIndex="25">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="5556" TopLine="5546"/>
@@ -545,10 +535,6 @@
         <Caret Line="4719" TopLine="4693"/>
       </Position>
       <Position>
-        <Filename Value="simulationthread.pas"/>
-        <Caret Line="30" Column="73" TopLine="13"/>
-      </Position>
-      <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="657" TopLine="646"/>
       </Position>
@@ -565,16 +551,8 @@
         <Caret Line="520" TopLine="511"/>
       </Position>
       <Position>
-        <Filename Value="simulationthread.pas"/>
-        <Caret Line="111" TopLine="93"/>
-      </Position>
-      <Position>
-        <Filename Value="simulationthread.pas"/>
-        <Caret Line="57" TopLine="45"/>
-      </Position>
-      <Position>
-        <Filename Value="frmscripteditor.pas"/>
-        <Caret Line="54" Column="28" TopLine="52"/>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="378" Column="14" TopLine="375"/>
       </Position>
     </JumpHistory>
     <RunParams>
