@@ -1,0 +1,180 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | mkpkg_windows                                                              |
+# | Make installer packages for Windows                                        |
+# +----------------------------------------------------------------------------+
+
+DIR="CoreLAB"
+VER="0.1.0"
+ARCH="win64"
+PKG="corelab-$VER-$ARCH"
+
+# COLLECTS FILES TO INSTALL AND CREATES LIST
+instfiles() {
+  find "$DIR" -type d | while read -r d; do
+    win_d=$(echo "$d" | sed 's/\//\\/g; s/^CoreLAB/$INSTDIR/')
+    echo "  SetOutPath \"$win_d\""
+    find "$d" -maxdepth 1 -type f | while read -r f; do
+      win_f=$(echo "$f" | sed 's/\//\\/g')
+      echo "  File \"$win_f\""
+    done
+  done
+}
+
+# COLLECTS FILES TO REMOVE AND CREATES LIST
+rmfiles() {
+  find "$DIR" -type f | while read -r f; do
+    win_f=$(echo "$f" | sed 's/\//\\/g; s/^CoreLAB/$INSTDIR/')
+    echo "  Delete \"$win_f\""
+  done
+}
+
+# COLLECTS DIRECTORIES TO REMOVE AND CREATES LIST
+rmdirs() {
+  find "$DIR" -mindepth 1 -type d | sort -r | while read -r d; do
+    win_d=$(echo "$d" | sed 's/\//\\/g; s/^CoreLAB/$INSTDIR/')
+    echo "  RMDir \"$win_d\""
+  done
+  echo "  RMDir \"\$INSTDIR\""
+}
+
+# MAKE EXE INSTALLER
+mkpkg_exe() {
+  # check dependency
+  chkdep makensis; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  # make recept
+  mkdir --parents exe
+  RECIPE="installer.nsi"
+  rm --force $RECIPE
+  cp exe/define.nsi $RECIPE
+  # - Section "CoreLAB" SEC01
+
+  cat << 'EOT' >> $RECIPE
+Function .onInit
+  !insertmacro MUI_LANGDLL_DISPLAY
+  StrCpy $InstDir "$PROGRAMFILES64\CoreLAB"
+FunctionEnd
+
+Section "CoreLAB" SEC01
+  SetOverwrite try
+EOT
+
+  instfiles >> $RECIPE
+
+  cat << 'EOT' >> $RECIPE
+  CreateShortCut "$DESKTOP\CoreLAB.lnk" "$INSTDIR\corelab.exe"
+  CreateDirectory "$SMPROGRAMS\CoreLAB"
+  CreateShortCut "$SMPROGRAMS\CoreLAB\CoreLAB.lnk" "$INSTDIR\corelab.exe"
+  CreateShortCut "$SMPROGRAMS\CoreLAB\CLProcessor.lnk" "$INSTDIR\clprocessor.exe"
+  CreateShortCut "$SMPROGRAMS\CoreLAB\CLMemory.lnk" "$INSTDIR\clmemory.exe"
+  CreateShortCut "$SMPROGRAMS\CoreLAB\CLIOPort.lnk" "$INSTDIR\clioport.exe"
+SectionEnd
+
+EOT
+
+  # - Section -AdditionalIcons
+  cat exe/section_additionalicons >> $RECIPE
+  # - Section -Post
+  cat exe/section_post >> $RECIPE
+  # - Section Uninstall
+
+  cat << 'EOT' >> $RECIPE
+Function un.onInit
+  !insertmacro MUI_UNGETLANGUAGE
+FunctionEnd
+
+Section Uninstall
+  Delete "$INSTDIR\uninst.exe"
+EOT
+
+  rmfiles >> $RECIPE
+  rmdirs >> $RECIPE
+
+  cat << 'EOT' >> $RECIPE
+  Delete "$DESKTOP\CoreLAB.lnk"
+  Delete "$SMPROGRAMS\CoreLAB\CoreLAB.lnk"
+  Delete "$SMPROGRAMS\CoreLAB\CLProcessor.lnk"
+  Delete "$SMPROGRAMS\CoreLAB\CLMemory.lnk"
+  Delete "$SMPROGRAMS\CoreLAB\CLIOPort.lnk"
+  Delete "$SMPROGRAMS\CoreLAB\Uninstall.lnk"
+  RMDir "$SMPROGRAMS\CoreLAB"
+
+  DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
+  DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
+  SetAutoClose true
+SectionEnd
+EOT
+
+  makensis -v1 $RECIPE
+  if [ $? -eq 0 ]; then echo -e "\nFile "${PKG}".exe has been created."; fi
+  rm --force $RECIPE
+}
+
+# MAKE MSI PACKAGE
+mkpkg_msi() {
+  # check dependency
+  chkdep wixl; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  # make package
+  mkdir --parents msi
+  find "$DIR/" | \
+    wixl-heat -p "$DIR/" \
+              --component-group InstalledFiles \
+              --directory-ref INSTALLDIR \
+              --var var.SourceDir > msi/fragment.wxs
+
+  if [ $? -ne 0 ]; then return; fi
+
+  wixl -D SourceDir=$DIR \
+       -o ${PKG}.msi msi/product.wxs msi/fragment.wxs
+
+  if [ $? -eq 0 ]; then echo -e "\nFile "${PKG}".msi has been created."; fi
+}
+
+# MAKE ZIP ARCHIVE
+mkpkg_zip() {
+  # check dependency
+  chkdep zip; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  # make package
+  zip -r9q ${PKG}".zip" $DIR
+
+  if [ $? -eq 0 ]; then echo -e "\nFile "${PKG}".zip has been created."; fi
+}
+
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '$1' is required to use the script."
+    return 127
+  fi
+}
+
+# MAIN
+if [ ! -d $DIR ]
+then
+  tar -xzf skeleton.tar.gz
+fi
+
+while true; do
+    echo "Select type"
+    echo "-----------------------"
+    echo "1: create EXE installer"
+    echo "2: create MSI package"
+    echo "3: create ZIP archive"
+    echo "-----------------------"
+    echo "q: exit"
+    read -p "Selected: " OPTION
+
+    case $OPTION in
+        1) mkpkg_exe;;
+        2) mkpkg_msi;;
+        3) mkpkg_zip;;
+        q) break;;
+        *) echo "Invalid selection.";;
+    esac
+    echo ""
+done

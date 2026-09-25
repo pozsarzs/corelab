@@ -1,0 +1,5 @@
+Section -AdditionalIcons
+  SetOutPath $INSTDIR
+  CreateShortCut "$SMPROGRAMS\CoreLAB\Uninstall.lnk" "$INSTDIR\uninst.exe"
+SectionEnd
+

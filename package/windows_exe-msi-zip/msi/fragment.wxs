@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="dirCFE4AF1255D5A8CD7C07145F6AD790D9" Name=".">
+        <Component Id="cmp6E0AD2B047414107E8CE2F294FA40D21" Guid="*">
+          <File Id="fil066E06FF4A060779D1810FE0E758C24D" KeyPath="yes" Source="$(var.SourceDir)/LICENCE"/>
+        </Component>
+        <Component Id="cmpA67DBE4CB2BFFD927C565E41EF31510C" Guid="*">
+          <File Id="filC3E090343174C840CF48B8DD8660037F" KeyPath="yes" Source="$(var.SourceDir)/clmemory.exe"/>
+        </Component>
+      </Directory>
+      <Directory Id="dir9AA8F8D131F0531E868445EB896B8E74" Name="message">
+        <Component Id="cmpB3FFD198816EE6693E0139FAA5FA762C" Guid="*">
+          <File Id="fil3021D2BA1496E083803DE9FF4C165632" KeyPath="yes" Source="$(var.SourceDir)/message/clioport.pot"/>
+        </Component>
+        <Component Id="cmpCC48E47F6CB56D1255056C54B3EBAC80" Guid="*">
+          <File Id="filD156E1384D204013342B3E9572C2A4BD" KeyPath="yes" Source="$(var.SourceDir)/message/clprocessor.pot"/>
+        </Component>
+        <Component Id="cmp6B68E685113DF1B755BD82DC7B5BD985" Guid="*">
+          <File Id="fil34678083A882D39451D163066194FFB3" KeyPath="yes" Source="$(var.SourceDir)/message/clmemory.pot"/>
+        </Component>
+        <Component Id="cmp6370A10D5B0E82806DE4B7B79B097EF6" Guid="*">
+          <File Id="fil16CF400EF4B80C2ED0F37875A2B3020A" KeyPath="yes" Source="$(var.SourceDir)/message/lhelp.pot"/>
+        </Component>
+        <Directory Id="dir93A065ED5DF80B2B3833B35F2B20E7F3" Name="hu">
+          <Component Id="cmpA83233DB65EF603218DBC53EFC77015E" Guid="*">
+            <File Id="filC77265FA686CCA4F5DFF97191F52B63E" KeyPath="yes" Source="$(var.SourceDir)/message/hu/clioport.mo"/>
+          </Component>
+          <Component Id="cmp134DF07820BB65069D878CDEB445E450" Guid="*">
+            <File Id="fil0D31AA102A49056F5507CA5C2B57A092" KeyPath="yes" Source="$(var.SourceDir)/message/hu/clmemory.mo"/>
+          </Component>
+          <Component Id="cmp356B9378E2749565DDBADFEF1DA84D75" Guid="*">
+            <File Id="filDD7DBEB370F048885EE6DEFE2B03AE6B" KeyPath="yes" Source="$(var.SourceDir)/message/hu/clprocessor.mo"/>
+          </Component>
+          <Component Id="cmpA8E67FDB6EC7A0AF5514617563B33D17" Guid="*">
+            <File Id="fil15F826E3A565C00EE1D58C12D1A29512" KeyPath="yes" Source="$(var.SourceDir)/message/hu/corelab.mo"/>
+          </Component>
+          <Component Id="cmp989DB04DA86C603FB9AF89902161CEAC" Guid="*">
+            <File Id="filB44D3627F0E47E9D4CAAC65CB4485BCC" KeyPath="yes" Source="$(var.SourceDir)/message/hu/lhelp.mo"/>
+          </Component>
+        </Directory>
+        <Component Id="cmpEA7F0AA32796E629D4AB8E79A9D3E9C9" Guid="*">
+          <File Id="fil1F2AF163CEDEC819CE721D97C0A8F470" KeyPath="yes" Source="$(var.SourceDir)/message/corelab.pot"/>
+        </Component>
+      </Directory>
+      <Directory Id="dir2DF4399E10CF8D03D93845FDB5A714A6" Name=".">
+        <Component Id="cmpFC5B4BC787C2A91CF66E684344771BC9" Guid="*">
+          <File Id="fil096DC3312A1683D04CBD3A072456DBC5" KeyPath="yes" Source="$(var.SourceDir)/clioport.exe"/>
+        </Component>
+      </Directory>
+      <Directory Id="dirA355A8B29ACC414A9638EF9B5A89612C" Name="help">
+        <Component Id="cmp282E9E4D3775E8C92EB8D536A3EBF0DB" Guid="*">
+          <File Id="fil465D13601B312F75E259BFB79877904D" KeyPath="yes" Source="$(var.SourceDir)/help/corelab_en.chm"/>
+        </Component>
+        <Component Id="cmp174332452911D164C6166C21886AA80B" Guid="*">
+          <File Id="fil4F8674570A00AC7AFA9709209DED3E27" KeyPath="yes" Source="$(var.SourceDir)/help/corelab_hu.chm"/>
+        </Component>
+      </Directory>
+      <Directory Id="dir6BDB92C19FEB8F43D8A4B00B04FC99E5" Name="document">
+        <Component Id="cmpEE442633C7098415CD7AD25FBFE70C50" Guid="*">
+          <File Id="filD84583CAE12E3BA6CDA111E5EB41109A" KeyPath="yes" Source="$(var.SourceDir)/document/copyright"/>
+        </Component>
+        <Directory Id="dir3B1D8B7D9CF28C62F1FAEEF84CFC820D" Name="inpout32">
+          <Component Id="cmp372264E041956305FED34AED6779C8DC" Guid="*">
+            <File Id="filBC1A1F6594E03BCA1049BD0E31C772D3" KeyPath="yes" Source="$(var.SourceDir)/document/inpout32/DLPortIO.txt"/>
+          </Component>
+          <Component Id="cmpCB9B805C445F12C3DC754E7D42B6C44F" Guid="*">
+            <File Id="filF28C33E1D5FBA71806DE791CD783C3AE" KeyPath="yes" Source="$(var.SourceDir)/document/inpout32/ReadMe.txt"/>
+          </Component>
+          <Component Id="cmp04ECD1654A842592063BAE8CE47559E3" Guid="*">
+            <File Id="filC6F4BD6370F3F2081214C1C36FFEAF05" KeyPath="yes" Source="$(var.SourceDir)/document/inpout32/license.txt"/>
+          </Component>
+        </Directory>
+        <Component Id="cmp9B8E3E89DB6E0E9196AD63691BCBEA7F" Guid="*">
+          <File Id="filABB00C38938153485BF6E03C3C121CEA" KeyPath="yes" Source="$(var.SourceDir)/document/AUTHORS"/>
+        </Component>
+        <Component Id="cmp9633A2E8845AFF10E32354D1CB2E5F6A" Guid="*">
+          <File Id="filF1B7ECDF31D803076F548F3066A5AECB" KeyPath="yes" Source="$(var.SourceDir)/document/changelog"/>
+        </Component>
+        <Component Id="cmpD6AB03B55BC11161CD955C62CBC656AF" Guid="*">
+          <File Id="fil4874E7DC786EDCF84AB06EBE145E9A18" KeyPath="yes" Source="$(var.SourceDir)/document/README.md"/>
+        </Component>
+        <Component Id="cmpCDF63394E07CD6CFC2F885F8457B6732" Guid="*">
+          <File Id="filA14EB28D4DE1BC76C6B632CB11B50B80" KeyPath="yes" Source="$(var.SourceDir)/document/syntax.md"/>
+        </Component>
+        <Component Id="cmp98A001AB462BED9DC42E98C22B7F6AD4" Guid="*">
+          <File Id="fil34464C2FD633588E755F8F611EA24F61" KeyPath="yes" Source="$(var.SourceDir)/document/VERSION"/>
+        </Component>
+      </Directory>
+      <Directory Id="dirA9FA5C6186D3C1D3086C15BE36F213A8" Name="syntax">
+        <Component Id="cmpD0E8AA572045E5E69056DAE48F12E689" Guid="*">
+          <File Id="fil65A6F25AFFA09641B2D08FF87BD921B9" KeyPath="yes" Source="$(var.SourceDir)/syntax/scripts.vim"/>
+        </Component>
+        <Component Id="cmp75EC417F8A447EEFF75F7BAE9A2F68D4" Guid="*">
+          <File Id="filD047FCCC636BC09031710FA1787424A0" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab.xml"/>
+        </Component>
+        <Component Id="cmp0B6FD1A7A06F61BC77F9B2BAB853FAF8" Guid="*">
+          <File Id="fil16F6703D36F0E143D63862FCDFC50F23" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab.yaml"/>
+        </Component>
+        <Component Id="cmp5E48DD0200CFAA668E988549893FB791" Guid="*">
+          <File Id="fil788C950728087B1DA9F2EB3FC205D198" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab.vim"/>
+        </Component>
+        <Component Id="cmp11AC955363EB062CB74B83FF7F25048D" Guid="*">
+          <File Id="fil01656554692F5171A79ADC31D0831495" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab.nanorc"/>
+        </Component>
+        <Component Id="cmp7D35F21458A46DA23EA0BFB47D81708C" Guid="*">
+          <File Id="fil1F4369E746530ED60C79796DDC4477BC" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab.lang"/>
+        </Component>
+        <Component Id="cmp40F41DE2213E4DD6289491DAEAC4A5BF" Guid="*">
+          <File Id="filBCBF99FFE1EA8D6AFA548DD59E72C1A9" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab-script-0.0.2.vsix"/>
+        </Component>
+        <Component Id="cmp2C73540A1CEF9D60B1E8BED7B53F54F9" Guid="*">
+          <File Id="filA72C627C766C3AA0B280A49B32DCF9F0" KeyPath="yes" Source="$(var.SourceDir)/syntax/README.md"/>
+        </Component>
+        <Component Id="cmp936437D4F2E9EA89893FD1F7D8F8E56F" Guid="*">
+          <File Id="filB18A498F7FEFEDF66826B4206D51C37E" KeyPath="yes" Source="$(var.SourceDir)/syntax/corelab.syntax"/>
+        </Component>
+        <Component Id="cmp0B4B151213C2844604413913DFD3001C" Guid="*">
+          <File Id="fil972A2D38DF468AD83CDFD874AE2C2878" KeyPath="yes" Source="$(var.SourceDir)/syntax/Syntax"/>
+        </Component>
+      </Directory>
+      <Directory Id="dir67469FAF5B380354AADB30C01656A13E" Name="library">
+        <Component Id="cmp41551347F1F725B393B1D409552A6D92" Guid="*">
+          <File Id="fil785D080AC3323D01DCC926106063471E" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred512mux.dll"/>
+        </Component>
+        <Component Id="cmp1A0460A77EA25D7D6F06EF8EE7880425" Guid="*">
+          <File Id="fil16C8BC9A54D17A6137CD42E2FD9003C6" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_standard.dll"/>
+        </Component>
+        <Component Id="cmp5A0EAB47DDA3F421027B755C31112E2F" Guid="*">
+          <File Id="filEF77C298E13B07D3C74911831B09F636" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledgreen8.dll"/>
+        </Component>
+        <Component Id="cmp927E574A8771A33BD47EDB36CABB6F04" Guid="*">
+          <File Id="fil3374EDCDCE27B93354958204AEC236C3" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledyellow8.dll"/>
+        </Component>
+        <Component Id="cmp25604A181FC435C1430128178D1F7BC0" Guid="*">
+          <File Id="filB14F74D42A44B45405D69CA32AB3B049" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledgreen512mux.dll"/>
+        </Component>
+        <Component Id="cmp05E39FB174670155616A5AEC2DFD8BFC" Guid="*">
+          <File Id="fil26088AE16D89951DE22754CBB2137401" KeyPath="yes" Source="$(var.SourceDir)/library/memory_standard.dll"/>
+        </Component>
+        <Component Id="cmpAF4324DA66C78C4309B4AE0474DD688E" Guid="*">
+          <File Id="filCC60FC7496C530F2B96BE38EB5BBCC19" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_realport.dll"/>
+        </Component>
+        <Component Id="cmp77EA4601A5F60E289B877B47332EA91B" Guid="*">
+          <File Id="fil915FD519667423CE016AE3A496672172" KeyPath="yes" Source="$(var.SourceDir)/library/cpu_8080.dll"/>
+        </Component>
+        <Component Id="cmp9514CD2DF7E88FC2DA49F6BE4D4D1191" Guid="*">
+          <File Id="fil463C29F02F3A7F6F4C64A833E6F4224E" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp47segmux.dll"/>
+        </Component>
+        <Component Id="cmpF197FFF7CECC7350A2D5FD8EF8CC571B" Guid="*">
+          <File Id="filF8C7918353BD7CB4C2A577ED0F741D35" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp8hexmuxbcd.dll"/>
+        </Component>
+        <Component Id="cmp7322FE459868A79999CB64C3BC4C61D3" Guid="*">
+          <File Id="fil2D2D11681F135453FC2F783D2B70CB50" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_switch8.dll"/>
+        </Component>
+        <Component Id="cmp204F41E2D383D4D61F45322699D2F1FC" Guid="*">
+          <File Id="fil8529BB14A7938A68AD641F952AA4037C" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp2hexmuxbcd.dll"/>
+        </Component>
+        <Component Id="cmpE1743A6099E990631CEF8C56AEBC14E4" Guid="*">
+          <File Id="filF2D5480BDAF6DFF2A7EDD8D89316C1E3" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_button16bcd.dll"/>
+        </Component>
+        <Component Id="cmp64F23597BD3C16945BB309BB25BEE512" Guid="*">
+          <File Id="filC995869061357555A86B89DDB661012E" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_button16mux.dll"/>
+        </Component>
+        <Component Id="cmp677A0DE2BEEBEA47B9AF1C21FDD41321" Guid="*">
+          <File Id="fil8BA1DF3EED45434EA6D3DE1404BD1045" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_co.dllle.dll"/>
+        </Component>
+        <Component Id="cmp8B163BD742AD67EE7795BC463C051DC9" Guid="*">
+          <File Id="filC9573C49528AA46EE7E389AE1B77DD3C" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred64mux.dll"/>
+        </Component>
+        <Component Id="cmp85657FEEDD7539CBAF5948D4F721FEA8" Guid="*">
+          <File Id="filA0CC3844BD12A0D9BC8832632D4DA37B" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp4hexmuxbcd.dll"/>
+        </Component>
+        <Component Id="cmpE1B958C6D02347A8557948FCC749EC81" Guid="*">
+          <File Id="fil1DBCA9D31092CBED1A49DBE77186D502" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledgreen64mux.dll"/>
+        </Component>
+        <Component Id="cmp6EFC69FA57930169EF077D09958FEFD8" Guid="*">
+          <File Id="fil1A5004A1CEA1C0C8AE73DFE31C15C18F" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_switch16bcd.dll"/>
+        </Component>
+        <Component Id="cmpD193E84B0ED4CA14D5E984A20181B019" Guid="*">
+          <File Id="filC0AD6ECEF2043A7149ACF35C6480EDD7" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledyellow512mux.dll"/>
+        </Component>
+        <Component Id="cmp32F7519789A04AA6FE377EB2AAD73C86" Guid="*">
+          <File Id="fil5D79B7609DB05462EC12F1A69ADAAFCF" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp17seg.dll"/>
+        </Component>
+        <Component Id="cmp548E2A36ACC8A861BE18CA73EBFDA821" Guid="*">
+          <File Id="fil0F352E79D0926F11E4314F8AC2DE07B1" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp27segmux.dll"/>
+        </Component>
+        <Component Id="cmp81BE181967D332A144918B453E33A9C3" Guid="*">
+          <File Id="fil8EA6A2C1F5E6AEA7299778CAA3A919C3" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred8.dll"/>
+        </Component>
+        <Component Id="cmp7088B66FEC207E0906DBC7E947406E32" Guid="*">
+          <File Id="fil0CD0464EED909C9CBB9A0BC4746D87E4" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledyellow64mux.dll"/>
+        </Component>
+        <Component Id="cmpF245A1C3A405C3CEC5BBEA9EA07E368B" Guid="*">
+          <File Id="filF6A271A56EA8FE00E8B614B9707FC575" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp87segmux.dll"/>
+        </Component>
+        <Component Id="cmp40FC0B8B100024FF8D2DAE0CC36D5B5A" Guid="*">
+          <File Id="filA9008728B99BA167AF7A2E7069CDEB89" KeyPath="yes" Source="$(var.SourceDir)/library/inpoutx64.dll"/>
+        </Component>
+        <Component Id="cmp915E4D5085294A810ACEAB62E1007F6D" Guid="*">
+          <File Id="fil9E8477CA8176FE9A254F0F5AF2DFF27B" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_bell.dll"/>
+        </Component>
+        <Component Id="cmp2B864592265D849C93C8B6784BE30547" Guid="*">
+          <File Id="fil144C5EBD6DDA276B2ED24BA53935F355" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp1hexbcd.dll"/>
+        </Component>
+        <Component Id="cmp36460B592DF0E0FF38CD1FED4E41F08C" Guid="*">
+          <File Id="fil570B225608591A0AEFB26C08DBA4527C" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_null.dll"/>
+        </Component>
+        <Component Id="cmp547C2C1FC31A8BC56A58561FFC26EEC6" Guid="*">
+          <File Id="fil7BDA1CC3582F8824D502F885601CB70A" KeyPath="yes" Source="$(var.SourceDir)/library/inpout32.dll"/>
+        </Component>
+        <Component Id="cmp0195C96F44AE7DFD614B35685FDE11FC" Guid="*">
+          <File Id="fil05E561EAD007BD62479E612B28ED9B54" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_button8.dll"/>
+        </Component>
+        <Component Id="cmp012AC218044D04FF1C41767F27EBD6B2" Guid="*">
+          <File Id="filE381E51BFFE0C8872D8488EBC52ADE43" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_switch16mux.dll"/>
+        </Component>
+      </Directory>
+      <Directory Id="dirE02C2D997CEE01DD9B2BE43BA61E4030" Name=".">
+        <Component Id="cmp2B2AC0F4FD4FBDF45E5051BA21EB590E" Guid="*">
+          <File Id="fil4AC183A9A4E363A38CDE05F7E5D6F220" KeyPath="yes" Source="$(var.SourceDir)/lhelp.exe"/>
+        </Component>
+        <Component Id="cmpED165F56D944F56F9ADC2A3E0205722E" Guid="*">
+          <File Id="filFCF90B572A86EFEE1274071A8BF608E5" KeyPath="yes" Source="$(var.SourceDir)/clprocessor.exe"/>
+        </Component>
+        <Component Id="cmp8EC9A00BFD09B3190AC6B22251DBB1AA" Guid="*">
+          <File Id="fil2E1C4A08244035C1DDECFAC78E746A66" KeyPath="yes" Source="$(var.SourceDir)/README.md"/>
+        </Component>
+        <Component Id="cmpC3953A8A341185D2FDC9D0C9F0CA497D" Guid="*">
+          <File Id="fil32C6CF1CA248B817622061688AD53148" KeyPath="yes" Source="$(var.SourceDir)/corelab.exe"/>
+        </Component>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="InstalledFiles">
+      <ComponentRef Id="cmp6E0AD2B047414107E8CE2F294FA40D21"/>
+      <ComponentRef Id="cmpA67DBE4CB2BFFD927C565E41EF31510C"/>
+      <ComponentRef Id="cmpB3FFD198816EE6693E0139FAA5FA762C"/>
+      <ComponentRef Id="cmpCC48E47F6CB56D1255056C54B3EBAC80"/>
+      <ComponentRef Id="cmp6B68E685113DF1B755BD82DC7B5BD985"/>
+      <ComponentRef Id="cmp6370A10D5B0E82806DE4B7B79B097EF6"/>
+      <ComponentRef Id="cmpA83233DB65EF603218DBC53EFC77015E"/>
+      <ComponentRef Id="cmp134DF07820BB65069D878CDEB445E450"/>
+      <ComponentRef Id="cmp356B9378E2749565DDBADFEF1DA84D75"/>
+      <ComponentRef Id="cmpA8E67FDB6EC7A0AF5514617563B33D17"/>
+      <ComponentRef Id="cmp989DB04DA86C603FB9AF89902161CEAC"/>
+      <ComponentRef Id="cmpEA7F0AA32796E629D4AB8E79A9D3E9C9"/>
+      <ComponentRef Id="cmpFC5B4BC787C2A91CF66E684344771BC9"/>
+      <ComponentRef Id="cmp282E9E4D3775E8C92EB8D536A3EBF0DB"/>
+      <ComponentRef Id="cmp174332452911D164C6166C21886AA80B"/>
+      <ComponentRef Id="cmpEE442633C7098415CD7AD25FBFE70C50"/>
+      <ComponentRef Id="cmp372264E041956305FED34AED6779C8DC"/>
+      <ComponentRef Id="cmpCB9B805C445F12C3DC754E7D42B6C44F"/>
+      <ComponentRef Id="cmp04ECD1654A842592063BAE8CE47559E3"/>
+      <ComponentRef Id="cmp9B8E3E89DB6E0E9196AD63691BCBEA7F"/>
+      <ComponentRef Id="cmp9633A2E8845AFF10E32354D1CB2E5F6A"/>
+      <ComponentRef Id="cmpD6AB03B55BC11161CD955C62CBC656AF"/>
+      <ComponentRef Id="cmpCDF63394E07CD6CFC2F885F8457B6732"/>
+      <ComponentRef Id="cmp98A001AB462BED9DC42E98C22B7F6AD4"/>
+      <ComponentRef Id="cmpD0E8AA572045E5E69056DAE48F12E689"/>
+      <ComponentRef Id="cmp75EC417F8A447EEFF75F7BAE9A2F68D4"/>
+      <ComponentRef Id="cmp0B6FD1A7A06F61BC77F9B2BAB853FAF8"/>
+      <ComponentRef Id="cmp5E48DD0200CFAA668E988549893FB791"/>
+      <ComponentRef Id="cmp11AC955363EB062CB74B83FF7F25048D"/>
+      <ComponentRef Id="cmp7D35F21458A46DA23EA0BFB47D81708C"/>
+      <ComponentRef Id="cmp40F41DE2213E4DD6289491DAEAC4A5BF"/>
+      <ComponentRef Id="cmp2C73540A1CEF9D60B1E8BED7B53F54F9"/>
+      <ComponentRef Id="cmp936437D4F2E9EA89893FD1F7D8F8E56F"/>
+      <ComponentRef Id="cmp0B4B151213C2844604413913DFD3001C"/>
+      <ComponentRef Id="cmp41551347F1F725B393B1D409552A6D92"/>
+      <ComponentRef Id="cmp1A0460A77EA25D7D6F06EF8EE7880425"/>
+      <ComponentRef Id="cmp5A0EAB47DDA3F421027B755C31112E2F"/>
+      <ComponentRef Id="cmp927E574A8771A33BD47EDB36CABB6F04"/>
+      <ComponentRef Id="cmp25604A181FC435C1430128178D1F7BC0"/>
+      <ComponentRef Id="cmp05E39FB174670155616A5AEC2DFD8BFC"/>
+      <ComponentRef Id="cmpAF4324DA66C78C4309B4AE0474DD688E"/>
+      <ComponentRef Id="cmp77EA4601A5F60E289B877B47332EA91B"/>
+      <ComponentRef Id="cmp9514CD2DF7E88FC2DA49F6BE4D4D1191"/>
+      <ComponentRef Id="cmpF197FFF7CECC7350A2D5FD8EF8CC571B"/>
+      <ComponentRef Id="cmp7322FE459868A79999CB64C3BC4C61D3"/>
+      <ComponentRef Id="cmp204F41E2D383D4D61F45322699D2F1FC"/>
+      <ComponentRef Id="cmpE1743A6099E990631CEF8C56AEBC14E4"/>
+      <ComponentRef Id="cmp64F23597BD3C16945BB309BB25BEE512"/>
+      <ComponentRef Id="cmp677A0DE2BEEBEA47B9AF1C21FDD41321"/>
+      <ComponentRef Id="cmp8B163BD742AD67EE7795BC463C051DC9"/>
+      <ComponentRef Id="cmp85657FEEDD7539CBAF5948D4F721FEA8"/>
+      <ComponentRef Id="cmpE1B958C6D02347A8557948FCC749EC81"/>
+      <ComponentRef Id="cmp6EFC69FA57930169EF077D09958FEFD8"/>
+      <ComponentRef Id="cmpD193E84B0ED4CA14D5E984A20181B019"/>
+      <ComponentRef Id="cmp32F7519789A04AA6FE377EB2AAD73C86"/>
+      <ComponentRef Id="cmp548E2A36ACC8A861BE18CA73EBFDA821"/>
+      <ComponentRef Id="cmp81BE181967D332A144918B453E33A9C3"/>
+      <ComponentRef Id="cmp7088B66FEC207E0906DBC7E947406E32"/>
+      <ComponentRef Id="cmpF245A1C3A405C3CEC5BBEA9EA07E368B"/>
+      <ComponentRef Id="cmp40FC0B8B100024FF8D2DAE0CC36D5B5A"/>
+      <ComponentRef Id="cmp915E4D5085294A810ACEAB62E1007F6D"/>
+      <ComponentRef Id="cmp2B864592265D849C93C8B6784BE30547"/>
+      <ComponentRef Id="cmp36460B592DF0E0FF38CD1FED4E41F08C"/>
+      <ComponentRef Id="cmp547C2C1FC31A8BC56A58561FFC26EEC6"/>
+      <ComponentRef Id="cmp0195C96F44AE7DFD614B35685FDE11FC"/>
+      <ComponentRef Id="cmp012AC218044D04FF1C41767F27EBD6B2"/>
+      <ComponentRef Id="cmp2B2AC0F4FD4FBDF45E5051BA21EB590E"/>
+      <ComponentRef Id="cmpED165F56D944F56F9ADC2A3E0205722E"/>
+      <ComponentRef Id="cmp8EC9A00BFD09B3190AC6B22251DBB1AA"/>
+      <ComponentRef Id="cmpC3953A8A341185D2FDC9D0C9F0CA497D"/>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
+<!-- generated with msitools 0.101 -->
+<!-- wixl-heat -p CoreLAB/ -component-group InstalledFiles -directory-ref INSTALLDIR -var var.SourceDir -->

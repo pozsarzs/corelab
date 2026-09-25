@@ -1,0 +1,14 @@
+Package: corelab
+Version: 0.1
+Section: devel
+Priority: standard
+Depends: libc6
+Architecture: amd64
+Installed-Size: 0.0 MB
+Maintainer: Pozsar Zsolt <pozsarzs@gmail.com>
+Homepage: https://pozsarzs.github.io/corelab/
+Description: Modular Processor Simulation Framework
+ The CoreLAB project is a functional 8 bits
+ microprocessor and microcontroller simulator
+ born from a fusion of academic research,
+ technical passion, and historical preservation.

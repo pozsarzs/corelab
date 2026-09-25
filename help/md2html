@@ -1,9 +1,28 @@
 #!/bin/bash
-# convert .md files to .html
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | md2html                                                                    |
+# | .md to .html converter                                                     |
+# +----------------------------------------------------------------------------+
 
-files=`ls *.md`
+FILES=`ls *.md`
 
-for x in $files
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '$1' is required to use the script."
+    return 127
+  fi
+}
+
+# check dependency
+chkdep pandoc; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+# convert files
+for x in $FILES
 do
   echo $x
   cat $x | grep -v '\# Core' | grep -v '\*\*Modular' | grep -v 'Copy' > temp.tmp

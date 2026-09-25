@@ -6,21 +6,31 @@
 # | Create UML diagram picture                                                 |
 # +----------------------------------------------------------------------------+
 
-format='pdf'
+FORMAT='pdf'
 
-if command -v plantuml >/dev/null 2>&1; then
-  for file in source/*.puml; do
-    if [ -f "$file" ]; then
-      y=$(basename "$file" .puml)
-      for x in $format; do
-        echo "$y.puml -> .$x"
-        plantuml -t"$x" -o"../" "$file"
-      done
-    fi
-  done
-else
-  echo "ERROR: The PlantUML is not installed."
-fi
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '$1' is required to use the script."
+    return 127
+  fi
+}
+
+# check dependency
+chkdep plantuml; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+# make diagrams
+for file in source/*.puml; do
+  if [ -f "$file" ]; then
+    y=$(basename "$file" .puml)
+    for x in $FORMAT; do
+      echo "$y.puml -> .$x"
+      plantuml -t"$x" -o"../" "$file"
+    done
+  fi
+done
 
 # If the output PDF is too large, use Ghostscript to reduce the size:
 #

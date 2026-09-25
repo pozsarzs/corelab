@@ -159,9 +159,9 @@ tailored to the requirements of the system being studied.
 
 ### Supported Processor Architectures
 
-CoreLAB is not limited to a single processor type. Different CPU, microprocessor,
-and microcontroller architectures can be loaded as plug-ins. This enables the
-same environment to be used for studying multiple instruction sets and hardware
+CoreLAB is not limited to a single processor type. Different microprocessor and
+microcontroller architectures can be loaded as plug-ins. This enables the same
+environment to be used for studying multiple instruction sets and hardware
 models.
 
 ### Virtual Memory and I/O Environment

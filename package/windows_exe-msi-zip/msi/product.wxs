@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" 
+    Name="CoreLAB" 
+    Language="1033" 
+    Version="0.1.0" 
+    Manufacturer="Pozsar Zsolt" 
+    UpgradeCode="15d62d1f-6e65-47fc-8b37-0630a388bba8">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <MediaTemplate EmbedCab="yes" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="CoreLAB" />
+      </Directory>
+    </Directory>
+    <Feature Id="MainFeature" Title="Main" Level="1">
+      <ComponentGroupRef Id="InstalledFiles" />
+    </Feature>
+  </Product>
+</Wix>

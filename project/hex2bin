@@ -1,4 +1,23 @@
 #!/bin/bash
-# convert Intel hexa files to raw binary
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | hex2bin                                                                    |
+# | Convert Intel hexa file to binary                                          |
+# +----------------------------------------------------------------------------+
 
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '$1' is required to use the script."
+    return 127
+  fi
+}
+
+# check dependency
+chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+# convert file
 objcopy -I ihex -O binary $1 $1.bin
