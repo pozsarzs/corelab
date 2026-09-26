@@ -104,27 +104,27 @@ in mind:
 
 ### CoreLAB framework application
 
-![CoreLAB framework application](document/screenshots/corelab_1.png)
+![CoreLAB framework application](docs/screenshots/corelab_1.png)
 
 ### CLIOPort plugin tester application
 
-![CLIOPort plugin tester application](document/screenshots/clioport.png)
+![CLIOPort plugin tester application](docs/screenshots/clioport.png)
 
 ### CLMemory plugin tester application
 
-![CLMemory plugin tester application](document/screenshots/clmemory.png)
+![CLMemory plugin tester application](docs/screenshots/clmemory.png)
 
 ### CLProcessor plugin tester application
 
-![CLProcessor plugin tester application](document/screenshots/clprocessor_1.png)
+![CLProcessor plugin tester application](docs/screenshots/clprocessor_1.png)
 
-![CLProcessor plugin tester application](document/screenshots/clprocessor_2.png)
+![CLProcessor plugin tester application](docs/screenshots/clprocessor_2.png)
 
-![CLProcessor plugin tester application](document/screenshots/clprocessor_3.png)
+![CLProcessor plugin tester application](docs/screenshots/clprocessor_3.png)
 
-![CLMemory plugin tester application](document/screenshots/clprocessor_4.png)
+![CLMemory plugin tester application](docs/screenshots/clprocessor_4.png)
 
-![CLProcessor plugin tester application](document/screenshots/clprocessor_5.png)
+![CLProcessor plugin tester application](docs/screenshots/clprocessor_5.png)
 
 ## IV. Used external libraries, programs and others
 
@@ -318,7 +318,7 @@ to be used with other development tools or transferred to real hardware.
 |**SWAP**     |csScript         |Yes   |-    |Swap the values of two variables.                                      |
 |**WAIT**     |csScript         |-     |-    |Wait specified ms.                                                     |
 |**XOR**      |csScript         |Yes   |Z    |Bitwise/logical XOR in-place.                                          |
-TScriptRuntime
+
 ## VIII. Documentation and Help  
 
 CoreLAB features built-in help and comprehensive documentation, accessible
