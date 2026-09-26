@@ -1,17 +1,17 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 # +----------------------------------------------------------------------------+
 # | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 # | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-# | create_links                                                               |
-# | Symbolic link creator script                                               |
+# | install                                                                    |
+# | Uninstaller script                                                         |
 # +----------------------------------------------------------------------------+
 
 SOFTWARE_NAME="CoreLAB"
 SOFTWARE_VERSION=$(head -n 1 document/VERSION)
 COPYRIGHT_TEXT=$(cat document/copyright)
+OPT_DIR="/opt/${SOFTWARE_NAME}"
 TARGET_BASE_DIR="/usr/local"
 
-CURRENT_DIR=$(pwd)
 TARGET_DIRECTORIES="$TARGET_BASE_DIR/bin \
                     $TARGET_BASE_DIR/share/applications \
                     $TARGET_BASE_DIR/share/man/man1"
@@ -24,7 +24,7 @@ MIME_TARGET_DIR="$TARGET_BASE_DIR/share/mime/packages"
 MIME_SOURCE_DIR="$CURRENT_DIR/desktop"
 
 echo "--------------------------------------------------------------------------------"
-echo "$SOFTWARE_NAME $SOFTWARE_VERSION symbolic link creator script"
+echo "$SOFTWARE_NAME $SOFTWARE_VERSION uninstaller script"
 echo "$COPYRIGHT_TEXT"
 echo "--------------------------------------------------------------------------------"
 
@@ -39,20 +39,17 @@ FOR A PARTICULAR PURPOSE."
 echo "--------------------------------------------------------------------------------"
 sleep 1
 
-# directories
-for dir in $TARGET_DIRECTORIES
-do
-  mkdir -p "$dir" 2> /dev/null
-done
+echo "Removing links..."
+cd "$OPT_DIR"
+CURRENT_DIR=$(pwd)
 
-echo "Creating links..."
 # binaries
 echo -n "Binaries      ["
 for file in $EXECUTABLES
 do
   BIN_PATH="$CURRENT_DIR/$file"
   if [ -f "$BIN_PATH" ]; then
-    ln -sf "$BIN_PATH" "$TARGET_BASE_DIR/bin/$file" 2> /dev/null
+    rm --force "$TARGET_BASE_DIR/bin/$file" 2> /dev/null
     echo -n "."
   fi
 done
@@ -64,7 +61,7 @@ for file in $EXECUTABLES
 do
   DESKTOP_PATH="$CURRENT_DIR/desktop/$file.desktop"
   if [ -f "$DESKTOP_PATH" ]; then
-    ln -sf "$DESKTOP_PATH" "$TARGET_BASE_DIR/share/applications/$file.desktop" 2> /dev/null
+    rm --force "$TARGET_BASE_DIR/share/applications/$file.desktop" 2> /dev/null
     echo -n "."
   fi
 done
@@ -76,13 +73,14 @@ for file in $EXECUTABLES
 do
   MAN_PATH="$CURRENT_DIR/manual/$file.1"
   if [ -f "$MAN_PATH" ]; then
-    ln -sf "$MAN_PATH" "$TARGET_BASE_DIR/share/man/man1/$file.1" 2> /dev/null
+    rm --force "$TARGET_BASE_DIR/share/man/man1/$file.1" 2> /dev/null
     echo -n "."
   fi
 done
 echo "]"  
 
 # icon files
+ICON_SOURCE_BASE="$CURRENT_DIR/desktop"
 echo -n "Icon files    ["
 for category in $ICON_CATEGORIES
 do
@@ -96,7 +94,7 @@ do
       do
         if [ -f "$icon_file" ]; then
           icon_name=$(basename "$icon_file")
-          ln -sf "$icon_file" "$TARGET_ICON_DIR/$icon_name" 2> /dev/null
+          rm --force "$TARGET_ICON_DIR/$icon_name" 2> /dev/null
           echo -n "."
         fi
       done
@@ -106,6 +104,7 @@ done
 echo "]"  
 
 # mime files
+MIME_SOURCE_DIR="$CURRENT_DIR/desktop"
 echo -n "MIME files    ["
 if [ -d "$MIME_SOURCE_DIR" ]; then
   mkdir -p "$MIME_TARGET_DIR" 2> /dev/null
@@ -113,12 +112,16 @@ if [ -d "$MIME_SOURCE_DIR" ]; then
   do
     if [ -f "$xml_file" ]; then
       xml_name=$(basename "$xml_file")
-      ln -sf "$xml_file" "$MIME_TARGET_DIR/$xml_name" 2> /dev/null
+      rm --force "$MIME_TARGET_DIR/$xml_name" 2> /dev/null
       echo -n "."
     fi
   done
 fi
 echo -e "]\n"
+
+echo "Removing files..."
+cd ..
+rm --force -r "${OPT_DIR}"
 
 update-mime-database "$TARGET_BASE_DIR/share/mime"
 gtk-update-icon-cache -t "$ICON_TARGET_BASE"

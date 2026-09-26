@@ -2,31 +2,29 @@
 # +----------------------------------------------------------------------------+
 # | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 # | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-# | mkpkg_linux_r                                                              |
-# | Makes .rpm installer package                                               |
+# | mkpackage                                                                  |
+# | Makes .deb installer package                                               |
 # +----------------------------------------------------------------------------+
 
 DIR="CoreLAB"
 NAM="corelab"
 VER="0.1.0"
 REL="1"
-ARC="x86_64"
-PKG="${NAM}_${VER}-${REL}.${ARC}"
+ARC="amd64"
+PKG="${NAM}_${VER}-${REL}_${ARC}"
 
 # MAKE ZIP ARCHIVE
-mkpkg_rpm() {
+mkpkg_deb() {
   # check dependency
-  chkdep rpmbuild; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  chkdep dpkg-deb; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  chkdep fakeroot; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  chkdep lintian; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
   # make package
-  rm --force "RPMS/${ARC}/*.rpm"
-  find "BUILDROOT" -exec touch {} +
-  mkdir --parents "RPMS/${ARC}"
-  rpmbuild --define "_topdir $(pwd)" \
-           --buildroot "$(pwd)/BUILDROOT" \
-           -bb \
-           --noclean "SPECS/${NAM}-${VER}-${REL}.spec"
-
-  if [ $? -eq 0 ]; then echo -e "\nFile ${PKG}.rpm has been created."; fi
+  rm --force "*.deb"
+  find "$NAM" -exec touch {} +
+  fakeroot dpkg-deb --build "$NAM" && lintian "${NAM}.deb"
+  mv "${NAM}.deb" "${PKG}.deb" 
+  if [ $? -eq 0 ]; then echo -e "\nFile ${PKG}.deb has been created."; fi
 }
 
 # CHECK DEPENDENCY
@@ -41,10 +39,10 @@ chkdep() {
 }
 
 # MAIN
-if [ ! -d "BUILDROOT/usr" ]
+if [ ! -d "${NAM}/usr" ]
 then
-  mkdir --parents "BUILDROOT"
-  tar -xzf skeleton.tar.gz -C "BUILDROOT"
+  mkdir --parents "$NAM"
+  tar -xzf skeleton.tar.gz -C "$NAM"
   echo -e "\nAttention!"
   echo "~~~~~~~~~~"
   echo -e "I have unpacked the skeleton; first, fill it"\
@@ -55,13 +53,13 @@ fi
 while true; do
     echo "Select type"
     echo "-----------------------"
-    echo "1: create RPM package"
+    echo "1: create DEB package"
     echo "-----------------------"
     echo "q: exit"
     read -p "Selected: " OPTION
 
     case $OPTION in
-        1) mkpkg_rpm;;
+        1) mkpkg_deb;;
         q) break;;
         *) echo "Invalid selection.";;
     esac

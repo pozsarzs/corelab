@@ -1,16 +1,15 @@
 # $FreeBSD$
 
-PORTNAME=	mm8dread
-PORTVERSION=	0.4
-CATEGORIES=	misc
-MASTER_SITES=	http://www.pozsarzs.hu/packages/software/mm8dread
-
+PORTNAME=	corelab
+PORTVERSION=	0.1.0
+CATEGORIES=	emulators
 MAINTAINER=	pozsarzs@gmail.com
-COMMENT=	Status reader program for MM8D device
+COMMENT=	Modular Processor Simulation Framework
+USE_GITHUB=	yes
+GH_ACCOUNT=	pozsarzs
 
 GNU_CONFIGURE=	yes
 
 .include <bsd.port.mk>
 
 CONFIGURE_ARGS+=stagedir=$(STAGEDIR)/$(PREFIX)
-

@@ -1,8 +1,7 @@
-MM8DRead
-You can check status of MM8D growing house
-controllers with this software via network.
-You can redistribute this version and/or modify it
-under the terms of the EUPL v1.2.
+CoreLAB
+The CoreLAB project is a functional 8 bits
+microprocessor and microcontroller simulator
+born from a fusion of academic research,
+technical passion, and historical preservation.
 
-Homepage: http://www.pozsarzs.hu/
-Package created by: Pozsar Zsolt
+Homepage: https://pozsarzs.github.io/corelab/

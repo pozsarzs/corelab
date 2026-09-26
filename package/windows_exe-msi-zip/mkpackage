@@ -2,7 +2,7 @@
 # +----------------------------------------------------------------------------+
 # | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 # | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-# | mkpkg_windows_emz                                                          |
+# | mkpackage                                                                  |
 # | Makes installer packages for Windows                                       |
 # +----------------------------------------------------------------------------+
 

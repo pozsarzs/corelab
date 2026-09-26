@@ -6,40 +6,115 @@
 # | Symbolic link remover script                                               |
 # +----------------------------------------------------------------------------+
 
-# constants
-SWN="ModShell"
-SWV=`cat documents/VERSION`
-CR=`cat documents/copyright`
-INSTDIR=/opt/modshell
-LINKDIR=/usr/local
-BINFILES="modshell xmodshell"
+SOFTWARE_NAME="CoreLAB"
+SOFTWARE_VERSION=$(head -n 1 document/VERSION)
+COPYRIGHT_TEXT=$(cat document/copyright)
+TARGET_BASE_DIR="/usr/local"
 
-# link remover
-clear
+CURRENT_DIR=$(pwd)
+TARGET_DIRECTORIES="$TARGET_BASE_DIR/bin \
+                    $TARGET_BASE_DIR/share/applications \
+                    $TARGET_BASE_DIR/share/man/man1"
+EXECUTABLES="clioport clmemory clprocessor corelab lhelp"
+ICON_SIZES="16x16 24x24 32x32 48x48 64x64 scalable"
+ICON_CATEGORIES="apps mimetypes"
+ICON_TARGET_BASE="$TARGET_BASE_DIR/share/icons/hicolor"
+ICON_SOURCE_BASE="$CURRENT_DIR/desktop"
+MIME_TARGET_DIR="$TARGET_BASE_DIR/share/mime/packages"
+MIME_SOURCE_DIR="$CURRENT_DIR/desktop"
+
 echo "--------------------------------------------------------------------------------"
-echo "$SWN $SWV symbolic link remover script"
-echo "$CR"
+echo "$SOFTWARE_NAME $SOFTWARE_VERSION symbolic link remover script"
+echo "$COPYRIGHT_TEXT"
 echo "--------------------------------------------------------------------------------"
-if [ `whoami` != 'root' ]
-then echo 'ERROR: You are not root!'; exit
-fi
+
+if [ $(whoami) != 'root' ]; then echo 'ERROR: You are not root!'; exit; fi
+
+echo "  This program is free software: you can redistribute it and/or modify it
+under the terms of the European Union Public License 1.2 version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE."
+echo "--------------------------------------------------------------------------------"
 sleep 1
-echo "Removing symbolic links..."
-for f in $BINFILES
+
+echo "Removing links..."
+# binaries
+echo -n "Binaries      ["
+for file in $EXECUTABLES
 do
-  rm -f $LINKDIR/bin/$f 2> /dev/null
-  echo "  $LINKDIR/bin/$f"
-  if [ -f $LINKDIR/bin/$f.desktop ];
-  then
-    rm -f $LINKDIR/share/applications/$f.desktop 2> /dev/null
-    echo "  $LINKDIR/share/applications/$f.desktop"
+  BIN_PATH="$CURRENT_DIR/$file"
+  if [ -f "$BIN_PATH" ]; then
+    rm --force "$TARGET_BASE_DIR/bin/$file" 2> /dev/null
+    echo -n "."
   fi
-  if [ -f $f.png ];
-  then
-    rm -f $LINKDIR/share/pixmaps/$f.png 2> /dev/null
-    echo "  $LINKDIR/share/pixmaps/$f.png"
-  fi
-  rm -f $LINKDIR/share/man/man1/$f.1 2> /dev/null
-  echo "  $LINKDIR/share/man/man1/$f.1"
 done
-echo "Done."
+echo "]"  
+
+# desktop files
+echo -n "Desktop files ["
+for file in $EXECUTABLES
+do
+  DESKTOP_PATH="$CURRENT_DIR/desktop/$file.desktop"
+  if [ -f "$DESKTOP_PATH" ]; then
+    rm --force "$TARGET_BASE_DIR/share/applications/$file.desktop" 2> /dev/null
+    echo -n "."
+  fi
+done
+echo "]"  
+
+# manuals
+echo -n "Manuals       ["
+for file in $EXECUTABLES
+do
+  MAN_PATH="$CURRENT_DIR/manual/$file.1"
+  if [ -f "$MAN_PATH" ]; then
+    rm --force "$TARGET_BASE_DIR/share/man/man1/$file.1" 2> /dev/null
+    echo -n "."
+  fi
+done
+echo "]"  
+
+# icon files
+echo -n "Icon files    ["
+for category in $ICON_CATEGORIES
+do
+  for size in $ICON_SIZES
+  do
+    SOURCE_ICON_DIR="$ICON_SOURCE_BASE/$size/$category"
+    TARGET_ICON_DIR="$ICON_TARGET_BASE/$size/$category"
+    if [ -d "$SOURCE_ICON_DIR" ]; then
+      mkdir -p "$TARGET_ICON_DIR" 2> /dev/null
+      for icon_file in "$SOURCE_ICON_DIR"/*
+      do
+        if [ -f "$icon_file" ]; then
+          icon_name=$(basename "$icon_file")
+          rm --force "$TARGET_ICON_DIR/$icon_name" 2> /dev/null
+          echo -n "."
+        fi
+      done
+    fi
+  done
+done
+echo "]"  
+
+# mime files
+echo -n "MIME files    ["
+if [ -d "$MIME_SOURCE_DIR" ]; then
+  mkdir -p "$MIME_TARGET_DIR" 2> /dev/null
+  for xml_file in "$MIME_SOURCE_DIR"/*.xml
+  do
+    if [ -f "$xml_file" ]; then
+      xml_name=$(basename "$xml_file")
+      rm --force "$MIME_TARGET_DIR/$xml_name" 2> /dev/null
+      echo -n "."
+    fi
+  done
+fi
+echo -e "]\n"
+
+update-mime-database "$TARGET_BASE_DIR/share/mime"
+gtk-update-icon-cache -t "$ICON_TARGET_BASE"
+
+echo -e "Done.\n"

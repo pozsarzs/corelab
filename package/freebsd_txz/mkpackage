@@ -1,0 +1,12 @@
+#!/usr/local/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | mkpackage                                                                  |
+# | Make installer packages for FreeBSD                                        |
+# +----------------------------------------------------------------------------+
+
+make makesum
+make stage
+make stage-qa
+make package
