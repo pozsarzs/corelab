@@ -15,6 +15,9 @@ simulator born from a fusion of academic research, technical passion, and
 historical preservation. The project was initiated with several key objectives
 in mind:
 
+[Homepage](index_hu.md)  
+
+
 * **A Tribute to the Pioneers (Hardware and Human):** The project serves as a
     respectful nod to the early eras of computing architecture and the brilliant
     minds who designed them. By keeping the logic of these foundational
