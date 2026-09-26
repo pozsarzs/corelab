@@ -6,15 +6,21 @@
 # | Symbolic link creator script                                               |
 # +----------------------------------------------------------------------------+
 
-SWN="CoreLAB"
-SWV=`head -n 1 document/VERSION`
-CR=`cat document/copyright`
+# constants
+SWN="ModShell"
+SWV=`cat documents/VERSION`
+CR=`cat documents/copyright`
 LINKDIR=/usr/local
 SYSDIRS="$LINKDIR/bin \
          $LINKDIR/share/applications \
-         $LINKDIR/share/man/man1"
-BINFILES="clioport clmemory clprocessor corelab"
-
+         $LINKDIR/share/man/man1 \
+         $LINKDIR/share/pixmaps"
+BINFILES="modshell \
+          serialechoserver \
+          serialmbmonitor \
+          tcpechoserver \
+          udpechoserver \
+          xmodshell"
 README=./README.md
 
 # installer
@@ -34,35 +40,29 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE."
 echo "--------------------------------------------------------------------------------"
 sleep 3
-
 echo "Creating symbolic links..."
+mkdir -p $INSTDIR 2> /dev/null
 for d in $SYSDIRS
 do
   mkdir -p $d 2> /dev/null
 done
 for f in $BINFILES
 do
-  # binaries
-  if [ -f `pwd`/$f ];
+  ln -s `pwd`/$f $LINKDIR/bin/$f 2> /dev/null
+  echo "  "`pwd`/$f' --> '$LINKDIR/bin/$f
+  if [ -f `pwd`/$f.desktop ];
   then
-    ln -sf `pwd`/$f $LINKDIR/bin/$f 2> /dev/null
-    echo "  "`pwd`/$f' --> '$LINKDIR/bin/$f
-  fi
-  # desktop files
-  if [ -f `pwd`/desktop/$f.desktop ];
-  then
-    ln -sf `pwd`/$f.desktop $LINKDIR/share/applications/$f.desktop 2> /dev/null
+    ln -s `pwd`/$f.desktop $LINKDIR/share/applications/$f.desktop 2> /dev/null
     echo "  "`pwd`/$f.desktop' --> '$LINKDIR/share/applications/$f.desktop
   fi
-  # manuals
-  if [ -f `pwd`/manual/"$f".1 ];
+  if [ -f `pwd`/$f.png ];
   then
-    ln -sf `pwd`/manual/"$f".1 $LINKDIR/share/man/man1/$f.1 2> /dev/null
-    echo "  "`pwd`/manual/"$f".1' --> '$LINKDIR/share/man/man1/$f.1
+    ln -s `pwd`/$f.png $LINKDIR/share/pixmaps/$f.png 2> /dev/null
+    echo "  "`pwd`/$f.png' --> '$LINKDIR/share/pixmaps/$f.png
   fi
+  ln -s `pwd`/manual/"$f"_en.1 $LINKDIR/share/man/man1/$f.1 2> /dev/null
+  echo "  "`pwd`/manual/"$f"_en.1' --> '$LINKDIR/share/man/man1/$f.1
 done
-
-
 echo "Done."
 echo ""
 echo "Thank you for installing $SWN,"

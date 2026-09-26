@@ -34,7 +34,6 @@ install:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then $(make) -s -C $$dir install; fi; \
 	done
-	@ldconfig
 	@update-mime-database $(datarootdir)/mime
 	@gtk-update-icon-cache -t $(datarootdir)/icons/hicolor
 	@echo "Done."
@@ -44,7 +43,6 @@ uninstall:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then $(make) -s -C $$dir uninstall; fi; \
 	done
-	@ldconfig
 	@update-mime-database $(datarootdir)/mime
 	@gtk-update-icon-cache -t $(datarootdir)/icons
 	@echo "Done."

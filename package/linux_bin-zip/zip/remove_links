@@ -7,13 +7,12 @@
 # +----------------------------------------------------------------------------+
 
 # constants
-SWN="CoreLAB"
-SWV=0.1.0
-SWV=`head -n 1 documents/VERSION`
-CR=`cat document/copyright`
-INSTDIR=/opt/corelab
+SWN="ModShell"
+SWV=`cat documents/VERSION`
+CR=`cat documents/copyright`
+INSTDIR=/opt/modshell
 LINKDIR=/usr/local
-BINFILES="clioport clmemory clprocessor corelab"
+BINFILES="modshell xmodshell"
 
 # link remover
 clear

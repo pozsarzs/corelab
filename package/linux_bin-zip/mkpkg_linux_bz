@@ -1,0 +1,89 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | mkpkg_linux_bz                                                             |
+# | Make installer packages for Linux                                          |
+# +----------------------------------------------------------------------------+
+
+DIR="CoreLAB"
+NAM="corelab"
+VER="0.1.0"
+REL="1"
+ARC="x86_64"
+PKG="${NAM}-${VER}-${REL}-${ARC}"
+
+# MAKE SFX INSTALLER
+mkpkg_bin() {
+  # check dependency
+  chkdep makeself; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+
+  cp "bin/install" "$NAM"
+  cp "bin/uninstall" "$NAM"
+
+  find "$NAM" -exec touch {} +
+  makeself --keep-umask "$NAM" "${PKG}.bin" "${DIR} v${VER} r${REL}" ./install
+
+  if [ $? -eq 0 ]; then echo -e "\nFile "${PKG}".bin has been created."; fi
+
+  rm --force "${NAM}/install"
+  rm --force "${NAM}/uninstall"
+}
+
+# MAKE ZIP ARCHIVE
+mkpkg_zip() {
+  # check dependency
+  chkdep zip; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  # make package
+
+  cp "zip/create_links" "$NAM"
+  cp "zip/remove_links" "$NAM"
+
+  find "$NAM" -exec touch {} +
+  zip -r9q "${PKG}.zip" "${NAM}"
+
+  if [ $? -eq 0 ]; then echo -e "\nFile "${PKG}".zip has been created."; fi
+
+  rm --force "${NAM}/create_links"
+  rm --force "${NAM}/remove_links"
+}
+
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '${1}' is required to use the script."
+    return 127
+  fi
+}
+
+# MAIN
+if [ ! -d $NAM ]
+then
+  tar -xzf skeleton.tar.gz
+  echo -e "\nAttention!"
+  echo "~~~~~~~~~~"
+  echo -e "I have unpacked the skeleton; first, fill it"\
+       " with real files, then run this script again.\n"
+  exit
+fi
+
+while true; do
+    echo "Select type"
+    echo "-----------------------"
+    echo "1: create SFX installer"
+    echo "2: create ZIP archive"
+    echo "-----------------------"
+    echo "q: exit"
+    read -p "Selected: " OPTION
+
+    case $OPTION in
+        1) mkpkg_bin;;
+        2) mkpkg_zip;;
+        q) break;;
+        *) echo "Invalid selection.";;
+    esac
+    echo ""
+done
