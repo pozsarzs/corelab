@@ -104,27 +104,27 @@ in mind:
 
 ### CoreLAB framework application
 
-![CoreLAB framework application](docs/screenshots/corelab_1.png)
+![CoreLAB framework application](docs/corelab.png)
 
 ### CLIOPort plugin tester application
 
-![CLIOPort plugin tester application](docs/screenshots/clioport.png)
+![CLIOPort plugin tester application](document/screenshots/clioport.png)
 
 ### CLMemory plugin tester application
 
-![CLMemory plugin tester application](docs/screenshots/clmemory.png)
+![CLMemory plugin tester application](document/screenshots/clmemory.png)
 
 ### CLProcessor plugin tester application
 
-![CLProcessor plugin tester application](docs/screenshots/clprocessor_1.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_1.png)
 
-![CLProcessor plugin tester application](docs/screenshots/clprocessor_2.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_2.png)
 
-![CLProcessor plugin tester application](docs/screenshots/clprocessor_3.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_3.png)
 
-![CLMemory plugin tester application](docs/screenshots/clprocessor_4.png)
+![CLMemory plugin tester application](document/screenshots/clprocessor_4.png)
 
-![CLProcessor plugin tester application](docs/screenshots/clprocessor_5.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_5.png)
 
 ## IV. Used external libraries, programs and others
 
@@ -331,8 +331,7 @@ through the following channels:
   architectures.
 - Source code documentation: Detailed developer assistance and documentation
   for the source code are available in the document folder.
-- Additionally, you can view the manual page from *nix shell (_man corelab_) or
-  _corelab.txt_ on other systems.  
+- Additionally, you can view the manual page from *nix shell (_man corelab_).  
 
 ## IX. Contributing  
 
@@ -343,20 +342,8 @@ for details.
 
 ## X. Links  
 
- - [Homepage](https://www.pozsarzs.hu/60_myprogcom/corelab/)  
- - [GitHub repository](https://github.com/pozsarzs/corelab/tree/CoreLAB8)  
- - [Project webpage on Github](https://pozsarzs.github.io/corelab)  
-
-### Source packages  
-
-|name                                                                                 |version|
-|-------------------------------------------------------------------------------------|:-----:|
-|[main.zip](https://github.com/pozsarzs/corelab/archive/refs/heads/CoreLAB8.zip)      |latest |
-|[corelab-0.1.tar.gz](https://www.pozsarzs.hu/60_myprogcom/package/corelab-0.1.tar.gz)|v0.1   |
-
-### Binaries and installer packages for several OS and architecture
-
-Not all test versions have binary or installation packages.
-To download, visit [CoreLAB's webpage](https://www.pozsarzs.hu/60_myprogcom/corelab/).
-
+ - [Homepage](https://pozsarzs.github.io/corelab)  
+ - [GitHub Page](https://github.com/pozsarzs/corelab)  
+ - [GitHub Releases](https://github.com/pozsarzs/corelab/releases)
+ 
 [^1]: [InpOut32 Github repository](https://github.com/ellysh/InpOut32)
