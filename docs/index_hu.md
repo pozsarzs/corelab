@@ -1,3 +1,9 @@
+<a href="https://github.com/pozsarzs/corelab/releases" class="btn">Letöltés</a>
+<a href="https://github.com/pozsarzs/corelab/releases" class="btn">Letöltés</a>
+<a href="https://github.com/pozsarzs/corelab/releases" class="btn">Letöltés</a>
+
+<hr>
+
 <img align="left" style="float: left; margin: 0 10px 0 0;" alt="Icon"
   src="../desktop/48x48/apps/corelab-orange.png">
 
