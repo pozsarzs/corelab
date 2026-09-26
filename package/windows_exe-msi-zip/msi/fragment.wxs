@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="dirCFE4AF1255D5A8CD7C07145F6AD790D9" Name=".">
+      <Directory Id="dir87B80A0BF8C22CEC4DA8C06A7E9275AD" Name=".">
         <Component Id="cmp6E0AD2B047414107E8CE2F294FA40D21" Guid="*">
           <File Id="fil066E06FF4A060779D1810FE0E758C24D" KeyPath="yes" Source="$(var.SourceDir)/LICENCE"/>
         </Component>
@@ -10,7 +10,7 @@
           <File Id="filC3E090343174C840CF48B8DD8660037F" KeyPath="yes" Source="$(var.SourceDir)/clmemory.exe"/>
         </Component>
       </Directory>
-      <Directory Id="dir9AA8F8D131F0531E868445EB896B8E74" Name="message">
+      <Directory Id="dirC57204D2920BC5E823CF00487D54696C" Name="message">
         <Component Id="cmpB3FFD198816EE6693E0139FAA5FA762C" Guid="*">
           <File Id="fil3021D2BA1496E083803DE9FF4C165632" KeyPath="yes" Source="$(var.SourceDir)/message/clioport.pot"/>
         </Component>
@@ -23,7 +23,7 @@
         <Component Id="cmp6370A10D5B0E82806DE4B7B79B097EF6" Guid="*">
           <File Id="fil16CF400EF4B80C2ED0F37875A2B3020A" KeyPath="yes" Source="$(var.SourceDir)/message/lhelp.pot"/>
         </Component>
-        <Directory Id="dir93A065ED5DF80B2B3833B35F2B20E7F3" Name="hu">
+        <Directory Id="dirAC354E23DDC3B554507B27DA6E28C9F3" Name="hu">
           <Component Id="cmpA83233DB65EF603218DBC53EFC77015E" Guid="*">
             <File Id="filC77265FA686CCA4F5DFF97191F52B63E" KeyPath="yes" Source="$(var.SourceDir)/message/hu/clioport.mo"/>
           </Component>
@@ -44,12 +44,12 @@
           <File Id="fil1F2AF163CEDEC819CE721D97C0A8F470" KeyPath="yes" Source="$(var.SourceDir)/message/corelab.pot"/>
         </Component>
       </Directory>
-      <Directory Id="dir2DF4399E10CF8D03D93845FDB5A714A6" Name=".">
+      <Directory Id="dirE422A4C1EFF6C24C5CB894CDC21CB517" Name=".">
         <Component Id="cmpFC5B4BC787C2A91CF66E684344771BC9" Guid="*">
           <File Id="fil096DC3312A1683D04CBD3A072456DBC5" KeyPath="yes" Source="$(var.SourceDir)/clioport.exe"/>
         </Component>
       </Directory>
-      <Directory Id="dirA355A8B29ACC414A9638EF9B5A89612C" Name="help">
+      <Directory Id="dir4C6850801F8DA9CC70757A38B000600D" Name="help">
         <Component Id="cmp282E9E4D3775E8C92EB8D536A3EBF0DB" Guid="*">
           <File Id="fil465D13601B312F75E259BFB79877904D" KeyPath="yes" Source="$(var.SourceDir)/help/corelab_en.chm"/>
         </Component>
@@ -57,11 +57,11 @@
           <File Id="fil4F8674570A00AC7AFA9709209DED3E27" KeyPath="yes" Source="$(var.SourceDir)/help/corelab_hu.chm"/>
         </Component>
       </Directory>
-      <Directory Id="dir6BDB92C19FEB8F43D8A4B00B04FC99E5" Name="document">
+      <Directory Id="dir17D2544C9CF25FA94A7BD4A17D273FDE" Name="document">
         <Component Id="cmpEE442633C7098415CD7AD25FBFE70C50" Guid="*">
           <File Id="filD84583CAE12E3BA6CDA111E5EB41109A" KeyPath="yes" Source="$(var.SourceDir)/document/copyright"/>
         </Component>
-        <Directory Id="dir3B1D8B7D9CF28C62F1FAEEF84CFC820D" Name="inpout32">
+        <Directory Id="dirA9F7A61D11B84D1E27FAEF5CB42A7EDC" Name="inpout32">
           <Component Id="cmp372264E041956305FED34AED6779C8DC" Guid="*">
             <File Id="filBC1A1F6594E03BCA1049BD0E31C772D3" KeyPath="yes" Source="$(var.SourceDir)/document/inpout32/DLPortIO.txt"/>
           </Component>
@@ -88,7 +88,7 @@
           <File Id="fil34464C2FD633588E755F8F611EA24F61" KeyPath="yes" Source="$(var.SourceDir)/document/VERSION"/>
         </Component>
       </Directory>
-      <Directory Id="dirA9FA5C6186D3C1D3086C15BE36F213A8" Name="syntax">
+      <Directory Id="dir8A1A84402A789B6802396D5C30A35E08" Name="syntax">
         <Component Id="cmpD0E8AA572045E5E69056DAE48F12E689" Guid="*">
           <File Id="fil65A6F25AFFA09641B2D08FF87BD921B9" KeyPath="yes" Source="$(var.SourceDir)/syntax/scripts.vim"/>
         </Component>
@@ -120,7 +120,7 @@
           <File Id="fil972A2D38DF468AD83CDFD874AE2C2878" KeyPath="yes" Source="$(var.SourceDir)/syntax/Syntax"/>
         </Component>
       </Directory>
-      <Directory Id="dir67469FAF5B380354AADB30C01656A13E" Name="library">
+      <Directory Id="dir1ACE99FEE6D17303BF89B1C1CF617F18" Name="library">
         <Component Id="cmp41551347F1F725B393B1D409552A6D92" Guid="*">
           <File Id="fil785D080AC3323D01DCC926106063471E" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred512mux.dll"/>
         </Component>
@@ -218,7 +218,7 @@
           <File Id="filE381E51BFFE0C8872D8488EBC52ADE43" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_switch16mux.dll"/>
         </Component>
       </Directory>
-      <Directory Id="dirE02C2D997CEE01DD9B2BE43BA61E4030" Name=".">
+      <Directory Id="dir83722B776892E45E0B43D5A2B2C49D74" Name=".">
         <Component Id="cmp2B2AC0F4FD4FBDF45E5051BA21EB590E" Guid="*">
           <File Id="fil4AC183A9A4E363A38CDE05F7E5D6F220" KeyPath="yes" Source="$(var.SourceDir)/lhelp.exe"/>
         </Component>

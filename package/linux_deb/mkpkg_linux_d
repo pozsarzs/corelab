@@ -1,0 +1,67 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | mkpkg_linux_d                                                              |
+# | Makes .deb installer package                                               |
+# +----------------------------------------------------------------------------+
+
+DIR="CoreLAB"
+NAM="corelab"
+VER="0.1.0"
+REL="1"
+ARC="amd64"
+PKG="${NAM}_${VER}-${REL}_${ARC}"
+
+# MAKE ZIP ARCHIVE
+mkpkg_deb() {
+  # check dependency
+  chkdep dpkg-deb; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  chkdep fakeroot; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  chkdep lintian; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  # make package
+  rm --force "*.deb"
+  find "$NAM" -exec touch {} +
+  fakeroot dpkg-deb --build "$NAM" && lintian "${NAM}.deb"
+  mv "${NAM}.deb" "${PKG}.deb" 
+  if [ $? -eq 0 ]; then echo -e "\nFile ${PKG}.deb has been created."; fi
+}
+
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '${1}' is required to use the script."
+    return 127
+  fi
+}
+
+# MAIN
+if [ ! -d "${NAM}/usr" ]
+then
+  mkdir --parents "$NAM"
+  tar -xzf skeleton.tar.gz -C "$NAM"
+  echo -e "\nAttention!"
+  echo "~~~~~~~~~~"
+  echo -e "I have unpacked the skeleton; first, fill it"\
+       " with real files, then run this script again.\n"
+  exit
+fi
+
+while true; do
+    echo "Select type"
+    echo "-----------------------"
+    echo "1: create DEB package"
+    echo "-----------------------"
+    echo "q: exit"
+    read -p "Selected: " OPTION
+
+    case $OPTION in
+        1) mkpkg_deb;;
+        q) break;;
+        *) echo "Invalid selection.";;
+    esac
+    echo ""
+done

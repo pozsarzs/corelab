@@ -12,13 +12,13 @@ chkdep() {
   then
     return 0
   else
-    echo -e "\nERROR: The '$1' is required to use the script."
+    echo -e "\nERROR: The '${1}' is required to use the script."
     return 127
   fi
 }
 
 # check dependency
-chkdep vsce; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+chkdep vsce; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
 # create .vsix file
 cd corelab-scriptembly
 vsce package

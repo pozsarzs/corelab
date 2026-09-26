@@ -1,10 +1,10 @@
 Package: corelab
 Version: 0.1
 Section: devel
-Priority: standard
-Depends: libc6
+Priority: optional
 Architecture: amd64
-Installed-Size: 0.0 MB
+Depends: libc6
+Installed-Size: 1024
 Maintainer: Pozsar Zsolt <pozsarzs@gmail.com>
 Homepage: https://pozsarzs.github.io/corelab/
 Description: Modular Processor Simulation Framework

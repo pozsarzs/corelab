@@ -1,0 +1,69 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | create_links                                                               |
+# | Symbolic link creator script                                               |
+# +----------------------------------------------------------------------------+
+
+SWN="CoreLAB"
+SWV=`head -n 1 document/VERSION`
+CR=`cat document/copyright`
+LINKDIR=/usr/local
+SYSDIRS="$LINKDIR/bin \
+         $LINKDIR/share/applications \
+         $LINKDIR/share/man/man1"
+BINFILES="clioport clmemory clprocessor corelab"
+
+README=./README.md
+
+# installer
+clear
+echo "--------------------------------------------------------------------------------"
+echo "$SWN $SWV symbolic link creator script"
+echo "$CR"
+echo "--------------------------------------------------------------------------------"
+if [ `whoami` != 'root' ]
+then echo 'ERROR: You are not root!'; exit
+fi
+echo "  This program is free software: you can redistribute it and/or modify it
+under the terms of the European Union Public License 1.2 version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE."
+echo "--------------------------------------------------------------------------------"
+sleep 3
+
+echo "Creating symbolic links..."
+for d in $SYSDIRS
+do
+  mkdir -p $d 2> /dev/null
+done
+for f in $BINFILES
+do
+  # binaries
+  if [ -f `pwd`/$f ];
+  then
+    ln -sf `pwd`/$f $LINKDIR/bin/$f 2> /dev/null
+    echo "  "`pwd`/$f' --> '$LINKDIR/bin/$f
+  fi
+  # desktop files
+  if [ -f `pwd`/desktop/$f.desktop ];
+  then
+    ln -sf `pwd`/$f.desktop $LINKDIR/share/applications/$f.desktop 2> /dev/null
+    echo "  "`pwd`/$f.desktop' --> '$LINKDIR/share/applications/$f.desktop
+  fi
+  # manuals
+  if [ -f `pwd`/manual/"$f".1 ];
+  then
+    ln -sf `pwd`/manual/"$f".1 $LINKDIR/share/man/man1/$f.1 2> /dev/null
+    echo "  "`pwd`/manual/"$f".1' --> '$LINKDIR/share/man/man1/$f.1
+  fi
+done
+
+
+echo "Done."
+echo ""
+echo "Thank you for installing $SWN,"
+echo "see $README for more information."

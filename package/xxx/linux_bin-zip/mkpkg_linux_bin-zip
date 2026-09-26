@@ -2,13 +2,19 @@
 # +----------------------------------------------------------------------------+
 # | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 # | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-# | mkpkg_windows                                                              |
+# | mkpkg_linux_bin-zip                                                        |
 # | Make installer packages for Windows                                        |
 # +----------------------------------------------------------------------------+
+DIR="CoreLAB"
+NAM="corelab"
+VER="0.1.0"
+REL="1"
+ARC="win64"
+PKG="${NAM}-${VER}-${REL}-${ARC}"
 
 DIR="CoreLAB"
 VER="0.1.0"
-ARCH="win64"
+ARCH="x86_64"
 PKG="corelab-$VER-$ARCH"
 
 # COLLECTS FILES TO INSTALL AND CREATES LIST
@@ -40,8 +46,8 @@ rmdirs() {
   echo "  RMDir \"\$INSTDIR\""
 }
 
-# MAKE EXE INSTALLER
-mkpkg_exe() {
+# MAKE SFX INSTALLER
+mkpkg_bin() {
   # check dependency
   chkdep makensis; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
   # make recept
@@ -112,26 +118,6 @@ EOT
   rm --force $RECIPE
 }
 
-# MAKE MSI PACKAGE
-mkpkg_msi() {
-  # check dependency
-  chkdep wixl; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
-  # make package
-  mkdir --parents msi
-  find "$DIR/" | \
-    wixl-heat -p "$DIR/" \
-              --component-group InstalledFiles \
-              --directory-ref INSTALLDIR \
-              --var var.SourceDir > msi/fragment.wxs
-
-  if [ $? -ne 0 ]; then return; fi
-
-  wixl -D SourceDir=$DIR \
-       -o ${PKG}.msi msi/product.wxs msi/fragment.wxs
-
-  if [ $? -eq 0 ]; then echo -e "\nFile "${PKG}".msi has been created."; fi
-}
-
 # MAKE ZIP ARCHIVE
 mkpkg_zip() {
   # check dependency
@@ -157,22 +143,25 @@ chkdep() {
 if [ ! -d $DIR ]
 then
   tar -xzf skeleton.tar.gz
+  echo -e "\nAttention!"
+  echo "~~~~~~~~~~"
+  echo -e "I have unpacked the skeleton; first, fill it"\
+       " with real files, then run this script again.\n"
+  exit
 fi
 
 while true; do
     echo "Select type"
     echo "-----------------------"
-    echo "1: create EXE installer"
-    echo "2: create MSI package"
-    echo "3: create ZIP archive"
+    echo "1: create SFX installer"
+    echo "2: create ZIP archive"
     echo "-----------------------"
     echo "q: exit"
     read -p "Selected: " OPTION
 
     case $OPTION in
-        1) mkpkg_exe;;
-        2) mkpkg_msi;;
-        3) mkpkg_zip;;
+        1) mkpkg_bin;;
+        2) mkpkg_zip;;
         q) break;;
         *) echo "Invalid selection.";;
     esac

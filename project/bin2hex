@@ -12,12 +12,12 @@ chkdep() {
   then
     return 0
   else
-    echo -e "\nERROR: The '$1' is required to use the script."
+    echo -e "\nERROR: The '${1}' is required to use the script."
     return 127
   fi
 }
 
 # check dependency
-chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
 # convert file
-objcopy -I binary -O ihex $1 $1.bin
+objcopy -I binary -O ihex "$1" "${1}.bin"

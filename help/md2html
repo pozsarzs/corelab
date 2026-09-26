@@ -14,13 +14,13 @@ chkdep() {
   then
     return 0
   else
-    echo -e "\nERROR: The '$1' is required to use the script."
+    echo -e "\nERROR: The '${1}' is required to use the script."
     return 127
   fi
 }
 
 # check dependency
-chkdep pandoc; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+chkdep pandoc; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
 # convert files
 for x in $FILES
 do

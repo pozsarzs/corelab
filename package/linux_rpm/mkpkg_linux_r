@@ -1,0 +1,71 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | mkpkg_linux_r                                                              |
+# | Makes .rpm installer package                                               |
+# +----------------------------------------------------------------------------+
+
+DIR="CoreLAB"
+NAM="corelab"
+VER="0.1.0"
+REL="1"
+ARC="x86_64"
+PKG="${NAM}_${VER}-${REL}.${ARC}"
+
+# MAKE ZIP ARCHIVE
+mkpkg_rpm() {
+  # check dependency
+  chkdep rpmbuild; TOBE=$?; if [ $TOBE -ne 0 ]; then return; fi
+  # make package
+  rm --force "RPMS/${ARC}/*.rpm"
+  find "BUILDROOT" -exec touch {} +
+  mkdir --parents "RPMS/${ARC}"
+  rpmbuild --define "_topdir $(pwd)" \
+           --buildroot "$(pwd)/BUILDROOT" \
+           -bb \
+           --noclean "SPECS/${NAM}-${VER}-${REL}.spec"
+
+  if [ $? -eq 0 ]; then echo -e "\nFile ${PKG}.rpm has been created."; fi
+}
+
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '${1}' is required to use the script."
+    return 127
+  fi
+}
+
+# MAIN
+if [ ! -d "BUILDROOT/usr" ]
+then
+  mkdir --parents "BUILDROOT"
+  tar -xzf skeleton.tar.gz -C "BUILDROOT"
+  echo -e "\nAttention!"
+  echo "~~~~~~~~~~"
+  echo -e "I have unpacked the skeleton; first, fill it"\
+       " with real files, then run this script again.\n"
+  exit
+fi
+
+#if [ `whoami` != 'root' ]; then echo 'ERROR: You are not root!'; exit; fi
+
+while true; do
+    echo "Select type"
+    echo "-----------------------"
+    echo "1: create RPM package"
+    echo "-----------------------"
+    echo "q: exit"
+    read -p "Selected: " OPTION
+
+    case $OPTION in
+        1) mkpkg_rpm;;
+        q) break;;
+        *) echo "Invalid selection.";;
+    esac
+    echo ""
+done
