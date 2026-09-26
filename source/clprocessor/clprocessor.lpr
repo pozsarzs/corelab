@@ -19,7 +19,7 @@ uses
   frmexdepmemory, frmloadsavememory;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
-  PRGHOME = 'http://www.pozsarzs.hu';
+  PRGHOME = 'https://pozsarzs.github.io/corelab';
   AUTMAIL = 'pozsarzs@gmail.com';
   PRGNAME = 'CLProcessor';
   PRGVERS = '0.1';

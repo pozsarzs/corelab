@@ -18,7 +18,7 @@ uses
   lhelpcontrolpkg, crt, frmabout, frmmain;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
-  PRGHOME = 'http://www.pozsarzs.hu';
+  PRGHOME = 'https://pozsarzs.github.io/corelab';
   AUTMAIL = 'pozsarzs@gmail.com';
   PRGNAME = 'CLMemory';
   PRGVERS = '0.1';

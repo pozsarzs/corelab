@@ -38,6 +38,7 @@ historical preservation.
 
 ## Contact
 
- - Homepage: <https://www.pozsarzs.hu/60_myprogcom/corelab/>  
- - Project webpage on Github: <https://pozsarzs.github.io/corelab>  
+ - [Homepage](https://pozsarzs.github.io/corelab)  
+ - [GitHub Page](https://github.com/pozsarzs/corelab)  
+ - [GitHub Releases](https://github.com/pozsarzs/corelab/releases)
  - Author: Pozsár Zsolt <pozsarzs@gmail.com>  
