@@ -720,7 +720,7 @@ msgstr "&Bezárás"
 
 #: tform5.caption
 msgid "Examine/deposit"
-msgstr "Vizsgálat/adatbevitel"
+msgstr "Vizsgálat/tárolás"
 
 #: tform5.editbutton1.text
 msgctxt "tform5.editbutton1.text"

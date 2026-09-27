@@ -7,8 +7,7 @@
       <Unit>
         <Filename Value="clmemory.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="3" Y="2"/>
+        <CursorPos X="17" Y="7"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -18,6 +17,7 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="5" Y="2"/>
         <UsageCount Value="216"/>
@@ -75,7 +75,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="26" Column="15"/>
@@ -189,10 +189,6 @@
       </Position>
       <Position>
         <Filename Value="frmabout.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="40" TopLine="73"/>
       </Position>
     </JumpHistory>
     <RunParams>

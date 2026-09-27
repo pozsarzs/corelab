@@ -20,12 +20,12 @@ uses
 type
   { TForm2 }
   TAboutLabels = record
-    Copyright:   string[31];
-    Description: string[31];
-    Email:       string[31];
-    Homepage:    string[31];
-    Name:        string[31];
-    Version:     string[31];
+    Copyright:   string[32];
+    Description: string;
+    Email:       string[32];
+    Homepage:    string[64];
+    Name:        string[32];
+    Version:     string[32];
   end;
   TForm2 = class(TForm)
     Bevel1:  TBevel;

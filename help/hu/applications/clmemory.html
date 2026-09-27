@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - CLMemory</title>
+<meta http-equiv="content-language" content="hu">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h1 id="clmemory-súgó">CLMemory – Súgó</h1>
+<h2 id="bevezetés">1. Bevezetés</h2>
+<p>A CLMemory a CoreLAB keretrendszer memória-bővítményeinek
+kipróbálására szolgáló grafikus alkalmazás. Az alkalmazás segítségével
+memória-plugin tölthető be, megtekinthetők és módosíthatók a plugin
+egyes tulajdonságai, valamint memóriarekeszek olvashatók és írhatók. A
+bővítmény állapota fájlba menthető, illetve fájlból visszatölthető.</p>
+<h3 id="főbb-funkciók">1.1 Főbb funkciók</h3>
+<ul>
+<li>Memória-bővítmények keresése egy megadott könyvtárban.</li>
+<li>Bővítmény betöltése és cseréje.</li>
+<li>A betöltött bővítmény tulajdonságainak megjelenítése.</li>
+<li>A memória méretének, engedélyezett állapotának és memóriamódjának
+beállítása.</li>
+<li>Memóriacímről egy bájt beolvasása.</li>
+<li>Egy bájt kiírása memóriacímre.</li>
+<li>A bővítmény állapotának mentése és betöltése.</li>
+</ul>
+<h3 id="rendszerkövetelmények">2. Rendszerkövetelmények</h3>
+<p>Az alkalmazás FreeBSD, Linux és Windows operációs rendszereken
+használható.</p>
+<h2 id="a-felhasználói-felület">3. A felhasználói felület</h2>
+<h3 id="főablak">3.1 Főablak</h3>
+<p>A főablak fő részei:</p>
+<ul>
+<li><strong>Bővítménykönyvtár mező:</strong> a memória-bővítményeket
+tartalmazó könyvtár megadása.</li>
+<li><strong>Fájllista:</strong> a könyvtárban található memória-pluginok
+listája. A lista a fájlnevet, méretet és típust mutatja.</li>
+<li><strong>Tulajdonságlista:</strong> a betöltött bővítmény adatait és
+beállítható tulajdonságait jeleníti meg.</li>
+<li><strong>Memóriatáblázat:</strong> a vizsgált memóriacím és az adat
+hexadecimális értékének megadására, illetve megjelenítésére
+szolgál.</li>
+<li><strong>Állapotsor:</strong> a betöltések sorszámát, a kiválasztott
+fájl nevét és a műveletek rövid visszajelzését mutatja.</li>
+</ul>
+<h3 id="tulajdonságlista">3.2 Tulajdonságlista</h3>
+<p>A tulajdonságlista a betöltött plugin adatait és konfigurációs
+értékeit mutatja.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Tulajdonság</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Filename</td>
+<td>A betöltött bővítmény fájlneve.</td>
+</tr>
+<tr class="even">
+<td>Modname</td>
+<td>A bővítmény neve.</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>A bővítmény leírása.</td>
+</tr>
+<tr class="even">
+<td>Enabled</td>
+<td>A memória-bővítmény engedélyezett állapota.</td>
+</tr>
+<tr class="odd">
+<td>MemoryMode</td>
+<td>A memória működési módja.</td>
+</tr>
+<tr class="even">
+<td>AddressRangeSize</td>
+<td>A memória címtartományának mérete.</td>
+</tr>
+</tbody>
+</table>
+<p>Az <code>AddressRangeSize</code> értéke 16 bájt és 16 MB közötti
+lehet.</p>
+<h3 id="memóriatáblázat">3.3 Memóriatáblázat</h3>
+<p>A memóriatáblázat két adatot kezel:</p>
+<ul>
+<li><strong>Cím:</strong> a vizsgálandó memóriacím, hexadecimális
+formában.</li>
+<li><strong>Adat:</strong> a memóriacímhez tartozó bájtérték,
+hexadecimális formában.</li>
+</ul>
+<p>Az adatmezőbe 8 bites érték írható be. A cím és az adat hexadecimális
+formátumú.</p>
+<h2 id="az-alkalmazás-használata">4. Az alkalmazás használata</h2>
+<h3 id="bővítménykönyvtár-kiválasztása">4.1 Bővítménykönyvtár
+kiválasztása</h3>
+<h3 id="bővítménykönyvtár-kiválasztása-1">4.1 Bővítménykönyvtár
+kiválasztása</h3>
+<ol type="1">
+<li>Válaszd a <strong>Bővítménykönyvtár kiválasztása</strong>
+menüpontot, vagy használd a könyvtármező melletti kiválasztógombot.</li>
+<li>Válaszd ki a bővítményeket tartalmazó könyvtárat.</li>
+<li>A fájllista frissül, és megjeleníti a felismert
+bővítményfájlokat.</li>
+</ol>
+<p>A <strong>Bővítménylista frissítése</strong> parancs újraolvassa az
+aktuális könyvtár tartalmát.</p>
+<h3 id="bővítmény-betöltése-vagy-cseréje">4.2 Bővítmény betöltése vagy
+cseréje</h3>
+<ol type="1">
+<li>Válaszd ki a kívánt bővítményfájlt a fájllistában.</li>
+<li>Indítsd el a <strong>Bővítmény betöltése/cseréje</strong>
+parancsot.</li>
+<li>Sikeres betöltéskor a tulajdonságlista frissül, és a memória
+vizsgálatára szolgáló mezők, illetve műveletek engedélyezetté
+válnak.</li>
+</ol>
+<p>Új bővítmény betöltésekor a korábbi példány felszabadításra
+kerül.</p>
+<h3 id="memória-olvasása">4.3 Memória olvasása</h3>
+<ol type="1">
+<li>Add meg a címet az <strong>Cím</strong> mezőben, hexadecimális
+formában.</li>
+<li>Válaszd a <strong>Vizsgálat</strong> parancsot.</li>
+<li>A program beolvassa a megadott cím tartalmát.</li>
+<li>A beolvasott bájt a <strong>Data</strong> mezőben jelenik meg.</li>
+</ol>
+<p>Ha a cím kívül esik a memória címtartományán, az állapotsor erre
+figyelmeztet.</p>
+<h3 id="memória-írása">4.4 Memória írása</h3>
+<ol type="1">
+<li>Add meg a címet az <strong>Cím</strong> mezőben.</li>
+<li>Add meg a kiírandó bájtértéket a <strong>Adat</strong> mezőben.</li>
+<li>Válaszd a <strong>Tárolás</strong> parancsot.</li>
+<li>A program meghívja a bővítmény írási műveletét, majd visszajelzést
+ad az állapotsorban.</li>
+</ol>
+<p>A program jelzi, ha a cím a címtartományon kívül esik, illetve ha a
+memória ROM módban van.</p>
+<h3 id="a-bővítmény-állapotának-betöltése">4.5 A bővítmény állapotának
+betöltése</h3>
+<ol type="1">
+<li>Válaszd a <strong>Állapot betöltése</strong> parancsot.</li>
+<li>Válaszd ki a korábban mentett állományt.</li>
+<li>A program átadja az állapotadatokat a bővítménynek.</li>
+<li>Sikeres betöltés után a tulajdonságlista frissül.</li>
+</ol>
+<h3 id="a-bővítmény-állapotának-mentése">4.6 A bővítmény állapotának
+mentése</h3>
+<ol type="1">
+<li>Válaszd a <strong>Állapot mentése</strong> parancsot.</li>
+<li>Add meg a célfájlt.</li>
+<li>A program lekéri a bővítmény állapotadatait, majd elmenti azokat a
+kiválasztott fájlba.</li>
+</ol>
+<h2 id="menüparancsok">5. Menüparancsok</h2>
+<h3 id="fájl">5.1 Fájl</h3>
+<ul>
+<li>Bővítménykönyvtár kiválasztása</li>
+<li>Gyakori helyek</li>
+<li>Bővítménylista frissítése</li>
+<li>Bővítmény betöltése/cseréje</li>
+<li>Alkalmazás újraindítása</li>
+<li>Kilépés</li>
+</ul>
+<p>Az <strong>Gyakori helyek</strong> almenüben a forrás szerint az
+alábbi útvonalak szerepelhetnek, ha léteznek:</p>
+<ul>
+<li><code>./</code></li>
+<li><code>/usr/lib/corelab/</code></li>
+<li><code>/usr/local/lib/corelab/</code></li>
+<li><code>./plugins/</code></li>
+<li><code>~/.local/lib/corelab/</code></li>
+</ul>
+<h3 id="memory">5.2 Memory</h3>
+<ul>
+<li>Vizsgálat (Egy bájt beolvasása a megadott memóriacímről.)</li>
+<li>Tárolás (Egy bájt kiírása a megadott memóriacímre.)</li>
+<li>Állapot betöltése</li>
+<li>Állapot mentése</li>
+</ul>
+<h3 id="help">5.3 Help</h3>
+<ul>
+<li>Súgó</li>
+<li>Névjegy</li>
+</ul>
+<h2 id="beállítások">6. Beállítások</h2>
+<p>Az alkalmazás nem tartalmaz általános beállítási
+párbeszédablakot.</p>
+<h2 id="hibaelhárítás">7. Hibaelhárítás</h2>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hiba</th>
+<th>Lehetséges ok / teendő</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A megadott könyvtár nem létezik.</td>
+<td>Ellenőrizd a bővítménykönyvtár útvonalát.</td>
+</tr>
+<tr class="even">
+<td>A bővítmény nem tölthető be.</td>
+<td>Ellenőrizd a fájlt és a betöltő által jelzett hibát.</td>
+</tr>
+<tr class="odd">
+<td>A fájl nem CoreLAB memória-bővítmény.</td>
+<td>Olyan bővítményt válassz, amely a szükséges memória-belépési
+pontokat biztosítja.</td>
+</tr>
+<tr class="even">
+<td>Hibás hexadecimális adat.</td>
+<td>Csak hexadecimális érték adható meg.</td>
+</tr>
+<tr class="odd">
+<td>A megadott memória mérete kívül esik a megengedett tartományon.</td>
+<td>A memória mérete 16 bájt és 16 MiB közötti lehet.</td>
+</tr>
+<tr class="even">
+<td>A cím a címtartományon kívül esik.</td>
+<td>Ellenőrizd a megadott címet és a memória méretét.</td>
+</tr>
+<tr class="odd">
+<td>A memória csak olvasható.</td>
+<td>ROM módban az írás nem módosítja a memóriát.</td>
+</tr>
+<tr class="even">
+<td>Hiányzik a súgófájl vagy a súgónéző.</td>
+<td>Ellenőrizd a súgófájl és az <code>lhelp</code> elérhetőségét.</td>
+</tr>
+<tr class="odd">
+<td>Nem olvasható vagy nem írható a bővítmény állapota.</td>
+<td>Ellenőrizd a kiválasztott bővítményt és az állományt.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="függelék">8. Függelék</h2>
+<h3 id="fájlformátumok">8.1 Fájlformátumok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Kiterjesztés / minta</th>
+<th>Rendeltetés</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>memory_*.dll</code></td>
+<td>Windows memória-bővítmény.</td>
+</tr>
+<tr class="even">
+<td><code>libmemory_*.so</code></td>
+<td>Linux/Unix memória-bővítmény.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB bővítményállapot-fájl.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="billentyűparancsok">8.2 Billentyűparancsok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Parancs</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Bővítménykönyvtár kiválasztása</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-E</td>
+<td>Egy bájt beolvasása a megadott memóriacímről</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-P</td>
+<td>Egy bájt kiírása a megadott memóriacímre</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fogalomtár">8.3 Fogalomtár</h3>
+<ul>
+<li><strong>Memória-bővítmény (plugin):</strong> dinamikusan betöltött
+modul, amely memóriaműveleteket valósít meg.</li>
+<li><strong>AddressRangeSize:</strong> a bővítmény által kezelt
+memóriacímek tartományának mérete.</li>
+<li><strong>MemoryMode:</strong> a memória működési módja, például ROM
+vagy RAM, a bővítmény által támogatott mód.</li>
+<li><strong>Állapotfájl:</strong> a bővítmény állapotának mentésére és
+visszaállítására szolgáló <code>.clpst</code> fájl.</li>
+</ul>
+<h3 id="verziótörténet">8.4 Verziótörténet</h3>
+<ul>
+<li><strong>v0.1.0:</strong> első változat.</li>
+</ul>
+</body>
+</html>

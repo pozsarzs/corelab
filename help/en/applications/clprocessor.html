@@ -1,10 +1,459 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - CLProcessor plugin tester application</title>
+<title>CoreLAB - CLProcessor</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
+<h1 id="clprocessor-help">CLProcessor – Help</h1>
+<h2 id="introduction">1. Introduction</h2>
+<p>CLProcessor is a graphical application for loading and testing
+processor plugins in the CoreLAB framework. The loaded processor is
+connected to the test environment, where it can be run step by step or
+continuously.</p>
+<h3 id="main-features">1.1 Main Features</h3>
+<ul>
+<li>Search for and load processor plugins.</li>
+<li>Display processor properties and registers.</li>
+<li>Load register values from the processor and write values back to
+it.</li>
+<li>Reset the processor.</li>
+<li>Issue NMI and IRQ interrupt requests.</li>
+<li>Run the processor program step by step or continuously.</li>
+<li>Log program execution.</li>
+<li>Examine, clear, load, and save memory contents.</li>
+<li>Use the test environment’s standard I/O ports and ASCII
+console.</li>
+<li>Save and restore the processor state.</li>
+</ul>
+<h3 id="system-requirements">1.2 System Requirements</h3>
+<p>The application can be used on FreeBSD, Linux, and Windows.</p>
+<h2 id="user-interface">2. User Interface</h2>
+<h3 id="main-window">2.1 Main Window</h3>
+<p>The main window contains the controls for selecting and loading
+plugins, the processor properties and registers, and the commands for
+running the processor and managing the test environment.</p>
+<h3 id="processor-properties">2.2 Processor Properties</h3>
+<p>The properties list displays information and configuration
+characteristics of the loaded processor. The properties handled in the
+source code are:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Filename</td>
+<td>The filename of the loaded plugin.</td>
+</tr>
+<tr class="even">
+<td>Modname</td>
+<td>The name of the processor plugin.</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>A description of the plugin.</td>
+</tr>
+<tr class="even">
+<td>Architecture</td>
+<td>The processor architecture.</td>
+</tr>
+<tr class="odd">
+<td>Enabled</td>
+<td>Whether the processor is enabled.</td>
+</tr>
+<tr class="even">
+<td>AddressWidth</td>
+<td>The width of the processor’s address bus.</td>
+</tr>
+<tr class="odd">
+<td>Architecture</td>
+<td>The processor architecture.</td>
+</tr>
+<tr class="even">
+<td>Endianness</td>
+<td>The byte order used to store data.</td>
+</tr>
+<tr class="odd">
+<td>HasSeparateIOBus</td>
+<td>Whether the processor uses a separate I/O bus.</td>
+</tr>
+<tr class="even">
+<td>MaxCodeAddress</td>
+<td>The maximum address of code memory.</td>
+</tr>
+<tr class="odd">
+<td>MaxIOPortAddress</td>
+<td>The maximum address of I/O ports.</td>
+</tr>
+<tr class="even">
+<td>MaxMemAddress</td>
+<td>The maximum memory address.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="register-list">2.3 Register List</h3>
+<p>The register list displays the registers of the loaded processor and
+their current values. Register names and sizes depend on the processor
+plugin.</p>
+<p>The values are displayed in hexadecimal format. The input field
+checks whether a value is hexadecimal and whether it fits within the
+size of the corresponding register.</p>
+<h3 id="memory">2.4 Memory</h3>
+<p>The test environment’s memory contents are managed in banks.
+According to the source, bank 0 is the code memory for Neumann and
+Harvard architecture processors, while bank 1 is the Harvard data
+memory.</p>
+<p>The memory size is defined in the program by the
+<code>MEM_SIZE</code> constant.</p>
+<h3 id="status-bar">2.5 Status Bar</h3>
+<p>The status bar displays the load sequence number, the name of the
+selected plugin, and brief feedback about operations.</p>
+<h2 id="using-the-application">3. Using the Application</h2>
+<h3 id="selecting-the-plugin-directory">3.1 Selecting the Plugin
+Directory</h3>
+<ol type="1">
+<li>Select the <strong>Select plugin directory</strong> command.</li>
+<li>Select the directory containing the processor plugins.</li>
+<li>The file list is refreshed.</li>
+</ol>
+<p>The <strong>Refresh plugin list</strong> command rereads the contents
+of the current directory.</p>
+<h3 id="loading-or-changing-a-processor">3.2 Loading or Changing a
+Processor</h3>
+<ol type="1">
+<li>Select the desired processor plugin in the file list.</li>
+<li>Run the <strong>Load/change plugin</strong> command.</li>
+<li>If loading succeeds, the processor instance is created and connected
+to the test bus. The properties and register lists are then
+updated.</li>
+</ol>
+<h3 id="loading-register-values-from-the-processor">3.3 Loading Register
+Values from the Processor</h3>
+<p>The <strong>Load register values from CPU</strong> command refreshes
+the register list with the processor’s current values.</p>
+<h3 id="writing-register-values-to-the-processor">3.4 Writing Register
+Values to the Processor</h3>
+<ol type="1">
+<li>Modify the desired register value in the register list.</li>
+<li>Select the <strong>Save register values to CPU</strong>
+command.</li>
+<li>The program writes the displayed values back to the processor
+registers.</li>
+</ol>
+<p>The value must be hexadecimal and must fit within the size of the
+corresponding register.</p>
+<h3 id="resetting-the-processor">3.5 Resetting the Processor</h3>
+<p>The <strong>Reset</strong> command invokes the processor’s reset
+operation and then refreshes the register list.</p>
+<h3 id="interrupt-requests">3.6 Interrupt Requests</h3>
+<ul>
+<li><strong>NMI:</strong> Sends a non-maskable interrupt request to the
+processor.</li>
+<li><strong>IRQ:</strong> Sends an interrupt request to the processor
+using the interrupt vector specified in the main window.</li>
+</ul>
+<p>The IRQ vector field accepts a hexadecimal value. In the source code,
+the vector is formatted as two hexadecimal digits.</p>
+<h3 id="running-the-program-step-by-step">3.7 Running the Program Step
+by Step</h3>
+<p>The <strong>Step</strong> command performs one processor step and
+then refreshes the register list.</p>
+<h3 id="running-and-stopping-the-program">3.8 Running and Stopping the
+Program</h3>
+<ul>
+<li><strong>Run:</strong> Starts repeated processor stepping.</li>
+<li><strong>Stop:</strong> Stops repeated stepping and then refreshes
+the register list.</li>
+</ul>
+<p>The execution speed can be adjusted using the slider; its position
+sets the interval of the stepping timer.</p>
+<h3 id="execution-log">3.9 Execution Log</h3>
+<p>The <strong>RunLogger</strong> command displays the execution log
+window. The processor’s event handler records the current instruction at
+instruction boundaries.</p>
+<h3 id="examining-memory-contents">3.10 Examining Memory Contents</h3>
+<p>The <strong>Examine/Deposit</strong> command opens the window used to
+examine and modify memory.</p>
+<p>The <strong>HexViewer</strong> command displays the HexViewer window.
+The window receives the loaded processor’s architecture and the size of
+the test memory.</p>
+<h3 id="loading-memory-contents-from-a-file">3.11 Loading Memory
+Contents from a File</h3>
+<p>The <strong>Load memory content</strong> command loads memory
+contents from a file. The target bank and address range must be
+specified before loading.</p>
+<p>The source code supports two file formats:</p>
+<ul>
+<li>Binary (<code>.bin</code>)</li>
+<li>Intel HEX (<code>.hex</code>)</li>
+</ul>
+<p>For a binary file, the bytes read are placed in the selected address
+range. Before loading an Intel HEX file, the contents of the target bank
+are cleared.</p>
+<h3 id="saving-memory-contents-to-a-file">3.12 Saving Memory Contents to
+a File</h3>
+<p>The <strong>Save memory content</strong> command saves the specified
+address range of the selected bank to a file. The supported formats
+are:</p>
+<ul>
+<li>Binary (<code>.bin</code>)</li>
+<li>Intel HEX (<code>.hex</code>)</li>
+</ul>
+<h3 id="clearing-memory-banks">3.13 Clearing Memory Banks</h3>
+<ul>
+<li><strong>Clear (code) memory:</strong> Sets every byte in bank 0 to
+zero.</li>
+<li><strong>Clear data memory:</strong> Sets every byte in bank 1 to
+zero.</li>
+</ul>
+<h3 id="ascii-console">3.14 ASCII Console</h3>
+<p>The <strong>ASCII Console</strong> command creates and displays the
+ASCII console panel. The panel name contains the console’s I/O address.
+The console also receives an interrupt handler and uses the interrupt
+vector configured in the main window.</p>
+<h3 id="standard-io-port">3.15 Standard I/O Port</h3>
+<p>The <strong>Standard I/O Port</strong> command creates and displays
+the standard I/O port panel.</p>
+<h3 id="io-port-interrupt-requests">3.16 I/O Port Interrupt
+Requests</h3>
+<p>The corresponding menu item enables or disables forwarding of
+interrupt requests originating from the I/O port.</p>
+<h3 id="resetting-io-ports">3.17 Resetting I/O Ports</h3>
+<p>The <strong>Reset ports</strong> command resets the created ASCII
+console and standard I/O port.</p>
+<h3 id="saving-and-loading-processor-state">3.18 Saving and Loading
+Processor State</h3>
+<ul>
+<li><strong>Save status:</strong> Saves the processor state to a
+<code>.clpst</code> file.</li>
+<li><strong>Load status:</strong> Restores the processor state from the
+selected <code>.clpst</code> file.</li>
+</ul>
+<p>The properties list is refreshed after a successful load.</p>
+<h2 id="menu-commands">4. Menu Commands</h2>
+<h3 id="file">4.1 File</h3>
+<ul>
+<li>Select plugin directory</li>
+<li>Usual places</li>
+<li>Refresh plugin List</li>
+<li>Load/change plugin</li>
+<li>Restart application</li>
+<li>Exit</li>
+</ul>
+<p>The <strong>Usual places</strong> submenu may contain the following
+paths, if they exist:</p>
+<ul>
+<li><code>./</code></li>
+<li><code>/usr/lib/corelab/</code></li>
+<li><code>/usr/local/lib/corelab/</code></li>
+<li><code>./plugins/</code></li>
+<li><code>~/.local/lib/corelab/</code></li>
+</ul>
+<h3 id="processor">4.2 Processor</h3>
+<ul>
+<li>Load register values from CPU</li>
+<li>Save register values to CPU</li>
+<li>Reset (Resets the processor.)</li>
+<li>NMI (Sends a non-maskable interrupt request.)</li>
+<li>IRQ (Sends an interrupt request using the specified vector.)</li>
+<li>Step (Executes one processor step.)</li>
+<li>Run (Starts continuous execution.)</li>
+<li>Stop (Stops continuous execution.)</li>
+<li>RunLogger</li>
+<li>Load status</li>
+<li>Save status</li>
+</ul>
+<h3 id="memory-1">4.3 Memory</h3>
+<ul>
+<li>Examine/Deposit (Examines or modifies memory addresses and
+data.)</li>
+<li>HexViewer</li>
+<li>Load memory content</li>
+<li>Save memory content</li>
+<li>Clear code memory</li>
+<li>Clear data memory</li>
+</ul>
+<h3 id="io">4.4 I/O</h3>
+<ul>
+<li>ASCII Console (Displays the ASCII console.)</li>
+<li>Standard I/O Port (Displays the standard I/O port.)</li>
+<li>Reset ports (Resets the test environment’s I/O ports.)</li>
+<li>IRQ request (Enables or disables forwarding of interrupt requests
+from the I/O port.)</li>
+</ul>
+<h3 id="help">4.5 Help</h3>
+<ul>
+<li>Help</li>
+<li>About</li>
+</ul>
+<h2 id="settings">5. Settings</h2>
+<h3 id="execution-speed">5.1 Execution Speed</h3>
+<p>The execution speed can be controlled using the slider in the main
+window. The slider sets the interval of the timer that performs
+processor stepping.</p>
+<h3 id="irq-vector">5.2 IRQ Vector</h3>
+<p>The IRQ vector can be specified in the main window. The field accepts
+a hexadecimal value.</p>
+<h3 id="io-interrupts">5.3 I/O Interrupts</h3>
+<p>The menu can be used to enable or disable forwarding of interrupt
+requests from I/O ports.</p>
+<h2 id="troubleshooting">6. Troubleshooting</h2>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Problem</th>
+<th>Possible Cause / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The specified directory does not exist.</td>
+<td>Check the path of the plugin directory.</td>
+</tr>
+<tr class="even">
+<td>The processor plugin cannot be loaded.</td>
+<td>Check the file and the error reported by the loader.</td>
+</tr>
+<tr class="odd">
+<td>The file is not a CoreLAB processor plugin.</td>
+<td>Select a plugin that provides the required processor entry
+points.</td>
+</tr>
+<tr class="even">
+<td>Invalid register value.</td>
+<td>The value must be hexadecimal and fit within the register size.</td>
+</tr>
+<tr class="odd">
+<td>Invalid IRQ vector.</td>
+<td>Enter a valid value representable by two hexadecimal digits.</td>
+</tr>
+<tr class="even">
+<td>The memory file cannot be read or saved.</td>
+<td>Check file availability and permissions.</td>
+</tr>
+<tr class="odd">
+<td>An error occurs while loading the Intel HEX file.</td>
+<td>Check the file format and contents.</td>
+</tr>
+<tr class="even">
+<td>The help file or help viewer is missing.</td>
+<td>Check the availability of <code>corelab_&lt;language&gt;.chm</code>,
+<code>corelab_en.chm</code>, and <code>lhelp</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix">7. Appendix</h2>
+<h3 id="file-formats">7.1 File Formats</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Extension / Pattern</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_*.dll</code></td>
+<td>Windows processor plugin.</td>
+</tr>
+<tr class="even">
+<td><code>libcpu_*.so</code></td>
+<td>Linux/Unix processor plugin.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB plugin state file.</td>
+</tr>
+<tr class="even">
+<td><code>*.bin</code></td>
+<td>Binary memory contents.</td>
+</tr>
+<tr class="odd">
+<td><code>*.hex</code></td>
+<td>Intel HEX memory contents.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts">7.2 Keyboard Shortcuts</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Shortcut</th>
+<th>Description</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Select plugin directory</td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-H</td>
+<td>HexViewer</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-L</td>
+<td>RunLogger</td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F4</td>
+<td>Examine/deposit</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F5</td>
+<td>Load register values from CPU</td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F8</td>
+<td>Step</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F9</td>
+<td>Run</td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F10</td>
+<td>Stop</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="glossary">7.3 Glossary</h3>
+<ul>
+<li><strong>Processor plugin:</strong> A dynamically loaded module that
+implements a processor.</li>
+<li><strong>Register:</strong> An internal processor storage location
+with a name and size.</li>
+<li><strong>NMI:</strong> Non-maskable interrupt request.</li>
+<li><strong>IRQ:</strong> Interrupt request for which the test
+environment supplies a vector.</li>
+<li><strong>Intel HEX:</strong> A text-based file format used to store
+memory contents.</li>
+<li><strong>RunLogger:</strong> A log window associated with processor
+execution.</li>
+<li><strong>HexViewer:</strong> A window for displaying memory in
+hexadecimal form.</li>
+</ul>
+<h3 id="version-history">7.4 Version History</h3>
+<ul>
+<li><strong>v0.1.0:</strong> First release.</li>
+</ul>
 </body>
 </html>

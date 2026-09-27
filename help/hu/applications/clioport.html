@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - CLIOPort</title>
+<meta http-equiv="content-language" content="hu">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h1 id="clioport-súgó">CLIOPort – Súgó</h1>
+<h2 id="bevezetés">1. Bevezetés</h2>
+<p>A CLIOPort a CoreLAB keretrendszer I/O-port bővítményeinek
+kipróbálására szolgáló grafikus alkalmazás, amely lehetővé teszi egy
+I/O-port plugin kiválasztását, betöltését, tulajdonságainak
+megtekintését, valamint a portok bájtszintű olvasását és írását. A
+panellel rendelkező bővítmények saját kezelőablaka is
+megjeleníthető.</p>
+<h3 id="főbb-funkciók">1.1 Főbb funkciók</h3>
+<ul>
+<li>I/O-port bővítmények keresése egy megadott könyvtárban.</li>
+<li>Bővítmény betöltése és cseréje.</li>
+<li>A betöltött bővítmény tulajdonságainak megjelenítése.</li>
+<li>Bájtszintű olvasás és írás a bővítmény portjain.</li>
+<li>A bővítmény állapotának fájlba mentése és fájlból
+visszatöltése.</li>
+<li>A bővítmény saját ablakának megjelenítése és ablakjellemzőinek
+módosítása.</li>
+</ul>
+<h3 id="rendszerkövetelmények">2. Rendszerkövetelmények</h3>
+<p>Az alkalmazás FreeBSD, Linux és Windows operációs rendszereken
+használható.</p>
+<h2 id="a-felhasználói-felület">3. A felhasználói felület</h2>
+<h3 id="főablak">3.1 Főablak</h3>
+<p>A főablak a következő fő részekből áll:</p>
+<ul>
+<li><strong>Bővítménykönyvtár mező:</strong> a keresési könyvtár
+megadása.</li>
+<li><strong>Fájllista:</strong> a könyvtárban található I/O-port
+bővítmények listája. A lista a fájlnevet, méretet és típust
+mutatja.</li>
+<li><strong>Tulajdonságlista:</strong> a betöltött bővítmény adatait és
+konfigurációs tulajdonságait jeleníti meg.</li>
+<li><strong>Porttábla:</strong> a bővítmény portcímeit és az azokhoz
+tartozó hexadecimális adatokat mutatja.</li>
+<li><strong>Állapotsor:</strong> a betöltések sorszámát, a kiválasztott
+fájl nevét és az aktuális művelet rövid visszajelzését jeleníti
+meg.</li>
+</ul>
+<h3 id="tulajdonságlista">3.2 Tulajdonságlista</h3>
+<p>A tulajdonságlista a betöltött plugin jellemzőit jeleníti meg.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Tulajdonság</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Filename</td>
+<td>A betöltött bővítmény fájlneve.</td>
+</tr>
+<tr class="even">
+<td>Modname</td>
+<td>A bővítmény neve.</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>A bővítmény leírása.</td>
+</tr>
+<tr class="even">
+<td>Int. vector (Hex)</td>
+<td>A megszakításvektor hexadecimális értéke.</td>
+</tr>
+<tr class="odd">
+<td>HasPanel</td>
+<td>Jelzi, hogy a bővítmény rendelkezik-e saját ablakkal.</td>
+</tr>
+<tr class="even">
+<td>Enabled</td>
+<td>A bővítmény engedélyezett állapota.</td>
+</tr>
+<tr class="odd">
+<td>AddressRangeSize</td>
+<td>A bővítmény által kezelt portcímek száma.</td>
+</tr>
+<tr class="even">
+<td>LatchedOutput</td>
+<td>A kimenet reteszelt működését jelző tulajdonság.</td>
+</tr>
+<tr class="odd">
+<td>ReadBackOutput</td>
+<td>A kimenet visszaolvashatóságát jelző tulajdonság.</td>
+</tr>
+<tr class="even">
+<td>DataInMode</td>
+<td>Az adatbemeneti vonalak módja.</td>
+</tr>
+<tr class="odd">
+<td>DataInNegation</td>
+<td>Az adatbemeneti vonalak invertálása.</td>
+</tr>
+<tr class="even">
+<td>DataOutMode</td>
+<td>Az adat-kimeneti vonalak módja.</td>
+</tr>
+<tr class="odd">
+<td>DataOutNegation</td>
+<td>Az adat-kimeneti vonalak invertálása.</td>
+</tr>
+<tr class="even">
+<td>SelMode</td>
+<td>A kiválasztójel módja.</td>
+</tr>
+<tr class="odd">
+<td>SelNegation</td>
+<td>A kiválasztójel invertálása.</td>
+</tr>
+</tbody>
+</table>
+<p>A konfigurációs értékek módosítása a bővítmény saját működésén
+keresztül történik.</p>
+<h3 id="porttábla">3.3 Porttábla</h3>
+<p>A porttábla minden kezelt porthoz egy sort jelenít meg. Az első
+oszlop a báziscímhez viszonyított eltolást (<code>BA+0</code>,
+<code>BA+1</code>, …) a második oszlop az adatot tartalmazza
+hexadecimális formában. Az adatmezőbe 8 bites, <code>00</code> és
+<code>FF</code> közötti hexadecimális érték írható be.</p>
+<h2 id="az-alkalmazás-használata">4. Az alkalmazás használata</h2>
+<h3 id="bővítménykönyvtár-kiválasztása">4.1 Bővítménykönyvtár
+kiválasztása</h3>
+<ol type="1">
+<li>Válaszd a <strong>Bővítménykönyvtár kiválasztása</strong>
+menüpontot, vagy használd a könyvtármező melletti kiválasztógombot.</li>
+<li>Válaszd ki a bővítményeket tartalmazó könyvtárat.</li>
+<li>A fájllista frissül, és megjeleníti a felismert
+bővítményfájlokat.</li>
+</ol>
+<p>A <strong>Bővítménylista frissítése</strong> parancs újraolvassa az
+aktuális könyvtár tartalmát.</p>
+<h3 id="bővítmény-betöltése-vagy-cseréje">4.2 Bővítmény betöltése vagy
+cseréje</h3>
+<ol type="1">
+<li>Válaszd ki a kívánt bővítményfájlt a fájllistában.</li>
+<li>Indítsd el a <strong>Bővítmény betöltése/cseréje</strong>
+parancsot.</li>
+<li>Sikeres betöltéskor a tulajdonságlista és a porttábla
+feltöltődik.</li>
+<li>Ha a bővítmény saját panellel rendelkezik, az alkalmazás létrehozza
+és megjeleníti azt. Új bővítmény betöltésekor a korábban betöltött
+bővítmény példánya és – ha van – saját ablaka felszabadításra
+kerül.</li>
+</ol>
+<h3 id="port-olvasása">4.3 Port olvasása</h3>
+<ol type="1">
+<li>Jelöld ki a porttáblában a kívánt sort.</li>
+<li>Válaszd a <strong>Bájt olvasása</strong> parancsot.</li>
+<li>A program beolvassa a kiválasztott port értékét.</li>
+<li>Az eredmény hexadecimális formában megjelenik a porttáblában; az
+állapotsor rövid visszajelzést ad.</li>
+</ol>
+<h3 id="port-írása">4.4 Port írása</h3>
+<ol type="1">
+<li>Jelöld ki a porttáblában a kívánt sort.</li>
+<li>Írd be az adatot a <strong>Adat (Hex)</strong> oszlopba.</li>
+<li>Az adatmező szerkesztésének befejezésekor a program végrehajtja az
+írást.</li>
+<li>Az értéknek 8 bites hexadecimális számnak kell lennie
+(<code>00</code>–<code>FF</code>).</li>
+</ol>
+<h3 id="a-bővítmény-állapotának-mentése">4.5 A bővítmény állapotának
+mentése</h3>
+<ol type="1">
+<li>Válaszd a <strong>Állapot mentése</strong> parancsot.</li>
+<li>Add meg a célfájlt.</li>
+<li>A program a bővítmény által szolgáltatott állapotadatokat a
+kiválasztott fájlba menti.</li>
+</ol>
+<h3 id="a-bővítmény-állapotának-betöltése">4.6 A bővítmény állapotának
+betöltése</h3>
+<ol type="1">
+<li>Válaszd a <strong>Állapot betöltése</strong> parancsot.</li>
+<li>Válaszd ki a korábban mentett állományt.</li>
+<li>A program átadja az állapotadatokat a bővítménynek, majd frissíti a
+tulajdonságlistát.</li>
+</ol>
+<h3 id="a-bővítmény-saját-ablakának-kezelése">4.7 A bővítmény saját
+ablakának kezelése</h3>
+<p>A saját ablakkal rendelkező bővítmények esetén a következő műveletek
+érhetők el:</p>
+<ul>
+<li>A bővítmény ablakának megjelenítése.</li>
+<li>Az ablak címének módosítása.</li>
+<li>Az ablak méretének és pozíciójának beállítása.</li>
+</ul>
+<h2 id="menüparancsok">5. Menüparancsok</h2>
+<h3 id="fájl">5.1 Fájl</h3>
+<ul>
+<li>Bővítménykönyvtár kiválasztása</li>
+<li>Gyakori helyek</li>
+<li>Bővítménylista frissítése</li>
+<li>Bővítmény betöltése/cseréje</li>
+<li>Alkalmazás újraindítása</li>
+<li>Kilépés</li>
+</ul>
+<p>A <strong>Gyakori helyek</strong> almenüben az alábbi útvonalak
+szerepelhetnek, amennyiben léteznek: - <code>./</code> -
+<code>/usr/lib/corelab/</code> - <code>/usr/local/lib/corelab/</code> -
+<code>./plugins/</code> - <code>~/.local/lib/corelab/</code></p>
+<h3 id="nézet">5.2 Nézet</h3>
+<ul>
+<li>Bővítményablak megjelenítése</li>
+<li>Bővítményablak címének beállítása</li>
+<li>Bővítményablak méretének/pozíciójának beállítása</li>
+</ul>
+<h3 id="io-port">5.3 I/O-port</h3>
+<ul>
+<li>Bájt olvasása</li>
+<li>Bájt írása</li>
+<li>Állapot betöltése</li>
+<li>Állapot mentése</li>
+</ul>
+<h3 id="súgó">5.4 Súgó</h3>
+<ul>
+<li>Súgó</li>
+<li>Névjegy</li>
+</ul>
+<h2 id="beállítások">6. Beállítások</h2>
+<p>Az alkalmazás nem tartalmaz általános beállítási
+párbeszédablakot.</p>
+<h2 id="hibaelhárítás">7. Hibaelhárítás</h2>
+<p>A program az alábbi esetekben jelenít meg hibaüzenetet:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hiba</th>
+<th>Lehetséges ok / teendő</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A megadott könyvtár nem létezik.</td>
+<td>Ellenőrizd a bővítménykönyvtár útvonalát.</td>
+</tr>
+<tr class="even">
+<td>A bővítmény nem tölthető be.</td>
+<td>Ellenőrizd a fájlt és a betöltő által jelzett hibát.</td>
+</tr>
+<tr class="odd">
+<td>A fájl nem CoreLAB I/O-port bővítmény.</td>
+<td>Olyan bővítményt válassz, amely a szükséges I/O-port belépési
+pontokat biztosítja.</td>
+</tr>
+<tr class="even">
+<td>Hiányzik a súgófájl.</td>
+<td>Ellenőrizd a <code>corelab_&lt;nyelv&gt;.chm</code>, illetve a
+<code>corelab_en.chm</code> fájl elérhetőségét.</td>
+</tr>
+<tr class="odd">
+<td>Hiányzik a súgónéző.</td>
+<td>Ellenőrizd, hogy az <code>lhelp</code> elérhető-e a program
+számára.</td>
+</tr>
+<tr class="even">
+<td>Hibás hexadecimális adat.</td>
+<td>Csak <code>00</code>–<code>FF</code> közötti, 8 bites hexadecimális
+érték adható meg.</td>
+</tr>
+<tr class="odd">
+<td>Nem olvasható vagy nem írható a bővítmény állapota.</td>
+<td>Ellenőrizd a kiválasztott bővítményt és az állományt.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="függelék">8. Függelék</h2>
+<h3 id="fájlformátumok">8.1 Fájlformátumok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Kiterjesztés / minta</th>
+<th>Rendeltetés</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ioport_*.dll</code></td>
+<td>Windows I/O-port bővítmény.</td>
+</tr>
+<tr class="even">
+<td><code>libioport_*.so</code></td>
+<td>Linux/Unix I/O-port bővítmény.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB bővítményállapot-fájl.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="billentyűparancsok">8.2 Billentyűparancsok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Parancs</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Bővítménykönyvtár kiválasztása</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-R</td>
+<td>Bájt olvasása</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-W</td>
+<td>Bájt írása</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fogalomtár">8.3 Fogalomtár</h3>
+<ul>
+<li><strong>I/O-port:</strong> a bővítményen keresztül elérhető
+bemeneti/kimeneti cím.</li>
+<li><strong>Bővítmény (plugin):</strong> dinamikusan betöltött modul,
+amely I/O-port funkciókat valósít meg.</li>
+<li><strong>BA:</strong> a porttáblában használt báziscím-jelölés; a
+sorok ehhez képest mutatják az eltolást.</li>
+</ul>
+<h3 id="verziótörténet">8.4 Verziótörténet</h3>
+<ul>
+<li><strong>v0.1.0:</strong> első változat.</li>
+</ul>
+</body>
+</html>

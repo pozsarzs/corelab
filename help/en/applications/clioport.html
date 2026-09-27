@@ -1,10 +1,340 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - CLIOPort plugin tester application</title>
+<title>CoreLAB - CLIOPort</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
+<h1 id="clioport-help">CLIOPort – Help</h1>
+<h2 id="introduction">1. Introduction</h2>
+<p>CLIOPort is a graphical application for testing I/O port plugins in
+the CoreLAB framework. It allows you to select and load an I/O port
+plugin, view its properties, and read from and write to its ports at
+byte level. The control window of plugins that have a panel can also be
+displayed.</p>
+<h3 id="main-features">1.1 Main Features</h3>
+<ul>
+<li>Search for I/O port plugins in a specified directory.</li>
+<li>Load and replace plugins.</li>
+<li>Display the properties of the loaded plugin.</li>
+<li>Read and write bytes to the plugin’s ports.</li>
+<li>Save the plugin’s state to a file and load it from a file.</li>
+<li>Display the plugin’s own window and modify its window
+properties.</li>
+</ul>
+<h3 id="system-requirements">2. System Requirements</h3>
+<p>The application can be used on FreeBSD, Linux, and Windows operating
+systems.</p>
+<h2 id="user-interface">3. User Interface</h2>
+<h3 id="main-window">3.1 Main Window</h3>
+<p>The main window consists of the following sections:</p>
+<ul>
+<li><strong>Plugin directory field:</strong> specifies the directory to
+search.</li>
+<li><strong>File list:</strong> lists the I/O port plugins found in the
+directory. The list displays the file name, size, and type.</li>
+<li><strong>Property list:</strong> displays the data and configuration
+properties of the loaded plugin.</li>
+<li><strong>Port table:</strong> displays the plugin’s port addresses
+and their hexadecimal data.</li>
+<li><strong>Status bar:</strong> displays the load count, the selected
+file name, and brief feedback about the current operation.</li>
+</ul>
+<h3 id="property-list">3.2 Property List</h3>
+<p>The property list displays the characteristics of the loaded
+plugin.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Filename</td>
+<td>The file name of the loaded plugin.</td>
+</tr>
+<tr class="even">
+<td>Modname</td>
+<td>The name of the plugin.</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>The plugin description.</td>
+</tr>
+<tr class="even">
+<td>Int. vector (Hex)</td>
+<td>The interrupt vector in hexadecimal format.</td>
+</tr>
+<tr class="odd">
+<td>HasPanel</td>
+<td>Indicates whether the plugin has its own window.</td>
+</tr>
+<tr class="even">
+<td>Enabled</td>
+<td>Indicates whether the plugin is enabled.</td>
+</tr>
+<tr class="odd">
+<td>AddressRangeSize</td>
+<td>The number of port addresses handled by the plugin.</td>
+</tr>
+<tr class="even">
+<td>LatchedOutput</td>
+<td>Indicates whether the output operates in latched mode.</td>
+</tr>
+<tr class="odd">
+<td>ReadBackOutput</td>
+<td>Indicates whether the output can be read back.</td>
+</tr>
+<tr class="even">
+<td>DataInMode</td>
+<td>The mode of the data input lines.</td>
+</tr>
+<tr class="odd">
+<td>DataInNegation</td>
+<td>Inversion of the data input lines.</td>
+</tr>
+<tr class="even">
+<td>DataOutMode</td>
+<td>The mode of the data output lines.</td>
+</tr>
+<tr class="odd">
+<td>DataOutNegation</td>
+<td>Inversion of the data output lines.</td>
+</tr>
+<tr class="even">
+<td>SelMode</td>
+<td>The mode of the select signal.</td>
+</tr>
+<tr class="odd">
+<td>SelNegation</td>
+<td>Inversion of the select signal.</td>
+</tr>
+</tbody>
+</table>
+<p>Configuration values are modified through the plugin’s own
+functionality.</p>
+<h3 id="port-table">3.3 Port Table</h3>
+<p>The port table displays one row for each port handled. The first
+column contains the offset relative to the base address
+(<code>BA+0</code>, <code>BA+1</code>, …), while the second column
+contains the data in hexadecimal format. An 8-bit hexadecimal value
+between <code>00</code> and <code>FF</code> can be entered in the data
+field.</p>
+<h2 id="using-the-application">4. Using the Application</h2>
+<h3 id="selecting-the-plugin-directory">4.1 Selecting the Plugin
+Directory</h3>
+<ol type="1">
+<li>Select the <strong>Select plugin directory</strong> menu item, or
+use the browse button next to the directory field.</li>
+<li>Select the directory containing the plugins.</li>
+<li>The file list is refreshed and displays the recognized plugin
+files.</li>
+</ol>
+<p>The <strong>Refresh plugin list</strong> command rereads the contents
+of the current directory.</p>
+<h3 id="loading-or-replacing-a-plugin">4.2 Loading or Replacing a
+Plugin</h3>
+<ol type="1">
+<li>Select the required plugin file in the file list.</li>
+<li>Execute the <strong>Load/change plugin</strong> command.</li>
+<li>When loading is successful, the property list and port table are
+populated.</li>
+<li>If the plugin has its own panel, the application creates and
+displays it. When a new plugin is loaded, the previously loaded plugin
+instance and, if present, its own window are freed.</li>
+</ol>
+<h3 id="reading-a-port">4.3 Reading a Port</h3>
+<ol type="1">
+<li>Select the required row in the port table.</li>
+<li>Select the <strong>Read a Byte</strong> command.</li>
+<li>The program reads the value of the selected port.</li>
+<li>The result is displayed in hexadecimal format in the port table; the
+status bar provides brief feedback.</li>
+</ol>
+<h3 id="writing-to-a-port">4.4 Writing to a Port</h3>
+<ol type="1">
+<li>Select the required row in the port table.</li>
+<li>Enter the data in the <strong>Data (Hex)</strong> column.</li>
+<li>The program performs the write operation when editing the data field
+is finished.</li>
+<li>The value must be an 8-bit hexadecimal number
+(<code>00</code>–<code>FF</code>).</li>
+</ol>
+<h3 id="saving-the-plugin-state">4.5 Saving the Plugin State</h3>
+<ol type="1">
+<li>Select the <strong>Save status</strong> command.</li>
+<li>Specify the destination file.</li>
+<li>The program saves the state data provided by the plugin to the
+selected file.</li>
+</ol>
+<h3 id="loading-the-plugin-state">4.6 Loading the Plugin State</h3>
+<ol type="1">
+<li>Select the <strong>Load status</strong> command.</li>
+<li>Select a previously saved file.</li>
+<li>The program passes the state data to the plugin and then refreshes
+the property list.</li>
+</ol>
+<h3 id="managing-the-plugins-own-window">4.7 Managing the Plugin’s Own
+Window</h3>
+<p>For plugins that have their own window, the following operations are
+available:</p>
+<ul>
+<li>Display the plugin window.</li>
+<li>Change the window title.</li>
+<li>Set the window size and position.</li>
+</ul>
+<h2 id="menu-commands">5. Menu Commands</h2>
+<h3 id="file">5.1 File</h3>
+<ul>
+<li>Select plugin directory</li>
+<li>Usual places</li>
+<li>Refresh plugin List</li>
+<li>Load/change plugin</li>
+<li>Restart application</li>
+<li>Exit</li>
+</ul>
+<p>The <strong>Usual places</strong> submenu may contain the following
+paths, if they exist:</p>
+<ul>
+<li><code>./</code></li>
+<li><code>/usr/lib/corelab/</code></li>
+<li><code>/usr/local/lib/corelab/</code></li>
+<li><code>./plugins/</code></li>
+<li><code>~/.local/lib/corelab/</code></li>
+</ul>
+<h3 id="view">5.2 View</h3>
+<ul>
+<li>show plugin window</li>
+<li>set plugin window caption</li>
+<li>set plugin window size/position</li>
+</ul>
+<h3 id="io-port">5.3 I/O Port</h3>
+<ul>
+<li>Read a byte</li>
+<li>Write a byte</li>
+<li>Load status</li>
+<li>Save status</li>
+</ul>
+<h3 id="help">5.4 Help</h3>
+<ul>
+<li>Help</li>
+<li>About</li>
+</ul>
+<h2 id="settings">6. Settings</h2>
+<p>The application does not have a general settings dialog.</p>
+<h2 id="troubleshooting">7. Troubleshooting</h2>
+<p>The program displays error messages in the following cases:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Error</th>
+<th>Possible Cause / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The specified directory does not exist.</td>
+<td>Check the plugin directory path.</td>
+</tr>
+<tr class="even">
+<td>The plugin cannot be loaded.</td>
+<td>Check the file and the error reported by the loader.</td>
+</tr>
+<tr class="odd">
+<td>The file is not a CoreLAB I/O port plugin.</td>
+<td>Select a plugin that provides the required I/O port entry
+points.</td>
+</tr>
+<tr class="even">
+<td>The help file is missing.</td>
+<td>Check that <code>corelab_&lt;language&gt;.chm</code> or
+<code>corelab_en.chm</code> is available.</td>
+</tr>
+<tr class="odd">
+<td>The help viewer is missing.</td>
+<td>Check that <code>lhelp</code> is available to the program.</td>
+</tr>
+<tr class="even">
+<td>Invalid hexadecimal data.</td>
+<td>Only an 8-bit hexadecimal value between <code>00</code> and
+<code>FF</code> can be entered.</td>
+</tr>
+<tr class="odd">
+<td>The plugin state cannot be read or written.</td>
+<td>Check the selected plugin and the file.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix">8. Appendix</h2>
+<h3 id="file-formats">8.1 File Formats</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Extension / Pattern</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ioport_*.dll</code></td>
+<td>Windows I/O port plugin.</td>
+</tr>
+<tr class="even">
+<td><code>libioport_*.so</code></td>
+<td>Linux/Unix I/O port plugin.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB plugin state file.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts">8.2 Keyboard Shortcuts</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Shortcut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Select plugin directory</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-R</td>
+<td>Read byte</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-W</td>
+<td>Write byte</td>
+</tr>
+</tbody>
+</table>
+<h3 id="glossary">8.3 Glossary</h3>
+<ul>
+<li><strong>I/O port:</strong> an input/output address accessible
+through the plugin.</li>
+<li><strong>Plugin:</strong> a dynamically loaded module that implements
+I/O port functionality.</li>
+<li><strong>BA:</strong> the base address notation used in the port
+table; rows show offsets relative to it.</li>
+</ul>
+<h3 id="version-history">8.4 Version History</h3>
+<ul>
+<li><strong>v0.1.0:</strong> First version.</li>
+</ul>
 </body>
 </html>

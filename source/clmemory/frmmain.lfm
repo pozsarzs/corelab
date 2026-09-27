@@ -1013,7 +1013,7 @@ object Form1: TForm1
       Hint = 'Deposit data in memory cell'
       ImageIndex = 19
       OnExecute = DepositExecute
-      ShortCut = 16452
+      ShortCut = 16464
     end
     object LoadStatus: TAction
       Caption = 'Load status'

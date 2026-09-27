@@ -187,7 +187,7 @@ msgstr "Form1"
 
 #: tform1.deposit.caption
 msgid "&Deposit"
-msgstr "&Adatbevitel"
+msgstr "&Tárolás"
 
 #: tform1.deposit.hint
 msgid "Deposit data in memory cell"

@@ -1,0 +1,447 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - CLIOProcessor</title>
+<meta http-equiv="content-language" content="hu">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h1 id="clprocessor-súgó">CLProcessor – Súgó</h1>
+<h2 id="bevezetés">1. Bevezetés</h2>
+<p>A CLProcessor a CoreLAB keretrendszer processzor-bővítményeinek
+betöltésére és kipróbálására szolgáló grafikus alkalmazás. A betöltött
+processzor a tesztkörnyezethez csatlakozik, ahol léptetve vagy
+folyamatosan futtatható.</p>
+<h3 id="főbb-funkciók">1.1 Főbb funkciók</h3>
+<ul>
+<li>Processzor-bővítmények keresése és betöltése.</li>
+<li>A processzor tulajdonságainak és regisztereinek megjelenítése.</li>
+<li>Regiszterértékek betöltése a processzorból és visszaírása.</li>
+<li>A processzor alaphelyzetbe állítása.</li>
+<li>NMI és IRQ megszakításkérés kezdeményezése.</li>
+<li>A processzor programjának léptetett vagy folyamatos futtatása.</li>
+<li>A programfutás naplózása.</li>
+<li>Memóriatartalom vizsgálata, törlése, betöltése és mentése.</li>
+<li>A tesztkörnyezet szabványos I/O-portjainak és ASCII-konzoljának
+használata.</li>
+<li>A processzor állapotának mentése és visszatöltése.</li>
+</ul>
+<h3 id="rendszerkövetelmények">2. Rendszerkövetelmények</h3>
+<p>Az alkalmazás FreeBSD, Linux és Windows operációs rendszereken
+használható.</p>
+<h2 id="a-felhasználói-felület">3. A felhasználói felület</h2>
+<h3 id="főablak">3.1 Főablak</h3>
+<p>A főablakban találhatók a bővítmény kiválasztására és betöltésére
+szolgáló elemek, a processzor tulajdonságai és regiszterei, valamint a
+futtatás és a tesztkörnyezet kezelésére szolgáló parancsok.</p>
+<h3 id="processzortulajdonságok">3.2 Processzortulajdonságok</h3>
+<p>A tulajdonságlista a betöltött processzor adatait és konfigurációs
+jellemzőit mutatja. A forráskódban kezelt tulajdonságok:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Tulajdonság</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Filename</td>
+<td>A betöltött bővítmény fájlneve.</td>
+</tr>
+<tr class="even">
+<td>Modname</td>
+<td>A processzor-bővítmény neve.</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>A bővítmény leírása.</td>
+</tr>
+<tr class="even">
+<td>Architecture</td>
+<td>A processzor architektúrája.</td>
+</tr>
+<tr class="odd">
+<td>Enabled</td>
+<td>A processzor engedélyezett állapota.</td>
+</tr>
+<tr class="even">
+<td>AddressWidth</td>
+<td>A processzor címbuszának szélessége.</td>
+</tr>
+<tr class="odd">
+<td>Architecture</td>
+<td>A processzor architektúrája.</td>
+</tr>
+<tr class="even">
+<td>Endianness</td>
+<td>A bájtok tárolási sorrendje.</td>
+</tr>
+<tr class="odd">
+<td>HasSeparateIOBus</td>
+<td>A processzor külön I/O-buszt használ-e.</td>
+</tr>
+<tr class="even">
+<td>MaxCodeAddress</td>
+<td>A kódmemória maximális címe.</td>
+</tr>
+<tr class="odd">
+<td>MaxIOPortAddress</td>
+<td>Az I/O-portok maximális címe.</td>
+</tr>
+<tr class="even">
+<td>MaxMemAddress</td>
+<td>A memóriacímzés maximális címe.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regiszterlista">3.3 Regiszterlista</h3>
+<p>A regiszterlista a betöltött processzor regisztereit és azok aktuális
+értékét jeleníti meg. A regiszterek neve és mérete a
+processzor-bővítménytől függ.</p>
+<p>A megadott értékek hexadecimális formában jelennek meg. A beviteli
+mező ellenőrzi, hogy az érték hexadecimális-e, és belefér-e az adott
+regiszter méretébe.</p>
+<h3 id="memória">3.4 Memória</h3>
+<p>A tesztkörnyezet memóriatartalma bankok szerint kezelhető. A forrás
+alapján a 0. bank a Neumann- és Harvard-architektúrájú processzorok
+kódmemóriája, az 1. bank pedig a Harvard-adatmemória.</p>
+<p>A memóriaméret a programban <code>MEM_SIZE</code> konstanssal van
+meghatározva.</p>
+<h3 id="állapotsor">3.5 Állapotsor</h3>
+<p>Az állapotsor a betöltési sorszámot, a kiválasztott bővítmény nevét
+és a műveletek rövid visszajelzését jeleníti meg.</p>
+<h2 id="az-alkalmazás-használata">4. Az alkalmazás használata</h2>
+<h3 id="bővítménykönyvtár-kiválasztása">4.1 Bővítménykönyvtár
+kiválasztása</h3>
+<ol type="1">
+<li>Válaszd a <strong>Bővítménykönyvtár kiválasztása</strong>
+menüpontot, vagy használd a könyvtármező melletti kiválasztógombot.</li>
+<li>Válaszd ki a processzor-bővítményeket tartalmazó könyvtárat.</li>
+<li>A fájllista frissül.</li>
+</ol>
+<p>A <strong>Bővítménylista frissítése</strong> parancs újraolvassa az
+aktuális könyvtár tartalmát.</p>
+<h3 id="processzor-betöltése-vagy-cseréje">4.2 Processzor betöltése vagy
+cseréje</h3>
+<ol type="1">
+<li>Válaszd ki a kívánt processzor-bővítményt a fájllistában.</li>
+<li>Indítsd el a <strong>Bővítmény betöltése/cseréje</strong>
+parancsot.</li>
+<li>Sikeres betöltéskor a processzor példánya létrejön, a tesztbuszhoz
+csatlakozik, majd a tulajdonság- és regiszterlista frissül.</li>
+</ol>
+<h3 id="regiszterek-betöltése-a-processzorból">4.3 Regiszterek betöltése
+a processzorból</h3>
+<p>A <strong>Regiszterértékek betöltése a CPU-ból</strong> parancs
+frissíti a regiszterlistát a processzor aktuális értékeivel.</p>
+<h3 id="regiszterek-visszaírása-a-processzorba">4.4 Regiszterek
+visszaírása a processzorba</h3>
+<ol type="1">
+<li>Módosítsd a kívánt regiszter értékét a regiszterlistában.</li>
+<li>Válaszd a <strong>Regiszterértékek mentése a CPU-ba</strong>
+parancsot.</li>
+<li>A program a megjelenített értékeket visszaírja a processzor
+regisztereibe.</li>
+</ol>
+<p>Az értéknek az adott regiszter méretébe kell férnie, és hexadecimális
+formátumúnak kell lennie.</p>
+<h3 id="processzor-alaphelyzetbe-állítása">4.5 Processzor alaphelyzetbe
+állítása</h3>
+<p>A <strong>Alaphelyzet</strong> parancs meghívja a processzor
+resetműveletét, majd frissíti a regiszterlistát.</p>
+<h3 id="megszakításkérések">4.6 Megszakításkérések</h3>
+<ul>
+<li><strong>NMI:</strong> nem maszkolható megszakításkérést küld a
+processzornak.</li>
+<li><strong>IRQ:</strong> megszakításkérést küld a processzornak a
+főablakban megadott megszakításvektorral.</li>
+</ul>
+<p>Az IRQ-vektor mező hexadecimális értéket fogad el. A forráskódban a
+vektor két hexadecimális számjegyre van formázva.</p>
+<h3 id="program-léptetett-futtatása">4.7 Program léptetett
+futtatása</h3>
+<p>A <strong>Lépés</strong> parancs egy processzorlépést hajt végre,
+majd frissíti a regiszterlistát.</p>
+<h3 id="program-folyamatos-futtatása-és-leállítása">4.8 Program
+folyamatos futtatása és leállítása</h3>
+<ul>
+<li><strong>Futtatás:</strong> elindítja az ismétlődő
+processzorléptetést.</li>
+<li><strong>Leállítás:</strong> leállítja az ismétlődő léptetést, majd
+frissíti a regiszterlistát.</li>
+</ul>
+<p>A futtatás sebessége a csúszkával módosítható; a csúszka pozíciója a
+léptető időzítő intervallumát állítja.</p>
+<h3 id="futtatási-napló">4.9 Futtatási napló</h3>
+<p>A <strong>RunLogger</strong> parancs megjeleníti a futtatási napló
+ablakát. A processzor eseménykezelője az utasításhatároknál rögzíti az
+aktuális utasítást.</p>
+<h3 id="memóriatartalom-vizsgálata">4.10 Memóriatartalom vizsgálata</h3>
+<p>Az <strong>Vizsgálat/tárolás</strong> parancs megnyitja a memória
+vizsgálatára és módosítására szolgáló ablakot.</p>
+<p>A <strong>HexViewer</strong> parancs megjeleníti a HexViewer ablakot.
+Az ablak a betöltött processzor architektúráját és a tesztmemória
+méretét kapja meg.</p>
+<h3 id="memória-betöltése-fájlból">4.11 Memória betöltése fájlból</h3>
+<p>A <strong>Memóriatartalom betöltése</strong> parancs fájlból tölti be
+a memóriatartalmat. A betöltés előtt meg kell adni a célbankot és a
+címtartományt.</p>
+<p>A forráskód két fájlformátumot kezel:</p>
+<ul>
+<li>bináris (<code>.bin</code>)</li>
+<li>Intel HEX (<code>.hex</code>)</li>
+</ul>
+<p>Bináris fájl esetén a kiválasztott címtartományba kerülnek a
+beolvasott bájtok. Intel HEX betöltése előtt a célbank tartalma
+törlődik.</p>
+<h3 id="memóriatartalom-mentése-fájlba">4.12 Memóriatartalom mentése
+fájlba</h3>
+<p>A <strong>Memóriatartalom mentése</strong> parancs a kiválasztott
+bank megadott címtartományát menti fájlba. A támogatott formátumok:</p>
+<ul>
+<li>bináris (<code>.bin</code>)</li>
+<li>Intel HEX (<code>.hex</code>)</li>
+</ul>
+<h3 id="memóriabankok-törlése">4.13 Memóriabankok törlése</h3>
+<ul>
+<li><strong>(Kód)memória törlése:</strong> a 0. bank minden bájtját
+nullára állítja.</li>
+<li><strong>Adat memória törlése:</strong> az 1. bank minden bájtját
+nullára állítja.</li>
+</ul>
+<h3 id="ascii-konzol">4.14 ASCII-konzol</h3>
+<p>Az <strong>ASCII-konzol</strong> parancs létrehozza és megjeleníti az
+ASCII-konzol paneljét. A panel neve a konzol I/O-címét tartalmazza. A
+konzol megszakításkezelőt is kap, és a főablakban beállított
+megszakításvektort használja.</p>
+<h3 id="szabványos-io-port">4.15 Szabványos I/O-port</h3>
+<p>A <strong>Szabványos port</strong> parancs létrehozza és megjeleníti
+a szabványos I/O-port paneljét.</p>
+<h3 id="io-portok-megszakításkérése">4.16 I/O-portok
+megszakításkérése</h3>
+<p>A megfelelő menüponttal engedélyezhető vagy letiltható az I/O-port
+felől érkező megszakításkérés továbbítása.</p>
+<h3 id="io-portok-alaphelyzetbe-állítása">4.17 I/O-portok alaphelyzetbe
+állítása</h3>
+<p>A <strong>Portok alaphelyzetbe állítása</strong> parancs
+alaphelyzetbe állítja a létrehozott ASCII-konzolt és szabványos
+I/O-portot.</p>
+<h3 id="processzorállapot-mentése-és-betöltése">4.18 Processzorállapot
+mentése és betöltése</h3>
+<ul>
+<li><strong>Állapot mentése:</strong> a processzor állapotát
+<code>.clpst</code> fájlba menti.</li>
+<li><strong>Állapot betöltése:</strong> a kiválasztott
+<code>.clpst</code> fájlból visszatölti a processzor állapotát.</li>
+</ul>
+<p>Sikeres betöltés után a tulajdonságlista frissül.</p>
+<h2 id="menüparancsok">5. Menüparancsok</h2>
+<h3 id="file">5.1 File</h3>
+<ul>
+<li>Bővítménykönyvtár kiválasztása</li>
+<li>Gyakori helyek</li>
+<li>Bővítménylista frissítése</li>
+<li>Bővítmény betöltése/cseréje</li>
+<li>Alkalmazás újraindítása</li>
+<li>Kilépés</li>
+</ul>
+<p>A <strong>Gyakori helyek</strong> almenüben az alábbi útvonalak
+szerepelhetnek, amennyiben léteznek: - <code>./</code> -
+<code>/usr/lib/corelab/</code> - <code>/usr/local/lib/corelab/</code> -
+<code>./plugins/</code> - <code>~/.local/lib/corelab/</code></p>
+<h3 id="processor">5.2 Processor</h3>
+<ul>
+<li>Regiszterértékek betöltése a CPU-ból</li>
+<li>Regiszterértékek mentése a CPU-ba</li>
+<li>Alaphelyzet (A processzor alaphelyzetbe állítása.)</li>
+<li>NMI (Nem maszkolható megszakításkérés küldése.)</li>
+<li>IRQ (Megszakításkérés küldése a megadott vektorral.)</li>
+<li>Lépés (Egy processzorlépés végrehajtása.)</li>
+<li>Futtatás (Folyamatos futtatás indítása.)</li>
+<li>Leállítás (A folyamatos futtatás leállítása.)</li>
+<li>RunLogger</li>
+<li>Állapot betöltése</li>
+<li>Állapot mentése</li>
+</ul>
+<h3 id="memory">5.3 Memory</h3>
+<ul>
+<li>Vizsgálat/tárolás (Memóriacímek és -adatok vizsgálata, illetve
+módosítása.)</li>
+<li>HexViewer</li>
+<li>Memóriatartalom betöltése</li>
+<li>Memóriatartalom mentése</li>
+<li>(Kód)memória törlése</li>
+<li>Adatmemória törlése</li>
+</ul>
+<h3 id="io">5.4 I/O</h3>
+<ul>
+<li>ASCII-konzol (Az ASCII-konzol megjelenítése.)</li>
+<li>Szabványos port (A szabványos I/O-port megjelenítése.)</li>
+<li>Portok alaphelyzetbe állítása</li>
+<li>IRQ kérése (Az I/O-port felől érkező megszakításkérés engedélyezése
+vagy letiltása.)</li>
+</ul>
+<h3 id="help">5.5 Help</h3>
+<ul>
+<li>Súgó</li>
+<li>Névjegy</li>
+</ul>
+<h2 id="beállítások">6. Beállítások</h2>
+<h3 id="futtatási-sebesség">6.1 Futtatási sebesség</h3>
+<p>A futtatási sebesség a főablak csúszkájával szabályozható. A csúszka
+a processzorléptetést végző időzítő intervallumát állítja.</p>
+<h3 id="irq-vektor">6.2 IRQ-vektor</h3>
+<p>Az IRQ-vektor a főablakban adható meg. A mező hexadecimális értéket
+fogad el.</p>
+<h3 id="io-megszakítások">6.3 I/O-megszakítások</h3>
+<p>A menüben engedélyezhető vagy letiltható az I/O-portok
+megszakításkérésének továbbítása.</p>
+<h2 id="hibaelhárítás">7. Hibaelhárítás</h2>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hiba</th>
+<th>Lehetséges ok / teendő</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A megadott könyvtár nem létezik.</td>
+<td>Ellenőrizd a bővítménykönyvtár útvonalát.</td>
+</tr>
+<tr class="even">
+<td>A processzor-bővítmény nem tölthető be.</td>
+<td>Ellenőrizd a fájlt és a betöltő által jelzett hibát.</td>
+</tr>
+<tr class="odd">
+<td>A fájl nem CoreLAB processzor-bővítmény.</td>
+<td>Olyan bővítményt válassz, amely biztosítja a szükséges
+processzor-belépési pontokat.</td>
+</tr>
+<tr class="even">
+<td>Hibás regiszterérték.</td>
+<td>Az érték legyen hexadecimális, és férjen bele a regiszter
+méretébe.</td>
+</tr>
+<tr class="odd">
+<td>Hibás IRQ-vektor.</td>
+<td>Adj meg érvényes, két hexadecimális számjeggyel ábrázolható
+értéket.</td>
+</tr>
+<tr class="even">
+<td>A memóriafájl nem olvasható vagy nem menthető.</td>
+<td>Ellenőrizd a fájl elérhetőségét és a jogosultságokat.</td>
+</tr>
+<tr class="odd">
+<td>Az Intel HEX fájl betöltése hibát jelez.</td>
+<td>Ellenőrizd a fájl formátumát és tartalmát.</td>
+</tr>
+<tr class="even">
+<td>Hiányzik a súgófájl vagy a súgónéző.</td>
+<td>Ellenőrizd a <code>corelab_&lt;nyelv&gt;.chm</code>, a
+<code>corelab_en.chm</code> és az <code>lhelp</code> elérhetőségét.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="függelék">8. Függelék</h2>
+<h3 id="fájlformátumok">8.1 Fájlformátumok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Kiterjesztés / minta</th>
+<th>Rendeltetés</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_*.dll</code></td>
+<td>Windows processzor-bővítmény.</td>
+</tr>
+<tr class="even">
+<td><code>libcpu_*.so</code></td>
+<td>Linux/Unix processzor-bővítmény.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB bővítményállapot-fájl.</td>
+</tr>
+<tr class="even">
+<td><code>*.bin</code></td>
+<td>Bináris memóriatartalom.</td>
+</tr>
+<tr class="odd">
+<td><code>*.hex</code></td>
+<td>Intel HEX memóriatartalom.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="billentyűparancsok">8.2 Billentyűparancsok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Parancs</th>
+<th>Leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Bővítménykönyvtár kiválasztása</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-H</td>
+<td>HexViewer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-L</td>
+<td>RunLogger</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F4</td>
+<td>Vizsgálat/tárolás</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F5</td>
+<td>Regiszterértékek betöltése a CPU-ból</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F8</td>
+<td>Lépés</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F9</td>
+<td>Futtatás</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F10</td>
+<td>Leállítás</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fogalomtár">8.3 Fogalomtár</h3>
+<ul>
+<li><strong>Processzor-bővítmény:</strong> dinamikusan betöltött modul,
+amely processzort valósít meg.</li>
+<li><strong>Regiszter:</strong> a processzor belső, névvel és mérettel
+rendelkező adattárolója.</li>
+<li><strong>NMI:</strong> nem maszkolható megszakításkérés.</li>
+<li><strong>IRQ:</strong> megszakításkérés, amelyhez a tesztkörnyezet
+vektort ad át.</li>
+<li><strong>Intel HEX:</strong> memóriatartalom tárolására használt
+szöveges fájlformátum.</li>
+<li><strong>RunLogger:</strong> a processzor végrehajtásához kapcsolódó
+naplóablak.</li>
+<li><strong>HexViewer:</strong> a memória hexadecimális megjelenítésére
+szolgáló ablak.</li>
+</ul>
+<h3 id="verziótörténet">8.4 Verziótörténet</h3>
+<ul>
+<li><strong>v0.1.0:</strong> első változat.</li>
+</ul>
+</body>
+</html>

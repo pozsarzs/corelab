@@ -1,10 +1,296 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - CLMemory plugin tester application</title>
+<title>CoreLAB - CLMemory</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
+<h1 id="clmemory-help">CLMemory – Help</h1>
+<h2 id="introduction">1. Introduction</h2>
+<p>CLMemory is a graphical application for testing memory plugins in the
+CoreLAB framework. It allows you to load a memory plugin, view and
+modify some of its properties, and read from and write to memory
+locations. The plugin’s state can be saved to a file and loaded from a
+file.</p>
+<h3 id="main-features">1.1 Main Features</h3>
+<ul>
+<li>Search for memory plugins in a specified directory.</li>
+<li>Load and replace plugins.</li>
+<li>Display the properties of the loaded plugin.</li>
+<li>Set the memory size, enabled state, and memory mode.</li>
+<li>Read a byte from a memory address.</li>
+<li>Write a byte to a memory address.</li>
+<li>Save and load the plugin’s state.</li>
+</ul>
+<h3 id="system-requirements">2. System Requirements</h3>
+<p>The application can be used on FreeBSD, Linux, and Windows operating
+systems.</p>
+<h2 id="user-interface">3. User Interface</h2>
+<h3 id="main-window">3.1 Main Window</h3>
+<p>The main window consists of the following sections:</p>
+<ul>
+<li><strong>Plugin directory field:</strong> specifies the directory
+containing memory plugins.</li>
+<li><strong>File list:</strong> lists the memory plugins found in the
+directory. The list displays the file name, size, and type.</li>
+<li><strong>Property list:</strong> displays the data and configurable
+properties of the loaded plugin.</li>
+<li><strong>Memory table:</strong> used to enter and display the memory
+address being examined and the hexadecimal value of the data.</li>
+<li><strong>Status bar:</strong> displays the load count, the selected
+file name, and brief feedback about operations.</li>
+</ul>
+<h3 id="property-list">3.2 Property List</h3>
+<p>The property list displays the data and configuration values of the
+loaded plugin.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Filename</td>
+<td>The file name of the loaded plugin.</td>
+</tr>
+<tr class="even">
+<td>Modname</td>
+<td>The name of the plugin.</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>The plugin description.</td>
+</tr>
+<tr class="even">
+<td>Enabled</td>
+<td>Indicates whether the memory plugin is enabled.</td>
+</tr>
+<tr class="odd">
+<td>MemoryMode</td>
+<td>The memory operating mode.</td>
+</tr>
+<tr class="even">
+<td>AddressRangeSize</td>
+<td>The size of the memory address range.</td>
+</tr>
+</tbody>
+</table>
+<p>The value of <code>AddressRangeSize</code> can be between 16 bytes
+and 16 MB.</p>
+<h3 id="memory-table">3.3 Memory Table</h3>
+<p>The memory table handles two values:</p>
+<ul>
+<li><strong>Address:</strong> the memory address to be examined, in
+hexadecimal format.</li>
+<li><strong>Data:</strong> the byte value at the memory address, in
+hexadecimal format.</li>
+</ul>
+<p>An 8-bit value can be entered in the data field. Both the address and
+the data use hexadecimal format.</p>
+<h2 id="using-the-application">4. Using the Application</h2>
+<h3 id="selecting-the-plugin-directory">4.1 Selecting the Plugin
+Directory</h3>
+<ol type="1">
+<li>Select the <strong>Select plugin directory</strong> command, or use
+the browse button next to the directory field.</li>
+<li>Select the directory containing the memory plugins.</li>
+<li>The file list is refreshed and displays the recognized plugin
+files.</li>
+</ol>
+<p>The <strong>Refresh plugin list</strong> command rereads the contents
+of the current directory.</p>
+<h3 id="loading-or-replacing-a-plugin">4.2 Loading or Replacing a
+Plugin</h3>
+<ol type="1">
+<li>Select the required plugin file in the file list.</li>
+<li>Execute the <strong>Load/change plugin</strong> command.</li>
+<li>When loading is successful, the property list is refreshed, and the
+fields and operations used to examine memory become enabled.</li>
+</ol>
+<p>When a new plugin is loaded, the previous instance is freed.</p>
+<h3 id="reading-memory">4.3 Reading Memory</h3>
+<ol type="1">
+<li>Enter the address in hexadecimal format in the
+<strong>Address</strong> field.</li>
+<li>Select the <strong>Read a byte</strong> command.</li>
+<li>The program reads the contents of the specified address.</li>
+<li>The byte read is displayed in the <strong>Data</strong> field.</li>
+</ol>
+<p>If the address is outside the memory address range, the status bar
+displays a warning.</p>
+<h3 id="writing-to-memory">4.4 Writing to Memory</h3>
+<ol type="1">
+<li>Enter the address in the <strong>Address</strong> field.</li>
+<li>Enter the byte value to be written in the <strong>Data</strong>
+field.</li>
+<li>Select the <strong>Write a byte</strong> command.</li>
+<li>The program calls the plugin’s write operation and then displays
+feedback in the status bar.</li>
+</ol>
+<p>The program indicates if the address is outside the address range or
+if the memory is in ROM mode.</p>
+<h3 id="loading-the-plugin-state">4.5 Loading the Plugin State</h3>
+<ol type="1">
+<li>Select the <strong>Load status</strong> command.</li>
+<li>Select a previously saved file.</li>
+<li>The program passes the state data to the plugin.</li>
+<li>After a successful load, the property list is refreshed.</li>
+</ol>
+<h3 id="saving-the-plugin-state">4.6 Saving the Plugin State</h3>
+<ol type="1">
+<li>Select the <strong>Save status</strong> command.</li>
+<li>Specify the destination file.</li>
+<li>The program retrieves the plugin’s state data and saves it to the
+selected file.</li>
+</ol>
+<h2 id="menu-commands">5. Menu Commands</h2>
+<h3 id="file">5.1 File</h3>
+<ul>
+<li>Select plugin directory</li>
+<li>Usual places</li>
+<li>Refresh plugin list</li>
+<li>Load/change plugin</li>
+<li>Restart application</li>
+<li>Exit</li>
+</ul>
+<p>According to the source, the <strong>Usual places</strong> submenu
+may contain the following paths, if they exist:</p>
+<ul>
+<li><code>./</code></li>
+<li><code>/usr/lib/corelab/</code></li>
+<li><code>/usr/local/lib/corelab/</code></li>
+<li><code>./plugins/</code></li>
+<li><code>~/.local/lib/corelab/</code></li>
+</ul>
+<h3 id="memory">5.2 Memory</h3>
+<ul>
+<li>Examine (Read one byte from the specified memory address.)</li>
+<li>Deposit (Write one byte to the specified memory address.)</li>
+<li>Load status</li>
+<li>Save status</li>
+</ul>
+<h3 id="help">5.3 Help</h3>
+<ul>
+<li>Help</li>
+<li>About</li>
+</ul>
+<h2 id="settings">6. Settings</h2>
+<p>The application does not have a general settings dialog.</p>
+<h2 id="troubleshooting">7. Troubleshooting</h2>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Error</th>
+<th>Possible Cause / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The specified directory does not exist.</td>
+<td>Check the plugin directory path.</td>
+</tr>
+<tr class="even">
+<td>The plugin cannot be loaded.</td>
+<td>Check the file and the error reported by the loader.</td>
+</tr>
+<tr class="odd">
+<td>The file is not a CoreLAB memory plugin.</td>
+<td>Select a plugin that provides the required memory entry points.</td>
+</tr>
+<tr class="even">
+<td>Invalid hexadecimal data.</td>
+<td>Only hexadecimal values can be entered.</td>
+</tr>
+<tr class="odd">
+<td>The specified memory size is outside the permitted range.</td>
+<td>The memory size must be between 16 bytes and 16 MiB.</td>
+</tr>
+<tr class="even">
+<td>The address is outside the address range.</td>
+<td>Check the specified address and the memory size.</td>
+</tr>
+<tr class="odd">
+<td>The memory is read-only.</td>
+<td>In ROM mode, writing does not modify the memory.</td>
+</tr>
+<tr class="even">
+<td>The help file or help viewer is missing.</td>
+<td>Check that the help file and <code>lhelp</code> are available.</td>
+</tr>
+<tr class="odd">
+<td>The plugin state cannot be read or written.</td>
+<td>Check the selected plugin and the file.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="appendix">8. Appendix</h2>
+<h3 id="file-formats">8.1 File Formats</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Extension / Pattern</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>memory_*.dll</code></td>
+<td>Windows memory plugin.</td>
+</tr>
+<tr class="even">
+<td><code>libmemory_*.so</code></td>
+<td>Linux/Unix memory plugin.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB plugin state file.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts">8.2 Keyboard Shortcuts</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Shortcut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Select plugin directory</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-E</td>
+<td>Read a byte</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-P</td>
+<td>Write a byte</td>
+</tr>
+</tbody>
+</table>
+<h3 id="glossary">8.3 Glossary</h3>
+<ul>
+<li><strong>Memory plugin:</strong> a dynamically loaded module that
+implements memory operations.</li>
+<li><strong>AddressRangeSize:</strong> the size of the range of memory
+addresses handled by the plugin.</li>
+<li><strong>MemoryMode:</strong> the memory operating mode, such as ROM
+or RAM, depending on the modes supported by the plugin.</li>
+<li><strong>State file:</strong> a <code>.clpst</code> file used to save
+and restore the plugin’s state.</li>
+</ul>
+<h3 id="version-history">8.4 Version History</h3>
+<ul>
+<li><strong>v0.1.0:</strong> First version.</li>
+</ul>
 </body>
 </html>
