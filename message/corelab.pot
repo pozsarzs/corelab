@@ -174,6 +174,18 @@ msgstr ""
 msgid "ToolButton9"
 msgstr ""
 
+#: tform1:toolbutton80.caption
+msgid "ToolButton80"
+msgstr ""
+
+#: tform1:combobox1.text
+msgid "1000 ms"
+msgstr ""
+
+#: tform1:combobox1.texthint
+msgid "Run delay between steps in ms"
+msgstr ""
+
 #: tform1:tabsheet2.caption
 msgid "Processor"
 msgstr ""
@@ -244,6 +256,10 @@ msgstr ""
 
 #: tform1:toolbutton75.caption
 msgid "ToolButton75"
+msgstr ""
+
+#: tform1:toolbutton79.caption
+msgid "ToolButton79"
 msgstr ""
 
 #: tform1:tabsheet5.caption
@@ -403,7 +419,7 @@ msgid "Show Breakpoint Manager"
 msgstr ""
 
 #: tform1:vshowbuslogger.caption
-msgid "Show &BusLogger"
+msgid "Show &BusLogger..."
 msgstr ""
 
 #: tform1:vshowbuslogger.hint
@@ -614,6 +630,14 @@ msgstr ""
 msgid "Disable I/O module"
 msgstr ""
 
+#: tform1:ioreadwrite.caption
+msgid "&Read/Write..."
+msgstr ""
+
+#: tform1:ioreadwrite.hint
+msgid "Read/write I/O port"
+msgstr ""
+
 #: tform1:orun.caption
 msgid "&Run"
 msgstr ""
@@ -644,14 +668,6 @@ msgstr ""
 
 #: tform1:onmi.hint
 msgid "NMI"
-msgstr ""
-
-#: tform1:oirq.caption
-msgid "IR&Q..."
-msgstr ""
-
-#: tform1:oirq.hint
-msgid "IRQ"
 msgstr ""
 
 #: tform1:oresetall.caption
@@ -768,6 +784,18 @@ msgstr ""
 
 #: tform17:label2.caption
 msgid "Available modules:"
+msgstr ""
+
+#: tform51:caption
+msgid "Read/write"
+msgstr ""
+
+#: tform51:button3.caption
+msgid "&Read"
+msgstr ""
+
+#: tform51:button4.caption
+msgid "&Write"
 msgstr ""
 
 #: tform11:caption
@@ -891,14 +919,6 @@ msgstr ""
 
 #: frmabout:msg01
 msgid "Cannot open URL."
-msgstr ""
-
-#: frmexdepmemory:msg02
-msgid "Only hexadecimal values can be entered for address value."
-msgstr ""
-
-#: frmexdepmemory:msg03
-msgid "Only hexadecimal values can be entered for data value."
 msgstr ""
 
 #: frmexdepmemory:msg04
@@ -1281,6 +1301,30 @@ msgstr ""
 msgid "Unsuccess"
 msgstr ""
 
+#: frmmain:msg113
+msgid "Command '%S' is not available while simulation is running."
+msgstr ""
+
+#: frmmain:msg114
+msgid "All attached modules have been reseted."
+msgstr ""
+
+#: frmmain:msg115
+msgid "Run simulation."
+msgstr ""
+
+#: frmmain:msg116
+msgid "Step simulation."
+msgstr ""
+
+#: frmmain:msg117
+msgid "Stop simulation."
+msgstr ""
+
+#: frmmain:msg118
+msgid "Non-maskable interrupt requested."
+msgstr ""
+
 #: frmproperties:msg02
 msgid "Cannot open memory module."
 msgstr ""
@@ -1295,6 +1339,14 @@ msgstr ""
 
 #: frmproperties:msg07
 msgid "The address value be 0-2^24"
+msgstr ""
+
+#: frmrdwrioport:msg06
+msgid "Port address too high. (> %s)"
+msgstr ""
+
+#: frmrdwrioport:msg07
+msgid "Cannot open I/O port module."
 msgstr ""
 
 #: frmregviewer:msg02

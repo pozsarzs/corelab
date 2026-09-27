@@ -8,12 +8,12 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 |filename            |base, parent|class            |description              |
 |--------------------|------------|-----------------|-------------------------|
-|cmd-f.pas           |            |(include file)   |File menu commands       |
-|cmd-io.pas          |            |(include file)   |I/O port menu commands   |
-|cmd-m.pas           |            |(include file)   |Memory menu commands     |
-|cmd-o.pas           |            |(include file)   |Operation menu commands  |
-|cmd-p.pas           |            |(include file)   |Processor menu commands  |
-|cmd-v.pas           |            |(include file)   |Viewer menu commands     |
+|reg-f.pas           |            |(include file)   |File menu commands       |
+|reg-io.pas          |            |(include file)   |I/O port menu commands   |
+|reg-m.pas           |            |(include file)   |Memory menu commands     |
+|reg-o.pas           |            |(include file)   |Operation menu commands  |
+|reg-p.pas           |            |(include file)   |Processor menu commands  |
+|reg-v.pas           |            |(include file)   |Viewer menu commands     |
 |command.pas         |            |TCommand         |Command class            |
 |commandengine.pas   |            |TCommandEngine   |Command line engine class|
 |commandregistry.pas |            |TCommandRegistry |Command registry class   |

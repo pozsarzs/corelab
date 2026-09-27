@@ -262,7 +262,7 @@ to be used with other development tools or transferred to real hardware.
 |**ENIO**     |csEveryWhere     |-     |-    |Enable I/O port or device module.                                      |
 |**ENME**     |csEveryWhere     |-     |-    |Enable memory module.                                                  |
 |**ENPU**     |csEveryWhere     |-     |-    |Enable processor module.                                               |
-|**EXAM**     |csScript         |Yes   |-    |Examine a value from memory, register or bus address into a variable.  |
+|**EXAM**     |csScript         |Yes   |-    |Examine a value from memory, register or bus address into a register.  |
 |**EXAP**     |csEveryWhere     |-     |-    |Exit from application.                                                 |
 |**EXIT**     |csScript         |-     |-    |Terminate the script.                                                  |
 |**HELP**     |csInteractiveOnly|-     |-    |Display general help overview or detailed usage for a specific command.|
@@ -315,7 +315,7 @@ to be used with other development tools or transferred to real hardware.
 |**SVPR**     |csInteractiveOnly|-     |-    |Save project to file.                                                  |
 |**SVSC**     |csInteractiveOnly|-     |-    |Save script to file.                                                   |
 |**SVSS**     |csEveryWhere     |-     |-    |Make and save snapshot.                                                |
-|**SWAP**     |csScript         |Yes   |-    |Swap the values of two variables.                                      |
+|**SWAP**     |csScript         |Yes   |-    |Swap the values of two registers.                                      |
 |**WAIT**     |csScript         |-     |-    |Wait specified ms.                                                     |
 |**XOR**      |csScript         |Yes   |Z    |Bitwise/logical XOR in-place.                                          |
 

@@ -23,7 +23,7 @@ type
     Copyright:   string[31];
     Description: string;
     Email:       string[31];
-    Homepage:    string[31];
+    Homepage:    string[63];
     Name:        string[31];
     Version:     string[31];
   end;

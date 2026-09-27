@@ -15,7 +15,7 @@ unit scriptengine;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, commandengine, scriptruntime;
+  SysUtils, Classes, command, commandengine, scriptruntime, uactcontext;
 type
   { TScriptEngine }
   TScriptEngine = class(TCommandEngine)
@@ -39,11 +39,11 @@ begin
   // commands
   with FRegistry do
   begin
-    {$I cmd-arithmetic.pas}
-    {$I cmd-logic.pas}
-    {$I cmd-access.pas}
-    {$I cmd-control.pas}
-    {$I cmd-other.pas}
+    {$I reg-access.pas}
+    {$I reg-arithmetic.pas}
+    {$I reg-control.pas}
+    {$I reg-logic.pas}
+    {$I reg-other.pas}
   end;
 end;
 

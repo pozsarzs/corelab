@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | cmd-p.pas                                                                | }
+{ | reg-p.pas                                                                | }
 { | Commands of Processor menu                                               | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it

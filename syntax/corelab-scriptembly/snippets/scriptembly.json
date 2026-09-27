@@ -228,7 +228,7 @@
         "body": [
             "EXAM address"
         ],
-        "description": "Examine a value from memory, register or bus address into a variable."
+        "description": "Examine a value from memory, register or bus address into a register."
     },
     "EXAP": {
         "prefix": "EXAP",
@@ -618,9 +618,9 @@
     "SWAP": {
         "prefix": "SWAP",
         "body": [
-            "SWAP var"
+            "SWAP register register"
         ],
-        "description": "Swap the values of two variables."
+        "description": "Swap the values of two register."
     },
     "WAIT": {
         "prefix": "WAIT",

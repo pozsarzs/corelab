@@ -49,13 +49,13 @@ begin
   // commands
   with FRegistry do
   begin
-    {$I cmd-f.pas}
-    {$I cmd-v.pas}
-    {$I cmd-p.pas}
-    {$I cmd-m.pas}
-    {$I cmd-io.pas}
-    {$I cmd-o.pas}
-    {$I cmd-s.pas}
+    {$I reg-f.pas}
+    {$I reg-v.pas}
+    {$I reg-p.pas}
+    {$I reg-m.pas}
+    {$I reg-io.pas}
+    {$I reg-o.pas}
+    {$I reg-s.pas}
   end;
   FParser := TCommandParser.Create;
 end;

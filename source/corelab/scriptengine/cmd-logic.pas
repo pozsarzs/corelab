@@ -1,41 +1,14 @@
-{
-access
-EXAM
-DEPO
-SWAP
+{ +--------------------------------------------------------------------------+ }
+{ | CoreLAB v0.1 - Modular Processor Simulation Framework                    | }
+{ | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
+{ | cmd-logic.pas                                                            | }
+{ | Logic commands                                                           | }
+{ +--------------------------------------------------------------------------+ }
+{ This program is free software: you can redistribute it and/or modify it
+  under the terms of the European Union Public License 1.2 version.
 
-aritmet
-ADD
-SUB
-MUL
-INC
-DEC
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE. }
 
-logic
-AND
-OR
-XOR
-NOT
-SHL
-SHR
-BIT
-
-control
-COMP
-INRG
-JPEQ/JPZR
-JPGE
-JPGT
-JPLE
-JPLT
-JPNE/JPNZ
-CALL
-RTRN
-
-other
-CONV
-PRNT
-WAIT
-END
-EXIT
-}
+{ AND OR XOR NOT SHL SHR BIT }
