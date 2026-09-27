@@ -1,0 +1,639 @@
+{
+    "ADD": {
+        "prefix": "ADD",
+        "body": [
+            "ADD value"
+        ],
+        "description": "Add value to target in-place."
+    },
+    "AND": {
+        "prefix": "AND",
+        "body": [
+            "AND value"
+        ],
+        "description": "Bitwise/logical AND in-place."
+    },
+    "ATIO": {
+        "prefix": "ATIO",
+        "body": [
+            "ATIO instancename"
+        ],
+        "description": "Attach I/O port or device module to bus."
+    },
+    "ATME": {
+        "prefix": "ATME",
+        "body": [
+            "ATME instancename"
+        ],
+        "description": "Attach memory module to bus."
+    },
+    "ATPU": {
+        "prefix": "ATPU",
+        "body": [
+            "ATPU instancename"
+        ],
+        "description": "Attach processor module to bus."
+    },
+    "BIT": {
+        "prefix": "BIT",
+        "body": [
+            "BIT bit_index"
+        ],
+        "description": "Check the specified bit."
+    },
+    "CALL": {
+        "prefix": "CALL",
+        "body": [
+            "CALL label"
+        ],
+        "description": "Call subroutine."
+    },
+    "CFIO": {
+        "prefix": "CFIO",
+        "body": [
+            "CFIO instancename.property value"
+        ],
+        "description": "Configure I/O port module."
+    },
+    "CFME": {
+        "prefix": "CFME",
+        "body": [
+            "CFME instancename.property value"
+        ],
+        "description": "Configure memory module."
+    },
+    "CFPU": {
+        "prefix": "CFPU",
+        "body": [
+            "CFPU instancename.property value"
+        ],
+        "description": "Configure processor module."
+    },
+    "CHWD": {
+        "prefix": "CHWD",
+        "body": [
+            "CHWD directory"
+        ],
+        "description": "Change work directory."
+    },
+    "COMP": {
+        "prefix": "COMP",
+        "body": [
+            "COMP value"
+        ],
+        "description": "Compare target with value by subtraction."
+    },
+    "CONV": {
+        "prefix": "CONV",
+        "body": [
+            "CONV base"
+        ],
+        "description": "Convert number in different numeral systems in-place."
+    },
+    "CRIO": {
+        "prefix": "CRIO",
+        "body": [
+            "CRIO library instancename"
+        ],
+        "description": "Instantiate a I/O port or device module."
+    },
+    "CRME": {
+        "prefix": "CRME",
+        "body": [
+            "CRME library instancename"
+        ],
+        "description": "Instantiate a memory module."
+    },
+    "CRPU": {
+        "prefix": "CRPU",
+        "body": [
+            "CRPU library instancename"
+        ],
+        "description": "Instantiate a processor module."
+    },
+    "DEC": {
+        "prefix": "DEC",
+        "body": [
+            "DEC [count]"
+        ],
+        "description": "Decrement integer target by 1 or by count in-place."
+    },
+    "DEPO": {
+        "prefix": "DEPO",
+        "body": [
+            "DEPO address value"
+        ],
+        "description": "Deposit a value directly into memory, register or bus address."
+    },
+    "DIIO": {
+        "prefix": "DIIO",
+        "body": [
+            "DIIO instancename"
+        ],
+        "description": "Disable I/O port or device module."
+    },
+    "DIME": {
+        "prefix": "DIME",
+        "body": [
+            "DIME instancename"
+        ],
+        "description": "Disable memory module."
+    },
+    "DIPU": {
+        "prefix": "DIPU",
+        "body": [
+            "DIPU instancename"
+        ],
+        "description": "Disable processor module."
+    },
+    "DSIO": {
+        "prefix": "DSIO",
+        "body": [
+            "DSIO instancename"
+        ],
+        "description": "Destroy I/O port or device module."
+    },
+    "DSME": {
+        "prefix": "DSME",
+        "body": [
+            "DSME instancename"
+        ],
+        "description": "Destroy memory module."
+    },
+    "DSPU": {
+        "prefix": "DSPU",
+        "body": [
+            "DSPU instancename"
+        ],
+        "description": "Destroy processor module."
+    },
+    "DTIO": {
+        "prefix": "DTIO",
+        "body": [
+            "DTIO instancename"
+        ],
+        "description": "Detach I/O port or device module from bus."
+    },
+    "DTME": {
+        "prefix": "DTME",
+        "body": [
+            "DTME instancename"
+        ],
+        "description": "Detach memory module from bus."
+    },
+    "DTPU": {
+        "prefix": "DTPU",
+        "body": [
+            "DTPU instancename"
+        ],
+        "description": "Detach processor module from bus."
+    },
+    "EDME": {
+        "prefix": "EDME",
+        "body": [
+            "EDME instancename"
+        ],
+        "description": "Show examine/deposit window"
+    },
+    "END": {
+        "prefix": "END",
+        "body": [
+            "END"
+        ],
+        "description": "End of script."
+    },
+    "ENIO": {
+        "prefix": "ENIO",
+        "body": [
+            "ENIO instancename"
+        ],
+        "description": "Enable I/O port or device module."
+    },
+    "ENME": {
+        "prefix": "ENME",
+        "body": [
+            "ENME instancename"
+        ],
+        "description": "Enable memory module."
+    },
+    "ENPU": {
+        "prefix": "ENPU",
+        "body": [
+            "ENPU instancename"
+        ],
+        "description": "Enable processor module."
+    },
+    "EXAM": {
+        "prefix": "EXAM",
+        "body": [
+            "EXAM address"
+        ],
+        "description": "Examine a value from memory, register or bus address into a variable."
+    },
+    "EXAP": {
+        "prefix": "EXAP",
+        "body": [
+            "EXAP"
+        ],
+        "description": "Exit from application."
+    },
+    "EXIT": {
+        "prefix": "EXIT",
+        "body": [
+            "EXIT"
+        ],
+        "description": "Terminate the script."
+    },
+    "HELP": {
+        "prefix": "HELP",
+        "body": [
+            "HELP [command]"
+        ],
+        "description": "Display general help overview or detailed usage for a specific command."
+    },
+    "INC": {
+        "prefix": "INC",
+        "body": [
+            "INC [count]"
+        ],
+        "description": "Increment integer target by 1 or by count in-place."
+    },
+    "INRG": {
+        "prefix": "INRG",
+        "body": [
+            "INRG min max"
+        ],
+        "description": "Check if value is between min and max."
+    },
+    "JPEQ": {
+        "prefix": "JPEQ",
+        "body": [
+            "JPEQ label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPGE": {
+        "prefix": "JPGE",
+        "body": [
+            "JPGE label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPGT": {
+        "prefix": "JPGT",
+        "body": [
+            "JPGT label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPLE": {
+        "prefix": "JPLE",
+        "body": [
+            "JPLE label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPLT": {
+        "prefix": "JPLT",
+        "body": [
+            "JPLT label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPNE": {
+        "prefix": "JPNE",
+        "body": [
+            "JPNE label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPNZ": {
+        "prefix": "JPNZ",
+        "body": [
+            "JPNZ label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "JPZR": {
+        "prefix": "JPZR",
+        "body": [
+            "JPZR label"
+        ],
+        "description": "Jump to the specified label, based on the result of the previous CMP."
+    },
+    "LDME": {
+        "prefix": "LDME",
+        "body": [
+            "LDME instancename filename"
+        ],
+        "description": "Load memory content from file"
+    },
+    "LDPR": {
+        "prefix": "LDPR",
+        "body": [
+            "LDPR filename.clprj"
+        ],
+        "description": "Change to interactive mode and load project from file."
+    },
+    "LDSC": {
+        "prefix": "LDSC",
+        "body": [
+            "LDSC filename.clsce"
+        ],
+        "description": "Change to script mode and load script from file."
+    },
+    "LDSS": {
+        "prefix": "LDSS",
+        "body": [
+            "LDSS"
+        ],
+        "description": "Load and restore snapshot."
+    },
+    "MUL": {
+        "prefix": "MUL",
+        "body": [
+            "MUL value"
+        ],
+        "description": "Multiply target by value in-place."
+    },
+    "NMI": {
+        "prefix": "NMI",
+        "body": [
+            "NMI"
+        ],
+        "description": "Call non-maskable interrupt."
+    },
+    "NOT": {
+        "prefix": "NOT",
+        "body": [
+            "NOT"
+        ],
+        "description": "Bitwise/logical NOT in-place."
+    },
+    "NWPR": {
+        "prefix": "NWPR",
+        "body": [
+            "NWPR"
+        ],
+        "description": "Change to interactive mode and create new project."
+    },
+    "NWSC": {
+        "prefix": "NWSC",
+        "body": [
+            "NWSC"
+        ],
+        "description": "Change to script mode and create new script."
+    },
+    "OR": {
+        "prefix": "OR",
+        "body": [
+            "OR value"
+        ],
+        "description": "Bitwise/logical OR in-place."
+    },
+    "PRNT": {
+        "prefix": "PRNT",
+        "body": [
+            "PRNT \"text\""
+        ],
+        "description": "Write text to console."
+    },
+    "RNIO": {
+        "prefix": "RNIO",
+        "body": [
+            "RNIO instancename caption"
+        ],
+        "description": "Rename I/O device panel."
+    },
+    "RSAP": {
+        "prefix": "RSAP",
+        "body": [
+            "RSAP"
+        ],
+        "description": "Restart application."
+    },
+    "RSIO": {
+        "prefix": "RSIO",
+        "body": [
+            "RSIO instancename"
+        ],
+        "description": "Reset I/O port or device module."
+    },
+    "RSME": {
+        "prefix": "RSME",
+        "body": [
+            "RSME instancename"
+        ],
+        "description": "Reset memory module."
+    },
+    "RSPU": {
+        "prefix": "RSPU",
+        "body": [
+            "RSPU instancename"
+        ],
+        "description": "Reset processor module."
+    },
+    "RST": {
+        "prefix": "RST",
+        "body": [
+            "RST"
+        ],
+        "description": "Reset all module."
+    },
+    "RTRN": {
+        "prefix": "RTRN",
+        "body": [
+            "RTRN"
+        ],
+        "description": "Return from subroutine."
+    },
+    "RUN": {
+        "prefix": "RUN",
+        "body": [
+            "RUN"
+        ],
+        "description": "Run simulation."
+    },
+    "RUSC": {
+        "prefix": "RUSC",
+        "body": [
+            "RUN"
+        ],
+        "description": "Run script."
+    },
+    "RWIO": {
+        "prefix": "RWIO",
+        "body": [
+            "RWIO instancename"
+        ],
+        "description": "Show read/write window"
+    },
+    "SESC": {
+        "prefix": "SESC",
+        "body": [
+            "SESC"
+        ],
+        "description": "Run script step-by-step."
+    },
+    "SHBL": {
+        "prefix": "SHBL",
+        "body": [
+            "SHBL"
+        ],
+        "description": "Show BusLogger window."
+    },
+    "SHBM": {
+        "prefix": "SHBM",
+        "body": [
+            "SHBM"
+        ],
+        "description": "Show BreakPoint Manager window."
+    },
+    "SHHV": {
+        "prefix": "SHHV",
+        "body": [
+            "SHHV instancename"
+        ],
+        "description": "Show HexViewer window."
+    },
+    "SHIL": {
+        "prefix": "SHIL",
+        "body": [
+            "SHIL"
+        ],
+        "description": "Show IntLogger window."
+    },
+    "SHIO": {
+        "prefix": "SHIO",
+        "body": [
+            "SHIO instancename"
+        ],
+        "description": "Show I/O device panel."
+    },
+    "SHL": {
+        "prefix": "SHL",
+        "body": [
+            "SHL count"
+        ],
+        "description": "Shift target bits left by count in-place."
+    },
+    "SHME": {
+        "prefix": "SHME",
+        "body": [
+            "SHME"
+        ],
+        "description": "Show Module Explorer window."
+    },
+    "SHRL": {
+        "prefix": "SHRL",
+        "body": [
+            "SHRL"
+        ],
+        "description": "Show RunLogger window."
+    },
+    "SHR": {
+        "prefix": "SHR",
+        "body": [
+            "SHR count"
+        ],
+        "description": "Shift target bits right by count in-place."
+    },
+    "SHRV": {
+        "prefix": "SHRV",
+        "body": [
+            "SHRV instancename"
+        ],
+        "description": "Show RegViewer window."
+    },
+    "SHSC": {
+        "prefix": "SHSC",
+        "body": [
+            "SHSC"
+        ],
+        "description": "Show ScriptConsole window."
+    },
+    "SHSE": {
+        "prefix": "SHSE",
+        "body": [
+            "SHSE"
+        ],
+        "description": "Show ScriptEditor window."
+    },
+    "STEP": {
+        "prefix": "STEP",
+        "body": [
+            "STEP"
+        ],
+        "description": "Run simulation step-by-step."
+    },
+    "STOP": {
+        "prefix": "STOP",
+        "body": [
+            "STOP"
+        ],
+        "description": "Stop simulation."
+    },
+    "STSC": {
+        "prefix": "STSC",
+        "body": [
+            "STSC"
+        ],
+        "description": "Stop script."
+    },
+    "SUB": {
+        "prefix": "SUB",
+        "body": [
+            "SUB value"
+        ],
+        "description": "Subtract value from target in-place."
+    },
+    "SVME": {
+        "prefix": "SVME",
+        "body": [
+            "SVME filename instancename"
+        ],
+        "description": "Save memory content to file"
+    },
+    "SVPR": {
+        "prefix": "SVPR",
+        "body": [
+            "SVPR filename.clprj"
+        ],
+        "description": "Save project to file."
+    },
+    "SVSC": {
+        "prefix": "SVSC",
+        "body": [
+            "SVSC filename.clsce"
+        ],
+        "description": "Save script to file."
+    },
+    "SVSS": {
+        "prefix": "SVSS",
+        "body": [
+            "SVSS"
+        ],
+        "description": "Make and save snapshot."
+    },
+    "SWAP": {
+        "prefix": "SWAP",
+        "body": [
+            "SWAP var"
+        ],
+        "description": "Swap the values of two variables."
+    },
+    "WAIT": {
+        "prefix": "WAIT",
+        "body": [
+            "WAIT ms"
+        ],
+        "description": "Wait specified ms."
+    },
+    "XOR": {
+        "prefix": "XOR",
+        "body": [
+            "XOR value"
+        ],
+        "description": "Bitwise/logical XOR in-place."
+    }
+}

@@ -7,7 +7,7 @@
   "author": "Pozsar Zsolt",
   "publisher": "pozsarzs",
   "license": "MIT",
-  "homepage": "https://pozsarzs.github.io/corelab",
+  "homepage": "https://pozsarzs.github.io/corelab-scriptembly",
   "repository": {
     "type": "git",
     "url": "https://github.com/pozsarzs/corelab-scriptembly.git"
@@ -24,19 +24,19 @@
   ],
   "contributes": {
     "languages": [{
-      "id": "mdsscript",
-      "aliases": ["CoreLAB scriptembly", "clse"],
+      "id": "scriptembly",
+      "aliases": ["CoreLAB scriptembly", "scriptembly"],
       "extensions": [""],
       "configuration": "./language-configuration.json"
     }],
     "snippets": [{
-      "language": "clse",
-      "path": "./snippets/clse.json"
+      "language": "scriptembly",
+      "path": "./snippets/scriptembly.json"
     }],
     "grammars": [{
-      "language": "clse",
-      "scopeName": "source.clsce",
-      "path": "./syntaxes/clse.tmLanguage.json"
+      "language": "scriptembly",
+      "scopeName": "source.scriptembly",
+      "path": "./syntaxes/scriptembly.tmLanguage.json"
     }]
   }
 }

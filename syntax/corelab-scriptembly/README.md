@@ -1,4 +1,4 @@
-<img align="left" style="float: left; margin: 0 10px 0 0;" alt="CoreLAB icon" src="images/corelab-orange.png">   
+<img align="left" style="float: left; margin: 0 10px 0 0;" alt="CoreLAB icon" src="images/application-x-corelab-scriptembly.png">   
 
 # CoreLAB scriptembly
 
