@@ -1,0 +1,626 @@
+.TH CoreLAB 1 "2026 Sept 27" ""
+
+.SH NAME
+CoreLAB \- Modular Processor Simulation Framework
+
+.SH SYNOPSIS
+.B corelab
+[options] [filename]
+
+.SH COPYRIGHT
+CoreLAB is Copyright (C) 2026 by Pozsar Zsolt.
+
+.SH DESCRIPTION
+The CoreLAB project is a functional 8 bit microprocessor and microcontroller
+simulator born from a fusion of academic research, technical passion, and
+historical preservation.
+.PP
+Unlike comprehensive emulators, the goal of CoreLAB is not to replicate entire
+vintage computer systems, run historical operating systems, or simulate
+cycle-accurate hardware quirks. Instead, it focuses strictly on the clean,
+functional execution of instructions, making the code's logic transparent and
+easy to analyze.
+.PP
+Beyond a simple educational tool, the project serves as a practical application
+of advanced system design and hardware modeling concepts. It provides a platform
+to explore how complex, real-world physical systems - such as buses, registers,
+memory layouts, and I/O lines - can be accurately modeled, decoupled, and
+reconfigured dynamically in software using modern software engineering patterns.
+.PP
+The program is designed for Windows and Unix-like operating systems.
+
+.SH OPTIONS
+.TP
+.B \-d \-\-dir
+Set plugin directory.
+.TP
+.B \-i \-\-ignore-help
+Ignore missing help file or viewer.
+.TP
+.B \-h \-\-help
+Show useable parameters.
+.TP
+.B \-p \-\-project
+Switch to project mode, optionally load [project].
+.TP
+.B \-r \-\-run
+Run loaded script immediately.
+.TP
+.B \-s \-\-script
+Switch to script mode, optionally load [filename].
+.TP
+.B \-v \-\-version
+Show version and build information.
+
+.SH OPERATION
+.SS Project Management
+CoreLAB uses a simple directory-based project structure. A project directory can
+contain all related files—such as optional environment setup scripts, saved state
+snapshots, program code, and data streams. The simulation environment can also be
+built manually, meaning none of these files are strictly mandatory. This setup
+keeps experiments independent while fully supporting the use of external files.
+
+.SS Modular Architecture
+One of the most important features of the simulator is its modular design.
+Processors, memories, and peripherals can be created as independent objects and
+connected dynamically. Users can build custom virtual hardware environments
+tailored to the requirements of the system being studied.
+
+.B Plug-in modules
+
+.TP
+.B Real Port Redirection
+Bridges virtual port I/O streams directly to the physical hardware ports of the host machine.
+.TP
+.B Simple Console
+Basic text-based console for data stream monitoring.
+.TP
+.B 7-Segment Display
+Single and multiplexed 7-segment display arrays for numerical and basic character output.
+.TP
+.B CPU
+Emulated processor, microprocessor with custom architectures.
+.TP
+.B Hexadecimal Display
+Single and multiplexed hex display arrays mapped to virtual port addresses.
+.TP
+.B LED Array and Matrix
+Linear LED bars and dot-matrix displays for visual bit-state and coordinate-based output.
+.TP
+.B Memory (RAM/ROM)
+Configurable volatile and non-volatile memory blocks with custom sizing and address mapping.
+.TP
+.B Pushbutton Array and Matrix
+Linear and matrix-arranged momentary pushbuttons for interactive binary input.
+.TP
+.B Switch Array and Matrix
+Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.
+
+.SS Supported Processor Architectures
+CoreLAB is not limited to a single processor type. Different microprocessor and
+microcontroller architectures can be loaded as plug-ins. This enables the same
+environment to be used for studying multiple instruction sets and hardware
+models.
+
+.SS Virtual Memory and I/O Environment
+The memory map and I/O address space can be configured freely during simulation.
+Virtual peripherals can be assigned to memory locations or I/O ports in the same
+way as real hardware devices.
+
+.SS Debugging Features
+CoreLAB provides several built-in diagnostic and debugging tools. Users can halt
+execution at breakpoints, execute programs step by step, inspect memory and
+register contents, and monitor instruction execution in real time. These features
+are especially useful for educational purposes and low-level software
+development.
+
+.B Integrated modules
+
+.TP
+.B Breakpoint Manager
+Managing breakpoints
+.TP
+.B BusLogger
+Logging system bus traffic
+.TP
+.B HexViewer
+Memory viewer component
+.TP
+.B IntLogger
+Logging interrupt requests
+.TP
+.B Module Explorer
+Managing module instances
+.TP
+.B RegViewer
+Real-time inspection of registers
+.TP
+.B RunLogger
+Real-time output of address, machine code, and mnemonic
+.TP
+.B ScriptConsole
+Console for showing running script output
+.TP
+.B ScriptEditor
+Built-in environment for writing control scripts
+.TP
+.B SysConsole
+Console for system messages and command line interface
+
+.SS Scripting and Automation
+The program is primarily operated through its own built-in console command line,
+though a menu is also available. It features a custom command interpreter and
+scripting language. Scripts can be executed directly from the OS shell; when run
+this way, the script automatically builds the execution environment and performs
+all specified operations. This allows for the efficient automation of repetitive
+tasks, tests, and the reproduction of complex hardware configurations.
+
+.SS State Saving and Restoration
+The complete state of a simulation can be saved and restored at any time. This
+includes not only memory contents but also the current state of processors,
+peripherals, and other objects. As a result, development and debugging sessions
+can be paused and resumed without loss of progress.
+
+.SS Logging and Data Export
+Runtime events and execution logs can be saved to files for later analysis.
+Memory contents can be exported in binary or Intel HEX format, allowing results
+to be used with other development tools or transferred to real hardware.
+
+.SH INTERNAL REGISTERS
+.TS
+box tab(|);
+cb | cb | cb
+c  | l  | c .
+Registers|Description|Access
+_
+R0-9|General register|R/W
+RA|Work register (accumulator)|R/W
+RB|Work directory|RO
+RC|Script instruction counter|RO
+RD|CPU instruction counter|RO
+RE|Random byte|RO
+RF|Flags|RO
+.TE
+.PP
+\fBNote:\fR Flag's bit 0 is ZERO, bit 1 is CARRY.
+
+.SH BUILTIN COMMANDS
+Notes:
+
+.IP \(bu 3
+The value can be specified directly or register name ($R0-$RF).
+.IP \(bu 3
+Start the comment with ' ; is marked with '.
+.IP \(bu 3
+Enclose the string in ' ” ' characters.
+
+.SS Commands can only be used on the command line
+
+.TP
+\fBEDME\fP \fIinstancename\fP
+Show examine/deposit window
+
+.TP
+\fBHELP\fP \fI[command]\fP
+Display general help overview or detailed usage for a specific command.
+
+.TP
+\fBLDPR\fP \fIfilename.clprj\fP
+Change to interactive mode and load project from file.
+
+.TP
+\fBLDSC\fP \fIfilename.clsce\fP
+Change to script mode and load script from file.
+
+.TP
+\fBNWPR\fP
+Change to interactive mode and create new project.
+
+.TP
+\fBNWSC\fP
+Change to script mode and create new script.
+
+.TP
+\fBRUSC\fP
+Run script.
+
+.TP
+\fBRWIO\fP \fIinstancename\fP
+Show read/write window
+
+.TP
+\fBSESC\fP
+Run script step-by-step.
+
+.TP
+\fBSHBM\fP
+Show BreakPoint Manager window.
+
+.TP
+\fBSHME\fP
+Show Module Explorer window.
+
+.TP
+\fBSHSE\fP
+Show ScriptEditor window.
+
+.TP
+\fBSTSC\fP
+Stop script.
+
+.TP
+\fBSVPR\fP \fIfilename.clprj\fP
+Save project to file.
+
+.TP
+\fBSVSC\fP \fIfilename.clsce\fP
+Save script to file.
+
+.SS Commands can only be used in scripts
+
+.TP
+\fBADD\fP \fIvalue\fP
+Add value to target in-place.
+
+.TP
+\fBAND\fP \fIvalue\fP
+Bitwise/logical AND in-place.
+
+.TP
+\fBBIT\fP \fIbit_index\fP
+Check the specified bit.
+
+.TP
+\fBCALL\fP \fIlabel\fP
+Call subroutine.
+
+.TP
+\fBCOMP\fP \fIvalue\fP
+Compare target with value by subtraction.
+
+.TP
+\fBCONV\fP \fIbase\fP
+Convert number in different numeral systems in-place.
+
+.TP
+\fBDEC\fP \fI[count]\fP
+Decrement integer target by 1 or by count in-place.
+
+.TP
+\fBDEPO\fP \fIaddress\fP \fIvalue\fP
+Deposit a value directly into memory, register or bus address.
+
+.TP
+\fBEND\fP
+End of script.
+
+.TP
+\fBEXAM\fP \fIaddress\fP
+Examine a value from memory, register or bus address into a variable.
+
+.TP
+\fBINC\fP \fI[count]\fP
+Increment integer target by 1 or by count in-place.
+
+.TP
+\fBINRG\fP \fImin\fP \fImax\fP
+Check if value is between min and max.
+
+.TP
+\fBJPEQ\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPGE\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPGT\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPLE\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPLT\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPNE\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPNZ\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPZR\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBMUL\fP \fIvalue\fP
+Multiply target by value in-place.
+
+.TP
+\fBNOT\fP
+Bitwise/logical NOT in-place.
+
+.TP
+\fBOR\fP \fIvalue\fP
+Bitwise/logical OR in-place.
+
+.TP
+\fBPRNT\fP \fI"text"\fP
+Write text to console.
+
+.TP
+\fBRTRN\fP
+Return from subroutine.
+
+.TP
+\fBSHL\fP \fIcount\fP
+Shift target bits left by count in-place.
+
+.TP
+\fBSHR\fP \fIcount\fP
+Shift target bits right by count in-place.
+
+.TP
+\fBSUB\fP \fIvalue\fP
+Subtract value from target in-place.
+
+.TP
+\fBSWAP\fP \fIvar\fP
+Swap the values of two variables.
+
+.TP
+\fBWAIT\fP \fIms\fP
+Wait specified ms.
+
+.TP
+\fBXOR\fP \fIvalue\fP
+Bitwise/logical XOR in-place.
+
+.SS Commands that can be used everywhere
+			
+.TP
+\fBATIO\fP \fIinstancename\fP
+Attach I/O port or device module to bus.
+
+.TP
+\fBATME\fP \fIinstancename\fP
+Attach memory module to bus.
+
+.TP
+\fBATPU\fP \fIinstancename\fP
+Attach processor module to bus.
+
+.TP
+\fBCFIO\fP \fIinstancename.property\fP \fIvalue\fP
+Configure I/O port module.
+
+.TP
+\fBCFME\fP \fIinstancename.property\fP \fIvalue\fP
+Configure memory module.
+
+.TP
+\fBCFPU\fP \fIinstancename.property\fP \fIvalue\fP
+Configure processor module.
+
+.TP
+\fBCHWD\fP \fIdirectory\fP
+Change work directory.
+
+.TP
+\fBCRIO\fP \fIlibrary\fP \fIinstancename\fP
+Instantiate a I/O port or device module.
+
+.TP
+\fBCRME\fP \fIlibrary\fP \fIinstancename\fP
+Instantiate a memory module.
+
+.TP
+\fBCRPU\fP \fIlibrary\fP \fIinstancename\fP
+Instantiate a processor module.
+
+.TP
+\fBDIIO\fP \fIinstancename\fP
+Disable I/O port or device module.
+
+.TP
+\fBDIME\fP \fIinstancename\fP
+Disable memory module.
+
+.TP
+\fBDIPU\fP \fIinstancename\fP
+Disable processor module.
+
+.TP
+\fBDSIO\fP \fIinstancename\fP
+Destroy I/O port or device module.
+
+.TP
+\fBDSME\fP \fIinstancename\fP
+Destroy memory module.
+
+.TP
+\fBDSPU\fP \fIinstancename\fP
+Destroy processor module.
+
+.TP
+\fBDTIO\fP \fIinstancename\fP
+Detach I/O port or device module from bus.
+
+.TP
+\fBDTME\fP \fIinstancename\fP
+Detach memory module from bus.
+
+.TP
+\fBDTPU\fP \fIinstancename\fP
+Detach processor module from bus.
+
+.TP
+\fBENIO\fP \fIinstancename\fP
+Enable I/O port or device module.
+
+.TP
+\fBENME\fP \fIinstancename\fP
+Enable memory module.
+
+.TP
+\fBENPU\fP \fIinstancename\fP
+Enable processor module.
+
+.TP
+\fBEXAP\fP
+Exit from application.
+
+.TP
+\fBEXIT\fP
+Terminate the script.
+
+.TP
+\fBLDME\fP \fIinstancename\fP \fIfilename\fP
+Load memory content from file
+
+.TP
+\fBLDSS\fP
+Load and restore snapshot.
+
+.TP
+\fBNMI\fP
+Call non-maskable interrupt.
+
+.TP
+\fBRNIO\fP \fIinstancename\fP \fIcaption\fP
+Rename I/O device panel.
+
+.TP
+\fBRSAP\fP
+Restart application.
+
+.TP
+\fBRSIO\fP \fIinstancename\fP
+Reset I/O port or device module.
+
+.TP
+\fBRSME\fP \fIinstancename\fP
+Reset memory module.
+
+.TP
+\fBRSPU\fP \fIinstancename\fP
+Reset processor module.
+
+.TP
+\fBRST\fP
+Reset all module.
+
+.TP
+\fBRUN\fP
+Run simulation.
+
+.TP
+\fBSHBL\fP
+Show BusLogger window.
+
+.TP
+\fBSHHV\fP \fIinstancename\fP
+Show HexViewer window.
+
+.TP
+\fBSHIL\fP
+Show IntLogger window.
+
+.TP
+\fBSHIO\fP \fIinstancename\fP
+Show I/O device panel.
+
+.TP
+\fBSHRL\fP
+Show RunLogger window.
+
+.TP
+\fBSHRV\fP \fIinstancename\fP
+Show RegViewer window.
+
+.TP
+\fBSHSC\fP
+Show ScriptConsole window.
+
+.TP
+\fBSTEP\fP
+Run simulation step-by-step.
+
+.TP
+\fBSTOP\fP
+Stop simulation.
+
+.TP
+\fBSVME\fP \fIfilename\fP \fIinstancename\fP
+Save memory content to file
+
+.TP
+\fBSVSS\fP
+Make and save snapshot.
+
+.SH ENVIRONMENTAL VARIABLES
+.TP
+.B LANG
+This is the system language on Unix-like operating systems.
+
+.SH FILES
+.TP
+.B *.bin:
+General binary file for load/save memory content.
+.TP
+.B *.clprj:
+Project file. Contains the static description of the simulation environment,
+including the configuration, positions, and sizes of the visual modules.
+.TP
+.B *.clsce:
+CoreLAB scriptembly file. Executable script that dynamically builds the
+simulation environment at runtime by instantiating modules. It controls the
+simulation, manages debug windows, evaluates data, handles data loading/saving,
+and creates snapshots.
+.TP
+.B yymmddhhmmss.clsht:
+CoreLAB snapshot. The instantaneous and restorable state of the framework and
+the simulation.
+.TP
+.B corelab.ini:
+General settings. Stores general application preferences, including interface
+colors, dimensions, and saved window positions.
+.TP
+.B *.hex:
+Intel hexa file for load/save memory content.
+.TP
+.B *.log:
+General log file (loggers output file).
+
+.SH EXIT STATUS
+.TP
+.B 0
+Normal exit.
+
+.SH HOMEPAGE
+.UR https://pozsarzs.github.io/corelab
+.UE
+.PP
+.UR https://github.com/pozsarzs/corelab
+.UE
+
+.SH SEE ALSO
+.PD 0
+.LP
+\fBclioport\fP(1)
+\fBclprocessor\fP(1)
+\fBcorelab\fP(1)
+and files in document or \fI/usr/share/doc/corelab/\fP folder (or equivalent on
+your system). The source code documentation for plugins can only be found in the
+source package and in the help.
+
+.SH AUTHOR
+Pozsar Zsolt
+.MT pozsarzs@gmail.com
+.ME

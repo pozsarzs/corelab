@@ -13,7 +13,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## I. Introduction and Project Goals
 
-The CoreLAB project is a functional 8 bits microprocessor and microcontroller
+The CoreLAB project is a functional 8 bit microprocessor and microcontroller
 simulator born from a fusion of academic research, technical passion, and
 historical preservation. The project was initiated with several key objectives
 in mind:
@@ -82,7 +82,7 @@ in mind:
 |**Module Explorer**   |Managing module instances                              |
 |**RegViewer**         |Real-time inspection of registers                      |
 |**RunLogger**         |Real-time output of address, machine code, and mnemonic|
-|**ScriptConsole**     |Console for show running script output                 |
+|**ScriptConsole**     |Console for showing running script output              |
 |**ScriptEditor**      |Built-in environment for writing control scripts       |
 |**SysConsole**        |Console for system messages and command line interface |
 
@@ -216,15 +216,15 @@ to be used with other development tools or transferred to real hardware.
 
 |registers|description                |access|
 |:-------:|:--------------------------|:----:|
-|R0-9     |general register           | R/W  | 
-|RA       |work register (accumulator)| R/W  | 
-|RB       |work directory             | RO   | 
-|RC       |script instruction counter | RO   | 
+|R0-9     |General register           | R/W  | 
+|RA       |Work register (accumulator)| R/W  | 
+|RB       |Work directory             | RO   | 
+|RC       |Script instruction counter | RO   | 
 |RD       |CPU instruction counter    | RO   | 
-|RE       |random byte                | RO   | 
-|RF       |flags                      | RO   |
+|RE       |Random byte                | RO   | 
+|RF       |Flags                      | RO   |
 
-**Note:** Flag's 0 bit is ZERO, 1 bit is CARRY.  
+**Note:** Flag's bit 0 is ZERO, bit 1 is CARRY.  
 
 ## VII. Implemented commands
 
@@ -265,7 +265,7 @@ to be used with other development tools or transferred to real hardware.
 |**EXAM**     |csScript         |Yes   |-    |Examine a value from memory, register or bus address into a variable.  |
 |**EXAP**     |csEveryWhere     |-     |-    |Exit from application.                                                 |
 |**EXIT**     |csScript         |-     |-    |Terminate the script.                                                  |
-|**HELP**     |csScript         |-     |-    |Display general help overview or detailed usage for a specific command.|
+|**HELP**     |csInteractiveOnly|-     |-    |Display general help overview or detailed usage for a specific command.|
 |**INC**      |csScript         |Yes   |Z    |Increment integer target by 1 or by count in-place.                    |
 |**INRG**     |csScript         |Yes   |Z    |Check if value is between min and max.                                 |
 |**JPEQ/JPZR**|csScript         |-     |-    |Jump to the specified label, based on the result of the previous CMP.  |
@@ -297,15 +297,15 @@ to be used with other development tools or transferred to real hardware.
 |**RWIO**     |csInteractiveOnly|-     |-    |Show read/write window.                                                |
 |**SESC**     |csInteractiveOnly|-     |-    |Run script step-by-step.                                               |
 |**SHBM**     |csInteractiveOnly|-     |-    |Show BreakPoint Manager window.                                        |
-|**SHHV**     |csInteractiveOnly|-     |-    |Show HexViewer window.                                                 |
-|**SHIL**     |csInteractiveOnly|-     |-    |Show IntLogger window.                                                 |
+|**SHHV**     |csEveryWhere     |-     |-    |Show HexViewer window.                                                 |
+|**SHIL**     |csEveryWhere     |-     |-    |Show IntLogger window.                                                 |
 |**SHIO**     |csEveryWhere     |-     |-    |Show I/O device panel.                                                 |
 |**SHL**      |csScript         |Yes   |C, Z |Shift target bits left by count in-place.                              |
 |**SHME**     |csInteractiveOnly|-     |-    |Show Module Explorer window.                                           |
 |**SHR**      |csScript         |Yes   |C, Z |Shift target bits right by count in-place.                             |
-|**SHRL**     |csInteractiveOnly|-     |-    |Show RunLogger window.                                                 |
-|**SHRV**     |csInteractiveOnly|-     |-    |Show RegViewer window.                                                 |
-|**SHSC**     |csInteractiveOnly|-     |-    |Show ScriptConsole window.                                             |
+|**SHRL**     |csEveryWhere     |-     |-    |Show RunLogger window.                                                 |
+|**SHRV**     |csEveryWhere     |-     |-    |Show RegViewer window.                                                 |
+|**SHSC**     |csEveryWhere     |-     |-    |Show ScriptConsole window.                                             |
 |**SHSE**     |csInteractiveOnly|-     |-    |Show ScriptEditor window.                                              |
 |**STEP**     |csEveryWhere     |-     |-    |Run simulation step-by-step.                                           |
 |**STOP**     |csEveryWhere     |-     |-    |Stop simulation.                                                       |

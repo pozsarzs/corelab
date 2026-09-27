@@ -6,9 +6,6 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## Installation from source package
 
-Lazarus LCL units are required to compile Xcorelab and FreePascal compiler is
-required to compile all programs.  
-
 > [!IMPORTANT]
 > On Windows operating systems, FreePascal's BIN directory contains the
 > compiler and additional necessary utilities (make, rstconv), so this directory
