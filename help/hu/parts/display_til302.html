@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TDisplayTIL302 osztály a TDisplay osztályból, a display_til302 modulban</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2
+id="tdisplaytil302-osztály-a-tdisplay-osztályból-a-display_til302-modulban">TDisplayTIL302
+osztály a TDisplay osztályból, a display_til302 modulban</h2>
+<p>A TDisplayTIL302 a TDisplay alaposztályból származó virtuális
+kijelzőkomponens. Az 1971-ben bemutatott Texas Instruments TIL302 hét
+szegmenses LED-kijelzőt szimulálja. A komponens a hét szegmenst és a két
+tizedespontot egy belső bitképpufferbe rajzolja, az alaposztályban
+meghatározott retró vörös kijelzőszínekkel.</p>
+<h3 id="a-kijelző-elrendezése">A kijelző elrendezése</h3>
+<p>A szegmensek bitjeinek kiosztása:</p>
+<table>
+<thead>
+<tr class="header">
+<th>bit</th>
+<th>segment</th>
+<th>coordinates</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>A</td>
+<td>43,05 – 85,05</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>B</td>
+<td>85,05 – 79,47</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>C</td>
+<td>79,47 – 73,89</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>D</td>
+<td>31,89 – 73,89</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>E</td>
+<td>31,89 – 37,47</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>F</td>
+<td>37,47 – 43,05</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>G</td>
+<td>37,47 – 79,47</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>–</td>
+<td>unused</td>
+</tr>
+</tbody>
+</table>
+<p>A bal oldali tizedespont a <code>(3,91)</code>, a jobb oldali a
+<code>(101,91)</code> koordinátára kerül.</p>
+<h3 id="védett-metódusok">Védett metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 1%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);</code></td>
+<td></td>
+<td>Draws a decimal-point LED into the internal buffer.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DrawLine(AStatus: Boolean; Ax1, Ay1, Ax2, Ay2: Byte);</code></td>
+<td></td>
+<td>Draws an active seven-segment line. Active segments are rendered as
+dashed lines; horizontal segments use four dashes and vertical segments
+use three. Inactive segments are not drawn.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 2%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Initializes the TIL302 display, its module information and bitmap
+buffer.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Destroys the display object.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure DrawToBuffer(AInputData: TDisplayedData);</code></td>
+<td>Or</td>
+<td>Clears the buffer and renders the seven segments and decimal points
+according to the supplied display data.</td>
+</tr>
+<tr class="even">
+<td><code>procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);</code></td>
+<td>Or</td>
+<td>Copies the internal bitmap buffer to the target canvas at the
+specified position.</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="objektumtulajdonságok-és-örökölt-interfész">Objektumtulajdonságok és
+örökölt interfész</h3>
+<p>Az osztály a <code>TDisplay</code> osztályból örökli a kijelző
+állapotát, tulajdonságait és vezérlőmetódusait, többek között a
+<code>ModName</code>, <code>Description</code>, <code>Enabled</code>,
+<code>SetBlank</code>, <code>SetLeftDot</code>,
+<code>SetRightDot</code>, <code>SetSegments</code> és
+<code>SetValue</code> elemeket.</p>
+<h3 id="moduladatok">Moduladatok</h3>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module name</td>
+<td><code>TIL302</code></td>
+</tr>
+<tr class="even">
+<td>Description</td>
+<td><code>Texas Instruments TIL302 LED display (1971)</code></td>
+</tr>
+<tr class="odd">
+<td>Buffer width</td>
+<td>118 pixels</td>
+</tr>
+<tr class="even">
+<td>Buffer height</td>
+<td>122 pixels</td>
+</tr>
+<tr class="odd">
+<td>FrameX</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td>FrameY</td>
+<td>28</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

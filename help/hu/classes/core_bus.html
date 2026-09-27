@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - ISysBus a core_bus modulból</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="isysbus-a-core_bus-modulból">ISysBus a core_bus modulból</h2>
+<p><code>ISysBus</code> a CoreLAB rendszersín-interfésze. Meghatározza a
+memória- és I/O- műveleteket, amelyekkel a CPU a rendszersínen keresztül
+kommunikál a memóriával és az I/O-port eszközökkel.</p>
+<p>A forrás az interfészt a CPU és az eszközök közötti kapcsolatként
+azonosítja, amely a <code>TCPU</code> osztálytól a <code>TIOPort</code>,
+illetve <code>TMemory</code> között.</p>
+<h3 id="interfészmetódusok">Interfészmetódusok</h3>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function ReadMemory(AAddress: DWord): QWord;</code></td>
+<td>Kiolvassa az <code>AAddress</code> által megadott memóriacímen
+található értéket. A forrás szerint ezt a műveletet kizárólag a
+<code>TMemory</code> valósítja meg.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WriteMemory(AAddress: DWord; AValue: QWord);</code></td>
+<td>Kiír egy értéket az <code>AAddress</code> által megadott
+memóriacímre. A forrás szerint ezt a műveletet kizárólag a
+<code>TMemory</code> valósítja meg.</td>
+</tr>
+<tr class="odd">
+<td><code>function ReadPort(APort: Word): Byte;</code></td>
+<td>Kiolvas egy bájtot a megadott I/O-portról. A forrás szerint ezt a
+műveletet kizárólag a <code>TIOPort</code> valósítja meg.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WritePort(APort: Word; AValue: Byte);</code></td>
+<td>Kiír egy bájtot a megadott I/O-portra. A forrás szerint ezt a
+műveletet kizárólag a <code>TIOPort</code> valósítja meg.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interfészazonosító">Interfészazonosító</h3>
+<p>Az <code>ISysBus</code> GUID-azonosítója:</p>
+<p><code>{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}</code></p>
+<h3 id="használat">Használat</h3>
+<p>A forrás megjegyzése szerint az <code>ISysBus</code> biztosítja a
+kommunikációs útvonalat a <code>TCPU</code> és a <code>TIOPort</code>,
+illetve <code>TMemory</code> között.</p>
+<p>A <code>TBus</code> megvalósítja az <code>ISysBus</code> interfészt,
+így biztosítja ezeknek a műveleteknek a rendszerszintű
+megvalósítását.</p>
+</body>
+</html>

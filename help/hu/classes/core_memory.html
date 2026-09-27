@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TMemory a core_memory modulból</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tmemory-a-core_memory-modulból">TMemory a core_memory
+modulból</h2>
+<p>A <code>TMemory</code> a CoreLAB keretrendszer
+alapmemória-komponense. Bájt címezhető memóriatárolást biztosít
+konfigurálható címtérmérettel, RAM/ROM üzemmóddal, engedélyezési
+állapottal, példányazonosítással és adatfolyam-alapú állapot
+mentéssel.</p>
+<h3 id="tmemorymode">TMemoryMode</h3>
+<p>A <code>TMemoryMode</code> a memória működési módját határozza
+meg:</p>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>érték</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mmRAM</code></td>
+<td>A memória tartalma akkor írható, ha a memória engedélyezett.</td>
+</tr>
+<tr class="even">
+<td><code>mmROM</code></td>
+<td>A memória tartalma a <code>WriteMemory</code> metóduson keresztül
+csak olvasható.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tmemorymodehelper">TMemoryModeHelper</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ToString</code></td>
+<td>Az aktuális <code>TMemoryMode</code> értéket a felsorolás nevévé
+alakítja.</td>
+</tr>
+<tr class="even">
+<td><code>FromString(const Value: string)</code></td>
+<td>A felsorolás nevét RTTI segítségével <code>TMemoryMode</code>
+értékké alakítja.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tsemanticversion">TSemanticVersion</h3>
+<p>A <code>TSemanticVersion</code> a modul verzióját három egész számú
+összetevőként tárolja.</p>
+<table>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Major</code></td>
+<td><code>Integer</code></td>
+<td>Főverziószám.</td>
+</tr>
+<tr class="even">
+<td><code>Minor</code></td>
+<td><code>Integer</code></td>
+<td>Alverziószám.</td>
+</tr>
+<tr class="odd">
+<td><code>Patch</code></td>
+<td><code>Integer</code></td>
+<td>Javítóverziószám.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tsemanticversionhelper">TSemanticVersionHelper</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ToString</code></td>
+<td>A verziót <code>Major.Minor.Patch</code> formátumban jeleníti
+meg.</td>
+</tr>
+<tr class="even">
+<td><code>Compare(AOther: TSemanticVersion)</code></td>
+<td>Összehasonlítja a másik verziót az aktuális verzióval. Újabb, azonos
+vagy régebbi verzió esetén <code>-1</code>, <code>0</code>, illetve
+<code>1</code> értéket ad vissza.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-mezők">Védett mezők</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 14%" />
+<col style="width: 36%" />
+<col style="width: 32%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FAddressRangeSize</code></td>
+<td><code>DWord</code></td>
+<td>A címezhető memóriacellák száma.</td>
+<td><code>1024</code></td>
+</tr>
+<tr class="even">
+<td><code>FBaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>Báziscím.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>A modul rövid leírása.</td>
+<td><code>Standard memory with 8 bit data width.</code></td>
+</tr>
+<tr class="even">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Engedélyezi a memóriaelérést a sínről való leválasztás nélkül.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FMemoryMode</code></td>
+<td><code>TMemoryMode</code></td>
+<td>RAM vagy ROM működési mód.</td>
+<td><code>mmRAM</code></td>
+</tr>
+<tr class="even">
+<td><code>FMemCells</code></td>
+<td><code>array of Byte</code></td>
+<td>Belső, bájtonként címezhető memóriatároló.</td>
+<td>1024 bytes initially</td>
+</tr>
+<tr class="odd">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Modulnév.</td>
+<td><code>RAM/ROM</code></td>
+</tr>
+<tr class="even">
+<td><code>FVersion</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>Modulverzió.</td>
+<td><code>0.1.0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-metódusok">Védett metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure SetFAddressRangeSize(AAddressRangeSize: DWord);</code></td>
+<td>Beállítja a címtér méretét, és átméretezi a memóriatömböt. A
+<code>16</code> alatti értékeket figyelmen kívül hagyja; a maximális
+méret <code>2^24</code> bájt.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 2%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Inicializál egy 1024 bájtos RAM-modult, letiltja, beállítja a
+moduladatait, és törli a memória tartalmát.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Megsemmisíti a memóriaobjektumot.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Vi</td>
+<td>Az összes lefoglalt memóriacellát nullával tölti fel.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadMemory(AAddress: DWord): Byte;</code></td>
+<td>Vi</td>
+<td>Engedélyezett állapotban és a beállított címtartományon belül
+visszaadja a megadott címen található bájtot. Egyébként <code>0</code>
+értéket ad vissza.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WriteMemory(AAddress: DWord; AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Bájtot ír, ha a memória engedélyezett, <code>mmRAM</code> módban
+van, és a cím a beállított tartományba esik.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Betölti az engedélyezési állapotot, a memóriamódot, a címtartomány
+méretét és a memória tartalmát egy adatfolyamból. Olvasási kivétel
+esetén <code>False</code> értéket ad vissza.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Vi</td>
+<td>Elmenti az engedélyezési állapotot, a memóriamódot, a címtartomány
+méretét és a memória tartalmát.</td>
+</tr>
+<tr class="even">
+<td><code>procedure LoadFromStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
+<td>Vi</td>
+<td>Az aktuális adatfolyam-pozíciótól kezdve <code>ACount</code> bájtot
+tölt a memóriába, ha a memória engedélyezett, és a memória- valamint az
+adatfolyamhatárok érvényesek.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord);</code></td>
+<td>Vi</td>
+<td>Az engedélyezett memória <code>ACount</code> bájtját az aktuális
+adatfolyam-pozícióra írja, ha a memóriatartomány érvényes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-tulajdonságok">Nyilvános tulajdonságok</h3>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 12%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressRangeSize</code></td>
+<td><code>DWord</code></td>
+<td>read/write</td>
+<td>A beállított memóriacímtér mérete.</td>
+</tr>
+<tr class="even">
+<td><code>BaseAddress</code></td>
+<td><code>DWord</code></td>
+<td>read/write</td>
+<td>Globális kezdőcím.</td>
+</tr>
+<tr class="odd">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>A modul rövid leírása.</td>
+</tr>
+<tr class="even">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>read/write</td>
+<td>Engedélyezi vagy letiltja a memóriaelérést.</td>
+</tr>
+<tr class="odd">
+<td><code>MemoryMode</code></td>
+<td><code>TMemoryMode</code></td>
+<td>read/write</td>
+<td>Kiválasztja a RAM vagy ROM működési módot.</td>
+</tr>
+<tr class="even">
+<td><code>ModName</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Modulnév.</td>
+</tr>
+<tr class="odd">
+<td><code>Version</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>read</td>
+<td>Modulverzió.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

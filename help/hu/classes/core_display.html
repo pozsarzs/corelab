@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TDisplay a core_display modulból</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tdisplay-a-core_display-modulból">TDisplay a core_display
+modulból</h2>
+<p>A <code>TDisplay</code> absztrakt alaposztály grafikus kijelzők
+megvalósításához. A megjelenített BCD-értéket, a hét szegmens adatait, a
+két tizedespont állapotát és az üres kijelző állapotát tárolja. A
+tényleges rajzolást és megjelenítést a leszármazott osztályok valósítják
+meg.</p>
+<h3 id="tdisplayeddata-rekord"><code>TDisplayedData</code> rekord</h3>
+<table>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Blank</code></td>
+<td><code>Boolean</code></td>
+<td>Üres kijelző állapota</td>
+</tr>
+<tr class="even">
+<td><code>LeftDot</code></td>
+<td><code>Boolean</code></td>
+<td>Bal oldali tizedespont állapota</td>
+</tr>
+<tr class="odd">
+<td><code>RightDot</code></td>
+<td><code>Boolean</code></td>
+<td>Jobb oldali tizedespont állapota</td>
+</tr>
+<tr class="even">
+<td><code>Segments</code></td>
+<td><code>Byte</code></td>
+<td>Hétszegmenses adat; a 0–6. bitek használatosak</td>
+</tr>
+<tr class="odd">
+<td><code>Value</code></td>
+<td><code>Byte</code></td>
+<td>BCD-érték; a 0–3. bitek használatosak</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-mezők">Védett mezők</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Modulnév</td>
+</tr>
+<tr class="even">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>Rövid leírás</td>
+</tr>
+<tr class="odd">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>A megjelenítés engedélyezése</td>
+</tr>
+<tr class="even">
+<td><code>FBuffer</code></td>
+<td><code>TBitmap</code></td>
+<td>Belső rajzpuffer</td>
+</tr>
+<tr class="odd">
+<td><code>FDisplayedData</code></td>
+<td><code>TDisplayedData</code></td>
+<td>Aktuális kijelzőadat</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-konstansok">Védett konstansok</h3>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RETRO_RED_GLOW</code></td>
+<td><code>TColor</code></td>
+<td><code>$003333FF</code></td>
+<td>Retró vörös LED fényudvarának színe</td>
+</tr>
+<tr class="even">
+<td><code>RETRO_RED_ON</code></td>
+<td><code>TColor</code></td>
+<td><code>$000000FF</code></td>
+<td>Retró vörös aktív színe</td>
+</tr>
+<tr class="odd">
+<td><code>RETRO_RED_OFF</code></td>
+<td><code>TColor</code></td>
+<td><code>$00000040</code></td>
+<td>Retró vörös inaktív színe</td>
+</tr>
+<tr class="even">
+<td><code>RETRO_RED_BG</code></td>
+<td><code>TColor</code></td>
+<td><code>$00000015</code></td>
+<td>Retró vörös kijelző háttérszíne</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 3%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Létrehozza a kijelzőt és a belső bitképpufferét</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Vi</td>
+<td>Felszabadítja a belső bitképpuffert</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Vi</td>
+<td>Törli az üres kijelző és a tizedespontok állapotát, valamint
+alaphelyzetbe állítja a szegmens- és értékadatokat</td>
+</tr>
+<tr class="even">
+<td><code>procedure DrawToBuffer(AInputData: TDisplayedData);</code></td>
+<td>Ab,Vi</td>
+<td>A megadott kijelzőadatokat a belső pufferbe rajzolja; a
+megvalósítást egy leszármazott osztály biztosítja</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RenderTo(ATargetCanvas: TCanvas; Ax, Ay: Integer);</code></td>
+<td>Ab,Vi</td>
+<td>Megjeleníti a kijelzőt a célvásznon; a megvalósítást egy
+leszármazott osztály biztosítja</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetBlank(AStatus: Boolean);</code></td>
+<td>Vi</td>
+<td>Beállítja az üres kijelző állapotát, majd újrarajzol</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetLeftDot(AStatus: Boolean);</code></td>
+<td>Vi</td>
+<td>Beállítja a bal oldali tizedespont állapotát, majd újrarajzol</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetRightDot(AStatus: Boolean);</code></td>
+<td>Vi</td>
+<td>Beállítja a jobb oldali tizedespont állapotát, majd újrarajzol</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetSegments(AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Beállítja a hétszegmenses adatot, majd újrarajzol</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetValue(AValue: Byte);</code></td>
+<td>Vi</td>
+<td>Beállítja a BCD-értéket az alsó négy bit felhasználásával, majd
+újrarajzol</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-tulajdonságok">Nyilvános tulajdonságok</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ModName</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Modulnév</td>
+</tr>
+<tr class="even">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>Rövid leírás</td>
+</tr>
+<tr class="odd">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>Re/Wr</td>
+<td>A megjelenítés engedélyezése</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

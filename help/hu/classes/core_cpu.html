@@ -1,0 +1,611 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TCPU a core_cpu modulból</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tcpu-a-core_cpu-modulból">TCPU a core_cpu modulból</h2>
+<p>A <code>TCPU</code> absztrakt alaposztály a processzormegvalósítások
+számára. Meghatározza a közös CPU-azonosítókat és architektúraadatokat,
+a futásidejű állapotot, a végrehajtási statisztikákat, a
+megszakításkezelést, az eseményértesítést és a külső
+<code>ISysBus</code> interfészhez való kapcsolódást.</p>
+<p>A processzorspecifikus regiszterelérést, alaphelyzetbe állítást,
+lépésenkénti végrehajtást, az aktuális utasítás lekérdezését és az
+állapot mentését a leszármazott CPU-osztályok valósítják meg.</p>
+<h3 id="kapcsolódó-típusok">Kapcsolódó típusok</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 17%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TArchitecture</code></td>
+<td>enumeration</td>
+<td>CPU-memóriaarchitektúra.</td>
+</tr>
+<tr class="even">
+<td><code>TEndianness</code></td>
+<td>enumeration</td>
+<td>CPU-bájtsorrend.</td>
+</tr>
+<tr class="odd">
+<td><code>TCPUEvent</code></td>
+<td>enumeration</td>
+<td>Általános CPU-események.</td>
+</tr>
+<tr class="even">
+<td><code>TCPUEventHandler</code></td>
+<td>procedure type</td>
+<td>CPU-esemény visszahívási eljárása.</td>
+</tr>
+<tr class="odd">
+<td><code>TSemanticVersion</code></td>
+<td>record</td>
+<td>Fő-, al- és javítóverzió adatai.</td>
+</tr>
+<tr class="even">
+<td><code>TLogRec</code></td>
+<td>record</td>
+<td>Az utoljára végrehajtott utasítás adatai.</td>
+</tr>
+<tr class="odd">
+<td><code>TIntLogRec</code></td>
+<td>record</td>
+<td>Az utolsó megszakításkérés adatai.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="felsorolási-értékek">Felsorolási értékek</h3>
+<h4 id="tarchitecture">TArchitecture</h4>
+<table>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>arHarvard</code></td>
+<td>Harvard-architektúra.</td>
+</tr>
+<tr class="even">
+<td><code>arNeumann</code></td>
+<td>Neumann-architektúra.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tendianness">TEndianness</h4>
+<table>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>enLittle</code></td>
+<td>Little-endian bájtsorrend.</td>
+</tr>
+<tr class="even">
+<td><code>enBig</code></td>
+<td>Big-endian bájtsorrend.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tcpuevent">TCPUEvent</h4>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ceInstructionBoundary</code></td>
+<td>Utasításhatár-esemény.</td>
+</tr>
+<tr class="even">
+<td><code>ceInterrupt</code></td>
+<td>Megszakítási esemény.</td>
+</tr>
+<tr class="odd">
+<td><code>ceHalt</code></td>
+<td>CPU leállítási eseménye.</td>
+</tr>
+<tr class="even">
+<td><code>ceReset</code></td>
+<td>CPU alaphelyzetbe állítási eseménye.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="típussegédek">Típussegédek</h3>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TArchitectureHelper.ToString</code></td>
+<td>Az architektúraértéket a felsorolás nevévé alakítja.</td>
+</tr>
+<tr class="even">
+<td><code>TArchitectureHelper.FromString</code></td>
+<td>A nevet RTTI segítségével <code>TArchitecture</code> értékké
+alakítja.</td>
+</tr>
+<tr class="odd">
+<td><code>TEndiannessHelper.ToString</code></td>
+<td>A bájtsorrend értékét a felsorolás nevévé alakítja.</td>
+</tr>
+<tr class="even">
+<td><code>TEndiannessHelper.FromString</code></td>
+<td>A nevet RTTI segítségével <code>TEndianness</code> értékké
+alakítja.</td>
+</tr>
+<tr class="odd">
+<td><code>TCPUEventHelper.ToString</code></td>
+<td>A CPU-esemény értékét a felsorolás nevévé alakítja.</td>
+</tr>
+<tr class="even">
+<td><code>TCPUEventHelper.FromString</code></td>
+<td>A nevet RTTI segítségével <code>TCPUEvent</code> értékké
+alakítja.</td>
+</tr>
+<tr class="odd">
+<td><code>TSemanticVersionHelper.ToString</code></td>
+<td>A verziót <code>Major.Minor.Patch</code> formátumban jeleníti
+meg.</td>
+</tr>
+<tr class="even">
+<td><code>TSemanticVersionHelper.Compare</code></td>
+<td>Összehasonlít két verziót, és <code>-1</code>, <code>0</code> vagy
+<code>1</code> értéket ad vissza.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-mezők">Védett mezők</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 19%" />
+<col style="width: 44%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>initial value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FBus</code></td>
+<td><code>ISysBus</code></td>
+<td>Csatlakoztatott külső rendszersín.</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="even">
+<td><code>FOnEvent</code></td>
+<td><code>TCPUEventHandler</code></td>
+<td>CPU-esemény visszahívási eljárása.</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="odd">
+<td><code>FModname</code></td>
+<td><code>PChar</code></td>
+<td>Modulnév.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FDescription</code></td>
+<td><code>PChar</code></td>
+<td>Rövid leírás.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FVersion</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>Modulverzió.</td>
+<td><code>0.1.0</code></td>
+</tr>
+<tr class="even">
+<td><code>FAddressWidth</code></td>
+<td><code>Byte</code></td>
+<td>A címsín szélessége bitekben.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FArchitecture</code></td>
+<td><code>TArchitecture</code></td>
+<td>CPU-architektúra.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>A CPU engedélyezése a rendszersínről való leválasztás nélkül.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FEndianness</code></td>
+<td><code>TEndianness</code></td>
+<td>CPU-bájtsorrend.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FMaxCodeAddress</code></td>
+<td><code>DWord</code></td>
+<td>A kódmemória legmagasabb címe.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FMaxIOPortAddress</code></td>
+<td><code>DWord</code></td>
+<td>A legmagasabb I/O-portcím.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FMaxMemAddress</code></td>
+<td><code>DWord</code></td>
+<td>Az adatmemória legmagasabb címe.</td>
+<td>not initialized</td>
+</tr>
+<tr class="odd">
+<td><code>FHasSeparateIOBus</code></td>
+<td><code>Boolean</code></td>
+<td>Jelzi, hogy a memória- és az I/O-sín különálló-e.</td>
+<td>not initialized</td>
+</tr>
+<tr class="even">
+<td><code>FRunning</code></td>
+<td><code>Boolean</code></td>
+<td>A CPU végrehajtási állapota.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FHalted</code></td>
+<td><code>Boolean</code></td>
+<td>A CPU HALT-állapota.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FInterruptEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>A maszkolható megszakítások globális engedélyezőjelzője.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FIRQPending</code></td>
+<td><code>Boolean</code></td>
+<td>Függőben lévő maszkolható megszakítás.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FIRQVector</code></td>
+<td><code>Byte</code></td>
+<td>Fogadott megszakításvektor.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FNMIPending</code></td>
+<td><code>Boolean</code></td>
+<td>Függőben lévő nem maszkolható megszakítás.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FCycles</code></td>
+<td><code>QWord</code></td>
+<td>A CPU összes ciklusának száma.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FInstructions</code></td>
+<td><code>QWord</code></td>
+<td>A végrehajtott utasítások összesített száma.</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FRegPtr</code></td>
+<td><code>array of ^Word</code></td>
+<td>Regisztermutatók a leszármazott CPU-osztályokhoz.</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-metódusok">Védett metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 5%" />
+<col style="width: 44%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure EmitEvent(AEvent: TCPUEvent);</code></td>
+<td>Vi</td>
+<td>CPU-eseményt küld a gazdaalkalmazás visszahívási eljárásának.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td>Vi</td>
+<td>Továbbítja az elfogadott megszakítási eseményt.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 47%" />
+<col style="width: 3%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Vi</td>
+<td>Inicializálja a CPU állapotát, a megszakításjelzőket, a számlálókat
+és a verziót.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Megsemmisíti a CPU-példányt.</td>
+</tr>
+<tr class="odd">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td></td>
+<td>Szükség esetén elfogadja a függőben lévő megszakítást.</td>
+</tr>
+<tr class="even">
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td>Ab,Vi</td>
+<td>Visszaadja az aktuális utasítás adatait.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<td>Ab,Vi</td>
+<td>Visszaadja az aktuális megszakításkérés adatait.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td>Ab,Vi</td>
+<td>Kiolvassa a processzorregisztert; a megvalósítást a leszármazott
+osztályok biztosítják.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td>Ab,Vi</td>
+<td>Visszaadja a processzorregiszterek számát.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td>Ab,Vi</td>
+<td>Index alapján visszaadja a regiszter nevét.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td>Ab,Vi</td>
+<td>Index alapján visszaadja a regiszter méretét.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Ab,Vi</td>
+<td>Betölti a processzor állapotát; a megvalósítást a leszármazott
+osztályok biztosítják.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Ab,Vi</td>
+<td>Elmenti a processzor állapotát; a megvalósítást a leszármazott
+osztályok biztosítják.</td>
+</tr>
+<tr class="even">
+<td><code>procedure ConnectBus(const Bus: ISysBus);</code></td>
+<td>Vi</td>
+<td>A CPU-t külső rendszersínhez csatlakoztatja.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure IRQ(AVector: Byte);</code></td>
+<td>Vi</td>
+<td>Beállítja a függőben lévő IRQ-t, és eltárolja a vektorát.</td>
+</tr>
+<tr class="even">
+<td><code>procedure NMI;</code></td>
+<td>Vi</td>
+<td>Beállítja a függőben lévő nem maszkolható megszakítást.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td>Ab,Vi</td>
+<td>Alaphelyzetbe állítja a processzort; a megvalósítást a leszármazott
+osztályok biztosítják.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Run;</code></td>
+<td>Vi</td>
+<td>Elindítja a végrehajtást, ha a CPU engedélyezett.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; AValue: Word);</code></td>
+<td>Ab,Vi</td>
+<td>Beállítja a processzorregisztert; a megvalósítást a leszármazott
+osztályok biztosítják.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td>Ab,Vi</td>
+<td>Végrehajt egy processzorlépést; a megvalósítást a leszármazott
+osztályok biztosítják.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Stop;</code></td>
+<td>Vi</td>
+<td>Leállítja a CPU végrehajtását.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-tulajdonságok">Nyilvános tulajdonságok</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 11%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressWidth</code></td>
+<td><code>Byte</code></td>
+<td>read</td>
+<td>A címsín szélessége bitekben.</td>
+</tr>
+<tr class="even">
+<td><code>Architecture</code></td>
+<td><code>TArchitecture</code></td>
+<td>read</td>
+<td>CPU-architektúra.</td>
+</tr>
+<tr class="odd">
+<td><code>Cycles</code></td>
+<td><code>QWord</code></td>
+<td>read</td>
+<td>A CPU-ciklusok összesített számlálója.</td>
+</tr>
+<tr class="even">
+<td><code>Description</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Short module description.</td>
+</tr>
+<tr class="odd">
+<td><code>Enabled</code></td>
+<td><code>Boolean</code></td>
+<td>read/write</td>
+<td>Engedélyezi vagy letiltja a CPU működését.</td>
+</tr>
+<tr class="even">
+<td><code>Endianness</code></td>
+<td><code>TEndianness</code></td>
+<td>read</td>
+<td>CPU-bájtsorrend.</td>
+</tr>
+<tr class="odd">
+<td><code>Halted</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>A CPU aktuális HALT-állapota.</td>
+</tr>
+<tr class="even">
+<td><code>HasSeparateIOBus</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>Jelzi, hogy a memória- és az I/O-sín különálló-e.</td>
+</tr>
+<tr class="odd">
+<td><code>Instructions</code></td>
+<td><code>QWord</code></td>
+<td>read</td>
+<td>A végrehajtott utasítások összesített számlálója.</td>
+</tr>
+<tr class="even">
+<td><code>InterruptEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>A maszkolható megszakítások globális állapota.</td>
+</tr>
+<tr class="odd">
+<td><code>MaxCodeAddress</code></td>
+<td><code>DWord</code></td>
+<td>read</td>
+<td>A kódmemória legmagasabb címe.</td>
+</tr>
+<tr class="even">
+<td><code>MaxIOPortAddress</code></td>
+<td><code>DWord</code></td>
+<td>read</td>
+<td>A legmagasabb I/O-portcím.</td>
+</tr>
+<tr class="odd">
+<td><code>MaxMemAddress</code></td>
+<td><code>DWord</code></td>
+<td>read</td>
+<td>Az adatmemória legmagasabb címe.</td>
+</tr>
+<tr class="even">
+<td><code>Modname</code></td>
+<td><code>PChar</code></td>
+<td>read</td>
+<td>Modulnév.</td>
+</tr>
+<tr class="odd">
+<td><code>OnEvent</code></td>
+<td><code>TCPUEventHandler</code></td>
+<td>read/write</td>
+<td>CPU-esemény visszahívási eljárása.</td>
+</tr>
+<tr class="even">
+<td><code>Running</code></td>
+<td><code>Boolean</code></td>
+<td>read</td>
+<td>Az aktuális végrehajtási állapot.</td>
+</tr>
+<tr class="odd">
+<td><code>Version</code></td>
+<td><code>TSemanticVersion</code></td>
+<td>read</td>
+<td>Modulverzió.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

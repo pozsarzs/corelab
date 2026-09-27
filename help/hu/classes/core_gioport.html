@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TGIOPort a core_gioport modulból</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="tgioport-a-core_gioport-modulból">TGIOPort a core_gioport
+modulból</h2>
+<p>A <code>TGIOPort</code> a <code>TIOPort</code> osztályból származó
+absztrakt grafikus I/O-port osztály. Lazarus <code>TForm</code> alapú
+panelt ad hozzá, és biztosítja a panel élettartamának, láthatóságának,
+feliratának, pozíciójának, méretének és állapotmentésének kezelését.</p>
+<p>A leszármazott osztályoknak meg kell valósítaniuk a
+<code>CreatePanel</code> metódust.</p>
+<h3 id="privát-mezők">Privát mezők</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SPanelCaption</code></td>
+<td><code>String</code></td>
+<td>A panel feliratának belső tárolója</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-mezők">Védett mezők</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+<th>initial value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FPanelForm</code></td>
+<td><code>TForm</code></td>
+<td>Grafikus panelűrlap</td>
+<td><code>nil</code></td>
+</tr>
+<tr class="even">
+<td><code>FPanelCaption</code></td>
+<td><code>PChar</code></td>
+<td>Panel felirata</td>
+<td><code>MyIO</code></td>
+</tr>
+<tr class="odd">
+<td><code>FPanelHeight</code></td>
+<td><code>Integer</code></td>
+<td>Panel magassága</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FPanelLeft</code></td>
+<td><code>Integer</code></td>
+<td>Panel bal oldali pozíciója</td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>FPanelTop</code></td>
+<td><code>Integer</code></td>
+<td>Panel felső pozíciója</td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>FPanelWidth</code></td>
+<td><code>Integer</code></td>
+<td>Panel szélessége</td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 3%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Inicializálja a panel feliratát, pozícióját és méretét</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td></td>
+<td>Felszabadítja a panelt, és megsemmisíti az objektumot</td>
+</tr>
+<tr class="odd">
+<td><code>procedure CreatePanel;</code></td>
+<td>Ab,Vi</td>
+<td>Létrehozza a megvalósításspecifikus grafikus panelt</td>
+</tr>
+<tr class="even">
+<td><code>procedure FreePanel;</code></td>
+<td>Vi</td>
+<td>Felszabadítja a panel űrlapját, ha létezik</td>
+</tr>
+<tr class="odd">
+<td><code>procedure ShowPanel;</code></td>
+<td>Vi</td>
+<td>Megjeleníti a panelt, ha létezik</td>
+</tr>
+<tr class="even">
+<td><code>procedure HidePanel;</code></td>
+<td>Vi</td>
+<td>Elrejti a panelt, ha létezik</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RenamePanel(ACaption: PChar);</code></td>
+<td>Vi</td>
+<td>Módosítja a tárolt feliratot és az űrlap feliratát</td>
+</tr>
+<tr class="even">
+<td><code>function MovePanel(ALeft, ATop: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Beállítja a panel pozícióját, ha mindkét koordináta nem negatív</td>
+</tr>
+<tr class="odd">
+<td><code>function ResizePanel(AWidth, AHeight: Integer): Boolean;</code></td>
+<td>Vi</td>
+<td>Beállítja a panel méretét, ha mindkét méret nem negatív</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Or</td>
+<td>Betölti az örökölt I/O-portállapotot, valamint a panel feliratát,
+méretét és pozícióját</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Or</td>
+<td>Elmenti az örökölt I/O-portállapotot, valamint a panel feliratát,
+méretét és pozícióját</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-tulajdonságok">Nyilvános tulajdonságok</h3>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PanelCaption</code></td>
+<td><code>PChar</code></td>
+<td>Re</td>
+<td>A panel aktuális felirata</td>
+</tr>
+<tr class="even">
+<td><code>PanelHeight</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>A panel aktuális magassága</td>
+</tr>
+<tr class="odd">
+<td><code>PanelLeft</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>A panel aktuális bal oldali pozíciója</td>
+</tr>
+<tr class="even">
+<td><code>PanelTop</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>A panel aktuális felső pozíciója</td>
+</tr>
+<tr class="odd">
+<td><code>PanelWidth</code></td>
+<td><code>Integer</code></td>
+<td>Re</td>
+<td>A panel aktuális szélessége</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
