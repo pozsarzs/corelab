@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB – Bevezetés, projektcélok, szolgáltatások és a program bemutatása</title>
+<meta http-equiv="content-language" content="hu">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="introduction-and-project-goals">Bevezetés és a projekt célkitűzései</h2>
+<p>A CoreLAB projekt egy funkcionális, 8 bites mikroprocesszor- és mikrokontroller-szimulátor, amely az akadémiai kutatás, a műszaki érdeklődés és a történelmi értékek megőrzésének ötvözéséből született. A projektet több fontos célkitűzés szem előtt tartásával indítottam el:</p>
+<ul>
+<li><strong>Tisztelgés az úttörők – a hardverek és az emberek – előtt:</strong> A projekt tisztelettel adózik a számítástechnikai architektúrák korai korszakainak és az azokat megtervező kiváló szakembereknek. E meghatározó processzorok működési logikájának életben tartásával megőrzi azt a digitális örökséget, amely megalapozta a modern számítástechnikát.</li>
+<li><strong>A gépi kódú programozás elsajátítása:</strong> Könnyen hozzáférhető, gyakorlati oktatási platformot biztosít az alacsony szintű programozás tanulmányozásához olyan klasszikus architektúrákon, mint az i40xx, az i80xx vagy a TMS1000. E fizikai chipek közül sok ma már ritka, drága vagy teljesen elavult, így a szoftveres szimuláció az egyetlen ésszerű lehetőség a működésük megismerésére.</li>
+<li><strong>Akadémiai kutatás (egyetemi szakdolgozat):</strong> A szimulátor és a moduláris bővítményrendszer fejlesztése az egyetemi szakdolgozatom alapját képezi. A munka a dinamikus szoftverarchitektúrákat és az oktatási célú szimuláció módszertanait vizsgálja.</li>
+<li><strong>Funkcionális végrehajtás a teljes emuláció helyett:</strong> A teljes körű emulátorokkal ellentétben a CoreLAB célja <strong>nem</strong> a teljes régi számítógéprendszerek reprodukálása, a történelmi operációs rendszerek futtatása vagy a hardver cikluspontos sajátosságainak szimulálása. Ehelyett kizárólag az utasítások tiszta, funkcionális végrehajtására összpontosít, így a programkód működési logikája átlátható és könnyen elemezhető.</li>
+<li><strong>Gyakorlati terep a rendszertervezéshez és -modellezéshez:</strong> A projekt az egyszerű oktatási eszközön túl a korszerű rendszertervezési és hardvermodellezési koncepciók gyakorlati alkalmazására is szolgál. Lehetőséget ad annak vizsgálatára, hogyan modellezhetők, választhatók szét és konfigurálhatók dinamikusan szoftverben olyan összetett, valós fizikai rendszerelemek, mint a buszok, regiszterek, memóriatérképek és I/O-vonalak, korszerű szoftverfejlesztési minták alkalmazásával.</li>
+<li><strong>A régi logika összekapcsolása a modern automatizálással:</strong> A projekt egyik fontos újítása, hogy ezeket a klasszikus CPU-architektúrákat modern, szkriptelhető környezetbe foglalja. A felhasználók dinamikusan építhetnek fel topológiákat, módosíthatják a regisztereket, és parancssori felületen keresztül automatizálhatják a teszteket. Így a múlt meghatározó hardvereihez modern DevOps- és hibakeresési munkafolyamatokat kapcsol.</li>
+</ul>
+<h2 id="features">Szolgáltatások</h2>
+<h3 id="general-features">Általános jellemzők</h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Jellemző</th>
+<th>Specifikáció / leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>projekt típusa</strong></td>
+<td>Funkcionális processzorszimulátor</td>
+</tr>
+<tr class="even">
+<td><strong>aktuális verzió</strong></td>
+<td>v0.1</td>
+</tr>
+<tr class="odd">
+<td><strong>licenc</strong></td>
+<td>EUPL v1.2</td>
+</tr>
+<tr class="even">
+<td><strong>nyelv</strong></td>
+<td>en, hu</td>
+</tr>
+<tr class="odd">
+<td><strong>architektúra</strong></td>
+<td>amd64, armhf, i386, x86_64</td>
+</tr>
+<tr class="even">
+<td><strong>operációs rendszer</strong></td>
+<td>FreeBSD, Linux, Windows</td>
+</tr>
+<tr class="odd">
+<td><strong>felhasználói felület</strong></td>
+<td>Grafikus felhasználói felület (GUI), szkriptelhető parancssori vezérléssel</td>
+</tr>
+<tr class="even">
+<td><strong>futtatási módok</strong></td>
+<td>Normál vagy értelmező</td>
+</tr>
+<tr class="odd">
+<td><strong>szimuláció típusa</strong></td>
+<td>Utasításszintű működés (nem cikluspontos)</td>
+</tr>
+<tr class="even">
+<td><strong>támogatott architektúrák</strong></td>
+<td>Neumann- és Harvard-architektúra</td>
+</tr>
+<tr class="odd">
+<td><strong>támogatott processzorok</strong></td>
+<td>Bájtalapú mikroprocesszorok és egyszerű mikrokontrollerek</td>
+</tr>
+<tr class="even">
+<td><strong>szimulációs környezet</strong></td>
+<td>Konfigurálható memóriatér és virtuális I/O-portok vagy eszközök</td>
+</tr>
+<tr class="odd">
+<td><strong>moduláris architektúra</strong></td>
+<td>Dinamikusan betölthető CPU-k és perifériák</td>
+</tr>
+<tr class="even">
+<td><strong>állapotmentés</strong></td>
+<td>A teljes környezeti állapot mentése és visszaállítása</td>
+</tr>
+</tbody>
+</table>
+<h3 id="integrated-modules">Integrált modulok</h3>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modul</th>
+<th>Specifikáció / leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Breakpoint Manager</strong></td>
+<td>Töréspontok kezelése</td>
+</tr>
+<tr class="even">
+<td><strong>BusLogger</strong></td>
+<td>A rendszerbusz-forgalom naplózása</td>
+</tr>
+<tr class="odd">
+<td><strong>HexViewer</strong></td>
+<td>Memóriamegjelenítő komponens</td>
+</tr>
+<tr class="even">
+<td><strong>IntLogger</strong></td>
+<td>A megszakításkérések naplózása</td>
+</tr>
+<tr class="odd">
+<td><strong>Module Explorer</strong></td>
+<td>Modulpéldányok kezelése</td>
+</tr>
+<tr class="even">
+<td><strong>RegViewer</strong></td>
+<td>A regiszterek valós idejű vizsgálata</td>
+</tr>
+<tr class="odd">
+<td><strong>RunLogger</strong></td>
+<td>A cím, a gépi kód és a mnemonik valós idejű megjelenítése</td>
+</tr>
+<tr class="even">
+<td><strong>ScriptConsole</strong></td>
+<td>A futó szkript kimenetét megjelenítő konzol</td>
+</tr>
+<tr class="odd">
+<td><strong>ScriptEditor</strong></td>
+<td>Beépített környezet vezérlőszkriptek írásához</td>
+</tr>
+<tr class="even">
+<td><strong>SysConsole</strong></td>
+<td>Konzol rendszerüzenetekhez és parancssori felületként</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plug-in-modules">Bővítménymodulok</h3>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modul</th>
+<th>Specifikáció / leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Real Port Redirection</strong></td>
+<td>A virtuális portok I/O-adatfolyamait közvetlenül a gazdagép fizikai hardverportjaihoz kapcsolja.</td>
+</tr>
+<tr class="even">
+<td><strong>Simple Console</strong></td>
+<td>Egyszerű, szöveges konzol adatfolyamok megfigyeléséhez.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual 7-Segment Display</strong></td>
+<td>Egyszeres és multiplexelt 7-szegmenses kijelzők numerikus és egyszerű karakteres megjelenítéshez.</td>
+</tr>
+<tr class="even">
+<td><strong>Virtual CPU</strong></td>
+<td>Emulált processzor, egyedi architektúrájú mikroprocesszor.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual Hexadecimal Display</strong></td>
+<td>Virtuális portcímekhez rendelt egyszeres és multiplexelt hexadecimális kijelzők.</td>
+</tr>
+<tr class="even">
+<td><strong>Virtual LED Array and Matrix</strong></td>
+<td>Lineáris LED-sorok és LED-mátrixok a bitek állapotának vizuális, illetve koordináták szerinti megjelenítéséhez.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual Memory (RAM/ROM)</strong></td>
+<td>Konfigurálható, tetszőleges méretű és címleképezésű, felejtő és nem felejtő memóriablokkok.</td>
+</tr>
+<tr class="even">
+<td><strong>Virtual Pushbutton Array and Matrix</strong></td>
+<td>Lineáris és mátrixelrendezésű, pillanatkapcsolós nyomógombok interaktív bináris bemenethez.</td>
+</tr>
+<tr class="odd">
+<td><strong>Virtual Switch Array and Matrix</strong></td>
+<td>Lineáris és mátrixelrendezésű kapcsolók, amelyek tartós bináris adatot szolgáltatnak a virtuális portok számára.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="iii.-about-the-program">III. A program bemutatása</h2>
+<h3 id="project-management">Projektkezelés</h3>
+<p>A CoreLAB egyszerű, könyvtáralapú projektstruktúrát használ. A projektkönyvtár tartalmazhat minden kapcsolódó fájlt, például opcionális környezetbeállító szkripteket, mentett állapotképeket, programkódot és adatfolyamokat. A szimulációs környezet kézzel is felépíthető, ezért ezek közül a fájlok közül egyik sem kötelező. Ez a felépítés egymástól függetlenül tartja a kísérleteket, miközben teljes körűen támogatja a külső fájlok használatát.</p>
+<h3 id="modular-architecture">Moduláris architektúra</h3>
+<p>A szimulátor egyik legfontosabb jellemzője a moduláris felépítés. A processzorok, memóriák és perifériák egymástól független objektumként hozhatók létre, majd dinamikusan összekapcsolhatók. A felhasználók a vizsgált rendszer követelményeihez igazított, egyedi virtuális hardverkörnyezeteket építhetnek fel.</p>
+<h3 id="supported-processor-architectures">Támogatott processzorarchitektúrák</h3>
+<p>A CoreLAB nem korlátozódik egyetlen processzortípusra. Különböző CPU-, mikroprocesszor- és mikrokontroller-architektúrák tölthetők be bővítményként. Így ugyanaz a környezet több utasításkészlet és hardvermodell tanulmányozására is használható.</p>
+<h3 id="virtual-memory-and-io-environment">Virtuális memória- és I/O-környezet</h3>
+<p>A memóriatérkép és az I/O-címtér a szimuláció során szabadon konfigurálható. A virtuális perifériák ugyanúgy rendelhetők memóriacímekhez vagy I/O-portokhoz, mint a valódi hardvereszközök.</p>
+<h3 id="debugging-features">Hibakeresési lehetőségek</h3>
+<p>A CoreLAB számos beépített diagnosztikai és hibakeresési eszközt biztosít. A felhasználók töréspontoknál állíthatják meg a végrehajtást, lépésenként futtathatják a programokat, megvizsgálhatják a memória és a regiszterek tartalmát, valamint valós időben figyelhetik az utasítások végrehajtását. Ezek a funkciók különösen hasznosak oktatási célokra és alacsony szintű szoftverfejlesztéshez.</p>
+<h3 id="scripting-and-automation">Szkriptelés és automatizálás</h3>
+<p>A program elsősorban a saját beépített konzoljának parancssorán keresztül működtethető, de menü is rendelkezésre áll. Saját parancsértelmezővel és szkriptnyelvvel rendelkezik. A szkriptek közvetlenül az operációs rendszer parancsértelmezőjéből is futtathatók; ilyen indítás esetén a szkript automatikusan felépíti a végrehajtási környezetet, és végrehajtja az összes megadott műveletet. Ez lehetővé teszi az ismétlődő feladatok és tesztek hatékony automatizálását, valamint összetett hardverkonfigurációk reprodukálását.</p>
+<h3 id="state-saving-and-restoration">Állapotmentés és -visszaállítás</h3>
+<p>A szimuláció teljes állapota bármikor menthető és visszaállítható. Ez nemcsak a memória tartalmát, hanem a processzorok, perifériák és egyéb objektumok aktuális állapotát is magában foglalja. Ennek köszönhetően a fejlesztési és hibakeresési munkamenetek a folyamat elvesztése nélkül megszakíthatók és folytathatók.</p>
+<h3 id="logging-and-data-export">Naplózás és adatexportálás</h3>
+<p>A futás közbeni események és a végrehajtási naplók fájlba menthetők későbbi elemzés céljából. A memória tartalma bináris vagy Intel HEX formátumban exportálható, így az eredmények más fejlesztőeszközökkel is felhasználhatók, illetve valódi hardverre is átvihetők.</p>
+</body>
+</html>

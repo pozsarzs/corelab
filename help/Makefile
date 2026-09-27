@@ -13,7 +13,7 @@ sourcedir="."
 targetdir=$(datarootdir)/$(name)/help
 filemode=$(txtmode)
 files=`ls $(sourcedir)/*.chm | grep -v Makefile`
-projectdirs=en
+projectdirs=en hu
 
 all:
 

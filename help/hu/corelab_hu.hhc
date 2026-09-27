@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bevezetés és projektcélok">
+		<param name="Local" value="index.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="A CoreLAB bemutatása">
+		<param name="Local" value="about.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Keretprogram">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Alkalmazások">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CLIOPort bővítménytesztelő alkalmazás">
+			<param name="Local" value="applications\clioport.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CLMemory bővítménytesztelő alkalmazás">
+			<param name="Local" value="applications\clioport.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="CLProcessor bővítménytesztelő alkalmazás">
+			<param name="Local" value="applications\clioport.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Osztályok">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TBus osztály a core_bus modulból">
+			<param name="Local" value="classes\core_bus.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TCPU osztály a core_cpu modulból">
+			<param name="Local" value="classes\core_cpu.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisplay osztály a core_display modulból">
+			<param name="Local" value="classes\core_display.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TGIOPort osztály a core_gioport modulból">
+			<param name="Local" value="classes\core_gioport.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TIOPort osztály a core_ioport modulból">
+			<param name="Local" value="classes\core_ioport.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLED osztály a core_led modulból">
+			<param name="Local" value="classes\core_led.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TMemory osztály a core_memory modulból">
+			<param name="Local" value="classes\core_memory.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Alkatrészek">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisplayTIL302 osztály a TDisplay osztályból, a display_til302 modulban">
+			<param name="Local" value="parts\display_til302.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisplayTIL311 osztály a TDisplay osztályból, a display_til311 modulban">
+			<param name="Local" value="parts\display_til311.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDRound osztály a TLED osztályból, a led_round modulban">
+			<param name="Local" value="parts\led_round.html.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDSquare osztály a TLED osztályból, a led_square modulban">
+			<param name="Local" value="parts\led_square.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bővítmények">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="T4004CPU osztály a TCPU osztályból, a cpu_4004 modulban">
+			<param name="Local" value="plugins\cpu_4004.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="T4040CPU osztály a TCPU osztályból, a cpu_4040 modulban">
+			<param name="Local" value="plugins\cpu_4040.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="T8008CPU osztály a TCPU osztályból, a cpu_8008 modulban">
+			<param name="Local" value="plugins\cpu_8008.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="T8080CPU osztály a TCPU osztályból, a cpu_8080 modulban">
+			<param name="Local" value="plugins\cpu_8080.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TZ80CPU osztály a TCPU osztályból, a cpu_z80 modulban">
+			<param name="Local" value="plugins\cpu_z80.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TBELLPort osztály a TIOPort osztályból, a ioport_bell modulban">
+			<param name="Local" value="plugins\ioport_bell.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TButton16BCD osztály a TGIOPort osztályból, a ioport_button16bcd modulban">
+			<param name="Local" value="plugins\ioport_button16bcd.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TButton16MUX osztály a TGIOPort osztályból, a ioport_button16mux modulban">
+			<param name="Local" value="plugins\ioport_button16mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TButton8 osztály a TGIOPort osztályból, a ioport_button8 modulban">
+			<param name="Local" value="plugins\ioport_button8.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TConsole osztály a TGIOPort osztályból, a ioport_console modulban">
+			<param name="Local" value="plugins\ioport_console.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp17seg osztály a TGIOPort osztályból, a ioport_disp17seg modulban">
+			<param name="Local" value="plugins\ioport_disp17seg.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp1HexBCD osztály a TGIOPort osztályból, a ioport_disp1hexbcd modulban">
+			<param name="Local" value="plugins\ioport_disp1hexbcd.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp27segMUX osztály a TGIOPort osztályból, a ioport_disp27segmux modulban">
+			<param name="Local" value="plugins\ioport_disp27segmux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp2HexMUXBCD osztály a TGIOPort osztályból, a ioport_disp2hexmuxbcd modulban">
+			<param name="Local" value="plugins\ioport_disp2hexmuxbcd.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp47segMUX osztály a TGIOPort osztályból, a ioport_disp47segmux modulban">
+			<param name="Local" value="plugins\ioport_disp47segmux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp4HexMUXBCD osztály a TGIOPort osztályból, a ioport_disp4hexmuxbcd modulban">
+			<param name="Local" value="plugins\ioport_disp4hexmuxbcd.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp87segMUX osztály a TGIOPort osztályból, a ioport_disp87segmux modulban">
+			<param name="Local" value="plugins\ioport_disp87segmux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TDisp8HexMUXBCD osztály a TGIOPort osztályból, a ioport_disp8hexmuxbcd modulban">
+			<param name="Local" value="plugins\ioport_disp8hexmuxbcd.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDGreen512MUX osztály a TGIOPort osztályból, a ioport_ledgreen512mux modulban">
+			<param name="Local" value="plugins\ioport_ledgreen512mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDGreen64MUX osztály a TGIOPort osztályból, a ioport_ledgreen64mux modulban">
+			<param name="Local" value="plugins\ioport_ledgreen64mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDGreen8 osztály a TGIOPort osztályból, a ioport_ledgreen8 modulban">
+			<param name="Local" value="plugins\ioport_ledgreen8.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDRed512MUX osztály a TGIOPort osztályból, a ioport_ledred512mux modulban">
+			<param name="Local" value="plugins\ioport_ledred512mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDRed64MUX osztály a TGIOPort osztályból, a ioport_ledred64mux modulban">
+			<param name="Local" value="plugins\ioport_ledred64mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDRed8 osztály a TGIOPort osztályból, a ioport_ledred8 modulban">
+			<param name="Local" value="plugins\ioport_ledred8.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDYellow512MUX osztály a TGIOPort osztályból, a ioport_ledyellow512mux modulban">
+			<param name="Local" value="plugins\ioport_ledyellow512mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDYellow64MUX osztály a TGIOPort osztályból, a ioport_ledyellow64mux modulban">
+			<param name="Local" value="plugins\ioport_ledyellow64mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDYellow8 osztály a TGIOPort osztályból, a ioport_ledyellow8 modulban">
+			<param name="Local" value="plugins\ioport_ledyellow8.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Local" value="plugins\ioport_null.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TREALPort osztály a TIOPort osztályból, a ioport_realport modulban">
+			<param name="Local" value="plugins\ioport_realport.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TStandardPort osztály a TGIOPort osztályból, a ioport_standard modulban">
+			<param name="Local" value="plugins\ioport_standard.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TSwitch16BCD osztály a TGIOPort osztályból, a ioport_switch16bcd modulban">
+			<param name="Local" value="plugins\ioport_switch16bcd.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TSwitch16MUX osztály a TGIOPort osztályból, a ioport_switch16mux modulban">
+			<param name="Local" value="plugins\ioport_switch16mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TSwitch8 osztály a TGIOPort osztályból, a ioport_switch8 modulban">
+			<param name="Local" value="plugins\ioport_switch8.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TStandardMemory osztály a TMemory osztályból, a memory_standard modulban">
+			<param name="Local" value="plugins\memory_standard.html">
+			</OBJECT>
+	</UL>
+</UL>
+</BODY></HTML>
