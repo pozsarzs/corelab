@@ -12,3 +12,51 @@
   FOR A PARTICULAR PURPOSE. }
 
 { COMP INRG JPEQ JPZR JPGE JPGT JPLE JPLT JPNE JPNZ CALL RTRN }
+
+procedure TScriptEngine.CmdCOMP(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdINRG(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPEQ(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPZR(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPGE(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPGT(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPLE(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPLT(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPNE(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdJPNZ(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdCALL(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdRTRN(AActionContext: TActionContext);
+begin
+end;

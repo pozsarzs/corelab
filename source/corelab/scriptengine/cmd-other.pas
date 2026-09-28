@@ -12,3 +12,23 @@
   FOR A PARTICULAR PURPOSE. }
 
 { CONV PRNT WAIT END EXIT }
+
+procedure TScriptEngine.CmdCONV(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdPRNT(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdWAIT(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdEND(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdEXIT(AActionContext: TActionContext);
+begin
+end;

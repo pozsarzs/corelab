@@ -12,3 +12,23 @@
   FOR A PARTICULAR PURPOSE. }
 
 { ADD SUB MUL INC DEC }
+
+procedure TScriptEngine.CmdADD(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdSUB(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdMUL(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdINC(AActionContext: TActionContext);
+begin
+end;
+
+procedure TScriptEngine.CmdDEC(AActionContext: TActionContext);
+begin
+end;

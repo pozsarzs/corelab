@@ -11,15 +11,16 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-{procedure ?.CmdDEPO(AActionContext: TActionContext);
+{ DEPO EXAM SWAP }
+
+procedure TScriptEngine.CmdDEPO(AActionContext: TActionContext);
 begin
 end;
 
-procedure ?.CmdEXAM(AActionContext: TActionContext);
+procedure TScriptEngine.CmdEXAM(AActionContext: TActionContext);
 begin
 end;
 
-procedure ?.CmdSWAP(AActionContext: TActionContext);
+procedure TScriptEngine.CmdSWAP(AActionContext: TActionContext);
 begin
 end;
-}

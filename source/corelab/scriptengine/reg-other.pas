@@ -12,3 +12,44 @@
   FOR A PARTICULAR PURPOSE. }
 
 { CONV PRNT WAIT END EXIT }
+
+RegisterCommand(TCommand.Create('CONV',
+                                'Convert number in different numeral systems in-place.',
+                                csScriptOnly,
+                                'CONV base',
+                                1,
+                                @CmdCONV,
+                                True));
+
+RegisterCommand(TCommand.Create('PRNT',
+                                'Write text to console.',
+                                csScriptOnly,
+                                'PRNT "text"',
+                                1,
+                                @CmdPRNT,
+                                True));
+
+RegisterCommand(TCommand.Create('WAIT',
+                                'Wait specified ms.',
+                                csScriptOnly,
+                                'WAIT ms',
+                                1,
+                                @CmdWAIT,
+                                True));
+
+RegisterCommand(TCommand.Create('END',
+                                'End of script.',
+                                csScriptOnly,
+                                'END',
+                                0,
+                                @CmdEND,
+                                True));
+
+RegisterCommand(TCommand.Create('EXIT',
+                                'Terminate the script.',
+                                csScriptOnly,
+                                'EXIT',
+                                0,
+                                @CmdEXIT,
+                                True));
+

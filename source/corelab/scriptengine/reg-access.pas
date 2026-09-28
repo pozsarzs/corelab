@@ -11,12 +11,14 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-{RegisterCommand(TCommand.Create('DEPO',
+{ DEPO EXAM SWAP }
+
+RegisterCommand(TCommand.Create('DEPO',
                                 'Deposit a value directly into memory, register or bus address.',
                                 csScriptOnly,
                                 'DEPO address value',
                                 2,
-                                @?.CmdDEPO,
+                                @CmdDEPO,
                                 True));
 
 RegisterCommand(TCommand.Create('EXAM',
@@ -24,7 +26,7 @@ RegisterCommand(TCommand.Create('EXAM',
                                 csScriptOnly,
                                 'EXAM address',
                                 1,
-                                @?.CmdEXAM,
+                                @CmdEXAM,
                                 True));
 
 RegisterCommand(TCommand.Create('SWAP',
@@ -32,5 +34,5 @@ RegisterCommand(TCommand.Create('SWAP',
                                 csScriptOnly,
                                 'SWAP register register',
                                 2,
-                                @?.CmdSWAP,
-                                True));}
+                                @CmdSWAP,
+                                True));
