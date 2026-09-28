@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TStandardMemory a TMemory osztályból, a memory_standard modul</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2
+id="tstandardmemory-a-tmemory-osztályból-a-memory_standard-modul">TStandardMemory
+a TMemory osztályból, a memory_standard modul</h2>
+<p>A <code>TStandardMemory</code> a CoreLAB keretrendszer szabványos
+memóriabővítménye. A <code>TMemory</code> osztályból származik, és
+legfeljebb 16 MB kapacitású RAM- vagy ROM-üzemmódú memóriakomponenst
+biztosít.</p>
+<h3 id="védett-mezők">Védett mezők</h3>
+<p>A <code>TStandardMemory</code> nem deklarál további védett mezőket. A
+<code>TMemory</code> osztálytól örökölt mezőket használja.</p>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 2%" />
+<col style="width: 87%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Az örökölt konstruktor meghívásával létrehoz egy szabványos
+memóriaobjektumot, majd a modult <code>Standard memory</code> névvel és
+<code>Up to 16MB RAM/ROM</code> leírással állítja be, RAM üzemmódot
+választva.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy;</code></td>
+<td>Or</td>
+<td>Az örökölt destruktor meghívásával megsemmisíti a szabványos
+memóriaobjektumot.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="örökölt-interfész">Örökölt interfész</h3>
+<p>Az osztály a <code>TMemory</code> teljes memória-interfészét örökli,
+beleértve a következőket:</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>tag</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressRangeSize</code></td>
+<td>Beállítható memóriacím-tartomány mérete.</td>
+</tr>
+<tr class="even">
+<td><code>DataWidth</code></td>
+<td>Beállítható memória-adatszélesség.</td>
+</tr>
+<tr class="odd">
+<td><code>Description</code></td>
+<td>Modulleírás.</td>
+</tr>
+<tr class="even">
+<td><code>Enabled</code></td>
+<td>Engedélyezi vagy letiltja a memóriaelérést.</td>
+</tr>
+<tr class="odd">
+<td><code>InstanceID</code></td>
+<td>Modulpéldány-azonosító.</td>
+</tr>
+<tr class="even">
+<td><code>MemoryMode</code></td>
+<td>Kiválasztja a RAM vagy ROM működést.</td>
+</tr>
+<tr class="odd">
+<td><code>ModName</code></td>
+<td>Modulnév.</td>
+</tr>
+<tr class="even">
+<td><code>Version</code></td>
+<td>Modulverzió.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadMemory</code></td>
+<td>Egy bájtot olvas a memóriából.</td>
+</tr>
+<tr class="even">
+<td><code>WriteMemory</code></td>
+<td>Bájtot ír, ha a memória engedélyezett és RAM módban működik.</td>
+</tr>
+<tr class="odd">
+<td><code>Reset</code></td>
+<td>Törli a memória tartalmát.</td>
+</tr>
+<tr class="even">
+<td><code>LoadState</code></td>
+<td>Betölti a memória állapotát egy adatfolyamból.</td>
+</tr>
+<tr class="odd">
+<td><code>SaveState</code></td>
+<td>Elmenti a memória állapotát egy adatfolyamba.</td>
+</tr>
+<tr class="even">
+<td><code>LoadFromStream</code></td>
+<td>Adatblokkot tölt a memóriába.</td>
+</tr>
+<tr class="odd">
+<td><code>SaveToStream</code></td>
+<td>Memóriaadat-blokkot ment adatfolyamba.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-függvények">Exportált függvények</h3>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportált név</th>
+<th>függvény</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>memory_create</code></td>
+<td><code>CreateMemory</code></td>
+<td>Létrehoz és visszaad egy új <code>TStandardMemory</code>
+példányt.</td>
+</tr>
+<tr class="even">
+<td><code>memory_destroy</code></td>
+<td><code>DestroyMemory</code></td>
+<td>Megsemmisíti a megadott memóriaobjektumot, ha az hozzá van
+rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>memory_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Betölti a megadott memóriaobjektum állapotát egy adatfolyamból.
+<code>False</code> értéket ad vissza, ha a memóriaobjektum
+<code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>memory_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Elmenti a megadott memóriaobjektum állapotát egy adatfolyamba.
+<code>False</code> értéket ad vissza, ha a memóriaobjektum
+<code>nil</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modulbeállítások">Modulbeállítások</h3>
+<table>
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modulosztály</td>
+<td><code>TStandardMemory</code></td>
+</tr>
+<tr class="even">
+<td>Alaposztály</td>
+<td><code>TMemory</code></td>
+</tr>
+<tr class="odd">
+<td>Modulnév</td>
+<td><code>RAM/ROM</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Szabványos memória 8 bites adatszélességgel.</code></td>
+</tr>
+<tr class="odd">
+<td>Kezdeti üzemmód</td>
+<td><code>mmRAM</code></td>
+</tr>
+<tr class="even">
+<td>Könyvtár</td>
+<td><code>memory_standard</code></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

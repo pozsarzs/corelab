@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - TREALPort a TIOPort osztályból, a ioport_realport modul</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2
+id="trealport-a-tioport-osztályból-a-ioport_realport-modul">TREALPort a
+TIOPort osztályból, a ioport_realport modul</h2>
+<p>Átirányítja a hozzáférést egy valódi I/O-portra.</p>
+<h3 id="io-működés">I/O-működés</h3>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 92%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>port</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>APort</td>
+<td>A megfelelő valódi hardveres I/O-portról olvas, illetve arra
+ír.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rövidítések">Rövidítések</h3>
+<ul>
+<li><em>Ab</em>: jelentése: absztrakt,</li>
+<li><em>Co</em>: jelentése: konstans,</li>
+<li><em>Il</em>: jelentése: inline,</li>
+<li><em>Ol</em>: jelentése: túlterhelés,</li>
+<li><em>Or</em>: jelentése: felüldefiniálás,</li>
+<li><em>Re</em>: jelentése: olvasás,</li>
+<li><em>Ri</em>: jelentése: újradefiniálás,</li>
+<li><em>St</em>: jelentése: statikus,</li>
+<li><em>Vi</em>: jelentése: virtuális,</li>
+<li><em>Wr</em>: jelentése: írás.</li>
+</ul>
+<h3 id="privát-mezők">Privát mezők</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 59%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+<th>alapérték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>InpOut32</code></td>
+<td>THandle</td>
+<td>Eszközspecifikus állapot vagy grafikus felhasználói felületi
+objektum</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>Inp32</code></td>
+<td>TInp32</td>
+<td>Eszközspecifikus állapot vagy grafikus felhasználói felületi
+objektum</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>Out32</code></td>
+<td>TOut32</td>
+<td>Eszközspecifikus állapot vagy grafikus felhasználói felületi
+objektum</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="privát-metódusok">Privát metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 4%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function LoadIODLL(ALibDir: string): Boolean;</code></td>
+<td></td>
+<td>Betölti a platformfüggő, valódi I/O-hozzáférést biztosító
+könyvtárat.</td>
+</tr>
+<tr class="even">
+<td><code>function UnLoadIODLL: Boolean;</code></td>
+<td></td>
+<td>Eltávolítja a platformfüggő, valódi I/O-hozzáférést biztosító
+könyvtárat.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-metódusok">Védett metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 59%" />
+<col style="width: 4%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function ReadByteFromIOPort(AAddress: Word; var AData: Byte): Boolean;</code></td>
+<td></td>
+<td>Egy bájtot olvas a valódi hardveres I/O-portról.</td>
+</tr>
+<tr class="even">
+<td><code>function WriteByteToIOPort(AAddress: Word; AData: Byte): Boolean;</code></td>
+<td></td>
+<td>Egy bájtot ír a valódi hardveres I/O-portra.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 4%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create; override;</code></td>
+<td>Or</td>
+<td>Inicializálja az objektumot és az eszközspecifikus állapotát.</td>
+</tr>
+<tr class="even">
+<td><code>destructor Destroy; override;</code></td>
+<td>Or</td>
+<td>Felszabadítja az objektumot és a lefoglalt erőforrásait.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset; override;</code></td>
+<td>Or</td>
+<td>Alaphelyzetbe állítja az eszköz állapotát.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadPort(APort: Word): Byte; override;</code></td>
+<td>Or</td>
+<td>Kiolvassa a kiválasztott virtuális I/O-port értékét.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WritePort(APort: Word; AValue: Byte); override;</code></td>
+<td>Or</td>
+<td>Kiírja a kiválasztott virtuális I/O-port értékét.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-függvények-és-eljárások">Exportált függvények és
+eljárások</h3>
+<p><strong>Hívási konvenció:</strong></p>
+<ul>
+<li>Windows alatt: <code>stdcall</code>,</li>
+<li>Unix-szerű operációs rendszereken: <code>cdecl</code>.</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 56%" />
+<col style="width: 12%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>exportált név</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function CreatePort: TIOPort;</code></td>
+<td>ioport_create</td>
+<td>Új eszközobjektumot hoz létre.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DestroyPort(APort: TIOPort);</code></td>
+<td>ioport_destroy</td>
+<td>Megsemmisíti az eszközobjektumot.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);</code></td>
+<td>ioport_setinthandler</td>
+<td>Beállítja a megszakítás-visszahívást és a megszakításvektort.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(APort: TIOPort; AStream: TStream): Boolean;</code></td>
+<td>ioport_loadstate</td>
+<td>Betölti az eszköz állapotát egy adatfolyamból.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(APort: TIOPort; AStream: TStream): Boolean;</code></td>
+<td>ioport_savestate</td>
+<td>Elmenti az eszköz állapotát egy adatfolyamba.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

@@ -55,11 +55,11 @@ The class inherits the complete memory interface from `TMemory`, including:
 
 ### Module configuration
 
-|item               |value                                      |
-|-------------------|-------------------------------------------|
-|Module class       |`TStandardMemory`                          |
-|Base class         |`TMemory`                                  |
-|Module name        |`RAM/ROM`                                  |
-|Description        |`Standard memory with 4-64 bit data width.`|
-|Initial memory mode|`mmRAM`                                    |
-|Library            |`memory_standard`                          |
+|item               |value                                   |
+|-------------------|----------------------------------------|
+|Module class       |`TStandardMemory`                       |
+|Base class         |`TMemory`                               |
+|Module name        |`RAM/ROM`                               |
+|Description        |`Standard memory with 8 bit data width.`|
+|Initial memory mode|`mmRAM`                                 |
+|Library            |`memory_standard`                       |

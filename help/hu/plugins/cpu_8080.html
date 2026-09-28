@@ -1,0 +1,573 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - T8080CPU a TCPU osztályból, a cpu_8080 modul</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="t8080cpu-a-tcpu-osztályból-a-cpu_8080-modul">T8080CPU a TCPU
+osztályból, a cpu_8080 modul</h2>
+<p>A <code>T8080CPU</code> az Intel 8080 processzor CoreLAB
+keretrendszerhez készült megvalósítása. A <code>TCPU</code> osztályból
+származik, és megvalósítja az Intel 8080 regiszterkészletét, az
+alaphelyzetbe állítást, az állapot mentését és betöltését, az
+utasításléptetést, az aktuális utasítás jelentését, valamint a
+regiszterek elérését.</p>
+<p>Az utasítások tényleges megvalósítása fordításkor a
+<code>microcode.pas</code> fájlból kerül beillesztésre. Emiatt az
+utasításkészlet működésének leírása e modul és a beillesztett
+mikroprogram-forrás között oszlik meg.</p>
+<h3 id="cpu-konfiguráció">CPU-konfiguráció</h3>
+<p>A konstruktor a következőképpen állítja be az örökölt
+<code>TCPU</code> tulajdonságokat:</p>
+<table>
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modul neve</td>
+<td><code>8080</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Intel 8080 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architektúra</td>
+<td><code>arNeumann</code></td>
+</tr>
+<tr class="even">
+<td>Adatszélesség</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>Címszélesség</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>Bájtsorrend</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális memóriacím</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximális kódcím</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális I/O-portcím</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="even">
+<td>Külön I/O-busz</td>
+<td><code>True</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="alaphelyzeti-állapot">Alaphelyzeti állapot</h3>
+<p>A <code>Reset</code> törli a teljes <code>T8080Registers</code>
+rekordot, majd kifejezetten a következő értékeket rendeli hozzá:</p>
+<table>
+<thead>
+<tr class="header">
+<th>regiszter/állapot</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<p>A metódus emellett kiváltja az örökölt <code>ceReset</code>
+eseményt.</p>
+<h3 id="utasítás-végrehajtás">Utasítás-végrehajtás</h3>
+<p>A <code>Step</code> a következő műveleteket hajtja végre:</p>
+<ol type="1">
+<li>Meghívja a <code>CheckInterrupts</code> metódust; elfogadott
+megszakítás esetén a végrehajtás azonnal leáll.</li>
+<li>Azonnal leáll, ha a CPU leállított állapotban van.</li>
+<li>Kiolvassa az opkódot a rendszersínről az aktuális <code>PC</code>
+címen.</li>
+<li>Elmenti a címet és az opkódot a <code>LogRecord</code> mezőbe.</li>
+<li>Törli a naplórekordban tárolt operandusok számát.</li>
+<li>Növeli a <code>PC</code> értékét.</li>
+<li>Kiváltja a <code>ceInstructionBoundary</code> eseményt.</li>
+<li>Beilleszti és végrehajtja a <code>microcode.pas</code> fájlban
+található utasítás-megvalósítást.</li>
+<li>Növeli az örökölt utasításszámlálót.</li>
+</ol>
+<p>Az opkód beolvasásához ezért a forrásnak csatlakoztatott
+<code>FBus</code> objektumra van szüksége.</p>
+<h3 id="az-aktuális-utasítás-formátuma">Az aktuális utasítás
+formátuma</h3>
+<p>A <code>GetCurrentInstruction</code> tabulátorokkal elválasztott
+szöveges reprezentációt ad vissza, amely a következőket tartalmazza:</p>
+<ol type="1">
+<li>az utasítás címe négy hexadecimális számjeggyel;</li>
+<li>az opkód két hexadecimális számjeggyel;</li>
+<li>legfeljebb két kódolt operandusérték;</li>
+<li>a mnemonikot;</li>
+<li>az operandusértékeket ismét, a formázott operandusrészben.</li>
+</ol>
+<p>A visszaadott karakterlánc a karakterre mutató pointer visszaadása
+előtt a privát <code>s</code> mezőbe kerül.</p>
+<h3 id="regiszterek-elérése">Regiszterek elérése</h3>
+<p>A <code>GetRegister</code> és a <code>SetRegister</code> az
+<code>UpperCase</code> használatával, a kis- és nagybetűk
+megkülönböztetése nélkül hasonlítja össze a regiszterneveket.</p>
+<table>
+<thead>
+<tr class="header">
+<th>regiszter</th>
+<th>szélesség</th>
+<th>olvasható</th>
+<th>írható</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>F</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>BC</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>DE</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>HL</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>PC</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>SP</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>SetRegister</code> az <code>A</code> és <code>F</code>
+regiszterek értékét <code>$FF</code>, a <code>BC</code>,
+<code>DE</code>, <code>HL</code>, <code>PC</code> és <code>SP</code>
+regiszterekét pedig <code>$FFFF</code> maszkkal korlátozza.</p>
+<p>A <code>case</code> utasításban nem kezelt neveknek a
+<code>SetRegister</code> esetén nincs hatásuk, a
+<code>GetRegister</code> pedig <code>0</code> értéket ad vissza
+rájuk.</p>
+<h3 id="állapot-mentése-és-betöltése">Állapot mentése és betöltése</h3>
+<p>A <code>LoadState</code> a következő sorrendben olvassa be az
+adatokat:</p>
+<table>
+<thead>
+<tr class="header">
+<th>sorrend</th>
+<th>adat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FInterruptEnabled</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FIRQPending</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FNMIPending</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FCycles</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ha az adatfolyam kezelése közben kivétel történik, a
+<code>LoadState</code> <code>False</code> értéket ad vissza; egyébként
+<code>True</code> értéket.</p>
+<p>A <code>SaveState</code> ugyanazokat a mezőket, ugyanebben a
+sorrendben írja ki, de csak akkor, ha az
+<code>InstanceID &gt; -1</code>. Érvénytelen példányazonosító esetén
+<code>False</code> értéket ad vissza.</p>
+<h3 id="tlastinstruction">TLastInstruction</h3>
+<p>A <code>TLastInstruction</code> a legutóbb beolvasott utasítás
+adatait tárolja.</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 26%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Address</code></td>
+<td><code>Word</code></td>
+<td>Az utasítás beolvasásának címe.</td>
+</tr>
+<tr class="even">
+<td><code>Opcode</code></td>
+<td><code>Byte</code></td>
+<td>A beolvasott opkód bájtja.</td>
+</tr>
+<tr class="odd">
+<td><code>NumOperand</code></td>
+<td><code>Byte</code></td>
+<td>A naplórekordban tárolt operandusok száma.</td>
+</tr>
+<tr class="even">
+<td><code>Operands</code></td>
+<td><code>array[1..2] of Word</code></td>
+<td>Az utasítás operandusértékei.</td>
+</tr>
+<tr class="odd">
+<td><code>Mnemonic</code></td>
+<td><code>string[12]</code></td>
+<td>Az utasítás mnemonikja.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="t8080registers">T8080Registers</h3>
+<p>A <code>T8080Registers</code> egy variánsrekordon keresztül biztosít
+hozzáférést a 16 bites regiszterpárokhoz és az egyedi 8 bites
+regiszterekhez is.</p>
+<table>
+<thead>
+<tr class="header">
+<th>16 bites regiszter</th>
+<th>8 bites reprezentáció</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BC</code></td>
+<td><code>B</code>, <code>C</code></td>
+</tr>
+<tr class="even">
+<td><code>DE</code></td>
+<td><code>D</code>, <code>E</code></td>
+</tr>
+<tr class="odd">
+<td><code>HL</code></td>
+<td><code>H</code>, <code>L</code></td>
+</tr>
+<tr class="even">
+<td><code>AF</code></td>
+<td><code>A</code>, <code>F</code></td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>PCL</code>, <code>PCH</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>SPL</code>, <code>SPH</code></td>
+</tr>
+</tbody>
+</table>
+<p>A regiszterkészlet tehát tartalmazza az Intel 8080 akkumulátorát,
+jelzőbitjeit, általános célú regiszterpárjait, programszámlálóját és
+veremmutatóját.</p>
+<h3 id="regiszternevek">Regiszternevek</h3>
+<p>A belső regiszterpointer-tábla a következő sorrendet használja:</p>
+<table>
+<thead>
+<tr class="header">
+<th>index</th>
+<th>név</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>B</code></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>C</code></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>D</code></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>E</code></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>H</code></td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>L</code></td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>M</code></td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>A</code></td>
+</tr>
+</tbody>
+</table>
+<p>Az <code>M</code> nem rendelkezik közvetlen regiszterpointerrel,
+mivel a <code>HL</code> által megcímzett memóriaterületet jelöli.</p>
+<h3 id="védett-mezők">Védett mezők</h3>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 19%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T8080Registers</code></td>
+<td>A teljes Intel 8080 regiszterkészlet.</td>
+</tr>
+<tr class="even">
+<td><code>LogRecord</code></td>
+<td><code>TLastInstruction</code></td>
+<td>A legutóbb beolvasott utasítás nyers adatai.</td>
+</tr>
+<tr class="odd">
+<td><code>RegPointers</code></td>
+<td><code>array[0..7] of PByte</code></td>
+<td>Az utasítás-megvalósítás által használt 8 bites regiszterváltozók
+pointerei.</td>
+</tr>
+<tr class="even">
+<td><code>s</code></td>
+<td><code>string</code></td>
+<td>Az aktuális utasítás megjelenítésének formázására használt
+ideiglenes karakterlánc.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-metódusok">Védett metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 3%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);</code></td>
+<td></td>
+<td>Updates the Intel 8080 flag register according to the supplied
+arithmetic result.</td>
+</tr>
+</tbody>
+</table>
+<p>Az <code>UpdateFlags</code> kezeli a Sign, Zero, Auxiliary Carry,
+Parity és Carry jelzőbiteket. Emellett az Intel 8080 állandó
+jelzőbitjeit az előírt értékükre állítja.</p>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 2%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Létrehoz egy Intel 8080 CPU-t, beállítja az architektúra
+paramétereit és a regiszterpointereket, majd alaphelyzetbe állítja.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td>Or</td>
+<td>Törli a regiszterkészletet, a <code>PC</code> értékét
+<code>0</code>-ra, az <code>SP</code> értékét <code>$FFFF</code>-re
+állítja, törli a futási és leállítási állapotot, majd kiváltja a
+<code>ceReset</code> eseményt.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInstruction: PChar;</code></td>
+<td>Or</td>
+<td>Visszaadja a legutóbb beolvasott utasítás formázott
+reprezentációját.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): QWord;</code></td>
+<td>Or</td>
+<td>Visszaadja a megadott <code>A</code>, <code>F</code>,
+<code>BC</code>, <code>DE</code>, <code>HL</code>, <code>PC</code> vagy
+<code>SP</code> regiszter értékét.</td>
+</tr>
+<tr class="odd">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td>Or</td>
+<td>Betölti az engedélyezett állapotot, a teljes regiszterkészletet, a
+végrehajtási és megszakítási állapotot, valamint a végrehajtási
+számlálókat egy adatfolyamból.</td>
+</tr>
+<tr class="even">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td>Or</td>
+<td>Érvényes példányazonosító esetén elmenti az engedélyezett állapotot,
+a regiszterkészletet, a végrehajtási és megszakítási állapotot, valamint
+a végrehajtási számlálókat.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: QWord);</code></td>
+<td>Or</td>
+<td>Beállítja a megadott <code>A</code>, <code>F</code>,
+<code>BC</code>, <code>DE</code>, <code>HL</code>, <code>PC</code> vagy
+<code>SP</code> regisztert, a regiszter szélességének megfelelő
+maszkolással.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td>Or</td>
+<td>Beolvassa és végrehajtja az Intel 8080 egy utasítását, beleértve a
+megszakítások ellenőrzését, az opkód beolvasását, az utasításhatár
+jelzését és az utasításszámlálást.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-plugininterfész">Exportált plugininterfész</h3>
+<p>A modul <code>cpu_8080</code> dinamikus könyvtárként fordul le, és
+négy plugin-belépési pontot exportál:</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportált név</th>
+<th>függvény</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Létrehoz és <code>TCPU</code> típusúként visszaad egy új
+<code>T8080CPU</code> példányt.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Megsemmisíti a megadott CPU-példányt, ha az hozzá van rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>A megadott <code>TCPU</code> hivatkozáson keresztül betölti az
+állapotot. <code>nil</code> hivatkozás esetén <code>False</code> értéket
+ad vissza.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>A megadott <code>TCPU</code> hivatkozáson keresztül elmenti az
+állapotot. <code>nil</code> hivatkozás esetén <code>False</code> értéket
+ad vissza.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
