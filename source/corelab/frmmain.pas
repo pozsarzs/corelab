@@ -3667,6 +3667,8 @@ begin
     SysConsole1.WriteMessage(Format(MSG73, [Filename, InstanceName]));
   finally
     LoadStream.Free;
+    AActionContext.DArg1 := 0;
+    AActionContext.DArg2 := 0;
   end;
 end;
 
@@ -5203,10 +5205,10 @@ begin
       for i := 0 to FScriptBuffer.Count - 1 do
       with CommandEngine2 do
       begin
-        FScriptRuntime.GetRegister('C', Counter);
+{        FScriptRuntime.GetRegister('C', Counter);
         ExecuteLine(FScriptBuffer.Strings[Counter]);
         Inc(Counter);
-        FScriptRuntime.SetRegister('C', Counter, True);
+        FScriptRuntime.SetRegister('C', Counter, True);}
       end;
     finally
       FScriptIsRunning := False;
@@ -5258,10 +5260,10 @@ begin
     try
       with CommandEngine2 do
       begin
-        FScriptRuntime.GetRegister('C', Counter);
+{        FScriptRuntime.GetRegister('C', Counter);
         ExecuteLine(FScriptBuffer.Strings[Counter]);
         if Counter < FScriptBuffer.Count - 1 then Inc(Counter);
-        FScriptRuntime.SetRegister('C', Counter, True);
+        FScriptRuntime.SetRegister('C', Counter, True);}
       end;
     finally
       FScriptIsRunning := False;

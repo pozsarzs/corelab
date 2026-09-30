@@ -182,12 +182,10 @@ begin
       begin
         SArg1 := '';
         SArg2 := '';
+        DArg1 := 0;
+        DArg2 := 0;
         if Tokens.Count > 1 then SArg1 := Tokens[1].RawText;
         if Tokens.Count > 2 then SArg2 := Tokens[2].RawText;
-        if not TryStrToBool(SArg1, BArg1) then BArg1 := False;
-        if not TryStrToBool(SArg2, BArg2) then BArg2 := False;
-        if not TryStrToInt(SArg1, IArg1) then IArg1 := -1;
-        if not TryStrToInt(SArg2, IArg2) then IArg2 := -1;
         Command.Operation(ActionContext);
         Result := 0;
       end;

@@ -15,48 +15,53 @@ unit scriptengine;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, command, commandengine, scriptruntime, uactcontext;
+  SysUtils, Classes, Variants, command, commandengine, scriptruntime,
+  uactcontext;
 type
   { TScriptEngine }
   TScriptEngine = class(TCommandEngine)
-  public
-    FScriptRuntime: TScriptRuntime;
   private
-    procedure CmdADD(AActionContext: TActionContext);
-    procedure CmdAND(AActionContext: TActionContext);
-    procedure CmdBIT(AActionContext: TActionContext);
-    procedure CmdCALL(AActionContext: TActionContext);
-    procedure CmdCOMP(AActionContext: TActionContext);
-    procedure CmdCONV(AActionContext: TActionContext);
-    procedure CmdDEC(AActionContext: TActionContext);
+    function ChkVarInt(var AVariant: Variant): Boolean;
+  protected
+    // access
     procedure CmdDEPO(AActionContext: TActionContext);
-    procedure CmdEND(AActionContext: TActionContext);
     procedure CmdEXAM(AActionContext: TActionContext);
-    procedure CmdEXIT(AActionContext: TActionContext);
+    procedure CmdSWAP(AActionContext: TActionContext);
+    // arithmetic
+    procedure CmdADD(AActionContext: TActionContext);
+    procedure CmdSUB(AActionContext: TActionContext);
+    procedure CmdMUL(AActionContext: TActionContext);
     procedure CmdINC(AActionContext: TActionContext);
+    procedure CmdDEC(AActionContext: TActionContext);
+    // control
+    procedure CmdCOMP(AActionContext: TActionContext);
     procedure CmdINRG(AActionContext: TActionContext);
     procedure CmdJPEQ(AActionContext: TActionContext);
+    procedure CmdJPZR(AActionContext: TActionContext);
     procedure CmdJPGE(AActionContext: TActionContext);
     procedure CmdJPGT(AActionContext: TActionContext);
     procedure CmdJPLE(AActionContext: TActionContext);
     procedure CmdJPLT(AActionContext: TActionContext);
     procedure CmdJPNE(AActionContext: TActionContext);
     procedure CmdJPNZ(AActionContext: TActionContext);
-    procedure CmdJPZR(AActionContext: TActionContext);
-    procedure CmdMUL(AActionContext: TActionContext);
-    procedure CmdNOT(AActionContext: TActionContext);
-    procedure CmdOR(AActionContext: TActionContext);
-    procedure CmdPRNT(AActionContext: TActionContext);
+    procedure CmdCALL(AActionContext: TActionContext);
     procedure CmdRTRN(AActionContext: TActionContext);
+    // logic
+    procedure CmdAND(AActionContext: TActionContext);
+    procedure CmdOR(AActionContext: TActionContext);
+    procedure CmdXOR(AActionContext: TActionContext);
+    procedure CmdNOT(AActionContext: TActionContext);
     procedure CmdSHL(AActionContext: TActionContext);
     procedure CmdSHR(AActionContext: TActionContext);
-    procedure CmdSUB(AActionContext: TActionContext);
-    procedure CmdSWAP(AActionContext: TActionContext);
+    procedure CmdBIT(AActionContext: TActionContext);
+    // other
+    procedure CmdCONV(AActionContext: TActionContext);
+    procedure CmdPRNT(AActionContext: TActionContext);
     procedure CmdWAIT(AActionContext: TActionContext);
-    procedure CmdXOR(AActionContext: TActionContext);
-  protected
+    procedure CmdEND(AActionContext: TActionContext);
+    procedure CmdEXIT(AActionContext: TActionContext);
   public
-    //FScriptRuntime: TScriptRuntime;
+    FScriptRuntime: TScriptRuntime;
     constructor Create; override;
     destructor Destroy; override;
     function ExecuteLine(const ALine: string): Integer; override;
@@ -65,6 +70,27 @@ type
 implementation
 
 { TScriptEngine }
+
+// ---- PRIVATE METHODS ----
+
+// CHECK VARIANT VALUE
+function TScriptEngine.ChkVarInt(var AVariant: Variant): Boolean;
+begin
+  Result := False;
+  if (VarType(AVariant) in [varByte, varShortInt, varWord, varSmallint,
+    varLongWord, varInteger, varInt64, varQWord]) then
+    if (AVariant >= 0) and (AVariant <= High(DWord)) then Result := True;
+end;
+
+// ---- PROTECTED METHODS ----
+
+{$I cmd-access.pas}
+{$I cmd-arithmetic.pas}
+{$I cmd-control.pas}
+{$I cmd-logic.pas}
+{$I cmd-other.pas}
+
+// ---- PUBLIC METHODS ----
 
 // CREATE TSCRIPTENGINE INSTANCE
 constructor TScriptEngine.Create;
@@ -82,22 +108,16 @@ begin
   end;
 end;
 
-{$I cmd-access.pas}
-{$I cmd-arithmetic.pas}
-{$I cmd-control.pas}
-{$I cmd-logic.pas}
-{$I cmd-other.pas}
-
- // EXECUTE COMMAND WITH PARAMETERS
-function TScriptEngine.ExecuteLine(const ALine: string): Integer;
-begin
-// if HasError then Exit;                              // command run error
-end;
-
 // DESTROY TSCRIPTENGINE INSTANCE
 destructor TScriptEngine.Destroy;
 begin
   inherited Destroy;
+end;
+
+// EXECUTE COMMAND WITH PARAMETERS
+function TScriptEngine.ExecuteLine(const ALine: string): Integer;
+begin
+// if HasError then Exit;                              // command run error
 end;
 
 end.

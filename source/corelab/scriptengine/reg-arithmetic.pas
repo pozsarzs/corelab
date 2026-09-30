@@ -38,17 +38,17 @@ RegisterCommand(TCommand.Create('MUL',
                                 True));
 
 RegisterCommand(TCommand.Create('INC',
-                                'Increment integer target by 1 or by count in-place.',
+                                'Increment integer target by 1 in-place.',
                                 csScriptOnly,
-                                'INC [count]',
+                                'INC',
                                 0,
                                 @CmdINC,
                                 True));
 
 RegisterCommand(TCommand.Create('DEC',
-                                'Decrement integer target by 1 or by count in-place.',
+                                'Decrement integer target by 1 in-place.',
                                 csScriptOnly,
-                                'DEC [count]',
+                                'DEC',
                                 0,
                                 @CmdDEC,
                                 True));

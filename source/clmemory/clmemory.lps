@@ -30,10 +30,8 @@
         <ComponentName Value="Form2"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <UsageCount Value="176"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="frmcaption.pas"/>
@@ -62,10 +60,9 @@
       </Unit>
       <Unit>
         <Filename Value="../_ppu/ucommon.pas"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="22" Y="5"/>
         <UsageCount Value="42"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../corelab-core/core_memory.pas"/>
@@ -75,7 +72,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="26" Column="15"/>
@@ -186,9 +183,6 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="654" Column="3" TopLine="648"/>
-      </Position>
-      <Position>
-        <Filename Value="frmabout.pas"/>
       </Position>
     </JumpHistory>
     <RunParams>

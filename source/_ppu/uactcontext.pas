@@ -24,10 +24,6 @@ type
     ActionSource:  TActionSource;                            // source of action
     SArg1:    string;               // arguments from to ...Operation procedures
     SArg2:    string;
-    IArg1:    Integer;
-    IArg2:    Integer;
-    BArg1:    Boolean;
-    BArg2:    Boolean;
     DArg1:    DWord;
     DArg2:    DWord;
     HasError: Boolean;                                      // command run error
@@ -45,10 +41,6 @@ begin
   ActionSource := asMainMenu;
   SArg1 := '';
   SArg2 := '';
-  IArg1 := -1;
-  IArg2 := -1;
-  BArg1 := false;
-  BArg2 := false;
   DArg1 := 0;
   DArg2 := 0;
   HasError := False;
