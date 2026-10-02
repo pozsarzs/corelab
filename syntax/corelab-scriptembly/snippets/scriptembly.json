@@ -114,16 +114,9 @@
     "DEC": {
         "prefix": "DEC",
         "body": [
-            "DEC [count]"
+            "DEC"
         ],
-        "description": "Decrement integer target by 1 or by count in-place."
-    },
-    "DEPO": {
-        "prefix": "DEPO",
-        "body": [
-            "DEPO address value"
-        ],
-        "description": "Deposit a value directly into memory, register or bus address."
+        "description": "Decrement integer target by 1."
     },
     "DIIO": {
         "prefix": "DIIO",
@@ -193,7 +186,7 @@
         "body": [
             "EDME instancename"
         ],
-        "description": "Show examine/deposit window"
+        "description": "Show examine/deposit window."
     },
     "END": {
         "prefix": "END",
@@ -223,13 +216,6 @@
         ],
         "description": "Enable processor module."
     },
-    "EXAM": {
-        "prefix": "EXAM",
-        "body": [
-            "EXAM address"
-        ],
-        "description": "Examine a value from memory, register or bus address into a register."
-    },
     "EXAP": {
         "prefix": "EXAP",
         "body": [
@@ -254,9 +240,9 @@
     "INC": {
         "prefix": "INC",
         "body": [
-            "INC [count]"
+            "INC"
         ],
-        "description": "Increment integer target by 1 or by count in-place."
+        "description": "Increment integer target by 1."
     },
     "INRG": {
         "prefix": "INRG",
@@ -326,7 +312,7 @@
         "body": [
             "LDME instancename filename"
         ],
-        "description": "Load memory content from file"
+        "description": "Load memory content from file."
     },
     "LDPR": {
         "prefix": "LDPR",
@@ -334,6 +320,13 @@
             "LDPR filename.clprj"
         ],
         "description": "Change to interactive mode and load project from file."
+    },
+    "LDRG": {
+        "prefix": "LDRG",
+        "body": [
+            "LDRG register value"
+        ],
+        "description": "Load a value to specified register."
     },
     "LDSC": {
         "prefix": "LDSC",
@@ -397,6 +390,20 @@
             "PRNT \"text\""
         ],
         "description": "Write text to console."
+    },
+    "RDIO": {
+        "prefix": "RDIO",
+        "body": [
+            "RDIO address"
+        ],
+        "description": "Read a value from I/O port and store in register RA."
+    },
+    "RDME": {
+        "prefix": "RDME",
+        "body": [
+            "RDME address"
+        ],
+        "description": "Read a value from memory and store in register RA."
     },
     "RNIO": {
         "prefix": "RNIO",
@@ -466,7 +473,7 @@
         "body": [
             "RWIO instancename"
         ],
-        "description": "Show read/write window"
+        "description": "Show read/write window."
     },
     "SESC": {
         "prefix": "SESC",
@@ -592,7 +599,7 @@
         "body": [
             "SVME filename instancename"
         ],
-        "description": "Save memory content to file"
+        "description": "Save memory content to file."
     },
     "SVPR": {
         "prefix": "SVPR",
@@ -628,6 +635,20 @@
             "WAIT ms"
         ],
         "description": "Wait specified ms."
+    },
+    "WRIO": {
+        "prefix": "WRIO",
+        "body": [
+            "WRIO address"
+        ],
+        "description": "Read a value from register RA and write to I/O port."
+    },
+    "WRME": {
+        "prefix": "WRME",
+        "body": [
+            "WRME address"
+        ],
+        "description": "Read a value from register RA and store in memory."
     },
     "XOR": {
         "prefix": "XOR",

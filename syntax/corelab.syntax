@@ -38,12 +38,15 @@ context default
     keyword whole EXAP white
     keyword whole LDME white
     keyword whole LDPR white
+    keyword whole LDRG white
     keyword whole LDSC white
     keyword whole LDSS white
     keyword whole NMI white
     keyword whole NWPR white
     keyword whole NWSC white
     keyword whole RNIO white
+    keyword whole RDIO white
+    keyword whole RDME white
     keyword whole RSAP white
     keyword whole RSIO white
     keyword whole RSME white
@@ -77,9 +80,7 @@ context default
     keyword whole COMP white
     keyword whole CONV white
     keyword whole DEC white
-    keyword whole DEPO white
     keyword whole END white
-    keyword whole EXAM white
     keyword whole EXIT white
     keyword whole HELP white
     keyword whole INC white
@@ -102,6 +103,8 @@ context default
     keyword whole SUB white
     keyword whole SWAP white
     keyword whole WAIT white
+    keyword whole WRIO white
+    keyword whole WRME white
     keyword whole XOR white
 
 # strings:

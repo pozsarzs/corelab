@@ -52,11 +52,14 @@
       <keyword>EXAP</keyword>
       <keyword>LDME</keyword>
       <keyword>LDPR</keyword>
+      <keyword>LDRG</keyword>
       <keyword>LDSC</keyword>
       <keyword>LDSS</keyword>
       <keyword>NMI</keyword>
       <keyword>NWPR</keyword>
       <keyword>NWSC</keyword>
+      <keyword>RDIO</keyword>
+      <keyword>RDME</keyword>
       <keyword>RNIO</keyword>
       <keyword>RSAP</keyword>
       <keyword>RSIO</keyword>
@@ -91,9 +94,7 @@
       <keyword>COMP</keyword>
       <keyword>CONV</keyword>
       <keyword>DEC</keyword>
-      <keyword>DEPO</keyword>
       <keyword>END</keyword>
-      <keyword>EXAM</keyword>
       <keyword>EXIT</keyword>
       <keyword>HELP</keyword>
       <keyword>INC</keyword>
@@ -116,6 +117,8 @@
       <keyword>SUB</keyword>
       <keyword>SWAP</keyword>
       <keyword>WAIT</keyword>
+      <keyword>WRIO</keyword>
+      <keyword>WRME</keyword>
       <keyword>XOR</keyword>
     </context>
     <!-- registers: -->

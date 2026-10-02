@@ -96,7 +96,7 @@
 			<param name="Local" value="plugins\cpu_4004.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="T4040CPU osztály a TCPU osztályból, a cpu_4040 modulban">
+			<param name="Name" value="T4040CPU osztály a T4004CPU osztályból, a cpu_4040 modulban">
 			<param name="Local" value="plugins\cpu_4040.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
@@ -108,7 +108,11 @@
 			<param name="Local" value="plugins\cpu_8080.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="TZ80CPU osztály a TCPU osztályból, a cpu_z80 modulban">
+			<param name="Name" value="T8085CPU osztály a T8080CPU osztályból, a cpu_8085 modulban">
+			<param name="Local" value="plugins\cpu_8085.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TZ80CPU osztály a T8080CPU osztályból, a cpu_z80 modulban">
 			<param name="Local" value="plugins\cpu_z80.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">

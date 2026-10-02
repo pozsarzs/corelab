@@ -30,6 +30,7 @@ plugins/cpu_4004.html
 plugins/cpu_4040.html
 plugins/cpu_8008.html
 plugins/cpu_8080.html
+plugins/cpu_8085.html
 plugins/cpu_z80.html
 plugins/ioport_bell.html
 plugins/ioport_button16bcd.html

@@ -53,14 +53,14 @@ Switch to script mode, optionally load [filename].
 Show version and build information.
 
 .SH OPERATION
-.SS Project Management
+.SS Project management
 CoreLAB uses a simple directory-based project structure. A project directory can
 contain all related files—such as optional environment setup scripts, saved state
 snapshots, program code, and data streams. The simulation environment can also be
 built manually, meaning none of these files are strictly mandatory. This setup
 keeps experiments independent while fully supporting the use of external files.
 
-.SS Modular Architecture
+.SS Modular architecture
 One of the most important features of the simulator is its modular design.
 Processors, memories, and peripherals can be created as independent objects and
 connected dynamically. Users can build custom virtual hardware environments
@@ -69,45 +69,45 @@ tailored to the requirements of the system being studied.
 .B Plug-in modules
 
 .TP
-.B Real Port Redirection
+.B Real port redirection
 Bridges virtual port I/O streams directly to the physical hardware ports of the host machine.
 .TP
-.B Simple Console
+.B Simple console
 Basic text-based console for data stream monitoring.
 .TP
-.B 7-Segment Display
+.B 7-segment display
 Single and multiplexed 7-segment display arrays for numerical and basic character output.
 .TP
 .B CPU
 Emulated processor, microprocessor with custom architectures.
 .TP
-.B Hexadecimal Display
+.B Hexadecimal display
 Single and multiplexed hex display arrays mapped to virtual port addresses.
 .TP
-.B LED Array and Matrix
+.B LED array and matrix
 Linear LED bars and dot-matrix displays for visual bit-state and coordinate-based output.
 .TP
 .B Memory (RAM/ROM)
 Configurable volatile and non-volatile memory blocks with custom sizing and address mapping.
 .TP
-.B Pushbutton Array and Matrix
+.B Pushbutton array and matrix
 Linear and matrix-arranged momentary pushbuttons for interactive binary input.
 .TP
-.B Switch Array and Matrix
+.B Switch array and matrix
 Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.
 
-.SS Supported Processor Architectures
+.SS Supported processor architectures
 CoreLAB is not limited to a single processor type. Different microprocessor and
 microcontroller architectures can be loaded as plug-ins. This enables the same
 environment to be used for studying multiple instruction sets and hardware
 models.
 
-.SS Virtual Memory and I/O Environment
+.SS Virtual memory and I/O environment
 The memory map and I/O address space can be configured freely during simulation.
 Virtual peripherals can be assigned to memory locations or I/O ports in the same
 way as real hardware devices.
 
-.SS Debugging Features
+.SS Debugging features
 CoreLAB provides several built-in diagnostic and debugging tools. Users can halt
 execution at breakpoints, execute programs step by step, inspect memory and
 register contents, and monitor instruction execution in real time. These features
@@ -147,7 +147,7 @@ Built-in environment for writing control scripts
 .B SysConsole
 Console for system messages and command line interface
 
-.SS Scripting and Automation
+.SS Scripting and automation
 The program is primarily operated through its own built-in console command line,
 though a menu is also available. It features a custom command interpreter and
 scripting language. Scripts can be executed directly from the OS shell; when run
@@ -155,13 +155,13 @@ this way, the script automatically builds the execution environment and performs
 all specified operations. This allows for the efficient automation of repetitive
 tasks, tests, and the reproduction of complex hardware configurations.
 
-.SS State Saving and Restoration
+.SS State saving and restoration
 The complete state of a simulation can be saved and restored at any time. This
 includes not only memory contents but also the current state of processors,
 peripherals, and other objects. As a result, development and debugging sessions
 can be paused and resumed without loss of progress.
 
-.SS Logging and Data Export
+.SS Logging and data export
 Runtime events and execution logs can be saved to files for later analysis.
 Memory contents can be exported in binary or Intel HEX format, allowing results
 to be used with other development tools or transferred to real hardware.
@@ -171,7 +171,7 @@ to be used with other development tools or transferred to real hardware.
 box tab(|);
 cb | cb | cb
 c  | l  | c .
-Registers|Description|Access
+registers|description|access
 _
 R0-9|General register|R/W
 RA|Work register (accumulator)|R/W
@@ -182,197 +182,17 @@ RE|Random byte|RO
 RF|Flags|RO
 .TE
 .PP
-\fBNote:\fR Flag's bit 0 is ZERO, bit 1 is CARRY.
+\fBNote:\fR Flag's bit 1 is CARRY, bit 0 is ZERO.
 
 .SH BUILTIN COMMANDS
-Notes:
 
+Notes:
 .IP \(bu 3
-The value can be specified directly or register name ($R0-$RF).
+The value can be specified directly only.
 .IP \(bu 3
 Start the comment with ' ; is marked with '.
 .IP \(bu 3
 Enclose the string in ' ” ' characters.
-
-.SS Commands can only be used on the command line
-
-.TP
-\fBEDME\fP \fIinstancename\fP
-Show examine/deposit window
-
-.TP
-\fBHELP\fP \fI[command]\fP
-Display general help overview or detailed usage for a specific command.
-
-.TP
-\fBLDPR\fP \fIfilename.clprj\fP
-Change to interactive mode and load project from file.
-
-.TP
-\fBLDSC\fP \fIfilename.clsce\fP
-Change to script mode and load script from file.
-
-.TP
-\fBNWPR\fP
-Change to interactive mode and create new project.
-
-.TP
-\fBNWSC\fP
-Change to script mode and create new script.
-
-.TP
-\fBRUSC\fP
-Run script.
-
-.TP
-\fBRWIO\fP \fIinstancename\fP
-Show read/write window
-
-.TP
-\fBSESC\fP
-Run script step-by-step.
-
-.TP
-\fBSHBM\fP
-Show BreakPoint Manager window.
-
-.TP
-\fBSHME\fP
-Show Module Explorer window.
-
-.TP
-\fBSHSE\fP
-Show ScriptEditor window.
-
-.TP
-\fBSTSC\fP
-Stop script.
-
-.TP
-\fBSVPR\fP \fIfilename.clprj\fP
-Save project to file.
-
-.TP
-\fBSVSC\fP \fIfilename.clsce\fP
-Save script to file.
-
-.SS Commands can only be used in scripts
-
-.TP
-\fBADD\fP \fIvalue\fP
-Add value to target in-place.
-
-.TP
-\fBAND\fP \fIvalue\fP
-Bitwise/logical AND in-place.
-
-.TP
-\fBBIT\fP \fIbit_index\fP
-Check the specified bit.
-
-.TP
-\fBCALL\fP \fIlabel\fP
-Call subroutine.
-
-.TP
-\fBCOMP\fP \fIvalue\fP
-Compare target with value by subtraction.
-
-.TP
-\fBCONV\fP \fIbase\fP
-Convert number in different numeral systems in-place.
-
-.TP
-\fBDEC\fP
-Decrement integer target by 1 in-place.
-
-.TP
-\fBEND\fP
-End of script.
-
-.TP
-\fBINC\fP
-Increment integer target by 1 in-place.
-
-.TP
-\fBINRG\fP \fImin\fP \fImax\fP
-Check if value is between min and max.
-
-.TP
-\fBJPEQ\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPGE\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPGT\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPLE\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPLT\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPNE\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPNZ\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPZR\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBMUL\fP \fIvalue\fP
-Multiply target by value in-place.
-
-.TP
-\fBNOT\fP
-Bitwise/logical NOT in-place.
-
-.TP
-\fBOR\fP \fIvalue\fP
-Bitwise/logical OR in-place.
-
-.TP
-\fBPRNT\fP \fI"text"\fP
-Write text to console.
-
-.TP
-\fBRTRN\fP
-Return from subroutine.
-
-.TP
-\fBSHL\fP \fIcount\fP
-Shift target bits left by count in-place.
-
-.TP
-\fBSHR\fP \fIcount\fP
-Shift target bits right by count in-place.
-
-.TP
-\fBSUB\fP \fIvalue\fP
-Subtract value from target in-place.
-
-.TP
-\fBSWAP\fP \fIregister\fP \fIregister\fP
-Swap the values of two registers.
-
-.TP
-\fBWAIT\fP \fIms\fP
-Wait specified ms.
-
-.TP
-\fBXOR\fP \fIvalue\fP
-Bitwise/logical XOR in-place.
 
 .SS Commands that can be used everywhere
 			
@@ -550,11 +370,216 @@ Stop simulation.
 
 .TP
 \fBSVME\fP \fIfilename\fP \fIinstancename\fP
-Save memory content to file
+Save memory content to file.
 
 .TP
 \fBSVSS\fP
 Make and save snapshot.
+
+.SS Commands can only be used on the command line
+
+.TP
+\fBEDME\fP \fIinstancename\fP
+Show examine/deposit window.
+
+.TP
+\fBHELP\fP \fI[command]\fP
+Display general help overview or detailed usage for a specific command.
+
+.TP
+\fBLDPR\fP \fIfilename.clprj\fP
+Change to interactive mode and load project from file.
+
+.TP
+\fBLDSC\fP \fIfilename.clsce\fP
+Change to script mode and load script from file.
+
+.TP
+\fBNWPR\fP
+Change to interactive mode and create new project.
+
+.TP
+\fBNWSC\fP
+Change to script mode and create new script.
+
+.TP
+\fBRUSC\fP
+Run script.
+
+.TP
+\fBRWIO\fP \fIinstancename\fP
+Show read/write window.
+
+.TP
+\fBSESC\fP
+Run script step-by-step.
+
+.TP
+\fBSHBM\fP
+Show BreakPoint Manager window.
+
+.TP
+\fBSHME\fP
+Show Module Explorer window.
+
+.TP
+\fBSHSE\fP
+Show ScriptEditor window.
+
+.TP
+\fBSTSC\fP
+Stop script.
+
+.TP
+\fBSVPR\fP \fIfilename.clprj\fP
+Save project to file.
+
+.TP
+\fBSVSC\fP \fIfilename.clsce\fP
+Save script to file.
+
+.SS Commands can only be used in scripts
+Notes:
+.IP \(bu 3
+The \fIvalue\fP (\fIbit_index\fP, \fIaddress\fP, etc.) can be specified directly
+or with register content ($R0-$RF).
+.IP \(bu 3
+The \fIregister\fP can be specified with register name (R0-RF).
+
+.TP
+\fBADD\fP \fIvalue\fP
+Add value to target in-place.
+
+.TP
+\fBAND\fP \fIvalue\fP
+Bitwise/logical AND in-place.
+
+.TP
+\fBBIT\fP \fIbit_index\fP
+Check the specified bit.
+
+.TP
+\fBCALL\fP \fIlabel\fP
+Call subroutine.
+
+.TP
+\fBCOMP\fP \fIvalue\fP
+Compare target with value by subtraction.
+
+.TP
+\fBCONV\fP \fIbase\fP
+Convert number in different numeral systems in-place.
+
+.TP
+\fBDEC\fP
+Decrement integer target by 1 in-place.
+
+.TP
+\fBEND\fP
+End of script.
+
+.TP
+\fBINC\fP
+Increment integer target by 1 in-place.
+
+.TP
+\fBINRG\fP \fImin\fP \fImax\fP
+Check if value is between min and max.
+
+.TP
+\fBJPEQ\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPGE\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPGT\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPLE\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPLT\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPNE\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPNZ\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBJPZR\fP \fIlabel\fP
+Jump to the specified label, based on the result of the previous CMP.
+
+.TP
+\fBLDRG\fP \fIregister\fP \fIvalue\fP
+Load a value to specified register.
+
+.TP
+\fBMUL\fP \fIvalue\fP
+Multiply target by value in-place.
+
+.TP
+\fBNOT\fP
+Bitwise/logical NOT in-place.
+
+.TP
+\fBOR\fP \fIvalue\fP
+Bitwise/logical OR in-place.
+
+.TP
+\fBPRNT\fP \fI"text"\fP
+Write text to console.
+
+.TP
+\fBRDIO\fP \fIaddress\fP
+Read a value from I/O port and store in register RA.
+
+\fBRDME\fP \fIaddress\fP
+Read a value from memory and store in register RA.
+
+.TP
+\fBRTRN\fP
+Return from subroutine.
+
+.TP
+\fBSHL\fP \fIcount\fP
+Shift target bits left by count in-place.
+
+.TP
+\fBSHR\fP \fIcount\fP
+Shift target bits right by count in-place.
+
+.TP
+\fBSUB\fP \fIvalue\fP
+Subtract value from target in-place.
+
+.TP
+\fBSWAP\fP \fIregister\fP \fIregister\fP
+Swap the values of two registers.
+
+.TP
+\fBWAIT\fP \fIms\fP
+Wait specified ms.
+
+.TP
+\fBWRIO\fP \fIaddress\fP
+Read a value from register RA and write to I/O port.
+
+.TP
+\fBWRME\fP \fIaddress\fP
+Read a value from register RA and store in memory.
+
+.TP
+\fBXOR\fP \fIvalue\fP
+Bitwise/logical XOR in-place.
 
 .SH ENVIRONMENTAL VARIABLES
 .TP

@@ -66,6 +66,10 @@
 	<param name="Local" value="plugins/cpu_8080.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="T8085CPU">
+	<param name="Local" value="plugins/cpu_8085.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TZ80CPU">
 	<param name="Local" value="plugins/cpu_z80.html">
 	</OBJECT>
