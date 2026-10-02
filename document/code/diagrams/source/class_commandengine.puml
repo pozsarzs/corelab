@@ -30,7 +30,7 @@ package "Command Engine" {
     --
     + Create() : TCommand
     + Destroy()
-    + Execute(Tokens : TTokenList; AContext : TCommandContext) : Integer <<abstract>>
+    + Execute(Tokens : TTokenList) : Integer <<abstract>>
     + SetParamCount(ACount : Byte)
     + ActionName : string <<read-only>>
     + ExitRequested : Boolean <<read-only>>
@@ -39,25 +39,9 @@ package "Command Engine" {
     + ParamCount : Byte <<read/write>>
     + CommandScope : TCommandScope <<read-only>>
   }
-
-  class TCommandContext {
-    # FOutput : TStrings
-    # FVariables : TContextDict
-    --
-    + Create() : TCommandContext
-    + Destroy()
-    + GetConst(AName : string) : string
-    + GetVar(AName : string) : string
-    + SetConst(AName, AValue : string) : Boolean
-    + SetVar(AName, AValue : string) : Boolean
-    + Clear()
-    + WriteOutput(AText : string)
-    + Output : TStrings <<read/write>>
-  }
-
+  
   class TCommandEngine {
     # FActionList : TActionList
-    # FContext : TCommandContext
     # FExitRequested : Boolean
     # FLastExitCode : Integer
     # FParser : TCommandParser
@@ -79,7 +63,7 @@ package "Command Engine" {
     --
     + Create() : TCommandParser
     + Destroy()
-    + Tokenize(ALine : string; AContext : TCommandContext) : TTokenList
+    + Tokenize(ALine : string) : TTokenList
   }
 
   class TCommandRegistry {
@@ -101,18 +85,11 @@ package "Command Engine" {
 
   class TTokenList <<specialize TObjectList<TToken>>
   class TCommandDict <<specialize TDictionary<string,TCommandClass>>
-  class TContextDict <<specialize TDictionary<string,TContextValue>>
-
-  class TContextValue <<record>> {
-    RawValue : string
-    IsReadOnly : Boolean
-  }
 
   class TCommandClass <<class reference>>
 }
 
 ' Ownership / containment established by constructors/destructors in the source
-TCommandEngine *-- TCommandContext : creates / frees
 TCommandEngine *-- TCommandParser : creates / frees
 
 ' References assigned or consumed by the engine; not created/freed by TCommandEngine
@@ -123,11 +100,9 @@ TCommandEngine ..> TTokenList : uses
 
 ' Command dependencies
 TCommand ..> TTokenList : parameter
-TCommand ..> TCommandContext : parameter
 TCommand --> TCommandScope
 
 ' Parser dependencies
-TCommandParser ..> TCommandContext : parameter
 TCommandParser ..> TTokenList : creates
 
 ' Registry and command-class relationship
@@ -137,9 +112,5 @@ TCommandClass ..> TCommand : class of
 
 ' Token list owns token objects (TObjectList semantics)
 TTokenList *-- TToken : contains
-
-' Context storage
-TCommandContext *-- TContextDict
-TContextDict ..> TContextValue : maps name to value
 
 @enduml

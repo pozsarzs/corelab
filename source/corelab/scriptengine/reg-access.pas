@@ -11,22 +11,46 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-{ DEPO EXAM SWAP }
+{ RDIO WRIO RDME WRME LDRG SWAP }
 
-RegisterCommand(TCommand.Create('DEPO',
-                                'Deposit a value directly into memory, register or bus address.',
+RegisterCommand(TCommand.Create('RDIO',
+                                'Read a value from I/O port and store in register RA.',
                                 csScriptOnly,
-                                'DEPO address value',
-                                2,
-                                @CmdDEPO,
+                                'RDIO address',
+                                1,
+                                @CmdRDIO,
                                 True));
 
-RegisterCommand(TCommand.Create('EXAM',
-                                'Examine a value from memory, register or bus address into a variable.',
+RegisterCommand(TCommand.Create('WRIO',
+                                'Read a value from register RA and write to I/O port',
                                 csScriptOnly,
-                                'EXAM address',
+                                'WRIO address',
                                 1,
-                                @CmdEXAM,
+                                @CmdWRIO,
+                                True));
+
+RegisterCommand(TCommand.Create('RDME',
+                                'Read a value from memory and store in register RA.',
+                                csScriptOnly,
+                                'RDME address',
+                                1,
+                                @CmdRDME,
+                                True));
+
+RegisterCommand(TCommand.Create('WRME',
+                                'Read a value from register RA and store in memory',
+                                csScriptOnly,
+                                'WRME address',
+                                1,
+                                @CmdWRME,
+                                True));
+
+RegisterCommand(TCommand.Create('LDRG',
+                                'Load a value to specified register.',
+                                csScriptOnly,
+                                'LDRG register|value',
+                                1,
+                                @CmdLDRG,
                                 True));
 
 RegisterCommand(TCommand.Create('SWAP',

@@ -12,8 +12,8 @@ while preserving text enclosed in matching single or double quotes as one token.
 
 ### Public methods
 
-|name                                                                            |flags|description                               |
-|--------------------------------------------------------------------------------|:---:|------------------------------------------|
-|`constructor Create;`                                                           |Vi   |Creates the parser object.                |
-|`destructor Destroy;`                                                           |Or   |Destroys the parser object.               |
-|`function Tokenize(const ALine: string; AContext: TCommandContext): TTokenList;`|Vi   |Converts a command line into a token list.|
+|name                                                 |flags|description                               |
+|-----------------------------------------------------|:---:|------------------------------------------|
+|`constructor Create;`                                |Vi   |Creates the parser object.                |
+|`destructor Destroy;`                                |Or   |Destroys the parser object.               |
+|`function Tokenize(const ALine: string): TTokenList;`|Vi   |Converts a command line into a token list.|

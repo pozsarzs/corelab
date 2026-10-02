@@ -16,7 +16,6 @@ stores the resulting exit code.
 |name            |type              |description                                                             |
 |----------------|------------------|------------------------------------------------------------------------|
 |`FActionList`   |`TActionList`     |Optional action list used by `ExecuteAction`.                           |
-|`FContext`      |`TCommandContext` |Command execution context created by the constructor.                   |
 |`FExitRequested`|`Boolean`         |Exit state received from the most recently executed command.            |
 |`FLastExitCode` |`Integer`         |Exit code returned by the most recently executed command-line operation.|
 |`FParser`       |`TCommandParser`  |Command parser created by the constructor.                              |
@@ -50,4 +49,5 @@ stores the resulting exit code.
 |`-1` |Command name is not registered.                          |
 |`-2` |The command is not permitted in the current running mode.|
 |`-3` |Argument number error.                                   |  
+|`-4` |Cannot run under simulation.                             |  
 |other|Return value supplied by the command's `Execute` method. |

@@ -6,41 +6,41 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-<h2 id="introduction-and-project-goals">Introduction and Project
-Goals</h2>
+<h2 id="introduction-and-project-goals">Introduction and project
+goals</h2>
 <p>The CoreLAB project is a functional 8 bits microprocessor and
 microcontroller simulator born from a fusion of academic research,
 technical passion, and historical preservation. The project was
 initiated with several key objectives in mind:</p>
 <ul>
-<li><strong>A Tribute to the Pioneers (Hardware and Human):</strong> The
+<li><strong>A tribute to the pioneers (hardware and human):</strong> The
 project serves as a respectful nod to the early eras of computing
 architecture and the brilliant minds who designed them. By keeping the
 logic of these foundational processors alive, it preserves the digital
 heritage that paved the way for modern computing.</li>
-<li><strong>Learning Machine Code Programming:</strong> It provides an
+<li><strong>Learning machine code programming:</strong> It provides an
 accessible, hands-on educational platform to study low-level programming
 on classic architectures (such as the i40xx, i80xx, or TMS1000). Many of
 these physical chips are now rare, expensive, or completely obsolete,
 making software simulation the only viable way to experience them.</li>
-<li><strong>Academic Research (University Thesis):</strong> The
+<li><strong>Academic research (university thesis):</strong> The
 development of this simulator and its modular plugin system forms the
 core framework of my university thesis, exploring dynamic software
 architectures and instructional simulation methodologies.</li>
-<li><strong>Functional Execution over Full Emulation:</strong> Unlike
+<li><strong>Functional execution over full emulation:</strong> Unlike
 comprehensive emulators, the goal of CoreLAB is <strong>not</strong> to
 replicate entire vintage computer systems, run historical operating
 systems, or simulate cycle-accurate hardware quirks. Instead, it focuses
 strictly on the clean, functional execution of instructions, making the
 code’s logic transparent and easy to analyze.</li>
-<li><strong>A Playground for System Design and Modeling:</strong> Beyond
+<li><strong>A playground for system design and modeling:</strong> Beyond
 a simple educational tool, the project serves as a practical application
 of advanced system design and hardware modeling concepts. It provides a
 platform to explore how complex, real-world physical systems - such as
 buses, registers, memory layouts, and I/O lines - can be accurately
 modeled, decoupled, and reconfigured dynamically in software using
 modern software engineering patterns.</li>
-<li><strong>Bridging Vintage Logic with Modern Automation:</strong> A
+<li><strong>Bridging vintage logic with modern automation:</strong> A
 key innovation of the project is wrapping these classic CPU
 architectures into a modern, scriptable environment. By allowing users
 to dynamically build topologies, manipulate registers, and automate
@@ -56,8 +56,8 @@ workflows to the foundational hardware of the past.</li>
 </colgroup>
 <thead>
 <tr class="header">
-<th>Features</th>
-<th>Specification / Description</th>
+<th>features</th>
+<th>specification / description</th>
 </tr>
 </thead>
 <tbody>
@@ -128,8 +128,8 @@ control</td>
 </colgroup>
 <thead>
 <tr class="header">
-<th>Features</th>
-<th>Specification / Description</th>
+<th>features</th>
+<th>specification / description</th>
 </tr>
 </thead>
 <tbody>
@@ -183,22 +183,22 @@ control</td>
 </colgroup>
 <thead>
 <tr class="header">
-<th>Features</th>
-<th>Specification / Description</th>
+<th>features</th>
+<th>specification / description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Real Port Redirection</strong></td>
+<td><strong>Real port redirection</strong></td>
 <td>Bridges virtual port I/O streams directly to the physical hardware
 ports of the host machine.</td>
 </tr>
 <tr class="even">
-<td><strong>Simple Console</strong></td>
+<td><strong>Simple console</strong></td>
 <td>Basic text-based console for data stream monitoring.</td>
 </tr>
 <tr class="odd">
-<td><strong>Virtual 7-Segment Display</strong></td>
+<td><strong>Virtual 7-segment display</strong></td>
 <td>Single and multiplexed 7-segment display arrays for numerical and
 basic character output.</td>
 </tr>
@@ -207,64 +207,64 @@ basic character output.</td>
 <td>Emulated processor, microprocessor with custom architectures.</td>
 </tr>
 <tr class="odd">
-<td><strong>Virtual Hexadecimal Display</strong></td>
+<td><strong>Virtual hexadecimal display</strong></td>
 <td>Single and multiplexed hex display arrays mapped to virtual port
 addresses.</td>
 </tr>
 <tr class="even">
-<td><strong>Virtual LED Array and Matrix</strong></td>
+<td><strong>Virtual LED array and matrix</strong></td>
 <td>Linear LED bars and dot-matrix displays for visual bit-state and
 coordinate-based output.</td>
 </tr>
 <tr class="odd">
-<td><strong>Virtual Memory (RAM/ROM)</strong></td>
+<td><strong>Virtual memory (RAM/ROM)</strong></td>
 <td>Configurable volatile and non-volatile memory blocks with custom
 sizing and address mapping.</td>
 </tr>
 <tr class="even">
-<td><strong>Virtual Pushbutton Array and Matrix</strong></td>
+<td><strong>Virtual pushbutton array and matrix</strong></td>
 <td>Linear and matrix-arranged momentary pushbuttons for interactive
 binary input.</td>
 </tr>
 <tr class="odd">
-<td><strong>Virtual Switch Array and Matrix</strong></td>
+<td><strong>Virtual switch array and matrix</strong></td>
 <td>Linear and matrix-arranged toggle switches providing persistent
 binary data to virtual ports.</td>
 </tr>
 </tbody>
 </table>
 <h2 id="iii.-about-the-program">III. About the program</h2>
-<h3 id="project-management">Project Management</h3>
+<h3 id="project-management">Project management</h3>
 <p>CoreLAB uses a simple directory-based project structure. A project
 directory can contain all related files—such as optional environment
 setup scripts, saved state snapshots, program code, and data streams.
 The simulation environment can also be built manually, meaning none of
 these files are strictly mandatory. This setup keeps experiments
 independent while fully supporting the use of external files.</p>
-<h3 id="modular-architecture">Modular Architecture</h3>
+<h3 id="modular-architecture">Modular architecture</h3>
 <p>One of the most important features of the simulator is its modular
 design. Processors, memories, and peripherals can be created as
 independent objects and connected dynamically. Users can build custom
 virtual hardware environments tailored to the requirements of the system
 being studied.</p>
-<h3 id="supported-processor-architectures">Supported Processor
-Architectures</h3>
+<h3 id="supported-processor-architectures">Supported processor
+architectures</h3>
 <p>CoreLAB is not limited to a single processor type. Different CPU,
 microprocessor, and microcontroller architectures can be loaded as
 plug-ins. This enables the same environment to be used for studying
 multiple instruction sets and hardware models.</p>
-<h3 id="virtual-memory-and-io-environment">Virtual Memory and I/O
-Environment</h3>
+<h3 id="virtual-memory-and-io-environment">Virtual memory and I/O
+environment</h3>
 <p>The memory map and I/O address space can be configured freely during
 simulation. Virtual peripherals can be assigned to memory locations or
 I/O ports in the same way as real hardware devices.</p>
-<h3 id="debugging-features">Debugging Features</h3>
+<h3 id="debugging-features">Debugging features</h3>
 <p>CoreLAB provides several built-in diagnostic and debugging tools.
 Users can halt execution at breakpoints, execute programs step by step,
 inspect memory and register contents, and monitor instruction execution
 in real time. These features are especially useful for educational
 purposes and low-level software development.</p>
-<h3 id="scripting-and-automation">Scripting and Automation</h3>
+<h3 id="scripting-and-automation">Scripting and automation</h3>
 <p>The program is primarily operated through its own built-in console
 command line, though a menu is also available. It features a custom
 command interpreter and scripting language. Scripts can be executed
@@ -272,13 +272,13 @@ directly from the OS shell; when run this way, the script automatically
 builds the execution environment and performs all specified operations.
 This allows for the efficient automation of repetitive tasks, tests, and
 the reproduction of complex hardware configurations.</p>
-<h3 id="state-saving-and-restoration">State Saving and Restoration</h3>
+<h3 id="state-saving-and-restoration">State saving and restoration</h3>
 <p>The complete state of a simulation can be saved and restored at any
 time. This includes not only memory contents but also the current state
 of processors, peripherals, and other objects. As a result, development
 and debugging sessions can be paused and resumed without loss of
 progress.</p>
-<h3 id="logging-and-data-export">Logging and Data Export</h3>
+<h3 id="logging-and-data-export">Logging and data export</h3>
 <p>Runtime events and execution logs can be saved to files for later
 analysis. Memory contents can be exported in binary or Intel HEX format,
 allowing results to be used with other development tools or transferred

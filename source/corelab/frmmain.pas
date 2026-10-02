@@ -5575,6 +5575,13 @@ begin
   // command interpreters
   CommandEngine1 := TCommandEngine.Create;
   CommandEngine2 := TScriptEngine.Create;
+  with CommandEngine2 do
+  begin
+    FReadPortFunc := @FSysBus.ReadPort;
+    FReadMemoryFunc := @FSysBus.ReadMemory;
+    FWritePortProc := @FSysBus.WritePort;
+    FWriteMemoryProc := @FSysBus.WriteMemory;
+  end;
   // SysConsole
   SysConsole1 := TSysConsole.Create(Self);
   SysConsole1.OnCommand := @SysConsole1CmdBridge;

@@ -19,6 +19,11 @@ end;
 
 procedure TScriptEngine.CmdPRNT(AActionContext: TActionContext);
 begin
+//  HasError := True;
+  // get argument and operation
+  WriteLn(AActionContext.SArg1);
+  //Form12.WriteMessage(VarToText(AActionContext.SArg1));
+//  HasError := False;
 end;
 
 procedure TScriptEngine.CmdWAIT(AActionContext: TActionContext);

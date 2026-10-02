@@ -16,16 +16,23 @@ unit scriptengine;
 interface
 uses
   SysUtils, Classes, Variants, command, commandengine, scriptruntime,
-  uactcontext;
+  frmscriptconsole, uactcontext;
 type
+  // type of read/write functions
+  TReadFunc = function(AAddress: DWord): Byte of object;
+  TWriteProc = procedure(AAddress: DWord; AValue: Byte) of object;
   { TScriptEngine }
   TScriptEngine = class(TCommandEngine)
   private
+    function ChkRegName(var ARegName: string): Boolean;
     function ChkVarInt(var AVariant: Variant): Boolean;
   protected
     // access
-    procedure CmdDEPO(AActionContext: TActionContext);
-    procedure CmdEXAM(AActionContext: TActionContext);
+    procedure CmdRDIO(AActionContext: TActionContext);
+    procedure CmdWRIO(AActionContext: TActionContext);
+    procedure CmdRDME(AActionContext: TActionContext);
+    procedure CmdWRME(AActionContext: TActionContext);
+    procedure CmdLDRG(AActionContext: TActionContext);
     procedure CmdSWAP(AActionContext: TActionContext);
     // arithmetic
     procedure CmdADD(AActionContext: TActionContext);
@@ -61,17 +68,29 @@ type
     procedure CmdEND(AActionContext: TActionContext);
     procedure CmdEXIT(AActionContext: TActionContext);
   public
-    FScriptRuntime: TScriptRuntime;
+    FScriptRuntime: TScriptRuntime;                       // runtime environment
+    FReadPortFunc: TReadFunc;                 // read port function from outside
+    FReadMemoryFunc: TReadFunc;             // read memory function from outside
+    FWritePortProc: TWriteProc;             // write port procedure from outside
+    FWriteMemoryProc: TWriteProc;         // write memory procedure from outside
     constructor Create; override;
     destructor Destroy; override;
     function ExecuteLine(const ALine: string): Integer; override;
   end;
 
 implementation
-
+uses frmmain;
 { TScriptEngine }
 
 // ---- PRIVATE METHODS ----
+
+// CHECK REGISTER NAME
+function TScriptEngine.ChkRegName(var ARegName: string): Boolean;
+begin
+  Result := False;
+  if (Length(ARegName) = 3) then
+    if (ARegName[1] + ARegName[2] = '$R') then Result := True;
+end;
 
 // CHECK VARIANT VALUE
 function TScriptEngine.ChkVarInt(var AVariant: Variant): Boolean;

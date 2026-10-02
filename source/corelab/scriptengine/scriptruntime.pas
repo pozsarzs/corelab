@@ -173,7 +173,7 @@ begin
   Result := False;
   c := UpCase(ARegName);
   if not (c in ['0'..'9', 'A'..'F']) then Exit;
-  if c = 'E' then Exit else
+  if c <> 'E' then
   begin
     if c < 'A' then
     begin
