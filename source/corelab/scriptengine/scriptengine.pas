@@ -24,7 +24,8 @@ type
   { TScriptEngine }
   TScriptEngine = class(TCommandEngine)
   private
-    function ChkRegName(var ARegName: string): Boolean;
+    function ChkRegName(var ARegName: string; ARepr: Boolean): Boolean;
+    function ChkVarByte(var AVariant: Variant): Boolean;
     function ChkVarInt(var AVariant: Variant): Boolean;
   protected
     // access
@@ -79,17 +80,36 @@ type
   end;
 
 implementation
-uses frmmain;
+
 { TScriptEngine }
 
 // ---- PRIVATE METHODS ----
 
 // CHECK REGISTER NAME
-function TScriptEngine.ChkRegName(var ARegName: string): Boolean;
+function TScriptEngine.ChkRegName(var ARegName: string; ARepr: Boolean): Boolean;
+const
+  NL = 2;
+  NP = 'R';
 begin
   Result := False;
-  if (Length(ARegName) = 3) then
-    if (ARegName[1] + ARegName[2] = '$R') then Result := True;
+  if ARepr then
+  begin
+    if (Length(ARegName) = NL + 1) then
+      if (ARegName[1] + ARegName[2] = '$' + NP) then Result := True;
+  end else
+  begin
+    if (Length(ARegName) = NL) then
+      if (ARegName[1] + ARegName[2] = NP) then Result := True;
+  end;
+end;
+
+// CHECK VARIANT VALUE
+function TScriptEngine.ChkVarByte(var AVariant: Variant): Boolean;
+begin
+  Result := False;
+  if (VarType(AVariant) in [varByte, varShortInt, varWord, varSmallint,
+    varLongWord, varInteger, varInt64, varQWord]) then
+    if (AVariant >= 0) and (AVariant <= High(Byte)) then Result := True;
 end;
 
 // CHECK VARIANT VALUE
