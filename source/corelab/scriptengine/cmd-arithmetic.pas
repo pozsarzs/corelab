@@ -15,22 +15,32 @@
 
 procedure TScriptEngine.CmdADD(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
   Overflow:   Boolean;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
-    OverFlow := False;
+    Overflow := False;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
     if Operandus2 <= High(DWord) - Operandus1
       then Operandus1 := Operandus1 + Operandus2
@@ -48,22 +58,32 @@ end;
 
 procedure TScriptEngine.CmdSUB(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
   Overflow:   Boolean;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
-    OverFlow := False;
+    Overflow := False;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
     if Operandus2 <= Operandus1
       then Operandus1 := Operandus1 - Operandus2
@@ -81,22 +101,32 @@ end;
 
 procedure TScriptEngine.CmdMUL(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
   Overflow:   Boolean;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
-    OverFlow := False;
+    Overflow := False;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
     if (Operandus1 <> 0) and (Operandus2 > High(DWord) div Operandus1)
       then Overflow := True

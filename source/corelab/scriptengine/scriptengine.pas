@@ -27,6 +27,7 @@ type
     function ChkRegName(var ARegName: string; ARepr: Boolean): Boolean;
     function ChkVarByte(var AVariant: Variant): Boolean;
     function ChkVarInt(var AVariant: Variant): Boolean;
+    function ChkVarStr(var AVariant: Variant): Boolean;
   protected
     // access
     procedure CmdRDIO(AActionContext: TActionContext);
@@ -119,6 +120,13 @@ begin
   if (VarType(AVariant) in [varByte, varShortInt, varWord, varSmallint,
     varLongWord, varInteger, varInt64, varQWord]) then
     if (AVariant >= 0) and (AVariant <= High(DWord)) then Result := True;
+end;
+
+// CHECK VARIANT VALUE
+function TScriptEngine.ChkVarStr(var AVariant: Variant): Boolean;
+begin
+  Result := False;
+  if (VarType(AVariant) in [varString]) then Result := True;
 end;
 
 // ---- PROTECTED METHODS ----

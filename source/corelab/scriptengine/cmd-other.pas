@@ -18,16 +18,59 @@ begin
 end;
 
 procedure TScriptEngine.CmdPRNT(AActionContext: TActionContext);
+var
+  Text: Variant;
 begin
-//  HasError := True;
-  // get argument and operation
-  WriteLn(AActionContext.SArg1);
-  //Form12.WriteMessage(VarToText(AActionContext.SArg1));
-//  HasError := False;
+  with AActionContext do
+  begin
+    HasError := True;
+    Text := '';
+    // get and check arguments
+    if ChkRegName(SArg1, True) then
+    begin
+      // address in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Text) then Exit;
+      // write to console
+      Form12.WriteMessage(VarToStr(Text));
+    end else
+    begin
+      // address in value
+      // write to console
+      Form12.WriteMessage(SArg1);
+    end;
+    HasError := False;
+  end;
 end;
 
 procedure TScriptEngine.CmdWAIT(AActionContext: TActionContext);
+var
+  Delay:  Variant;
+  WDelay: DWord;
 begin
+  with AActionContext do
+  begin
+    HasError := True;
+    Delay := 0;
+    WDelay := 0;
+    // get and check arguments
+    if ChkRegName(SArg1, True) then
+    begin
+      // address in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Delay) then Exit;
+      // check type
+      if not ChkVarInt(Delay) then Exit;
+      // sleeping
+      Sleep(DWord(Delay));
+    end else
+    begin
+      // address in value
+      // check type
+      if not TryStrToDWord(SArg1, WDelay) then Exit;
+      // sleeping
+      Sleep(WDelay);
+    end;
+    HasError := False;
+  end;
 end;
 
 procedure TScriptEngine.CmdEND(AActionContext: TActionContext);

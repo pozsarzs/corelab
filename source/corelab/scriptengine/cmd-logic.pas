@@ -15,20 +15,30 @@
 
 procedure TScriptEngine.CmdAND(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
     Operandus1 := Operandus1 and Operandus2;
     // set accu and flags
@@ -40,20 +50,30 @@ end;
 
 procedure TScriptEngine.CmdOR(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
     Operandus1 := Operandus1 or Operandus2;
     // set accu and flags
@@ -65,20 +85,30 @@ end;
 
 procedure TScriptEngine.CmdXOR(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
     Operandus1 := Operandus1 xor Operandus2;
     // set accu and flags
@@ -112,24 +142,34 @@ end;
 
 procedure TScriptEngine.CmdSHL(AActionContext: TActionContext);
 var
-  Accu:       Variant;
+  Carry:   Boolean;
   Operandus1: DWord;
   Operandus2: DWord;
-  Carry:   Boolean;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
     Carry := False;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
-    if Operandus2 > 31 then Operandus2 := 31;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
+    if Operandus2 > 31 then Operandus2 := 31;
     if Operandus2 > 0 then
     begin
       Carry := ((Operandus1 shr (32 - Operandus2)) and 1) <> 0;
@@ -146,24 +186,34 @@ end;
 
 procedure TScriptEngine.CmdSHR(AActionContext: TActionContext);
 var
-  Accu:       Variant;
+  Carry:   Boolean;
   Operandus1: DWord;
   Operandus2: DWord;
-  Carry:   Boolean;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
     Carry := False;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
-    if Operandus2 > 31 then Operandus2 := 31;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
+    if Operandus2 > 31 then Operandus2 := 31;
     if Operandus2 > 0 then
     begin
       Carry := ((Operandus1 shr (Operandus2 - 1)) and 1) <> 0;
@@ -180,9 +230,9 @@ end;
 
 procedure TScriptEngine.CmdBIT(AActionContext: TActionContext);
 var
-  Accu:       Variant;
   Operandus1: DWord;
   Operandus2: DWord;
+  Temp:       Variant;
   Zero:       Boolean;
 begin
   with AActionContext do
@@ -190,14 +240,24 @@ begin
     HasError := True;
     Zero := False;
     // get accu value
-    Accu := 0;
-    if not FScriptRuntime.GetRegister('A', Accu) then Exit;
-    if not ChkVarInt(Accu) then Exit;
-    Operandus1 := DWord(Accu);
-    // get argument(s)
-    if not TryStrToUint(SArg1, Operandus2) then Exit;
-    if Operandus2 > 31 then Operandus2 := 31;
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
     // control and operation
+    if Operandus2 > 31 then Operandus2 := 31;
     Zero := (Operandus1 and (1 shl Operandus2)) = 0;
     // set flag
     if not FScriptRuntime.SetFlag('Z', Zero) then Exit;
