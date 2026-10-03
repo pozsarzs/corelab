@@ -16,7 +16,7 @@ unit scriptengine;
 interface
 uses
   SysUtils, Classes, Variants, command, commandengine, scriptruntime,
-  frmscriptconsole, uactcontext;
+  frmscriptconsole, uactcontext, token;
 type
   // type of read/write functions
   TReadFunc = function(AAddress: DWord): Byte of object;
@@ -163,8 +163,124 @@ end;
 
 // EXECUTE COMMAND WITH PARAMETERS
 function TScriptEngine.ExecuteLine(const ALine: string): Integer;
+var
+  ActionContext: TActionContext;
+  Command:       TCommand;
+  CommandName:   string;
+  i:             Integer;
+  Line:          string;
+  Tokens:        TTokenList;
+  InfoText:      string;
+  InfoList:      TStringList;
 begin
-// if HasError then Exit;                              // command run error
+  Result := 0;
+  // empty line or comment
+  if (Trim(ALine) = '') or (ALine[1] = '#') or (ALine[1] = ';') then exit;
+  // remove comment at end of line
+  Line := ALine;
+  i := Pos(';', Line);
+  if i > 0 then Delete(Line, i, MaxInt);
+  // get tokens to a TTokenList instance
+  Tokens := FParser.Tokenize(Line);
+  try
+    // if no any token
+    if Tokens.Count = 0 then exit;
+    // get name of command
+    CommandName := LowerCase(Tokens[0].RawText);
+    // some internal commands
+    {...}
+    // HELP command
+    if CommandName = 'help' then
+    begin
+      // command list
+      if Tokens.Count = 1 then
+      begin
+        InfoList := TStringList.Create;
+        try
+          for Command in FRegistry.Commands.Values do
+            InfoList.Add(Format('%-10s %s', [Command.Name, Command.Description]));
+          InfoList.Sort;
+          for i := 0 to InfoList.Count -1 do
+            Form12.WriteMessage(InfoList.Strings[i]);
+          Result := 0;
+          Exit;
+        finally
+          InfoList.Free
+        end;
+      end;
+      // command info
+      Command := FRegistry.FindCommand(Tokens[1].RawText);
+      if Command = nil then
+      begin
+        Result := -1;
+        Exit;
+      end;
+      with Command do
+      begin
+        InfoText := Name + LineEnding +
+                    '  ' + Description + LineEnding +
+                    '  Syntax: ' + Syntax + LineEnding;
+        case Scope of
+          csEverywhere:      InfoText := InfoText + '  Scope:  Everywhere';
+          csScriptOnly:      InfoText := InfoText + '  Scope:  Script only';
+          csInteractiveOnly: InfoText := InfoText + '  Scope:  Interactive only';
+      end;
+      end;
+      Form12.WriteMessage(InfoText);
+      Result := 0;
+      Exit;
+    end;
+    // find command object in CommandRegistry
+    Command := FRegistry.FindCommand(CommandName);
+    // unknown command
+    if Command = nil then
+    begin
+      Result := -1;
+      Exit;
+    end;
+    // cannot be used in this mode
+    if Command.Scope = csScriptOnly then
+    begin
+      Result := -2;
+      Exit;
+    end;
+    // argument number error
+    if (Tokens.Count - 1) <> Command.RequiredArgs then
+    begin
+      Result := -3;
+      Exit;
+    end;
+    // cannot run under simulation
+    if not Command.AllowedUnderCPURun then
+    begin
+      Result := -4;
+      Exit;
+    end;
+    // arguments and calling
+    ActionContext := TActionContext.Create;
+    try
+      // set caller
+      ActionContext.ActionSource := asSysConsole;
+      // arguments
+      with ActionContext do
+      begin
+        SArg1 := '';
+        SArg2 := '';
+        DArg1 := 0;
+        DArg2 := 0;
+        if Tokens.Count > 1 then SArg1 := Tokens[1].RawText;
+        if Tokens.Count > 2 then SArg2 := Tokens[2].RawText;
+        Form12.WriteMessage(SArg1 + 'x' + SArg2);
+        Command.Operation(ActionContext);
+        if HasError then Result := -5 else Result := 0;     // command run error
+      end;
+    finally
+      ActionContext.Free;
+    end;
+  finally
+    Tokens.Free;
+  end;
+  FLastExitCode := Result;
 end;
 
 end.

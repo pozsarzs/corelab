@@ -5189,7 +5189,7 @@ end;
 // SCRIPT/RUN SCRIPT OPERATION
 procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
 var
-  Counter: Integer;
+  Counter: Variant;
   i:       Integer;
 begin
   if FScriptIsRunning then Exit;
@@ -5199,16 +5199,16 @@ begin
     Counter := 0;
     Form12.ClearContent;                                  // clear ScriptConsole
     if not Form12.Visible then Form12.Show;                // show ScriptConsole
-    CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
+    CommandEngine2.FScriptRuntime.SetRegister('C', Counter, True);
     FScriptIsRunning := True;
     try
       for i := 0 to FScriptBuffer.Count - 1 do
       with CommandEngine2 do
       begin
-{        FScriptRuntime.GetRegister('C', Counter);
+        FScriptRuntime.GetRegister('C', Counter);
         ExecuteLine(FScriptBuffer.Strings[Counter]);
-        Inc(Counter);
-        FScriptRuntime.SetRegister('C', Counter, True);}
+        if Counter < FScriptBuffer.Count - 1 then Counter := Counter + 1;
+        FScriptRuntime.SetRegister('C', Counter, True);
       end;
     finally
       FScriptIsRunning := False;
@@ -5247,7 +5247,7 @@ end;
 // SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
 procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
 var
-  Counter: Integer;
+  Counter: Variant;
   i:       Integer;
 begin
   Counter := 0;
@@ -5260,10 +5260,10 @@ begin
     try
       with CommandEngine2 do
       begin
-{        FScriptRuntime.GetRegister('C', Counter);
+        FScriptRuntime.GetRegister('C', Counter);
         ExecuteLine(FScriptBuffer.Strings[Counter]);
-        if Counter < FScriptBuffer.Count - 1 then Inc(Counter);
-        FScriptRuntime.SetRegister('C', Counter, True);}
+        if Counter < FScriptBuffer.Count - 1 then Counter := Counter + 1;
+        FScriptRuntime.SetRegister('C', Counter, True);
       end;
     finally
       FScriptIsRunning := False;
