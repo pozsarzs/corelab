@@ -17,7 +17,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, EditBtn,
   ExtCtrls, ValEdit, Menus, uconfig, Types, LCLType, core_cpu, core_ioport,
-  core_memory, uproperties;
+  core_memory, ucommon, uproperties;
 type
   { TForm9 }
   TForm9 = class(TForm)

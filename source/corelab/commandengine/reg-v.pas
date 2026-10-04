@@ -13,89 +13,100 @@
 
 RegisterCommand(TCommand.Create('SHME',
                                 'Show Module Explorer window.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'SHME',
                                 0,
                                 @Form1.VShowModuleExplorerOperation,
-                                True));
+                                True,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('SHBM',
                                 'Show BreakPoint Manager window.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'SHBM',
                                 0,
                                 @Form1.VShowBreakPointManagerOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHBL',
                                 'Show BusLogger window.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHBL',
                                 0,
                                 @Form1.VShowBusLoggerOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHRL',
                                 'Show RunLogger window.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHRL',
                                 0,
                                 @Form1.VShowRunLoggerOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHIL',
                                 'Show IntLogger window.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHIL',
                                 0,
                                 @Form1.VShowIntLoggerOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHRV',
                                 'Show RegViewer window.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHRV instancename',
                                 1,
                                 @Form1.VShowRegViewerOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHHV',
                                 'Show HexViewer window.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHHV instancename',
                                 1,
                                 @Form1.VShowHexViewerOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHSE',
                                 'Show ScriptEditor window.',
-                                csInteractiveOnly,
+                                [csCommandLine, csScript],
                                 'SHSE',
                                 0,
                                 @Form1.VShowScriptEditorOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHSC',
                                 'Show ScriptConsole window.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHSC',
                                 0,
                                 @Form1.VShowScriptConsoleOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RNIO',
                                 'Rename I/O device panel.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'RNIO instancename caption',
                                 2,
                                 @Form1.VRenameIOPanelOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SHIO',
                                 'Show I/O device panel.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'SHIO instancename',
                                 1,
                                 @Form1.VShowIOPanelOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 

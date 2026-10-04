@@ -15,41 +15,46 @@
 
 RegisterCommand(TCommand.Create('CONV',
                                 'Convert number in different numeral systems in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'CONV base',
                                 1,
                                 @CmdCONV,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('PRNT',
                                 'Write text to console.',
-                                csScriptOnly,
+                                [csScript],
                                 'PRNT "text"',
                                 1,
                                 @CmdPRNT,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('WAIT',
                                 'Wait specified ms.',
-                                csScriptOnly,
+                                [csScript],
                                 'WAIT ms',
                                 1,
                                 @CmdWAIT,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('END',
                                 'End of script.',
-                                csScriptOnly,
+                                [csScript],
                                 'END',
                                 0,
                                 @CmdEND,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('EXIT',
                                 'Terminate the script.',
-                                csScriptOnly,
+                                [csScript],
                                 'EXIT',
                                 0,
                                 @CmdEXIT,
-                                True));
+                                True,
+                                [omScript]));
 

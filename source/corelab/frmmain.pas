@@ -18,49 +18,15 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
   ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
-  Process, Generics.Collections, frmabout, frmclasslist, frmmodulelist,
+  Process, frmabout, frmclasslist, frmmodulelist, Generics.Collections,
   frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
   frmproperties, frmmoduleexplorer, frmbpmanager, frmbuslogger, frmrdwrioport,
   commandengine, scriptengine, core_cpu, core_memory, core_ioport, core_bus,
   usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext,
   uproperties, ubreakpoint, simulationthread;
-type
-  // allocated simulation objects and its types
-  TProcInfo = record
-    Processor:     TCPU;
-    ModuleName:    string;
-    AttachedToBus: Boolean;
-  end;
-  TMemInfo = record
-    Memory:        TMemory;
-    ModuleName:    string;
-    AttachedToBus: Boolean;
-  end;
-  TPortInfo = record
-    Port:          TIOPort;
-    ModuleName:    string;
-    AttachedToBus: Boolean;
-  end;
-  TProcInstanceDict = specialize TDictionary<string, TProcInfo>;
-  TMemInstanceDict = specialize TDictionary<string, TMemInfo>;
-  TPortInstanceDict = specialize TDictionary<string, TPortInfo>;
-  // operation mode type
-  TOpMode = (omInteractive, omScript, omInterpreter);
-  // attached device description record types
-  TBusMem = record
-    ModuleName:   string;
-    Memory:       TMemory;
-  end;
-  TBusPort = record
-    ModuleName:   string;
-    IOPort:       TIOPort;
-  end;
-  TBusProc = record
-    ModuleName: string;
-    CPU:        TCPU;
-  end;
   { TSysBus }
+type
   TSysBus = class(TInterfacedObject, ISysBus)
     FCPUs:     array of TBusProc;
     FMemories: array of TBusMem;
@@ -559,6 +525,10 @@ resourcestring
   MSG06 = '%s plugins loaded.';                                           { SC }
   MSG07 = 'New, empty project has been created.';                         { SC }
   MSG08 = 'New, empty script has been created.';                          { SC }
+  MSG09 = 'Cannot destroy attached module named ''%s''.';                 { SM }
+  MSG10 = 'Cannot be used ''%s'' in interactive mode.';                   { SC }
+  MSG11 = 'Cannot be used ''%s'' in script mode.';                        { SC }
+  MSG12 = 'Command ''%s'' execute error.';                                { SC }
   MSG18 = 'Missing help file.';                                           { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
   MSG28 = 'Save memory content to file';
@@ -617,10 +587,10 @@ resourcestring
   MSG83 = 'Script saved to ''%s''.';                                      { SC }
   MSG84 = 'Cannot create backup file.';                                   { SC }
   MSG85 = 'Module named ''%s'' exists.';                                  { SM }
-  MSG86 = 'Unknown command.';                                             { SC }
-  MSG87 = 'Invalid number of arguments.';                                 { SC }
-  MSG88 = 'Cannot be used in command line.';                              { SC }
-  MSG89 = 'Cannot be used in script.';                                    { SC }
+  MSG86 = 'Unknown command: ''%s''.';                                     { SC }
+  MSG87 = 'Invalid number of ''%s'' arguments.';                          { SC }
+  MSG88 = 'Cannot be used ''%s'' in command line.';                       { SC }
+  MSG89 = 'Cannot be used ''%s'' in script.';                             { SC }
   MSG90 = 'Cannot create %s module named ''%s''.';                        { SM }
   MSG91 = 'Cannot view module content named ''%s''.';                     { SM }
   MSG92 = 'Cannot rename module named ''%s''.';                           { SM }
@@ -972,10 +942,14 @@ end;
 procedure TForm1.SysConsole1CmdBridge(Sender: TObject; const ACommand: string);
 begin
   case CommandEngine1.ExecuteLine(ACommand) of
-    -1: SysConsole1.WriteMessage(MSG01 + MSG86);
-    -2: SysConsole1.WriteMessage(MSG01 + MSG88);
-    -3: SysConsole1.WriteMessage(MSG01 + MSG87);
-    -4: SysConsole1.WriteMessage(MSG02 + Format(MSG113, [ACommand]));
+    -1: SysConsole1.WriteMessage(MSG01 + Format(MSG86, [ACommand]));
+    -2: SysConsole1.WriteMessage(MSG01 + Format(MSG88, [ACommand]));
+    -3: SysConsole1.WriteMessage(MSG01 + Format(MSG89, [ACommand]));
+    -4: SysConsole1.WriteMessage(MSG01 + Format(MSG87, [ACommand]));
+    -5: SysConsole1.WriteMessage(MSG02 + Format(MSG113, [ACommand]));
+    -6: SysConsole1.WriteMessage(MSG01 + Format(MSG10, [ACommand]));
+    -7: SysConsole1.WriteMessage(MSG01 + Format(MSG11, [ACommand]));
+    -8: SysConsole1.WriteMessage(MSG01 + Format(MSG12, [ACommand]));
   end
 end;
 
@@ -1028,16 +1002,20 @@ begin
       if not FActualScriptIsSaved then
         if MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrNo
           then Exit;
+    end;
   end;
-  end;
-  FOpMode := AOpMode;
   // stop running script or simulation
   if FOpMode <> omInteractive
     then SStopScriptExecute(Nil)
     else OStopExecute(Nil);
+  FOpMode := AOpMode;
   // enable/disable MenuItems and ToolBars for required OpMode
   if FOpMode = omInteractive then
   begin
+    // interactive mode
+    MenuItem3.Enabled := True;
+    MenuItem4.Enabled := True;
+    MenuItem5.Enabled := True;
     MenuItem6.Enabled := True;
     MenuItem7.Enabled := False;
     MenuItem37.Enabled := True;
@@ -1046,12 +1024,21 @@ begin
     MenuItem40.Enabled := True;
     MenuItem51.Enabled := False;
     MenuItem52.Enabled := False;
+    MenuItem55.Enabled := True;
     ToolBar2.Enabled := True;
+    ToolBar3.Enabled := True;
+    ToolBar4.Enabled := True;
+    ToolBar5.Enabled := True;
     ToolBar6.Enabled := False;
+    ToolButton29.Enabled := True;
     ToolButton64.Enabled := False;
     ToolButton65.Enabled := False;
   end else
   begin
+    // script mode
+    MenuItem3.Enabled := False;
+    MenuItem4.Enabled := False;
+    MenuItem5.Enabled := False;
     MenuItem6.Enabled := False;
     MenuItem7.Enabled := True;
     MenuItem37.Enabled := False;
@@ -1060,8 +1047,13 @@ begin
     MenuItem40.Enabled := False;
     MenuItem51.Enabled := True;
     MenuItem52.Enabled := True;
+    MenuItem55.Enabled := False;
     ToolBar2.Enabled := False;
+    ToolBar3.Enabled := False;
+    ToolBar4.Enabled := False;
+    ToolBar5.Enabled := False;
     ToolBar6.Enabled := True;
+    ToolButton29.Enabled := False;
     ToolButton64.Enabled := True;
     ToolButton65.Enabled := True;
   end;
@@ -1072,14 +1064,20 @@ begin
   FActualProjectIsSaved := False;
   FActualScript := '';
   FActualScriptIsSaved := False;
-  CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
+  // remove all attached components from system bus
+  SetLength(FSysBus.FIOPorts, 0);
+  SetLength(FSysBus.FMemories, 0);
+  SetLength(FSysBus.FCPUs, 0);
   // clear active component instances
   DestroyAllModules(False);
+  // clear instance dictionaries
   FProcInstanceDict.Clear;
   FMemInstanceDict.Clear;
   FPortInstanceDict.Clear;
   // clear script buffer and refresh ScriptEditor;
   FScriptBuffer.Clear;
+  // set script counter
+  CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
   // clear content of the internal modules
   if Assigned(Form3) then Form3.Invalidate;                         // HexViewer
   if Assigned(Form4) then Form4.ClearContent;                       // RunLogger
@@ -1116,7 +1114,7 @@ begin
       // destroy module
       FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
       // remove from dict
-      FPortInstanceDict.Remove(KeyName);
+      // FPortInstanceDict.Remove(KeyName);
       // remove from Module Explorer
       if not AClose then Form9.DeleteNode('I/O port & device', KeyName);
     end;
@@ -1131,7 +1129,7 @@ begin
       // destroy module
       FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
       // remove from dict
-      FProcInstanceDict.Remove(KeyName);
+      // FProcInstanceDict.Remove(KeyName);
       // remove from Module Explorer
       if not AClose then Form9.DeleteNode('Processor', KeyName);
     end;
@@ -1146,7 +1144,7 @@ begin
       // destroy module
       FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
       // remove from dict
-      FMemInstanceDict.Remove(KeyName);
+      // FMemInstanceDict.Remove(KeyName);
       // remove from Module Explorer
       if not AClose then Form9.DeleteNode('Memory', KeyName);
     end;
@@ -1326,9 +1324,9 @@ var
   Message:  string;
 begin
   Filename := AActionContext.SArg1;
-  FActualProjectIsSaved := True;
+  // FActualProjectIsSaved := True;
   // clearing
-  ChangeOpMode(omScript, True, True);
+  ChangeOpMode(omInteractive, True, False);
   // loading
   try
     LoadProject(Filename);
@@ -1342,7 +1340,7 @@ begin
   end;
   FActualProject := Filename;                                 // with filename
   FActualProjectIsSaved := True;                            // no need to save
-  Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
+  Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
 end;
 
 // FILE/SAVE PROJECT ACTION ----------------------------------------------------
@@ -1435,7 +1433,8 @@ begin
     SysConsole1.WriteMessage(Message);
     AActionContext.HasError := True;
     Exit;
-  end else SysConsole1.WriteMessage(MSG81);
+  end;
+  SysConsole1.WriteMessage(Format(MSG81, [Filename]));
   FActualProject := Filename;                                           // named
   FActualProjectIsSaved := True;                              // no need to save
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
@@ -2269,8 +2268,18 @@ var
   ProcInfo:     TProcInfo;
 begin
   InstanceName := AActionContext.SArg1;
+  // check attach
+  ProcInfo := FProcInstanceDict[InstanceName];
+  if ProcInfo.AttachedToBus then
+  begin
+    // error
+    Message := MSG01 + Format(MSG09, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
   try
-    ProcInfo := FProcInstanceDict[InstanceName];
     // destroy
     FProcPluginDict[ProcInfo.ModuleName].FDestroy(ProcInfo.Processor);
   except
@@ -2951,8 +2960,18 @@ var
   Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
+  // check attach
+  MemInfo := FMemInstanceDict[InstanceName];
+  if MemInfo.AttachedToBus then
+  begin
+    // error
+    Message := MSG01 + Format(MSG09, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
   try
-    MemInfo := FMemInstanceDict[InstanceName];
     // destroy
     FMemPluginDict[MemInfo.ModuleName].FDestroy(MemInfo.Memory);
   except
@@ -4081,8 +4100,18 @@ var
   PortInfo:     TPortInfo;
 begin
   InstanceName := AActionContext.SArg1;
+  // check attach
+  PortInfo := FPortInstanceDict[InstanceName];
+  if PortInfo.AttachedToBus then
+  begin
+    // error
+    Message := MSG01 + Format(MSG09, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
   try
-    PortInfo := FPortInstanceDict[InstanceName];
     // destroy
     FPortPluginDict[PortInfo.ModuleName].FDestroy(PortInfo.Port);
   except
@@ -4499,7 +4528,7 @@ begin
   InstanceName := AActionContext.SArg1;
   try
     PortInfo := FPortInstanceDict[InstanceName];
-    case FSysBus.DetachCPU(InstanceName) of
+    case FSysBus.DetachIOPort(InstanceName) of
       1: begin
            Message := MSG01 + Format(MSG99, [InstanceName]);
            ShowMessage(Message);
@@ -4789,12 +4818,12 @@ end;
 // OPERATION/STOP SIMULATION OPERATION
 procedure TForm1.OStopOperation(AActionContext: TActionContext);
 begin
-  try
+  if Length(FSysBus.FCPUs) > 0 then
+  begin
     SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
     SimulationThread1.CPUStop;
     //report
     SysConsole1.WriteMessage(MSG117);
-  except
   end;
 end;
 
@@ -5030,9 +5059,9 @@ var
   Message:    string;
 begin
   Filename := AActionContext.SArg1;
-  FActualScriptIsSaved := True;
+  //  FActualScriptIsSaved := True;
   // clearing
-  ChangeOpMode(omScript, True, True);
+  ChangeOpMode(omScript, True, False);
   // loading
   try
     FScriptBuffer.LoadFromFile(FileName);
@@ -5142,7 +5171,6 @@ begin
   // save file
   try
     FScriptBuffer.SaveToFile(FileName);
-    SysConsole1.WriteMessage(Format(MSG83, [FActualScript]));
   except
     Message := MSG01 + Format(MSG49, [FileName]);
     ShowMessage(Message);
@@ -5150,12 +5178,13 @@ begin
     AActionContext.HasError := True;
     Exit;
   end;
-  FActualScript := Filename;                                        // named
-  FActualScriptIsSaved := True;                           // no need to save
+  SysConsole1.WriteMessage(Format(MSG83, [FActualScript]));
+  FActualScript := Filename;                                            // named
+  Form6.SetFilename(FActualScript);
+  FActualScriptIsSaved := True;                               // no need to save
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
   // refresh and show ScriptEditor
   Form6.ClearModified;
-  Form6.SetFilename(FActualScript);
 end;
 
 // SCRIPT/RUN SCRIPT ACTION ----------------------------------------------------
@@ -5189,30 +5218,93 @@ end;
 // SCRIPT/RUN SCRIPT OPERATION
 procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
 var
-  Counter: Variant;
-  i:       Integer;
+  Counter:    Variant;
+  CmdResult:  Byte;
+  CurrentCmd: string;
+  i:          Integer;
+  NewCounter: Variant;
 begin
   if FScriptIsRunning then Exit;
-  Form6.CopyEditorToBuffer;                        // store ScriptEditor content
-  if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
+  //
+  CommandEngine2.FScriptRuntime.GetRegister('C', Counter);
+  // initialization, if starting from the beginning of the script
+  if Counter = 0 then
   begin
-    Counter := 0;
-    Form12.ClearContent;                                  // clear ScriptConsole
-    if not Form12.Visible then Form12.Show;                // show ScriptConsole
-    CommandEngine2.FScriptRuntime.SetRegister('C', Counter, True);
-    FScriptIsRunning := True;
-    try
-      for i := 0 to FScriptBuffer.Count - 1 do
-      with CommandEngine2 do
-      begin
-        FScriptRuntime.GetRegister('C', Counter);
-        ExecuteLine(FScriptBuffer.Strings[Counter]);
-        if Counter < FScriptBuffer.Count - 1 then Counter := Counter + 1;
-        FScriptRuntime.SetRegister('C', Counter, True);
-      end;
-    finally
-      FScriptIsRunning := False;
+    // clear content of the internal modules
+    if Assigned(Form3) then Form3.Invalidate;                       // HexViewer
+    if Assigned(Form4) then Form4.ClearContent;                     // RunLogger
+    if Assigned(Form6) then Form6.CopyBufferToEditor;            // ScriptEditor
+    if Assigned(Form8) then Form8.ClearContent;                     // IntLogger
+    if Assigned(Form12) then Form12.ClearContent;               // ScriptConsole
+    if Assigned(Form14) then Form14.ClearContent;                   // BusLogger
+    // removal of remaining modules and bus contacts
+    DestroyAllModules(False);
+    FProcInstanceDict.Clear;
+    FMemInstanceDict.Clear;
+    FPortInstanceDict.Clear;
+    SetLength(FSysBus.FIOPorts, 0);
+    SetLength(FSysBus.FMemories, 0);
+    SetLength(FSysBus.FCPUs, 0);
+    // close visual components
+    for i := Screen.FormCount - 1 downto 0 do
+      if (Screen.Forms[i] <> Application.MainForm) and
+         (Screen.Forms[i] <> Form6) and
+         Screen.Forms[i].Visible
+        then Screen.Forms[i].Close;
+    // copy ScriptEditor content to script buffer
+    Form6.CopyEditorToBuffer;
+    if FScriptBuffer.Count = 0 then
+    begin
+      ShowMessage(MSG42);
+      Exit;
     end;
+    Form12.ClearContent;                                  // clear ScriptConsole
+  end else
+  begin
+    // if the script buffer is empty
+    if FScriptBuffer.Count = 0 then Exit;
+  end;
+  // open ScriptConsole
+  if not Form12.Visible then Form12.Show;
+  // run script
+  FScriptIsRunning := True;
+  try
+    while Counter < FScriptBuffer.Count do
+    begin
+      // save line counter for compare next position
+      CommandEngine2.FScriptRuntime.GetRegister('C', Counter);
+      // execute line
+      CurrentCmd := FScriptBuffer.Strings[Counter];
+      CmdResult := CommandEngine2.ExecuteLine(CurrentCmd);
+      if CmdResult < 0 then
+      begin
+        case CmdResult of
+          -1: SysConsole1.WriteMessage(MSG01 + Format(MSG86, [CurrentCmd]));
+          -2: SysConsole1.WriteMessage(MSG01 + Format(MSG88, [CurrentCmd]));
+          -3: SysConsole1.WriteMessage(MSG01 + Format(MSG89, [CurrentCmd]));
+          -4: SysConsole1.WriteMessage(MSG01 + Format(MSG87, [CurrentCmd]));
+          -5: SysConsole1.WriteMessage(MSG02 + Format(MSG113, [CurrentCmd]));
+          -6: SysConsole1.WriteMessage(MSG01 + Format(MSG10, [CurrentCmd]));
+          -7: SysConsole1.WriteMessage(MSG01 + Format(MSG11, [CurrentCmd]));
+          -8: SysConsole1.WriteMessage(MSG01 + Format(MSG12, [CurrentCmd]));
+        end;
+        Exit;
+      end;
+      // check whether there was a jump
+      CommandEngine2.FScriptRuntime.GetRegister('C', NewCounter);
+      if Counter = NewCounter then
+      begin
+        Counter := Counter + 1;
+        CommandEngine2.FScriptRuntime.SetRegister('C', Counter, True);
+      end else Counter := NewCounter;
+      // refresh the GUI (to handle the Stop button or other one)
+      Application.ProcessMessages;
+      // if the Stop button was pressed
+      if not FScriptIsRunning then Break;
+    end;
+  finally
+    // post-stop cleanup
+    if FScriptIsRunning then SStopScriptExecute(nil);
   end;
 end;
 
@@ -5247,26 +5339,87 @@ end;
 // SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
 procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
 var
-  Counter: Variant;
-  i:       Integer;
+  CmdResult:  Byte;
+  Counter:    Variant;
+  CurrentCmd: string;
+  i:          Integer;
+  NewCounter: Variant;
 begin
-  Counter := 0;
   if FScriptIsRunning then Exit;
-  Form6.CopyEditorToBuffer;                        // store ScriptEditor content
-  if FScriptBuffer.Count = 0 then ShowMessage(MSG42) else
+  // position check
+  CommandEngine2.FScriptRuntime.GetRegister('C', Counter);
+  if (FScriptBuffer.Count > 0) and (Counter >= FScriptBuffer.Count) then Exit;
+  // initialization, if starting from the beginning of the script
+  if Counter = 0 then
   begin
-    if not Form12.Visible then Form12.Show;                // show ScriptConsole
-    FScriptIsRunning := True;
-    try
-      with CommandEngine2 do
-      begin
-        FScriptRuntime.GetRegister('C', Counter);
-        ExecuteLine(FScriptBuffer.Strings[Counter]);
-        if Counter < FScriptBuffer.Count - 1 then Counter := Counter + 1;
-        FScriptRuntime.SetRegister('C', Counter, True);
+    // removal of remaining modules and bus contacts
+    DestroyAllModules(False);
+    FProcInstanceDict.Clear;
+    FMemInstanceDict.Clear;
+    FPortInstanceDict.Clear;
+    SetLength(FSysBus.FIOPorts, 0);
+    SetLength(FSysBus.FMemories, 0);
+    SetLength(FSysBus.FCPUs, 0);
+    // clear content of the internal modules
+    if Assigned(Form3) then Form3.Invalidate;                       // HexViewer
+    if Assigned(Form4) then Form4.ClearContent;                     // RunLogger
+    if Assigned(Form8) then Form8.ClearContent;                     // IntLogger
+    if Assigned(Form11) then Form11.RefreshContent;                 // RegViewer
+    if Assigned(Form12) then Form12.ClearContent;               // ScriptConsole
+    if Assigned(Form14) then Form14.ClearContent;                   // BusLogger
+    // close visual components
+    for i := Screen.FormCount - 1 downto 0 do
+      if (Screen.Forms[i] <> Application.MainForm) and
+         (Screen.Forms[i] <> Form6) and Screen.Forms[i].Visible
+        then Screen.Forms[i].Close;
+    // copy ScriptEditor content to script buffer
+    Form6.CopyEditorToBuffer;
+    if FScriptBuffer.Count = 0 then
+    begin
+      ShowMessage(MSG42);
+      Exit;
+    end;
+  end else
+  begin
+    // if the script buffer is empty
+    if FScriptBuffer.Count = 0 then Exit;
+  end;
+  // open ScriptConsole
+  if not Form12.Visible then Form12.Show;
+  // run script
+  FScriptIsRunning := True;
+  try
+    // execute line
+    CurrentCmd := FScriptBuffer.Strings[Counter];
+    CmdResult := CommandEngine2.ExecuteLine(CurrentCmd);
+    if CmdResult < 0 then
+    begin
+      case CmdResult of
+        -1: SysConsole1.WriteMessage(MSG01 + Format(MSG86, [CurrentCmd]));
+        -2: SysConsole1.WriteMessage(MSG01 + Format(MSG88, [CurrentCmd]));
+        -3: SysConsole1.WriteMessage(MSG01 + Format(MSG89, [CurrentCmd]));
+        -4: SysConsole1.WriteMessage(MSG01 + Format(MSG87, [CurrentCmd]));
+        -5: SysConsole1.WriteMessage(MSG02 + Format(MSG113, [CurrentCmd]));
+        -6: SysConsole1.WriteMessage(MSG01 + Format(MSG10, [CurrentCmd]));
+        -7: SysConsole1.WriteMessage(MSG01 + Format(MSG11, [CurrentCmd]));
+        -8: SysConsole1.WriteMessage(MSG01 + Format(MSG12, [CurrentCmd]));
       end;
-    finally
-      FScriptIsRunning := False;
+      Exit;
+    end;
+    // check whether there was a jump
+    CommandEngine2.FScriptRuntime.GetRegister('C', NewCounter);
+    if Counter = NewCounter then
+    begin
+      Counter := Counter + 1;
+      CommandEngine2.FScriptRuntime.SetRegister('C', Counter, True);
+    end;
+  finally
+    FScriptIsRunning := False;
+    CommandEngine2.FScriptRuntime.GetRegister('C', Counter);
+    // post-stop cleanup
+    if Counter >= FScriptBuffer.Count then
+    begin
+      SStopScriptExecute(nil);
     end;
   end;
 end;
@@ -5305,6 +5458,15 @@ begin
   CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
   FScriptIsRunning := False;
   Form12.ClearContent;                                    // clear ScriptConsole
+  // stop simualtion
+  try
+    if Length(FSysBus.FCPUs) > 0 then
+    begin
+      SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
+      SimulationThread1.CPUStop;
+    end;
+  except
+  end;
 end;
 
 // HELP/SHOW HELP ACTION =======================================================
@@ -5349,10 +5511,10 @@ begin
         then Enabled := StrToBool(Value)
 
       else if SameText(PropertyName, uproperties.IOPropertyInfoArray[5].Name)
-             then BaseAddress := StrToInt(Value)
+             then BaseAddress := StrToInt('$' + Value)
 
       else if SameText(PropertyName, uproperties.IOPropertyInfoArray[6].Name)
-             then IntVector := StrToInt(Value)
+             then IntVector := StrToInt('$' + Value)
 
       else if SameText(PropertyName, uproperties.IOPropertyInfoArray[7].Name)
              then DataInMode := DataInMode.FromString(Value)

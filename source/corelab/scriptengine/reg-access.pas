@@ -15,48 +15,55 @@
 
 RegisterCommand(TCommand.Create('RDIO',
                                 'Read a value from I/O port and store in register RA.',
-                                csScriptOnly,
+                                [csScript],
                                 'RDIO address',
                                 1,
                                 @CmdRDIO,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('WRIO',
                                 'Read a value from register RA and write to I/O port',
-                                csScriptOnly,
+                                [csScript],
                                 'WRIO address',
                                 1,
                                 @CmdWRIO,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('RDME',
                                 'Read a value from memory and store in register RA.',
-                                csScriptOnly,
+                                [csScript],
                                 'RDME address',
                                 1,
                                 @CmdRDME,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('WRME',
                                 'Read a value from register RA and store in memory',
-                                csScriptOnly,
+                                [csScript],
                                 'WRME address',
                                 1,
                                 @CmdWRME,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('LDRG',
                                 'Load a value to specified register.',
-                                csScriptOnly,
+                                [csScript],
                                 'LDRG register|value',
                                 1,
                                 @CmdLDRG,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('SWAP',
                                 'Swap the values of two registers.',
-                                csScriptOnly,
+                                [csScript],
                                 'SWAP register register',
                                 2,
                                 @CmdSWAP,
-                                True));
+                                True,
+                                [omScript]));
+

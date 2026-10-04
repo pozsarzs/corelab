@@ -7,6 +7,7 @@
 ; +----------------------------------------------------------------------------+
 
 ; Show internal modules
+	PRNT	"CoreLAB 8080 Demo program"
 	SHBL					; open BusLogger
 	SHRL					; open RunLogger
 	SHIL					; open IntLogger
@@ -33,6 +34,7 @@
 	CFME	RAM.BaseAddress 0		; base address
 	CFME	RAM.AddressRangeSize 1024	; size
 	CFME	RAM.MemoryMode mmRAM		; mode
+	CHWD	"/home/pozsarzs/"
 	LDME	RAM "iodemo8080.hex"		; load program
 	ATME	RAM				; attach to bus
 	
@@ -50,7 +52,7 @@
 	SHHV	RAM				; open HexViewer
 
 ; Run simulation
-	RUN	100				; run with 100 ms delay
+;	RUN	100				; run with 100 ms delay
 
 ; Disable modules
 	DIIO	Console

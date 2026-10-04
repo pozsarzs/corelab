@@ -13,89 +13,100 @@
 
 RegisterCommand(TCommand.Create('CRME',
                                 'Instantiate a memory module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'CRME library instancename',
                                 2,
                                 @Form1.MCreateOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DSME',
                                 'Destroy memory module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DSME instancename',
                                 1,
                                 @Form1.MDestroyOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RSME',
                                 'Reset memory module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'RSME instancename',
                                 1,
                                 @Form1.MResetOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('ENME',
                                 'Enable memory module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'ENME instancename',
                                 1,
                                 @Form1.MEnableOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DIME',
                                 'Disable memory module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DIME instancename',
                                 1,
                                 @Form1.MDisableOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('ATME',
                                 'Attach memory module to bus.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'ATME instancename',
                                 1,
                                 @Form1.MAttachToBusOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DTME',
                                 'Detach memory module from bus.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DTME instancename',
                                 1,
                                 @Form1.MDetachFromBusOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('LDME',
                                 'Load memory content from file',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'LDME instancename filename',
                                 2,
                                 @Form1.MLoadMemoryContentOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SVME',
                                 'Save memory content to file',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'SVME filename instancename',
                                 2,
                                 @Form1.MSaveMemoryContentOperation,
-                                True));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('EDME',
                                 'Show examine/deposit window',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'EDME instancename',
                                 1,
                                 @Form1.MExamineDepositOperation,
-                                False));
+                                False,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('CFME',
                                 'Configure memory module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'CFME instancename.property value',
                                 2,
                                 @Form1.MConfigureOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 

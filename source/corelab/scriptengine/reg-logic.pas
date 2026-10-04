@@ -15,56 +15,64 @@
 
 RegisterCommand(TCommand.Create('AND',
                                 'Bitwise/logical AND in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'AND value',
                                 1,
                                 @CmdAND,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('OR',
                                 'Bitwise/logical OR in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'OR value',
                                 1,
                                 @CmdOR,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('XOR',
                                 'Bitwise/logical XOR in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'XOR value',
                                 1,
                                 @CmdXOR,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('NOT',
                                 'Bitwise/logical NOT in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'NOT',
                                 0,
                                 @CmdNOT,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('SHL',
                                 'Shift target bits left by count in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'SHL count',
                                 1,
                                 @CmdSHL,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('SHR',
                                 'Shift target bits right by count in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'SHR count',
                                 1,
                                 @CmdSHR,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('BIT',
                                 'Check the specified bit.',
-                                csScriptOnly,
+                                [csScript],
                                 'BIT index',
                                 1,
                                 @CmdBIT,
-                                True));
+                                True,
+                                [omScript]));
+

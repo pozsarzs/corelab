@@ -15,97 +15,109 @@
 
 RegisterCommand(TCommand.Create('COMP',
                                 'Compare target with value by subtraction.',
-                                csScriptOnly,
+                                [csScript],
                                 'COMP value',
                                 1,
                                 @CmdCOMP,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('INRG',
                                 'Check if value is between min and max.',
-                                csScriptOnly,
+                                [csScript],
                                 'INRG min max',
                                 2,
                                 @CmdINRG,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPEQ',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPEQ label',
                                 1,
                                 @CmdJPEQ,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPZR',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPZR label',
                                 1,
                                 @CmdJPZR,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPGE',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPGE label',
                                 1,
                                 @CmdJPGE,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPGT',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPGT label',
                                 1,
                                 @CmdJPGT,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPLE',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPLE label',
                                 1,
                                 @CmdJPLE,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPLT',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPLT label',
                                 1,
                                 @CmdJPLT,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPNE',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPNE label',
                                 1,
                                 @CmdJPNE,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('JPNZ',
                                 'Jump to the specified label, based on the result of the previous CMP.',
-                                csScriptOnly,
+                                [csScript],
                                 'JPNZ label',
                                 1,
                                 @CmdJPNZ,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('CALL',
                                 'Call subroutine.',
-                                csScriptOnly,
+                                [csScript],
                                 'CALL label',
                                 1,
                                 @CmdCALL,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('RTRN',
                                 'Return from subroutine.',
-                                csScriptOnly,
+                                [csScript],
                                 'RTRN',
                                 0,
                                 @CmdRTRN,
-                                True));
+                                True,
+                                [omScript]));
 

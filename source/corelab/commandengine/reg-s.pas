@@ -13,49 +13,55 @@
 
 RegisterCommand(TCommand.Create('NWSC',
                                 'Change to script mode and create new script.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'NWSC',
                                 0,
                                 @Form1.SNewScriptOperation,
-                                False));
+                                False,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('LDSC',
                                 'Change to script mode and load script from file.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'LDSC filename.clsce',
                                 1,
                                 @Form1.SLoadScriptOperation,
-                                False));
+                                False,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('SVSC',
                                 'Save script to file.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'SVSC filename.clsce',
                                 1,
                                 @Form1.SSaveScriptAsOperation,
-                                True));
+                                False,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('RUSC',
                                 'Run script.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'RUN',
                                 0,
                                 @Form1.SRunScriptOperation,
-                                True));
+                                False,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('SESC',
                                 'Run script step-by-step.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'SESC',
                                 0,
                                 @Form1.SStepScriptOperation,
-                                True));
+                                False,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('STSC',
                                 'Stop script.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'STSC',
                                 0,
                                 @Form1.SStopScriptOperation,
-                                True));
+                                True,
+                                [omScript]));
 

@@ -15,40 +15,46 @@
 
 RegisterCommand(TCommand.Create('ADD',
                                 'Add value to target in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'ADD value',
                                 1,
                                 @CmdADD,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('SUB',
                                 'Subtract value from target in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'SUB value',
                                 1,
                                 @CmdSUB,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('MUL',
                                 'Multiply target by value in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'MUL value',
                                 1,
                                 @CmdMUL,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('INC',
                                 'Increment integer target by 1 in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'INC',
                                 0,
                                 @CmdINC,
-                                True));
+                                True,
+                                [omScript]));
 
 RegisterCommand(TCommand.Create('DEC',
                                 'Decrement integer target by 1 in-place.',
-                                csScriptOnly,
+                                [csScript],
                                 'DEC',
                                 0,
                                 @CmdDEC,
-                                True));
+                                True,
+                                [omScript]));
+

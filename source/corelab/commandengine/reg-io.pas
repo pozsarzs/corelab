@@ -13,73 +13,82 @@
 
 RegisterCommand(TCommand.Create('CRIO',
                                 'Instantiate a I/O port or device module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'CRIO library instancename',
                                 2,
                                 @Form1.IOCreateOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DSIO',
                                 'Destroy I/O port or device module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DSIO instancename',
                                 1,
                                 @Form1.IODestroyOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RSIO',
                                 'Reset I/O port or device module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'RSIO instancename',
                                 1,
                                 @Form1.IOResetOperation,
-                                True));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('ENIO',
                                 'Enable I/O port or device module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'ENIO instancename',
                                 1,
                                 @Form1.IOEnableOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DIIO',
                                 'Disable I/O port or device module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DIIO instancename',
                                 1,
                                 @Form1.IODisableOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('ATIO',
                                 'Attach I/O port or device module to bus.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'ATIO instancename',
                                 1,
                                 @Form1.IOAttachToBusOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DTIO',
                                 'Detach I/O port or device module from bus.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DTIO instancename',
                                 1,
                                 @Form1.IODetachFromBusOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RWIO',
                                 'Show read/write window',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'RWIO instancename',
                                 1,
                                 @Form1.IOReadWriteOperation,
-                                False));
+                                False,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('CFIO',
                                 'Configure I/O port module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'CFIO instancename.property value',
                                 2,
                                 @Form1.IOConfigureOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 

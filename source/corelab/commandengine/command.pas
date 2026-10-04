@@ -15,38 +15,42 @@ unit command;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  uactcontext;
+  uactcontext, ucommon;
 type
   // target type of output call
   TActionOperation = procedure(AActionContext: TActionContext) of object;
   // Command scope type
-  TCommandScope = (csEverywhere, csScriptOnly, csInteractiveOnly);
+  TCommandScope = (csCommandLine, csScript);
+  TCommandScopes = set of TCommandScope;
   { TCommand }
   TCommand = class
   protected
     FName:               string;
     FDescription:        string;
-    FScope:              TCommandScope;
+    FScope:              TCommandScopes;
     FSyntax:             string;
-    FOperation:          TActionOperation;
     FRequiredArgs:       Integer;
+    FOperation:          TActionOperation;
     FAllowedUnderCPURun: Boolean;
+    FAllowedOpModes:     TOpModes;
   public
     constructor Create(const AName: string;
                        const ADescription: string;
-                       AScope: TCommandScope;
+                       AScope: TCommandScopes;
                        const ASyntax: string;
                        ARequiredArgs: Byte;
                        AOperation: TActionOperation;
-                       AAllowedUnderCPURun: Boolean); virtual;
+                       AAllowedUnderCPURun: Boolean;
+                       AAllowedOpModes: TOpModes); virtual;
     destructor Destroy; override;
     property Name: string read FName;
     property Description: string read FDescription;
-    property Scope: TCommandScope read FScope;
+    property Scope: TCommandScopes read FScope;
     property Syntax: string read FSyntax;
     property Operation: TActionOperation read FOperation;
     property RequiredArgs: Integer read FRequiredArgs;
     property AllowedUnderCPURun: Boolean read FAllowedUnderCPURun;
+    property AllowedOpModes: TOpModes read FAllowedOpModes;
   end;
 
 implementation
@@ -56,20 +60,22 @@ implementation
 // CREATE TCOMMAND INSTANCE
 constructor TCommand.Create(const AName: string;
                             const ADescription: string;
-                            AScope: TCommandScope;
+                            AScope: TCommandScopes;
                             const ASyntax: string;
                             ARequiredArgs: Byte;
                             AOperation: TActionOperation;
-                            AAllowedUnderCPURun: Boolean);
+                            AAllowedUnderCPURun: Boolean;
+                            AAllowedOpModes: TOpModes);
 begin
   inherited Create;
   FName := AName;
   FDescription := ADescription;
   FScope := AScope;
   FSyntax := ASyntax;
-  FOperation := AOperation;
   FRequiredArgs :=  ARequiredArgs;
+  FOperation := AOperation;
   FAllowedUnderCPURun := AAllowedUnderCPURun;
+  FAllowedOpModes := AAllowedOpModes;
 end;
 
 // DESTROY TCOMMAND INSTANCE

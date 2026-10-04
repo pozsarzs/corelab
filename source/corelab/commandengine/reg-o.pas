@@ -13,56 +13,64 @@
 
 RegisterCommand(TCommand.Create('RUN',
                                 'Run simulation.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'RUN',
                                 0,
                                 @Form1.ORunOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('STEP',
                                 'Run simulation step-by-step.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'STEP',
                                 0,
                                 @Form1.OStepOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('STOP',
                                 'Stop simulation.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'STOP',
                                 0,
                                 @Form1.OStopOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('NMI',
                                 'Call non-maskable interrupt.',
-                                csEverywhere,
+                                [csCommandLine],
                                 'NMI',
                                 0,
                                 @Form1.ONMIOperation,
-                                True));
+                                False,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('RST',
                                 'Reset all module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'RST',
                                 0,
                                 @Form1.OResetAllOperation,
-                                False));
+                                False,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('SVSS',
                                 'Make and save snapshot.',
-                                csEverywhere,
+                                [csCommandLine],
                                 'SVSS',
                                 0,
                                 @Form1.OMakeSnapshotOperation,
-                                True));
+                                False,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('LDSS',
                                 'Load and restore snapshot.',
-                                csEverywhere,
+                                [csCommandLine],
                                 'LDSS',
                                 0,
                                 @Form1.ORestoreSnapshotOperation,
-                                False));
+                                False,
+                                [omInteractive]));
+

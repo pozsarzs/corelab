@@ -15,7 +15,8 @@ unit commandengine;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, command, commandparser, commandregistry, uactcontext, token;
+  SysUtils, Classes, command, commandparser, commandregistry, uactcontext,
+  ucommon, token;
 type
   { TCommandEngine }
   TCommandEngine = class
@@ -75,10 +76,10 @@ var
   Command:       TCommand;  
   CommandName:   string;
   i:             Integer;
-  Line:          string;
-  Tokens:        TTokenList;
   InfoText:      string;
   InfoList:      TStringList;
+  Line:          string;
+  Tokens:        TTokenList;
 begin
   Result := 0;
   // empty line or comment
@@ -134,11 +135,14 @@ begin
         InfoText := Name + LineEnding +
                     '  ' + Description + LineEnding +
                     '  Syntax: ' + Syntax + LineEnding;
-        case Scope of
-          csEverywhere:      InfoText := InfoText + '  Scope:  Everywhere';
-          csScriptOnly:      InfoText := InfoText + '  Scope:  Script only';
-          csInteractiveOnly: InfoText := InfoText + '  Scope:  Interactive only';
-      end;
+        if Scope = [csCommandLine, csScript]
+          then InfoText := InfoText + '  Scope:  Everywhere'
+          else
+            if Scope = [csScript]
+              then InfoText := InfoText + '  Scope:  Script only'
+              else
+                if Scope = [csCommandLine]
+                  then InfoText := InfoText + '  Scope:  Interactive only';
       end;
       Form1.SysConsole1.WriteMessage(InfoText);
       Result := 0;
@@ -152,16 +156,16 @@ begin
       Result := -1;              
       Exit;
     end;    
-    // cannot be used in this mode
-    if Command.Scope = csScriptOnly then
+    // cannot be used in command line
+    if not (csCommandLine in Command.Scope) then
     begin
-      Result := -2;              
+      Result := -2;
       Exit;
     end;
     // argument number error
     if (Tokens.Count - 1) <> Command.RequiredArgs then
     begin
-      Result := -3;
+      Result := -4;
       Exit;
     end;
     // cannot run under simulation
@@ -169,9 +173,15 @@ begin
            ((Form1.SimulationThread1.Mode <> smNone) and Command.AllowedUnderCPURun))
       then 
       begin
-        Result := -4;
+        Result := -5;
         Exit;
       end;
+    // cannot be used in interactive operation mode
+    if not (omInteractive in Command.AllowedOpModes) then
+    begin
+      Result := -6;
+      Exit;
+    end;
     // arguments and calling
     ActionContext := TActionContext.Create;
     try
@@ -187,7 +197,8 @@ begin
         if Tokens.Count > 1 then SArg1 := Tokens[1].RawText;
         if Tokens.Count > 2 then SArg2 := Tokens[2].RawText;
         Command.Operation(ActionContext);
-        Result := 0;
+        // command run error
+        if HasError then Result := -8 else Result := 0;
       end;
     finally
       ActionContext.Free;

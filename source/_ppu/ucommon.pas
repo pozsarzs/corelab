@@ -15,7 +15,8 @@ unit ucommon;
 {$MODE OBJFPC} {$H+} {$MACRO ON}
 interface
 uses
-  {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils;
+  {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils, Generics.Collections, core_cpu, core_memory,
+  core_ioport, core_bus;
 {$IFDEF WINDOWS}
   const
     CSIDL_PROFILE = 40;
@@ -23,6 +24,42 @@ uses
   var
     Buffer: array[0..MAX_PATH] of Char;
 {$ENDIF}
+type
+  // allocated simulation objects and its types
+  TProcInfo = record
+    Processor:     TCPU;
+    ModuleName:    string;
+    AttachedToBus: Boolean;
+  end;
+  TMemInfo = record
+    Memory:        TMemory;
+    ModuleName:    string;
+    AttachedToBus: Boolean;
+  end;
+  TPortInfo = record
+    Port:          TIOPort;
+    ModuleName:    string;
+    AttachedToBus: Boolean;
+  end;
+  TProcInstanceDict = specialize TDictionary<string, TProcInfo>;
+  TMemInstanceDict = specialize TDictionary<string, TMemInfo>;
+  TPortInstanceDict = specialize TDictionary<string, TPortInfo>;
+  // operation mode type
+  TOpMode = (omInteractive, omScript);
+  TOpModes = set of TOpMode;
+  // attached device description record types
+  TBusMem = record
+    ModuleName:   string;
+    Memory:       TMemory;
+  end;
+  TBusPort = record
+    ModuleName:   string;
+    IOPort:       TIOPort;
+  end;
+  TBusProc = record
+    ModuleName: string;
+    CPU:        TCPU;
+  end;
 
 function GetLang: string;
 function GetExeDir: string;

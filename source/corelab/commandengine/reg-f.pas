@@ -13,48 +13,55 @@
 
 RegisterCommand(TCommand.Create('NWPR',
                                 'Change to interactive mode and create new project.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'NWPR',
                                 0,
                                 @Form1.FNewProjectOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('LDPR',
                                 'Change to interactive mode and load project from file.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'LDPR filename.clprj',
                                 1,
                                 @Form1.FLoadProjectOperation,
-                                False));
-                                
+                                False,
+                                [omInteractive, omScript]));
+
 RegisterCommand(TCommand.Create('SVPR',
                                 'Save project to file.',
-                                csInteractiveOnly,
+                                [csCommandLine],
                                 'SVPR filename.clprj',
                                 1,
                                 @Form1.FSaveProjectAsOperation,
-                                False));
+                                False,
+                                [omInteractive]));
 
 RegisterCommand(TCommand.Create('CHWD',
                                 'Change work directory.',
-                                csEveryWhere,
+                                [csCommandLine, csScript],
                                 'CHWD directory',
                                 1,
                                 @Form1.FChangeWorkDirectoryOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RSAP',
                                 'Restart application.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'RSAP',
                                 0,
                                 @Form1.FRestartApplicationOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('EXAP',
                                 'Exit from application.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'EXAP',
                                 0,
                                 @Form1.FExitOperation,
-                                True));
+                                True,
+                                [omInteractive, omScript]));
+

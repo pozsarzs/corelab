@@ -13,65 +13,73 @@
 
 RegisterCommand(TCommand.Create('CRPU',
                                 'Instantiate a processor module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'CRPU library instancename',
                                 2,
                                 @Form1.PCreateOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DSPU',
                                 'Destroy processor module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DSPU instancename',
                                 1,
                                 @Form1.PDestroyOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RSPU',
                                 'Reset processor module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'RSPU instancename',
                                 1,
                                 @Form1.PResetOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('ENPU',
                                 'Enable processor module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'ENPU instancename',
                                 1,
                                 @Form1.PEnableOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DIPU',
                                 'Disable processor module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DIPU instancename',
                                 1,
                                 @Form1.PDisableOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('ATPU',
                                 'Attach processor module to bus.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'ATPU instancename',
                                 1,
                                 @Form1.PAttachToBusOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('DTPU',
                                 'Detach processor module from bus.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'DTPU instancename',
                                 1,
                                 @Form1.PDetachFromBusOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('CFPU',
                                 'Configure processor module.',
-                                csEverywhere,
+                                [csCommandLine, csScript],
                                 'CFPU instancename.property value',
                                 2,
                                 @Form1.PConfigureOperation,
-                                False));
+                                False,
+                                [omInteractive, omScript]));
 
