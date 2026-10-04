@@ -108,7 +108,14 @@ end;
 // REFRESH GRID CONTENT
 procedure TForm3.RefreshContent;
 begin
-  Form3.Invalidate;
+  // -- start of the thread safe operation --
+  GlobalSimLock.Acquire;
+  try
+    Form3.Invalidate;
+  finally
+    GlobalSimLock.Release;
+  end;
+  // -- end of the thread safe operation --
 end;
 
 // ---- EVENT HANDLER METHODS ----

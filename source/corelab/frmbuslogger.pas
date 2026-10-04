@@ -16,7 +16,7 @@ unit frmbuslogger;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  EditBtn, Grids, Types, core_bus, uconfig;
+  EditBtn, Grids, Types, core_bus, uconfig, ucommon;
 const
   MAX_LOG = 32768;
 type
@@ -152,8 +152,15 @@ end;
 // REFRESH CONTENT
 procedure TForm14.RefreshContent;
 begin
-  DrawGrid1.RowCount := FRecordCount + 1;
-  if DrawGrid1.RowCount > 1 then DrawGrid1.Row := DrawGrid1.RowCount - 1;
+  // -- start of the thread safe operation --
+  GlobalSimLock.Acquire;
+  try
+    DrawGrid1.RowCount := FRecordCount + 1;
+    if DrawGrid1.RowCount > 1 then DrawGrid1.Row := DrawGrid1.RowCount - 1;
+  finally
+    GlobalSimLock.Release;
+  end;
+  // -- end of the thread safe operation --
 end;
 
 // REFRESH COLORS

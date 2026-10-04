@@ -16,7 +16,7 @@ unit frmrunlogger;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, EditBtn, Grids, Types, core_cpu, uconfig;
+  Buttons, EditBtn, Grids, Types, core_cpu, uconfig, ucommon;
 const
   MAX_LOG = 32768;
 type
@@ -161,8 +161,15 @@ end;
 // REFRESH CONTENT
 procedure TForm4.RefreshContent;
 begin
-  DrawGrid1.RowCount := FRecordCount + 1;
-  if DrawGrid1.RowCount > 1 then DrawGrid1.Row := DrawGrid1.RowCount - 1;
+  // -- start of the thread safe operation --
+  GlobalSimLock.Acquire;
+  try
+    DrawGrid1.RowCount := FRecordCount + 1;
+    if DrawGrid1.RowCount > 1 then DrawGrid1.Row := DrawGrid1.RowCount - 1;
+  finally
+    GlobalSimLock.Release;
+  end;
+  // -- end of the thread safe operation --
 end;
 
 // ---- EVENT HANDLER METHODS ----

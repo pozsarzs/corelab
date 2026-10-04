@@ -16,7 +16,7 @@ unit frmregviewer;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ValEdit, core_cpu, uconfig;
+  ValEdit, core_cpu, uconfig, ucommon;
 type
   { TForm11 }
   TForm11 = class(TForm)
@@ -104,13 +104,20 @@ var
   b: Byte;
 begin
   if not Assigned(FProcInstance) then Exit;
-  for b := 0 to FRegCount - 1 do
-  begin
-    // ValueListEditor1 to array
-    FRegValues[b] := StrToInt('$' + ValueListEditor1.Values[StrPas(FRegNames[b])]);
-    // array to registers
-    FProcInstance.SetRegister(FRegNames[b], FRegValues[b]);
+  // -- start of the thread safe operation --
+  GlobalSimLock.Acquire;
+  try
+    for b := 0 to FRegCount - 1 do
+    begin
+      // ValueListEditor1 to array
+      FRegValues[b] := StrToInt('$' + ValueListEditor1.Values[StrPas(FRegNames[b])]);
+      // array to registers
+      FProcInstance.SetRegister(FRegNames[b], FRegValues[b]);
+    end;
+  finally
+    GlobalSimLock.Release;
   end;
+  // -- end of the thread safe operation --
 end;
 
 // GET VALUES FROM PROCESSOR
@@ -126,13 +133,20 @@ begin
     Clear;
     DefaultRowHeight := 20;
     Strings.BeginUpdate;
-    for b := 0 to FRegCount - 1 do
-    begin
-      // registers to array
-      FRegValues[b] := FProcInstance.GetRegister(FRegNames[b]);
-      // array to ValueListEditor1
-      Strings.Add(StrPas(FRegNames[b]) + '=' + IntToHex(FRegValues[b], FRegSize[b]));
+    // -- start of the thread safe operation --
+    GlobalSimLock.Acquire;
+    try
+      for b := 0 to FRegCount - 1 do
+      begin
+        // registers to array
+        FRegValues[b] := FProcInstance.GetRegister(FRegNames[b]);
+        // array to ValueListEditor1
+        Strings.Add(StrPas(FRegNames[b]) + '=' + IntToHex(FRegValues[b], FRegSize[b]));
+      end;
+    finally
+      GlobalSimLock.Release;
     end;
+    // -- end of the thread safe operation --
     Strings.EndUpdate;
   end;
 end;

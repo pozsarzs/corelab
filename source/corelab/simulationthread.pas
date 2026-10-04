@@ -15,7 +15,7 @@ unit simulationthread;
 interface
 {$MODE OBJFPC}{$H+}
 uses
-  Classes, {$IFDEF UNIX}cthreads,{$ENDIF} core_cpu;
+  Classes, {$IFDEF UNIX} cthreads, {$ENDIF} core_cpu, ucommon;
 type
   // simulation state type
   TSimulationMode = (smNone, smCPURun, smCPUStep, smCPUStop);
@@ -104,7 +104,12 @@ begin
     // NMI request
     if FPendingNMI then
     begin
-      FCPU.NMI;
+      GlobalSimLock.Acquire;
+      try
+        FCPU.NMI;
+      finally
+        GlobalSimLock.Release;
+      end;
       FPendingNMI := False;
     end;
     // run
@@ -112,7 +117,12 @@ begin
     begin
       while FMode = smCPURun do
       begin
-        FCPU.Step;
+        GlobalSimLock.Acquire;
+        try
+          FCPU.Step;
+        finally
+          GlobalSimLock.Release;
+        end;
         Sleep(FDelay);
       end;
     end else
@@ -120,13 +130,23 @@ begin
       // step
       if FMode = smCPUStep then
       begin
-        FCPU.Step;
+        GlobalSimLock.Acquire;
+        try
+          FCPU.Step;
+        finally
+          GlobalSimLock.Release;
+        end;
         FMode := smNone;
       end;
       // stop
       if FMode = smCPUStop then
       begin
-        FCPU.Stop;
+        GlobalSimLock.Acquire;
+        try
+          FCPU.Stop;
+        finally
+          GlobalSimLock.Release;
+        end;
         FMode := smNone;
       end;
       // clear previous event

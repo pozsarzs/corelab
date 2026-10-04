@@ -15,8 +15,8 @@ unit ucommon;
 {$MODE OBJFPC} {$H+} {$MACRO ON}
 interface
 uses
-  {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils, Generics.Collections, core_cpu, core_memory,
-  core_ioport, core_bus;
+  {$IFDEF WINDOWS} Windows, {$ENDIF} SysUtils, Generics.Collections, syncobjs,
+  core_cpu, core_memory, core_ioport;
 {$IFDEF WINDOWS}
   const
     CSIDL_PROFILE = 40;
@@ -60,6 +60,8 @@ type
     ModuleName: string;
     CPU:        TCPU;
   end;
+var
+  GlobalSimLock: TCriticalSection;        // global locker for simulation thread
 
 function GetLang: string;
 function GetExeDir: string;
@@ -182,5 +184,11 @@ begin
   end;
   Result := Valid;
 end;
+
+initialization
+  GlobalSimLock := TCriticalSection.Create;
+
+finalization
+  GlobalSimLock.Free;
 
 end.

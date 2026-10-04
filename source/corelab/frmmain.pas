@@ -507,7 +507,8 @@ type
     property StartupScript: string write FStartupScript;
   end;
 var
-  Form1: TForm1;
+  Form1:         TForm1;
+//  GlobalSimLock: TCriticalSection;        // global locker for simulation thread
 
 implementation
 
@@ -529,6 +530,7 @@ resourcestring
   MSG10 = 'Cannot be used ''%s'' in interactive mode.';                   { SC }
   MSG11 = 'Cannot be used ''%s'' in script mode.';                        { SC }
   MSG12 = 'Command ''%s'' execute error.';                                { SC }
+  MSG13 = 'No continuous viewer updates during a 100 ms execution delay.';{ SC }
   MSG18 = 'Missing help file.';                                           { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
   MSG28 = 'Save memory content to file';
@@ -3594,6 +3596,9 @@ var
 begin
   InstanceName := AActionContext.SArg1;
   Filename := AActionContext.SArg2;
+  // if there is only filename, insert the name of the working directory
+  if ExtractFilePath(Filename) = ''
+    then Filename := IncludeTrailingPathDelimiter(FWorkDirectory) + Filename;
   try
     MemInfo := FMemInstanceDict[InstanceName];
   except
@@ -3779,6 +3784,9 @@ var
   Message:       string;
 begin
   Filename := AActionContext.SArg1;
+  // if there is only filename, insert the name of the working directory
+  if ExtractFilePath(Filename) = ''
+    then Filename := IncludeTrailingPathDelimiter(FWorkDirectory) + Filename;
   InstanceName := AActionContext.SArg2;
   try
     MemInfo := FMemInstanceDict[InstanceName];
@@ -5709,11 +5717,14 @@ end;
 // GLOBAL REFRESH TICK FOR LOGS AND OTHERS
 procedure TForm1.RefreshTimerTimer(Sender: TObject);
 begin
-  if Assigned(Form3) then Form3.RefreshContent;                     // HexViewer
-  if Assigned(Form4) then Form4.RefreshContent;                     // RunLogger
-  if Assigned(Form8) then Form8.RefreshContent;                     // IntLogger
-  if Assigned(Form11) then Form11.RefreshContent;                   // RegViewer
-  if Assigned(Form14) then Form14.RefreshContent;                   // BusLogger
+  if SimulationThread1.Delay >= 100 then
+  begin
+    if Assigned(Form3) then Form3.RefreshContent;                   // HexViewer
+    if Assigned(Form4) then Form4.RefreshContent;                   // RunLogger
+    if Assigned(Form8) then Form8.RefreshContent;                   // IntLogger
+    if Assigned(Form11) then Form11.RefreshContent;                 // RegViewer
+    if Assigned(Form14) then Form14.RefreshContent;                 // BusLogger
+  end;
 end;
 
 // CHANGE RUN DELAY
@@ -5724,6 +5735,7 @@ begin
   s := ComboBox1.Items[ComboBox1.ItemIndex];
   s := Copy(ComboBox1.Items[ComboBox1.ItemIndex], 1, Length(s) - 3);
   SimulationThread1.Delay := StrToInt(s);
+  if SimulationThread1.Delay < 100 then SysConsole1.WriteMessage(MSG02 + MSG13);
 end;
 
 // ONCREATE EVENT

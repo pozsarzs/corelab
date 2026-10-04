@@ -386,9 +386,9 @@ object Form1: TForm1
       Height = 58
       Top = 1
       Width = 687
-      ActivePage = TabSheet4
+      ActivePage = TabSheet1
       Align = alClient
-      TabIndex = 3
+      TabIndex = 0
       TabOrder = 2
       object TabSheet1: TTabSheet
         Caption = 'Operation'
@@ -1623,6 +1623,7 @@ object Form1: TForm1
     end
     object OMakeSnapshot: TAction
       Caption = 'Make snaps&hot'
+      Enabled = False
       Hint = 'Make snapshot'
       ImageIndex = 29
       OnExecute = OMakeSnapshotExecute
@@ -1630,6 +1631,7 @@ object Form1: TForm1
     end
     object ORestoreSnapshot: TAction
       Caption = 'Rest&ore snapshot...'
+      Enabled = False
       Hint = 'Rest&ore snapshot'
       ImageIndex = 30
       OnExecute = ORestoreSnapshotExecute
