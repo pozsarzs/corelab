@@ -55,10 +55,10 @@ Show version and build information.
 .SH OPERATION
 .SS Project management
 CoreLAB uses a simple directory-based project structure. A project directory can
-contain all related files—such as optional environment setup scripts, saved state
-snapshots, program code, and data streams. The simulation environment can also be
-built manually, meaning none of these files are strictly mandatory. This setup
-keeps experiments independent while fully supporting the use of external files.
+contain all related files—such as optional environment setup scripts, program
+code, and data streams. The simulation environment can also be built manually,
+meaning none of these files are strictly mandatory. This setup keeps experiments
+independent while fully supporting the use of external files.
 
 .SS Modular architecture
 One of the most important features of the simulator is its modular design.
@@ -154,12 +154,6 @@ scripting language. Scripts can be executed directly from the OS shell; when run
 this way, the script automatically builds the execution environment and performs
 all specified operations. This allows for the efficient automation of repetitive
 tasks, tests, and the reproduction of complex hardware configurations.
-
-.SS State saving and restoration
-The complete state of a simulation can be saved and restored at any time. This
-includes not only memory contents but also the current state of processors,
-peripherals, and other objects. As a result, development and debugging sessions
-can be paused and resumed without loss of progress.
 
 .SS Logging and data export
 Runtime events and execution logs can be saved to files for later analysis.
@@ -297,10 +291,6 @@ Terminate the script.
 Load memory content from file
 
 .TP
-\fBLDSS\fP
-Load and restore snapshot.
-
-.TP
 \fBNMI\fP
 Call non-maskable interrupt.
 
@@ -371,10 +361,6 @@ Stop simulation.
 .TP
 \fBSVME\fP \fIfilename\fP \fIinstancename\fP
 Save memory content to file.
-
-.TP
-\fBSVSS\fP
-Make and save snapshot.
 
 .SS Commands can only be used on the command line
 
@@ -598,8 +584,7 @@ including the configuration, positions, and sizes of the visual modules.
 .B *.clsce:
 CoreLAB scriptembly file. Executable script that dynamically builds the
 simulation environment at runtime by instantiating modules. It controls the
-simulation, manages debug windows, evaluates data, handles data loading/saving,
-and creates snapshots.
+simulation, manages debug windows, evaluates data and handles data loading/saving.
 .TP
 .B yymmddhhmmss.clsht:
 CoreLAB snapshot. The instantaneous and restorable state of the framework and

@@ -114,10 +114,6 @@ control</td>
 <td><strong>modular architecture</strong></td>
 <td>Dynamically loadable CPUs and peripherals</td>
 </tr>
-<tr class="even">
-<td><strong>state saving</strong></td>
-<td>Saving and restoring full environment state</td>
-</tr>
 </tbody>
 </table>
 <h3 id="integrated-modules">Integrated modules</h3>
@@ -237,10 +233,10 @@ binary data to virtual ports.</td>
 <h3 id="project-management">Project management</h3>
 <p>CoreLAB uses a simple directory-based project structure. A project
 directory can contain all related files—such as optional environment
-setup scripts, saved state snapshots, program code, and data streams.
-The simulation environment can also be built manually, meaning none of
-these files are strictly mandatory. This setup keeps experiments
-independent while fully supporting the use of external files.</p>
+setup scripts, program code, and data streams. The simulation environment
+can also be built manually, meaning none of these files are strictly
+mandatory. This setup keeps experiments independent while fully supporting
+the use of external files.</p>
 <h3 id="modular-architecture">Modular architecture</h3>
 <p>One of the most important features of the simulator is its modular
 design. Processors, memories, and peripherals can be created as
@@ -272,12 +268,6 @@ directly from the OS shell; when run this way, the script automatically
 builds the execution environment and performs all specified operations.
 This allows for the efficient automation of repetitive tasks, tests, and
 the reproduction of complex hardware configurations.</p>
-<h3 id="state-saving-and-restoration">State saving and restoration</h3>
-<p>The complete state of a simulation can be saved and restored at any
-time. This includes not only memory contents but also the current state
-of processors, peripherals, and other objects. As a result, development
-and debugging sessions can be paused and resumed without loss of
-progress.</p>
 <h3 id="logging-and-data-export">Logging and data export</h3>
 <p>Runtime events and execution logs can be saved to files for later
 analysis. Memory contents can be exported in binary or Intel HEX format,

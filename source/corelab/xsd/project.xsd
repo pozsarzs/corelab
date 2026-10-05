@@ -1,0 +1,86 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="CoreLAB_Workspace">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Modules">
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+              
+              <xs:element name="TIOPort">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="BaseAddress" type="xs:unsignedInt" minOccurs="0"/>
+                    <xs:element name="DataInMode" type="xs:string" minOccurs="0"/>
+                    <xs:element name="DataInNegation" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="DataOutMode" type="xs:string" minOccurs="0"/>
+                    <xs:element name="DataOutNegation" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="Enabled" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="IntVector" type="xs:unsignedByte" minOccurs="0"/>
+                    <xs:element name="SelMode" type="xs:string" minOccurs="0"/>
+                    <xs:element name="SelNegation" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="PanelCaption" type="xs:string" minOccurs="0"/>
+                    <xs:element name="PanelHeight" type="xs:unsignedInt" minOccurs="0"/>
+                    <xs:element name="PanelLeft" type="xs:int" minOccurs="0"/>
+                    <xs:element name="PanelTop" type="xs:int" minOccurs="0"/>
+                    <xs:element name="PanelWidth" type="xs:unsignedInt" minOccurs="0"/>
+                  </xs:all>
+                  <xs:attribute name="id" type="xs:string" use="required"/>
+                  <xs:attribute name="type" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:element name="TMemory">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="AddressRangeSize" type="xs:unsignedInt" minOccurs="0"/>
+                    <xs:element name="BaseAddress" type="xs:unsignedInt" minOccurs="0"/>
+                    <xs:element name="Enabled" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="MemoryMode" type="xs:string" minOccurs="0"/>
+                  </xs:all>
+                  <xs:attribute name="id" type="xs:string" use="required"/>
+                  <xs:attribute name="type" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+
+              <xs:element name="TCPU">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="Enabled" type="xs:boolean" minOccurs="0"/>
+                  </xs:all>
+                  <xs:attribute name="id" type="xs:string" use="required"/>
+                  <xs:attribute name="type" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="Connections" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SysBusConnection" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Source">
+                      <xs:complexType>
+                        <xs:attribute name="module" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Target">
+                      <xs:complexType>
+                        <xs:attribute name="module" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

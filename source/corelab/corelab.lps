@@ -7,7 +7,9 @@
       <Unit>
         <Filename Value="corelab.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="5" Y="2"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="191"/>
+        <CursorPos X="7" Y="206"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -69,9 +71,8 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="5" Y="2"/>
+        <CursorPos X="40" Y="33"/>
         <UsageCount Value="206"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -308,7 +309,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="96"/>
         <CursorPos X="20" Y="65"/>
-        <UsageCount Value="167"/>
+        <UsageCount Value="170"/>
       </Unit>
       <Unit>
         <Filename Value="breakpointframe.pas"/>
@@ -319,7 +320,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos Y="51"/>
-        <UsageCount Value="161"/>
+        <UsageCount Value="164"/>
       </Unit>
       <Unit>
         <Filename Value="scriptengine/scriptengine.pas"/>
@@ -327,7 +328,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="260"/>
         <CursorPos X="38" Y="287"/>
-        <UsageCount Value="131"/>
+        <UsageCount Value="134"/>
       </Unit>
       <Unit>
         <Filename Value="frmbuslogger.pas"/>
@@ -338,7 +339,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="46" Y="25"/>
-        <UsageCount Value="107"/>
+        <UsageCount Value="110"/>
       </Unit>
       <Unit>
         <Filename Value="frmrdwrioport.pas"/>
@@ -348,14 +349,14 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="13" Y="3"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="101"/>
       </Unit>
       <Unit>
         <Filename Value="simulationthread.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="45"/>
-        <UsageCount Value="91"/>
+        <UsageCount Value="94"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/cmd-p.pas"/>
@@ -410,20 +411,20 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="28" Y="31"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="../corelab-core/core_bus.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="22" Y="4"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/scriptengine.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="18"/>
         <CursorPos X="3" Y="37"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="scriptengine/reg-access.pas"/>
@@ -441,9 +442,10 @@
       </Unit>
       <Unit>
         <Filename Value="scriptengine/scriptruntime.pas"/>
+        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="19" Y="187"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="20"/>
       </Unit>
       <Unit>
         <Filename Value="scriptengine/reg-arithmetic.pas"/>
@@ -545,8 +547,17 @@
         <CursorPos Y="4"/>
         <UsageCount Value="10"/>
       </Unit>
+      <Unit>
+        <Filename Value="projectengine/projectengine.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="26">
+    <JumpHistory HistoryIndex="24">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="933" Column="22" TopLine="932"/>
@@ -562,10 +573,6 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="394" Column="35" TopLine="366"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="530" Column="60" TopLine="620"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
@@ -621,10 +628,6 @@
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="511" TopLine="529"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="1288" Column="41" TopLine="1261"/>
       </Position>
       <Position>
@@ -633,27 +636,27 @@
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="21" Column="72" TopLine="79"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="511" TopLine="484"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="17" Column="40" TopLine="22"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="21" Column="72" TopLine="70"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="6058"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="6058"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="33" Column="40"/>
+      </Position>
+      <Position>
+        <Filename Value="corelab.lpr"/>
+        <Caret Line="24" Column="52"/>
+      </Position>
+      <Position>
+        <Filename Value="corelab.lpr"/>
+        <Caret Line="17" Column="5"/>
       </Position>
     </JumpHistory>
     <RunParams>

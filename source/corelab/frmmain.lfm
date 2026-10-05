@@ -1628,6 +1628,7 @@ object Form1: TForm1
       ImageIndex = 29
       OnExecute = OMakeSnapshotExecute
       ShortCut = 113
+      Visible = False
     end
     object ORestoreSnapshot: TAction
       Caption = 'Rest&ore snapshot...'
@@ -1636,6 +1637,7 @@ object Form1: TForm1
       ImageIndex = 30
       OnExecute = ORestoreSnapshotExecute
       ShortCut = 114
+      Visible = False
     end
     object SNewScript: TAction
       Caption = '&New script'

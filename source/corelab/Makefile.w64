@@ -24,6 +24,7 @@ fpcargs = -T$(os) \
           -Fu../corelab-parts/ \
           -Fu../corelab-plugins/ \
           -Fu./commandengine/ \
+          -Fu./projectengine/ \
           -Fu./scriptengine/ \
           -Fu$(lcldir)/../components/chmhelp/packages/help/ \
           -Fu$(lcldir)/../components/lazutils/lib/$(architecture)-$(os)/ \

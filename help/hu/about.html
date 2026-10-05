@@ -82,10 +82,6 @@
 <td><strong>moduláris architektúra</strong></td>
 <td>Dinamikusan betölthető CPU-k és perifériák</td>
 </tr>
-<tr class="even">
-<td><strong>állapotmentés</strong></td>
-<td>A teljes környezeti állapot mentése és visszaállítása</td>
-</tr>
 </tbody>
 </table>
 <h3 id="integrated-modules">Integrált modulok</h3>
@@ -196,7 +192,7 @@
 </table>
 <h2 id="iii.-about-the-program">III. A program bemutatása</h2>
 <h3 id="project-management">Projektkezelés</h3>
-<p>A CoreLAB egyszerű, könyvtáralapú projektstruktúrát használ. A projektkönyvtár tartalmazhat minden kapcsolódó fájlt, például opcionális környezetbeállító szkripteket, mentett állapotképeket, programkódot és adatfolyamokat. A szimulációs környezet kézzel is felépíthető, ezért ezek közül a fájlok közül egyik sem kötelező. Ez a felépítés egymástól függetlenül tartja a kísérleteket, miközben teljes körűen támogatja a külső fájlok használatát.</p>
+<p>A CoreLAB egyszerű, könyvtáralapú projektstruktúrát használ. A projektkönyvtár tartalmazhat minden kapcsolódó fájlt, például opcionális környezetbeállító szkripteket, programkódot és adatfolyamokat. A szimulációs környezet kézzel is felépíthető, ezért ezek közül a fájlok közül egyik sem kötelező. Ez a felépítés egymástól függetlenül tartja a kísérleteket, miközben teljes körűen támogatja a külső fájlok használatát.</p>
 <h3 id="modular-architecture">Moduláris architektúra</h3>
 <p>A szimulátor egyik legfontosabb jellemzője a moduláris felépítés. A processzorok, memóriák és perifériák egymástól független objektumként hozhatók létre, majd dinamikusan összekapcsolhatók. A felhasználók a vizsgált rendszer követelményeihez igazított, egyedi virtuális hardverkörnyezeteket építhetnek fel.</p>
 <h3 id="supported-processor-architectures">Támogatott processzorarchitektúrák</h3>
@@ -207,8 +203,6 @@
 <p>A CoreLAB számos beépített diagnosztikai és hibakeresési eszközt biztosít. A felhasználók töréspontoknál állíthatják meg a végrehajtást, lépésenként futtathatják a programokat, megvizsgálhatják a memória és a regiszterek tartalmát, valamint valós időben figyelhetik az utasítások végrehajtását. Ezek a funkciók különösen hasznosak oktatási célokra és alacsony szintű szoftverfejlesztéshez.</p>
 <h3 id="scripting-and-automation">Szkriptelés és automatizálás</h3>
 <p>A program elsősorban a saját beépített konzoljának parancssorán keresztül működtethető, de menü is rendelkezésre áll. Saját parancsértelmezővel és szkriptnyelvvel rendelkezik. A szkriptek közvetlenül az operációs rendszer parancsértelmezőjéből is futtathatók; ilyen indítás esetén a szkript automatikusan felépíti a végrehajtási környezetet, és végrehajtja az összes megadott műveletet. Ez lehetővé teszi az ismétlődő feladatok és tesztek hatékony automatizálását, valamint összetett hardverkonfigurációk reprodukálását.</p>
-<h3 id="state-saving-and-restoration">Állapotmentés és -visszaállítás</h3>
-<p>A szimuláció teljes állapota bármikor menthető és visszaállítható. Ez nemcsak a memória tartalmát, hanem a processzorok, perifériák és egyéb objektumok aktuális állapotát is magában foglalja. Ennek köszönhetően a fejlesztési és hibakeresési munkamenetek a folyamat elvesztése nélkül megszakíthatók és folytathatók.</p>
 <h3 id="logging-and-data-export">Naplózás és adatexportálás</h3>
 <p>A futás közbeni események és a végrehajtási naplók fájlba menthetők későbbi elemzés céljából. A memória tartalma bináris vagy Intel HEX formátumban exportálható, így az eredmények más fejlesztőeszközökkel is felhasználhatók, illetve valódi hardverre is átvihetők.</p>
 </body>

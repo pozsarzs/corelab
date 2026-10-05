@@ -14,6 +14,9 @@
         <TextDesc Value="CoreLAB | CoreLAB"/>
       </XPManifest>
       <Icon Value="0"/>
+      <Resources Count="1">
+        <Resource_0 FileName="xsd/project.xsd" Type="RCDATA" ResourceName="PROJECTXSD"/>
+      </Resources>
     </General>
     <i18n>
       <EnableI18N Value="True"/>
@@ -267,6 +270,14 @@
         <Filename Value="simulationthread.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="scriptengine/scriptruntime.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="projectengine/projectengine.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -276,7 +287,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
-      <OtherUnitFiles Value="../corelab-core;../corelab-plugins;../_ext/modlcltranslator;../_ext/modsynhighlighterany;../_ppu;../_inc;commandengine;scriptengine"/>
+      <OtherUnitFiles Value="../corelab-core;../corelab-plugins;../_ext/modlcltranslator;../_ext/modsynhighlighterany;../_ppu;../_inc;commandengine;projectengine;scriptengine"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>

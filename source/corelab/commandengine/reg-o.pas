@@ -56,7 +56,7 @@ RegisterCommand(TCommand.Create('RST',
                                 False,
                                 [omInteractive]));
 
-RegisterCommand(TCommand.Create('SVSS',
+{RegisterCommand(TCommand.Create('SVSS',
                                 'Make and save snapshot.',
                                 [csCommandLine],
                                 'SVSS',
@@ -72,5 +72,5 @@ RegisterCommand(TCommand.Create('LDSS',
                                 0,
                                 @Form1.ORestoreSnapshotOperation,
                                 False,
-                                [omInteractive]));
+                                [omInteractive]));}
 

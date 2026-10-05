@@ -69,7 +69,6 @@ in mind:
 |**supported processors**  |Byte based uPs and simple MCUs                                     |
 |**simulation environment**|Configurable memory space and virtual I/O ports or devices         |
 |**modular architecture**  |Dynamically loadable CPUs and peripherals                          |
-|**state saving**          |Saving and restoring full environment state                        |
 
 ### Integrated modules
 
@@ -145,10 +144,10 @@ in mind:
 ### Project management
 
 CoreLAB uses a simple directory-based project structure. A project directory can
-contain all related files—such as optional environment setup scripts, saved state
-snapshots, program code, and data streams. The simulation environment can also be
-built manually, meaning none of these files are strictly mandatory. This setup
-keeps experiments independent while fully supporting the use of external files.
+contain all related files—such as optional environment setup scripts, program
+code, and data streams. The simulation environment can also be built manually,
+meaning none of these files are strictly mandatory. This setup keeps experiments
+independent while fully supporting the use of external files.
 
 ### Modular architecture
 
@@ -186,13 +185,6 @@ scripting language. Scripts can be executed directly from the OS shell; when run
 this way, the script automatically builds the execution environment and performs
 all specified operations. This allows for the efficient automation of repetitive
 tasks, tests, and the reproduction of complex hardware configurations.
-
-### State saving and restoration
-
-The complete state of a simulation can be saved and restored at any time. This
-includes not only memory contents but also the current state of processors,
-peripherals, and other objects. As a result, development and debugging sessions
-can be paused and resumed without loss of progress.
 
 ### Logging and data export
 
@@ -288,7 +280,6 @@ Registers can store string and double word values.
 |**LDPR**   |csInteractiveOnly|-  |-    |Change to interactive mode and load project from file.                 |
 |**LDRG**   |csScriptOnly     |Yes|     |Load a value to specified register.                                    |
 |**LDSC**   |csInteractiveOnly|-  |-    |Change to script mode and load script from file.                       |
-|**LDSS**   |csEveryWhere     |-  |-    |Load and restore snapshot.                                             |
 |**MUL**    |csScript         |Yes|C, Z |Multiply target by value in-place.                                     |
 |**NMI**    |csEveryWhere     |-  |-    |Call non-maskable interrupt.                                           |
 |**NOT**    |csScript         |Yes|Z    |Bitwise/logical NOT in-place.                                          |
@@ -327,7 +318,6 @@ Registers can store string and double word values.
 |**SVME**   |csEveryWhere     |-  |-    |Save memory content to file.                                           |
 |**SVPR**   |csInteractiveOnly|-  |-    |Save project to file.                                                  |
 |**SVSC**   |csInteractiveOnly|-  |-    |Save script to file.                                                   |
-|**SVSS**   |csEveryWhere     |-  |-    |Make and save snapshot.                                                |
 |**SWAP**   |csScript         |Yes|-    |Swap the values of two registers.                                      |
 |**WAIT**   |csScript         |-  |-    |Wait specified ms.                                                     |
 |**WRIO**   |csScriptOnly     |Yes|     |Read a value from register RA and write to I/O port.                   |

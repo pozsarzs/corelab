@@ -21,7 +21,7 @@
 
 	CRIO	ioport_button16bcd Keyboard	; module name
 	CFIO	Keyboard.BaseAddress 81		; base address
-	CFIO	Console.IntVector CF		; interrupt vector
+	CFIO	Keyboard.IntVector CF		; interrupt vector
 	RNIO	Keyboard "Keyboard"		; panel caption
 	ATIO	Keyboard			; attach to bus
 	
@@ -52,7 +52,7 @@
 	SHHV	RAM				; open HexViewer
 
 ; Run simulation
-;	RUN	100				; run with 100 ms delay
+	RUN
 
 ; Disable modules
 	DIIO	Console

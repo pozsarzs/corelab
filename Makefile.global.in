@@ -63,6 +63,7 @@ fpcargs		= -T@os@ \
                   -Fu../corelab-plugins/ \
                   -Fu../corelab-plugins/ \
                   -Fu./commandengine/ \
+                  -Fu./projectengine/ \
                   -Fu./scriptengine/ \
                   -Fu. \
                   -Fu./lib/@architecture@-@os@/ \
