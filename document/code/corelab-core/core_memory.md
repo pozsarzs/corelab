@@ -79,12 +79,12 @@ persistence.
 
 ### Public properties
 
-|name              |type              |access    |description                          |
-|------------------|------------------|----------|-------------------------------------|
-|`AddressRangeSize`|`DWord`           |read/write|Configured memory address-space size.|
-|`BaseAddress`     |`DWord`           |read/write|Global start address.                |
-|`Description`     |`PChar`           |read      |Short module description.            |
-|`Enabled`         |`Boolean`         |read/write|Enables or disables memory access.   |
-|`MemoryMode`      |`TMemoryMode`     |read/write|Selects RAM or ROM operation.        |
-|`ModName`         |`PChar`           |read      |Module name.                         |
-|`Version`         |`TSemanticVersion`|read      |Module version.                      |
+|name              |type              |access|description                          |
+|------------------|------------------|------|-------------------------------------|
+|`AddressRangeSize`|`DWord`           |Re/Wr |Configured memory address-space size.|
+|`BaseAddress`     |`DWord`           |Re/Wr |Global start address.                |
+|`Description`     |`PChar`           |Re    |Short module description.            |
+|`Enabled`         |`Boolean`         |Re/Wr |Enables or disables memory access.   |
+|`MemoryMode`      |`TMemoryMode`     |Re/Wr |Selects RAM or ROM operation.        |
+|`ModName`         |`PChar`           |Re    |Module name.                         |
+|`Version`         |`TSemanticVersion`|Re    |Module version.                      |

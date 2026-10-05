@@ -18,8 +18,8 @@ mentéssel.</p>
 meg:</p>
 <table>
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 89%" />
+<col style="width: 9%" />
+<col style="width: 90%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -42,13 +42,13 @@ csak olvasható.</td>
 <h3 id="tmemorymodehelper">TMemoryModeHelper</h3>
 <table>
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 66%" />
+<col style="width: 32%" />
+<col style="width: 67%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>name</th>
-<th>description</th>
+<th>név</th>
+<th>leírás</th>
 </tr>
 </thead>
 <tbody>
@@ -70,9 +70,9 @@ alakítja.</td>
 <table>
 <thead>
 <tr class="header">
-<th>field</th>
-<th>type</th>
-<th>description</th>
+<th>mező</th>
+<th>típus</th>
+<th>leírás</th>
 </tr>
 </thead>
 <tbody>
@@ -96,13 +96,13 @@ alakítja.</td>
 <h3 id="tsemanticversionhelper">TSemanticVersionHelper</h3>
 <table>
 <colgroup>
-<col style="width: 25%" />
-<col style="width: 74%" />
+<col style="width: 20%" />
+<col style="width: 79%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>name</th>
-<th>description</th>
+<th>név</th>
+<th>leírás</th>
 </tr>
 </thead>
 <tbody>
@@ -123,16 +123,16 @@ vagy régebbi verzió esetén <code>-1</code>, <code>0</code>, illetve
 <table>
 <colgroup>
 <col style="width: 15%" />
-<col style="width: 14%" />
-<col style="width: 36%" />
-<col style="width: 32%" />
+<col style="width: 15%" />
+<col style="width: 35%" />
+<col style="width: 33%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>name</th>
-<th>type</th>
-<th>description</th>
-<th>default</th>
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+<th>alapérték</th>
 </tr>
 </thead>
 <tbody>
@@ -157,7 +157,7 @@ vagy régebbi verzió esetén <code>-1</code>, <code>0</code>, illetve
 <tr class="even">
 <td><code>FEnabled</code></td>
 <td><code>Boolean</code></td>
-<td>Engedélyezi a memóriaelérést a sínről való leválasztás nélkül.</td>
+<td>Engedélyezi a memóriaelérést.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
@@ -189,13 +189,13 @@ vagy régebbi verzió esetén <code>-1</code>, <code>0</code>, illetve
 <h3 id="védett-metódusok">Védett metódusok</h3>
 <table>
 <colgroup>
-<col style="width: 32%" />
-<col style="width: 67%" />
+<col style="width: 30%" />
+<col style="width: 69%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>name</th>
-<th>description</th>
+<th>név</th>
+<th>leírás</th>
 </tr>
 </thead>
 <tbody>
@@ -210,15 +210,15 @@ méret <code>2^24</code> bájt.</td>
 <h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
 <table>
 <colgroup>
-<col style="width: 33%" />
+<col style="width: 28%" />
 <col style="width: 2%" />
-<col style="width: 63%" />
+<col style="width: 69%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>name</th>
-<th>flags</th>
-<th>description</th>
+<th>név</th>
+<th>jelző</th>
+<th>leírás</th>
 </tr>
 </thead>
 <tbody>
@@ -284,58 +284,58 @@ adatfolyam-pozícióra írja, ha a memóriatartomány érvényes.</td>
 <colgroup>
 <col style="width: 21%" />
 <col style="width: 21%" />
-<col style="width: 12%" />
-<col style="width: 44%" />
+<col style="width: 7%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>name</th>
-<th>type</th>
-<th>access</th>
-<th>description</th>
+<th>név</th>
+<th>típus</th>
+<th>elérés</th>
+<th>leírás</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>AddressRangeSize</code></td>
 <td><code>DWord</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>A beállított memóriacímtér mérete.</td>
 </tr>
 <tr class="even">
 <td><code>BaseAddress</code></td>
 <td><code>DWord</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Globális kezdőcím.</td>
 </tr>
 <tr class="odd">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
-<td>read</td>
+<td>Re</td>
 <td>A modul rövid leírása.</td>
 </tr>
 <tr class="even">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Engedélyezi vagy letiltja a memóriaelérést.</td>
 </tr>
 <tr class="odd">
 <td><code>MemoryMode</code></td>
 <td><code>TMemoryMode</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Kiválasztja a RAM vagy ROM működési módot.</td>
 </tr>
 <tr class="even">
-<td><code>ModName</code></td>
+<td><code>Modname</code></td>
 <td><code>PChar</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Modulnév.</td>
 </tr>
 <tr class="odd">
 <td><code>Version</code></td>
 <td><code>TSemanticVersion</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Modulverzió.</td>
 </tr>
 </tbody>

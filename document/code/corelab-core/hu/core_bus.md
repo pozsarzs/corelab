@@ -15,12 +15,12 @@ A forrás az interfészt a CPU és az eszközök közötti kapcsolatként azonos
 
 ### Interfészmetódusok
 
-|name                                                    |description                                                                                                                         |
-|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+|név                                                     |leírás                                                                                                                                      |
+|--------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 |`function ReadMemory(AAddress: DWord): QWord;`          |Kiolvassa az `AAddress` által megadott memóriacímen található értéket. A forrás szerint ezt a műveletet kizárólag a `TMemory` valósítja meg.|
-|`procedure WriteMemory(AAddress: DWord; AValue: QWord);`|Kiír egy értéket az `AAddress` által megadott memóriacímre. A forrás szerint ezt a műveletet kizárólag a `TMemory` valósítja meg. |
-|`function ReadPort(APort: Word): Byte;`                 |Kiolvas egy bájtot a megadott I/O-portról. A forrás szerint ezt a műveletet kizárólag a `TIOPort` valósítja meg.                     |
-|`procedure WritePort(APort: Word; AValue: Byte);`       |Kiír egy bájtot a megadott I/O-portra. A forrás szerint ezt a műveletet kizárólag a `TIOPort` valósítja meg.                      |
+|`procedure WriteMemory(AAddress: DWord; AValue: QWord);`|Kiír egy értéket az `AAddress` által megadott memóriacímre. A forrás szerint ezt a műveletet kizárólag a `TMemory` valósítja meg.           |
+|`function ReadPort(APort: Word): Byte;`                 |Kiolvas egy bájtot a megadott I/O-portról. A forrás szerint ezt a műveletet kizárólag a `TIOPort` valósítja meg.                            |
+|`procedure WritePort(APort: Word; AValue: Byte);`       |Kiír egy bájtot a megadott I/O-portra. A forrás szerint ezt a műveletet kizárólag a `TIOPort` valósítja meg.                                |
 
 ### Interfészazonosító
 

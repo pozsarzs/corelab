@@ -124,22 +124,22 @@ CPU classes.
 
 ### Public properties
 
-|name              |type              |access    |description                               |
-|------------------|------------------|----------|------------------------------------------|
-|`AddressWidth`    |`Byte`            |read      |Address bus width in bits.                |
-|`Architecture`    |`TArchitecture`   |read      |CPU architecture.                         |
-|`Cycles`          |`QWord`           |read      |Total CPU cycle counter.                  |
-|`Description`     |`PChar`           |read      |Short module description.                 |
-|`Enabled`         |`Boolean`         |read/write|Enables or disables CPU operation.        |
-|`Endianness`      |`TEndianness`     |read      |CPU byte order.                           |
-|`Halted`          |`Boolean`         |read      |Current CPU HALT state.                   |
-|`HasSeparateIOBus`|`Boolean`         |read      |Whether memory and I/O buses are separate.|
-|`Instructions`    |`QWord`           |read      |Total executed instruction counter.       |
-|`InterruptEnabled`|`Boolean`         |read      |Global maskable-interrupt state.          |
-|`MaxCodeAddress`  |`DWord`           |read      |Highest code memory address.              |
-|`MaxIOPortAddress`|`DWord`           |read      |Highest I/O port address.                 |
-|`MaxMemAddress`   |`DWord`           |read      |Highest data memory address.              |
-|`Modname`         |`PChar`           |read      |Module name.                              |
-|`OnEvent`         |`TCPUEventHandler`|read/write|CPU event callback.                       |
-|`Running`         |`Boolean`         |read      |Current execution state.                  |
-|`Version`         |`TSemanticVersion`|read      |Module version.                           |
+|name              |type              |access|description                               |
+|------------------|------------------|------|------------------------------------------|
+|`AddressWidth`    |`Byte`            |Re    |Address bus width in bits.                |
+|`Architecture`    |`TArchitecture`   |Re    |CPU architecture.                         |
+|`Cycles`          |`QWord`           |Re    |Total CPU cycle counter.                  |
+|`Description`     |`PChar`           |Re    |Short module description.                 |
+|`Enabled`         |`Boolean`         |Re/Wr |Enables or disables CPU operation.        |
+|`Endianness`      |`TEndianness`     |Re    |CPU byte order.                           |
+|`Halted`          |`Boolean`         |Re    |Current CPU HALT state.                   |
+|`HasSeparateIOBus`|`Boolean`         |Re    |Whether memory and I/O buses are separate.|
+|`Instructions`    |`QWord`           |Re    |Total executed instruction counter.       |
+|`InterruptEnabled`|`Boolean`         |Re    |Global maskable-interrupt state.          |
+|`MaxCodeAddress`  |`DWord`           |Re    |Highest code memory address.              |
+|`MaxIOPortAddress`|`DWord`           |Re    |Highest I/O port address.                 |
+|`MaxMemAddress`   |`DWord`           |Re    |Highest data memory address.              |
+|`Modname`         |`PChar`           |Re    |Module name.                              |
+|`OnEvent`         |`TCPUEventHandler`|Re/Wr |CPU event callback.                       |
+|`Running`         |`Boolean`         |Re    |Current execution state.                  |
+|`Version`         |`TSemanticVersion`|Re    |Module version.                           |

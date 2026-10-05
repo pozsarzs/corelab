@@ -14,7 +14,7 @@ address-space size, RAM/ROM operation mode, enable state, instance
 identification and stream-based state persistence.</p>
 <h3 id="tmemorymode">TMemoryMode</h3>
 <p><code>TMemoryMode</code> defines the memory operation mode:</p>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -33,7 +33,7 @@ identification and stream-based state persistence.</p>
 </tbody>
 </table>
 <h3 id="tmemorymodehelper">TMemoryModeHelper</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 66%" />
@@ -60,7 +60,7 @@ using RTTI.</td>
 <h3 id="tsemanticversion">TSemanticVersion</h3>
 <p><code>TSemanticVersion</code> stores the module version as three
 integer components.</p>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <thead>
 <tr class="header">
 <th>field</th>
@@ -87,7 +87,7 @@ integer components.</p>
 </tbody>
 </table>
 <h3 id="tsemanticversionhelper">TSemanticVersionHelper</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 74%" />
@@ -112,7 +112,7 @@ older.</td>
 </tbody>
 </table>
 <h3 id="protected-fields">Protected fields</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 15%" />
 <col style="width: 14%" />
@@ -179,7 +179,7 @@ older.</td>
 </tbody>
 </table>
 <h3 id="protected-methods">Protected methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 32%" />
 <col style="width: 67%" />
@@ -200,7 +200,7 @@ bytes.</td>
 </tbody>
 </table>
 <h3 id="public-methods">Public methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 2%" />
@@ -271,12 +271,12 @@ position when enabled and memory bounds are valid.</td>
 </tbody>
 </table>
 <h3 id="public-properties">Public properties</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
-<col style="width: 21%" />
-<col style="width: 21%" />
-<col style="width: 12%" />
-<col style="width: 44%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 7%" />
+<col style="width: 46%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -290,43 +290,43 @@ position when enabled and memory bounds are valid.</td>
 <tr class="odd">
 <td><code>AddressRangeSize</code></td>
 <td><code>DWord</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Configured memory address-space size.</td>
 </tr>
 <tr class="even">
 <td><code>BaseAddress</code></td>
 <td><code>DWord</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Global start address.</td>
 </tr>
 <tr class="odd">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Short module description.</td>
 </tr>
 <tr class="even">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Enables or disables memory access.</td>
 </tr>
 <tr class="odd">
 <td><code>MemoryMode</code></td>
 <td><code>TMemoryMode</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Selects RAM or ROM operation.</td>
 </tr>
 <tr class="even">
 <td><code>ModName</code></td>
 <td><code>PChar</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Module name.</td>
 </tr>
 <tr class="odd">
 <td><code>Version</code></td>
 <td><code>TSemanticVersion</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Module version.</td>
 </tr>
 </tbody>

@@ -16,7 +16,7 @@ event notification and connection to an external
 current-instruction reporting and state persistence are left abstract
 for derived CPU classes.</p>
 <h3 id="related-types">Related types</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 22%" />
 <col style="width: 17%" />
@@ -69,7 +69,7 @@ for derived CPU classes.</p>
 </table>
 <h3 id="enumeration-values">Enumeration values</h3>
 <h4 id="tarchitecture">TArchitecture</h4>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -88,7 +88,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h4 id="tendianness">TEndianness</h4>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -107,7 +107,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h4 id="tcpuevent">TCPUEvent</h4>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -134,7 +134,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="type-helpers">Type helpers</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 37%" />
 <col style="width: 62%" />
@@ -182,7 +182,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="protected-fields">Protected fields</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 19%" />
@@ -333,7 +333,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="protected-methods">Protected methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 49%" />
 <col style="width: 5%" />
@@ -360,7 +360,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="public-methods">Public methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
 <col style="width: 47%" />
 <col style="width: 3%" />
@@ -472,12 +472,12 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="public-properties">Public properties</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 11%" />
-<col style="width: 47%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 7%" />
+<col style="width: 50%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -491,103 +491,103 @@ for derived CPU classes.</p>
 <tr class="odd">
 <td><code>AddressWidth</code></td>
 <td><code>Byte</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Address bus width in bits.</td>
 </tr>
 <tr class="even">
 <td><code>Architecture</code></td>
 <td><code>TArchitecture</code></td>
-<td>read</td>
+<td>Re</td>
 <td>CPU architecture.</td>
 </tr>
 <tr class="odd">
 <td><code>Cycles</code></td>
 <td><code>QWord</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Total CPU cycle counter.</td>
 </tr>
 <tr class="even">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Short module description.</td>
 </tr>
 <tr class="odd">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>Enables or disables CPU operation.</td>
 </tr>
 <tr class="even">
 <td><code>Endianness</code></td>
 <td><code>TEndianness</code></td>
-<td>read</td>
+<td>Re</td>
 <td>CPU byte order.</td>
 </tr>
 <tr class="odd">
 <td><code>Halted</code></td>
 <td><code>Boolean</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Current CPU HALT state.</td>
 </tr>
 <tr class="even">
 <td><code>HasSeparateIOBus</code></td>
 <td><code>Boolean</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Whether memory and I/O buses are separate.</td>
 </tr>
 <tr class="odd">
 <td><code>Instructions</code></td>
 <td><code>QWord</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Total executed instruction counter.</td>
 </tr>
 <tr class="even">
 <td><code>InterruptEnabled</code></td>
 <td><code>Boolean</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Global maskable-interrupt state.</td>
 </tr>
 <tr class="odd">
 <td><code>MaxCodeAddress</code></td>
 <td><code>DWord</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Highest code memory address.</td>
 </tr>
 <tr class="even">
 <td><code>MaxIOPortAddress</code></td>
 <td><code>DWord</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Highest I/O port address.</td>
 </tr>
 <tr class="odd">
 <td><code>MaxMemAddress</code></td>
 <td><code>DWord</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Highest data memory address.</td>
 </tr>
 <tr class="even">
 <td><code>Modname</code></td>
 <td><code>PChar</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Module name.</td>
 </tr>
 <tr class="odd">
 <td><code>OnEvent</code></td>
 <td><code>TCPUEventHandler</code></td>
-<td>read/write</td>
+<td>Re/Wr</td>
 <td>CPU event callback.</td>
 </tr>
 <tr class="even">
 <td><code>Running</code></td>
 <td><code>Boolean</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Current execution state.</td>
 </tr>
 <tr class="odd">
 <td><code>Version</code></td>
 <td><code>TSemanticVersion</code></td>
-<td>read</td>
+<td>Re</td>
 <td>Module version.</td>
 </tr>
 </tbody>
