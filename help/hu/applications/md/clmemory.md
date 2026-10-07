@@ -1,4 +1,4 @@
-# CLMemory – Súgó
+# CLMemory - Súgó
 
 ## 1. Bevezetés
 

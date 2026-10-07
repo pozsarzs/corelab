@@ -1,0 +1,1901 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 8008 microprocessor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-8008-microprocessor">Intel 8008 microprocessor</h2>
+<h3 id="technical-parameters">Technical Parameters</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 58%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Release date</strong></td>
+<td>April 1972</td>
+</tr>
+<tr class="even">
+<td><strong>Process technology</strong></td>
+<td>10 µm PMOS</td>
+</tr>
+<tr class="odd">
+<td><strong>Transistor count</strong></td>
+<td>~3,500</td>
+</tr>
+<tr class="even">
+<td><strong>Architecture</strong></td>
+<td>Neumann</td>
+</tr>
+<tr class="odd">
+<td><strong>Data bus width</strong></td>
+<td>8-bit</td>
+</tr>
+<tr class="even">
+<td><strong>Address bus width</strong></td>
+<td>14-bit</td>
+</tr>
+<tr class="odd">
+<td><strong>Maximum addressable memory</strong></td>
+<td>16 kB</td>
+</tr>
+<tr class="even">
+<td><strong>Maximum addressable I/O area</strong></td>
+<td>8 input ports + 8 output ports</td>
+</tr>
+<tr class="odd">
+<td><strong>Clock speed</strong></td>
+<td>500 kHz; 8008-1 up to 800 kHz</td>
+</tr>
+<tr class="even">
+<td><strong>Stack</strong></td>
+<td>7-level × 14-bit call internal stack</td>
+</tr>
+<tr class="odd">
+<td><strong>General purpose registers</strong></td>
+<td>A, B, C, D, E, H, L</td>
+</tr>
+<tr class="even">
+<td><strong>Special registers</strong></td>
+<td>PC, Flags</td>
+</tr>
+<tr class="odd">
+<td><strong>Interrupt handling</strong></td>
+<td>One input; vector is supplied externally.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Flag abbreviations:</strong></p>
+<ul>
+<li><strong>S</strong> - Sign Flag</li>
+<li><strong>Z</strong> - Zero Flag</li>
+<li><strong>P</strong> - Parity Flag</li>
+<li><strong>C</strong> - Carry Flag</li>
+</ul>
+<h3 id="opcodes">Opcodes</h3>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li><code>/</code>: operation occurs/does not occur.</li>
+<li><code>*</code>: alternative opcodes; must not be used.</li>
+<li><code>d8</code> or <code>d16</code>: 8-bit or 16-bit immediate
+data.</li>
+<li><code>a16</code>: 16-bit memory address.</li>
+</ul>
+<table border="1" cellspacing="0" cellpadding="4">
+
+<thead>
+<tr class="header">
+<th style="text-align: center;">opcode</th>
+<th style="text-align: left;">mnemonic</th>
+<th style="text-align: right;">size</th>
+<th style="text-align: right;">cycles</th>
+<th>flags</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">00</td>
+<td style="text-align: left;">*HLT</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">01</td>
+<td style="text-align: left;">*HLT</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">02</td>
+<td style="text-align: left;">RLC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>-C</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">03</td>
+<td style="text-align: left;">RFC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">04</td>
+<td style="text-align: left;">ADI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">05</td>
+<td style="text-align: left;">RST 0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">06</td>
+<td style="text-align: left;">LAI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">07</td>
+<td style="text-align: left;">RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">08</td>
+<td style="text-align: left;">INB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">09</td>
+<td style="text-align: left;">DCB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0A</td>
+<td style="text-align: left;">RRC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>-C</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0B</td>
+<td style="text-align: left;">RFZ</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0C</td>
+<td style="text-align: left;">ACI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0D</td>
+<td style="text-align: left;">RST 1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0E</td>
+<td style="text-align: left;">LBI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0F</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">10</td>
+<td style="text-align: left;">INC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">11</td>
+<td style="text-align: left;">DCC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">12</td>
+<td style="text-align: left;">RAL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>-C</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">13</td>
+<td style="text-align: left;">RFS</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">14</td>
+<td style="text-align: left;">SUI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">15</td>
+<td style="text-align: left;">RST 2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">16</td>
+<td style="text-align: left;">LCI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">17</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">18</td>
+<td style="text-align: left;">IND</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">19</td>
+<td style="text-align: left;">DCD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1A</td>
+<td style="text-align: left;">RAR</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>-C</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1B</td>
+<td style="text-align: left;">RFP</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1C</td>
+<td style="text-align: left;">SBI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1D</td>
+<td style="text-align: left;">RST 3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1E</td>
+<td style="text-align: left;">LDI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1F</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">20</td>
+<td style="text-align: left;">INE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">21</td>
+<td style="text-align: left;">DCE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">22</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">23</td>
+<td style="text-align: left;">RTC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: left;">NDI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">25</td>
+<td style="text-align: left;">RST 4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">26</td>
+<td style="text-align: left;">LEI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">27</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">28</td>
+<td style="text-align: left;">INH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">29</td>
+<td style="text-align: left;">DCH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2A</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2B</td>
+<td style="text-align: left;">RTZ</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2C</td>
+<td style="text-align: left;">XRI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2D</td>
+<td style="text-align: left;">RST 5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2E</td>
+<td style="text-align: left;">LHI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2F</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">30</td>
+<td style="text-align: left;">INL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">31</td>
+<td style="text-align: left;">DCL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZP-</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">32</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">33</td>
+<td style="text-align: left;">RTS</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">34</td>
+<td style="text-align: left;">ORI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">35</td>
+<td style="text-align: left;">RST 6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">36</td>
+<td style="text-align: left;">LLI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">37</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">38</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">39</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3A</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3B</td>
+<td style="text-align: left;">RTP</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10/6</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3C</td>
+<td style="text-align: left;">CPI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td>SZP-</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3D</td>
+<td style="text-align: left;">RST 7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3E</td>
+<td style="text-align: left;">LMI d8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3F</td>
+<td style="text-align: left;">*RET</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">40</td>
+<td style="text-align: left;">JFC a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">41</td>
+<td style="text-align: left;">INP 0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">42</td>
+<td style="text-align: left;">CFC a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">43</td>
+<td style="text-align: left;">INP 1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">44</td>
+<td style="text-align: left;">JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">45</td>
+<td style="text-align: left;">INP 2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">46</td>
+<td style="text-align: left;">CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">47</td>
+<td style="text-align: left;">INP 3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">48</td>
+<td style="text-align: left;">JFZ a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">49</td>
+<td style="text-align: left;">INP 4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4A</td>
+<td style="text-align: left;">CFZ a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4B</td>
+<td style="text-align: left;">INP 5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4C</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4D</td>
+<td style="text-align: left;">INP 6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4E</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4F</td>
+<td style="text-align: left;">INP 7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">50</td>
+<td style="text-align: left;">JFS a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">51</td>
+<td style="text-align: left;">OUT 8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">52</td>
+<td style="text-align: left;">CFS a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">53</td>
+<td style="text-align: left;">OUT 9</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">54</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">55</td>
+<td style="text-align: left;">OUT 10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">56</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">57</td>
+<td style="text-align: left;">OUT 11</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">58</td>
+<td style="text-align: left;">JFP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">59</td>
+<td style="text-align: left;">OUT 12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5A</td>
+<td style="text-align: left;">CFP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5B</td>
+<td style="text-align: left;">OUT 13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5C</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5D</td>
+<td style="text-align: left;">OUT 14</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5E</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5F</td>
+<td style="text-align: left;">OUT 15</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">60</td>
+<td style="text-align: left;">JTC a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">61</td>
+<td style="text-align: left;">OUT 16</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">62</td>
+<td style="text-align: left;">CTC a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">63</td>
+<td style="text-align: left;">OUT 17</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">64</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">65</td>
+<td style="text-align: left;">OUT 18</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">66</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">67</td>
+<td style="text-align: left;">OUT 19</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">68</td>
+<td style="text-align: left;">JTZ a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">69</td>
+<td style="text-align: left;">OUT 20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6A</td>
+<td style="text-align: left;">CTZ a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6B</td>
+<td style="text-align: left;">OUT 21</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6C</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6D</td>
+<td style="text-align: left;">OUT 22</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6E</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6F</td>
+<td style="text-align: left;">OUT 23</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">70</td>
+<td style="text-align: left;">JTS a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">71</td>
+<td style="text-align: left;">OUT 24</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">72</td>
+<td style="text-align: left;">CTS a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">73</td>
+<td style="text-align: left;">OUT 25</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">74</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">75</td>
+<td style="text-align: left;">OUT 26</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">76</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">77</td>
+<td style="text-align: left;">OUT 27</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">78</td>
+<td style="text-align: left;">JTP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">79</td>
+<td style="text-align: left;">OUT 28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7A</td>
+<td style="text-align: left;">CTP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22/18</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7B</td>
+<td style="text-align: left;">OUT 29</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7C</td>
+<td style="text-align: left;">*JMP a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7D</td>
+<td style="text-align: left;">OUT 30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7E</td>
+<td style="text-align: left;">*CAL a16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7F</td>
+<td style="text-align: left;">OUT 31</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">80</td>
+<td style="text-align: left;">ADA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">81</td>
+<td style="text-align: left;">ADB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">82</td>
+<td style="text-align: left;">ADC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">83</td>
+<td style="text-align: left;">ADD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">84</td>
+<td style="text-align: left;">ADE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">85</td>
+<td style="text-align: left;">ADH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">86</td>
+<td style="text-align: left;">ADL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">87</td>
+<td style="text-align: left;">ADM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">88</td>
+<td style="text-align: left;">ACA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">89</td>
+<td style="text-align: left;">ACB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">8A</td>
+<td style="text-align: left;">ACC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8B</td>
+<td style="text-align: left;">ACD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">8C</td>
+<td style="text-align: left;">ACE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8D</td>
+<td style="text-align: left;">ACH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">8E</td>
+<td style="text-align: left;">ACL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8F</td>
+<td style="text-align: left;">ACM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">90</td>
+<td style="text-align: left;">SUA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">91</td>
+<td style="text-align: left;">SUB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">92</td>
+<td style="text-align: left;">SUC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">93</td>
+<td style="text-align: left;">SUD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">94</td>
+<td style="text-align: left;">SUE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">95</td>
+<td style="text-align: left;">SUH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">96</td>
+<td style="text-align: left;">SUL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">97</td>
+<td style="text-align: left;">SUM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">98</td>
+<td style="text-align: left;">SBA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">99</td>
+<td style="text-align: left;">SBB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9A</td>
+<td style="text-align: left;">SBC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">9B</td>
+<td style="text-align: left;">SBD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9C</td>
+<td style="text-align: left;">SBE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">9D</td>
+<td style="text-align: left;">SBH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9E</td>
+<td style="text-align: left;">SBL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">9F</td>
+<td style="text-align: left;">SBM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">A0</td>
+<td style="text-align: left;">NDA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">A1</td>
+<td style="text-align: left;">NDB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">A2</td>
+<td style="text-align: left;">NDC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">A3</td>
+<td style="text-align: left;">NDD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">A4</td>
+<td style="text-align: left;">NDE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">A5</td>
+<td style="text-align: left;">NDH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">A6</td>
+<td style="text-align: left;">NDL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">A7</td>
+<td style="text-align: left;">NDM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">A8</td>
+<td style="text-align: left;">XRA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">A9</td>
+<td style="text-align: left;">XRB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">AA</td>
+<td style="text-align: left;">XRC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">AB</td>
+<td style="text-align: left;">XRD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">AC</td>
+<td style="text-align: left;">XRE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">AD</td>
+<td style="text-align: left;">XRH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">AE</td>
+<td style="text-align: left;">XRL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">AF</td>
+<td style="text-align: left;">XRM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">B0</td>
+<td style="text-align: left;">ORA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B1</td>
+<td style="text-align: left;">ORB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">B2</td>
+<td style="text-align: left;">ORC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B3</td>
+<td style="text-align: left;">ORD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">B4</td>
+<td style="text-align: left;">ORE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B5</td>
+<td style="text-align: left;">ORH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">B6</td>
+<td style="text-align: left;">ORL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B7</td>
+<td style="text-align: left;">ORM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">B8</td>
+<td style="text-align: left;">CPA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B9</td>
+<td style="text-align: left;">CPB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">BA</td>
+<td style="text-align: left;">CPC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">BB</td>
+<td style="text-align: left;">CPD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">BC</td>
+<td style="text-align: left;">CPE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">BD</td>
+<td style="text-align: left;">CPH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">BE</td>
+<td style="text-align: left;">CPL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>SZPC</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">BF</td>
+<td style="text-align: left;">CPM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>SZPC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C0</td>
+<td style="text-align: left;">NOP</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">C1</td>
+<td style="text-align: left;">LAB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C2</td>
+<td style="text-align: left;">LAC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">C3</td>
+<td style="text-align: left;">LAD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C4</td>
+<td style="text-align: left;">LAE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">C5</td>
+<td style="text-align: left;">LAH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C6</td>
+<td style="text-align: left;">LAL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">C7</td>
+<td style="text-align: left;">LAM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C8</td>
+<td style="text-align: left;">LBA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">C9</td>
+<td style="text-align: left;">LBB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">CA</td>
+<td style="text-align: left;">LBC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">CB</td>
+<td style="text-align: left;">LBD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">CC</td>
+<td style="text-align: left;">LBE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">CD</td>
+<td style="text-align: left;">LBH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">CE</td>
+<td style="text-align: left;">LBL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">CF</td>
+<td style="text-align: left;">LBM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D0</td>
+<td style="text-align: left;">LCA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D1</td>
+<td style="text-align: left;">LCB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D2</td>
+<td style="text-align: left;">LCC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D3</td>
+<td style="text-align: left;">LCD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D4</td>
+<td style="text-align: left;">LCE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D5</td>
+<td style="text-align: left;">LCH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D6</td>
+<td style="text-align: left;">LCL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D7</td>
+<td style="text-align: left;">LCM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">D8</td>
+<td style="text-align: left;">LDA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D9</td>
+<td style="text-align: left;">LDB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">DA</td>
+<td style="text-align: left;">LDC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">DB</td>
+<td style="text-align: left;">LDD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">DC</td>
+<td style="text-align: left;">LDE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">DD</td>
+<td style="text-align: left;">LDH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">DE</td>
+<td style="text-align: left;">LDL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">DF</td>
+<td style="text-align: left;">LDM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">E0</td>
+<td style="text-align: left;">LEA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">E1</td>
+<td style="text-align: left;">LEB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">E2</td>
+<td style="text-align: left;">LEC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">E3</td>
+<td style="text-align: left;">LED</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">E4</td>
+<td style="text-align: left;">LEE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">E5</td>
+<td style="text-align: left;">LEH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">E6</td>
+<td style="text-align: left;">LEL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">E7</td>
+<td style="text-align: left;">LEM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">E8</td>
+<td style="text-align: left;">LHA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">E9</td>
+<td style="text-align: left;">LHB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">EA</td>
+<td style="text-align: left;">LHC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">EB</td>
+<td style="text-align: left;">LHD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">EC</td>
+<td style="text-align: left;">LHE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">ED</td>
+<td style="text-align: left;">LHH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">EE</td>
+<td style="text-align: left;">LHL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">EF</td>
+<td style="text-align: left;">LHM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F0</td>
+<td style="text-align: left;">LLA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F1</td>
+<td style="text-align: left;">LLB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F2</td>
+<td style="text-align: left;">LLC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F3</td>
+<td style="text-align: left;">LLD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F4</td>
+<td style="text-align: left;">LLE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F5</td>
+<td style="text-align: left;">LLH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F6</td>
+<td style="text-align: left;">LLL</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F7</td>
+<td style="text-align: left;">LLM</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F8</td>
+<td style="text-align: left;">LMA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F9</td>
+<td style="text-align: left;">LMB</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">FA</td>
+<td style="text-align: left;">LMC</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">FB</td>
+<td style="text-align: left;">LMD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">FC</td>
+<td style="text-align: left;">LME</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">FD</td>
+<td style="text-align: left;">LMH</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">FE</td>
+<td style="text-align: left;">LML</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td>--</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">FF</td>
+<td style="text-align: left;">HLT</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td>--</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

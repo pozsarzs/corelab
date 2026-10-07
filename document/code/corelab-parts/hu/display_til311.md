@@ -6,11 +6,11 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TDisplayTIL311 osztály a TDisplay osztályból, a display_til311 modulban
 
-A TDisplayTIL311 a TDisplay alaposztályból származó virtuális kijelzőkomponens. Az 1972-ben bemutatott Texas Instruments TIL311 hexadecimális LED-kijelzőt szimulálja. A komponens a 0–F hexadecimális értékeket 4×7-es pontmátrixként jeleníti meg, és két tizedespont-LED-et biztosít.
+A TDisplayTIL311 a TDisplay alaposztályból származó virtuális kijelzőkomponens. Az 1972-ben bemutatott Texas Instruments TIL311 hexadecimális LED-kijelzőt szimulálja. A komponens a 0-F hexadecimális értékeket 4×7-es pontmátrixként jeleníti meg, és két tizedespont-LED-et biztosít.
 
 ### Karaktertérkép
 
-A kijelző beépített, 16 karakterből álló térképet használ a `0`–`9` hexadecimális számjegyekhez és az `A`–`F` betűkhöz. Minden karakter hét, egyenként négy LED-pozícióból álló sorból épül fel.
+A kijelző beépített, 16 karakterből álló térképet használ a `0`-`9` hexadecimális számjegyekhez és az `A`-`F` betűkhöz. Minden karakter hét, egyenként négy LED-pozícióból álló sorból épül fel.
 
 A TIL311 karakteralakjának reprodukálásához a megvalósítás az 1., 2., 4. és 5. sorban elhagyja a két belső pontot.
 
@@ -19,7 +19,7 @@ A TIL311 karakteralakjának reprodukálásához a megvalósítás az 1., 2., 4. 
 |name                                                |flags|description                                                                                     |
 |----------------------------------------------------|-----|------------------------------------------------------------------------------------------------|
 |`procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);`|     |Draws a single display dot into the internal buffer.                                            |
-|`CHARMAP_TIL311`                                    |Co   |16-entry hexadecimal character map; each entry contains seven 4-bit rows for characters `0`–`F`.|
+|`CHARMAP_TIL311`                                    |Co   |16-entry hexadecimal character map; each entry contains seven 4-bit rows for characters `0`-`F`.|
 
 ### Nyilvános metódusok
 

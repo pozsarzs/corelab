@@ -1,4 +1,4 @@
-# CLProcessor – Súgó
+# CLProcessor - Súgó
 
 ## 1. Bevezetés
 

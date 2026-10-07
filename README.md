@@ -144,7 +144,7 @@ in mind:
 ### Project management
 
 CoreLAB uses a simple directory-based project structure. A project directory can
-contain all related files—such as optional environment setup scripts, program
+contain all related files-such as optional environment setup scripts, program
 code, and data streams. The simulation environment can also be built manually,
 meaning none of these files are strictly mandatory. This setup keeps experiments
 independent while fully supporting the use of external files.

@@ -1,4 +1,4 @@
-# CLProcessor – Help
+# CLProcessor - Help
 
 ## 1. Introduction
 

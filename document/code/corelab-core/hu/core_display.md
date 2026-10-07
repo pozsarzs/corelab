@@ -18,8 +18,8 @@ osztályok valósítják meg.
 |`Blank`   |`Boolean`|Üres kijelző állapota                         |
 |`LeftDot` |`Boolean`|Bal oldali tizedespont állapota               |
 |`RightDot`|`Boolean`|Jobb oldali tizedespont állapota              |
-|`Segments`|`Byte`   |Hétszegmenses adat; a 0–6. bitek használatosak|
-|`Value`   |`Byte`   |BCD-érték; a 0–3. bitek használatosak         |
+|`Segments`|`Byte`   |Hétszegmenses adat; a 0-6. bitek használatosak|
+|`Value`   |`Byte`   |BCD-érték; a 0-3. bitek használatosak         |
 
 ### Védett mezők
 

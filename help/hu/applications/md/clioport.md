@@ -1,4 +1,4 @@
-# CLIOPort – Súgó
+# CLIOPort - Súgó
 
 ## 1. Bevezetés
 
@@ -84,7 +84,7 @@ A **Bővítménylista frissítése** parancs újraolvassa az aktuális könyvtá
 2. Indítsd el a **Bővítmény betöltése/cseréje** parancsot.
 3. Sikeres betöltéskor a tulajdonságlista és a porttábla feltöltődik.
 4. Ha a bővítmény saját panellel rendelkezik, az alkalmazás létrehozza és megjeleníti azt.
-Új bővítmény betöltésekor a korábban betöltött bővítmény példánya és – ha van – saját ablaka felszabadításra kerül.
+Új bővítmény betöltésekor a korábban betöltött bővítmény példánya és - ha van - saját ablaka felszabadításra kerül.
 
 ### 4.3 Port olvasása
 
@@ -98,7 +98,7 @@ A **Bővítménylista frissítése** parancs újraolvassa az aktuális könyvtá
 1. Jelöld ki a porttáblában a kívánt sort.
 2. Írd be az adatot a **Adat (Hex)** oszlopba.
 3. Az adatmező szerkesztésének befejezésekor a program végrehajtja az írást.
-4. Az értéknek 8 bites hexadecimális számnak kell lennie (`00`–`FF`).
+4. Az értéknek 8 bites hexadecimális számnak kell lennie (`00`-`FF`).
 
 ### 4.5 A bővítmény állapotának mentése
 
@@ -171,7 +171,7 @@ A program az alábbi esetekben jelenít meg hibaüzenetet:
 | A fájl nem CoreLAB I/O-port bővítmény. | Olyan bővítményt válassz, amely a szükséges I/O-port belépési pontokat biztosítja. |
 | Hiányzik a súgófájl. | Ellenőrizd a `corelab_<nyelv>.chm`, illetve a `corelab_en.chm` fájl elérhetőségét. |
 | Hiányzik a súgónéző. | Ellenőrizd, hogy az `lhelp` elérhető-e a program számára. |
-| Hibás hexadecimális adat. | Csak `00`–`FF` közötti, 8 bites hexadecimális érték adható meg. |
+| Hibás hexadecimális adat. | Csak `00`-`FF` közötti, 8 bites hexadecimális érték adható meg. |
 | Nem olvasható vagy nem írható a bővítmény állapota. | Ellenőrizd a kiválasztott bővítményt és az állományt. |
 
 ## 8. Függelék

@@ -67,6 +67,35 @@
 			</OBJECT>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="CPUs">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Intel 4004">
+			<param name="Local" value="cpus/cpu_4004.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Intel 4040">
+			<param name="Local" value="cpus/cpu_4040.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Intel 8008">
+			<param name="Local" value="cpus/cpu_8008.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Intel 8080">
+			<param name="Local" value="cpus/cpu_8080.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Intel 8085">
+			<param name="Local" value="cpus/cpu_8085.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Zilog Z80">
+			<param name="Local" value="cpus/cpu_z80.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Parts">
 		</OBJECT>
 	<UL>

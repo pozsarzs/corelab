@@ -50,6 +50,30 @@
 	<param name="Local" value="classes/core_memory.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="4004">
+	<param name="Local" value="cpus/cpu_4004.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="4040">
+	<param name="Local" value="cpus/cpu_4040.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="8008">
+	<param name="Local" value="cpus/cpu_8008.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="8080">
+	<param name="Local" value="cpus/cpu_8080.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="8085">
+	<param name="Local" value="cpus/cpu_8085.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Z80">
+	<param name="Local" value="cpus/cpu_z80.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="T4004CPU">
 	<param name="Local" value="plugins/cpu_4004.html">
 	</OBJECT>

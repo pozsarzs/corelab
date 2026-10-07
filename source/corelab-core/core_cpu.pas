@@ -51,12 +51,23 @@ type
     function ToString: string;
     function Compare(AOther: TSemanticVersion): Integer;
   end;
+  // Last executed instruction
+  TLastInstruction = record
+    Address:     Word;
+    Opcode:      Byte;
+    NumOperand:  Byte;
+    Operands:    array[1..2] of Word;
+    Mnemonic:    string[12];
+    Cycles:      Byte;
+  end;
   // Last executed instruction record for RunLogger
   TLogRec = record
-    InstCount: Integer;
-    Address:   string[31];
-    OpCode:    string[31];
-    Mnemonic:  string[127];
+    InstCount:   Integer;
+    Address:     string[31];
+    OpCode:      string[31];
+    Mnemonic:    string[127];
+    Cycles:      string[3];
+    TotalCycles: string[20];
   end;
   // Last interrupt record for IntLogger
   TIntLogRec = record
@@ -79,6 +90,7 @@ type
     FArchitecture:     TArchitecture;                    // Type of architecture
     FEnabled:          Boolean;         // Enable device without detach from bus
     FEndianness:       TEndianness;                                // Byte order
+    LogRecord:         TLastInstruction;                 // Raw running log data
     FMaxCodeAddress:   DWord;                 // The highest code memory address
     FMaxIOPortAddress: DWord;                    // The highest I/O port address
     FMaxMemAddress:    DWord;               // The highest (data) memory address

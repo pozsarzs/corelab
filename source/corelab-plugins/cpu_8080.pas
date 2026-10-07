@@ -19,11 +19,13 @@ uses
 type
   // Last executed instruction
   TLastInstruction = record
-    Address:    Word;
-    Opcode:     Byte;
-    NumOperand: Byte;
-    Operands:   array[1..2] of Word;
-    Mnemonic:   string[12];
+    Address:     Word;
+    Opcode:      Byte;
+    NumOperand:  Byte;
+    Operands:    array[1..2] of Word;
+    Mnemonic:    string[12];
+    Cycles:      Byte;
+    TotalCycles: QWord;
   end;
   // Register set
   T8080Registers = record

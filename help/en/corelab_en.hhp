@@ -22,6 +22,12 @@ classes/core_gioport.html
 classes/core_ioport.html
 classes/core_led.html
 classes/core_memory.html
+cpus/cpu_4004.html
+cpus/cpu_4040.html
+cpus/cpu_8008.html
+cpus/cpu_8080.html
+cpus/cpu_8085.html
+cpus/cpu_z80.html
 parts/display_til302.html
 parts/display_til311.html
 parts/led_round.html

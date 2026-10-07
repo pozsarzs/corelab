@@ -6,11 +6,11 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TDisplayTIL311 from TDisplay class in display_til311 unit
 
-TDisplayTIL311 is a virtual display component derived from the TDisplay base class. It simulates the Texas Instruments TIL311 hexadecimal LED display introduced in 1972. The component renders hexadecimal values 0–F as a 4×7 dot matrix and provides two decimal-point LEDs.
+TDisplayTIL311 is a virtual display component derived from the TDisplay base class. It simulates the Texas Instruments TIL311 hexadecimal LED display introduced in 1972. The component renders hexadecimal values 0-F as a 4×7 dot matrix and provides two decimal-point LEDs.
 
 ### Character map
 
-The display uses a built-in 16-character map for hexadecimal digits `0`–`9` and letters `A`–`F`. Each character consists of seven rows of four LED positions.
+The display uses a built-in 16-character map for hexadecimal digits `0`-`9` and letters `A`-`F`. Each character consists of seven rows of four LED positions.
 
 The implementation suppresses the two inner dots on rows 1, 2, 4 and 5 to reproduce the TIL311 character shape.
 
@@ -19,7 +19,7 @@ The implementation suppresses the two inner dots on rows 1, 2, 4 and 5 to reprod
 |name                                                |flags|description                                                                                     |
 |----------------------------------------------------|-----|------------------------------------------------------------------------------------------------|
 |`procedure DrawDot(AStatus: Boolean; Ax, Ay: Byte);`|     |Draws a single display dot into the internal buffer.                                            |
-|`CHARMAP_TIL311`                                    |Co   |16-entry hexadecimal character map; each entry contains seven 4-bit rows for characters `0`–`F`.|
+|`CHARMAP_TIL311`                                    |Co   |16-entry hexadecimal character map; each entry contains seven 4-bit rows for characters `0`-`F`.|
 
 ### Public methods
 

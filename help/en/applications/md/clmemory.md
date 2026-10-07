@@ -1,4 +1,4 @@
-# CLMemory – Help
+# CLMemory - Help
 
 ## 1. Introduction
 

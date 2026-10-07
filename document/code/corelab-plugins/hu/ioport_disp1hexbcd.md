@@ -13,7 +13,7 @@ TIL311 típusú kijelző; az alsó nibble a BCD-bemenet, a felső nibble jelent�
 
 |port|leírás                                                                                                                                                                                                                 |
 |----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|0   |TIL311-stílusú adatot ír ki: a 6. bit a kijelző elsötétítése, az 5. bit a bal oldali tizedespont, a 4. bit a jobb oldali tizedespont, a 0–3. bitek pedig a hexadecimális/BCD-érték. Olvasáskor `00h` értéket ad vissza.|
+|0   |TIL311-stílusú adatot ír ki: a 6. bit a kijelző elsötétítése, az 5. bit a bal oldali tizedespont, a 4. bit a jobb oldali tizedespont, a 0-3. bitek pedig a hexadecimális/BCD-érték. Olvasáskor `00h` értéket ad vissza.|
 
 ### Rövidítések
 

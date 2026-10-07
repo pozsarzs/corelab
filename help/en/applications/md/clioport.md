@@ -1,4 +1,4 @@
-# CLIOPort – Help
+# CLIOPort - Help
 
 ## 1. Introduction
 
@@ -86,7 +86,7 @@ The **Refresh plugin list** command rereads the contents of the current director
 1. Select the required row in the port table.
 2. Enter the data in the **Data (Hex)** column.
 3. The program performs the write operation when editing the data field is finished.
-4. The value must be an 8-bit hexadecimal number (`00`–`FF`).
+4. The value must be an 8-bit hexadecimal number (`00`-`FF`).
 
 ### 4.5 Saving the Plugin State
 

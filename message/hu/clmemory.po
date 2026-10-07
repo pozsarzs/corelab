@@ -354,4 +354,4 @@ msgid "Label8"
 msgstr "Label8"
 
 #~ msgid "The data width can be 4-64 bits."
-#~ msgstr "Az adat szélessége 4–64 bit lehet."
+#~ msgstr "Az adat szélessége 4-64 bit lehet."

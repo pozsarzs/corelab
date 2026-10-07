@@ -18,8 +18,8 @@ operations.
 |`Blank`   |`Boolean`|Blank-display state                  |
 |`LeftDot` |`Boolean`|Left decimal-point state             |
 |`RightDot`|`Boolean`|Right decimal-point state            |
-|`Segments`|`Byte`   |Seven-segment data; bits 0–6 are used|
-|`Value`   |`Byte`   |BCD value; bits 0–3 are used         |
+|`Segments`|`Byte`   |Seven-segment data; bits 0-6 are used|
+|`Value`   |`Byte`   |BCD value; bits 0-3 are used         |
 
 ### Protected fields
 

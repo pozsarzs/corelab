@@ -14,14 +14,14 @@ The seven segment bits are assigned as follows:
 
 |bit|segment|coordinates  |
 |---|-------|-------------|
-|0  |A      |43,05 – 85,05|
-|1  |B      |85,05 – 79,47|
-|2  |C      |79,47 – 73,89|
-|3  |D      |31,89 – 73,89|
-|4  |E      |31,89 – 37,47|
-|5  |F      |37,47 – 43,05|
-|6  |G      |37,47 – 79,47|
-|7  |–      |unused       |
+|0  |A      |43,05 - 85,05|
+|1  |B      |85,05 - 79,47|
+|2  |C      |79,47 - 73,89|
+|3  |D      |31,89 - 73,89|
+|4  |E      |31,89 - 37,47|
+|5  |F      |37,47 - 43,05|
+|6  |G      |37,47 - 79,47|
+|7  |-      |unused       |
 
 The left decimal point is drawn at `(3,91)` and the right decimal point at `(101,91)`.
 
