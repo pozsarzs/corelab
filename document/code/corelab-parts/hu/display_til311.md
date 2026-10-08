@@ -6,7 +6,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TDisplayTIL311 osztály a TDisplay osztályból, a display_til311 modulban
 
-A TDisplayTIL311 a TDisplay alaposztályból származó virtuális kijelzőkomponens. Az 1972-ben bemutatott Texas Instruments TIL311 hexadecimális LED-kijelzőt szimulálja. A komponens a 0-F hexadecimális értékeket 4×7-es pontmátrixként jeleníti meg, és két tizedespont-LED-et biztosít.
+A TDisplayTIL311 a TDisplay alaposztályból származó virtuális kijelzőkomponens. Az 1972-ben bemutatott Texas Instruments TIL311 hexadecimális LED-kijelzőt szimulálja. A komponens a 0-F hexadecimális értékeket 4x7-es pontmátrixként jeleníti meg, és két tizedespont-LED-et biztosít.
 
 ### Karaktertérkép
 

@@ -70,12 +70,12 @@ msgstr "Adattípus-konverziós hiba."
 #: frmmain.msg03
 #, object-pascal-format
 msgid "Directory '%s' does not exist."
-msgstr "A(z) „%s” könyvtár nem létezik."
+msgstr "A(z) '%s' könyvtár nem létezik."
 
 #: frmmain.msg04
 #, object-pascal-format
 msgid "Cannot load '%s' plugin%s(%s)."
-msgstr "A(z) „%s” bővítmény%s(%s) nem tölthető be."
+msgstr "A(z) '%s' bővítmény%s(%s) nem tölthető be."
 
 #: frmmain.msg05
 msgid "It is not a CoreLAB IOPort plugin."
@@ -154,7 +154,7 @@ msgstr "Bővítmény állapotának mentése fájlba"
 #: frmmain.msg22
 #, object-pascal-format
 msgid "Cannot save '%s' plugin data."
-msgstr "A(z) „%s” bővítmény adatai nem menthetők."
+msgstr "A(z) '%s' bővítmény adatai nem menthetők."
 
 #: frmmain.msg23
 msgid "Load plugin state from file"
@@ -163,7 +163,7 @@ msgstr "Bővítmény állapotának betöltése fájlból"
 #: frmmain.msg24
 #, object-pascal-format
 msgid "Cannot load '%s' plugin data."
-msgstr "A(z) „%s” bővítmény adatai nem tölthetők be."
+msgstr "A(z) '%s' bővítmény adatai nem tölthetők be."
 
 #: frmmain.msg25
 msgid "Cannot write state data to plugin."

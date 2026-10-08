@@ -6,7 +6,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TDisplayTIL311 from TDisplay class in display_til311 unit
 
-TDisplayTIL311 is a virtual display component derived from the TDisplay base class. It simulates the Texas Instruments TIL311 hexadecimal LED display introduced in 1972. The component renders hexadecimal values 0-F as a 4×7 dot matrix and provides two decimal-point LEDs.
+TDisplayTIL311 is a virtual display component derived from the TDisplay base class. It simulates the Texas Instruments TIL311 hexadecimal LED display introduced in 1972. The component renders hexadecimal values 0-F as a 4x7 dot matrix and provides two decimal-point LEDs.
 
 ### Character map
 

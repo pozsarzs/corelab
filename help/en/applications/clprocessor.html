@@ -23,7 +23,7 @@ it.</li>
 <li>Run the processor program step by step or continuously.</li>
 <li>Log program execution.</li>
 <li>Examine, clear, load, and save memory contents.</li>
-<li>Use the test environment’s standard I/O ports and ASCII
+<li>Use the test environment's standard I/O ports and ASCII
 console.</li>
 <li>Save and restore the processor state.</li>
 </ul>
@@ -68,7 +68,7 @@ source code are:</p>
 </tr>
 <tr class="even">
 <td>AddressWidth</td>
-<td>The width of the processor’s address bus.</td>
+<td>The width of the processor's address bus.</td>
 </tr>
 <tr class="odd">
 <td>Architecture</td>
@@ -104,7 +104,7 @@ plugin.</p>
 checks whether a value is hexadecimal and whether it fits within the
 size of the corresponding register.</p>
 <h3 id="memory">2.4 Memory</h3>
-<p>The test environment’s memory contents are managed in banks.
+<p>The test environment's memory contents are managed in banks.
 According to the source, bank 0 is the code memory for Neumann and
 Harvard architecture processors, while bank 1 is the Harvard data
 memory.</p>
@@ -135,7 +135,7 @@ updated.</li>
 <h3 id="loading-register-values-from-the-processor">3.3 Loading Register
 Values from the Processor</h3>
 <p>The <strong>Load register values from CPU</strong> command refreshes
-the register list with the processor’s current values.</p>
+the register list with the processor's current values.</p>
 <h3 id="writing-register-values-to-the-processor">3.4 Writing Register
 Values to the Processor</h3>
 <ol type="1">
@@ -148,7 +148,7 @@ registers.</li>
 <p>The value must be hexadecimal and must fit within the size of the
 corresponding register.</p>
 <h3 id="resetting-the-processor">3.5 Resetting the Processor</h3>
-<p>The <strong>Reset</strong> command invokes the processor’s reset
+<p>The <strong>Reset</strong> command invokes the processor's reset
 operation and then refreshes the register list.</p>
 <h3 id="interrupt-requests">3.6 Interrupt Requests</h3>
 <ul>
@@ -174,13 +174,13 @@ the register list.</li>
 sets the interval of the stepping timer.</p>
 <h3 id="execution-log">3.9 Execution Log</h3>
 <p>The <strong>RunLogger</strong> command displays the execution log
-window. The processor’s event handler records the current instruction at
+window. The processor's event handler records the current instruction at
 instruction boundaries.</p>
 <h3 id="examining-memory-contents">3.10 Examining Memory Contents</h3>
 <p>The <strong>Examine/Deposit</strong> command opens the window used to
 examine and modify memory.</p>
 <p>The <strong>HexViewer</strong> command displays the HexViewer window.
-The window receives the loaded processor’s architecture and the size of
+The window receives the loaded processor's architecture and the size of
 the test memory.</p>
 <h3 id="loading-memory-contents-from-a-file">3.11 Loading Memory
 Contents from a File</h3>
@@ -213,7 +213,7 @@ zero.</li>
 </ul>
 <h3 id="ascii-console">3.14 ASCII Console</h3>
 <p>The <strong>ASCII Console</strong> command creates and displays the
-ASCII console panel. The panel name contains the console’s I/O address.
+ASCII console panel. The panel name contains the console's I/O address.
 The console also receives an interrupt handler and uses the interrupt
 vector configured in the main window.</p>
 <h3 id="standard-io-port">3.15 Standard I/O Port</h3>
@@ -282,7 +282,7 @@ data.)</li>
 <ul>
 <li>ASCII Console (Displays the ASCII console.)</li>
 <li>Standard I/O Port (Displays the standard I/O port.)</li>
-<li>Reset ports (Resets the test environment’s I/O ports.)</li>
+<li>Reset ports (Resets the test environment's I/O ports.)</li>
 <li>IRQ request (Enables or disables forwarding of interrupt requests
 from the I/O port.)</li>
 </ul>

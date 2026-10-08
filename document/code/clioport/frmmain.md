@@ -92,7 +92,7 @@ The form contains the following published controls and actions.
 |`StatusBar1`                 |`TStatusBar`      |Status display.                 |
 |`Timer1`                     |`TTimer`          |Temporary status-message timer. |
 |`ToolBar1`                   |`TToolBar`        |Toolbar.                        |
-|`ToolButton1` … `ToolButton7`|`TToolButton`     |Toolbar buttons.                |
+|`ToolButton1`...`ToolButton7`|`TToolButton`     |Toolbar buttons.                |
 |`ValueListEditor1`           |`TValueListEditor`|Plugin property editor.         |
 |`ValueListEditor2`           |`TValueListEditor`|Port address/data editor.       |
 |`WriteAByte`                 |`TAction`         |Write-byte command.             |
