@@ -16,8 +16,7 @@ event notification and connection to an external
 current-instruction reporting and state persistence are left abstract
 for derived CPU classes.</p>
 <h3 id="related-types">Related types</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 22%" />
 <col style="width: 17%" />
@@ -57,11 +56,16 @@ for derived CPU classes.</p>
 <td>Major, minor and patch version information.</td>
 </tr>
 <tr class="even">
+<td><code>TLastInstruction</code></td>
+<td>record</td>
+<td>Last executed instruction</td>
+</tr>
+<tr class="odd">
 <td><code>TLogRec</code></td>
 <td>record</td>
 <td>Information about the last executed instruction.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>TIntLogRec</code></td>
 <td>record</td>
 <td>Information about the last interrupt request.</td>
@@ -70,8 +74,7 @@ for derived CPU classes.</p>
 </table>
 <h3 id="enumeration-values">Enumeration values</h3>
 <h4 id="tarchitecture">TArchitecture</h4>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -90,8 +93,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h4 id="tendianness">TEndianness</h4>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -110,8 +112,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h4 id="tcpuevent">TCPUEvent</h4>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>value</th>
@@ -138,8 +139,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="type-helpers">Type helpers</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 37%" />
 <col style="width: 62%" />
@@ -187,11 +187,10 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="protected-fields">Protected fields</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
-<col style="width: 20%" />
-<col style="width: 19%" />
+<col style="width: 21%" />
+<col style="width: 18%" />
 <col style="width: 44%" />
 <col style="width: 15%" />
 </colgroup>
@@ -319,13 +318,13 @@ for derived CPU classes.</p>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>FCycles</code></td>
+<td><code>FTotalCycles</code></td>
 <td><code>QWord</code></td>
 <td>Total CPU cycles.</td>
 <td><code>0</code></td>
 </tr>
 <tr class="odd">
-<td><code>FInstructions</code></td>
+<td><code>FTotalInstructions</code></td>
 <td><code>QWord</code></td>
 <td>Total executed instructions.</td>
 <td><code>0</code></td>
@@ -339,8 +338,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="protected-methods">Protected methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 49%" />
 <col style="width: 5%" />
@@ -367,8 +365,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="public-methods">Public methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 47%" />
 <col style="width: 3%" />
@@ -480,13 +477,12 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="public-properties">Public properties</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
-<col style="width: 21%" />
+<col style="width: 22%" />
 <col style="width: 21%" />
 <col style="width: 7%" />
-<col style="width: 50%" />
+<col style="width: 49%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -510,7 +506,7 @@ for derived CPU classes.</p>
 <td>CPU architecture.</td>
 </tr>
 <tr class="odd">
-<td><code>Cycles</code></td>
+<td><code>TotalCycles</code></td>
 <td><code>QWord</code></td>
 <td>Re</td>
 <td>Total CPU cycle counter.</td>
@@ -546,7 +542,7 @@ for derived CPU classes.</p>
 <td>Whether memory and I/O buses are separate.</td>
 </tr>
 <tr class="odd">
-<td><code>Instructions</code></td>
+<td><code>TotalInstructions</code></td>
 <td><code>QWord</code></td>
 <td>Re</td>
 <td>Total executed instruction counter.</td>

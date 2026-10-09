@@ -23,6 +23,7 @@ CPU classes.
 |`TCPUEvent`       |enumeration   |Generic CPU events.                             |
 |`TCPUEventHandler`|procedure type|CPU event callback.                             |
 |`TSemanticVersion`|record        |Major, minor and patch version information.     |
+|`TLastInstruction`|record        |Last executed instruction                       |
 |`TLogRec`         |record        |Information about the last executed instruction.|
 |`TIntLogRec`      |record        |Information about the last interrupt request.   |
 
@@ -66,30 +67,30 @@ CPU classes.
 
 ### Protected fields
 
-|name               |type              |description                               |initial value  |
-|-------------------|------------------|------------------------------------------|---------------|
-|`FBus`             |`ISysBus`         |Connected external bus.                   |`nil`          |
-|`FOnEvent`         |`TCPUEventHandler`|CPU event callback.                       |`nil`          |
-|`FModname`         |`PChar`           |Module name.                              |not initialized|
-|`FDescription`     |`PChar`           |Short description.                        |not initialized|
-|`FVersion`         |`TSemanticVersion`|Module version.                           |`0.1.0`        |
-|`FAddressWidth`    |`Byte`            |Address bus width in bits.                |not initialized|
-|`FArchitecture`    |`TArchitecture`   |CPU architecture.                         |not initialized|
-|`FEnabled`         |`Boolean`         |Enables CPU without bus detachment.       |`False`        |
-|`FEndianness`      |`TEndianness`     |CPU byte order.                           |not initialized|
-|`FMaxCodeAddress`  |`DWord`           |Highest code memory address.              |not initialized|
-|`FMaxIOPortAddress`|`DWord`           |Highest I/O port address.                 |not initialized|
-|`FMaxMemAddress`   |`DWord`           |Highest data memory address.              |not initialized|
-|`FHasSeparateIOBus`|`Boolean`         |Indicates separate memory and I/O buses.  |not initialized|
-|`FRunning`         |`Boolean`         |CPU execution state.                      |`False`        |
-|`FHalted`          |`Boolean`         |CPU HALT state.                           |`False`        |
-|`FInterruptEnabled`|`Boolean`         |Global maskable-interrupt enable flag.    |`False`        |
-|`FIRQPending`      |`Boolean`         |Pending maskable interrupt.               |`False`        |
-|`FIRQVector`       |`Byte`            |Received interrupt vector.                |`0`            |
-|`FNMIPending`      |`Boolean`         |Pending non-maskable interrupt.           |`False`        |
-|`FCycles`          |`QWord`           |Total CPU cycles.                         |`0`            |
-|`FInstructions`    |`QWord`           |Total executed instructions.              |`0`            |
-|`FRegPtr`          |`array of ^Word`  |Register pointers for derived CPU classes.|empty          |
+|name                |type              |description                               |initial value  |
+|--------------------|------------------|------------------------------------------|---------------|
+|`FBus`              |`ISysBus`         |Connected external bus.                   |`nil`          |
+|`FOnEvent`          |`TCPUEventHandler`|CPU event callback.                       |`nil`          |
+|`FModname`          |`PChar`           |Module name.                              |not initialized|
+|`FDescription`      |`PChar`           |Short description.                        |not initialized|
+|`FVersion`          |`TSemanticVersion`|Module version.                           |`0.1.0`        |
+|`FAddressWidth`     |`Byte`            |Address bus width in bits.                |not initialized|
+|`FArchitecture`     |`TArchitecture`   |CPU architecture.                         |not initialized|
+|`FEnabled`          |`Boolean`         |Enables CPU without bus detachment.       |`False`        |
+|`FEndianness`       |`TEndianness`     |CPU byte order.                           |not initialized|
+|`FMaxCodeAddress`   |`DWord`           |Highest code memory address.              |not initialized|
+|`FMaxIOPortAddress` |`DWord`           |Highest I/O port address.                 |not initialized|
+|`FMaxMemAddress`    |`DWord`           |Highest data memory address.              |not initialized|
+|`FHasSeparateIOBus` |`Boolean`         |Indicates separate memory and I/O buses.  |not initialized|
+|`FRunning`          |`Boolean`         |CPU execution state.                      |`False`        |
+|`FHalted`           |`Boolean`         |CPU HALT state.                           |`False`        |
+|`FInterruptEnabled` |`Boolean`         |Global maskable-interrupt enable flag.    |`False`        |
+|`FIRQPending`       |`Boolean`         |Pending maskable interrupt.               |`False`        |
+|`FIRQVector`        |`Byte`            |Received interrupt vector.                |`0`            |
+|`FNMIPending`       |`Boolean`         |Pending non-maskable interrupt.           |`False`        |
+|`FTotalCycles`      |`QWord`           |Total CPU cycles.                         |`0`            |
+|`FTotalInstructions`|`QWord`           |Total executed instructions.              |`0`            |
+|`FRegPtr`           |`array of ^Word`  |Register pointers for derived CPU classes.|empty          |
 
 ### Protected methods
 
@@ -124,22 +125,22 @@ CPU classes.
 
 ### Public properties
 
-|name              |type              |access|description                               |
-|------------------|------------------|------|------------------------------------------|
-|`AddressWidth`    |`Byte`            |Re    |Address bus width in bits.                |
-|`Architecture`    |`TArchitecture`   |Re    |CPU architecture.                         |
-|`Cycles`          |`QWord`           |Re    |Total CPU cycle counter.                  |
-|`Description`     |`PChar`           |Re    |Short module description.                 |
-|`Enabled`         |`Boolean`         |Re/Wr |Enables or disables CPU operation.        |
-|`Endianness`      |`TEndianness`     |Re    |CPU byte order.                           |
-|`Halted`          |`Boolean`         |Re    |Current CPU HALT state.                   |
-|`HasSeparateIOBus`|`Boolean`         |Re    |Whether memory and I/O buses are separate.|
-|`Instructions`    |`QWord`           |Re    |Total executed instruction counter.       |
-|`InterruptEnabled`|`Boolean`         |Re    |Global maskable-interrupt state.          |
-|`MaxCodeAddress`  |`DWord`           |Re    |Highest code memory address.              |
-|`MaxIOPortAddress`|`DWord`           |Re    |Highest I/O port address.                 |
-|`MaxMemAddress`   |`DWord`           |Re    |Highest data memory address.              |
-|`Modname`         |`PChar`           |Re    |Module name.                              |
-|`OnEvent`         |`TCPUEventHandler`|Re/Wr |CPU event callback.                       |
-|`Running`         |`Boolean`         |Re    |Current execution state.                  |
-|`Version`         |`TSemanticVersion`|Re    |Module version.                           |
+|name               |type              |access|description                               |
+|-------------------|------------------|------|------------------------------------------|
+|`AddressWidth`     |`Byte`            |Re    |Address bus width in bits.                |
+|`Architecture`     |`TArchitecture`   |Re    |CPU architecture.                         |
+|`TotalCycles`      |`QWord`           |Re    |Total CPU cycle counter.                  |
+|`Description`      |`PChar`           |Re    |Short module description.                 |
+|`Enabled`          |`Boolean`         |Re/Wr |Enables or disables CPU operation.        |
+|`Endianness`       |`TEndianness`     |Re    |CPU byte order.                           |
+|`Halted`           |`Boolean`         |Re    |Current CPU HALT state.                   |
+|`HasSeparateIOBus` |`Boolean`         |Re    |Whether memory and I/O buses are separate.|
+|`TotalInstructions`|`QWord`           |Re    |Total executed instruction counter.       |
+|`InterruptEnabled` |`Boolean`         |Re    |Global maskable-interrupt state.          |
+|`MaxCodeAddress`   |`DWord`           |Re    |Highest code memory address.              |
+|`MaxIOPortAddress` |`DWord`           |Re    |Highest I/O port address.                 |
+|`MaxMemAddress`    |`DWord`           |Re    |Highest data memory address.              |
+|`Modname`          |`PChar`           |Re    |Module name.                              |
+|`OnEvent`          |`TCPUEventHandler`|Re/Wr |CPU event callback.                       |
+|`Running`          |`Boolean`         |Re    |Current execution state.                  |
+|`Version`          |`TSemanticVersion`|Re    |Module version.                           |

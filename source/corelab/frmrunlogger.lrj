@@ -7,5 +7,7 @@
 {"hash":4877396,"name":"tform4.drawgrid1.columns[0].title.caption","sourcebytes":[67,111,117,110,116],"value":"Count"},
 {"hash":128683235,"name":"tform4.drawgrid1.columns[1].title.caption","sourcebytes":[65,100,100,114,101,115,115],"value":"Address"},
 {"hash":90613157,"name":"tform4.drawgrid1.columns[2].title.caption","sourcebytes":[79,112,99,111,100,101],"value":"Opcode"},
-{"hash":79978931,"name":"tform4.drawgrid1.columns[3].title.caption","sourcebytes":[77,110,101,109,111,110,105,99],"value":"Mnemonic"}
+{"hash":79978931,"name":"tform4.drawgrid1.columns[3].title.caption","sourcebytes":[77,110,101,109,111,110,105,99],"value":"Mnemonic"},
+{"hash":4913701,"name":"tform4.drawgrid1.columns[4].title.caption","sourcebytes":[67,121,99,108,101],"value":"Cycle"},
+{"hash":238130261,"name":"tform4.drawgrid1.columns[5].title.caption","sourcebytes":[84,111,116,97,108,32,99,121,99,108,101],"value":"Total cycle"}
 ]}

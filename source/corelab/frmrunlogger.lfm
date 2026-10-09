@@ -2,10 +2,10 @@ object Form4: TForm4
   Left = 550
   Height = 308
   Top = 226
-  Width = 478
+  Width = 618
   Caption = 'RunLogger'
   ClientHeight = 308
-  ClientWidth = 478
+  ClientWidth = 618
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -375,7 +375,7 @@ object Form4: TForm4
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Button2
     AnchorSideBottom.Side = asrBottom
-    Left = 395
+    Left = 535
     Height = 25
     Top = 275
     Width = 75
@@ -409,7 +409,7 @@ object Form4: TForm4
     Left = 8
     Height = 4
     Top = 263
-    Width = 462
+    Width = 602
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     Shape = bsBottomLine
@@ -423,7 +423,7 @@ object Form4: TForm4
     Height = 34
     Hint = 'Search in log records'
     Top = 8
-    Width = 462
+    Width = 602
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Around = 8
     ButtonWidth = 23
@@ -464,10 +464,10 @@ object Form4: TForm4
     Left = 8
     Height = 205
     Top = 50
-    Width = 462
+    Width = 602
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
-    ColCount = 4
+    ColCount = 6
     Columns = <    
       item
         Title.Alignment = taCenter
@@ -488,6 +488,16 @@ object Form4: TForm4
         Title.Alignment = taCenter
         Title.Caption = 'Mnemonic'
         Width = 150
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Cycle'
+        Width = 60
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Total cycle'
+        Width = 80
       end>
     ExtendedSelect = False
     FixedCols = 0
@@ -500,6 +510,8 @@ object Form4: TForm4
       80
       150
       150
+      60
+      80
     )
   end
   object SaveDialog1: TSaveDialog

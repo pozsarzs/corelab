@@ -18,10 +18,9 @@ uses
   StdCtrls, lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
   frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
   frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmbuslogger,
-  frmmoduleexplorer, commandengine, projectengine, scriptengine, scriptruntime,
-  uconfig, ucommon, uintelhex, uplugin, uproject, usysconsole, uproperties,
-  frmbpmanager, frmregviewer, frmproperties, breakpointframe, frmrdwrioport,
-  simulationthread;
+  frmmoduleexplorer, commandengine, scriptengine, scriptruntime, uconfig,
+  ucommon, uintelhex, uplugin, usysconsole, uproperties, frmbpmanager,
+  frmregviewer, frmproperties, breakpointframe, frmrdwrioport, simulationthread;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';
   PRGHOME = 'https://pozsarzs.github.io/corelab';

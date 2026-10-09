@@ -16,15 +16,15 @@ unit frmmain;
 {$I define.pas}
 interface
 uses
-  CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, ExtCtrls,
-  ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf, SynEdit,
-  Process, frmabout, frmclasslist, frmmodulelist, Generics.Collections,
-  frmrunlogger, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmregviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
-  frmproperties, frmmoduleexplorer, frmbpmanager, frmbuslogger, frmrdwrioport,
-  commandengine, scriptengine, core_cpu, core_memory, core_ioport, core_bus,
-  usysconsole, ucommon, uconfig, uplugin, uproject, uintelhex, uactcontext,
-  uproperties, ubreakpoint, simulationthread;
+  CMem, Classes, DOM, SysUtils, Forms, Controls, Graphics, Dialogs, Menus,
+  ExtCtrls, ComCtrls, ActnList, StdCtrls, HelpIntfs, LazHelpCHM, LazHelpIntf,
+  SynEdit, Generics.Collections, Process, XMLRead, XMLWrite, frmabout,
+  frmclasslist, frmmodulelist, frmrunlogger, frmsettings, frmexdepmemory,
+  frmloadsavememory, frmhexviewer, frmregviewer, frmscripteditor,
+  frmscriptconsole, frmintlogger, frmcaption, frmproperties, frmmoduleexplorer,
+  frmbpmanager, frmbuslogger, frmrdwrioport, commandengine, scriptengine,
+  core_cpu, core_memory, core_ioport, core_bus, usysconsole, ucommon, uconfig,
+  uplugin, uintelhex, uactcontext, uproperties, ubreakpoint, simulationthread;
   { TSysBus }
 type
   TSysBus = class(TInterfacedObject, ISysBus)
@@ -397,6 +397,8 @@ type
     function InstanceNameDuplicated(AInstanceDict: TPortInstanceDict; AKeyName: string): Boolean; overload;
     function InstanceNameDuplicated(AInstanceDict: TProcInstanceDict; AKeyName: string): Boolean; overload;
     // others
+    function LoadProject(const AFilename: string): Boolean;      // load project
+    function SaveProject(const AFilename: string): Boolean;      // save project
     procedure ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean); // change opmode
     procedure DestroyAllModules(AClose: Boolean);
     procedure SetIgnoreHelp(AIgnoreHelp: Boolean);
@@ -410,7 +412,6 @@ type
     FConfigDirectory:      string;                  // directory of the INI file
     FEXEDirectory:         string;                // directory of the executable
     FIgnoreHelp:           Boolean;                   // ignore search help file
-    FOpMode:               TOpMode;                            // operation mode
     FPluginDirectory:      string;                   // directory of the plugins
     FScriptIsRunning:      Boolean;                      // script running state
     FStartupProject:       string;        // project file name from command line
@@ -419,6 +420,7 @@ type
     FUserDirectory:        string;                           // user's directory
     FWorkDirectory:        string;                           // user's directory
   public
+    FOpMode:               TOpMode;                            // operation mode
     // active component instances
     FProcInstanceDict: TProcInstanceDict;
     FMemInstanceDict:  TMemInstanceDict;
@@ -983,6 +985,138 @@ begin
     if KeyName = AKeyName then Result := True;
 end;
 
+// LOAD PROJECT FROM FILE
+function TForm1.LoadProject(const AFilename: string): Boolean;   // load project
+var
+  ActionContext:          TActionContext;
+  Node, ChildNode:        TDOMNode;
+  FileVersion:            string;
+  i:                      Integer;
+  NodeList:               TDOMNodeList;
+  ProjectFile:            TXMLDocument;
+  WorkspaceNode: TDOMNode;
+  ModulesNode, ConnectionsNode: TDOMNode;
+begin
+  Result := False;
+  try
+    ReadXMLFile(ProjectFile, AFilename);
+  except
+    Exit;
+  end;
+  ActionContext := TActionContext.Create;
+  try
+    // <Workspace>
+    WorkspaceNode := ProjectFile.FindNode('CoreLAB_Workspace');
+    if Assigned(WorkspaceNode) then
+    begin
+      // get project file version
+      FileVersion := TDOMElement(WorkspaceNode).GetAttribute('version');
+      // <Modules>
+      ModulesNode := WorkspaceNode.FindNode('Modules');
+      if Assigned(ModulesNode) then
+      begin
+        // <TCPU>
+        NodeList := TDOMElement(ModulesNode).GetElementsByTagName('TCPU');
+        if Assigned(NodeList) then
+        begin
+          for i := 0 to NodeList.Count - 1 do
+          begin
+            Node := NodeList.Item[i];
+            {
+              <TCPU id="Processor" type="cpu_8080">
+                <Enabled>true</Enabled>
+              </TCPU>
+            }
+            // create processor instance
+            ActionContext.ActionSource := asOther;
+            ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
+            ActionContext.SArg2 := TDOMElement(Node).GetAttribute('id');
+            PCreateOperation(ActionContext);
+            // enable/disable
+            ActionContext.SArg1 := ActionContext.SArg2;
+            ChildNode := Node.FindNode('Enabled');
+            if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
+              if ChildNode.FirstChild.NodeValue = 'true'
+                then PEnableOperation(ActionContext)
+                else PDisableOperation(ActionContext);
+          end;
+          NodeList.Free;
+        end;
+        // <TIOPort>
+{        NodeList := TDOMElement(ModulesNode).GetElementsByTagName('TIOPort');
+        if Assigned(NodeList) then
+        begin
+          for i := 0 to NodeList.Count - 1 do
+          begin
+            Node := NodeList.Item[i];
+            {
+              <TCPU id="Processor" type="cpu_8080">
+                <Enabled>true</Enabled>
+              </TCPU>
+            }
+            // create processor instance
+            ActionContext.ActionSource := asOther;
+            ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
+            ActionContext.SArg2 := TDOMElement(Node).GetAttribute('id');
+            PCreateOperation(ActionContext);
+            // enable/disable processor instance
+            ActionContext.SArg1 := ActionContext.SArg2;
+            ChildNode := Node.FindNode('Enabled');
+            if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
+              if ChildNode.FirstChild.NodeValue = 'true'
+                then PEnableOperation(ActionContext)
+                else PDisableOperation(ActionContext);
+          end;
+          NodeList.Free;
+        end;}
+        // <TMemory>
+        NodeList := TDOMElement(ModulesNode).GetElementsByTagName('TMemory');
+        if Assigned(NodeList) then
+        begin
+          for i := 0 to NodeList.Count - 1 do
+          begin
+            Node := NodeList.Item[i];
+            {
+              <TMemory id="RAM" type="memory_standard">
+                <BaseAddress>0</BaseAddress>
+                <AddressRangeSize>1024</AddressRangeSize>
+                <MemoryMode>mmRAM</MemoryMode>
+                <Enabled>true</Enabled>
+              </TMemory>
+            }
+            // create memory instance
+            ActionContext.ActionSource := asOther;
+            ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
+            ActionContext.SArg2 := TDOMElement(Node).GetAttribute('id');
+            PCreateOperation(ActionContext);
+            // set base address
+            // set address range size
+            // set memory mode
+            // enable/disable
+            ActionContext.SArg1 := ActionContext.SArg2;
+            ChildNode := Node.FindNode('Enabled');
+            if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
+              if ChildNode.FirstChild.NodeValue = 'true'
+                then PEnableOperation(ActionContext)
+                else PDisableOperation(ActionContext);
+          end;
+          NodeList.Free;
+        end;
+      end;
+    end;
+  finally
+    ActionContext.Free;
+    ProjectFile.Free;
+  end;
+  Result := True;
+end;
+
+// SAVE PROJECT TO FILE
+function TForm1.SaveProject(const AFilename: string): Boolean;   // save project
+begin
+
+end;
+
 // CHANGE OPERATION MODE
 procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean);
 var
@@ -1091,6 +1225,7 @@ begin
   for i := Screen.FormCount - 1 downto 0 do
     if (Screen.Forms[i] <> Application.MainForm) and
         Screen.Forms[i].Visible then Screen.Forms[i].Close;
+  CommandEngine1.OpMode := FOpMode;
   // write message to console
   if FOpMode = omInteractive
     then SysConsole1.WriteMessage(MSG07)
@@ -5972,6 +6107,8 @@ begin
         column1_width := Items[1].Width;
         column2_width := Items[2].Width;
         column3_width := Items[3].Width;
+        column4_width := Items[4].Width;
+        column5_width := Items[5].Width;
       end;
     end;
     // IntLogger

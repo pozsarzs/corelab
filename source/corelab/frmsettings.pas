@@ -65,6 +65,8 @@ type
     ColorBox33:   TColorBox;
     ColorBox34:   TColorBox;
     ColorBox35:   TColorBox;
+    ColorBox36: TColorBox;
+    ColorBox37: TColorBox;
     ColorBox4:    TColorBox;
     ColorBox5:    TColorBox;
     ColorBox6:    TColorBox;
@@ -100,6 +102,8 @@ type
     Label33:      TLabel;
     Label34:      TLabel;
     Label35:      TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
     Label4:       TLabel;
     Label5:       TLabel;
     Label6:       TLabel;
@@ -177,6 +181,8 @@ begin
       address_color := ColorBox2.Selected;
       opcode_color := ColorBox3.Selected;
       mnemonic_color := ColorBox4.Selected;
+      cycles_color := ColorBox36.Selected;
+      totalcycles_color := ColorBox37.Selected;
       lineselector_color := ColorBox5.Selected;
       bgodd_color := ColorBox6.Selected;
       bgeven_color := ColorBox7.Selected;
@@ -260,6 +266,8 @@ begin
       ColorBox2.Selected := address_color;
       ColorBox3.Selected := opcode_color;
       ColorBox4.Selected := mnemonic_color;
+      ColorBox36.Selected := cycles_color;
+      ColorBox37.Selected := totalcycles_color;
       ColorBox5.Selected := lineselector_color;
       ColorBox6.Selected := bgodd_color;
       ColorBox7.Selected := bgeven_color;

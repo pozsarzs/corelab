@@ -6,7 +6,7 @@
 {"hash":86477811,"name":"tform2.label3.caption","sourcebytes":[76,97,98,101,108,51],"value":"Label3"},
 {"hash":86477812,"name":"tform2.label4.caption","sourcebytes":[76,97,98,101,108,52],"value":"Label4"},
 {"hash":86477813,"name":"tform2.label5.caption","sourcebytes":[76,97,98,101,108,53],"value":"Label5"},
-{"hash":63320810,"name":"tform2.label6.caption","sourcebytes":[72,111,109,101,112,97,103,101,58],"value":"Homepage:"},
+{"hash":383834,"name":"tform2.label6.caption","sourcebytes":[87,101,98,58],"value":"Web:"},
 {"hash":138641338,"name":"tform2.label7.caption","sourcebytes":[69,45,109,97,105,108,58],"value":"E-mail:"},
 {"hash":86477816,"name":"tform2.label8.caption","sourcebytes":[76,97,98,101,108,56],"value":"Label8"}
 ]}

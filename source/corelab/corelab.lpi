@@ -11,11 +11,15 @@
       <XPManifest>
         <DpiAware Value="True"/>
         <TextName Value="PozsarZsolt.CoreLAB.CoreLAB"/>
-        <TextDesc Value="CoreLAB | CoreLAB"/>
+        <TextDesc Value="Processor simulation framework"/>
       </XPManifest>
       <Icon Value="0"/>
-      <Resources Count="1">
+      <Resources Count="5">
         <Resource_0 FileName="xsd/project.xsd" Type="RCDATA" ResourceName="PROJECTXSD"/>
+        <Resource_1 FileName="application-x-corelab-project.ico" Type="ICON" ResourceName="APPLICATION-X-CORELAB-PROJECT"/>
+        <Resource_2 FileName="application-x-corelab-scriptembly.ico" Type="ICON" ResourceName="APPLICATION-X-CORELAB-SCRIPTEMBLY"/>
+        <Resource_3 FileName="application-x-corelab-snapshot.ico" Type="ICON" ResourceName="APPLICATION-X-CORELAB-SNAPSHOT"/>
+        <Resource_4 FileName="application-x-corelab-status.ico" Type="ICON" ResourceName="APPLICATION-X-CORELAB-STATUS"/>
       </Resources>
     </General>
     <i18n>

@@ -44,6 +44,8 @@ type
     FAddressColor:      TColor;                                // Address column
     FOpCodeColor:       TColor;                                 // Opcode column
     FMnemonicColor:     TColor;                               // Mnemonic column
+    FCyclesColor:       TColor;                                 // Cycles column
+    FTotalCyclesColor:  TColor;                            // TotalCycles column
     FLineSelectorColor: TColor;                                 // Selector line
     FBGColorOddLines:   TColor;                                     // Odd lines
     FBGColorEvenLines:  TColor;                                    // Even lines
@@ -74,6 +76,8 @@ resourcestring
   MSG06 = 'Address';
   MSG07 = 'Opcode';
   MSG08 = 'Mnemonic';
+  MSG09 = 'Cycles';
+  MSG10 = 'Total cycles';
 
 {$R *.lfm}
 
@@ -93,6 +97,8 @@ begin
       Address := '';
       OpCode := '';
       Mnemonic := '';
+      Cycles := 0;
+      TotalCycles := 0;
     end;
   FRecordCount := 0;
   FWriteMarker := 0;
@@ -110,6 +116,8 @@ begin
     InstCount := -1;
     Mnemonic := '';
     OpCode := '';
+    Cycles := 0;
+    TotalCycles := 0;
   end else
   begin
     if FRecordCount < MAX_LOG
@@ -150,6 +158,8 @@ begin
     Form4.FAddressColor := address_color;
     Form4.FOpCodeColor := opcode_color;
     Form4.FMnemonicColor := mnemonic_color;
+    Form4.FCyclesColor := cycles_color;
+    Form4.FTotalCyclesColor := totalcycles_color;
     Form4.FLineSelectorColor := lineselector_color;
     Form4.FBGColorOddLines := bgodd_color;
     Form4.FBGColorEvenLines := bgeven_color;
@@ -190,6 +200,8 @@ begin
       column1_width := Items[1].Width;
       column2_width := Items[2].Width;
       column3_width := Items[3].Width;
+      column4_width := Items[4].Width;
+      column5_width := Items[5].Width;
     end;
   end;
   Form4.Hide;
@@ -228,7 +240,9 @@ begin
             Format('%*.*d',[5, 5, InstCount]) + #9 +
             Address + #9 +
             OpCode + #9 +
-            Mnemonic);
+            Mnemonic + #9 +
+            Format('%u', [Cycles]) + #9 +
+            Format('%u', [TotalCycles]));
         StringList1.SaveToFile(Filename);
       except
         ShowMessage(MSG01 + Format(MSG03, [FileName]));
@@ -260,6 +274,8 @@ begin
       1: Font.Color := FAddressColor;
       2: Font.Color := FOpCodeColor;
       3: Font.Color := FMnemonicColor;
+      4: Font.Color := FCyclesColor;
+      5: Font.Color := FTotalCyclesColor;
     end;
     // text alignment
     Style := TextStyle;
@@ -269,6 +285,8 @@ begin
       1: Style.Alignment := taCenter;
       2: Style.Alignment := taLeftJustify;
       3: Style.Alignment := taLeftJustify;
+      4: Style.Alignment := taCenter;
+      5: Style.Alignment := taCenter;
     end;
     TextStyle := Style;
     // write content
@@ -277,6 +295,8 @@ begin
       1: TextRect(aRect, aRect.Left, aRect.Top, LogRec.Address);
       2: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.OpCode);
       3: TextRect(aRect, aRect.Left + 4, aRect.Top, LogRec.Mnemonic);
+      4: TextRect(aRect, aRect.Left, aRect.Top, Format('%d',[LogRec.Cycles]));
+      5: TextRect(aRect, aRect.Left, aRect.Top, Format('%d',[LogRec.TotalCycles]));
     end;
   end;
 end;
@@ -295,7 +315,9 @@ begin
              Format('%*.*d',[5, 5, InstCount]) + #9 +
              Address + #9 +
              OpCode + #9 +
-             Mnemonic);
+             Mnemonic + #9 +
+             Format('%u', [Cycles]) + #9 +
+             Format('%u', [TotalCycles]));
     if Pos(LowerCase(EditButton1.Text), s) > 0 then
     begin
       DrawGrid1.Row := i + 1;
@@ -323,6 +345,8 @@ begin
       Items[1].Title.Caption := MSG06;
       Items[2].Title.Caption := MSG07;
       Items[3].Title.Caption := MSG08;
+      Items[4].Title.Caption := MSG09;
+      Items[5].Title.Caption := MSG10;
     end;
     Color := FBGColorOddLines;
     RowCount := 1;
@@ -346,6 +370,8 @@ begin
       Items[1].Width := column1_width;
       Items[2].Width := column2_width;
       Items[3].Width := column3_width;
+      Items[4].Width := column4_width;
+      Items[5].Width := column5_width;
     end;
   end;
   RefreshColors;
@@ -368,6 +394,8 @@ begin
       column1_width := Items[1].Width;
       column2_width := Items[2].Width;
       column3_width := Items[3].Width;
+      column4_width := Items[4].Width;
+      column5_width := Items[5].Width;
     end;
   end;
 end;

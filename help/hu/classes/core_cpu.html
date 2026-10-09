@@ -56,11 +56,16 @@ lépésenkénti végrehajtást, az aktuális utasítás lekérdezését és az
 <td>Fő-, al- és javítóverzió adatai.</td>
 </tr>
 <tr class="even">
+<td><code>TLastInstruction</code></td>
+<td>record</td>
+<td>Az utoljára végrehajtott utasítás</td>
+</tr>
+<tr class="odd">
 <td><code>TLogRec</code></td>
 <td>record</td>
 <td>Az utoljára végrehajtott utasítás adatai.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>TIntLogRec</code></td>
 <td>record</td>
 <td>Az utolsó megszakításkérés adatai.</td>
@@ -188,7 +193,7 @@ meg.</td>
 <h3 id="védett-mezők">Védett mezők</h3>
 <table>
 <colgroup>
-<col style="width: 18%" />
+<col style="width: 19%" />
 <col style="width: 17%" />
 <col style="width: 54%" />
 <col style="width: 8%" />
@@ -317,13 +322,13 @@ meg.</td>
 <td><code>False</code></td>
 </tr>
 <tr class="even">
-<td><code>FCycles</code></td>
+<td><code>FTotalCycles</code></td>
 <td><code>QWord</code></td>
 <td>A CPU összes ciklusának száma.</td>
 <td><code>0</code></td>
 </tr>
 <tr class="odd">
-<td><code>FInstructions</code></td>
+<td><code>FTotalInstructions</code></td>
 <td><code>QWord</code></td>
 <td>A végrehajtott utasítások összesített száma.</td>
 <td><code>0</code></td>
@@ -485,7 +490,7 @@ osztályok biztosítják.</td>
 <h3 id="nyilvános-tulajdonságok">Nyilvános tulajdonságok</h3>
 <table>
 <colgroup>
-<col style="width: 19%" />
+<col style="width: 20%" />
 <col style="width: 19%" />
 <col style="width: 6%" />
 <col style="width: 53%" />
@@ -512,46 +517,34 @@ osztályok biztosítják.</td>
 <td>CPU-architektúra.</td>
 </tr>
 <tr class="odd">
-<td><code>Cycles</code></td>
-<td><code>QWord</code></td>
-<td>Re</td>
-<td>A CPU-ciklusok összesített számlálója.</td>
-</tr>
-<tr class="even">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
 <td>Re</td>
 <td>Rövid module leírás.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
 <td>Re/Wr</td>
 <td>Engedélyezi vagy letiltja a CPU működését.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>Endianness</code></td>
 <td><code>TEndianness</code></td>
 <td>Re</td>
 <td>CPU-bájtsorrend.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>Halted</code></td>
 <td><code>Boolean</code></td>
 <td>Re</td>
 <td>A CPU aktuális HALT-állapota.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>HasSeparateIOBus</code></td>
 <td><code>Boolean</code></td>
 <td>Re</td>
 <td>Jelzi, hogy a memória- és az I/O-sín különálló-e.</td>
-</tr>
-<tr class="odd">
-<td><code>Instructions</code></td>
-<td><code>QWord</code></td>
-<td>Re</td>
-<td>A végrehajtott utasítások összesített számlálója.</td>
 </tr>
 <tr class="even">
 <td><code>InterruptEnabled</code></td>
@@ -594,6 +587,18 @@ osztályok biztosítják.</td>
 <td><code>Boolean</code></td>
 <td>Re</td>
 <td>Az aktuális végrehajtási állapot.</td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>QWord</code></td>
+<td>Re</td>
+<td>A CPU-ciklusok összesített számlálója.</td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>QWord</code></td>
+<td>Re</td>
+<td>A végrehajtott utasítások összesített számlálója.</td>
 </tr>
 <tr class="odd">
 <td><code>Version</code></td>

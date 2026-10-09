@@ -9,10 +9,10 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |name           |description                         |
 |---------------|------------------------------------|
 |uactcontext.pas|TActionContext class                |
+|ubreakpoint.pas|TBreakpoint class                   |
 |ucommon.pas    |common functions and procedures     |
 |uconfig.pas    |load/save configuration data        |
 |uintelhex.pas  |Intel hex file handler              |
 |uplugin.pas    |plugin handler                      |
-|uproject.pas   |load/save project data              |
 |uproperties.pas|useable properties                  |
 |usysconsole.pas|TSysConsole class (visual component)|

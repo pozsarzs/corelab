@@ -23,6 +23,7 @@ type
   protected
     FExitRequested: Boolean;
     FLastExitCode:  Integer;
+    FOpMode:        TOpMode;
     FParser:        TCommandParser;
     FRegistry:      TCommandRegistry;
     FRunningMode:   TCommandScope;
@@ -31,6 +32,7 @@ type
     destructor Destroy; override;
     function ExecuteLine(const ALine: string): Integer;  virtual;
     property ExitRequested: Boolean read FExitRequested;
+    property OpMode: TOpMode write FOpMode;
     property Registry: TCommandRegistry read FRegistry write FRegistry;
     property LastExitCode: Integer read FLastExitCode;
     property RunningMode: TCommandScope read FRunningMode write FRunningMode;
@@ -177,7 +179,8 @@ begin
         Exit;
       end;
     // cannot be used in interactive operation mode
-    if not (omInteractive in Command.AllowedOpModes) then
+    if (not (omInteractive in Command.AllowedOpModes)) and
+       (FOpMode = omInteractive) then
     begin
       Result := -6;
       Exit;

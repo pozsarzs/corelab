@@ -20,8 +20,7 @@ included microcode source.</p>
 <h3 id="cpu-configuration">CPU configuration</h3>
 <p>The constructor configures the inherited <code>TCPU</code> properties
 as follows:</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>item</th>
@@ -74,8 +73,7 @@ as follows:</p>
 <h3 id="reset-state">Reset state</h3>
 <p><code>Reset</code> clears the complete <code>T8080Registers</code>
 record and then explicitly assigns:</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>register/state</th>
@@ -135,8 +133,7 @@ before its character pointer is returned.</p>
 <h3 id="register-access">Register access</h3>
 <p><code>GetRegister</code> and <code>SetRegister</code> compare
 register names case-insensitively using <code>UpperCase</code>.</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>register</th>
@@ -198,8 +195,7 @@ in <code>SetRegister</code> and return <code>0</code> from
 <code>GetRegister</code>.</p>
 <h3 id="state-persistence">State persistence</h3>
 <p><code>LoadState</code> reads the following data in order:</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>order</th>
@@ -237,11 +233,11 @@ in <code>SetRegister</code> and return <code>0</code> from
 </tr>
 <tr class="even">
 <td>8</td>
-<td><code>FCycles</code></td>
+<td><code>FTotalCycles</code></td>
 </tr>
 <tr class="odd">
 <td>9</td>
-<td><code>FInstructions</code></td>
+<td><code>FTotalInstructions</code></td>
 </tr>
 </tbody>
 </table>
@@ -250,56 +246,10 @@ in <code>SetRegister</code> and return <code>0</code> from
 <p><code>SaveState</code> writes the same fields in the same order, but
 only when <code>InstanceID &gt; -1</code>. When the instance ID is
 invalid, it returns <code>False</code>.</p>
-<h3 id="tlastinstruction">TLastInstruction</h3>
-<p><code>TLastInstruction</code> stores information about the most
-recently fetched instruction.</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 26%" />
-<col style="width: 57%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>field</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>Address</code></td>
-<td><code>Word</code></td>
-<td>Address at which the instruction was fetched.</td>
-</tr>
-<tr class="even">
-<td><code>Opcode</code></td>
-<td><code>Byte</code></td>
-<td>Fetched opcode byte.</td>
-</tr>
-<tr class="odd">
-<td><code>NumOperand</code></td>
-<td><code>Byte</code></td>
-<td>Number of operands stored in the log record.</td>
-</tr>
-<tr class="even">
-<td><code>Operands</code></td>
-<td><code>array[1..2] of Word</code></td>
-<td>Instruction operand values.</td>
-</tr>
-<tr class="odd">
-<td><code>Mnemonic</code></td>
-<td><code>string[12]</code></td>
-<td>Instruction mnemonic.</td>
-</tr>
-</tbody>
-</table>
 <h3 id="t8080registers">T8080Registers</h3>
 <p><code>T8080Registers</code> provides both 16-bit register-pair access
 and individual 8-bit register access through a variant record.</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>16-bit register</th>
@@ -338,8 +288,7 @@ flags, general-purpose register pairs, program counter and stack
 pointer.</p>
 <h3 id="register-names">Register names</h3>
 <p>The internal register-pointer table uses the following order:</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <thead>
 <tr class="header">
 <th>index</th>
@@ -384,12 +333,11 @@ pointer.</p>
 <p><code>M</code> has no direct register pointer because it represents
 the memory location addressed by <code>HL</code>.</p>
 <h3 id="protected-fields">Protected fields</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
-<col style="width: 11%" />
-<col style="width: 19%" />
-<col style="width: 68%" />
+<col style="width: 15%" />
+<col style="width: 18%" />
+<col style="width: 65%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -405,7 +353,7 @@ the memory location addressed by <code>HL</code>.</p>
 <td>Complete Intel 8080 register set.</td>
 </tr>
 <tr class="even">
-<td><code>LogRecord</code></td>
+<td><code>FLastInstruction</code></td>
 <td><code>TLastInstruction</code></td>
 <td>Raw information about the last fetched instruction.</td>
 </tr>
@@ -424,8 +372,7 @@ display.</td>
 </tbody>
 </table>
 <h3 id="protected-methods">Protected methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 43%" />
 <col style="width: 3%" />
@@ -451,8 +398,7 @@ arithmetic result.</td>
 Parity and Carry flags. It also forces the Intel 8080 constant flag bits
 to their required values.</p>
 <h3 id="public-methods">Public methods</h3>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 27%" />
 <col style="width: 2%" />
@@ -523,8 +469,7 @@ instruction counting.</td>
 <h3 id="exported-plugin-interface">Exported plugin interface</h3>
 <p>The unit is compiled as the <code>cpu_8080</code> dynamic library and
 exports four plugin entry points:</p>
-<table border="1" cellspacing="0" cellpadding="4">
-
+<table>
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 9%" />

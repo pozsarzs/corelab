@@ -23,6 +23,7 @@ CPU-osztályok valósítják meg.
 |`TCPUEvent`       |enumeration   |Általános CPU-események.                        |
 |`TCPUEventHandler`|procedure type|CPU-esemény visszahívási eljárása.              |
 |`TSemanticVersion`|record        |Fő-, al- és javítóverzió adatai.                |
+|`TLastInstruction`|record        |Az utoljára végrehajtott utasítás               |
 |`TLogRec`         |record        |Az utoljára végrehajtott utasítás adatai.       |
 |`TIntLogRec`      |record        |Az utolsó megszakításkérés adatai.              |
 
@@ -66,30 +67,30 @@ CPU-osztályok valósítják meg.
 
 ### Védett mezők
 
-|név                |típus             |leírás                                                  |alapérték|
-|-------------------|------------------|--------------------------------------------------------|---------|
-|`FBus`             |`ISysBus`         |Csatlakoztatott külső rendszersín.                      |`nil`    |
-|`FOnEvent`         |`TCPUEventHandler`|CPU-esemény visszahívási eljárása.                      |`nil`    |
-|`FModname`         |`PChar`           |Modulnév.                                               |         |
-|`FDescription`     |`PChar`           |Rövid leírás.                                           |         |
-|`FVersion`         |`TSemanticVersion`|Modulverzió.                                            |`0.1.0`  |
-|`FAddressWidth`    |`Byte`            |A címsín szélessége bitekben.                           |         |
-|`FArchitecture`    |`TArchitecture`   |CPU-architektúra.                                       |         |
-|`FEnabled`         |`Boolean`         |A CPU engedélyezése.                                    |`False`  |
-|`FEndianness`      |`TEndianness`     |CPU-bájtsorrend.                                        |         |
-|`FMaxCodeAddress`  |`DWord`           |A kódmemória legmagasabb címe.                          |         |
-|`FMaxIOPortAddress`|`DWord`           |A legmagasabb I/O-portcím.                              |         |
-|`FMaxMemAddress`   |`DWord`           |Az adatmemória legmagasabb címe.                        |         |
-|`FHasSeparateIOBus`|`Boolean`         |Jelzi, hogy a memória- és az I/O-sín különálló-e.       |         |
-|`FRunning`         |`Boolean`         |A CPU végrehajtási állapota.                            |`False`  |
-|`FHalted`          |`Boolean`         |A CPU HALT-állapota.                                    |`False`  |
-|`FInterruptEnabled`|`Boolean`         |A maszkolható megszakítások globális engedélyezőjelzője.|`False`  |
-|`FIRQPending`      |`Boolean`         |Függőben lévő maszkolható megszakítás.                  |`False`  |
-|`FIRQVector`       |`Byte`            |Fogadott megszakításvektor.                             |`0`      |
-|`FNMIPending`      |`Boolean`         |Függőben lévő nem maszkolható megszakítás.              |`False`  |
-|`FCycles`          |`QWord`           |A CPU összes ciklusának száma.                          |`0`      |
-|`FInstructions`    |`QWord`           |A végrehajtott utasítások összesített száma.            |`0`      |
-|`FRegPtr`          |`array of ^Word`  |Regisztermutatók a leszármazott CPU-osztályokhoz.       |         |
+|név                 |típus             |leírás                                                  |alapérték|
+|--------------------|------------------|--------------------------------------------------------|---------|
+|`FBus`              |`ISysBus`         |Csatlakoztatott külső rendszersín.                      |`nil`    |
+|`FOnEvent`          |`TCPUEventHandler`|CPU-esemény visszahívási eljárása.                      |`nil`    |
+|`FModname`          |`PChar`           |Modulnév.                                               |         |
+|`FDescription`      |`PChar`           |Rövid leírás.                                           |         |
+|`FVersion`          |`TSemanticVersion`|Modulverzió.                                            |`0.1.0`  |
+|`FAddressWidth`     |`Byte`            |A címsín szélessége bitekben.                           |         |
+|`FArchitecture`     |`TArchitecture`   |CPU-architektúra.                                       |         |
+|`FEnabled`          |`Boolean`         |A CPU engedélyezése.                                    |`False`  |
+|`FEndianness`       |`TEndianness`     |CPU-bájtsorrend.                                        |         |
+|`FMaxCodeAddress`   |`DWord`           |A kódmemória legmagasabb címe.                          |         |
+|`FMaxIOPortAddress` |`DWord`           |A legmagasabb I/O-portcím.                              |         |
+|`FMaxMemAddress`    |`DWord`           |Az adatmemória legmagasabb címe.                        |         |
+|`FHasSeparateIOBus` |`Boolean`         |Jelzi, hogy a memória- és az I/O-sín különálló-e.       |         |
+|`FRunning`          |`Boolean`         |A CPU végrehajtási állapota.                            |`False`  |
+|`FHalted`           |`Boolean`         |A CPU HALT-állapota.                                    |`False`  |
+|`FInterruptEnabled` |`Boolean`         |A maszkolható megszakítások globális engedélyezőjelzője.|`False`  |
+|`FIRQPending`       |`Boolean`         |Függőben lévő maszkolható megszakítás.                  |`False`  |
+|`FIRQVector`        |`Byte`            |Fogadott megszakításvektor.                             |`0`      |
+|`FNMIPending`       |`Boolean`         |Függőben lévő nem maszkolható megszakítás.              |`False`  |
+|`FTotalCycles`      |`QWord`           |A CPU összes ciklusának száma.                          |`0`      |
+|`FTotalInstructions`|`QWord`           |A végrehajtott utasítások összesített száma.            |`0`      |
+|`FRegPtr`           |`array of ^Word`  |Regisztermutatók a leszármazott CPU-osztályokhoz.       |         |
 
 ### Védett metódusok
 
@@ -124,22 +125,22 @@ CPU-osztályok valósítják meg.
 
 ### Nyilvános tulajdonságok
 
-|név               |típus             |elérés|leírás                                           |
-|------------------|------------------|------|-------------------------------------------------|
-|`AddressWidth`    |`Byte`            |Re    |A címsín szélessége bitekben.                    |
-|`Architecture`    |`TArchitecture`   |Re    |CPU-architektúra.                                |
-|`Cycles`          |`QWord`           |Re    |A CPU-ciklusok összesített számlálója.           |
-|`Description`     |`PChar`           |Re    |Rövid module leírás.                             |
-|`Enabled`         |`Boolean`         |Re/Wr |Engedélyezi vagy letiltja a CPU működését.       |
-|`Endianness`      |`TEndianness`     |Re    |CPU-bájtsorrend.                                 |
-|`Halted`          |`Boolean`         |Re    |A CPU aktuális HALT-állapota.                    |
-|`HasSeparateIOBus`|`Boolean`         |Re    |Jelzi, hogy a memória- és az I/O-sín különálló-e.|
-|`Instructions`    |`QWord`           |Re    |A végrehajtott utasítások összesített számlálója.|
-|`InterruptEnabled`|`Boolean`         |Re    |A maszkolható megszakítások globális állapota.   |
-|`MaxCodeAddress`  |`DWord`           |Re    |A kódmemória legmagasabb címe.                   |
-|`MaxIOPortAddress`|`DWord`           |Re    |A legmagasabb I/O-portcím.                       |
-|`MaxMemAddress`   |`DWord`           |Re    |Az adatmemória legmagasabb címe.                 |
-|`Modname`         |`PChar`           |Re    |Modulnév.                                        |
-|`OnEvent`         |`TCPUEventHandler`|Re/Wr |CPU-esemény visszahívási eljárása.               |
-|`Running`         |`Boolean`         |Re    |Az aktuális végrehajtási állapot.                |
-|`Version`         |`TSemanticVersion`|Re    |Modulverzió.                                     |
+|név                |típus             |elérés|leírás                                           |
+|-------------------|------------------|------|-------------------------------------------------|
+|`AddressWidth`     |`Byte`            |Re    |A címsín szélessége bitekben.                    |
+|`Architecture`     |`TArchitecture`   |Re    |CPU-architektúra.                                |
+|`Description`      |`PChar`           |Re    |Rövid module leírás.                             |
+|`Enabled`          |`Boolean`         |Re/Wr |Engedélyezi vagy letiltja a CPU működését.       |
+|`Endianness`       |`TEndianness`     |Re    |CPU-bájtsorrend.                                 |
+|`Halted`           |`Boolean`         |Re    |A CPU aktuális HALT-állapota.                    |
+|`HasSeparateIOBus` |`Boolean`         |Re    |Jelzi, hogy a memória- és az I/O-sín különálló-e.|
+|`InterruptEnabled` |`Boolean`         |Re    |A maszkolható megszakítások globális állapota.   |
+|`MaxCodeAddress`   |`DWord`           |Re    |A kódmemória legmagasabb címe.                   |
+|`MaxIOPortAddress` |`DWord`           |Re    |A legmagasabb I/O-portcím.                       |
+|`MaxMemAddress`    |`DWord`           |Re    |Az adatmemória legmagasabb címe.                 |
+|`Modname`          |`PChar`           |Re    |Modulnév.                                        |
+|`OnEvent`          |`TCPUEventHandler`|Re/Wr |CPU-esemény visszahívási eljárása.               |
+|`Running`          |`Boolean`         |Re    |Az aktuális végrehajtási állapot.                |
+|`TotalCycles`      |`QWord`           |Re    |A CPU-ciklusok összesített számlálója.           |
+|`TotalInstructions`|`QWord`           |Re    |A végrehajtott utasítások összesített számlálója.|
+|`Version`          |`TSemanticVersion`|Re    |Modulverzió.                                     |

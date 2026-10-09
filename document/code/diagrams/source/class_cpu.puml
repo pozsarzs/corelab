@@ -94,8 +94,8 @@ abstract class TCPU {
     #FIRQVector: Byte
     #FNMIPending: Boolean
 
-    #FCycles: QWord
-    #FInstructions: QWord
+    #FTotalCycles: QWord
+    #FTotalInstructions: QWord
 
     #FRegPtr: array of ^Word
 
@@ -179,10 +179,11 @@ class TLastInstruction <<record>> {
     NumOperand: Byte
     Operands: Word[1..2]
     Mnemonic: string
+    Cycles: Byte; 
 }
 
 class T8080CPU {
-    -LogRecord: TLastInstruction
+    -FLastInstruction: TLastInstruction
     -RegPointers: array[0..7] of PByte
 
     #FRegs: T8080Registers
@@ -222,11 +223,11 @@ TCPU *-- TSemanticVersion
 
 TCPU ..> TArchitecture
 TCPU ..> TEndianness
+TCPU ..> TLastInstruction
 TCPU ..> TCPUEvent
 TCPU ..> TLogRec
 
 T8080CPU *-- T8080Registers
-T8080CPU *-- TLastInstruction
 
 T8080CPU ..> TCPUEvent
 T8080CPU ..> ISysBus

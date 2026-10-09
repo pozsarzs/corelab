@@ -7,7 +7,8 @@
       <Unit>
         <Filename Value="clprocessor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="13" Y="9"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="30" Y="14"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -17,10 +18,7 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="329"/>
-        <CursorPos X="30" Y="332"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -155,10 +153,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="314" Column="3" TopLine="295"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
         <Caret Line="857" TopLine="805"/>
       </Position>
       <Position>
@@ -271,6 +265,10 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="57" Column="22" TopLine="33"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="332" Column="30" TopLine="329"/>
       </Position>
     </JumpHistory>
     <RunParams>

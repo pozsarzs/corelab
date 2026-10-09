@@ -241,11 +241,11 @@ adatokat:</p>
 </tr>
 <tr class="even">
 <td>8</td>
-<td><code>FCycles</code></td>
+<td><code>FTotalCycles</code></td>
 </tr>
 <tr class="odd">
 <td>9</td>
-<td><code>FInstructions</code></td>
+<td><code>FTotalInstructions</code></td>
 </tr>
 </tbody>
 </table>
@@ -256,50 +256,6 @@ adatokat:</p>
 sorrendben írja ki, de csak akkor, ha az
 <code>InstanceID &gt; -1</code>. Érvénytelen példányazonosító esetén
 <code>False</code> értéket ad vissza.</p>
-<h3 id="tlastinstruction">TLastInstruction</h3>
-<p>A <code>TLastInstruction</code> a legutóbb beolvasott utasítás
-adatait tárolja.</p>
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 26%" />
-<col style="width: 57%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>mező</th>
-<th>típus</th>
-<th>leírás</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>Address</code></td>
-<td><code>Word</code></td>
-<td>Az utasítás beolvasásának címe.</td>
-</tr>
-<tr class="even">
-<td><code>Opcode</code></td>
-<td><code>Byte</code></td>
-<td>A beolvasott opkód bájtja.</td>
-</tr>
-<tr class="odd">
-<td><code>NumOperand</code></td>
-<td><code>Byte</code></td>
-<td>A naplórekordban tárolt operandusok száma.</td>
-</tr>
-<tr class="even">
-<td><code>Operands</code></td>
-<td><code>array[1..2] of Word</code></td>
-<td>Az utasítás operandusértékei.</td>
-</tr>
-<tr class="odd">
-<td><code>Mnemonic</code></td>
-<td><code>string[12]</code></td>
-<td>Az utasítás mnemonikja.</td>
-</tr>
-</tbody>
-</table>
 <h3 id="t8080registers">T8080Registers</h3>
 <p>A <code>T8080Registers</code> egy variánsrekordon keresztül biztosít
 hozzáférést a 16 bites regiszterpárokhoz és az egyedi 8 bites
@@ -390,8 +346,8 @@ mivel a <code>HL</code> által megcímzett memóriaterületet jelöli.</p>
 <h3 id="védett-mezők">Védett mezők</h3>
 <table>
 <colgroup>
-<col style="width: 11%" />
-<col style="width: 19%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
 <col style="width: 68%" />
 </colgroup>
 <thead>
@@ -408,7 +364,7 @@ mivel a <code>HL</code> által megcímzett memóriaterületet jelöli.</p>
 <td>A teljes Intel 8080 regiszterkészlet.</td>
 </tr>
 <tr class="even">
-<td><code>LogRecord</code></td>
+<td><code>LastInstruction</code></td>
 <td><code>TLastInstruction</code></td>
 <td>A legutóbb beolvasott utasítás nyers adatai.</td>
 </tr>

@@ -55,10 +55,12 @@ type
     column0_width, left, top, height, width: Integer;
   end;
   TRunLoggerConfig = record
-    left, top, height, width:                                     Integer;
-    column0_width, column1_width, column2_width, column3_width:   Integer;
-    instcount_color, address_color, opcode_color, mnemonic_color: TColor;
-    lineselector_color, bgodd_color, bgeven_color:                TColor;
+    left, top, height, width:                        Integer;
+    column0_width, column1_width, column2_width:     Integer;
+    column3_width, column4_width, column5_width:     Integer;
+    instcount_color, address_color, opcode_color:    TColor;
+    mnemonic_color, cycles_color, totalcycles_color: TColor;
+    lineselector_color, bgodd_color, bgeven_color:   TColor;
   end;
   TScriptConsoleConfig = record
     left, top, height, width: Integer;
@@ -227,15 +229,19 @@ begin
     LoadSave(section, 'height', AAppConfig.RunLoggerConfig.height, 300);
     LoadSave(section, 'left', AAppConfig.RunLoggerConfig.left, 8);
     LoadSave(section, 'top', AAppConfig.RunLoggerConfig.top, 8);
-    LoadSave(section, 'width', AAppConfig.RunLoggerConfig.width, 480);
+    LoadSave(section, 'width', AAppConfig.RunLoggerConfig.width, 618);
     LoadSave(section, 'column0_width', AAppConfig.RunLoggerConfig.column0_width, 80);
     LoadSave(section, 'column1_width', AAppConfig.RunLoggerConfig.column1_width, 80);
     LoadSave(section, 'column2_width', AAppConfig.RunLoggerConfig.column2_width, 150);
     LoadSave(section, 'column3_width', AAppConfig.RunLoggerConfig.column3_width, 150);
+    LoadSave(section, 'column4_width', AAppConfig.RunLoggerConfig.column4_width, 60);
+    LoadSave(section, 'column5_width', AAppConfig.RunLoggerConfig.column5_width, 80);
     LoadSave(section, 'instcount_color', AAppConfig.RunLoggerConfig.instcount_color, RUNLOGGER_INSTCOUNT_DEFAULT);
     LoadSave(section, 'address_color', AAppConfig.RunLoggerConfig.address_color, RUNLOGGER_ADDRESS_DEFAULT);
     LoadSave(section, 'opcode_color', AAppConfig.RunLoggerConfig.opcode_color, RUNLOGGER_OPCODE_DEFAULT);
     LoadSave(section, 'mnemonic_color', AAppConfig.RunLoggerConfig.mnemonic_color, RUNLOGGER_MNEMONIC_DEFAULT);
+    LoadSave(section, 'cycles_color', AAppConfig.RunLoggerConfig.cycles_color, RUNLOGGER_CYCLES_DEFAULT);
+    LoadSave(section, 'totalcycles_color', AAppConfig.RunLoggerConfig.totalcycles_color, RUNLOGGER_TOTALCYCLES_DEFAULT);
     LoadSave(section, 'lineselector_color', AAppConfig.RunLoggerConfig.lineselector_color, RUNLOGGER_LINESELECTOR_DEFAULT);
     LoadSave(section, 'bgodd_color', AAppConfig.RunLoggerConfig.bgodd_color, RUNLOGGER_BGCOLOR_ODD_DEFAULT);
     LoadSave(section, 'bgeven_color', AAppConfig.RunLoggerConfig.bgeven_color, RUNLOGGER_BGCOLOR_EVEN_DEFAULT);

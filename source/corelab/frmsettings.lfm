@@ -1168,10 +1168,11 @@ object Form18: TForm18
       end
       object Label5: TLabel
         AnchorSideLeft.Control = Bevel2
-        AnchorSideTop.Control = TabSheet1
+        AnchorSideTop.Control = ColorBox37
+        AnchorSideTop.Side = asrBottom
         Left = 174
         Height = 17
-        Top = 8
+        Top = 70
         Width = 87
         BorderSpacing.Around = 8
         Caption = 'Line selector:'
@@ -1183,7 +1184,7 @@ object Form18: TForm18
         AnchorSideTop.Side = asrBottom
         Left = 174
         Height = 29
-        Top = 33
+        Top = 95
         Width = 150
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
         BorderSpacing.Around = 8
@@ -1196,7 +1197,7 @@ object Form18: TForm18
         AnchorSideTop.Side = asrBottom
         Left = 174
         Height = 17
-        Top = 70
+        Top = 132
         Width = 146
         BorderSpacing.Around = 8
         Caption = 'Odd lines background:'
@@ -1208,7 +1209,7 @@ object Form18: TForm18
         AnchorSideTop.Side = asrBottom
         Left = 174
         Height = 29
-        Top = 95
+        Top = 157
         Width = 150
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
         BorderSpacing.Around = 8
@@ -1221,7 +1222,7 @@ object Form18: TForm18
         AnchorSideTop.Side = asrBottom
         Left = 174
         Height = 17
-        Top = 132
+        Top = 194
         Width = 151
         BorderSpacing.Around = 8
         Caption = 'Even lines background:'
@@ -1233,7 +1234,7 @@ object Form18: TForm18
         AnchorSideTop.Side = asrBottom
         Left = 174
         Height = 29
-        Top = 157
+        Top = 219
         Width = 150
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
         BorderSpacing.Around = 8
@@ -1253,6 +1254,55 @@ object Form18: TForm18
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Around = 8
         Shape = bsLeftLine
+      end
+      object Label36: TLabel
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = ColorBox4
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 17
+        Top = 256
+        Width = 47
+        BorderSpacing.Around = 8
+        Caption = 'Cycles:'
+        ParentColor = False
+      end
+      object ColorBox36: TColorBox
+        AnchorSideLeft.Control = TabSheet1
+        AnchorSideTop.Control = Label36
+        AnchorSideTop.Side = asrBottom
+        Left = 8
+        Height = 29
+        Top = 281
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 7
+      end
+      object Label37: TLabel
+        AnchorSideLeft.Control = Bevel2
+        AnchorSideTop.Control = TabSheet1
+        Left = 174
+        Height = 17
+        Top = 8
+        Width = 80
+        BorderSpacing.Around = 8
+        Caption = 'Total cycles:'
+        ParentColor = False
+      end
+      object ColorBox37: TColorBox
+        AnchorSideLeft.Control = Bevel2
+        AnchorSideTop.Control = Label37
+        AnchorSideTop.Side = asrBottom
+        Left = 174
+        Height = 29
+        Top = 33
+        Width = 150
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor, cbCustomColors]
+        BorderSpacing.Around = 8
+        ItemHeight = 0
+        TabOrder = 8
       end
     end
     object TabSheet5: TTabSheet

@@ -34,6 +34,8 @@
 {"hash":50195146,"name":"tform18.label5.caption","sourcebytes":[76,105,110,101,32,115,101,108,101,99,116,111,114,58],"value":"Line selector:"},
 {"hash":229412106,"name":"tform18.label6.caption","sourcebytes":[79,100,100,32,108,105,110,101,115,32,98,97,99,107,103,114,111,117,110,100,58],"value":"Odd lines background:"},
 {"hash":195597930,"name":"tform18.label7.caption","sourcebytes":[69,118,101,110,32,108,105,110,101,115,32,98,97,99,107,103,114,111,117,110,100,58],"value":"Even lines background:"},
+{"hash":184167466,"name":"tform18.label36.caption","sourcebytes":[67,121,99,108,101,115,58],"value":"Cycles:"},
+{"hash":26497626,"name":"tform18.label37.caption","sourcebytes":[84,111,116,97,108,32,99,121,99,108,101,115,58],"value":"Total cycles:"},
 {"hash":34382837,"name":"tform18.tabsheet5.caption","sourcebytes":[83,99,114,105,112,116,67,111,110,115,111,108,101],"value":"ScriptConsole"},
 {"hash":5072250,"name":"tform18.label25.caption","sourcebytes":[70,111,110,116,58],"value":"Font:"},
 {"hash":249486954,"name":"tform18.label26.caption","sourcebytes":[66,97,99,107,103,114,111,117,110,100,58],"value":"Background:"},

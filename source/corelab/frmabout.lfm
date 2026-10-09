@@ -2,11 +2,11 @@ object Form2: TForm2
   Left = 762
   Height = 220
   Top = 333
-  Width = 324
+  Width = 327
   BorderStyle = bsDialog
   Caption = 'About'
   ClientHeight = 220
-  ClientWidth = 324
+  ClientWidth = 327
   Icon.Data = {
     3E2C00000000010001002A40000001002000282C000016000000280000002A00
     0000800000000100200000000000002A00006400000064000000000000000000
@@ -371,7 +371,7 @@ object Form2: TForm2
     Left = 8
     Height = 156
     Top = 8
-    Width = 308
+    Width = 311
     Align = alTop
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
@@ -386,7 +386,7 @@ object Form2: TForm2
     Left = 9
     Height = 154
     Top = 9
-    Width = 306
+    Width = 309
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 1
     Picture.Data = {
@@ -1133,7 +1133,7 @@ object Form2: TForm2
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 241
+    Left = 244
     Height = 28
     Top = 184
     Width = 75
@@ -1202,7 +1202,7 @@ object Form2: TForm2
     AnchorSideLeft.Side = asrBottom
     AnchorSideBottom.Control = Label6
     AnchorSideBottom.Side = asrBottom
-    Left = 99
+    Left = 56
     Height = 17
     Top = 111
     Width = 43
@@ -1223,10 +1223,10 @@ object Form2: TForm2
     Left = 16
     Height = 17
     Top = 111
-    Width = 75
+    Width = 32
     BorderSpacing.Left = 8
     BorderSpacing.Top = 8
-    Caption = 'Homepage:'
+    Caption = 'Web:'
     ParentColor = False
   end
   object Label7: TLabel
@@ -1269,7 +1269,7 @@ object Form2: TForm2
     Left = 8
     Height = 4
     Top = 172
-    Width = 308
+    Width = 311
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Around = 8
     Shape = bsBottomLine

@@ -880,7 +880,7 @@
          end;
    else  
     // INR r; INR M
-    // $04-$34, $0C-$3C
+    // $04, $14, $24, $34, $0C, $1C, $2C, $3C
     if (OC <= $3F) and ((OC and $07) = $04) then
     begin
       DestRegIndex := (OC shr 3) and $07;
@@ -893,18 +893,19 @@
         w1 := (b2 + 1) and $FF;
         FBus.WriteMemory(FRegs.HL, w1);
         UpdateFlags(w1, b2, 1);
-      end
-      else
+        FLastInstruction.Cycles := 10;
+      end else
       begin
         // INR r
         b2 := RegPointers[DestRegIndex]^;
         Inc(RegPointers[DestRegIndex]^);
         UpdateFlags(RegPointers[DestRegIndex]^, b2, 1);
+        FLastInstruction.Cycles := 5;
       end;
       FRegs.F := (FRegs.F and $FE) or b1;                      { restore Carry }
     end;
     // DCR r; DCR M
-    // $05-$35, $0D-$3D
+    // $05, $15, $25, $35, $0D, $1D, $2D, $3D
     if (OC <= $3F) and ((OC and $07) = $05) then
     begin
       DestRegIndex := (OC shr 3) and $07;
@@ -917,18 +918,19 @@
         w1 := (b2 - 1) and $FF;
         FBus.WriteMemory(FRegs.HL, w1);
         UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
-      end
-      else
+        FLastInstruction.Cycles := 10;
+      end else
       begin
         // DCR r
         b2 := RegPointers[DestRegIndex]^;
         Dec(RegPointers[DestRegIndex]^);
         UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
+        FLastInstruction.Cycles := 5;
       end;
       FRegs.F := (FRegs.F and $FE) or b1;                      { restore Carry }
     end;
     // MVI r, d8; MVI M, d8
-    // $06-$36, $0E-$3E
+    // $06, $16, $26, $36, $0E, $1E, $2E, $3E
     if (OC <= $3F) and ((OC and $07) = $06) then
     begin
       DestRegIndex := (OC shr 3) and $07;
@@ -937,12 +939,18 @@
       b1 := FBus.ReadMemory(FRegs.PC);
       Inc(FRegs.PC);
       FLastInstruction.Operands[1] := b1;
-      if DestRegIndex = 6 
-        then FBus.WriteMemory(FRegs.HL, b1)                           { MVI M, d8 }
-        else RegPointers[DestRegIndex]^ := b1;                     { MVI r, d8 }
+      if DestRegIndex = 6 then
+      begin
+        FBus.WriteMemory(FRegs.HL, b1);                            { MVI M, d8 }
+        FLastInstruction.Cycles := 10;
+      end else
+      begin
+        RegPointers[DestRegIndex]^ := b1;                          { MVI r, d8 }
+        FLastInstruction.Cycles := 7;
+      end;
     end;
     // DAD rp
-    // $09-$39)
+    // $09, $19, $29, $39)
     if (OC <= $3F) and ((OC and $0F) = $09) then
     begin
       SourceRegIndex := (OC shr 4) and $03;
@@ -957,6 +965,7 @@
       if (dw1 and $10000) <> 0 
         then FRegs.F := FRegs.F or $01
         else FRegs.F := FRegs.F and $FE;
+      FLastInstruction.Cycles := 10;
     end;
     // MOV r1, r2; MOV M, r1; MOV r1, M
     // $40-$7F
@@ -973,9 +982,13 @@
 	  if SourceRegIndex = 6
             then RegPointers[DestRegIndex]^ := FBus.ReadMemory(FRegs.HL) {MOV r, M}
             else RegPointers[DestRegIndex]^ := RegPointers[SourceRegIndex]^; {MOV r1, r2}
-
-
-
+      if (OC = $46) or (OC = $4E) or 
+         (OC = $56) or (OC = $5E) or 
+         (OC = $66) or (OC = $6E) or 
+         (OC = $77) or (OC = $7E) or 
+         ((OC >= $70) and (OC >= $75))
+        then FLastInstruction.Cycles := 7
+        else FLastInstruction.Cycles := 5;
     end;
     // ADD r
     // $80-$87
