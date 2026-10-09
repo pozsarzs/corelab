@@ -17,16 +17,6 @@ library cpu_8080;
 uses
   CMem, Classes, SysUtils, core_cpu;
 type
-  // Last executed instruction
-  TLastInstruction = record
-    Address:     Word;
-    Opcode:      Byte;
-    NumOperand:  Byte;
-    Operands:    array[1..2] of Word;
-    Mnemonic:    string[12];
-    Cycles:      Byte;
-    TotalCycles: QWord;
-  end;
   // Register set
   T8080Registers = record
     case boolean of
@@ -42,7 +32,6 @@ type
   { T8080CPU }
   T8080CPU = class(TCPU)
   private
-    LogRecord:   TLastInstruction;                       // Raw running log data
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
   protected
     FRegs: T8080Registers;
@@ -178,8 +167,8 @@ begin
   FIRQPending := false;
   FNMIPending := false;
   // Clear counters
-  FCycles := 0;
-  FInstructions := 0;
+  FTotalCycles := 0;
+  FTotalInstructions := 0;
   // Others
   FillChar(FRegs, SizeOf(FRegs), 0);
   FRegs.PC := 0;
@@ -202,8 +191,8 @@ begin
       ReadBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
       ReadBuffer(FIRQPending, SizeOf(FIRQPending));
       ReadBuffer(FNMIPending, SizeOf(FNMIPending));
-      ReadBuffer(FCycles, SizeOf(FCycles));
-      ReadBuffer(FInstructions, SizeOf(FInstructions));
+      ReadBuffer(FTotalCycles, SizeOf(FTotalCycles));
+      ReadBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
     except
       Result := false;
     end;
@@ -224,8 +213,8 @@ begin
     WriteBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
     WriteBuffer(FIRQPending, SizeOf(FIRQPending));
     WriteBuffer(FNMIPending, SizeOf(FNMIPending));
-    WriteBuffer(FCycles, SizeOf(FCycles));
-    WriteBuffer(FInstructions, SizeOf(FInstructions));
+    WriteBuffer(FTotalCycles, SizeOf(FTotalCycles));
+    WriteBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
     Result := true;
   end;
 end;
@@ -243,16 +232,18 @@ begin
   if CheckInterrupts then Exit;
   if FHalted then Exit;
   OC := FBus.ReadMemory(FRegs.PC);                     // Fetch opcode from (PC)
-  with LogRecord do
+  with FLastInstruction do
   begin
     Address := FRegs.PC;
+    Cycles := 0;
     Opcode := OC;
     NumOperand := 0;
   end;
   Inc(FRegs.PC);                                    // Increment Program Counter
   {$I cpu_8080_microcode.pas}
+  FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
   EmitEvent(ceInstructionBoundary);              // Notify debugger/trace system
-  Inc(FInstructions);                           // Increment Instruction Counter
+  Inc(FTotalInstructions);                           // Increment Instruction Counter
 end;
 
 // QUERY FOR THE LAST STATEMENT
@@ -260,7 +251,7 @@ function T8080CPU.GetCurrentInstruction: TLogRec;
 var
   RawCode, AsmText: string;
 begin
-  with LogRecord do
+  with FLastInstruction do
   begin
     RawCode := IntToHex(Opcode, 2);
     if NumOperand > 0 then RawCode := RawCode + ' ' + IntToHex(Operands[1], 2);
@@ -271,10 +262,12 @@ begin
   end;
   with Result do
   begin
-    InstCount := FInstructions;
-    Address := IntToHex(LogRecord.Address, 4);
+    InstCount := FTotalInstructions;
+    Address := IntToHex(FLastInstruction.Address, 4);
     Opcode := RawCode;
     Mnemonic := AsmText;
+    Cycles := FLastInstruction.Cycles;
+    TotalCycles := FTotalCycles;
   end;
 end;
 

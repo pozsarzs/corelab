@@ -57,56 +57,56 @@ type
     Opcode:      Byte;
     NumOperand:  Byte;
     Operands:    array[1..2] of Word;
-    Mnemonic:    string[12];
+    Mnemonic:    string[32];
     Cycles:      Byte;
   end;
   // Last executed instruction record for RunLogger
   TLogRec = record
     InstCount:   Integer;
-    Address:     string[31];
-    OpCode:      string[31];
-    Mnemonic:    string[127];
-    Cycles:      string[3];
-    TotalCycles: string[20];
+    Address:     string[32];
+    OpCode:      string[32];
+    Mnemonic:    string[32];
+    Cycles:      Byte;
+    TotalCycles: QWord;
   end;
   // Last interrupt record for IntLogger
   TIntLogRec = record
-    Sender: string[31];
-    Vector: string[31];
-    Status: string[31];
-    Flag:   string[31];
+    Sender: string[32];
+    Vector: string[32];
+    Status: string[32];
+    Flag:   string[32];
   end;
   { TCPU }
   TCPU = class
   protected
-    FBus:              ISysBus;                        // Connected external bus
-    FOnEvent:          TCPUEventHandler;                       // Event callback
+    FBus:               ISysBus;                       // Connected external bus
+    FOnEvent:           TCPUEventHandler;                      // Event callback
     // CPU identity information
-    FModname:          PChar;
-    FDescription:      PChar;                               // Short description
-    FVersion:          TSemanticVersion;                       // Module version
+    FModname:           PChar;
+    FDescription:       PChar;                              // Short description
+    FVersion:           TSemanticVersion;                      // Module version
     // CPU features
-    FAddressWidth:     Byte;                        // Address bus width in bits
-    FArchitecture:     TArchitecture;                    // Type of architecture
-    FEnabled:          Boolean;         // Enable device without detach from bus
-    FEndianness:       TEndianness;                                // Byte order
-    LogRecord:         TLastInstruction;                 // Raw running log data
-    FMaxCodeAddress:   DWord;                 // The highest code memory address
-    FMaxIOPortAddress: DWord;                    // The highest I/O port address
-    FMaxMemAddress:    DWord;               // The highest (data) memory address
-    FHasSeparateIOBus: Boolean;       // Indicates separate memory and I/O buses
+    FAddressWidth:      Byte;                       // Address bus width in bits
+    FArchitecture:      TArchitecture;                   // Type of architecture
+    FEnabled:           Boolean;        // Enable device without detach from bus
+    FEndianness:        TEndianness;                               // Byte order
+    FLastInstruction:   TLastInstruction;            // Data of last instruction
+    FMaxCodeAddress:    DWord;                // The highest code memory address
+    FMaxIOPortAddress:  DWord;                   // The highest I/O port address
+    FMaxMemAddress:     DWord;              // The highest (data) memory address
+    FHasSeparateIOBus:  Boolean;      // Indicates separate memory and I/O buses
     // Runtime state
-    FRunning:          Boolean;                           // CPU execution state
-    FHalted:           Boolean;                                // CPU HALT state
-    FInterruptEnabled: Boolean;                  // Global interrupt enable flag
-    FIRQPending:       Boolean;                    // Pending maskable interrupt
-    FIRQVector:        Byte;                        // Received interrupt vector
-    FNMIPending:       Boolean;                // Pending non-maskable interrupt
+    FRunning:           Boolean;                          // CPU execution state
+    FHalted:            Boolean;                               // CPU HALT state
+    FInterruptEnabled:  Boolean;                 // Global interrupt enable flag
+    FIRQPending:        Boolean;                   // Pending maskable interrupt
+    FIRQVector:         Byte;                       // Received interrupt vector
+    FNMIPending:        Boolean;               // Pending non-maskable interrupt
     // Execution statistics
-    FCycles:           QWord;                                    // Total cycles
-    FInstructions:     QWord;                     // Total executed instructions
-    FOnDestroy:        TProcessorDestroyEvent;
-    var FRegPtr:       array of ^Word;
+    FTotalCycles:       QWord;                                   // Total cycles
+    FTotalInstructions: QWord;                    // Total executed instructions
+    FOnDestroy:         TProcessorDestroyEvent;
+    var FRegPtr:        array of ^Word;
     procedure EmitEvent(AEvent: TCPUEvent); virtual;
     procedure DoInterrupt(AEvent: TCPUEvent); virtual;
   public
@@ -133,13 +133,13 @@ type
     // properties
     property AddressWidth: Byte read FAddressWidth;
     property Architecture: TArchitecture read FArchitecture;
-    property Cycles: QWord read FCycles;
+    property TotalCycles: QWord read FTotalCycles;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
     property Endianness: TEndianness read FEndianness;
     property Halted: Boolean read FHalted;
     property HasSeparateIOBus: Boolean read FHasSeparateIOBus;
-    property Instructions: QWord read FInstructions;
+    property TotalInstructions: QWord read FTotalInstructions;
     property InterruptEnabled: Boolean read FInterruptEnabled;
     property MaxCodeAddress: DWord read FMaxCodeAddress;
     property MaxIOPortAddress: DWord read FMaxIOPortAddress;
@@ -235,8 +235,8 @@ begin
   FIRQPending := false;
   FNMIPending := false;
   // Clear counters
-  FCycles := 0;
-  FInstructions := 0;
+  FTotalCycles := 0;
+  FTotalInstructions := 0;
   with FVersion do
   begin
     Major := 0;
