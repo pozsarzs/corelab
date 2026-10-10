@@ -101,7 +101,7 @@ var
     try
       // find instance
       PortInfo := Form1.FPortInstanceDict[Node.Text];
-      // load properies
+      // load properties
       with ValueListEditor1 do
       begin
         Clear;
@@ -136,7 +136,7 @@ var
     try
       // find instance
       MemInfo := Form1.FMemInstanceDict[Node.Text];
-      // load properies
+      // load properties
       with ValueListEditor1 do
       begin
         Clear;
@@ -162,7 +162,7 @@ var
     try
       // find instance
       ProcInfo := Form1.FProcInstanceDict[Node.Text];
-      // load properies
+      // load properties
       with ValueListEditor1 do
       begin
         Clear;

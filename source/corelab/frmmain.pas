@@ -510,9 +510,30 @@ type
     property StartupProject: string write FStartupProject;
     property StartupScript: string write FStartupScript;
   end;
+const
+  CPUProperties:    array[0..1] of string =  ('Enabled',
+                                              'AttachedToBus');
+  IOPortProperties: array[0..12] of string = ('BaseAddress',
+                                              'DataInMode',
+                                              'DataInNegation',
+                                              'DataOutMode',
+                                              'DataOutNegation',
+                                              'Enabled',
+                                              'IntVector',
+                                              'SelMode',
+                                              'SelNegation',
+                                              'PanelCaption',
+                                              'PanelSize',
+                                              'PanelPosition',
+                                              'AttachedToBus');
+  MemoryProperties: array[0..4] of string =  ('BaseAddress',
+                                              'AddressRangeSize',
+                                              'MemoryMode',
+                                              'Enabled',
+                                              'AttachedToBus');
 var
   Form1:         TForm1;
-//  GlobalSimLock: TCriticalSection;        // global locker for simulation thread
+//  GlobalSimLock: TCriticalSection;      // global locker for simulation thread
 
 implementation
 
@@ -999,27 +1020,6 @@ var
   NodeList:         TDOMNodeList;
   ProjectFile:      TXMLDocument;
   WorkspaceNode:    TDOMNode;
-const
-  CPUProperties:    array[0..1] of string =  ('Enabled',
-                                              'AttachedToBus');
-  IOPortProperties: array[0..12] of string = ('BaseAddress',
-                                              'DataInMode',
-                                              'DataInNegation',
-                                              'DataOutMode',
-                                              'DataOutNegation',
-                                              'Enabled',
-                                              'IntVector',
-                                              'SelMode',
-                                              'SelNegation',
-                                              'PanelCaption',
-                                              'PanelSize',
-                                              'PanelPosition',
-                                              'AttachedToBus');
-  MemoryProperties: array[0..4] of string =  ('BaseAddress',
-                                              'AddressRangeSize',
-                                              'MemoryMode',
-                                              'Enabled',
-                                              'AttachedToBus');
 begin
   Result := False;
   try
@@ -1070,7 +1070,7 @@ begin
                 begin
                   ActionContext.SArg2 := string(ChildNode.FirstChild.NodeValue);
                   case j of
-                    12: PAttachToBusOperation(ActionContext);
+                    1: PAttachToBusOperation(ActionContext);
                   else
                     PConfigureOperation(ActionContext);
                   end;
@@ -1174,7 +1174,7 @@ begin
                 begin
                   ActionContext.SArg2 := string(ChildNode.FirstChild.NodeValue);
                   case j of
-                    12: MAttachToBusOperation(ActionContext);
+                    4: MAttachToBusOperation(ActionContext);
                   else
                     MConfigureOperation(ActionContext);
                   end;
@@ -1196,8 +1196,99 @@ end;
 
 // SAVE PROJECT TO FILE
 function TForm1.SaveProject(const AFilename: string): Boolean;   // save project
+const
+  FileVersion = '1.0';
+var
+  MemInfo:       TMemInfo;
+  PortInfo:      TPortInfo;
+  ProcInfo:      TProcInfo;
+  KeyName:       string;
+  ModulesNode:   TDOMElement;
+  ProjectFile:   TXMLDocument;
+  WorkspaceNode: TDOMElement;
+  Node:          TDOMElement;
+
+  procedure AppendChildElement(Parent: TDOMNode; const TagName, Value: string);
+  var
+    Element: TDOMElement;
+  begin
+    Element := ProjectFile.CreateElement(DOMString(TagName));
+    Element.AppendChild(ProjectFile.CreateTextNode(DOMString(Value)));
+    Parent.AppendChild(Element);
+  end;
+
 begin
   Result := False;
+  ProjectFile := TXMLDocument.Create;
+  try
+    WorkspaceNode := ProjectFile.CreateElement('CoreLAB_Workspace');
+    WorkspaceNode.SetAttribute('version', FileVersion);
+    ProjectFile.AppendChild(WorkspaceNode);
+    // <Modules>
+    ModulesNode := ProjectFile.CreateElement('Modules');
+    WorkspaceNode.AppendChild(ModulesNode);
+    // <TCPU>
+    for KeyName in FProcInstanceDict.Keys do
+    begin
+      Node := ProjectFile.CreateElement('TCPU');
+      ProcInfo := FProcInstanceDict[KeyName];
+      Node.SetAttribute('id', DOMString(KeyName));
+      Node.SetAttribute('type', DOMString(ProcInfo.ModuleName));
+      AppendChildElement(Node, CPUProperties[0], BoolToStr(ProcInfo.Processor.Enabled, 'true', 'false'));
+      AppendChildElement(Node, CPUProperties[1], BoolToStr(ProcInfo.AttachedToBus, 'true', 'false'));
+      ModulesNode.AppendChild(Node);
+    end;
+    // <TIOPort>
+    for KeyName in FPortInstanceDict.Keys do
+    begin
+      Node := ProjectFile.CreateElement('TIOPort');
+      PortInfo := FPortInstanceDict[KeyName];
+      Node.SetAttribute('id', DOMString(KeyName));
+      Node.SetAttribute('type', DOMString(PortInfo.ModuleName));
+      AppendChildElement(Node, IOPortProperties[0], IntToHex(PortInfo.Port.BaseAddress));
+      AppendChildElement(Node, IOPortProperties[1], PortInfo.Port.DataInMode.ToString);
+      AppendChildElement(Node, IOPortProperties[2], BoolToStr(PortInfo.Port.DataInNegation, 'true', 'false'));
+      AppendChildElement(Node, IOPortProperties[3], PortInfo.Port.DataOutMode.ToString);
+      AppendChildElement(Node, IOPortProperties[4], BoolToStr(PortInfo.Port.DataOutNegation, 'true', 'false'));
+      AppendChildElement(Node, IOPortProperties[5], BoolToStr(PortInfo.Port.Enabled, 'true', 'false'));
+      AppendChildElement(Node, IOPortProperties[6], IntToHex(PortInfo.Port.IntVector));
+      AppendChildElement(Node, IOPortProperties[7], PortInfo.Port.SelMode.ToString);
+      AppendChildElement(Node, IOPortProperties[8], BoolToStr(PortInfo.Port.SelNegation, 'true', 'false'));
+      if PortInfo.Port.HasPanel then
+      begin
+//        'PanelCaption', 'PanelSize', 'PanelPosition',
+
+//        AppendChildElement(Node, IOPortProperties[9], PortInfo.Port
+//        AppendChildElement(Node, IOPortProperties[10], IntToStr(PortInfo.Port.
+//        AppendChildElement(Node, IOPortProperties[11], IntToStr(PortInfo.Port.
+      end;
+      AppendChildElement(Node, IOPortProperties[12], BoolToStr(PortInfo.AttachedToBus, 'true', 'false'));
+      ModulesNode.AppendChild(Node);
+    end;
+    // <TMemory>
+    for KeyName in FMemInstanceDict.Keys do
+    begin
+      Node := ProjectFile.CreateElement('TMemory');
+      MemInfo := FMemInstanceDict[KeyName];
+      Node.SetAttribute('id', DOMString(KeyName));
+      Node.SetAttribute('type', DOMString(MemInfo.ModuleName));
+      AppendChildElement(Node, MemoryProperties[0], IntToHex(MemInfo.Memory.BaseAddress));
+      AppendChildElement(Node, MemoryProperties[1], IntToStr(MemInfo.Memory.AddressRangeSize));
+      AppendChildElement(Node, MemoryProperties[2], MemInfo.Memory.MemoryMode.ToString);
+      AppendChildElement(Node, MemoryProperties[3], BoolToStr(MemInfo.Memory.Enabled, 'true', 'false'));
+      AppendChildElement(Node, MemoryProperties[4], BoolToStr(MemInfo.AttachedToBus, 'true', 'false'));
+      ModulesNode.AppendChild(Node);
+    end;
+    // write to file
+    try
+      WriteXMLFile(ProjectFile, AFileName);
+    except
+      Exit;
+    end;
+  finally
+    ProjectFile.Free;
+  end;
+  Result := True;
 end;
 
 // CHANGE OPERATION MODE
@@ -5453,7 +5544,7 @@ end;
 procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
 var
   Counter:    Variant;
-  CmdResult:  Byte;
+  CmdResult:  Integer;
   CurrentCmd: string;
   i:          Integer;
   NewCounter: Variant;
