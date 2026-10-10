@@ -23,7 +23,7 @@ uses
   frmloadsavememory, frmhexviewer, frmregviewer, frmscripteditor,
   frmscriptconsole, frmintlogger, frmcaption, frmproperties, frmmoduleexplorer,
   frmbpmanager, frmbuslogger, frmrdwrioport, commandengine, scriptengine,
-  core_cpu, core_memory, core_ioport, core_bus, usysconsole, ucommon, uconfig,
+  core_cpu, core_memory, core_ioport, core_gioport, core_bus, usysconsole, ucommon, uconfig,
   uplugin, uintelhex, uactcontext, uproperties, ubreakpoint, simulationthread;
   { TSysBus }
 type
@@ -1064,7 +1064,11 @@ begin
             // set properties
               for j := 0 to Length(CPUProperties) - 1 do
               begin
-                ActionContext.SArg1 := InstanceName + '.' + CPUProperties[j];
+                case j of
+                  1: ActionContext.SArg1 := InstanceName;
+                else
+                  ActionContext.SArg1 := InstanceName + '.' + CPUProperties[j];
+                end;
                 ChildNode := Node.FindNode(DOMString(CPUProperties[j]));
                 if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
                 begin
@@ -1100,7 +1104,8 @@ begin
                 <SelMode>lmBCD</SelMode>
                 <SelNegation>false</SelNegation>
                 <PanelCaption>Display</PanelCaption>
-                <PanelPosition>100-300</PanelPosition>
+                <PanelSize>320-240</PanelSize>
+                <PanelPosition>20-20</PanelPosition>
                 <AttachedToBus>true</AttachedToBus>
               </TIOPort>
             }
@@ -1119,6 +1124,7 @@ begin
                   9: ActionContext.SArg1 := InstanceName;
                   10: ActionContext.SArg1 := InstanceName;
                   11: ActionContext.SArg1 := InstanceName;
+                  12: ActionContext.SArg1 := InstanceName;
                 else
                   ActionContext.SArg1 := InstanceName + '.' + IOPortProperties[j];
                 end;
@@ -1128,8 +1134,8 @@ begin
                   ActionContext.SArg2 := string(ChildNode.FirstChild.NodeValue);
                   case j of
                     9: VRenameIOPanelOperation(ActionContext);
-                    10: IOMovePanelOperation(ActionContext);
-                    11: IOResizePanelOperation(ActionContext);
+                    10: IOResizePanelOperation(ActionContext);
+                    11: IOMovePanelOperation(ActionContext);
                     12: IOAttachToBusOperation(ActionContext);
                   else
                     IOConfigureOperation(ActionContext);
@@ -1168,7 +1174,11 @@ begin
               // set properties
               for j := 0 to Length(MemoryProperties) - 1 do
               begin
-                ActionContext.SArg1 := InstanceName + '.' + MemoryProperties[j];
+                case j of
+                  4: ActionContext.SArg1 := InstanceName;
+                else
+                  ActionContext.SArg1 := InstanceName + '.' + MemoryProperties[j];
+                end;
                 ChildNode := Node.FindNode(DOMString(MemoryProperties[j]));
                 if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
                 begin
@@ -1245,22 +1255,22 @@ begin
       PortInfo := FPortInstanceDict[KeyName];
       Node.SetAttribute('id', DOMString(KeyName));
       Node.SetAttribute('type', DOMString(PortInfo.ModuleName));
-      AppendChildElement(Node, IOPortProperties[0], IntToHex(PortInfo.Port.BaseAddress));
+      AppendChildElement(Node, IOPortProperties[0], IntToHex(PortInfo.Port.BaseAddress, 6));
       AppendChildElement(Node, IOPortProperties[1], PortInfo.Port.DataInMode.ToString);
       AppendChildElement(Node, IOPortProperties[2], BoolToStr(PortInfo.Port.DataInNegation, 'true', 'false'));
       AppendChildElement(Node, IOPortProperties[3], PortInfo.Port.DataOutMode.ToString);
       AppendChildElement(Node, IOPortProperties[4], BoolToStr(PortInfo.Port.DataOutNegation, 'true', 'false'));
       AppendChildElement(Node, IOPortProperties[5], BoolToStr(PortInfo.Port.Enabled, 'true', 'false'));
-      AppendChildElement(Node, IOPortProperties[6], IntToHex(PortInfo.Port.IntVector));
+      AppendChildElement(Node, IOPortProperties[6], IntToHex(PortInfo.Port.IntVector, 2));
       AppendChildElement(Node, IOPortProperties[7], PortInfo.Port.SelMode.ToString);
       AppendChildElement(Node, IOPortProperties[8], BoolToStr(PortInfo.Port.SelNegation, 'true', 'false'));
       if PortInfo.Port.HasPanel then
       begin
-//        'PanelCaption', 'PanelSize', 'PanelPosition',
-
-//        AppendChildElement(Node, IOPortProperties[9], PortInfo.Port
-//        AppendChildElement(Node, IOPortProperties[10], IntToStr(PortInfo.Port.
-//        AppendChildElement(Node, IOPortProperties[11], IntToStr(PortInfo.Port.
+        AppendChildElement(Node, IOPortProperties[9], TGIOPort(PortInfo.Port).PanelCaption);
+        AppendChildElement(Node, IOPortProperties[10], IntToStr(TGIOPort(PortInfo.Port).PanelWidth) + '-' +
+                                                       IntToStr(TGIOPort(PortInfo.Port).PanelHeight));
+        AppendChildElement(Node, IOPortProperties[11], IntToStr(TGIOPort(PortInfo.Port).PanelLeft) + '-' +
+                                                       IntToStr(TGIOPort(PortInfo.Port).PanelTop));
       end;
       AppendChildElement(Node, IOPortProperties[12], BoolToStr(PortInfo.AttachedToBus, 'true', 'false'));
       ModulesNode.AppendChild(Node);
@@ -1272,7 +1282,7 @@ begin
       MemInfo := FMemInstanceDict[KeyName];
       Node.SetAttribute('id', DOMString(KeyName));
       Node.SetAttribute('type', DOMString(MemInfo.ModuleName));
-      AppendChildElement(Node, MemoryProperties[0], IntToHex(MemInfo.Memory.BaseAddress));
+      AppendChildElement(Node, MemoryProperties[0], IntToHex(MemInfo.Memory.BaseAddress, 2));
       AppendChildElement(Node, MemoryProperties[1], IntToStr(MemInfo.Memory.AddressRangeSize));
       AppendChildElement(Node, MemoryProperties[2], MemInfo.Memory.MemoryMode.ToString);
       AppendChildElement(Node, MemoryProperties[3], BoolToStr(MemInfo.Memory.Enabled, 'true', 'false'));
@@ -5664,7 +5674,7 @@ end;
 // SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
 procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
 var
-  CmdResult:  Byte;
+  CmdResult:  Integer;
   Counter:    Variant;
   CurrentCmd: string;
   i:          Integer;
