@@ -988,14 +988,36 @@ end;
 // LOAD PROJECT FROM FILE
 function TForm1.LoadProject(const AFilename: string): Boolean;   // load project
 var
-  ActionContext:          TActionContext;
-  Node, ChildNode:        TDOMNode;
-  FileVersion:            string;
-  i:                      Integer;
-  NodeList:               TDOMNodeList;
-  ProjectFile:            TXMLDocument;
-  WorkspaceNode: TDOMNode;
-  ModulesNode, ConnectionsNode: TDOMNode;
+  ActionContext:    TActionContext;
+  ConnectionsNode:  TDOMNode;
+  FileVersion:      string;
+  i, j:             Integer;
+  InstanceName:     string;
+  ModulesNode:      TDOMNode;
+  Node, ChildNode:  TDOMNode;
+  NodeList:         TDOMNodeList;
+  ProjectFile:      TXMLDocument;
+  WorkspaceNode:    TDOMNode;
+const
+  CPUProperties:    array[0..0] of string  = ('Enabled');
+  IOPortProperties: array[0..13] of string = ('BaseAddress',
+                                              'DataInMode',
+                                              'DataInNegation',
+                                              'DataOutMode',
+                                              'DataOutNegation',
+                                              'Enabled',
+                                              'IntVector',
+                                              'SelMode',
+                                              'SelNegation',
+                                              'PanelCaption',
+                                              'PanelHeight',
+                                              'PanelLeft',
+                                              'PanelTop',
+                                              'PanelWidth');
+  MemoryProperties: array[0..3] of string  = ('BaseAddress',
+                                              'AddressRangeSize',
+                                              'MemoryMode',
+                                              'Enabled');
 begin
   Result := False;
   try
@@ -1005,6 +1027,7 @@ begin
   end;
   ActionContext := TActionContext.Create;
   try
+    ActionContext.ActionSource := asOther;
     // <Workspace>
     WorkspaceNode := ProjectFile.FindNode('CoreLAB_Workspace');
     if Assigned(WorkspaceNode) then
@@ -1027,48 +1050,77 @@ begin
                 <Enabled>true</Enabled>
               </TCPU>
             }
-            // create processor instance
-            ActionContext.ActionSource := asOther;
+            // create instance
+            InstanceName := TDOMElement(Node).GetAttribute('id');
             ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
-            ActionContext.SArg2 := TDOMElement(Node).GetAttribute('id');
+            ActionContext.SArg2 := InstanceName;
             PCreateOperation(ActionContext);
-            // enable/disable
-            ActionContext.SArg1 := ActionContext.SArg2;
-            ChildNode := Node.FindNode('Enabled');
-            if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
-              if ChildNode.FirstChild.NodeValue = 'true'
-                then PEnableOperation(ActionContext)
-                else PDisableOperation(ActionContext);
+            // if instance has created
+            if not ActionContext.HasError then
+            begin
+            // set properties
+              for j := 0 to Length(CPUProperties) - 1 do
+              begin
+                ActionContext.SArg1 := InstanceName + '.' + CPUProperties[j];
+                ChildNode := Node.FindNode(CPUProperties[j]);
+                if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
+                begin
+                  ActionContext.SArg2 := ChildNode.FirstChild.NodeValue;
+                  PConfigureOperation(ActionContext);
+                end;
+              end;
+            end;
           end;
           NodeList.Free;
         end;
         // <TIOPort>
-{        NodeList := TDOMElement(ModulesNode).GetElementsByTagName('TIOPort');
+        NodeList := TDOMElement(ModulesNode).GetElementsByTagName('TIOPort');
         if Assigned(NodeList) then
         begin
           for i := 0 to NodeList.Count - 1 do
           begin
             Node := NodeList.Item[i];
             {
-              <TCPU id="Processor" type="cpu_8080">
+              <TIOPort id="Keyboard" type="ioport_button16bcd">
+                <BaseAddress>129</BaseAddress>
+                <DataInMode></DataInMode>
+                <DataInNegation></DataInNegation>
+                <DataOutMode></DataOutMode>
+                <DataOutNegation></DataOutNegation>
                 <Enabled>true</Enabled>
-              </TCPU>
+                <IntVector>207</IntVector>
+                <SelMode></SelMode>
+                <SelNegation></SelNegation>
+                <PanelCaption></PanelCaption>
+                <PanelHeight></PanelHeight>
+                <PanelLeft></PanelLeft>
+                <PanelTop></PanelTop>
+                <PanelWidth></PanelWidth>
+              </TIOPort>
             }
-            // create processor instance
-            ActionContext.ActionSource := asOther;
+            // create instance
+            InstanceName := TDOMElement(Node).GetAttribute('id');
             ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
-            ActionContext.SArg2 := TDOMElement(Node).GetAttribute('id');
-            PCreateOperation(ActionContext);
-            // enable/disable processor instance
-            ActionContext.SArg1 := ActionContext.SArg2;
-            ChildNode := Node.FindNode('Enabled');
-            if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
-              if ChildNode.FirstChild.NodeValue = 'true'
-                then PEnableOperation(ActionContext)
-                else PDisableOperation(ActionContext);
+            ActionContext.SArg2 := InstanceName;
+            IOCreateOperation(ActionContext);
+            // if instance has created
+            if not ActionContext.HasError then
+            begin
+            // set properties
+              for j := 0 to Length(IOPortProperties) - 1 do
+              begin
+                ActionContext.SArg1 := InstanceName + '.' + IOPortProperties[j];
+                ChildNode := Node.FindNode(IOPortProperties[j]);
+                if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
+                begin
+                  ActionContext.SArg2 := ChildNode.FirstChild.NodeValue;
+                  IOConfigureOperation(ActionContext);
+                end;
+              end;
+            end;
           end;
           NodeList.Free;
-        end;}
+        end;
         // <TMemory>
         NodeList := TDOMElement(ModulesNode).GetElementsByTagName('TMemory');
         if Assigned(NodeList) then
@@ -1078,27 +1130,32 @@ begin
             Node := NodeList.Item[i];
             {
               <TMemory id="RAM" type="memory_standard">
-                <BaseAddress>0</BaseAddress>
                 <AddressRangeSize>1024</AddressRangeSize>
-                <MemoryMode>mmRAM</MemoryMode>
+                <BaseAddress>0</BaseAddress>
                 <Enabled>true</Enabled>
+                <MemoryMode>mmRAM</MemoryMode>
               </TMemory>
             }
-            // create memory instance
-            ActionContext.ActionSource := asOther;
+            // create instance
+            InstanceName := TDOMElement(Node).GetAttribute('id');
             ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
-            ActionContext.SArg2 := TDOMElement(Node).GetAttribute('id');
-            PCreateOperation(ActionContext);
-            // set base address
-            // set address range size
-            // set memory mode
-            // enable/disable
-            ActionContext.SArg1 := ActionContext.SArg2;
-            ChildNode := Node.FindNode('Enabled');
-            if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
-              if ChildNode.FirstChild.NodeValue = 'true'
-                then PEnableOperation(ActionContext)
-                else PDisableOperation(ActionContext);
+            ActionContext.SArg2 := InstanceName;
+            MCreateOperation(ActionContext);
+            // if instance has created
+            if not ActionContext.HasError then
+            begin
+              // set properties
+              for j := 0 to Length(MemoryProperties) - 1 do
+              begin
+                ActionContext.SArg1 := InstanceName + '.' + MemoryProperties[j];
+                ChildNode := Node.FindNode(MemoryProperties[j]);
+                if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
+                begin
+                  ActionContext.SArg2 := ChildNode.FirstChild.NodeValue;
+                  MConfigureOperation(ActionContext);
+                end;
+              end;
+            end;
           end;
           NodeList.Free;
         end;
