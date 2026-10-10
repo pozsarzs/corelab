@@ -287,7 +287,7 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="corelab"/>
+      <Filename Value="lib/$(TargetCPU)-$(TargetOS)/corelab"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>

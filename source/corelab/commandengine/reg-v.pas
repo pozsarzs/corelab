@@ -109,4 +109,3 @@ RegisterCommand(TCommand.Create('SHIO',
                                 @Form1.VShowIOPanelOperation,
                                 True,
                                 [omInteractive, omScript]));
-

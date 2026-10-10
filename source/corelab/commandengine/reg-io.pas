@@ -92,3 +92,20 @@ RegisterCommand(TCommand.Create('CFIO',
                                 False,
                                 [omInteractive, omScript]));
 
+RegisterCommand(TCommand.Create('MVIO',
+                                'Set position of I/O device panel.',
+                                [csCommandLine, csScript],
+                                'MVIO instancename left-top',
+                                2,
+                                @Form1.IOMovePanelOperation,
+                                True,
+                                [omInteractive, omScript]));
+
+RegisterCommand(TCommand.Create('SZIO',
+                                'Set size of I/O device panel.',
+                                [csCommandLine, csScript],
+                                'SZIO instancename width-height',
+                                2,
+                                @Form1.IOResizePanelOperation,
+                                True,
+                                [omInteractive, omScript]));

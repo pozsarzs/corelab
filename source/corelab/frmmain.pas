@@ -45,27 +45,10 @@ type
   end;
   { TForm1 }
   TForm1 = class(TForm)
-    ComboBox1: TComboBox;
-    IOReadWrite: TAction;
-    MenuItem74: TMenuItem;
-    Separator2: TMenuItem;
-    RefreshTimer: TTimer;
-    ToolButton10: TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton30: TToolButton;
-    ToolButton59: TToolButton;
-    ToolButton78: TToolButton;
-    ToolButton79: TToolButton;
-    ToolButton80: TToolButton;
-    VShowBusLogger: TAction;
-    FChangeWorkDirectory: TAction;
-    MenuItem17: TMenuItem;
-    MenuItem18: TMenuItem;
-    MenuItem55: TMenuItem;
-    ToolButton29: TToolButton;
-    VModuleExplorer: TAction;
     ActionList1:              TActionList;
     CHMHelpDatabase1:         TCHMHelpDatabase;
+    ComboBox1:                TComboBox;
+    FChangeWorkDirectory:     TAction;
     FExit:                    TAction;
     FLoadProject:             TAction;
     FNewProject:              TAction;
@@ -85,6 +68,7 @@ type
     IODisable:                TAction;
     IOEnable:                 TAction;
     IOProperties:             TAction;
+    IOReadWrite:              TAction;
     IOReset:                  TAction;
     LHelpConnector1:          TLHelpConnector;
     MainMenu1:                TMainMenu;
@@ -101,6 +85,8 @@ type
     MenuItem13:               TMenuItem;
     MenuItem15:               TMenuItem;
     MenuItem16:               TMenuItem;
+    MenuItem17:               TMenuItem;
+    MenuItem18:               TMenuItem;
     MenuItem19:               TMenuItem;
     MenuItem2:                TMenuItem;
     MenuItem20:               TMenuItem;
@@ -141,6 +127,7 @@ type
     MenuItem52:               TMenuItem;
     MenuItem53:               TMenuItem;
     MenuItem54:               TMenuItem;
+    MenuItem55:               TMenuItem;
     MenuItem56:               TMenuItem;
     MenuItem57:               TMenuItem;
     MenuItem58:               TMenuItem;
@@ -161,6 +148,7 @@ type
     MenuItem71:               TMenuItem;
     MenuItem72:               TMenuItem;
     MenuItem73:               TMenuItem;
+    MenuItem74:               TMenuItem;
     MenuItem8:                TMenuItem;
     MenuItem9:                TMenuItem;
     MExamineDeposit:          TAction;
@@ -186,6 +174,7 @@ type
     PEnable:                  TAction;
     PProperties:              TAction;
     PReset:                   TAction;
+    RefreshTimer:             TTimer;
     Separator1:               TMenuItem;
     Separator10:              TMenuItem;
     Separator11:              TMenuItem;
@@ -197,6 +186,7 @@ type
     Separator17:              TMenuItem;
     Separator18:              TMenuItem;
     Separator19:              TMenuItem;
+    Separator2:               TMenuItem;
     Separator20:              TMenuItem;
     Separator21:              TMenuItem;
     Separator22:              TMenuItem;
@@ -229,6 +219,8 @@ type
     ToolBar6:                 TToolBar;
     ToolBar7:                 TToolBar;
     ToolButton1:              TToolButton;
+    ToolButton10:             TToolButton;
+    ToolButton11:             TToolButton;
     ToolButton12:             TToolButton;
     ToolButton13:             TToolButton;
     ToolButton14:             TToolButton;
@@ -247,7 +239,9 @@ type
     ToolButton26:             TToolButton;
     ToolButton27:             TToolButton;
     ToolButton28:             TToolButton;
+    ToolButton29:             TToolButton;
     ToolButton3:              TToolButton;
+    ToolButton30:             TToolButton;
     ToolButton31:             TToolButton;
     ToolButton32:             TToolButton;
     ToolButton33:             TToolButton;
@@ -278,6 +272,7 @@ type
     ToolButton56:             TToolButton;
     ToolButton57:             TToolButton;
     ToolButton58:             TToolButton;
+    ToolButton59:             TToolButton;
     ToolButton6:              TToolButton;
     ToolButton60:             TToolButton;
     ToolButton61:             TToolButton;
@@ -298,11 +293,16 @@ type
     ToolButton75:             TToolButton;
     ToolButton76:             TToolButton;
     ToolButton77:             TToolButton;
+    ToolButton78:             TToolButton;
+    ToolButton79:             TToolButton;
     ToolButton8:              TToolButton;
+    ToolButton80:             TToolButton;
     ToolButton9:              TToolButton;
+    VModuleExplorer:          TAction;
     VMoveResizeIOPanel:       TAction;
     VRenameIOPanel:           TAction;
     VShowBreakpointManager:   TAction;
+    VShowBusLogger:           TAction;
     VShowHexViewer:           TAction;
     VShowIntLogger:           TAction;
     VShowIOPanel:             TAction;
@@ -498,6 +498,8 @@ type
     procedure IOConfigureOperation(AActionContext: TActionContext);
     procedure MConfigureOperation(AActionContext: TActionContext);
     procedure PConfigureOperation(AActionContext: TActionContext);
+    procedure IOMovePanelOperation(AActionContext: TActionContext);
+    procedure IOResizePanelOperation(AActionContext: TActionContext);
     // other methods and properties
     procedure SetProjectMode;
     procedure SetScriptMode;
@@ -989,7 +991,6 @@ end;
 function TForm1.LoadProject(const AFilename: string): Boolean;   // load project
 var
   ActionContext:    TActionContext;
-  ConnectionsNode:  TDOMNode;
   FileVersion:      string;
   i, j:             Integer;
   InstanceName:     string;
@@ -999,8 +1000,9 @@ var
   ProjectFile:      TXMLDocument;
   WorkspaceNode:    TDOMNode;
 const
-  CPUProperties:    array[0..0] of string  = ('Enabled');
-  IOPortProperties: array[0..13] of string = ('BaseAddress',
+  CPUProperties:    array[0..1] of string =  ('Enabled',
+                                              'AttachedToBus');
+  IOPortProperties: array[0..12] of string = ('BaseAddress',
                                               'DataInMode',
                                               'DataInNegation',
                                               'DataOutMode',
@@ -1010,14 +1012,14 @@ const
                                               'SelMode',
                                               'SelNegation',
                                               'PanelCaption',
-                                              'PanelHeight',
-                                              'PanelLeft',
-                                              'PanelTop',
-                                              'PanelWidth');
-  MemoryProperties: array[0..3] of string  = ('BaseAddress',
+                                              'PanelSize',
+                                              'PanelPosition',
+                                              'AttachedToBus');
+  MemoryProperties: array[0..4] of string =  ('BaseAddress',
                                               'AddressRangeSize',
                                               'MemoryMode',
-                                              'Enabled');
+                                              'Enabled',
+                                              'AttachedToBus');
 begin
   Result := False;
   try
@@ -1027,13 +1029,13 @@ begin
   end;
   ActionContext := TActionContext.Create;
   try
-    ActionContext.ActionSource := asOther;
+    ActionContext.ActionSource := asProject;
     // <Workspace>
     WorkspaceNode := ProjectFile.FindNode('CoreLAB_Workspace');
     if Assigned(WorkspaceNode) then
     begin
       // get project file version
-      FileVersion := TDOMElement(WorkspaceNode).GetAttribute('version');
+      FileVersion := string(TDOMElement(WorkspaceNode).GetAttribute('version'));
       // <Modules>
       ModulesNode := WorkspaceNode.FindNode('Modules');
       if Assigned(ModulesNode) then
@@ -1048,11 +1050,12 @@ begin
             {
               <TCPU id="Processor" type="cpu_8080">
                 <Enabled>true</Enabled>
+                <AttachedToBus>true</AttachedToBus>
               </TCPU>
             }
             // create instance
-            InstanceName := TDOMElement(Node).GetAttribute('id');
-            ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
+            InstanceName := string(TDOMElement(Node).GetAttribute('id'));
+            ActionContext.SArg1 := string(TDOMElement(Node).GetAttribute('type'));
             ActionContext.SArg2 := InstanceName;
             PCreateOperation(ActionContext);
             // if instance has created
@@ -1062,11 +1065,16 @@ begin
               for j := 0 to Length(CPUProperties) - 1 do
               begin
                 ActionContext.SArg1 := InstanceName + '.' + CPUProperties[j];
-                ChildNode := Node.FindNode(CPUProperties[j]);
+                ChildNode := Node.FindNode(DOMString(CPUProperties[j]));
                 if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
                 begin
-                  ActionContext.SArg2 := ChildNode.FirstChild.NodeValue;
-                  PConfigureOperation(ActionContext);
+                  ActionContext.SArg2 := string(ChildNode.FirstChild.NodeValue);
+                  case j of
+                    12: PAttachToBusOperation(ActionContext);
+                  else
+                    PConfigureOperation(ActionContext);
+                  end;
+                  if ActionContext.HasError then Break;
                 end;
               end;
             end;
@@ -1082,25 +1090,23 @@ begin
             Node := NodeList.Item[i];
             {
               <TIOPort id="Keyboard" type="ioport_button16bcd">
-                <BaseAddress>129</BaseAddress>
-                <DataInMode></DataInMode>
-                <DataInNegation></DataInNegation>
-                <DataOutMode></DataOutMode>
-                <DataOutNegation></DataOutNegation>
+                <BaseAddress>81</BaseAddress>
+                <DataInMode>lmBCD</DataInMode>
+                <DataInNegation>false</DataInNegation>
+                <DataOutMode>lmBCD</DataOutMode>
+                <DataOutNegation>false</DataOutNegation>
                 <Enabled>true</Enabled>
-                <IntVector>207</IntVector>
-                <SelMode></SelMode>
-                <SelNegation></SelNegation>
-                <PanelCaption></PanelCaption>
-                <PanelHeight></PanelHeight>
-                <PanelLeft></PanelLeft>
-                <PanelTop></PanelTop>
-                <PanelWidth></PanelWidth>
+                <IntVector>CF</IntVector>
+                <SelMode>lmBCD</SelMode>
+                <SelNegation>false</SelNegation>
+                <PanelCaption>Display</PanelCaption>
+                <PanelPosition>100-300</PanelPosition>
+                <AttachedToBus>true</AttachedToBus>
               </TIOPort>
             }
             // create instance
-            InstanceName := TDOMElement(Node).GetAttribute('id');
-            ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
+            InstanceName := string(TDOMElement(Node).GetAttribute('id'));
+            ActionContext.SArg1 := string(TDOMElement(Node).GetAttribute('type'));
             ActionContext.SArg2 := InstanceName;
             IOCreateOperation(ActionContext);
             // if instance has created
@@ -1109,12 +1115,26 @@ begin
             // set properties
               for j := 0 to Length(IOPortProperties) - 1 do
               begin
-                ActionContext.SArg1 := InstanceName + '.' + IOPortProperties[j];
-                ChildNode := Node.FindNode(IOPortProperties[j]);
+                case j of
+                  9: ActionContext.SArg1 := InstanceName;
+                  10: ActionContext.SArg1 := InstanceName;
+                  11: ActionContext.SArg1 := InstanceName;
+                else
+                  ActionContext.SArg1 := InstanceName + '.' + IOPortProperties[j];
+                end;
+                ChildNode := Node.FindNode(DOMString(IOPortProperties[j]));
                 if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
                 begin
-                  ActionContext.SArg2 := ChildNode.FirstChild.NodeValue;
-                  IOConfigureOperation(ActionContext);
+                  ActionContext.SArg2 := string(ChildNode.FirstChild.NodeValue);
+                  case j of
+                    9: VRenameIOPanelOperation(ActionContext);
+                    10: IOMovePanelOperation(ActionContext);
+                    11: IOResizePanelOperation(ActionContext);
+                    12: IOAttachToBusOperation(ActionContext);
+                  else
+                    IOConfigureOperation(ActionContext);
+                  end;
+                  if ActionContext.HasError then Break;
                 end;
               end;
             end;
@@ -1134,11 +1154,12 @@ begin
                 <BaseAddress>0</BaseAddress>
                 <Enabled>true</Enabled>
                 <MemoryMode>mmRAM</MemoryMode>
+                <AttachedToBus>true</AttachedToBus>
               </TMemory>
             }
             // create instance
-            InstanceName := TDOMElement(Node).GetAttribute('id');
-            ActionContext.SArg1 := TDOMElement(Node).GetAttribute('type');
+            InstanceName := string(TDOMElement(Node).GetAttribute('id'));
+            ActionContext.SArg1 := string(TDOMElement(Node).GetAttribute('type'));
             ActionContext.SArg2 := InstanceName;
             MCreateOperation(ActionContext);
             // if instance has created
@@ -1148,11 +1169,16 @@ begin
               for j := 0 to Length(MemoryProperties) - 1 do
               begin
                 ActionContext.SArg1 := InstanceName + '.' + MemoryProperties[j];
-                ChildNode := Node.FindNode(MemoryProperties[j]);
+                ChildNode := Node.FindNode(DOMString(MemoryProperties[j]));
                 if Assigned(ChildNode) and Assigned(ChildNode.FirstChild) then
                 begin
-                  ActionContext.SArg2 := ChildNode.FirstChild.NodeValue;
-                  MConfigureOperation(ActionContext);
+                  ActionContext.SArg2 := string(ChildNode.FirstChild.NodeValue);
+                  case j of
+                    12: MAttachToBusOperation(ActionContext);
+                  else
+                    MConfigureOperation(ActionContext);
+                  end;
+                  if ActionContext.HasError then Break;
                 end;
               end;
             end;
@@ -1171,7 +1197,7 @@ end;
 // SAVE PROJECT TO FILE
 function TForm1.SaveProject(const AFilename: string): Boolean;   // save project
 begin
-
+  Result := False;
 end;
 
 // CHANGE OPERATION MODE
@@ -1408,9 +1434,18 @@ end;
 
 // SET PROJECT MODE AT STARTUP
 procedure TForm1.SetProjectMode;
+var
+  Message: string;
 begin
   ChangeOpMode(omInteractive, False, False);
-  if Length(FStartupProject) > 0 then LoadProject(FStartupProject);
+  if Length(FStartupProject) > 0 then
+    if LoadProject(FStartupProject)
+      then SysConsole1.WriteMessage(Format(MSG80, [FStartupProject])) else
+      begin
+        Message := MSG01 + Format(MSG55, [FStartupProject]);
+        ShowMessage(Message);
+        SysConsole1.WriteMessage(Message);
+      end;
 end;
 
 // SET SCRIPT MODE AT STARTUP
@@ -1522,18 +1557,17 @@ begin
   // clearing
   ChangeOpMode(omInteractive, True, False);
   // loading
-  try
-    LoadProject(Filename);
-    SysConsole1.WriteMessage(Format(MSG80, [Filename]));
-  except
-    Message := MSG01 + Format(MSG55, [Filename]);
-    ShowMessage(Message);
-    SysConsole1.WriteMessage(Message);
-    AActionContext.HasError := True;
-    Exit;
-  end;
-  FActualProject := Filename;                                 // with filename
-  FActualProjectIsSaved := True;                            // no need to save
+  if LoadProject(Filename)
+    then SysConsole1.WriteMessage(Format(MSG80, [Filename])) else
+    begin
+      Message := MSG01 + Format(MSG55, [Filename]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
+      Exit;
+    end;
+  FActualProject := Filename;                                   // with filename
+  FActualProjectIsSaved := True;                              // no need to save
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualProject);
 end;
 
@@ -5707,31 +5741,31 @@ begin
   try
     with PortInfo.Port do
     begin
-      if SameText(PropertyName, uproperties.IOPropertyInfoArray[2].Name)
+      if SameText(PropertyName, uproperties.IOPropertyInfoArray[3].Name)
         then Enabled := StrToBool(Value)
 
       else if SameText(PropertyName, uproperties.IOPropertyInfoArray[5].Name)
              then BaseAddress := StrToInt('$' + Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[6].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[7].Name)
              then IntVector := StrToInt('$' + Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[7].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[8].Name)
              then DataInMode := DataInMode.FromString(Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[8].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[9].Name)
              then DataInNegation := StrToBool(Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[9].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[10].Name)
              then DataOutMode := DataOutMode.FromString(Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[10].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[11].Name)
              then DataOutNegation := StrToBool(Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[11].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[12].Name)
              then SelMode := SelMode.FromString(Value)
 
-      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[12].Name)
+      else if SameText(PropertyName, uproperties.IOPropertyInfoArray[13].Name)
              then SelNegation := StrToBool(Value)
       else
       begin
@@ -5864,6 +5898,92 @@ begin
   // report
   SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
+end;
+
+// MOVE I/O MODUL PANEL
+procedure TForm1.IOMovePanelOperation(AActionContext: TActionContext);
+var
+  InstanceName: string;
+  Message:      string;
+  PLeft, PTop:  Integer;
+  PortInfo:     TPortInfo;
+begin
+  InstanceName := AActionContext.SArg1;
+  try
+    PLeft := StrToInt(Copy(AActionContext.SArg2, 1, Pos('-', AActionContext.SArg2) - 1));
+    PTop := StrToInt(Copy(AActionContext.SArg2, Pos('-', AActionContext.SArg2) + 1, MaxInt));
+  except
+    Message := MSG01 + Format(MSG103, [AActionContext.SArg2]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
+  // find instance
+  try
+    PortInfo := FPortInstanceDict[InstanceName];
+  except
+    Message := MSG01 + Format(MSG101, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
+  // move panel
+  try
+    if PortInfo.Port.HasPanel
+      then FPortPluginDict[PortInfo.ModuleName].FMovePanel(PortInfo.Port, PLeft, PTop);
+  except
+    // invalid value
+    Message := MSG01 + Format(MSG103, [AActionContext.SArg2]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
+end;
+
+// RESIZE I/O MODUL PANEL
+procedure TForm1.IOResizePanelOperation(AActionContext: TActionContext);
+var
+  InstanceName:    string;
+  Message:         string;
+  PWidth, PHeight: Integer;
+  PortInfo:        TPortInfo;
+begin
+  InstanceName := AActionContext.SArg1;
+  try
+    PWidth := StrToInt(Copy(AActionContext.SArg2, 1, Pos('-', AActionContext.SArg2) - 1));
+    PHeight := StrToInt(Copy(AActionContext.SArg2, Pos('-', AActionContext.SArg2) + 1, MaxInt));
+  except
+    Message := MSG01 + Format(MSG103, [AActionContext.SArg2]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
+  // find instance
+  try
+    PortInfo := FPortInstanceDict[InstanceName];
+  except
+    Message := MSG01 + Format(MSG101, [InstanceName]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
+  // resize panel
+  try
+    if PortInfo.Port.HasPanel
+      then FPortPluginDict[PortInfo.ModuleName].FResizePanel(PortInfo.Port, PWidth, PHeight);
+  except
+    // invalid value
+    Message := MSG01 + Format(MSG103, [AActionContext.SArg2]);
+    ShowMessage(Message);
+    SysConsole1.WriteMessage(Message);
+    AActionContext.HasError := True;
+    Exit;
+  end;
 end;
 
 // ---- CREATE AND DESTROY EVENT HANDLERS ----
