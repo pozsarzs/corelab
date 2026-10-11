@@ -78,6 +78,7 @@ type
     constructor Create; override;
     destructor Destroy; override;
     function ExecuteLine(const ALine: string): Integer; override;
+    function PrepareScript(AScriptBuffer: TStringList; out BadLabel: string): Boolean;
   end;
 
 implementation
@@ -293,6 +294,36 @@ begin
     Tokens.Free;
   end;
   FLastExitCode := Result;
+end;
+
+// PREPARE RUNNING
+function TScriptEngine.PrepareScript(AScriptBuffer: TStringList; out BadLabel: string): Boolean;
+var
+  i: Integer;
+  s: string;
+begin
+  Result := True;
+  FScriptRuntime.ClearLabelTable;
+  // collecting labels
+  for i := 0 to AScriptBuffer.Count - 1 do
+  begin
+    s := UpperCase(Trim(AScriptBuffer[i]));
+    if (s <> '') and (Pos(':', s) = Length(s)) then
+    begin
+      if (Pos(#32, s) > 0) or (Pos(#9, s) > 0) then
+      begin
+        // bad label name
+        Result := False;
+        Exit;
+      end;
+      if not FScriptRuntime.AddLabel(Copy(s, 1, Length(s) - 1), i) then
+      begin
+        // duplicated label name
+        Result := False;
+        Exit;
+      end;
+    end;
+  end;
 end;
 
 end.

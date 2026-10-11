@@ -32,13 +32,19 @@ unit scriptruntime;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, Variants;
+  SysUtils, Classes, Variants, Generics.Collections;
 type
+  TCallStack = specialize TStack<Integer>;     // stack type for subroutine call
+  TLabelTable = specialize TDictionary<string, Integer>;     // label table type
   { TScriptRuntime }
   TScriptRuntime = class
-  protected
-    FGenRegs: array['0'..'9'] of Variant;
-    FSysRegs: array['A'..'F'] of Variant;
+  private
+    FGenRegs:      array['0'..'9'] of Variant;              // general registers
+    FSysRegs:      array['A'..'F'] of Variant;               // system registers
+    FCallStack:    TCallStack;                                          // stack
+    FLabelTable:   TLabelTable;                                        // labels
+    FMainEnded:    Boolean;                 // disable inst. execution after END
+    FScriptExited: Boolean;                // disable inst. execution after EXIT
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -48,6 +54,12 @@ type
     procedure ClearRegisters;
     function GetRegister(ARegName: Char; var ATarget: Variant): Boolean;
     function SetRegister(ARegName: Char; AValue: Variant; AForce: Boolean): Boolean;
+    procedure ClearLabelTable;
+    function AddLabel(const AName: string; ALine: Integer): Boolean;
+    function FindLabel(const AName: string; out ALine: Integer): Boolean;
+    procedure ClearCallStack;
+    property MainEnded: Boolean read FMainEnded write FMainEnded;
+    property ScriptExited: Boolean read FScriptExited write FScriptExited;
   end;
 const
   FlagNames:         string[8] = '000000CZ';
@@ -66,11 +78,15 @@ constructor TScriptRuntime.Create;
 begin
   inherited Create;
   ClearRegisters;
+  FCallStack := TCallStack.Create;
+  FLabelTable := TLabelTable.Create;
 end;
 
 // DESTROY TSCRIPTRUNTIME INSTANCE
 destructor TScriptRuntime.Destroy;
 begin
+  FLabelTable.Free;
+  FCallStack.Free;
   inherited Destroy;
 end;
 
@@ -184,6 +200,36 @@ begin
     end;
   end;
   Result := True;
+end;
+
+// CLEAR LABEL TABLE
+procedure TScriptRuntime.ClearLabelTable;
+begin
+  FLabelTable.Clear;
+end;
+
+// ADD NEW LABEL TO TABLE
+function TScriptRuntime.AddLabel(const AName: string; ALine: Integer): Boolean;
+var
+  LabelName: string;
+  i:         Integer;
+begin
+  LabelName := UpperCase(AName);
+  Result := not FLabelTable.TryGetValue(LabelName, i);
+  if Result then FlabelTable.Add(LabelName, ALine);
+end;
+
+// FIND LABEL IN TABLE
+function TScriptRuntime.FindLabel(const AName: string; out ALine: Integer): Boolean;
+begin
+  Result := FLabelTable.TryGetValue(UpperCase(AName), ALine);
+  if not Result then ALine := -1;
+end;
+
+// CLEAR CALL STACK
+procedure TScriptRuntime.ClearCallStack;
+begin
+  FCallStack.Clear;
 end;
 
 initialization

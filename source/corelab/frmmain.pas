@@ -555,6 +555,7 @@ resourcestring
   MSG11 = 'Cannot be used ''%s'' in script mode.';                        { SC }
   MSG12 = 'Command ''%s'' execute error.';                                { SC }
   MSG13 = 'No continuous viewer updates during a 100 ms execution delay.';{ SC }
+  MSG14 = 'Bad or duplicated label name: ''%s''.';                        { SC }
   MSG18 = 'Missing help file.';                                           { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
   MSG28 = 'Save memory content to file';
@@ -5593,11 +5594,12 @@ end;
 // SCRIPT/RUN SCRIPT OPERATION
 procedure TForm1.SRunScriptOperation(AActionContext: TActionContext);
 var
-  Counter:    Variant;
-  CmdResult:  Integer;
-  CurrentCmd: string;
-  i:          Integer;
-  NewCounter: Variant;
+  BadLabelName: string;
+  Counter:      Variant;
+  CmdResult:    Integer;
+  CurrentCmd:   string;
+  i:            Integer;
+  NewCounter:   Variant;
 begin
   Counter := 0;
   NewCounter := 0;
@@ -5644,6 +5646,16 @@ begin
   if not Form12.Visible then Form12.Show;
   // run script
   FScriptIsRunning := True;
+  // clear call stack
+  CommandEngine2.FScriptRuntime.ClearCallStack;
+  // collect labels
+  if not CommandEngine2.PrepareScript(FScriptBuffer, BadLabelName) then
+  begin
+    // bad label
+    SysConsole1.WriteMessage(MSG01 + Format(MSG14, [BadLabelName]));
+    FScriptIsRunning := False;
+    Exit;
+  end;
   try
     while Counter < FScriptBuffer.Count do
     begin
@@ -5715,11 +5727,12 @@ end;
 // SCRIPT/RUN SCRIPT STEP BY STEP OPERATION
 procedure TForm1.SStepScriptOperation(AActionContext: TActionContext);
 var
-  CmdResult:  Integer;
-  Counter:    Variant;
-  CurrentCmd: string;
-  i:          Integer;
-  NewCounter: Variant;
+  BadLabelName: string;
+  CmdResult:    Integer;
+  Counter:      Variant;
+  CurrentCmd:   string;
+  i:            Integer;
+  NewCounter:   Variant;
 begin
   Counter := 0;
   NewCounter := 0;
@@ -5755,6 +5768,16 @@ begin
     if FScriptBuffer.Count = 0 then
     begin
       ShowMessage(MSG42);
+      Exit;
+    end;
+    // clear call stack
+    CommandEngine2.FScriptRuntime.ClearCallStack;
+    // collect labels
+    if not CommandEngine2.PrepareScript(FScriptBuffer, BadLabelName) then
+    begin
+      // bad label
+      SysConsole1.WriteMessage(MSG01 + Format(MSG14, [BadLabelName]));
+      FScriptIsRunning := False;
       Exit;
     end;
   end else
