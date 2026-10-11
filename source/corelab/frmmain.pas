@@ -662,13 +662,13 @@ begin
   // module name is valid?
   Result := 1;
   if (AModuleName = '') or not Assigned(ACPU) then Exit;
-  // one CPU is allowed
-  Result := 3;
-  if Length(FCPUs) >= 1 then Exit;
   // already is attached?
   Result := 2;
   for i := 0 to High(FCPUs) do
     if FCPUs[i].ModuleName = AModuleName then Exit;
+  // one CPU is allowed
+  Result := 3;
+  if Length(FCPUs) >= 1 then Exit;
   // create entry
   SetLength(FCPUs, Length(FCPUs) + 1);
   with FCPUs[High(FCPUs)] do
@@ -1381,9 +1381,9 @@ begin
   Form1.Caption := Application.Title;
   // set new project value
   FActualProject := '';
-  FActualProjectIsSaved := False;
+  FActualProjectIsSaved := True;
   FActualScript := '';
-  FActualScriptIsSaved := False;
+  FActualScriptIsSaved := True;
   // remove all attached components from system bus
   SetLength(FSysBus.FIOPorts, 0);
   SetLength(FSysBus.FMemories, 0);
@@ -2526,6 +2526,7 @@ begin
     Form9.AddNode('Processor', InstanceName);
     // report
     SysConsole1.WriteMessage(Format(MSG58, ['cpu', InstanceName]));
+    FActualProjectIsSaved := False;
   end else
   begin
     Message := MSG01 + Format(MSG85, [InstanceName]);
@@ -2626,6 +2627,7 @@ begin
   Form9.ValueListEditor1.Clear;
   // report
   SysConsole1.WriteMessage(Format(MSG60, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // PROCESSOR/RESET ACTION ------------------------------------------------------
@@ -2785,6 +2787,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG64, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // PROCESSOR/DISABLE ACTION ----------------------------------------------------
@@ -2863,6 +2866,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG66, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // PROCESSOR/ATTACH TO BUS ACTION ----------------------------------------------
@@ -2968,6 +2972,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG68, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // PROCESSOR/DETACH FROM BUS ACTION --------------------------------------------
@@ -3064,6 +3069,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG70, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // PROCESSOR/PROPERTIES ACTION -------------------------------------------------
@@ -3125,15 +3131,25 @@ procedure TForm1.PPropertiesOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
   ProcInfo:     TProcInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   begin
-    ProcInfo := FProcInstanceDict[InstanceName];
+    try
+      ProcInfo := FProcInstanceDict[InstanceName];
+    except
+      Message := MSG01 + Format(MSG101, [InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
+      Exit;
+    end;
     // show properties
     with Form15 do
     begin
       ProcInstance := ProcInfo.Processor;
       ShowModal;
+      if Modified then FActualProjectIsSaved := False;
     end;
   end;
 end;
@@ -3218,6 +3234,7 @@ begin
     Form9.AddNode('Memory', InstanceName);
     // report
     SysConsole1.WriteMessage(Format(MSG58, ['memory', InstanceName]));
+    FActualProjectIsSaved := False;
   end else
   begin
     Message := MSG01 + Format(MSG85, [InstanceName]);
@@ -3318,6 +3335,7 @@ begin
   Form9.ValueListEditor1.Clear;
   // report
   SysConsole1.WriteMessage(Format(MSG60, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // MEMORY/RESET ACTION ------------------------------------------------------
@@ -3474,6 +3492,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG64, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // MEMORY/DISABLE ACTION ----------------------------------------------------
@@ -3552,6 +3571,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG66, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // MEMORY/ATTACH TO BUS ACTION ----------------------------------------------
@@ -3650,6 +3670,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG68, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // MEMORY/DETACH FROM BUS ACTION --------------------------------------------
@@ -3745,6 +3766,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG70, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // MEMORY/PROPERTIES ACTION -------------------------------------------------
@@ -3824,6 +3846,7 @@ begin
     begin
       MemInstance := MemInfo.Memory;
       ShowModal;
+      if Modified then FActualProjectIsSaved := False;
     end;
   end;
 end;
@@ -4364,6 +4387,7 @@ begin
     Form9.AddNode('I/O port & device', InstanceName);
     // report
     SysConsole1.WriteMessage(Format(MSG58, ['i/o port', InstanceName]));
+    FActualProjectIsSaved := False;
   end else
   begin
     Message := MSG01 + Format(MSG85, [InstanceName]);
@@ -4464,6 +4488,7 @@ begin
   Form9.ValueListEditor1.Clear;
   // report
   SysConsole1.WriteMessage(Format(MSG60, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // IO PORT/RESET ACTION ------------------------------------------------------
@@ -4620,6 +4645,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG64, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // IO PORT/DISABLE ACTION ----------------------------------------------------
@@ -4698,6 +4724,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG66, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // IO PORT/ATTACH TO BUS ACTION ----------------------------------------------
@@ -4797,6 +4824,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG68, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // IO PORT/DETACH FROM BUS ACTION --------------------------------------------
@@ -4893,6 +4921,7 @@ begin
   end;
   // report
   SysConsole1.WriteMessage(Format(MSG70, [InstanceName]));
+  FActualProjectIsSaved := False;
 end;
 
 // IO PORT/PROPERTIES ACTION -------------------------------------------------
@@ -4953,16 +4982,26 @@ end;
 procedure TForm1.IOPropertiesOperation(AActionContext: TActionContext);
 var
   InstanceName: string;
-  PortInfo:      TPortInfo;
+  PortInfo:     TPortInfo;
+  Message:      string;
 begin
   InstanceName := AActionContext.SArg1;
   begin
-    PortInfo := FPortInstanceDict[InstanceName];
+    try
+      PortInfo := FPortInstanceDict[InstanceName];
+    except
+      Message := MSG01 + Format(MSG101, [InstanceName]);
+      ShowMessage(Message);
+      SysConsole1.WriteMessage(Message);
+      AActionContext.HasError := True;
+      Exit;
+    end;
     // show properties
     with Form15 do
     begin
       PortInstance := PortInfo.Port;
       ShowModal;
+      if Modified then FActualProjectIsSaved := False;
     end;
   end;
 end;
@@ -5073,12 +5112,12 @@ end;
 // OPERATION/RUN SIMULATION OPERATION
 procedure TForm1.ORunOperation(AActionContext: TActionContext);
 begin
-  try
+  if Length(FSysBus.FCPUs) > 0 then
+  begin
     SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
     SimulationThread1.CPURun;
     //report
     SysConsole1.WriteMessage(MSG115);
-  except
   end;
 end;
 
@@ -5113,12 +5152,12 @@ end;
 // OPERATION/RUN SIMULATION STEP BY STEP OPERATION
 procedure TForm1.OStepOperation(AActionContext: TActionContext);
 begin
-  try
+  if Length(FSysBus.FCPUs) > 0 then
+  begin
     SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
     SimulationThread1.CPUStep;
     //report
     SysConsole1.WriteMessage(MSG116);
-  except
   end;
 end;
 
@@ -5193,12 +5232,12 @@ end;
 // OPERATION/REQUEST NMI OPERATION
 procedure TForm1.ONMIOperation(AActionContext: TActionContext);
 begin
-  try
+  if Length(FSysBus.FCPUs) > 0 then
+  begin
     SimulationThread1.CPU := FSysBus.FCPUs[0].CPU;
     SimulationThread1.CPUNMI;
     //report
     SysConsole1.WriteMessage(MSG118);
-  except
   end;
 end;
 
@@ -5889,6 +5928,7 @@ begin
   // report
   SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
+  FActualProjectIsSaved := False;
 end;
 
 // CONFIGURE MEMORY MODULE
@@ -5949,6 +5989,7 @@ begin
   // report
   SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
+  FActualProjectIsSaved := False;
 end;
 
 // CONFIGURE CPU MODULE
@@ -5999,6 +6040,7 @@ begin
   // report
   SysConsole1.WriteMessage(Format(MSG104, [InstanceName + '.' +
                            PropertyName, Value]));
+  FActualProjectIsSaved := False;
 end;
 
 // MOVE I/O MODUL PANEL
@@ -6032,8 +6074,11 @@ begin
   end;
   // move panel
   try
-    if PortInfo.Port.HasPanel
-      then FPortPluginDict[PortInfo.ModuleName].FMovePanel(PortInfo.Port, PLeft, PTop);
+    if PortInfo.Port.HasPanel then
+    begin
+      FPortPluginDict[PortInfo.ModuleName].FMovePanel(PortInfo.Port, PLeft, PTop);
+      FActualProjectIsSaved := False;
+    end;
   except
     // invalid value
     Message := MSG01 + Format(MSG103, [AActionContext.SArg2]);
@@ -6075,8 +6120,11 @@ begin
   end;
   // resize panel
   try
-    if PortInfo.Port.HasPanel
-      then FPortPluginDict[PortInfo.ModuleName].FResizePanel(PortInfo.Port, PWidth, PHeight);
+    if PortInfo.Port.HasPanel then
+    begin
+      FPortPluginDict[PortInfo.ModuleName].FResizePanel(PortInfo.Port, PWidth, PHeight);
+      FActualProjectIsSaved := False;
+    end;
   except
     // invalid value
     Message := MSG01 + Format(MSG103, [AActionContext.SArg2]);
@@ -6108,23 +6156,24 @@ var
   IntLogRec: TIntLogRec;
   Pair: specialize TPair<string, TPortInfo>;
 begin
-  if Assigned(FSysBus.FCPUs[0].CPU) then
-  begin
-    // current processor
-    FSysBus.FCPUs[0].CPU.IRQ(AVector);
-    // IntLogger
-    IntLogRec := FSysBus.FCPUs[0].CPU.GetCurrentInterrupt;
-    for Pair in FPortInstanceDict do
-      if Pair.Value.Port = Sender then
-      begin
-        IntLogRec.Sender := Pair.Key;
-        Break;
-      end;
-    if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
-    // RegViewer
-    if Assigned(Form11) and Form11.Visible and
-      (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.RefreshContent;
-  end;
+  if Length(FSysBus.FCPUs) > 0 then
+    if Assigned(FSysBus.FCPUs[0].CPU) then
+    begin
+      // current processor
+      FSysBus.FCPUs[0].CPU.IRQ(AVector);
+      // IntLogger
+      IntLogRec := FSysBus.FCPUs[0].CPU.GetCurrentInterrupt;
+      for Pair in FPortInstanceDict do
+        if Pair.Value.Port = Sender then
+        begin
+          IntLogRec.Sender := Pair.Key;
+          Break;
+        end;
+      if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
+      // RegViewer
+      if Assigned(Form11) and Form11.Visible and
+        (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.RefreshContent;
+    end;
 end;
 
 // GLOBAL REFRESH TICK FOR LOGS AND OTHERS

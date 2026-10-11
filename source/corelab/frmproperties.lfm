@@ -414,6 +414,7 @@ object Form15: TForm15
     TabOrder = 1
     OnDrawCell = ValueListEditor1DrawCell
     OnValidateEntry = ValueListEditor1ValidateEntry
+    OnStringsChange = ValueListEditor1StringsChange
     ColWidths = (
       64
       474

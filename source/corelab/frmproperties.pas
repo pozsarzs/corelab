@@ -30,8 +30,10 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ValueListEditor1DrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect; aState: TGridDrawState);
+    procedure ValueListEditor1StringsChange(Sender: TObject);
     procedure ValueListEditor1ValidateEntry(Sender: TObject; aCol, aRow: Integer; const OldValue: string; var NewValue: String);
   private
+    FModified:         Boolean;
     FMemInstance:      TMemory;
     FProcInstance:     TCPU;
     FPortInstance:     TIOPort;
@@ -40,6 +42,7 @@ type
     procedure SetProcInstance(AProcInstance: TCPU);                         // 2
     procedure SetPortInstance(APortInstance: TIOPort);                      // 3
   public
+    property Modified: Boolean read FModified;
     property MemInstance: TMemory write SetMemInstance;
     property ProcInstance: TCPU write SetProcInstance;
     property PortInstance: TIOPort write SetPortInstance;
@@ -389,6 +392,13 @@ begin
     2: LoadPProperties(FProcInstance);
     3: LoadIOProperties(FPortInstance);
   end;
+  FModified := False;
+end;
+
+// SET MODIFIED FLAG
+procedure TForm15.ValueListEditor1StringsChange(Sender: TObject);
+begin
+  FModified := True;
 end;
 
 // COLORING READ-ONLY PROPERTIES

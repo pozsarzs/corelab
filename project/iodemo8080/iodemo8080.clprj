@@ -1,39 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <CoreLAB_Workspace version="1.0">
-<!-- CoreLAB 8080 Demo -->
   <Modules>
-    <!-- Console IO Port -->
-    <TIOPort id="Console" type="ioport_console">
-      <BaseAddress>128</BaseAddress> <!-- 80H -->
-      <IntVector>215</IntVector> <!-- D7H -->
+    <TCPU id="Processor" type="cpu_8080">
       <Enabled>true</Enabled>
       <AttachedToBus>true</AttachedToBus>
-    </TIOPort>
-    <!-- Keyboard IO Port -->
+    </TCPU>
     <TIOPort id="Keyboard" type="ioport_button16bcd">
-      <BaseAddress>129</BaseAddress> <!-- 81H -->
-      <IntVector>207</IntVector> <!-- CFH -->
+      <BaseAddress>000129</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
       <Enabled>true</Enabled>
+      <IntVector>07</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>MyKeys</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>0-0</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
-    <!-- Display IO Port -->
+    <TIOPort id="Console" type="ioport_console">
+      <BaseAddress>000128</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>15</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>MyConsole</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>0-0</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
     <TIOPort id="Display" type="ioport_disp1hexbcd">
-      <BaseAddress>144</BaseAddress> <!-- 90H -->
+      <BaseAddress>000144</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
       <Enabled>true</Enabled>
+      <IntVector>00</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>MyNum</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>0-0</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
-    <!-- RAM Memory -->
     <TMemory id="RAM" type="memory_standard">
-      <BaseAddress>0</BaseAddress>
+      <BaseAddress>00</BaseAddress>
       <AddressRangeSize>1024</AddressRangeSize>
       <MemoryMode>mmRAM</MemoryMode>
       <Enabled>true</Enabled>
       <AttachedToBus>true</AttachedToBus>
     </TMemory>
-    <!-- CPU Processor -->
-    <TCPU id="Processor" type="cpu_8080">
-      <Enabled>true</Enabled>
-      <AttachedToBus>true</AttachedToBus>
-    </TCPU>
   </Modules>
 </CoreLAB_Workspace>
