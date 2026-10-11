@@ -302,6 +302,9 @@
       </Options>
     </Linking>
     <Other>
+      <CompilerMessages>
+        <IgnoredMessages idx6058="True"/>
+      </CompilerMessages>
       <CustomOptions Value="-dNOT_A_LIBRARY_BUT_A_UNIT"/>
     </Other>
   </CompilerOptions>

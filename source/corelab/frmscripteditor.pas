@@ -34,12 +34,14 @@ type
     FBGColor:         TColor;
     FFontColor:       TColor;
     FGutterFontColor: TColor;
-    // Others
-    FExtBuffer: TStringList;
+    // others
+    FExtBuffer:  TStringList;
     FLineNumber: Boolean;
     FSyntax:     Boolean;
+    function GetModified: Boolean;
     procedure SetExtBuffer(AExtBuffer: TStringList);
   public
+    property Modified: Boolean read GetModified;
     procedure ClearModified;
     procedure CopyBufferToEditor;
     procedure CopyEditorToBuffer;
@@ -74,6 +76,12 @@ uses frmmain;
 { TForm6 }
 
 // ---- PRIVATE METHODS ----
+
+// GET SYNEDIT1 MODIFIED FLAG
+function TForm6.GetModified: Boolean;
+begin
+  Result := SynEdit1.Modified;
+end;
 
 // SET EXTERNAL BUFFER
 procedure TForm6.SetExtBuffer(AExtBuffer: TStringList);
@@ -151,7 +159,6 @@ begin
   if SynEdit1.Modified
     then StatusBar1.Panels[0].Text := '*'
     else StatusBar1.Panels[0].Text := '';
-  Form1.ActualScriptIsSaved := SynEdit1.Modified;
   // cursor position
   StatusBar1.Panels[1].Text := IntToStr(SynEdit1.CaretY) + ':' + IntToStr(SynEdit1.CaretX);
   // inser/overwrite mode

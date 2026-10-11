@@ -23,18 +23,19 @@ uses
   frmloadsavememory, frmhexviewer, frmregviewer, frmscripteditor,
   frmscriptconsole, frmintlogger, frmcaption, frmproperties, frmmoduleexplorer,
   frmbpmanager, frmbuslogger, frmrdwrioport, commandengine, scriptengine,
-  core_cpu, core_memory, core_ioport, core_gioport, core_bus, usysconsole, ucommon, uconfig,
-  uplugin, uintelhex, uactcontext, uproperties, ubreakpoint, simulationthread;
-  { TSysBus }
+  core_cpu, core_memory, core_ioport, core_gioport, core_bus, usysconsole,
+  ucommon, uconfig, uplugin, uintelhex, uactcontext, uproperties, ubreakpoint,
+  simulationthread;
 type
+  { TSysBus }
   TSysBus = class(TInterfacedObject, ISysBus)
     FCPUs:     array of TBusProc;
     FMemories: array of TBusMem;
     FIOPorts:  array of TBusPort;
   public
     function AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
-    function AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Byte;
-    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: DWord): Byte;
+    function AttachMemory(const AModuleName: string; AMemory: TMemory): Byte;
+    function AttachIOPort(const AModuleName: string; AIOPort: TIOPort): Byte;
     function DetachCPU(const AModuleName: string): Byte;
     function DetachMemory(const AModuleName: string): Byte;
     function DetachIOPort(const AModuleName: string): Byte;
@@ -407,7 +408,6 @@ type
     FActualProject:        string;                   // actual project directory
     FActualProjectIsSaved: Boolean;                  // actual project directory
     FActualScript:         string;                         // actual script file
-    FActualScriptIsSaved:  Boolean;                        // actual script file
     FAutoRunScript:        Boolean;  // auto run after loading from command line
     FConfigDirectory:      string;                  // directory of the INI file
     FEXEDirectory:         string;                // directory of the executable
@@ -503,7 +503,6 @@ type
     // other methods and properties
     procedure SetProjectMode;
     procedure SetScriptMode;
-    property ActualScriptIsSaved: Boolean read FActualScriptIsSaved write FActualScriptIsSaved;
     property AutoRunScript: Boolean write FAutoRunScript;
     property IgnoreHelp: Boolean write SetIgnoreHelp;
     property PluginDirectory: string write SetPluginDirectory;
@@ -579,7 +578,6 @@ resourcestring
   MSG48 = 'Cannot load script from ''%s'' file.';                         { SM }
   MSG49 = 'Cannot save script to ''%s'' file.';                           { SM }
   MSG50 = 'The script is unsaved, should I continue?';                    { MD }
-  MSG51 = 'There is already a project, do you want to delete it?';        { MD }
   MSG52 = 'CoreLAB project file|*.clprj|All file|*.*';
   MSG53 = 'Load project';
   MSG54 = 'Save project';
@@ -597,7 +595,6 @@ resourcestring
   MSG66 = 'The module named ''%s'' has been disabled.';                   { SC }
   MSG67 = '&Attach to the bus';
   MSG68 = 'The module named ''%s'' has been attached to the bus.';        { SC }
-  MSG69 = '&Detach from the bus';
   MSG70 = 'The module named ''%s'' has been detached from the bus.';      { SC }
   MSG71 = 'Edit properties';
   MSG72 = '&Load content';
@@ -605,8 +602,6 @@ resourcestring
   MSG74 = '&Save content';
   MSG75 = 'Data saved from the module named ''%s'' to ''%s''.';           { SC }
   MSG76 = '&Rename panel';
-  MSG77 = '&Move/resize panel';
-  MSG78 = '&Show panel';
   MSG79 = '&Show';
   MSG80 = 'Project loaded from ''%s''.';                                  { SC }
   MSG81 = 'Project saved to ''%s''.';                                     { SC }
@@ -680,7 +675,7 @@ begin
 end;
 
 // ATTACH MEMORY TO SYSTEM BUS
-function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory; ABaseAddress, AAddressRange: DWord): Byte;
+function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory): Byte;
 var
   i: Integer;
 begin
@@ -702,7 +697,7 @@ begin
 end;
 
 // ATTACH I/O PORT TO SYSTEM BUS
-function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort; ABaseAddress, AAddressRange: DWord): Byte;
+function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort): Byte;
 var
   i: Integer;
 begin
@@ -1304,7 +1299,7 @@ end;
 // CHANGE OPERATION MODE
 procedure TForm1.ChangeOpMode(AOpMode: TOpMode; AForced, ACheck: Boolean);
 var
-  i: integer;
+  i: Integer;
 begin
   // forced change
   if (FOpMode = AOpMode) and (not AForced) then Exit;
@@ -1319,7 +1314,7 @@ begin
           then Exit;
     end else
     begin
-      if not FActualScriptIsSaved then
+      if Form6.Modified then
         if MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrNo
           then Exit;
     end;
@@ -1379,11 +1374,11 @@ begin
   end;
   // restore mainform caption
   Form1.Caption := Application.Title;
-  // set new project value
+  // set new project and script value
   FActualProject := '';
   FActualProjectIsSaved := True;
   FActualScript := '';
-  FActualScriptIsSaved := True;
+  Form6.ClearModified;
   // remove all attached components from system bus
   SetLength(FSysBus.FIOPorts, 0);
   SetLength(FSysBus.FMemories, 0);
@@ -1567,12 +1562,13 @@ begin
       Exit;
     end;
     FActualScript := FStartupScript;
-    FActualScriptIsSaved := True;                             // no need to save
     Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
-    Form6.SetFilename(FActualScript);
+    // show and refresh ScriptEditor
     if FAutoRunScript
       then SRunScriptExecute(nil)
       else VShowScriptEditorExecute(nil);
+    Form6.ClearModified;                                      // no need to save
+    Form6.SetFilename(FActualScript);
   end;
 end;
 
@@ -2370,9 +2366,12 @@ begin
     PortInfo := FPortInstanceDict[InstanceName];
     // rename panel
     if Length(Caption) > 0 then
-      if PortInfo.Port.HasPanel
-        then FPortPluginDict[PortInfo.ModuleName].FRenamePanel(PortInfo.Port,
-                                                               PChar(NewCaption));
+      if PortInfo.Port.HasPanel then
+      begin
+        FPortPluginDict[PortInfo.ModuleName].FRenamePanel(PortInfo.Port,
+                                                          PChar(NewCaption));
+        FActualProjectIsSaved := False;
+      end;
   except
     // error
     Message := MSG01 + Format(MSG92, [InstanceName]);
@@ -3639,9 +3638,7 @@ begin
   try
     MemInfo := FmemInstanceDict[InstanceName];
     // attach to bus
-    case FSysBus.AttachMemory(InstanceName, MemInfo.Memory,
-                              MemInfo.Memory.BaseAddress,
-                              MemInfo.Memory.AddressRangeSize) of
+    case FSysBus.AttachMemory(InstanceName, MemInfo.Memory) of
       1: begin
            Message := MSG01 + Format(MSG98, [InstanceName]);
            ShowMessage(Message);
@@ -4792,9 +4789,7 @@ begin
   try
     PortInfo := FPortInstanceDict[InstanceName];
     // attach to bus
-    case FSysBus.AttachIOPort(InstanceName, PortInfo.Port,
-                              PortInfo.Port.BaseAddress,
-                              PortInfo.Port.AddressRangeSize) of
+    case FSysBus.AttachIOPort(InstanceName, PortInfo.Port) of
       1: begin
            Message := MSG01 + Format(MSG98, [InstanceName]);
            ShowMessage(Message);
@@ -5374,10 +5369,13 @@ end;
 procedure TForm1.SNewScriptOperation(AActionContext: TActionContext);
 begin
   ChangeOpMode(omScript, True, False);
-  // refresh and show ScriptEditor
-  Form6.ClearModified;
-  Form6.SetFilename('');
+  // show and refresh ScriptEditor
   VShowScriptEditorExecute(nil);
+  with Form6 do
+  begin
+    ClearModified;
+    SetFilename('');
+  end;
 end;
 
 // SCRIPT/LOAD SCRIPT ACTION ---------------------------------------------------
@@ -5403,7 +5401,7 @@ procedure TForm1.SLoadScriptExecute(Sender: TObject);
           end else ActionSource := asToolBar;
         end;
         // check actual script status
-        if not FActualScriptIsSaved then
+        if Form6.Modified then
           if MessageDlg(MSG43, MSG44, mtConfirmation, [mbYes, mbNo], 0) = mrNo
             then Exit;
         // select file
@@ -5447,13 +5445,15 @@ begin
     AActionContext.HasError := True;
     exit;
   end;
-  FActualScript := Filename;                                // with filename
-  FActualScriptIsSaved := True;                           // no need to save
+  FActualScript := Filename;                                    // with filename
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
-  // refresh and show ScriptEditor
-  Form6.ClearModified;
-  Form6.SetFilename(FActualScript);
+  // show and refresh ScriptEditor
   VShowScriptEditorExecute(nil);
+  with Form6 do
+  begin
+    ClearModified;                                        // no need to save
+    SetFilename(FActualScript);
+  end;
 end;
 
 // SCRIPT/SAVE SCRIPT ACTION ---------------------------------------------------
@@ -5462,7 +5462,7 @@ var
   Message: string;
 begin
   if ActionNotAllowedUnderCPURun('SVSC') then Exit;
-  if FActualScriptIsSaved then Exit;
+  if not Form6.Modified then Exit;
   if Length(FActualScript) = 0 then SSaveScriptAsExecute(Sender) else
   begin
     // create backup
@@ -5475,15 +5475,14 @@ begin
     try
       FScriptBuffer.SaveToFile(FActualScript);
       SysConsole1.WriteMessage(Format(MSG83, [FActualScript]));
-      // refresh ScriptEditor
-      Form6.ClearModified;
     except
       Message := MSG01 + Format(MSG49, [FActualScript]);
       ShowMessage(Message);
       SysConsole1.WriteMessage(Message);
       Exit;
     end;
-    FActualScriptIsSaved := True;                             // no need to save
+    // refresh ScriptEditor
+    Form6.ClearModified;                                      // no need to save
   end;
 end;
 
@@ -5554,11 +5553,13 @@ begin
   end;
   SysConsole1.WriteMessage(Format(MSG83, [FActualScript]));
   FActualScript := Filename;                                            // named
-  Form6.SetFilename(FActualScript);
-  FActualScriptIsSaved := True;                               // no need to save
   Form1.Caption := Application.Title + ' - ' + ExtractFilename(FActualScript);
-  // refresh and show ScriptEditor
-  Form6.ClearModified;
+  // refresh ScriptEditor
+  with Form6 do
+  begin
+    SetFilename(FActualScript);
+    ClearModified;                                            // no need to save
+  end;
 end;
 
 // SCRIPT/RUN SCRIPT ACTION ----------------------------------------------------
@@ -5598,8 +5599,9 @@ var
   i:          Integer;
   NewCounter: Variant;
 begin
+  Counter := 0;
+  NewCounter := 0;
   if FScriptIsRunning then Exit;
-  //
   CommandEngine2.FScriptRuntime.GetRegister('C', Counter);
   // initialization, if starting from the beginning of the script
   if Counter = 0 then
@@ -5719,6 +5721,8 @@ var
   i:          Integer;
   NewCounter: Variant;
 begin
+  Counter := 0;
+  NewCounter := 0;
   if FScriptIsRunning then Exit;
   // position check
   CommandEngine2.FScriptRuntime.GetRegister('C', Counter);
@@ -6237,7 +6241,7 @@ begin
   FActualProject := '';
   FActualProjectIsSaved := True;
   FActualScript := '';
-  FActualScriptIsSaved := True;
+  Form6.ClearModified;
   CommandEngine2.FScriptRuntime.SetRegister('C', '0', True);
   // system language
   FSystemLanguage := GetLang;
@@ -6347,7 +6351,7 @@ begin
   if (FOpMode <> omInteractive) then
   begin
     // check script
-    if FActualScriptIsSaved = False then
+    if Form6.Modified then
       if not (MessageDlg(MSG43, MSG50, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
       begin
         CanClose := False;
