@@ -14,12 +14,12 @@
 program corelab;
 {$MODE OBJFPC}{$H+}
 uses
-  CMem, cthreads, Dialogs, Interfaces, Forms, ModLCLTranslator, SysUtils,
-  StdCtrls, lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger, frmclasslist,
-  frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory, frmhexviewer,
-  frmscripteditor, frmscriptconsole, frmintlogger, frmcaption, frmbuslogger,
-  frmmoduleexplorer, commandengine, scriptengine, scriptruntime, uconfig,
-  ucommon, uintelhex, uplugin, usysconsole, uproperties, frmbpmanager,
+  CMem, cthreads, Dialogs, Interfaces, Forms, ModLCLTranslator, CONVERT,
+  SysUtils, StdCtrls, lhelpcontrolpkg, crt, frmmain, frmabout, frmrunlogger,
+  frmclasslist, frmmodulelist, frmsettings, frmexdepmemory, frmloadsavememory,
+  frmhexviewer, frmscripteditor, frmscriptconsole, frmintlogger, frmcaption,
+  frmbuslogger, frmmoduleexplorer, commandengine, scriptengine, scriptruntime,
+  uconfig, ucommon, uintelhex, uplugin, usysconsole, uproperties, frmbpmanager,
   frmregviewer, frmproperties, breakpointframe, frmrdwrioport, simulationthread;
 const
   PRGCOPY = 'Copyright (C) 2026 Pozsar Zsolt';

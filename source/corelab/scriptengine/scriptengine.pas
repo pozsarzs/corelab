@@ -16,7 +16,7 @@ unit scriptengine;
 interface
 uses
   SysUtils, Classes, Variants, command, commandengine, scriptruntime,
-  frmscriptconsole, uactcontext, ucommon, token;
+  frmscriptconsole, uactcontext, ucommon, token, convert;
 type
   // type of read/write functions
   TReadFunc = function(AAddress: DWord): Byte of object;

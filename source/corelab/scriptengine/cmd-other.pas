@@ -14,30 +14,73 @@
 { CONV PRNT WAIT END EXIT }
 
 procedure TScriptEngine.CmdCONV(AActionContext: TActionContext);
-begin
-end;
-
-procedure TScriptEngine.CmdPRNT(AActionContext: TActionContext);
 var
-  Text: Variant;
+  Operandus1: DWord;
+  Operandus3: DWord;
+  s:          string;
+  Temp:       Variant;
 begin
   with AActionContext do
   begin
     HasError := True;
-    Text := '';
+    // get accu value
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    // get target register
+    if not ChkRegName(SArg1, True) then Exit;
+    // get base (2, 8, 16)
+    if ChkRegName(SArg2, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg2[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus3 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg2, Operandus3) then Exit;
+    end;
+    // convert value $RA
+    case Operandus3 of
+      2: s := DezToBin(VarToStr(Operandus1));
+      8: s := DezToOkt(VarToStr(Operandus1));
+      16: s := DezToHex(VarToStr(Operandus1));
+    else
+      Exit;
+    end;
+    // store in target register
+    if not FScriptRuntime.SetRegister(SArg1[2], s, False) then Exit;
+    // set flags
+    if not FScriptRuntime.SetFlag('C', False) then Exit;
+    if not FScriptRuntime.SetFlag('Z', False) then Exit;
+    HasError := False;
+  end;
+end;
+
+procedure TScriptEngine.CmdPRNT(AActionContext: TActionContext);
+var
+  Text1, Text2: Variant;
+begin
+  with AActionContext do
+  begin
+    HasError := True;
+    Text1 := '';
+    Text2 := '';
     // get and check arguments
     if ChkRegName(SArg1, True) then
     begin
-      // address in register
-      if not FScriptRuntime.GetRegister(SArg1[3], Text) then Exit;
-      // write to console
-      Form12.WriteMessage(VarToStr(Text));
-    end else
+      if not FScriptRuntime.GetRegister(SArg1[3], Text1) then Exit;
+      Text1 := VarToStr(Text1);
+    end else Text1 := SArg1;
+    if ChkRegName(SArg2, True) then
     begin
-      // address in value
-      // write to console
-      Form12.WriteMessage(SArg1);
-    end;
+      if not FScriptRuntime.GetRegister(SArg2[3], Text2) then Exit;
+      Text2 := VarToStr(Text2);
+    end else Text2 := SArg2;
+    Form12.WriteMessage(Format('%s%s', [Text1, Text2]));
     HasError := False;
   end;
 end;

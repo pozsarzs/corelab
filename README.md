@@ -127,6 +127,9 @@ in mind:
 
 ## IV. Used external libraries, programs and others
 
+ - _Convert - Bin/Oct/Dec/Hex number converter_  
+   Unit for Turbo Pascal v3.0  
+   Public Domain, Copyright (C) 1993 Tom Wellige  
  - _Fugue Icons_
    (C) 2013 Yusuke Kamiyamane
    CCA v3.0
@@ -244,7 +247,7 @@ Registers can store string and double word values.
 |**CFPU**   |Everywhere  |-  |-    |Configure processor module.                                            |
 |**CHWD**   |Everywhere  |-  |-    |Change work directory.                                                 |
 |**COMP**   |Script      |Yes|C, Z |Compare target with value by subtraction.                              |
-|**CONV**   |Script      |Yes|-    |Convert number in different numeral systems in-place.                  |
+|**CONV**   |Script      |Yes|-    |Convert number in different numeral systems.                           |
 |**CRIO**   |Everywhere  |-  |-    |Instantiate a I/O port or device module.                               |
 |**CRME**   |Everywhere  |-  |-    |Instantiate a memory module.                                           |
 |**CRPU**   |Everywhere  |-  |-    |Instantiate a processor module.                                        |

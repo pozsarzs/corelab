@@ -282,6 +282,11 @@
         <Filename Value="projectengine/projectengine.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="../_ext/convert/convert.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CONVERT"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -291,7 +296,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);../_inc"/>
-      <OtherUnitFiles Value="../corelab-core;../corelab-plugins;../_ext/modlcltranslator;../_ext/modsynhighlighterany;../_ppu;../_inc;commandengine;projectengine;scriptengine"/>
+      <OtherUnitFiles Value="../corelab-core;../corelab-plugins;../_ext/modlcltranslator;../_ext/modsynhighlighterany;../_ppu;../_inc;commandengine;projectengine;scriptengine;../_ext/convert"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
