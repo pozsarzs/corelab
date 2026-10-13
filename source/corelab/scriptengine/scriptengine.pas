@@ -45,14 +45,11 @@ type
     // control
     procedure CmdCOMP(AActionContext: TActionContext);
     procedure CmdINRG(AActionContext: TActionContext);
-    procedure CmdJPEQ(AActionContext: TActionContext);
-    procedure CmdJPZR(AActionContext: TActionContext);
-    procedure CmdJPGE(AActionContext: TActionContext);
-    procedure CmdJPGT(AActionContext: TActionContext);
-    procedure CmdJPLE(AActionContext: TActionContext);
-    procedure CmdJPLT(AActionContext: TActionContext);
-    procedure CmdJPNE(AActionContext: TActionContext);
+    procedure CmdJUMP(AActionContext: TActionContext);
+    procedure CmdJPZE(AActionContext: TActionContext);
     procedure CmdJPNZ(AActionContext: TActionContext);
+    procedure CmdJPCA(AActionContext: TActionContext);
+    procedure CmdJPNC(AActionContext: TActionContext);
     procedure CmdCALL(AActionContext: TActionContext);
     procedure CmdRTRN(AActionContext: TActionContext);
     // logic

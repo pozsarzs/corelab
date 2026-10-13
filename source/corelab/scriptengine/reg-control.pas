@@ -11,7 +11,7 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-{ COMP INRG JPEQ JPZR JPGE JPGT JPLE JPLT JPNE JPNZ CALL RTRN }
+{ COMP INRG JUMP JPZE JPNZ JPCA JPNC CALL RTRN }
 
 RegisterCommand(TCommand.Create('COMP',
                                 'Compare target with value by subtraction.',
@@ -31,75 +31,48 @@ RegisterCommand(TCommand.Create('INRG',
                                 True,
                                 [omScript]));
 
-RegisterCommand(TCommand.Create('JPEQ',
-                                'Jump to the specified label, based on the result of the previous CMP.',
+RegisterCommand(TCommand.Create('JUMP',
+                                'Jump to the specified label.',
                                 [csScript],
-                                'JPEQ label',
+                                'JUMP label',
                                 1,
-                                @CmdJPEQ,
+                                @CmdJUMP,
                                 True,
                                 [omScript]));
 
-RegisterCommand(TCommand.Create('JPZR',
-                                'Jump to the specified label, based on the result of the previous CMP.',
+RegisterCommand(TCommand.Create('JPZE',
+                                'Jump to the specified label, based on the result of the previous intruction.',
                                 [csScript],
-                                'JPZR label',
+                                'JPZE label',
                                 1,
-                                @CmdJPZR,
-                                True,
-                                [omScript]));
-
-RegisterCommand(TCommand.Create('JPGE',
-                                'Jump to the specified label, based on the result of the previous CMP.',
-                                [csScript],
-                                'JPGE label',
-                                1,
-                                @CmdJPGE,
-                                True,
-                                [omScript]));
-
-RegisterCommand(TCommand.Create('JPGT',
-                                'Jump to the specified label, based on the result of the previous CMP.',
-                                [csScript],
-                                'JPGT label',
-                                1,
-                                @CmdJPGT,
-                                True,
-                                [omScript]));
-
-RegisterCommand(TCommand.Create('JPLE',
-                                'Jump to the specified label, based on the result of the previous CMP.',
-                                [csScript],
-                                'JPLE label',
-                                1,
-                                @CmdJPLE,
-                                True,
-                                [omScript]));
-
-RegisterCommand(TCommand.Create('JPLT',
-                                'Jump to the specified label, based on the result of the previous CMP.',
-                                [csScript],
-                                'JPLT label',
-                                1,
-                                @CmdJPLT,
-                                True,
-                                [omScript]));
-
-RegisterCommand(TCommand.Create('JPNE',
-                                'Jump to the specified label, based on the result of the previous CMP.',
-                                [csScript],
-                                'JPNE label',
-                                1,
-                                @CmdJPNE,
+                                @CmdJPZE,
                                 True,
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('JPNZ',
-                                'Jump to the specified label, based on the result of the previous CMP.',
+                                'Jump to the specified label, based on the result of the previous intruction.',
                                 [csScript],
                                 'JPNZ label',
                                 1,
                                 @CmdJPNZ,
+                                True,
+                                [omScript]));
+
+RegisterCommand(TCommand.Create('JPCA',
+                                'Jump to the specified label, based on the result of the previous intruction.',
+                                [csScript],
+                                'JPCA label',
+                                1,
+                                @CmdJPCA,
+                                True,
+                                [omScript]));
+
+RegisterCommand(TCommand.Create('JPNC',
+                                'Jump to the specified label, based on the result of the previous intruction.',
+                                [csScript],
+                                'JPNC label',
+                                1,
+                                @CmdJPNC,
                                 True,
                                 [omScript]));
 

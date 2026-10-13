@@ -268,14 +268,11 @@ Registers can store string and double word values.
 |**HELP**   |Command line|-  |-    |Display general help overview or detailed usage for a specific command.|
 |**INC**    |Script      |Yes|C, Z |Increment integer target by 1 in-place.                                |
 |**INRG**   |Script      |Yes|-    |Check if value is between min and max.                                 |
-|**JPEQ**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPGE**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPGT**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPLE**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPLT**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPNE**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JUMP**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPZE**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
 |**JPNZ**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPZR**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPCA**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
+|**JPNC**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
 |**LDME**   |Everywhere  |-  |-    |Load memory content from file.                                         |
 |**LDPR**   |Command line|-  |-    |Change to interactive mode and load project from file.                 |
 |**LDRG**   |Script      |Yes|     |Load a value to specified register.                                    |

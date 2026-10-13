@@ -58,6 +58,8 @@ type
     function AddLabel(const AName: string; ALine: Integer): Boolean;
     function FindLabel(const AName: string; out ALine: Integer): Boolean;
     procedure ClearCallStack;
+    function PushCallStack(ALine: Integer): Boolean;
+    function PopCallStack(out ALine: Integer): Boolean;
     property MainEnded: Boolean read FMainEnded write FMainEnded;
     property ScriptExited: Boolean read FScriptExited write FScriptExited;
   end;
@@ -224,6 +226,18 @@ function TScriptRuntime.FindLabel(const AName: string; out ALine: Integer): Bool
 begin
   Result := FLabelTable.TryGetValue(UpperCase(AName), ALine);
   if not Result then ALine := -1;
+end;
+
+// PUSH LINE NUMBER TO STACK
+function TScriptRuntime.PushCallStack(ALine: Integer): Boolean;
+begin
+
+end;
+
+// POP LINE NUMBER FROM STACK
+function TScriptRuntime.PopCallStack(out ALine: Integer): Boolean;
+begin
+
 end;
 
 // CLEAR CALL STACK

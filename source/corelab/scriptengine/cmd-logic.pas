@@ -169,7 +169,7 @@ begin
       if not TryStrToDWord(SArg1, Operandus2) then Exit;
     end;
     // control and operation
-    if Operandus2 > 31 then Operandus2 := 31;
+    if Operandus2 > 31 then Exit;
     if Operandus2 > 0 then
     begin
       Carry := ((Operandus1 shr (32 - Operandus2)) and 1) <> 0;
@@ -177,7 +177,8 @@ begin
       // set accu and flags
       if not FScriptRuntime.SetFlag('C', Carry) then Exit;
       if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    end else
+      if not FScriptRuntime.SetFlag('C', False) then Exit;
     // set flag
     if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
@@ -213,7 +214,7 @@ begin
       if not TryStrToDWord(SArg1, Operandus2) then Exit;
     end;
     // control and operation
-    if Operandus2 > 31 then Operandus2 := 31;
+    if Operandus2 > 31 then Exit;
     if Operandus2 > 0 then
     begin
       Carry := ((Operandus1 shr (Operandus2 - 1)) and 1) <> 0;
@@ -221,7 +222,8 @@ begin
       // set accu and flags
       if not FScriptRuntime.SetFlag('C', Carry) then Exit;
       if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    end else
+      if not FScriptRuntime.SetFlag('C', False) then Exit;
     // set flag
     if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
@@ -257,9 +259,10 @@ begin
       if not TryStrToDWord(SArg1, Operandus2) then Exit;
     end;
     // control and operation
-    if Operandus2 > 31 then Operandus2 := 31;
+    if Operandus2 > 31 then Exit;
     Zero := (Operandus1 and (1 shl Operandus2)) = 0;
     // set flag
+    if not FScriptRuntime.SetFlag('C', False) then Exit;
     if not FScriptRuntime.SetFlag('Z', Zero) then Exit;
     HasError := False;
   end;

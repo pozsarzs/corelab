@@ -11,52 +11,218 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
-{ COMP INRG JPEQ JPZR JPGE JPGT JPLE JPLT JPNE JPNZ CALL RTRN }
+{ COMP INRG JUMP JPZE JPNZ JPCA JPNC CALL RTRN }
 
 procedure TScriptEngine.CmdCOMP(AActionContext: TActionContext);
+var
+  Operandus1: DWord;
+  Operandus2: DWord;
+  Overflow:   Boolean;
+  Temp:       Variant;
 begin
+  with AActionContext do
+  begin
+    HasError := True;
+    Overflow := False;
+    // get accu value
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
+    // control and operation
+    Overflow := Operandus2 > Operandus1;
+    Operandus1 := Operandus1 - Operandus2;
+    // set flags
+    if not FScriptRuntime.SetFlag('C', Overflow) then Exit;
+    if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
+    HasError := False;
+  end;
 end;
 
 procedure TScriptEngine.CmdINRG(AActionContext: TActionContext);
+var
+  Operandus1: DWord;
+  Operandus2: DWord;
+  Operandus3: DWord;
+  Swap:       DWord;
+  Temp:       Variant;
+  Zero:       Boolean;
 begin
+  with AActionContext do
+  begin
+    HasError := True;
+    Zero := False;
+    // get accu value
+    Temp := 0;
+    if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    if not ChkVarInt(Temp) then Exit;
+    Operandus1 := DWord(Temp);
+    // get operandus 2
+    if ChkRegName(SArg1, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus2 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg1, Operandus2) then Exit;
+    end;
+    // get operandus 3
+    if ChkRegName(SArg2, True) then
+    begin
+      // value in register
+      if not FScriptRuntime.GetRegister(SArg2[3], Temp) then Exit;
+      // check type
+      if not ChkVarInt(Temp) then Exit;
+      Operandus3 := DWord(Temp);
+    end else
+    begin
+      // direct value
+      if not TryStrToDWord(SArg2, Operandus3) then Exit;
+    end;
+    if Operandus2 > Operandus3 then
+    begin
+      Swap := Operandus3;
+      Operandus3 := Operandus2;
+      Operandus2 := Swap;
+    end;
+    // control and operation
+    Zero := (Operandus1 >= Operandus2) and (Operandus1 <= Operandus3);
+    // set flags
+    if not FScriptRuntime.SetFlag('C', False) then Exit;
+    if not FScriptRuntime.SetFlag('Z', Zero) then Exit;
+    HasError := False;
+  end;
 end;
 
-procedure TScriptEngine.CmdJPEQ(AActionContext: TActionContext);
+procedure TScriptEngine.CmdJUMP(AActionContext: TActionContext);
+var
+  NewLine: Integer;
 begin
+  with AActionContext do
+  begin
+    HasError := not FScriptRuntime.FindLabel(UpperCase(SArg1), NewLine);
+    if not HasError then FScriptRuntime.SetRegister('C', NewLine, True);
+  end;
 end;
 
-procedure TScriptEngine.CmdJPZR(AActionContext: TActionContext);
+procedure TScriptEngine.CmdJPZE(AActionContext: TActionContext);
+var
+  NewLine: Integer;
+  Zero:    Boolean;
 begin
-end;
-
-procedure TScriptEngine.CmdJPGE(AActionContext: TActionContext);
-begin
-end;
-
-procedure TScriptEngine.CmdJPGT(AActionContext: TActionContext);
-begin
-end;
-
-procedure TScriptEngine.CmdJPLE(AActionContext: TActionContext);
-begin
-end;
-
-procedure TScriptEngine.CmdJPLT(AActionContext: TActionContext);
-begin
-end;
-
-procedure TScriptEngine.CmdJPNE(AActionContext: TActionContext);
-begin
+  with AActionContext do
+  begin
+    Zero := False;
+    HasError := not FScriptRuntime.GetFlag('Z', Zero);
+    if HasError then Exit;
+    if Zero then
+    begin
+      HasError := not FScriptRuntime.FindLabel(UpperCase(SArg1), NewLine);
+      if HasError then Exit;
+      HasError := not FScriptRuntime.SetRegister('C', NewLine, True);
+    end;
+  end;
 end;
 
 procedure TScriptEngine.CmdJPNZ(AActionContext: TActionContext);
+var
+  NewLine: Integer;
+  Zero:    Boolean;
 begin
+  with AActionContext do
+  begin
+    Zero := False;
+    HasError := not FScriptRuntime.GetFlag('Z', Zero);
+    if HasError then Exit;
+    if not Zero then
+    begin
+      HasError := not FScriptRuntime.FindLabel(UpperCase(SArg1), NewLine);
+      if HasError then Exit;
+      HasError := not FScriptRuntime.SetRegister('C', NewLine, True);
+    end;
+  end;
+end;
+
+procedure TScriptEngine.CmdJPCA(AActionContext: TActionContext);
+var
+  NewLine: Integer;
+  Carry:    Boolean;
+begin
+  with AActionContext do
+  begin
+    Carry := False;
+    HasError := not FScriptRuntime.GetFlag('C', Carry);
+    if HasError then Exit;
+    if Carry then
+    begin
+      HasError := not FScriptRuntime.FindLabel(UpperCase(SArg1), NewLine);
+      if HasError then Exit;
+      HasError := not FScriptRuntime.SetRegister('C', NewLine, True);
+    end;
+  end;
+end;
+
+procedure TScriptEngine.CmdJPNC(AActionContext: TActionContext);
+var
+  NewLine: Integer;
+  Carry:    Boolean;
+begin
+  with AActionContext do
+  begin
+    Carry := False;
+    HasError := not FScriptRuntime.GetFlag('C', Carry);
+    if HasError then Exit;
+    if not Carry then
+    begin
+      HasError := not FScriptRuntime.FindLabel(UpperCase(SArg1), NewLine);
+      if HasError then Exit;
+      HasError := not FScriptRuntime.SetRegister('C', NewLine, True);
+    end;
+  end;
 end;
 
 procedure TScriptEngine.CmdCALL(AActionContext: TActionContext);
+var
+  OrigLine: Variant;
+  NewLine: Integer;
 begin
+  OrigLine := 0;
+  with AActionContext do
+  begin
+    HasError := not FScriptRuntime.FindLabel(UpperCase(SArg1), NewLine);
+    if not HasError then
+    begin
+      FScriptRuntime.GetRegister('C', OrigLine);
+      HasError := not FScriptRuntime.PushCallStack(Integer(OrigLine) + 1);
+      if not HasError then FScriptRuntime.SetRegister('C', NewLine, True);
+    end;
+  end;
 end;
 
 procedure TScriptEngine.CmdRTRN(AActionContext: TActionContext);
+var
+  RetLine: Integer;
 begin
+  with AActionContext do
+  begin
+    HasError := not FScriptRuntime.PopCallStack(RetLine);
+    if not HasError then FScriptRuntime.SetRegister('C', RetLine, True);
+  end;
 end;
+

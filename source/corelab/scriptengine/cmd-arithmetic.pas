@@ -42,16 +42,12 @@ begin
       if not TryStrToDWord(SArg1, Operandus2) then Exit;
     end;
     // control and operation
-    if Operandus2 <= High(DWord) - Operandus1
-      then Operandus1 := Operandus1 + Operandus2
-      else Overflow := True;
+    Overflow := Operandus2 > High(DWord) - Operandus1;
+    Operandus1 := Operandus1 + Operandus2;
     // set accu and flags
+    if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
     if not FScriptRuntime.SetFlag('C', Overflow) then Exit;
-    if not OverFlow then
-    begin
-      if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
-      if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
   end;
 end;
@@ -85,16 +81,12 @@ begin
       if not TryStrToDWord(SArg1, Operandus2) then Exit;
     end;
     // control and operation
-    if Operandus2 <= Operandus1
-      then Operandus1 := Operandus1 - Operandus2
-      else Overflow := True;
-    // set accu and flags
+    Overflow := Operandus2 > Operandus1;
+    Operandus1 := Operandus1 - Operandus2;
+    // set flags
+    if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
     if not FScriptRuntime.SetFlag('C', Overflow) then Exit;
-    if not OverFlow then
-    begin
-      if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
-      if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
   end;
 end;
@@ -132,12 +124,9 @@ begin
       then Overflow := True
       else Operandus1 := Operandus1 * Operandus2;
     // set accu and flags
+    if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
     if not FScriptRuntime.SetFlag('C', Overflow) then Exit;
-    if not OverFlow then
-    begin
-      if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
-      if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
   end;
 end;
@@ -158,16 +147,12 @@ begin
     if not ChkVarInt(Accu) then Exit;
     Operandus1 := DWord(Accu);
     // control and operation
-    if Operandus1 >= High(DWord)
-      then Overflow := True
-      else Operandus1 := Operandus1 + 1;
+    Overflow := Operandus1 = High(DWord);
+    Operandus1 := Operandus1 + 1;
     // set accu and flags
+    if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
     if not FScriptRuntime.SetFlag('C', Overflow) then Exit;
-    if not OverFlow then
-    begin
-      if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
-      if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
   end;
 end;
@@ -188,16 +173,12 @@ begin
     if not ChkVarInt(Accu) then Exit;
     Operandus1 := DWord(Accu);
     // control and operation
-    if Operandus1 <= 0
-      then Overflow := True
-      else Operandus1 := Operandus1 - 1;
+    Overflow := Operandus1 = 0;
+    Operandus1 := Operandus1 - 1;
     // set accu and flags
+    if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
     if not FScriptRuntime.SetFlag('C', Overflow) then Exit;
-    if not OverFlow then
-    begin
-      if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
-      if not FScriptRuntime.SetRegister('A', Operandus1, True) then Exit;
-    end;
+    if not FScriptRuntime.SetFlag('Z', Operandus1 = 0) then Exit;
     HasError := False;
   end;
 end;
