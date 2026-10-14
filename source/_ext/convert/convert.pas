@@ -339,7 +339,7 @@ end;
 
 function DezToBin(dez: string): string;
 var s, sn, vk, nk: string;
-    i, v: word;
+    i, v: dword;
     n: real;
 
 begin

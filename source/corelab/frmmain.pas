@@ -1379,7 +1379,7 @@ begin
   FActualProject := '';
   FActualProjectIsSaved := True;
   FActualScript := '';
-  Form6.ClearModified;
+//  Form6.ClearModified;
   // remove all attached components from system bus
   SetLength(FSysBus.FIOPorts, 0);
   SetLength(FSysBus.FMemories, 0);
@@ -5648,6 +5648,9 @@ begin
   FScriptIsRunning := True;
   // clear call stack
   CommandEngine2.FScriptRuntime.ClearCallStack;
+  // reset flags
+  CommandEngine2.FScriptRuntime.MainEnded := False;
+  CommandEngine2.FScriptRuntime.ScriptExited := False;
   // collect labels
   if not CommandEngine2.PrepareScript(FScriptBuffer, BadLabelName) then
   begin
@@ -5678,6 +5681,8 @@ begin
         end;
         Exit;
       end;
+      if CommandEngine2.FScriptRuntime.MainEnded or
+         CommandEngine2.FScriptRuntime.ScriptExited then Break;
       // check whether there was a jump
       CommandEngine2.FScriptRuntime.GetRegister('C', NewCounter);
       if Counter = NewCounter then
@@ -5772,6 +5777,9 @@ begin
     end;
     // clear call stack
     CommandEngine2.FScriptRuntime.ClearCallStack;
+    // reset flags
+    CommandEngine2.FScriptRuntime.MainEnded := False;
+    CommandEngine2.FScriptRuntime.ScriptExited := False;
     // collect labels
     if not CommandEngine2.PrepareScript(FScriptBuffer, BadLabelName) then
     begin
@@ -5805,6 +5813,13 @@ begin
         -7: SysConsole1.WriteMessage(MSG01 + Format(MSG11, [CurrentCmd]));
         -8: SysConsole1.WriteMessage(MSG01 + Format(MSG12, [CurrentCmd]));
       end;
+      Exit;
+    end;
+    if CommandEngine2.FScriptRuntime.MainEnded or
+       CommandEngine2.FScriptRuntime.ScriptExited then
+    begin
+      Counter := FScriptBuffer.Count;
+      CommandEngine2.FScriptRuntime.SetRegister('C', Counter, True);
       Exit;
     end;
     // check whether there was a jump
@@ -6264,7 +6279,7 @@ begin
   FActualProject := '';
   FActualProjectIsSaved := True;
   FActualScript := '';
-  Form6.ClearModified;
+//  Form6.ClearModified;
   CommandEngine2.FScriptRuntime.SetRegister('C', '0', True);
   // system language
   FSystemLanguage := GetLang;

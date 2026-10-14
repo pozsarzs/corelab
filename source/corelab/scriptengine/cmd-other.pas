@@ -118,8 +118,12 @@ end;
 
 procedure TScriptEngine.CmdEND(AActionContext: TActionContext);
 begin
+  AActionContext.HasError := False;
+  FScriptRuntime.MainEnded := True;
 end;
 
 procedure TScriptEngine.CmdEXIT(AActionContext: TActionContext);
 begin
+  AActionContext.HasError := False;
+  FScriptRuntime.ScriptExited := True;
 end;

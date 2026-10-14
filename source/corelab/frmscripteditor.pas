@@ -94,10 +94,13 @@ end;
 // CLEAR MODIFIED FLAG
 procedure TForm6.ClearModified;
 begin
-  SynEdit1.Modified := False;
-  if SynEdit1.Modified
-    then StatusBar1.Panels[0].Text := '*'
-    else StatusBar1.Panels[0].Text := '';
+  If Assigned(SynEdit1) and Assigned(StatusBar1) then
+  begin
+    SynEdit1.Modified := False;
+    if SynEdit1.Modified
+      then StatusBar1.Panels[0].Text := '*'
+      else StatusBar1.Panels[0].Text := '';
+  end;
 end;
 
 // COPY LINES FROM BUFFER
