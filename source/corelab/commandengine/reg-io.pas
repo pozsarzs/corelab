@@ -75,7 +75,7 @@ RegisterCommand(TCommand.Create('DTIO',
                                 [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('RWIO',
-                                'Show read/write window',
+                                'Show read/write window.',
                                 [csCommandLine],
                                 'RWIO instancename',
                                 1,

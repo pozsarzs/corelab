@@ -14,7 +14,7 @@
 { COMP INRG JUMP JPZE JPNZ JPCA JPNC CALL RTRN }
 
 RegisterCommand(TCommand.Create('COMP',
-                                'Compare target with value by subtraction.',
+                                'Compare RA with value by subtraction.',
                                 [csScript],
                                 'COMP value',
                                 1,
@@ -23,7 +23,7 @@ RegisterCommand(TCommand.Create('COMP',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('INRG',
-                                'Check if value is between min and max.',
+                                'Check if RA is between min and max.',
                                 [csScript],
                                 'INRG min max',
                                 2,
@@ -41,7 +41,7 @@ RegisterCommand(TCommand.Create('JUMP',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('JPZE',
-                                'Jump to the specified label, based on the result of the previous intruction.',
+                                'Jump to the specified label if RF/Z = true.',
                                 [csScript],
                                 'JPZE label',
                                 1,
@@ -50,7 +50,7 @@ RegisterCommand(TCommand.Create('JPZE',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('JPNZ',
-                                'Jump to the specified label, based on the result of the previous intruction.',
+                                'Jump to the specified label, if RF/Z = false.',
                                 [csScript],
                                 'JPNZ label',
                                 1,
@@ -59,7 +59,7 @@ RegisterCommand(TCommand.Create('JPNZ',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('JPCA',
-                                'Jump to the specified label, based on the result of the previous intruction.',
+                                'Jump to the specified label, if RF/C = true.',
                                 [csScript],
                                 'JPCA label',
                                 1,
@@ -68,7 +68,7 @@ RegisterCommand(TCommand.Create('JPCA',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('JPNC',
-                                'Jump to the specified label, based on the result of the previous intruction.',
+                                'Jump to the specified label, if RF/C = false.',
                                 [csScript],
                                 'JPNC label',
                                 1,

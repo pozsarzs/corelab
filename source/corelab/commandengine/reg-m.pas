@@ -75,7 +75,7 @@ RegisterCommand(TCommand.Create('DTME',
                                 [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('LDME',
-                                'Load memory content from file',
+                                'Load memory content from file.',
                                 [csCommandLine, csScript],
                                 'LDME instancename filename',
                                 2,
@@ -84,7 +84,7 @@ RegisterCommand(TCommand.Create('LDME',
                                 [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('SVME',
-                                'Save memory content to file',
+                                'Save memory content to file.',
                                 [csCommandLine, csScript],
                                 'SVME filename instancename',
                                 2,
@@ -93,7 +93,7 @@ RegisterCommand(TCommand.Create('SVME',
                                 [omInteractive, omScript]));
 
 RegisterCommand(TCommand.Create('EDME',
-                                'Show examine/deposit window',
+                                'Show examine/deposit window.',
                                 [csCommandLine],
                                 'EDME instancename',
                                 1,

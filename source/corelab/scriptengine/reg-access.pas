@@ -23,7 +23,7 @@ RegisterCommand(TCommand.Create('RDIO',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('WRIO',
-                                'Read a value from register RA and write to I/O port',
+                                'Read a value from register RA and write to I/O port.',
                                 [csScript],
                                 'WRIO address',
                                 1,
@@ -41,7 +41,7 @@ RegisterCommand(TCommand.Create('RDME',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('WRME',
-                                'Read a value from register RA and store in memory',
+                                'Read a value from register RA and store in memory.',
                                 [csScript],
                                 'WRME address',
                                 1,

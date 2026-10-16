@@ -14,7 +14,7 @@
 { ADD SUB MUL INC DEC }
 
 RegisterCommand(TCommand.Create('ADD',
-                                'Add value to target in-place.',
+                                'Add value to RA in-place.',
                                 [csScript],
                                 'ADD value',
                                 1,
@@ -23,7 +23,7 @@ RegisterCommand(TCommand.Create('ADD',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('SUB',
-                                'Subtract value from target in-place.',
+                                'Subtract value from RA in-place.',
                                 [csScript],
                                 'SUB value',
                                 1,
@@ -32,7 +32,7 @@ RegisterCommand(TCommand.Create('SUB',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('MUL',
-                                'Multiply target by value in-place.',
+                                'Multiply RA by value in-place.',
                                 [csScript],
                                 'MUL value',
                                 1,
@@ -41,7 +41,7 @@ RegisterCommand(TCommand.Create('MUL',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('INC',
-                                'Increment integer target by 1 in-place.',
+                                'Increment RA by 1 in-place.',
                                 [csScript],
                                 'INC',
                                 0,
@@ -50,7 +50,7 @@ RegisterCommand(TCommand.Create('INC',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('DEC',
-                                'Decrement integer target by 1 in-place.',
+                                'Decrement RA by 1 in-place.',
                                 [csScript],
                                 'DEC',
                                 0,

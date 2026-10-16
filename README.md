@@ -60,7 +60,7 @@ in mind:
 |**actual version**        |v0.1                                                               |
 |**licence**               |EUPL v1.2                                                          |
 |**language**              |en, hu                                                             |
-|**architecture**          |amd64, armhf, i386, x86_64                                         |
+|**architecture**          |i586, amd64, armhf                                                 |
 |**operation system**      |FreeBSD, Linux, Windows                                            |
 |**user interface**        |Graphical User Interface (GUI) with scriptable command-line control|
 |**running modes**         |Normal or interpreter                                              |
@@ -121,7 +121,7 @@ in mind:
 
 ![CLProcessor plugin tester application](document/screenshots/clprocessor_3.png)
 
-![CLMemory plugin tester application](document/screenshots/clprocessor_4.png)
+![CLProcessor plugin tester application](document/screenshots/clprocessor_4.png)
 
 ![CLProcessor plugin tester application](document/screenshots/clprocessor_5.png)
 
@@ -197,15 +197,15 @@ to be used with other development tools or transferred to real hardware.
 
 #### Used filetypes
 
-|extension|type                 |application                    |
-|:-------:|:--------------------|:------------------------------|
-|*.bin    |General binary file  |CoreLAB, CLProcessor           |
-|*.clprj  |CoreLAB project      |CoreLAB                        |
-|*.clpst  |CoreLAB plugin status|CLIOPort, CLMemory, CLProcessor|
-|*.clsce  |CoreLAB scriptembly  |CoreLAB                        |
-|*.clsht  |CoreLAB snapshot     |CoreLAB                        |
-|*.hex    |Intel hexa file      |CoreLAB, CLProcessor           |
-|*.log    |General log file     |CoreLAB, CLProcessor           |
+|extension|type                  |application                    |
+|:-------:|:---------------------|:------------------------------|
+|*.bin    |General binary file.  |CoreLAB, CLProcessor           |
+|*.clprj  |CoreLAB project.      |CoreLAB                        |
+|*.clpst  |CoreLAB plugin status.|CLIOPort, CLMemory, CLProcessor|
+|*.clsce  |CoreLAB scriptembly.  |CoreLAB                        |
+|*.clsht  |CoreLAB snapshot.     |CoreLAB                        |
+|*.hex    |Intel hexa file.      |CoreLAB, CLProcessor           |
+|*.log    |General log file.     |CoreLAB, CLProcessor           |
 
 ## VI. Internal registers
 
@@ -216,115 +216,115 @@ register used by instructions as an accumulator.
 
 Registers can store string and double word values.
 
-|registers|description                |access|
-|:-------:|:--------------------------|:----:|
-|R0-9     |General register           | R/W  | 
-|RA       |Work register (accumulator)| R/W  | 
-|RB       |Work directory             | RO   | 
-|RC       |Script instruction counter | RO   | 
-|RD       |CPU instruction counter    | RO   | 
-|RE       |Random byte                | RO   | 
-|RF       |Flags (000000CZ)           | RO   |
+|registers|description                 |access|
+|:-------:|:---------------------------|:----:|
+|R0-9     |General register.           | R/W  | 
+|RA       |Work register (accumulator).| R/W  | 
+|RB       |Work directory.             | RO   | 
+|RC       |Script instruction counter. | RO   | 
+|RD       |CPU instruction counter.    | RO   | 
+|RE       |Random byte.                | RO   | 
+|RF       |Flags (000000CZ).           | RO   |
 
 |flag|name    |description                |
 |:--:|--------|---------------------------|
-| C  |Carry   |Unsigned overflow or carry.|
-| Z  |Zero    |The result is zero.        |
+|C   |Carry   |Unsigned overflow or carry.|
+|Z   |Zero    |The result is zero.        |
 
 ## VII. Implemented commands
 
-|instruction|mode        |RA |flags|description                                                            |
-|:---------:|:----------:|:-:|:---:|-----------------------------------------------------------------------|
-|**ADD**    |Script      |Yes|C, Z |Add value to target in-place.                                          |
-|**AND**    |Script      |Yes|Z    |Bitwise/logical AND in-place.                                          |
-|**ATIO**   |Everywhere  |-  |-    |Attach I/O port or device module to bus.                               |
-|**ATME**   |Everywhere  |-  |-    |Attach memory module to bus.                                           |
-|**ATPU**   |Everywhere  |-  |-    |Attach processor module to bus.                                        |
-|**BIT**    |Script      |Yes|Z    |Check the specified bit.                                               |
-|**CALL**   |Script      |-  |-    |Call subroutine.                                                       |
-|**CFIO**   |Everywhere  |-  |-    |Configure I/O port module.                                             |
-|**CFME**   |Everywhere  |-  |-    |Configure memory module.                                               |
-|**CFPU**   |Everywhere  |-  |-    |Configure processor module.                                            |
-|**CHWD**   |Everywhere  |-  |-    |Change work directory.                                                 |
-|**COMP**   |Script      |Yes|C, Z |Compare target with value by subtraction.                              |
-|**CONV**   |Script      |Yes|-    |Convert number in different numeral systems.                           |
-|**CRIO**   |Everywhere  |-  |-    |Instantiate a I/O port or device module.                               |
-|**CRME**   |Everywhere  |-  |-    |Instantiate a memory module.                                           |
-|**CRPU**   |Everywhere  |-  |-    |Instantiate a processor module.                                        |
-|**DEC**    |Script      |Yes|C, Z |Decrement integer target by 1 in-place.                                |
-|**DIIO**   |Everywhere  |-  |-    |Disable I/O port or device module.                                     |
-|**DIME**   |Everywhere  |-  |-    |Disable memory module.                                                 |
-|**DIPU**   |Everywhere  |-  |-    |Disable processor module.                                              |
-|**DSIO**   |Everywhere  |-  |-    |Destroy I/O port or device module.                                     |
-|**DSME**   |Everywhere  |-  |-    |Destroy memory module.                                                 |
-|**DSPU**   |Everywhere  |-  |-    |Destroy processor module.                                              |
-|**DTIO**   |Everywhere  |-  |-    |Detach I/O port or device module from bus.                             |
-|**DTME**   |Everywhere  |-  |-    |Detach memory module from bus.                                         |
-|**DTPU**   |Everywhere  |-  |-    |Detach processor module from bus.                                      |
-|**EDME**   |Command line|-  |-    |Show examine/deposit window.                                           |
-|**END**    |Script      |-  |-    |End of script.                                                         |
-|**ENIO**   |Everywhere  |-  |-    |Enable I/O port or device module.                                      |
-|**ENME**   |Everywhere  |-  |-    |Enable memory module.                                                  |
-|**ENPU**   |Everywhere  |-  |-    |Enable processor module.                                               |
-|**EXAP**   |Everywhere  |-  |-    |Exit from application.                                                 |
-|**EXIT**   |Script      |-  |-    |Terminate the script.                                                  |
-|**HELP**   |Command line|-  |-    |Display general help overview or detailed usage for a specific command.|
-|**INC**    |Script      |Yes|C, Z |Increment integer target by 1 in-place.                                |
-|**INRG**   |Script      |Yes|-    |Check if value is between min and max.                                 |
-|**JUMP**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPZE**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPNZ**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPCA**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**JPNC**   |Script      |-  |-    |Jump to the specified label, based on the result of the previous CMP.  |
-|**LDME**   |Everywhere  |-  |-    |Load memory content from file.                                         |
-|**LDPR**   |Command line|-  |-    |Change to interactive mode and load project from file.                 |
-|**LDRG**   |Script      |Yes|     |Load a value to specified register.                                    |
-|**LDSC**   |Command line|-  |-    |Change to script mode and load script from file.                       |
-|**LTIO**   |Everywhere  |-  |-    |Set position of I/O device panel.                                      |
-|**MUL**    |Script      |Yes|C, Z |Multiply target by value in-place.                                     |
-|**NMI**    |Everywhere  |-  |-    |Call non-maskable interrupt.                                           |
-|**NOT**    |Script      |Yes|Z    |Bitwise/logical NOT in-place.                                          |
-|**NWPR**   |Command line|-  |-    |Change to interactive mode and create new project.                     |
-|**NWSC**   |Command line|-  |-    |Change to script mode and create new script.                           |
-|**OR**     |Script      |Yes|Z    |Bitwise/logical OR in-place.                                           |
-|**PRNT**   |Script      |-  |-    |Write text to console.                                                 |
-|**RDIO**   |Script      |Yes|     |Read a value from I/O port and store in register RA.                   |
-|**RDME**   |Script      |Yes|     |Read a value from memory and store in register RA.                     |
-|**RNIO**   |Everywhere  |-  |-    |Rename I/O device panel.                                               |
-|**RSAP**   |Everywhere  |-  |-    |Restart application.                                                   |
-|**RSIO**   |Everywhere  |-  |-    |Reset I/O port or device module.                                       |
-|**RSME**   |Everywhere  |-  |-    |Reset memory module.                                                   |
-|**RSPU**   |Everywhere  |-  |-    |Reset processor module.                                                |
-|**RST**    |Everywhere  |-  |-    |Reset all module.                                                      |
-|**RTRN**   |Script      |-  |-    |Return from subroutine.                                                |
-|**RUN**    |Everywhere  |-  |-    |Run simulation.                                                        |
-|**RUSC**   |Command line|-  |-    |Run script.                                                            |
-|**RWIO**   |Command line|-  |-    |Show read/write window.                                                |
-|**SESC**   |Command line|-  |-    |Run script step-by-step.                                               |
-|**SHBM**   |Command line|-  |-    |Show BreakPoint Manager window.                                        |
-|**SHHV**   |Everywhere  |-  |-    |Show HexViewer window.                                                 |
-|**SHIL**   |Everywhere  |-  |-    |Show IntLogger window.                                                 |
-|**SHIO**   |Everywhere  |-  |-    |Show I/O device panel.                                                 |
-|**SHL**    |Script      |Yes|C, Z |Shift target bits left by count in-place.                              |
-|**SHME**   |Command line|-  |-    |Show Module Explorer window.                                           |
-|**SHR**    |Script      |Yes|C, Z |Shift target bits right by count in-place.                             |
-|**SHRL**   |Everywhere  |-  |-    |Show RunLogger window.                                                 |
-|**SHRV**   |Everywhere  |-  |-    |Show RegViewer window.                                                 |
-|**SHSC**   |Everywhere  |-  |-    |Show ScriptConsole window.                                             |
-|**SHSE**   |Command line|-  |-    |Show ScriptEditor window.                                              |
-|**STEP**   |Everywhere  |-  |-    |Run simulation step-by-step.                                           |
-|**STOP**   |Everywhere  |-  |-    |Stop simulation.                                                       |
-|**STSC**   |Command line|-  |-    |Stop script.                                                           |
-|**SUB**    |Script      |Yes|C, Z |Subtract value from target in-place.                                   |
-|**SVME**   |Everywhere  |-  |-    |Save memory content to file.                                           |
-|**SVPR**   |Command line|-  |-    |Save project to file.                                                  |
-|**SVSC**   |Command line|-  |-    |Save script to file.                                                   |
-|**SWAP**   |Script      |Yes|-    |Swap the values of two registers.                                      |
-|**WAIT**   |Script      |-  |-    |Wait specified ms.                                                     |
-|**WHIO**   |Everywhere  |-  |-    |Set size of I/O device panel.                                          |
-|**WRIO**   |Script      |Yes|     |Read a value from register RA and write to I/O port.                   |
-|**WRME**   |Script      |Yes|     |Read a value from register RA and store in memory.                     |
-|**XOR**    |Script      |Yes|Z    |Bitwise/logical XOR in-place.                                          |
+|instruction|description                                           |command scope            |operation mode           |
+|:---------:|------------------------------------------------------|-------------------------|-------------------------|
+|ADD        |Add value to RA in-place.                             |[csScript]               |[omScript]               |
+|AND        |Bitwise/logical AND in-place.                         |[csScript]               |[omScript]               |
+|ATIO       |Attach I/O port or device module to bus.              |[csCommandLine, csScript]|[omInteractive, omScript]|
+|ATME       |Attach memory module to bus.                          |[csCommandLine, csScript]|[omInteractive, omScript]|
+|ATPU       |Attach processor module to bus.                       |[csCommandLine, csScript]|[omInteractive, omScript]|
+|BIT        |Check the specified bit.                              |[csScript]               |[omScript]               |
+|CALL       |Call subroutine.                                      |[csScript]               |[omScript]               |
+|CFIO       |Configure I/O port module.                            |[csCommandLine, csScript]|[omInteractive, omScript]|
+|CFME       |Configure memory module.                              |[csCommandLine, csScript]|[omInteractive, omScript]|
+|CFPU       |Configure processor module.                           |[csCommandLine, csScript]|[omInteractive, omScript]|
+|CHWD       |Change work directory.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|COMP       |Compare RA with value by subtraction.                 |[csScript]               |[omScript]               |
+|CONV       |Convert the number in RA into base 2/8/16.            |[csScript]               |[omScript]               |
+|CRIO       |Instantiate a I/O port or device module.              |[csCommandLine, csScript]|[omInteractive, omScript]|
+|CRME       |Instantiate a memory module.                          |[csCommandLine, csScript]|[omInteractive, omScript]|
+|CRPU       |Instantiate a processor module.                       |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DEC        |Decrement RA by 1 in-place.                           |[csScript]               |[omScript]               |
+|DIIO       |Disable I/O port or device module.                    |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DIME       |Disable memory module.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DIPU       |Disable processor module.                             |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DSIO       |Destroy I/O port or device module.                    |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DSME       |Destroy memory module.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DSPU       |Destroy processor module.                             |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DTIO       |Detach I/O port or device module from bus.            |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DTME       |Detach memory module from bus.                        |[csCommandLine, csScript]|[omInteractive, omScript]|
+|DTPU       |Detach processor module from bus.                     |[csCommandLine, csScript]|[omInteractive, omScript]|
+|EDME       |Show examine/deposit window.                          |[csCommandLine]          |[omInteractive]          |
+|END        |End of main program.                                  |[csScript]               |[omScript]               |
+|ENIO       |Enable I/O port or device module.                     |[csCommandLine, csScript]|[omInteractive, omScript]|
+|ENME       |Enable memory module.                                 |[csCommandLine, csScript]|[omInteractive, omScript]|
+|ENPU       |Enable processor module.                              |[csCommandLine, csScript]|[omInteractive, omScript]|
+|EXAP       |Exit from application.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|EXIT       |Terminate the script.                                 |[csScript]               |[omScript]               |
+|INC        |Increment RA by 1 in-place.                           |[csScript]               |[omScript]               |
+|INRG       |Check if RA is between min and max.                   |[csScript]               |[omScript]               |
+|JPCA       |Jump to the specified label; if RF/C = true.          |[csScript]               |[omScript]               |
+|JPNC       |Jump to the specified label; if RF/C = false.         |[csScript]               |[omScript]               |
+|JPNZ       |Jump to the specified label; if RF/Z = false.         |[csScript]               |[omScript]               |
+|JPZE       |Jump to the specified label if RF/Z = true.           |[csScript]               |[omScript]               |
+|JUMP       |Jump to the specified label.                          |[csScript]               |[omScript]               |
+|LDME       |Load memory content from file.                        |[csCommandLine, csScript]|[omInteractive, omScript]|
+|LDPR       |Change to interactive mode and load project from file.|[csCommandLine]          |[omInteractive, omScript]|
+|LDRG       |Load a value to specified register.                   |[csScript]               |[omScript]               |
+|LDSC       |Change to script mode and load script from file.      |[csCommandLine]          |[omScript]               |
+|MUL        |Multiply RA by value in-place.                        |[csScript]               |[omScript]               |
+|MVIO       |Set position of I/O device panel.                     |[csCommandLine, csScript]|[omInteractive, omScript]|
+|NMI        |Call non-maskable interrupt.                          |[csCommandLine]          |[omInteractive]          |
+|NOT        |Bitwise/logical NOT in-place.                         |[csScript]               |[omScript]               |
+|NWPR       |Change to interactive mode and create new project.    |[csCommandLine]          |[omInteractive, omScript]|
+|NWSC       |Change to script mode and create new script.          |[csCommandLine]          |[omScript]               |
+|OR         |Bitwise/logical OR in-place.                          |[csScript]               |[omScript]               |
+|PRNT       |Write text to console.                                |[csScript]               |[omScript]               |
+|RDIO       |Read a value from I/O port and store in register RA.  |[csScript]               |[omScript]               |
+|RDME       |Read a value from memory and store in register RA.    |[csScript]               |[omScript]               |
+|RNIO       |Rename I/O device panel.                              |[csCommandLine, csScript]|[omInteractive, omScript]|
+|RSAP       |Restart application.                                  |[csCommandLine, csScript]|[omInteractive, omScript]|
+|RSIO       |Reset I/O port or device module.                      |[csCommandLine, csScript]|[omInteractive, omScript]|
+|RSME       |Reset memory module.                                  |[csCommandLine, csScript]|[omInteractive, omScript]|
+|RSPU       |Reset processor module.                               |[csCommandLine, csScript]|[omInteractive, omScript]|
+|RST        |Reset all module.                                     |[csCommandLine, csScript]|[omInteractive]          |
+|RTRN       |Return from subroutine.                               |[csScript]               |[omScript]               |
+|RUN        |Run simulation.                                       |[csCommandLine, csScript]|[omInteractive, omScript]|
+|RUSC       |Run script.                                           |[csCommandLine]          |[omScript]               |
+|RWIO       |Show read/write window.                               |[csCommandLine]          |[omInteractive]          |
+|SESC       |Run script step-by-step.                              |[csCommandLine]          |[omScript]               |
+|SHBL       |Show BusLogger window.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHBM       |Show BreakPoint Manager window.                       |[csCommandLine]          |[omInteractive, omScript]|
+|SHHV       |Show HexViewer window.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHIL       |Show IntLogger window.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHIO       |Show I/O device panel.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHL        |Shift target bits left by count in-place.             |[csScript]               |[omScript]               |
+|SHME       |Show Module Explorer window.                          |[csCommandLine]          |[omInteractive]          |
+|SHRL       |Show RunLogger window.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHR        |Shift target bits right by count in-place.            |[csScript]               |[omScript]               |
+|SHRV       |Show RegViewer window.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHSC       |Show ScriptConsole window.                            |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SHSE       |Show ScriptEditor window.                             |[csCommandLine, csScript]|[omInteractive, omScript]|
+|STEP       |Run simulation step-by-step.                          |[csCommandLine, csScript]|[omInteractive, omScript]|
+|STOP       |Stop simulation.                                      |[csCommandLine, csScript]|[omInteractive, omScript]|
+|STSC       |Stop script.                                          |[csCommandLine]          |[omScript]               |
+|SUB        |Subtract value from RA in-place.                      |[csScript]               |[omScript]               |
+|SVME       |Save memory content to file.                          |[csCommandLine, csScript]|[omInteractive, omScript]|
+|SVPR       |Save project to file.                                 |[csCommandLine]          |[omInteractive]          |
+|SVSC       |Save script to file.                                  |[csCommandLine]          |[omScript]               |
+|SWAP       |Swap the values of two registers.                     |[csScript]               |[omScript]               |
+|SZIO       |Set size of I/O device panel.                         |[csCommandLine, csScript]|[omInteractive, omScript]|
+|WAIT       |Wait specified ms.                                    |[csScript]               |[omScript]               |
+|WRIO       |Read a value from register RA and write to I/O port.  |[csScript]               |[omScript]               |
+|WRME       |Read a value from register RA and store in memory.    |[csScript]               |[omScript]               |
+|XOR        |Bitwise/logical XOR in-place.                         |[csScript]               |[omScript]               |
 
 **Note:**  
 - RA: The instruction uses the _RA_ register as both source and destination.

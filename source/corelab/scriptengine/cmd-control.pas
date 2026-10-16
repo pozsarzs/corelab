@@ -27,6 +27,7 @@ begin
     // get accu value
     Temp := 0;
     if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    // check type
     if not TryStrToDWord(VarToStr(Temp), Operandus1) then Exit;
     if ChkRegName(SArg1, True) then
     begin
@@ -65,6 +66,7 @@ begin
     // get accu value
     Temp := 0;
     if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    // check type
     if not TryStrToDWord(VarToStr(Temp), Operandus1) then Exit;
     // get operandus 2
     if ChkRegName(SArg1, True) then

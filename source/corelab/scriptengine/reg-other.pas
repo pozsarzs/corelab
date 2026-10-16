@@ -14,7 +14,7 @@
 { CONV PRNT WAIT END EXIT }
 
 RegisterCommand(TCommand.Create('CONV',
-                                'Convert number in different numeral systems in-place.',
+                                'Convert the number in RA into base 2|8|16.',
                                 [csScript],
                                 'CONV target base',
                                 2,
@@ -25,7 +25,7 @@ RegisterCommand(TCommand.Create('CONV',
 RegisterCommand(TCommand.Create('PRNT',
                                 'Write text to console.',
                                 [csScript],
-                                'PRNT "text" "text"',
+                                'PRNT "text" ["text"]',
                                 1,
                                 @CmdPRNT,
                                 True,
@@ -41,7 +41,7 @@ RegisterCommand(TCommand.Create('WAIT',
                                 [omScript]));
 
 RegisterCommand(TCommand.Create('END',
-                                'End of script.',
+                                'End of main program.',
                                 [csScript],
                                 'END',
                                 0,

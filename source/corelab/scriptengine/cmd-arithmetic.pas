@@ -27,18 +27,14 @@ begin
     // get accu value
     Temp := 0;
     if not FScriptRuntime.GetRegister('A', Temp) then Exit;
-
+    // check type
     if not TryStrToDWord(VarToStr(Temp), Operandus1) then Exit;
-
-//    if not ChkVarInt(Temp) then Exit;
-//    Operandus1 := DWord(Temp);
     if ChkRegName(SArg1, True) then
     begin
       // value in register
       if not FScriptRuntime.GetRegister(SArg1[3], Temp) then Exit;
       // check type
-//      if not ChkVarInt(Temp) then Exit;
-      Operandus2 := DWord(Temp);
+      if not TryStrToDWord(VarToStr(Temp), Operandus2) then Exit;
     end else
     begin
       // direct value
@@ -69,6 +65,7 @@ begin
     // get accu value
     Temp := 0;
     if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    // check type
     if not TryStrToDWord(VarToStr(Temp), Operandus1) then Exit;
     if ChkRegName(SArg1, True) then
     begin
@@ -106,6 +103,7 @@ begin
     // get accu value
     Temp := 0;
     if not FScriptRuntime.GetRegister('A', Temp) then Exit;
+    // check type
     if not TryStrToDWord(VarToStr(Temp), Operandus1) then Exit;
     if ChkRegName(SArg1, True) then
     begin
@@ -143,6 +141,7 @@ begin
     // get accu value
     Accu := 0;
     if not FScriptRuntime.GetRegister('A', Accu) then Exit;
+    // check type
     if not TryStrToDWord(VarToStr(Accu), Operandus1) then Exit;
     // control and operation
     Overflow := Operandus1 = High(DWord);
@@ -168,6 +167,7 @@ begin
     // get accu value
     Accu := 0;
     if not FScriptRuntime.GetRegister('A', Accu) then Exit;
+    // check type
     if not TryStrToDWord(VarToStr(Accu), Operandus1) then Exit;
     // control and operation
     Overflow := Operandus1 = 0;
