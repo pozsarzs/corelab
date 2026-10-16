@@ -187,245 +187,6 @@ The value can be specified directly only.
 Start the comment with ' ; is marked with '.
 .IP \(bu 3
 Enclose the string in ' " ' characters.
-
-.SS Commands that can be used everywhere
-			
-.TP
-\fBATIO\fP \fIinstancename\fP
-Attach I/O port or device module to bus.
-
-.TP
-\fBATME\fP \fIinstancename\fP
-Attach memory module to bus.
-
-.TP
-\fBATPU\fP \fIinstancename\fP
-Attach processor module to bus.
-
-.TP
-\fBCFIO\fP \fIinstancename.property\fP \fIvalue\fP
-Configure I/O port module.
-
-.TP
-\fBCFME\fP \fIinstancename.property\fP \fIvalue\fP
-Configure memory module.
-
-.TP
-\fBCFPU\fP \fIinstancename.property\fP \fIvalue\fP
-Configure processor module.
-
-.TP
-\fBCHWD\fP \fIdirectory\fP
-Change work directory.
-
-.TP
-\fBCRIO\fP \fIlibrary\fP \fIinstancename\fP
-Instantiate a I/O port or device module.
-
-.TP
-\fBCRME\fP \fIlibrary\fP \fIinstancename\fP
-Instantiate a memory module.
-
-.TP
-\fBCRPU\fP \fIlibrary\fP \fIinstancename\fP
-Instantiate a processor module.
-
-.TP
-\fBDIIO\fP \fIinstancename\fP
-Disable I/O port or device module.
-
-.TP
-\fBDIME\fP \fIinstancename\fP
-Disable memory module.
-
-.TP
-\fBDIPU\fP \fIinstancename\fP
-Disable processor module.
-
-.TP
-\fBDSIO\fP \fIinstancename\fP
-Destroy I/O port or device module.
-
-.TP
-\fBDSME\fP \fIinstancename\fP
-Destroy memory module.
-
-.TP
-\fBDSPU\fP \fIinstancename\fP
-Destroy processor module.
-
-.TP
-\fBDTIO\fP \fIinstancename\fP
-Detach I/O port or device module from bus.
-
-.TP
-\fBDTME\fP \fIinstancename\fP
-Detach memory module from bus.
-
-.TP
-\fBDTPU\fP \fIinstancename\fP
-Detach processor module from bus.
-
-.TP
-\fBENIO\fP \fIinstancename\fP
-Enable I/O port or device module.
-
-.TP
-\fBENME\fP \fIinstancename\fP
-Enable memory module.
-
-.TP
-\fBENPU\fP \fIinstancename\fP
-Enable processor module.
-
-.TP
-\fBEXAP\fP
-Exit from application.
-
-.TP
-\fBEXIT\fP
-Terminate the script.
-
-.TP
-\fBLDME\fP \fIinstancename\fP \fIfilename\fP
-Load memory content from file
-
-.TP
-\fBNMI\fP
-Call non-maskable interrupt.
-
-.TP
-\fBRNIO\fP \fIinstancename\fP \fIcaption\fP
-Rename I/O device panel.
-
-.TP
-\fBRSAP\fP
-Restart application.
-
-.TP
-\fBRSIO\fP \fIinstancename\fP
-Reset I/O port or device module.
-
-.TP
-\fBRSME\fP \fIinstancename\fP
-Reset memory module.
-
-.TP
-\fBRSPU\fP \fIinstancename\fP
-Reset processor module.
-
-.TP
-\fBRST\fP
-Reset all module.
-
-.TP
-\fBRUN\fP
-Run simulation.
-
-.TP
-\fBSHBL\fP
-Show BusLogger window.
-
-.TP
-\fBSHHV\fP \fIinstancename\fP
-Show HexViewer window.
-
-.TP
-\fBSHIL\fP
-Show IntLogger window.
-
-.TP
-\fBSHIO\fP \fIinstancename\fP
-Show I/O device panel.
-
-.TP
-\fBSHRL\fP
-Show RunLogger window.
-
-.TP
-\fBSHRV\fP \fIinstancename\fP
-Show RegViewer window.
-
-.TP
-\fBSHSC\fP
-Show ScriptConsole window.
-
-.TP
-\fBSTEP\fP
-Run simulation step-by-step.
-
-.TP
-\fBSTOP\fP
-Stop simulation.
-
-.TP
-\fBSVME\fP \fIfilename\fP \fIinstancename\fP
-Save memory content to file.
-
-.SS Commands can only be used on the command line
-
-.TP
-\fBEDME\fP \fIinstancename\fP
-Show examine/deposit window.
-
-.TP
-\fBHELP\fP \fI[command]\fP
-Display general help overview or detailed usage for a specific command.
-
-.TP
-\fBLDPR\fP \fIfilename.clprj\fP
-Change to interactive mode and load project from file.
-
-.TP
-\fBLDSC\fP \fIfilename.clsce\fP
-Change to script mode and load script from file.
-
-.TP
-\fBNWPR\fP
-Change to interactive mode and create new project.
-
-.TP
-\fBNWSC\fP
-Change to script mode and create new script.
-
-.TP
-\fBRUSC\fP
-Run script.
-
-.TP
-\fBRWIO\fP \fIinstancename\fP
-Show read/write window.
-
-.TP
-\fBSESC\fP
-Run script step-by-step.
-
-.TP
-\fBSHBM\fP
-Show BreakPoint Manager window.
-
-.TP
-\fBSHME\fP
-Show Module Explorer window.
-
-.TP
-\fBSHSE\fP
-Show ScriptEditor window.
-
-.TP
-\fBSTSC\fP
-Stop script.
-
-.TP
-\fBSVPR\fP \fIfilename.clprj\fP
-Save project to file.
-
-.TP
-\fBSVSC\fP \fIfilename.clsce\fP
-Save script to file.
-
-.SS Commands can only be used in scripts
-Notes:
 .IP \(bu 3
 The \fIvalue\fP (\fIbit_index\fP, \fIaddress\fP, etc.) can be specified directly
 or with register content ($R0-$RF).
@@ -434,138 +195,898 @@ The \fIregister\fP can be specified with register name (R0-RF).
 
 .TP
 \fBADD\fP \fIvalue\fP
-Add value to target in-place.
+Add value to RA in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBAND\fP \fIvalue\fP
 Bitwise/logical AND in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
-\fBBIT\fP \fIbit_index\fP
+\fBATIO\fP \fIinstancename\fP
+Attach I/O port or device module to bus.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBATME\fP \fIinstancename\fP
+Attach memory module to bus.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBATPU\fP \fIinstancename\fP
+Attach processor module to bus.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBBIT\fP \fIindex\fP
 Check the specified bit.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBCALL\fP \fIlabel\fP
 Call subroutine.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBCFIO\fP \fIinstancename.property\fP \fIvalue\fP
+Configure I/O port module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBCFME\fP \fIinstancename.property\fP \fIvalue\fP
+Configure memory module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBCFPU\fP \fIinstancename.property\fP \fIvalue\fP
+Configure processor module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBCHWD\fP \fIdirectory\fP
+Change work directory.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
 
 .TP
 \fBCOMP\fP \fIvalue\fP
-Compare target with value by subtraction.
+Compare RA with value by subtraction.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
-\fBCONV\fP \fIbase\fP
-Convert number in different numeral systems in-place.
+\fBCONV\fP \fItarget\fP \fIbase\fP
+Convert the number in RA into base 2|8|16.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBCRIO\fP \fIlibrary\fP \fIinstancename\fP
+Instantiate a I/O port or device module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBCRME\fP \fIlibrary\fP \fIinstancename\fP
+Instantiate a memory module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBCRPU\fP \fIlibrary\fP \fIinstancename\fP
+Instantiate a processor module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
 
 .TP
 \fBDEC\fP
-Decrement integer target by 1 in-place.
+Decrement RA by 1 in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBDIIO\fP \fIinstancename\fP
+Disable I/O port or device module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDIME\fP \fIinstancename\fP
+Disable memory module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDIPU\fP \fIinstancename\fP
+Disable processor module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDSIO\fP \fIinstancename\fP
+Destroy I/O port or device module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDSME\fP \fIinstancename\fP
+Destroy memory module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDSPU\fP \fIinstancename\fP
+Destroy processor module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDTIO\fP \fIinstancename\fP
+Detach I/O port or device module from bus.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDTME\fP \fIinstancename\fP
+Detach memory module from bus.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBDTPU\fP \fIinstancename\fP
+Detach processor module from bus.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBEDME\fP \fIinstancename\fP
+Show examine/deposit window
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive].
 
 .TP
 \fBEND\fP
-End of script.
+End of main program.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBENIO\fP \fIinstancename\fP
+Enable I/O port or device module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBENME\fP \fIinstancename\fP
+Enable memory module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBENPU\fP \fIinstancename\fP
+Enable processor module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBEXAP\fP
+Exit from application.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBEXIT\fP
+Terminate the script.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBINC\fP
-Increment integer target by 1 in-place.
+Increment RA by 1 in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBINRG\fP \fImin\fP \fImax\fP
-Check if value is between min and max.
+Check if RA is between min and max.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
-\fBJPEQ\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
+\fBJPCA\fP \fIlabel\fP
+Jump to the specified label; if RF/C = true.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
-\fBJPGE\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPGT\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPLE\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPLT\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
-
-.TP
-\fBJPNE\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
+\fBJPNC\fP \fIlabel\fP
+Jump to the specified label; if RF/C = false.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBJPNZ\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
+Jump to the specified label; if RF/Z = false.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
-\fBJPZR\fP \fIlabel\fP
-Jump to the specified label, based on the result of the previous CMP.
+\fBJPZE\fP \fIlabel\fP
+Jump to the specified label if RF/Z = true.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBJUMP\fP \fIlabel\fP
+Jump to the specified label.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBLDME\fP \fIinstancename\fP \fIfilename\fP
+Load memory content from file
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBLDPR\fP \fIfilename.clprj\fP
+Change to interactive mode and load project from file.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
 
 .TP
 \fBLDRG\fP \fIregister\fP \fIvalue\fP
 Load a value to specified register.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBLDSC\fP \fIfilename.clsce\fP
+Change to script mode and load script from file.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBMUL\fP \fIvalue\fP
-Multiply target by value in-place.
+Multiply RA by value in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBMVIO\fP \fIinstancename\fP \fIleft-top\fP
+Set position of I/O device panel.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBNMI\fP
+Call non-maskable interrupt.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive].
 
 .TP
 \fBNOT\fP
 Bitwise/logical NOT in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBNWPR\fP
+Change to interactive mode and create new project.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBNWSC\fP
+Change to script mode and create new script.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBOR\fP \fIvalue\fP
 Bitwise/logical OR in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
-\fBPRNT\fP \fI"text"\fP
+\fBPRNT\fP \fI"text"\fP \fI["text"]\fP
 Write text to console.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBRDIO\fP \fIaddress\fP
 Read a value from I/O port and store in register RA.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
+.TP
 \fBRDME\fP \fIaddress\fP
 Read a value from memory and store in register RA.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBRNIO\fP \fIinstancename\fP \fIcaption\fP
+Rename I/O device panel.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBRSAP\fP
+Restart application.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBRSIO\fP \fIinstancename\fP
+Reset I/O port or device module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBRSME\fP \fIinstancename\fP
+Reset memory module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBRSPU\fP \fIinstancename\fP
+Reset processor module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBRST\fP
+Reset all module.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive].
 
 .TP
 \fBRTRN\fP
 Return from subroutine.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBRUN\fP
+Run simulation.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBRUN\fP
+Run script.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBRWIO\fP \fIinstancename\fP
+Show read/write window
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive].
+
+.TP
+\fBSESC\fP
+Run script step-by-step.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBSHBL\fP
+Show BusLogger window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSHBM\fP
+Show BreakPoint Manager window.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSHHV\fP \fIinstancename\fP
+Show HexViewer window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSHIL\fP
+Show IntLogger window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSHIO\fP \fIinstancename\fP
+Show I/O device panel.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
 
 .TP
 \fBSHL\fP \fIcount\fP
 Shift target bits left by count in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBSHME\fP
+Show Module Explorer window.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive].
+
+.TP
+\fBSHRL\fP
+Show RunLogger window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
 
 .TP
 \fBSHR\fP \fIcount\fP
 Shift target bits right by count in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBSHRV\fP \fIinstancename\fP
+Show RegViewer window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSHSC\fP
+Show ScriptConsole window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSHSE\fP
+Show ScriptEditor window.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSTEP\fP
+Run simulation step-by-step.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSTOP\fP
+Stop simulation.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSTSC\fP
+Stop script.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBSUB\fP \fIvalue\fP
-Subtract value from target in-place.
+Subtract value from RA in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBSVME\fP \fIfilename\fP \fIinstancename\fP
+Save memory content to file
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive, omScript].
+
+.TP
+\fBSVPR\fP \fIfilename.clprj\fP
+Save project to file.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omInteractive].
+
+.TP
+\fBSVSC\fP \fIfilename.clsce\fP
+Save script to file.
+.br
+Command scope: [csCommandLine].
+.br
+Useable under simulation: no.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBSWAP\fP \fIregister\fP \fIregister\fP
 Swap the values of two registers.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+
+.TP
+\fBSZIO\fP \fIinstancename\fP \fIwidth-height\fP
+Set size of I/O device panel.
+.br
+Command scope: [csCommandLine, csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omInteractive, omScript].
 
 .TP
 \fBWAIT\fP \fIms\fP
 Wait specified ms.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBWRIO\fP \fIaddress\fP
-Read a value from register RA and write to I/O port.
+Read a value from register RA and write to I/O port
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBWRME\fP \fIaddress\fP
-Read a value from register RA and store in memory.
+Read a value from register RA and store in memory
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
 
 .TP
 \fBXOR\fP \fIvalue\fP
 Bitwise/logical XOR in-place.
+.br
+Command scope: [csScript].
+.br
+Useable under simulation: yes.
+.br
+Allowed operation mode: [omScript].
+.br
 
 .SH ENVIRONMENTAL VARIABLES
 .TP
