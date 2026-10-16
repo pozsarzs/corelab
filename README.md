@@ -56,6 +56,11 @@ _0.2.0_
 Second release will be with the following changes:
  - [ ] Saving and restoring the current state of the program and the simulation;  
  - [ ] Calculating virtual processor time from cycle time for more precise timing.
+ - [ ] Intel 4004 4 bits microprocessor plugin.
+ - [ ] Intel 4040 4 bits microprocessor plugin.
+ - [ ] Intel 8008 8 bits microprocessor plugin.
+ - [ ] Intel 8085 8 bits microprocessor plugin.
+ - [ ] Zilog Z80 8 bits microprocessor plugin.
  
 ### Actual releases  
 

@@ -1,0 +1,60 @@
+@startuml
+
+title CoreLAB TScriptRuntime class diagram
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+skinparam monochrome true
+left to right direction
+
+class "TStack<Integer>" as TStack {
+}
+
+class "TDictionary<string, Integer>" as TDictionary {
+}
+
+class TCallStack << (T,#FF7700) alias >> {
+}
+TCallStack -up-|> TStack
+
+class TLabelTable << (T,#FF7700) alias >> {
+}
+TLabelTable -up-|> TDictionary
+
+class TScriptRuntime {
+  - FGenRegs : array['0'..'9'] of Variant
+  - FSysRegs : array['A'..'F'] of Variant
+  - FCallStack : TCallStack
+  - FLabelTable : TLabelTable
+  - FMainEnded : Boolean
+  - FScriptExited : Boolean
+  
+  + Create()
+  + Destroy()
+  + ClearFlags()
+  + GetFlag(ARegName: Char, var ATarget: Boolean): Boolean
+  + SetFlag(ARegName: Char, AState: Boolean): Boolean
+  + ClearRegisters()
+  + GetRegister(ARegName: Char, var ATarget: Variant): Boolean
+  + SetRegister(ARegName: Char, AValue: Variant, AForce: Boolean): Boolean
+  + ClearLabelTable()
+  + AddLabel(AName: string, ALine: Integer): Boolean
+  + FindLabel(AName: string, out ALine: Integer): Boolean
+  + ClearCallStack()
+  + PushCallStack(ALine: Integer): Boolean
+  + PopCallStack(out ALine: Integer): Boolean
+  
+  <<property>> + MainEnded: Boolean
+  <<property>> + ScriptExited: Boolean
+}
+
+TScriptRuntime *-- TCallStack : "uses"
+TScriptRuntime *-- TLabelTable : "uses"
+
+@enduml

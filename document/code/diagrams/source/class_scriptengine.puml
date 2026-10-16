@@ -1,0 +1,61 @@
+@startuml
+
+title CoreLAB TScriptEngine class diagram
+
+skinparam classAttributeIconSize 0
+skinparam diagramBorderColor black
+skinparam diagramBorderThickness 1
+'skinparam linetype ortho
+skinparam nodesep 10
+skinparam packageStyle rectangle
+skinparam ranksep 10
+skinparam shadowing false
+skinparam monochrome true
+left to right direction
+
+class TScriptEngine extends TCommandEngine {
+  - function ChkRegName(var ARegName: string; ARepr: Boolean): Boolean
+  # procedure CmdRDIO(AActionContext: TActionContext)
+  # procedure CmdWRIO(AActionContext: TActionContext)
+  # procedure CmdRDME(AActionContext: TActionContext)
+  # procedure CmdWRME(AActionContext: TActionContext)
+  # procedure CmdLDRG(AActionContext: TActionContext)
+  # procedure CmdSWAP(AActionContext: TActionContext)
+  # procedure CmdADD(AActionContext: TActionContext)
+  # procedure CmdSUB(AActionContext: TActionContext)
+  # procedure CmdMUL(AActionContext: TActionContext)
+  # procedure CmdINC(AActionContext: TActionContext)
+  # procedure CmdDEC(AActionContext: TActionContext)
+  # procedure CmdCOMP(AActionContext: TActionContext)
+  # procedure CmdINRG(AActionContext: TActionContext)
+  # procedure CmdJUMP(AActionContext: TActionContext)
+  # procedure CmdJPZE(AActionContext: TActionContext)
+  # procedure CmdJPNZ(AActionContext: TActionContext)
+  # procedure CmdJPCA(AActionContext: TActionContext)
+  # procedure CmdJPNC(AActionContext: TActionContext)
+  # procedure CmdCALL(AActionContext: TActionContext)
+  # procedure CmdRTRN(AActionContext: TActionContext)
+  # procedure CmdAND(AActionContext: TActionContext)
+  # procedure CmdOR(AActionContext: TActionContext)
+  # procedure CmdXOR(AActionContext: TActionContext)
+  # procedure CmdNOT(AActionContext: TActionContext)
+  # procedure CmdSHL(AActionContext: TActionContext)
+  # procedure CmdSHR(AActionContext: TActionContext)
+  # procedure CmdBIT(AActionContext: TActionContext)
+  # procedure CmdCONV(AActionContext: TActionContext)
+  # procedure CmdPRNT(AActionContext: TActionContext)
+  # procedure CmdWAIT(AActionContext: TActionContext)
+  # procedure CmdEND(AActionContext: TActionContext)
+  # procedure CmdEXIT(AActionContext: TActionContext)
+  + FScriptRuntime: TScriptRuntime
+  + FReadPortFunc: TReadFunc
+  + FReadMemoryFunc: TReadFunc
+  + FWritePortProc: TWriteProc
+  + FWriteMemoryProc: TWriteProc
+  + constructor Create; override
+  + destructor Destroy; override
+  + function ExecuteLine(const ALine: string): Integer; override
+  + function PrepareScript(AScriptBuffer: TStringList; out BadLabel: string): Boolean
+}
+
+@enduml
