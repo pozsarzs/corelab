@@ -1,0 +1,2255 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Pozsár Zsolt <pozsarzs@gmail.com>\n"
+"Language-Team: \n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: corelab.msg01
+msgid "CoreLAB Processor simulation framework"
+msgstr "CoreLAB Processzor szimulációs keretrendszer"
+
+#: corelab.msg02
+msgid "Build date:  "
+msgstr "Építés dátuma:  "
+
+#: corelab.msg03
+msgid "Builder:     "
+msgstr "Építette:     "
+
+#: corelab.msg04
+msgid "FPC version: "
+msgstr "FPC verzió: "
+
+#: corelab.msg05
+msgid "Target OS:   "
+msgstr "Cél OS:   "
+
+#: corelab.msg06
+msgid "Target CPU:  "
+msgstr "Cél CPU:  "
+
+#: corelab.msg07
+msgid "There are one or more bad arguments in command line."
+msgstr "Egy vagy több hibás argumentum van a parancssorban."
+
+#: corelab.msg08
+msgid "Usage"
+msgstr "Használat"
+
+#: corelab.msg09
+msgid " [argument]"
+msgstr " [argumentum]"
+
+#: corelab.msg10
+msgid " [directory|file]"
+msgstr " [könyvtár|fájl]"
+
+#: corelab.msg11
+msgid "arguments:"
+msgstr "argumentumok:"
+
+#: frmabout.msg01
+msgid "Cannot open URL."
+msgstr "Az URL nem nyitható meg."
+
+#: frmbuslogger.msg01
+msgctxt "frmbuslogger.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmbuslogger.msg02
+msgctxt "frmbuslogger.msg02"
+msgid "Save log to file"
+msgstr "Napló mentése fájlba"
+
+#: frmbuslogger.msg03
+#, object-pascal-format
+msgctxt "frmbuslogger.msg03"
+msgid "Cannot save '%s' log file."
+msgstr "A(z) '%s' naplófájlt nem sikerült menteni."
+
+#: frmbuslogger.msg04
+msgctxt "frmbuslogger.msg04"
+msgid "Log file|*.log|All file|*.*"
+msgstr "Naplófájl|*.log|Minden fájl|*.*"
+
+#: frmbuslogger.msg05
+msgctxt "frmbuslogger.msg05"
+msgid "Operation"
+msgstr "Művelet"
+
+#: frmbuslogger.msg06
+msgctxt "frmbuslogger.msg06"
+msgid "Device"
+msgstr "Eszköz"
+
+#: frmbuslogger.msg07
+msgctxt "frmbuslogger.msg07"
+msgid "Address"
+msgstr "Cím"
+
+#: frmbuslogger.msg08
+msgctxt "frmbuslogger.msg08"
+msgid "Rel. address"
+msgstr "Rel. cím"
+
+#: frmbuslogger.msg09
+msgctxt "frmbuslogger.msg09"
+msgid "Data"
+msgstr "Adat"
+
+#: frmbuslogger.msg10
+msgctxt "frmbuslogger.msg10"
+msgid "Status"
+msgstr "Állapot"
+
+#: frmexdepmemory.msg01
+msgctxt "frmexdepmemory.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmexdepmemory.msg02
+msgctxt "frmexdepmemory.msg02"
+msgid "Only hexadecimal values can be entered for address value."
+msgstr "A címhez csak hexadecimális érték adható meg."
+
+#: frmexdepmemory.msg03
+msgctxt "frmexdepmemory.msg03"
+msgid "Only hexadecimal values can be entered for data value."
+msgstr "Az adathoz csak hexadecimális érték adható meg."
+
+#: frmexdepmemory.msg04
+#, object-pascal-format
+msgid "Memory address too high. (> %s)"
+msgstr "A memóriacím túl magas. (> %s)"
+
+#: frmexdepmemory.msg05
+msgctxt "frmexdepmemory.msg05"
+msgid "Cannot open memory modul."
+msgstr "A memóriamodul nem nyitható meg."
+
+#: frmhexviewer.msg01
+msgctxt "frmhexviewer.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmhexviewer.msg02
+msgctxt "frmhexviewer.msg02"
+msgid "Address"
+msgstr "Cím"
+
+#: frmhexviewer.msg03
+msgctxt "frmhexviewer.msg03"
+msgid "Cannot open memory modul."
+msgstr "A memóriamodul nem nyitható meg."
+
+#: frmintlogger.msg01
+msgctxt "frmintlogger.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmintlogger.msg02
+msgctxt "frmintlogger.msg02"
+msgid "Save log to file"
+msgstr "Napló mentése fájlba"
+
+#: frmintlogger.msg03
+#, object-pascal-format
+msgctxt "frmintlogger.msg03"
+msgid "Cannot save '%s' log file."
+msgstr "A(z) '%s' naplófájlt nem sikerült menteni."
+
+#: frmintlogger.msg04
+msgctxt "frmintlogger.msg04"
+msgid "Log file|*.log|All file|*.*"
+msgstr "Naplófájl|*.log|Minden fájl|*.*"
+
+#: frmintlogger.msg05
+msgctxt "frmintlogger.msg05"
+msgid "Sender"
+msgstr "Küldő"
+
+#: frmintlogger.msg06
+msgctxt "frmintlogger.msg06"
+msgid "Vector"
+msgstr "Vektor"
+
+#: frmintlogger.msg07
+msgctxt "frmintlogger.msg07"
+msgid "Status"
+msgstr "Állapot"
+
+#: frmintlogger.msg08
+msgctxt "frmintlogger.msg08"
+msgid "Flag"
+msgstr "Jelzőbájt"
+
+#: frmloadsavememory.msg01
+msgctxt "frmloadsavememory.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmloadsavememory.msg02
+msgid "Only hexadecimal values can be entered for address value!"
+msgstr "A címhez csak hexadecimális érték adható meg!"
+
+#: frmloadsavememory.msg03
+#, object-pascal-format
+msgid "Memory address too high! (> %s)"
+msgstr "A memóriacím túl magas! (> %s)"
+
+#: frmloadsavememory.msg04
+msgid "&Save"
+msgstr "Menté&s"
+
+#: frmloadsavememory.msg05
+msgid "&Load"
+msgstr "&Betöltés"
+
+#: frmloadsavememory.msg06
+msgid "Save parameters"
+msgstr "Mentési paraméterek"
+
+#: frmloadsavememory.msg07
+msgid "Load parameters"
+msgstr "Betöltési paraméterek"
+
+#: frmmain.msg01
+msgctxt "frmmain.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmmain.msg02
+msgid "WARNING: "
+msgstr "FIGYELMEZTETÉS: "
+
+#: frmmain.msg03
+msgid "NOTE: "
+msgstr "MEGJEGYZÉS: "
+
+#: frmmain.msg04
+msgid "Plugin directory does not exist."
+msgstr "A bővítmények könyvtára nem létezik."
+
+#: frmmain.msg05
+#, object-pascal-format
+msgid "Cannot load plugins from %s."
+msgstr "Nem sikerült betölteni a bővítményeket innen: %s."
+
+#: frmmain.msg06
+#, object-pascal-format
+msgid "%s plugins loaded."
+msgstr "%s bővítmény betöltve."
+
+#: frmmain.msg07
+msgid "New, empty project has been created."
+msgstr "Új, üres projekt jött létre."
+
+#: frmmain.msg08
+msgid "New, empty script has been created."
+msgstr "Új, üres szkript jött létre."
+
+#: frmmain.msg09
+#, object-pascal-format
+msgid "Cannot destroy attached module named '%s'."
+msgstr "A(z) '%s' nevű csatolt modul nem semmisíthető meg."
+
+#: frmmain.msg10
+#, object-pascal-format
+msgid "Cannot be used '%s' in interactive mode."
+msgstr "A(z) '%s' nem használható interaktív módban."
+
+#: frmmain.msg100
+msgid "Cannot use it in this operation mode."
+msgstr "Ebben a működési módban nem használható."
+
+#: frmmain.msg101
+#, object-pascal-format
+msgid "Module named '%s' not exists."
+msgstr "A(z) '%s' nevű modul nem létezik."
+
+#: frmmain.msg102
+#, object-pascal-format
+msgid "Property '%s' is read only or not exists."
+msgstr "A(z) '%s' tulajdonság csak olvasható vagy nem létezik."
+
+#: frmmain.msg103
+#, object-pascal-format
+msgid "Value '%s' is bad."
+msgstr "A(z) '%s' érték hibás."
+
+#: frmmain.msg104
+#, object-pascal-format
+msgid "Property '%s' set to value '%s'."
+msgstr "A(z) '%s' tulajdonság beállítva a következő értékre: '%s'."
+
+#: frmmain.msg105
+#, object-pascal-format
+msgid "Module named '%s' has been already attached."
+msgstr "A(z) '%s' nevű modul már csatolva van."
+
+#: frmmain.msg106
+#, object-pascal-format
+msgid "Module named '%s' has been already detached."
+msgstr "A(z) '%s' nevű modul már le van választva."
+
+#: frmmain.msg107
+msgid "Only one CPU connection is allowed."
+msgstr "Csak egyetlen processzorkapcsolat engedélyezett."
+
+#: frmmain.msg108
+msgid "Select new work directory"
+msgstr "Válassz új munkakönyvtárat"
+
+#: frmmain.msg109
+#, object-pascal-format
+msgid "Work directory is set to '%s'."
+msgstr "A munkakönyvtár beállítva: '%s'."
+
+#: frmmain.msg11
+#, object-pascal-format
+msgid "Cannot be used '%s' in script mode."
+msgstr "A(z) '%s' nem használható szkript módban."
+
+#: frmmain.msg110
+msgid "none"
+msgstr "nincs"
+
+#: frmmain.msg111
+msgid "Success"
+msgstr "Siker"
+
+#: frmmain.msg112
+msgid "Unsuccess"
+msgstr "Sikertelen"
+
+#: frmmain.msg113
+#, object-pascal-format
+msgid "Command '%S' is not available while simulation is running."
+msgstr "A(z) '%S' parancs nem elérhető a szimuláció futása közben."
+
+#: frmmain.msg114
+msgid "All attached modules have been reseted."
+msgstr "Minden csatolt modul alaphelyzetbe állt."
+
+#: frmmain.msg115
+msgid "Run simulation."
+msgstr "Szimuláció futtatása."
+
+#: frmmain.msg116
+msgid "Step simulation."
+msgstr "Szimuláció léptetése."
+
+#: frmmain.msg117
+msgid "Stop simulation."
+msgstr "Szimuláció leállítása."
+
+#: frmmain.msg118
+msgid "Non-maskable interrupt requested."
+msgstr "Nem maszkolható megszakítás (NMI) kérve."
+
+#: frmmain.msg12
+#, object-pascal-format
+msgid "Error in line '%s'."
+msgstr "Hiba a(z) '%s'. sorban."
+
+#: frmmain.msg13
+msgid "No continuous viewer updates during a 100 ms execution delay."
+msgstr ""
+"Nincs folyamatos nézetfrissítés a 100 ms-os végrehajtási késleltetés alatt."
+
+#: frmmain.msg14
+#, object-pascal-format
+msgid "Bad or duplicated label name: '%s'."
+msgstr "Hibás vagy duplikált címkenév: '%s'."
+
+#: frmmain.msg18
+msgid "Missing help file."
+msgstr "Hiányzó súgófájl."
+
+#: frmmain.msg19
+msgid "Missing help viewer."
+msgstr "Hiányzó súgómegjelenítő."
+
+#: frmmain.msg28
+msgid "Save memory content to file"
+msgstr "Memóriatartalom mentése fájlba"
+
+#: frmmain.msg29
+#, object-pascal-format
+msgid "Cannot save memory content to '%s' binary file."
+msgstr "Nem sikerült a memóriatartalmat kimenteni a(z) '%s' bináris fájlba."
+
+#: frmmain.msg30
+msgid "Load memory content from file"
+msgstr "Memóriatartalom betöltése fájlból"
+
+#: frmmain.msg31
+#, object-pascal-format
+msgid "Cannot load memory content from '%s' binary file."
+msgstr "Nem sikerült a memóriatartalmat betölteni a(z) '%s' bináris fájlból."
+
+#: frmmain.msg32
+msgid "Binary file|*.bin|Intel hexa file|*.hex|All file|*.*"
+msgstr "Bináris fájl|*.bin|Intel hexa fájl|*.hex|Minden fájl|*.*"
+
+#: frmmain.msg35
+#, object-pascal-format
+msgid "Cannot load memory content from '%s' Intel hexa file."
+msgstr "Nem sikerült a memóriatartalmat betölteni a(z) '%s' Intel hexa fájlból."
+
+#: frmmain.msg36
+#, object-pascal-format
+msgid "Cannot save memory content to '%s' Intel hexa file."
+msgstr "Nem sikerült a memóriatartalmat kimenteni a(z) '%s' Intel hexa fájlba."
+
+#: frmmain.msg37
+msgid "Data converting error."
+msgstr "Adatkonverziós hiba."
+
+#: frmmain.msg38
+msgid "Checksum error."
+msgstr "Ellenőrzőösszeg hiba."
+
+#: frmmain.msg39
+msgid "Unexpected error."
+msgstr "Váratlan hiba."
+
+#: frmmain.msg40
+#, object-pascal-format
+msgid "Cannot load '%s' configuration file, using default values."
+msgstr ""
+"A(z) '%s' konfigurációs fájl nem tölthető be, alapértelmezések használata."
+
+#: frmmain.msg41
+#, object-pascal-format
+msgid "Cannot save '%s' configuration file."
+msgstr "A(z) '%s' konfigurációs fájlt nem sikerült menteni."
+
+#: frmmain.msg42
+msgid "No script, create or load one."
+msgstr "Nincs szkript, hozz létre vagy tölts be egyet."
+
+#: frmmain.msg43
+msgid "Confirmation"
+msgstr "Megerősítés"
+
+#: frmmain.msg44
+msgid "There is already a script, do you want to delete it?"
+msgstr "Már létezik egy szkript, törlöd?"
+
+#: frmmain.msg45
+msgid "CoreLAB scriptembly file|*.clsce|All file|*.*"
+msgstr "CoreLAB scriptembly fájl|*.clsce|Minden fájl|*.*"
+
+#: frmmain.msg46
+msgctxt "frmmain.msg46"
+msgid "Load script"
+msgstr "Szkript betöltése"
+
+#: frmmain.msg47
+msgctxt "frmmain.msg47"
+msgid "Save script"
+msgstr "Szkript mentése"
+
+#: frmmain.msg48
+#, object-pascal-format
+msgid "Cannot load script from '%s' file."
+msgstr "Nem sikerült betölteni a szkriptet a(z) '%s' fájlból."
+
+#: frmmain.msg49
+#, object-pascal-format
+msgid "Cannot save script to '%s' file."
+msgstr "Nem sikerült kimenteni a szkriptet a(z) '%s' fájlba."
+
+#: frmmain.msg50
+msgid "The script is unsaved, should I continue?"
+msgstr "A szkript nincs mentve, folytatod?"
+
+#: frmmain.msg52
+msgid "CoreLAB project file|*.clprj|All file|*.*"
+msgstr "CoreLAB projektfájl|*.clprj|Minden fájl|*.*"
+
+#: frmmain.msg53
+msgctxt "frmmain.msg53"
+msgid "Load project"
+msgstr "Projekt betöltése"
+
+#: frmmain.msg54
+msgctxt "frmmain.msg54"
+msgid "Save project"
+msgstr "Projekt mentése"
+
+#: frmmain.msg55
+#, object-pascal-format
+msgid "Cannot load project from '%s' file."
+msgstr "Nem sikerült betölteni a projektet a(z) '%s' fájlból."
+
+#: frmmain.msg56
+#, object-pascal-format
+msgid "Cannot save project to '%s' file."
+msgstr "Nem sikerült kimenteni a projektet a(z) '%s' fájlba."
+
+#: frmmain.msg57
+msgid "The project is unsaved, should I continue?"
+msgstr "A projekt nincs mentve, folytatod?"
+
+#: frmmain.msg58
+#, object-pascal-format
+msgid "The %s module named '%s' was successfully created."
+msgstr "A(z) '%s' nevű %s modul sikeresen létrejött."
+
+#: frmmain.msg59
+msgid "&Destroy"
+msgstr "Meg&semmisítés"
+
+#: frmmain.msg60
+#, object-pascal-format
+msgid "The module named '%s' was successfully destroyed."
+msgstr "A(z) '%s' nevű modul sikeresen megsemmisült."
+
+#: frmmain.msg61
+msgid "&Reset"
+msgstr "Alap&helyzet"
+
+#: frmmain.msg62
+#, object-pascal-format
+msgid "The module named '%s' has been reseted."
+msgstr "A(z) '%s' nevű modul alaphelyzetbe állt."
+
+#: frmmain.msg63
+msgid "&Enable"
+msgstr "&Engedélyezés"
+
+#: frmmain.msg64
+#, object-pascal-format
+msgid "The module named '%s' has been enabled."
+msgstr "A(z) '%s' nevű modul engedélyezve."
+
+#: frmmain.msg65
+msgid "&Disable"
+msgstr "Le&tiltás"
+
+#: frmmain.msg66
+#, object-pascal-format
+msgid "The module named '%s' has been disabled."
+msgstr "A(z) '%s' nevű modul letiltva."
+
+#: frmmain.msg67
+msgid "&Attach to the bus"
+msgstr "Cs&atolás a buszhoz"
+
+#: frmmain.msg68
+#, object-pascal-format
+msgid "The module named '%s' has been attached to the bus."
+msgstr "A(z) '%s' nevű modul a buszhoz lett csatolva."
+
+#: frmmain.msg70
+#, object-pascal-format
+msgid "The module named '%s' has been detached from the bus."
+msgstr "A(z) '%s' nevű modul le lett választva a buszról."
+
+#: frmmain.msg71
+msgid "Edit properties"
+msgstr "Tulajdonságok szerkesztése"
+
+#: frmmain.msg72
+msgid "&Load content"
+msgstr "Tartalom be&töltése"
+
+#: frmmain.msg73
+#, object-pascal-format
+msgid "Data loaded from '%s' into the module named '%s'."
+msgstr "Adatok betöltve a(z) '%s' fájlból a(z) '%s' nevű modulba."
+
+#: frmmain.msg74
+msgid "&Save content"
+msgstr "Tartalom &mentése"
+
+#: frmmain.msg75
+#, object-pascal-format
+msgid "Data saved from the module named '%s' to '%s'."
+msgstr "Adatok kimentve a(z) '%s' nevű modulból ide: '%s'."
+
+#: frmmain.msg76
+msgid "&Rename panel"
+msgstr "Panel át&nevezése"
+
+#: frmmain.msg79
+msgid "&Show"
+msgstr "&Megjelenítés"
+
+#: frmmain.msg80
+#, object-pascal-format
+msgid "Project loaded from '%s'."
+msgstr "Projekt betöltve innen: '%s'."
+
+#: frmmain.msg81
+#, object-pascal-format
+msgid "Project saved to '%s'."
+msgstr "Projekt elmentve ide: '%s'."
+
+#: frmmain.msg82
+#, object-pascal-format
+msgid "Script loaded from '%s'."
+msgstr "Szkript betöltve innen: '%s'."
+
+#: frmmain.msg83
+#, object-pascal-format
+msgid "Script saved to '%s'."
+msgstr "Szkript elmentve ide: '%s'."
+
+#: frmmain.msg84
+msgid "Cannot create backup file."
+msgstr "Nem sikerült biztonsági másolatot létrehozni."
+
+#: frmmain.msg85
+#, object-pascal-format
+msgid "Module named '%s' exists."
+msgstr "A(z) '%s' nevű modul már létezik."
+
+#: frmmain.msg86
+#, object-pascal-format
+msgid "Unknown command: '%s'."
+msgstr "Ismeretlen parancs: '%s'."
+
+#: frmmain.msg87
+#, object-pascal-format
+msgid "Invalid number of '%s' arguments."
+msgstr "Érvénytelen számú argumentum a(z) '%s' parancshoz."
+
+#: frmmain.msg88
+#, object-pascal-format
+msgid "Cannot be used '%s' in command line."
+msgstr "A(z) '%s' nem használható a parancssorban."
+
+#: frmmain.msg89
+#, object-pascal-format
+msgid "Cannot be used '%s' in script."
+msgstr "A(z) '%s' nem használható a szkriptben."
+
+#: frmmain.msg90
+#, object-pascal-format
+msgid "Cannot create %s module named '%s'."
+msgstr "Nem hozható létre a(z) '%s' nevű %s modul."
+
+#: frmmain.msg91
+#, object-pascal-format
+msgid "Cannot view module content named '%s'."
+msgstr "A(z) '%s' nevű modul tartalma nem tekinthető meg."
+
+#: frmmain.msg92
+#, object-pascal-format
+msgid "Cannot rename module named '%s'."
+msgstr "A(z) '%s' nevű modul nem nevezhető át."
+
+#: frmmain.msg93
+#, object-pascal-format
+msgid "Cannot show module named '%s'."
+msgstr "A(z) '%s' nevű modul nem jeleníthető meg."
+
+#: frmmain.msg94
+#, object-pascal-format
+msgid "Cannot destroy module named '%s'."
+msgstr "A(z) '%s' nevű modul nem semmisíthető meg."
+
+#: frmmain.msg95
+#, object-pascal-format
+msgid "Cannot reset module named '%s'."
+msgstr "A(z) '%s' nevű modul nem állítható alaphelyzetbe."
+
+#: frmmain.msg96
+#, object-pascal-format
+msgid "Cannot enable module named '%s'."
+msgstr "A(z) '%s' nevű modul nem engedélyezhető."
+
+#: frmmain.msg97
+#, object-pascal-format
+msgid "Cannot disable module named '%s'."
+msgstr "A(z) '%s' nevű modul nem tiltható le."
+
+#: frmmain.msg98
+#, object-pascal-format
+msgid "Cannot attach module named '%s' to bus."
+msgstr "A(z) '%s' nevű modul nem csatolható a buszhoz."
+
+#: frmmain.msg99
+#, object-pascal-format
+msgid "Cannot detach module named '%s' from bus."
+msgstr "A(z) '%s' nevű modul nem választható le a buszról."
+
+#: frmmoduleexplorer.msg01
+msgctxt "frmmoduleexplorer.msg01"
+msgid "Property"
+msgstr "Tulajdonság"
+
+#: frmmoduleexplorer.msg02
+msgctxt "frmmoduleexplorer.msg02"
+msgid "Value"
+msgstr "Érték"
+
+#: frmproperties.msg01
+msgctxt "frmproperties.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmproperties.msg02
+msgid "Cannot open memory module."
+msgstr "A memóriamodul nem nyitható meg."
+
+#: frmproperties.msg03
+msgctxt "frmproperties.msg03"
+msgid "Property"
+msgstr "Tulajdonság"
+
+#: frmproperties.msg04
+msgctxt "frmproperties.msg04"
+msgid "Value"
+msgstr "Érték"
+
+#: frmproperties.msg05
+msgid "The memory size can be 16 B-16 MB"
+msgstr "A memória mérete 16 B és 16 MB között lehet"
+
+#: frmproperties.msg06
+msgid "Data conversion error at save."
+msgstr "Adatkonverziós hiba a mentésnél."
+
+#: frmproperties.msg07
+msgid "The address value be 0-2^24"
+msgstr "A cím értéke 0 és 2^24 között lehet"
+
+#: frmrdwrioport.msg01
+msgctxt "frmrdwrioport.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmrdwrioport.msg02
+msgctxt "frmrdwrioport.msg02"
+msgid "Only hexadecimal values can be entered for address value."
+msgstr "A címhez csak hexadecimális érték adható meg."
+
+#: frmrdwrioport.msg03
+msgctxt "frmrdwrioport.msg03"
+msgid "Only hexadecimal values can be entered for data value."
+msgstr "Az adathoz csak hexadecimális érték adható meg."
+
+#: frmrdwrioport.msg06
+#, object-pascal-format
+msgid "Port address too high. (> %s)"
+msgstr "A port címe túl magas. (> %s)"
+
+#: frmrdwrioport.msg07
+msgid "Cannot open I/O port module."
+msgstr "Az I/O port modul nem nyitható meg."
+
+#: frmregviewer.msg01
+msgctxt "frmregviewer.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmregviewer.msg02
+msgid "Cannot open processor modul."
+msgstr "A processzormodul nem nyitható meg."
+
+#: frmregviewer.msg03
+msgid "Register"
+msgstr "Regiszter"
+
+#: frmregviewer.msg04
+msgctxt "frmregviewer.msg04"
+msgid "Value"
+msgstr "Érték"
+
+#: frmrunlogger.msg01
+msgctxt "frmrunlogger.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
+
+#: frmrunlogger.msg02
+msgctxt "frmrunlogger.msg02"
+msgid "Save log to file"
+msgstr "Napló mentése fájlba"
+
+#: frmrunlogger.msg03
+#, object-pascal-format
+msgctxt "frmrunlogger.msg03"
+msgid "Cannot save '%s' log file."
+msgstr "A(z) '%s' naplófájlt nem sikerült menteni."
+
+#: frmrunlogger.msg04
+msgctxt "frmrunlogger.msg04"
+msgid "Log file|*.log|All file|*.*"
+msgstr "Naplófájl|*.log|Minden fájl|*.*"
+
+#: frmrunlogger.msg05
+msgid "Counter"
+msgstr "Számláló"
+
+#: frmrunlogger.msg06
+msgctxt "frmrunlogger.msg06"
+msgid "Address"
+msgstr "Cím"
+
+#: frmrunlogger.msg07
+msgctxt "frmrunlogger.msg07"
+msgid "Opcode"
+msgstr "Műveleti kód"
+
+#: frmrunlogger.msg08
+msgctxt "frmrunlogger.msg08"
+msgid "Mnemonic"
+msgstr "Mnemónik"
+
+#: frmrunlogger.msg09
+msgid "Cycles"
+msgstr "Ciklusok"
+
+#: frmrunlogger.msg10
+msgid "Total cycles"
+msgstr "Összes ciklus"
+
+#: tform1.caption
+msgid "Form1"
+msgstr "Form1"
+
+#: tform1.combobox1.text
+msgid "1000 ms"
+msgstr "1000 ms"
+
+#: tform1.combobox1.texthint
+msgid "Run delay between steps in ms"
+msgstr "Futási késleltetés a lépések között (ms)"
+
+#: tform1.fchangeworkdirectory.caption
+msgid "&Change work directory"
+msgstr "Munkakönyvtár &módosítása"
+
+#: tform1.fchangeworkdirectory.hint
+msgid "Change work directory"
+msgstr "Munkakönyvtár módosítása"
+
+#: tform1.fexit.caption
+msgid "E&xit"
+msgstr "K&ilépés"
+
+#: tform1.fexit.hint
+msgid "Exit from application"
+msgstr "Kilépés az alkalmazásból"
+
+#: tform1.floadproject.caption
+msgid "&Load project..."
+msgstr "Projekt be&töltése..."
+
+#: tform1.floadproject.hint
+msgctxt "tform1.floadproject.hint"
+msgid "Load project"
+msgstr "Projekt betöltése"
+
+#: tform1.fnewproject.caption
+msgid "&New project"
+msgstr "Ú&j projekt"
+
+#: tform1.fnewproject.hint
+msgid "Create new project"
+msgstr "Új projekt létrehozása"
+
+#: tform1.frestartapplication.caption
+msgid "&Restart application"
+msgstr "Alkalmazás ú&jraindítása"
+
+#: tform1.frestartapplication.hint
+msgid "Restart application"
+msgstr "Alkalmazás újraindítása"
+
+#: tform1.fsaveproject.caption
+msgid "&Save project"
+msgstr "Projekt menté&se"
+
+#: tform1.fsaveproject.hint
+msgctxt "tform1.fsaveproject.hint"
+msgid "Save project"
+msgstr "Projekt mentése"
+
+#: tform1.fsaveprojectas.caption
+msgid "Save project &as..."
+msgstr "Projekt mentése má&sként..."
+
+#: tform1.fsaveprojectas.hint
+msgid "Save project as"
+msgstr "Projekt mentése másként"
+
+#: tform1.fsettings.caption
+msgid "Set&tings..."
+msgstr "Beállí&tások..."
+
+#: tform1.fsettings.hint
+msgctxt "tform1.fsettings.hint"
+msgid "Settings"
+msgstr "Beállítások"
+
+#: tform1.fswitchtointeractivemode.caption
+msgid "Switch to &interactive mode"
+msgstr "Váltás &interaktív módra"
+
+#: tform1.fswitchtointeractivemode.hint
+msgid "Switch to interactive mode"
+msgstr "Váltás interaktív módra"
+
+#: tform1.fswitchtoscriptmode.caption
+msgid "Switch to s&cript mode"
+msgstr "Váltás s&zkript módra"
+
+#: tform1.fswitchtoscriptmode.hint
+msgid "Switch to script mode"
+msgstr "Váltás szkript módra"
+
+#: tform1.habout.caption
+msgid "&About"
+msgstr "&Névjegy"
+
+#: tform1.hhelp.caption
+msgctxt "tform1.hhelp.caption"
+msgid "&Help"
+msgstr "&Súgó"
+
+#: tform1.ioattachtobus.caption
+msgctxt "tform1.ioattachtobus.caption"
+msgid "&Attach to bus..."
+msgstr "&Csatolás a buszhoz..."
+
+#: tform1.ioattachtobus.hint
+msgctxt "tform1.ioattachtobus.hint"
+msgid "Attach to bus"
+msgstr "Csatolás a buszhoz"
+
+#: tform1.iocreate.caption
+msgctxt "tform1.iocreate.caption"
+msgid "&Create..."
+msgstr "&Létrehozás..."
+
+#: tform1.iocreate.hint
+msgid "Create I/O port or device"
+msgstr "I/O port vagy eszköz létrehozása"
+
+#: tform1.iodestroy.caption
+msgid "&Destroy..."
+msgstr "Meg&semmisítés..."
+
+#: tform1.iodestroy.hint
+msgid "Destroy I/O port or device"
+msgstr "I/O port vagy eszköz megsemmisítése"
+
+#: tform1.iodetachfrombus.caption
+msgctxt "tform1.iodetachfrombus.caption"
+msgid "&Detach from bus..."
+msgstr "Le&választás a buszról..."
+
+#: tform1.iodetachfrombus.hint
+msgctxt "tform1.iodetachfrombus.hint"
+msgid "Detach from bus"
+msgstr "Leválasztás a buszról"
+
+#: tform1.iodisable.caption
+msgctxt "tform1.iodisable.caption"
+msgid "&Disable..."
+msgstr "Le&tiltás..."
+
+#: tform1.iodisable.hint
+msgid "Disable I/O module"
+msgstr "I/O modul letiltása"
+
+#: tform1.ioenable.caption
+msgctxt "tform1.ioenable.caption"
+msgid "&Enable..."
+msgstr "&Engedélyezés..."
+
+#: tform1.ioenable.hint
+msgid "Enable I/O module"
+msgstr "I/O modul engedélyezése"
+
+#: tform1.ioproperties.caption
+msgctxt "tform1.ioproperties.caption"
+msgid "&Properties..."
+msgstr "T&ulajdonságok..."
+
+#: tform1.ioproperties.hint
+msgctxt "tform1.ioproperties.hint"
+msgid "Properties"
+msgstr "Tulajdonságok"
+
+#: tform1.ioreadwrite.caption
+msgid "&Read/Write..."
+msgstr "&Olvasás/Írás..."
+
+#: tform1.ioreadwrite.hint
+msgid "Read/write I/O port"
+msgstr "I/O port olvasása/írása"
+
+#: tform1.ioreset.caption
+msgctxt "tform1.ioreset.caption"
+msgid "&Reset..."
+msgstr "Alap&helyzet..."
+
+#: tform1.ioreset.hint
+msgid "Reset I/O port or device"
+msgstr "I/O port vagy eszköz alaphelyzetbe állítása"
+
+#: tform1.mattachtobus.caption
+msgctxt "tform1.mattachtobus.caption"
+msgid "&Attach to bus..."
+msgstr "&Csatolás a buszhoz..."
+
+#: tform1.mattachtobus.hint
+msgctxt "tform1.mattachtobus.hint"
+msgid "Attach to bus"
+msgstr "Csatolás a buszhoz"
+
+#: tform1.mcreate.caption
+msgctxt "tform1.mcreate.caption"
+msgid "&Create..."
+msgstr "&Létrehozás..."
+
+#: tform1.mcreate.hint
+msgid "Create memory"
+msgstr "Memória létrehozása"
+
+#: tform1.mdestroy.caption
+msgctxt "tform1.mdestroy.caption"
+msgid "Destro&y..."
+msgstr "Meg&semmisítés..."
+
+#: tform1.mdestroy.hint
+msgid "Destroy memory"
+msgstr "Memória megsemmisítése"
+
+#: tform1.mdetachfrombus.caption
+msgctxt "tform1.mdetachfrombus.caption"
+msgid "&Detach from bus..."
+msgstr "Le&választás a buszról..."
+
+#: tform1.mdetachfrombus.hint
+msgctxt "tform1.mdetachfrombus.hint"
+msgid "Detach from bus"
+msgstr "Leválasztás a buszról"
+
+#: tform1.mdisable.caption
+msgctxt "tform1.mdisable.caption"
+msgid "&Disable..."
+msgstr "Le&tiltás..."
+
+#: tform1.mdisable.hint
+msgid "Disable memory modul"
+msgstr "Memóriamodul letiltása"
+
+#: tform1.menable.caption
+msgctxt "tform1.menable.caption"
+msgid "&Enable..."
+msgstr "&Engedélyezés..."
+
+#: tform1.menable.hint
+msgid "Enable memory modul"
+msgstr "Memóriamodul engedélyezése"
+
+#: tform1.menuitem1.caption
+msgid "&File"
+msgstr "&Fájl"
+
+#: tform1.menuitem2.caption
+msgid "&View"
+msgstr "&Nézet"
+
+#: tform1.menuitem3.caption
+msgid "&Processor"
+msgstr "&Processzor"
+
+#: tform1.menuitem4.caption
+msgid "&Memory"
+msgstr "&Memória"
+
+#: tform1.menuitem5.caption
+msgid "&I/O port"
+msgstr "&I/O port"
+
+#: tform1.menuitem6.caption
+msgid "&Operation"
+msgstr "Mű&velet"
+
+#: tform1.menuitem7.caption
+msgid "&Script"
+msgstr "&Szkript"
+
+#: tform1.menuitem8.caption
+msgctxt "tform1.menuitem8.caption"
+msgid "&Help"
+msgstr "&Súgó"
+
+#: tform1.mexaminedeposit.caption
+msgid "E&xamine/deposit..."
+msgstr "&Vizsgálat/beírás..."
+
+#: tform1.mexaminedeposit.hint
+msgid "Examine/deposit memory cell"
+msgstr "Memóriacella vizsgálata/beírása"
+
+#: tform1.mloadmemorycontent.caption
+msgid "&Load memory content..."
+msgstr "Memóriatartalom be&töltése..."
+
+#: tform1.mloadmemorycontent.hint
+msgid "Load memory content"
+msgstr "Memóriatartalom betöltése"
+
+#: tform1.mproperties.caption
+msgctxt "tform1.mproperties.caption"
+msgid "&Properties..."
+msgstr "T&ulajdonságok..."
+
+#: tform1.mproperties.hint
+msgctxt "tform1.mproperties.hint"
+msgid "Properties"
+msgstr "Tulajdonságok"
+
+#: tform1.mreset.caption
+msgctxt "tform1.mreset.caption"
+msgid "&Reset..."
+msgstr "Alap&helyzet..."
+
+#: tform1.mreset.hint
+msgid "Reset I/O port"
+msgstr "I/O port alaphelyzetbe állítása"
+
+#: tform1.msavememorycontent.caption
+msgid "&Save memory content..."
+msgstr "Memóriatartalom menté&se..."
+
+#: tform1.msavememorycontent.hint
+msgid "Save memory content"
+msgstr "Memóriatartalom mentése"
+
+#: tform1.omakesnapshot.caption
+msgid "Make snaps&hot"
+msgstr "&Pillanatkép készítése"
+
+#: tform1.omakesnapshot.hint
+msgid "Make snapshot"
+msgstr "Pillanatkép készítése"
+
+#: tform1.onmi.caption
+msgid "&NMI"
+msgstr "&NMI"
+
+#: tform1.onmi.hint
+msgid "NMI"
+msgstr "NMI"
+
+#: tform1.oresetall.caption
+msgid "R&eset all attached module"
+msgstr "&Minden csatolt modul alaphelyzetbe"
+
+#: tform1.oresetall.hint
+msgid "Reset all attached module"
+msgstr "Minden csatolt modul alaphelyzetbe állítása"
+
+#: tform1.orestoresnapshot.caption
+msgid "Rest&ore snapshot..."
+msgstr "Pillanatkép &visszaállítása..."
+
+#: tform1.orestoresnapshot.hint
+msgid "Rest&ore snapshot"
+msgstr "Pillanatkép visszaállítása"
+
+#: tform1.orun.caption
+msgid "&Run"
+msgstr "&Futtatás"
+
+#: tform1.orun.hint
+msgid "Run"
+msgstr "Futtatás"
+
+#: tform1.ostep.caption
+msgid "S&tep"
+msgstr "&Lépés"
+
+#: tform1.ostep.hint
+msgid "Step"
+msgstr "Lépés"
+
+#: tform1.ostop.caption
+msgid "&Stop"
+msgstr "&Leállítás"
+
+#: tform1.ostop.hint
+msgid "Stop"
+msgstr "Leállítás"
+
+#: tform1.pattachtobus.caption
+msgctxt "tform1.pattachtobus.caption"
+msgid "&Attach to bus..."
+msgstr "&Csatolás a buszhoz..."
+
+#: tform1.pattachtobus.hint
+msgctxt "tform1.pattachtobus.hint"
+msgid "Attach to bus"
+msgstr "Csatolás a buszhoz"
+
+#: tform1.pcreate.caption
+msgctxt "tform1.pcreate.caption"
+msgid "&Create..."
+msgstr "&Létrehozás..."
+
+#: tform1.pcreate.hint
+msgid "Create processor"
+msgstr "Processzor létrehozása"
+
+#: tform1.pdestroy.caption
+msgctxt "tform1.pdestroy.caption"
+msgid "Destro&y..."
+msgstr "Meg&semmisítés..."
+
+#: tform1.pdestroy.hint
+msgid "Destroy processor"
+msgstr "Processzor megsemmisítése"
+
+#: tform1.pdetachfrombus.caption
+msgctxt "tform1.pdetachfrombus.caption"
+msgid "&Detach from bus..."
+msgstr "Le&választás a buszról..."
+
+#: tform1.pdetachfrombus.hint
+msgctxt "tform1.pdetachfrombus.hint"
+msgid "Detach from bus"
+msgstr "Leválasztás a buszról"
+
+#: tform1.pdisable.caption
+msgctxt "tform1.pdisable.caption"
+msgid "&Disable..."
+msgstr "Le&tiltás..."
+
+#: tform1.pdisable.hint
+msgid "Disable processor module"
+msgstr "Processzormodul letiltása"
+
+#: tform1.penable.caption
+msgctxt "tform1.penable.caption"
+msgid "&Enable..."
+msgstr "&Engedélyezés..."
+
+#: tform1.penable.hint
+msgid "Enable processor module"
+msgstr "Processzormodul engedélyezése"
+
+#: tform1.pproperties.caption
+msgctxt "tform1.pproperties.caption"
+msgid "&Properties..."
+msgstr "T&ulajdonságok..."
+
+#: tform1.pproperties.hint
+msgctxt "tform1.pproperties.hint"
+msgid "Properties"
+msgstr "Tulajdonságok"
+
+#: tform1.preset.caption
+msgctxt "tform1.preset.caption"
+msgid "&Reset..."
+msgstr "Alap&helyzet..."
+
+#: tform1.preset.hint
+msgid "Reset processor"
+msgstr "Processzor alaphelyzetbe állítása"
+
+#: tform1.sloadscript.caption
+msgid "&Load script..."
+msgstr "Szkript be&töltése..."
+
+#: tform1.sloadscript.hint
+msgctxt "tform1.sloadscript.hint"
+msgid "Load script"
+msgstr "Szkript betöltése"
+
+#: tform1.snewscript.caption
+msgid "&New script"
+msgstr "Ú&j szkript"
+
+#: tform1.snewscript.hint
+msgid "New script"
+msgstr "Új szkript"
+
+#: tform1.srunscript.caption
+msgid "&Run script"
+msgstr "Szkript &futtatása"
+
+#: tform1.srunscript.hint
+msgid "Run script"
+msgstr "Szkript futtatása"
+
+#: tform1.ssavescript.caption
+msgctxt "tform1.ssavescript.caption"
+msgid "Save script"
+msgstr "Szkript menté&se"
+
+#: tform1.ssavescript.hint
+msgctxt "tform1.ssavescript.hint"
+msgid "Save script"
+msgstr "Szkript mentése"
+
+#: tform1.ssavescriptas.caption
+msgid "S&ave script as..."
+msgstr "Szkript mentése má&sként..."
+
+#: tform1.ssavescriptas.hint
+msgid "Save script as"
+msgstr "Szkript mentése másként"
+
+#: tform1.sstepscript.caption
+msgid "St&ep script"
+msgstr "Szkript lépé&senként"
+
+#: tform1.sstepscript.hint
+msgid "Step script"
+msgstr "Szkript léptetése"
+
+#: tform1.sstopscript.caption
+msgid "S&top script"
+msgstr "Szkript l&eállítása"
+
+#: tform1.sstopscript.hint
+msgid "Stop script"
+msgstr "Szkript leállítása"
+
+#: tform1.tabsheet1.caption
+msgctxt "tform1.tabsheet1.caption"
+msgid "Operation"
+msgstr "Művelet"
+
+#: tform1.tabsheet2.caption
+msgid "Processor"
+msgstr "Processzor"
+
+#: tform1.tabsheet3.caption
+msgid "Memory"
+msgstr "Memória"
+
+#: tform1.tabsheet4.caption
+msgid "I/O port"
+msgstr "I/O port"
+
+#: tform1.tabsheet5.caption
+msgid "Script"
+msgstr "Szkript"
+
+#: tform1.toolbar1.caption
+msgid "ToolBar1"
+msgstr "ToolBar1"
+
+#: tform1.toolbar2.caption
+msgid "ToolBar2"
+msgstr "ToolBar2"
+
+#: tform1.toolbar3.caption
+msgid "ToolBar3"
+msgstr "ToolBar3"
+
+#: tform1.toolbar4.caption
+msgid "ToolBar4"
+msgstr "ToolBar4"
+
+#: tform1.toolbar5.caption
+msgid "ToolBar5"
+msgstr "ToolBar5"
+
+#: tform1.toolbar6.caption
+msgid "ToolBar6"
+msgstr "ToolBar6"
+
+#: tform1.toolbar7.caption
+msgid "ToolBar7"
+msgstr "ToolBar7"
+
+#: tform1.toolbutton16.caption
+msgid "ToolButton16"
+msgstr "ToolButton16"
+
+#: tform1.toolbutton22.caption
+msgid "ToolButton22"
+msgstr "ToolButton22"
+
+#: tform1.toolbutton25.caption
+msgid "ToolButton25"
+msgstr "ToolButton25"
+
+#: tform1.toolbutton27.caption
+msgid "ToolButton27"
+msgstr "ToolButton27"
+
+#: tform1.toolbutton30.caption
+msgid "ToolButton30"
+msgstr "ToolButton30"
+
+#: tform1.toolbutton33.caption
+msgid "ToolButton33"
+msgstr "ToolButton33"
+
+#: tform1.toolbutton37.caption
+msgid "ToolButton37"
+msgstr "ToolButton37"
+
+#: tform1.toolbutton44.caption
+msgid "ToolButton44"
+msgstr "ToolButton44"
+
+#: tform1.toolbutton47.caption
+msgid "ToolButton47"
+msgstr "ToolButton47"
+
+#: tform1.toolbutton51.caption
+msgid "ToolButton51"
+msgstr "ToolButton51"
+
+#: tform1.toolbutton55.caption
+msgid "ToolButton55"
+msgstr "ToolButton55"
+
+#: tform1.toolbutton57.caption
+msgid "ToolButton57"
+msgstr "ToolButton57"
+
+#: tform1.toolbutton60.caption
+msgid "ToolButton60"
+msgstr "ToolButton60"
+
+#: tform1.toolbutton63.caption
+msgid "ToolButton63"
+msgstr "ToolButton63"
+
+#: tform1.toolbutton68.caption
+msgid "ToolButton68"
+msgstr "ToolButton68"
+
+#: tform1.toolbutton71.caption
+msgid "ToolButton71"
+msgstr "ToolButton71"
+
+#: tform1.toolbutton74.caption
+msgid "ToolButton74"
+msgstr "ToolButton74"
+
+#: tform1.toolbutton75.caption
+msgid "ToolButton75"
+msgstr "ToolButton75"
+
+#: tform1.toolbutton79.caption
+msgid "ToolButton79"
+msgstr "ToolButton79"
+
+#: tform1.toolbutton80.caption
+msgid "ToolButton80"
+msgstr "ToolButton80"
+
+#: tform1.toolbutton9.caption
+msgid "ToolButton9"
+msgstr "ToolButton9"
+
+#: tform1.vmoduleexplorer.caption
+msgid "Show Module Explorer..."
+msgstr "&Modulböngésző megjelenítése..."
+
+#: tform1.vmoduleexplorer.hint
+msgid "Show Module Explorer"
+msgstr "Modulböngésző megjelenítése"
+
+#: tform1.vmoveresizeiopanel.caption
+msgid "Move/resize I/O panel..."
+msgstr "I/O panel mozgatása/átméretezése..."
+
+#: tform1.vmoveresizeiopanel.hint
+msgid "Move/resize I/O panel"
+msgstr "I/O panel mozgatása/átméretezése"
+
+#: tform1.vrenameiopanel.caption
+msgid "Rename I/O panel..."
+msgstr "I/O panel átnevezése..."
+
+#: tform1.vrenameiopanel.hint
+msgid "Rename I/O panel"
+msgstr "I/O panel átnevezése"
+
+#: tform1.vshowbreakpointmanager.caption
+msgid "Show &Breakpoint Manager..."
+msgstr "&Töréspont-kezelő megjelenítése..."
+
+#: tform1.vshowbreakpointmanager.hint
+msgid "Show Breakpoint Manager"
+msgstr "Töréspont-kezelő megjelenítése"
+
+#: tform1.vshowbuslogger.caption
+msgid "Show &BusLogger..."
+msgstr "&BuszNaplózó megjelenítése..."
+
+#: tform1.vshowbuslogger.hint
+msgid " &BusLogger"
+msgstr " &BuszNaplózó"
+
+#: tform1.vshowhexviewer.caption
+msgid "Show He&xViewer..."
+msgstr "He&xNézegető megjelenítése..."
+
+#: tform1.vshowhexviewer.hint
+msgid "Show HexViewer"
+msgstr "HexNézegető megjelenítése"
+
+#: tform1.vshowintlogger.caption
+msgid "Show &IntLogger..."
+msgstr "&MegszakításNaplózó megjelenítése..."
+
+#: tform1.vshowintlogger.hint
+msgid "Show IntLogger"
+msgstr "MegszakításNaplózó megjelenítése"
+
+#: tform1.vshowiopanel.caption
+msgid "Show I/O panel..."
+msgstr "I/O panel megjelenítése..."
+
+#: tform1.vshowiopanel.hint
+msgid "Show I/O panel"
+msgstr "I/O panel megjelenítése"
+
+#: tform1.vshowregviewer.caption
+msgid "Show Re&gViewer..."
+msgstr "Re&giszterNézegető megjelenítése..."
+
+#: tform1.vshowregviewer.hint
+msgid "Show RegViewer"
+msgstr "RegiszterNézegető megjelenítése"
+
+#: tform1.vshowrunlogger.caption
+msgid "Show &RunLogger..."
+msgstr "&FutásNaplózó megjelenítése..."
+
+#: tform1.vshowrunlogger.hint
+msgid "Show RunLogger"
+msgstr "FutásNaplózó megjelenítése"
+
+#: tform1.vshowscriptconsole.caption
+msgid "Show Scrip&tConsole..."
+msgstr "Szkrip&tKonzol megjelenítése..."
+
+#: tform1.vshowscriptconsole.hint
+msgid "Show ScriptConsole"
+msgstr "SzkriptKonzol megjelenítése"
+
+#: tform1.vshowscripteditor.caption
+msgid "Show S&criptEditor..."
+msgstr "SzkriptSzerkesztő meg&jelenítése..."
+
+#: tform1.vshowscripteditor.hint
+msgid "Show ScriptEditor"
+msgstr "SzkriptSzerkesztő megjelenítése"
+
+#: tform10.button1.caption
+msgctxt "tform10.button1.caption"
+msgid "&Apply"
+msgstr "&Alkalmaz"
+
+#: tform10.button2.caption
+msgid "&Add new"
+msgstr "Új hozzá&adása"
+
+#: tform10.button3.caption
+msgctxt "tform10.button3.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform10.caption
+msgid "Breakpoint Manager"
+msgstr "Töréspont-kezelő"
+
+#: tform11.button1.caption
+msgctxt "tform11.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform11.button2.caption
+msgid "&Put"
+msgstr "&Beírás"
+
+#: tform11.button3.caption
+msgid "&Get"
+msgstr "&Kiolvasás"
+
+#: tform11.caption
+msgid "RegViewer"
+msgstr "RegiszterNézegető"
+
+#: tform12.button1.caption
+msgctxt "tform12.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform12.button2.caption
+msgctxt "tform12.button2.caption"
+msgid "Clea&r"
+msgstr "Tör&lés"
+
+#: tform12.caption
+msgctxt "tform12.caption"
+msgid "ScriptConsole"
+msgstr "SzkriptKonzol"
+
+#: tform13.button1.caption
+msgctxt "tform13.button1.caption"
+msgid "&Set"
+msgstr "&Beállítás"
+
+#: tform13.button2.caption
+msgctxt "tform13.button2.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform13.caption
+msgid "Set panel caption"
+msgstr "Panel feliratának beállítása"
+
+#: tform13.label1.caption
+msgid "New caption:"
+msgstr "Új felirat:"
+
+#: tform14.button1.caption
+msgctxt "tform14.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform14.button2.caption
+msgctxt "tform14.button2.caption"
+msgid "Clea&r"
+msgstr "Tör&lés"
+
+#: tform14.button3.caption
+msgctxt "tform14.button3.caption"
+msgid "&Save..."
+msgstr "Menté&s..."
+
+#: tform14.caption
+msgctxt "tform14.caption"
+msgid "BusLogger"
+msgstr "BuszNaplózó"
+
+#: tform14.drawgrid1.columns[0].title.caption
+msgctxt "tform14.drawgrid1.columns[0].title.caption"
+msgid "Operation"
+msgstr "Művelet"
+
+#: tform14.drawgrid1.columns[1].title.caption
+msgctxt "tform14.drawgrid1.columns[1].title.caption"
+msgid "Device"
+msgstr "Eszköz"
+
+#: tform14.drawgrid1.columns[2].title.caption
+msgctxt "tform14.drawgrid1.columns[2].title.caption"
+msgid "Address"
+msgstr "Cím"
+
+#: tform14.drawgrid1.columns[3].title.caption
+msgctxt "tform14.drawgrid1.columns[3].title.caption"
+msgid "Rel. address"
+msgstr "Rel. cím"
+
+#: tform14.drawgrid1.columns[4].title.caption
+msgctxt "tform14.drawgrid1.columns[4].title.caption"
+msgid "Data"
+msgstr "Adat"
+
+#: tform14.drawgrid1.columns[5].title.caption
+msgctxt "tform14.drawgrid1.columns[5].title.caption"
+msgid "Status"
+msgstr "Állapot"
+
+#: tform14.editbutton1.hint
+msgctxt "tform14.editbutton1.hint"
+msgid "Search in log records"
+msgstr "Keresés a naplóbejegyzésekben"
+
+#: tform15.button1.caption
+msgctxt "tform15.button1.caption"
+msgid "&Apply"
+msgstr "&Alkalmaz"
+
+#: tform15.button2.caption
+msgctxt "tform15.button2.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform15.caption
+msgctxt "tform15.caption"
+msgid "Properties"
+msgstr "Tulajdonságok"
+
+#: tform16.button1.caption
+msgctxt "tform16.button1.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform16.button5.caption
+msgid "&Instantiate"
+msgstr "&Példányosítás"
+
+#: tform16.caption
+msgid "Select plugin"
+msgstr "Bővítmény kiválasztása"
+
+#: tform16.label1.caption
+msgid "Name:"
+msgstr "Név:"
+
+#: tform16.label2.caption
+msgid "Available plugins:"
+msgstr "Elérhető bővítmények:"
+
+#: tform17.button1.caption
+msgctxt "tform17.button1.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform17.button5.caption
+msgctxt "tform17.button5.caption"
+msgid "Button5"
+msgstr "Button5"
+
+#: tform17.caption
+msgid "Select module"
+msgstr "Modul kiválasztása"
+
+#: tform17.label2.caption
+msgid "Available modules:"
+msgstr "Elérhető modulok:"
+
+#: tform18.button1.caption
+msgctxt "tform18.button1.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform18.button5.caption
+msgctxt "tform18.button5.caption"
+msgid "&Set"
+msgstr "&Beállítás"
+
+#: tform18.caption
+msgctxt "tform18.caption"
+msgid "Settings"
+msgstr "Beállítások"
+
+#: tform18.checkbox1.caption
+msgid "Line numbering"
+msgstr "Sorszámozás"
+
+#: tform18.checkbox2.caption
+msgid "Syntax highlighting"
+msgstr "Szintaxiskiemelés"
+
+#: tform18.label1.caption
+msgid "Instruction:"
+msgstr "Utasítás:"
+
+#: tform18.label10.caption
+msgctxt "tform18.label10.caption"
+msgid "Address:"
+msgstr "Cím:"
+
+#: tform18.label11.caption
+msgctxt "tform18.label11.caption"
+msgid "Data:"
+msgstr "Adat:"
+
+#: tform18.label12.caption
+msgctxt "tform18.label12.caption"
+msgid "Line selector:"
+msgstr "Sorkiválasztó:"
+
+#: tform18.label13.caption
+msgctxt "tform18.label13.caption"
+msgid "Odd lines background:"
+msgstr "Páratlan sorok háttere:"
+
+#: tform18.label14.caption
+msgctxt "tform18.label14.caption"
+msgid "Even lines background:"
+msgstr "Páros sorok háttere:"
+
+#: tform18.label15.caption
+msgid "Editor font:"
+msgstr "Szerkesztő betűtípusa:"
+
+#: tform18.label16.caption
+msgid "Editor background:"
+msgstr "Szerkesztő háttere:"
+
+#: tform18.label17.caption
+msgid "Gutter font:"
+msgstr "Margó betűtípusa:"
+
+#: tform18.label18.caption
+msgid "Sender:"
+msgstr "Küldő:"
+
+#: tform18.label19.caption
+msgid "Vector:"
+msgstr "Vektor:"
+
+#: tform18.label2.caption
+msgctxt "tform18.label2.caption"
+msgid "Address:"
+msgstr "Cím:"
+
+#: tform18.label20.caption
+msgctxt "tform18.label20.caption"
+msgid "Status:"
+msgstr "Állapot:"
+
+#: tform18.label21.caption
+msgid "Flag:"
+msgstr "Jelzőbájt:"
+
+#: tform18.label22.caption
+msgctxt "tform18.label22.caption"
+msgid "Line selector:"
+msgstr "Sorkiválasztó:"
+
+#: tform18.label23.caption
+msgctxt "tform18.label23.caption"
+msgid "Odd lines background:"
+msgstr "Páratlan sorok háttere:"
+
+#: tform18.label24.caption
+msgctxt "tform18.label24.caption"
+msgid "Even lines background:"
+msgstr "Páros sorok háttere:"
+
+#: tform18.label25.caption
+msgctxt "tform18.label25.caption"
+msgid "Font:"
+msgstr "Betűtípus:"
+
+#: tform18.label26.caption
+msgctxt "tform18.label26.caption"
+msgid "Background:"
+msgstr "Háttér:"
+
+#: tform18.label27.caption
+msgid "Operation:"
+msgstr "Művelet:"
+
+#: tform18.label28.caption
+msgid "Device:"
+msgstr "Eszköz:"
+
+#: tform18.label29.caption
+msgctxt "tform18.label29.caption"
+msgid "Address:"
+msgstr "Cím:"
+
+#: tform18.label3.caption
+msgid "Operation code:"
+msgstr "Műveleti kód:"
+
+#: tform18.label30.caption
+msgid "Relative address:"
+msgstr "Relatív cím:"
+
+#: tform18.label31.caption
+msgctxt "tform18.label31.caption"
+msgid "Status:"
+msgstr "Állapot:"
+
+#: tform18.label32.caption
+msgctxt "tform18.label32.caption"
+msgid "Line selector:"
+msgstr "Sorkiválasztó:"
+
+#: tform18.label33.caption
+msgctxt "tform18.label33.caption"
+msgid "Odd lines background:"
+msgstr "Páratlan sorok háttere:"
+
+#: tform18.label34.caption
+msgctxt "tform18.label34.caption"
+msgid "Even lines background:"
+msgstr "Páros sorok háttere:"
+
+#: tform18.label35.caption
+msgctxt "tform18.label35.caption"
+msgid "Data:"
+msgstr "Adat:"
+
+#: tform18.label36.caption
+msgid "Cycles:"
+msgstr "Ciklusok:"
+
+#: tform18.label37.caption
+msgid "Total cycles:"
+msgstr "Összes ciklus:"
+
+#: tform18.label4.caption
+msgid "Mnemonic:"
+msgstr "Mnemónik:"
+
+#: tform18.label5.caption
+msgctxt "tform18.label5.caption"
+msgid "Line selector:"
+msgstr "Sorkiválasztó:"
+
+#: tform18.label6.caption
+msgctxt "tform18.label6.caption"
+msgid "Odd lines background:"
+msgstr "Páratlan sorok háttere:"
+
+#: tform18.label7.caption
+msgctxt "tform18.label7.caption"
+msgid "Even lines background:"
+msgstr "Páros sorok háttere:"
+
+#: tform18.label8.caption
+msgctxt "tform18.label8.caption"
+msgid "Font:"
+msgstr "Betűtípus:"
+
+#: tform18.label9.caption
+msgctxt "tform18.label9.caption"
+msgid "Background:"
+msgstr "Háttér:"
+
+#: tform18.tabsheet1.caption
+msgctxt "tform18.tabsheet1.caption"
+msgid "RunLogger"
+msgstr "FutásNaplózó"
+
+#: tform18.tabsheet2.caption
+msgid "SysConsole"
+msgstr "RendszerKonzol"
+
+#: tform18.tabsheet3.caption
+msgctxt "tform18.tabsheet3.caption"
+msgid "HexViewer"
+msgstr "HexNézegető"
+
+#: tform18.tabsheet4.caption
+msgctxt "tform18.tabsheet4.caption"
+msgid "ScriptEditor"
+msgstr "SzkriptSzerkesztő"
+
+#: tform18.tabsheet5.caption
+msgctxt "tform18.tabsheet5.caption"
+msgid "ScriptConsole"
+msgstr "SzkriptKonzol"
+
+#: tform18.tabsheet6.caption
+msgctxt "tform18.tabsheet6.caption"
+msgid "IntLogger"
+msgstr "MegszakításNaplózó"
+
+#: tform18.tabsheet7.caption
+msgctxt "tform18.tabsheet7.caption"
+msgid "BusLogger"
+msgstr "BuszNaplózó"
+
+#: tform2.button1.caption
+msgctxt "tform2.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform2.caption
+msgid "About"
+msgstr "Névjegy"
+
+#: tform2.label1.caption
+msgid "Label1"
+msgstr "Label1"
+
+#: tform2.label2.caption
+msgid "Label2"
+msgstr "Label2"
+
+#: tform2.label3.caption
+msgid "Label3"
+msgstr "Label3"
+
+#: tform2.label4.caption
+msgid "Label4"
+msgstr "Label4"
+
+#: tform2.label5.caption
+msgid "Label5"
+msgstr "Label5"
+
+#: tform2.label6.caption
+msgid "Web:"
+msgstr "Web:"
+
+#: tform2.label7.caption
+msgid "E-mail:"
+msgstr "E-mail:"
+
+#: tform2.label8.caption
+msgid "Label8"
+msgstr "Label8"
+
+#: tform3.button1.caption
+msgctxt "tform3.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform3.caption
+msgctxt "tform3.caption"
+msgid "HexViewer"
+msgstr "HexNézegető"
+
+#: tform3.drawgrid1.columns[0].title.caption
+msgid "Title"
+msgstr "Cím"
+
+#: tform3.editbutton1.hint
+msgid "Search in dump"
+msgstr "Keresés a memóriaképben"
+
+#: tform4.button1.caption
+msgctxt "tform4.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform4.button2.caption
+msgctxt "tform4.button2.caption"
+msgid "Clea&r"
+msgstr "Tör&lés"
+
+#: tform4.button3.caption
+msgctxt "tform4.button3.caption"
+msgid "&Save..."
+msgstr "Menté&s..."
+
+#: tform4.caption
+msgctxt "tform4.caption"
+msgid "RunLogger"
+msgstr "FutásNaplózó"
+
+#: tform4.drawgrid1.columns[0].title.caption
+msgid "Count"
+msgstr "Szám"
+
+#: tform4.drawgrid1.columns[1].title.caption
+msgctxt "tform4.drawgrid1.columns[1].title.caption"
+msgid "Address"
+msgstr "Cím"
+
+#: tform4.drawgrid1.columns[2].title.caption
+msgctxt "tform4.drawgrid1.columns[2].title.caption"
+msgid "Opcode"
+msgstr "Műveleti kód"
+
+#: tform4.drawgrid1.columns[3].title.caption
+msgctxt "tform4.drawgrid1.columns[3].title.caption"
+msgid "Mnemonic"
+msgstr "Mnemónik"
+
+#: tform4.drawgrid1.columns[4].title.caption
+msgid "Cycle"
+msgstr "Ciklus"
+
+#: tform4.drawgrid1.columns[5].title.caption
+msgid "Total cycle"
+msgstr "Összes ciklus"
+
+#: tform4.editbutton1.hint
+msgctxt "tform4.editbutton1.hint"
+msgid "Search in log records"
+msgstr "Keresés a naplóbejegyzésekben"
+
+#: tform5.button3.caption
+msgid "&Examine"
+msgstr "&Vizsgálat"
+
+#: tform5.button4.caption
+msgid "&Deposit"
+msgstr "&Beírás"
+
+#: tform5.button5.caption
+msgctxt "tform5.button5.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform5.caption
+msgid "Examine/deposit"
+msgstr "Vizsgálat/beírás"
+
+#: tform5.editbutton1.text
+msgctxt "tform5.editbutton1.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+#: tform5.editbutton2.text
+msgid "00"
+msgstr "00"
+
+#: tform5.label1.caption
+msgid "Relative address"
+msgstr "Relatív cím"
+
+#: tform5.label2.caption
+msgctxt "tform5.label2.caption"
+msgid "Data"
+msgstr "Adat"
+
+#: tform51.button3.caption
+msgid "&Read"
+msgstr "&Olvasás"
+
+#: tform51.button4.caption
+msgid "&Write"
+msgstr "&Írás"
+
+#: tform51.caption
+msgid "Read/write"
+msgstr "Olvasás/írás"
+
+#: tform6.caption
+msgctxt "tform6.caption"
+msgid "ScriptEditor"
+msgstr "SzkriptSzerkesztő"
+
+#: tform6.statusbar1.panels[1].text
+msgid "1:1"
+msgstr "1:1"
+
+#: tform6.statusbar1.panels[2].text
+msgid "INS"
+msgstr "INS"
+
+#: tform7.button1.caption
+msgctxt "tform7.button1.caption"
+msgid "&Cancel"
+msgstr "Még&se"
+
+#: tform7.button5.caption
+msgctxt "tform7.button5.caption"
+msgid "Button5"
+msgstr "Button5"
+
+#: tform7.caption
+msgid "Form7"
+msgstr "Form7"
+
+#: tform7.editbutton1.text
+msgctxt "tform7.editbutton1.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+#: tform7.editbutton2.text
+msgctxt "tform7.editbutton2.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+#: tform7.label1.caption
+msgid "Start address"
+msgstr "Kezdőcím"
+
+#: tform7.label2.caption
+msgid "End address"
+msgstr "Végcím"
+
+#: tform7.label3.caption
+msgid "Bytes"
+msgstr "Bájtok"
+
+#: tform8.button1.caption
+msgctxt "tform8.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
+
+#: tform8.button2.caption
+msgctxt "tform8.button2.caption"
+msgid "Clea&r"
+msgstr "Tör&lés"
+
+#: tform8.button3.caption
+msgctxt "tform8.button3.caption"
+msgid "&Save..."
+msgstr "Menté&s..."
+
+#: tform8.caption
+msgctxt "tform8.caption"
+msgid "IntLogger"
+msgstr "MegszakításNaplózó"
+
+#: tform8.drawgrid1.columns[0].title.caption
+msgctxt "tform8.drawgrid1.columns[0].title.caption"
+msgid "Sender"
+msgstr "Küldő"
+
+#: tform8.drawgrid1.columns[1].title.caption
+msgctxt "tform8.drawgrid1.columns[1].title.caption"
+msgid "Vector"
+msgstr "Vektor"
+
+#: tform8.drawgrid1.columns[2].title.caption
+msgctxt "tform8.drawgrid1.columns[2].title.caption"
+msgid "Status"
+msgstr "Állapot"
+
+#: tform8.drawgrid1.columns[3].title.caption
+msgctxt "tform8.drawgrid1.columns[3].title.caption"
+msgid "Flag"
+msgstr "Jelzőbájt"
+
+#: tform8.editbutton1.hint
+msgctxt "tform8.editbutton1.hint"
+msgid "Search in log records"
+msgstr "Keresés a naplóbejegyzésekben"
+
+#: tform9.caption
+msgid "Module Explorer"
+msgstr "Modulböngésző"
+
+#: tform9.editbutton1.buttonhint
+msgid "Search in tree"
+msgstr "Keresés a fában"
+
+#: tform9.menuitem1.caption
+msgid "MenuItem1"
+msgstr "MenuItem1"
+
+#: tform9.menuitem2.caption
+msgid "MenuItem2"
+msgstr "MenuItem2"
+
+#: tform9.menuitem3.caption
+msgid "MenuItem3"
+msgstr "MenuItem3"
+
+#: tform9.menuitem4.caption
+msgid "MenuItem4"
+msgstr "MenuItem4"
+
+#: tform9.menuitem5.caption
+msgid "MenuItem5"
+msgstr "MenuItem5"
+
+#: tform9.menuitem6.caption
+msgid "MenuItem6"
+msgstr "MenuItem6"
+
+#: tform9.menuitem7.caption
+msgid "MenuItem7"
+msgstr "MenuItem7"
+
+#: tframe1.button3.caption
+msgid "Remove"
+msgstr "Eltávolítás"
+
+#: tframe1.checkbox1.caption
+msgid "Enable"
+msgstr "Engedélyezés"

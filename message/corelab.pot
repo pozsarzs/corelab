@@ -347,11 +347,16 @@ msgstr ""
 
 #: frmmain.msg12
 #, object-pascal-format
-msgid "Command '%s' execute error."
+msgid "Error in line '%s'."
 msgstr ""
 
 #: frmmain.msg13
 msgid "No continuous viewer updates during a 100 ms execution delay."
+msgstr ""
+
+#: frmmain.msg14
+#, object-pascal-format
+msgid "Bad or duplicated label name: '%s'."
 msgstr ""
 
 #: frmmain.msg18
@@ -456,10 +461,6 @@ msgstr ""
 msgid "The script is unsaved, should I continue?"
 msgstr ""
 
-#: frmmain.msg51
-msgid "There is already a project, do you want to delete it?"
-msgstr ""
-
 #: frmmain.msg52
 msgid "CoreLAB project file|*.clprj|All file|*.*"
 msgstr ""
@@ -538,10 +539,6 @@ msgstr ""
 msgid "The module named '%s' has been attached to the bus."
 msgstr ""
 
-#: frmmain.msg69
-msgid "&Detach from the bus"
-msgstr ""
-
 #: frmmain.msg70
 #, object-pascal-format
 msgid "The module named '%s' has been detached from the bus."
@@ -571,14 +568,6 @@ msgstr ""
 
 #: frmmain.msg76
 msgid "&Rename panel"
-msgstr ""
-
-#: frmmain.msg77
-msgid "&Move/resize panel"
-msgstr ""
-
-#: frmmain.msg78
-msgid "&Show panel"
 msgstr ""
 
 #: frmmain.msg79

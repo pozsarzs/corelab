@@ -4,7 +4,7 @@
         "body": [
             "ADD value"
         ],
-        "description": "Add value to target in-place."
+        "description": "Add value to RA in-place."
     },
     "AND": {
         "prefix": "AND",
@@ -37,7 +37,7 @@
     "BIT": {
         "prefix": "BIT",
         "body": [
-            "BIT bit_index"
+            "BIT index"
         ],
         "description": "Check the specified bit."
     },
@@ -81,14 +81,14 @@
         "body": [
             "COMP value"
         ],
-        "description": "Compare target with value by subtraction."
+        "description": "Compare RA with value by subtraction."
     },
     "CONV": {
         "prefix": "CONV",
         "body": [
-            "CONV base"
+            "CONV target base"
         ],
-        "description": "Convert number in different numeral systems in-place."
+        "description": "Convert the number in RA into base 2|8|16."
     },
     "CRIO": {
         "prefix": "CRIO",
@@ -116,7 +116,7 @@
         "body": [
             "DEC"
         ],
-        "description": "Decrement integer target by 1."
+        "description": "Decrement RA by 1 in-place."
     },
     "DIIO": {
         "prefix": "DIIO",
@@ -186,14 +186,14 @@
         "body": [
             "EDME instancename"
         ],
-        "description": "Show examine/deposit window."
+        "description": "Show examine/deposit window"
     },
     "END": {
         "prefix": "END",
         "body": [
             "END"
         ],
-        "description": "End of script."
+        "description": "End of main program."
     },
     "ENIO": {
         "prefix": "ENIO",
@@ -230,89 +230,61 @@
         ],
         "description": "Terminate the script."
     },
-    "HELP": {
-        "prefix": "HELP",
-        "body": [
-            "HELP [command]"
-        ],
-        "description": "Display general help overview or detailed usage for a specific command."
-    },
     "INC": {
         "prefix": "INC",
         "body": [
             "INC"
         ],
-        "description": "Increment integer target by 1."
+        "description": "Increment RA by 1 in-place."
     },
     "INRG": {
         "prefix": "INRG",
         "body": [
             "INRG min max"
         ],
-        "description": "Check if value is between min and max."
+        "description": "Check if RA is between min and max."
     },
-    "JPEQ": {
-        "prefix": "JPEQ",
+    "JPCA": {
+        "prefix": "JPCA",
         "body": [
-            "JPEQ label"
+            "JPCA label"
         ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
+        "description": "Jump to the specified label; if RF/C = true."
     },
-    "JPGE": {
-        "prefix": "JPGE",
+    "JPNC": {
+        "prefix": "JPNC",
         "body": [
-            "JPGE label"
+            "JPNC label"
         ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
-    },
-    "JPGT": {
-        "prefix": "JPGT",
-        "body": [
-            "JPGT label"
-        ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
-    },
-    "JPLE": {
-        "prefix": "JPLE",
-        "body": [
-            "JPLE label"
-        ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
-    },
-    "JPLT": {
-        "prefix": "JPLT",
-        "body": [
-            "JPLT label"
-        ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
-    },
-    "JPNE": {
-        "prefix": "JPNE",
-        "body": [
-            "JPNE label"
-        ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
+        "description": "Jump to the specified label; if RF/C = false."
     },
     "JPNZ": {
         "prefix": "JPNZ",
         "body": [
             "JPNZ label"
         ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
+        "description": "Jump to the specified label; if RF/Z = false."
     },
-    "JPZR": {
-        "prefix": "JPZR",
+    "JPZE": {
+        "prefix": "JPZE",
         "body": [
-            "JPZR label"
+            "JPZE label"
         ],
-        "description": "Jump to the specified label, based on the result of the previous CMP."
+        "description": "Jump to the specified label if RF/Z = true."
+    },
+    "JUMP": {
+        "prefix": "JUMP",
+        "body": [
+            "JUMP label"
+        ],
+        "description": "Jump to the specified label."
     },
     "LDME": {
         "prefix": "LDME",
         "body": [
             "LDME instancename filename"
         ],
-        "description": "Load memory content from file."
+        "description": "Load memory content from file"
     },
     "LDPR": {
         "prefix": "LDPR",
@@ -335,19 +307,19 @@
         ],
         "description": "Change to script mode and load script from file."
     },
-    "LDSS": {
-        "prefix": "LDSS",
-        "body": [
-            "LDSS"
-        ],
-        "description": "Load and restore snapshot."
-    },
     "MUL": {
         "prefix": "MUL",
         "body": [
             "MUL value"
         ],
-        "description": "Multiply target by value in-place."
+        "description": "Multiply RA by value in-place."
+    },
+    "MVIO": {
+        "prefix": "MVIO",
+        "body": [
+            "MVIO instancename left-top"
+        ],
+        "description": "Set position of I/O device panel."
     },
     "NMI": {
         "prefix": "NMI",
@@ -387,7 +359,7 @@
     "PRNT": {
         "prefix": "PRNT",
         "body": [
-            "PRNT \"text\""
+            "PRNT \"text\" [\"text\"]"
         ],
         "description": "Write text to console."
     },
@@ -464,7 +436,7 @@
     "RUSC": {
         "prefix": "RUSC",
         "body": [
-            "RUN"
+            "RUSC"
         ],
         "description": "Run script."
     },
@@ -473,7 +445,7 @@
         "body": [
             "RWIO instancename"
         ],
-        "description": "Show read/write window."
+        "description": "Show read/write window"
     },
     "SESC": {
         "prefix": "SESC",
@@ -592,14 +564,14 @@
         "body": [
             "SUB value"
         ],
-        "description": "Subtract value from target in-place."
+        "description": "Subtract value from RA in-place."
     },
     "SVME": {
         "prefix": "SVME",
         "body": [
             "SVME filename instancename"
         ],
-        "description": "Save memory content to file."
+        "description": "Save memory content to file"
     },
     "SVPR": {
         "prefix": "SVPR",
@@ -615,19 +587,19 @@
         ],
         "description": "Save script to file."
     },
-    "SVSS": {
-        "prefix": "SVSS",
-        "body": [
-            "SVSS"
-        ],
-        "description": "Make and save snapshot."
-    },
     "SWAP": {
         "prefix": "SWAP",
         "body": [
             "SWAP register register"
         ],
-        "description": "Swap the values of two register."
+        "description": "Swap the values of two registers."
+    },
+    "SZIO": {
+        "prefix": "SZIO",
+        "body": [
+            "SZIO instancename width-height"
+        ],
+        "description": "Set size of I/O device panel."
     },
     "WAIT": {
         "prefix": "WAIT",
@@ -641,14 +613,14 @@
         "body": [
             "WRIO address"
         ],
-        "description": "Read a value from register RA and write to I/O port."
+        "description": "Read a value from register RA and write to I/O port"
     },
     "WRME": {
         "prefix": "WRME",
         "body": [
             "WRME address"
         ],
-        "description": "Read a value from register RA and store in memory."
+        "description": "Read a value from register RA and store in memory"
     },
     "XOR": {
         "prefix": "XOR",
