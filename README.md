@@ -50,25 +50,44 @@ in mind:
     registers, and automate tests via a command-line shell, it applies modern
     DevOps and debugging workflows to the foundational hardware of the past.
 
+### Next release and planned new features
+
+_0.2.0_
+Second release will be with the following changes:
+ - [ ] Saving and restoring the current state of the program and the simulation;  
+ - [ ] Calculating virtual processor time from cycle time for more precise timing.
+ 
+### Actual releases  
+
+<details>
+ <summary><i>v0.1.0</i></summary>
+ First developer test release is not yet suitable for work, although it is 
+ functional. The purpose of this release is to test the program's construction,
+ operation, packaging, and package installation in all supported environments.
+ In addition, the documentation and other files are checked for possible typos
+ and errors. Only a source package will be released.
+</details>
+
 ## II. Features
 
 ### General features
 
-|Features                  |Specification / Description                                        |
-|--------------------------|-------------------------------------------------------------------|
-|**project type**          |Functional processor simulator                                     |
-|**actual version**        |v0.1                                                               |
-|**licence**               |EUPL v1.2                                                          |
-|**language**              |en, hu                                                             |
-|**architecture**          |i586, amd64, armhf                                                 |
-|**operation system**      |FreeBSD, Linux, Windows                                            |
-|**user interface**        |Graphical User Interface (GUI) with scriptable command-line control|
-|**running modes**         |Normal or interpreter                                              |
-|**simulation type**       |Instruction-level operation (not cycle-accurate)                   |
-|**supported architecture**|Neumann and Harvard architectures                                  |
-|**supported processors**  |Byte based uPs and simple MCUs                                     |
-|**simulation environment**|Configurable memory space and virtual I/O ports or devices         |
-|**modular architecture**  |Dynamically loadable CPUs and peripherals                          |
+|Features                  |Specification / Description                                                         |
+|--------------------------|------------------------------------------------------------------------------------|
+|**project type**          |Functional processor simulator                                                      |
+|**actual version**        |v0.1                                                                                |
+|**licence**               |EUPL v1.2                                                                           |
+|**language**              |en, hu                                                                              |
+|**architecture**          |i586, amd64, armhf                                                                  |
+|**operation system**      |FreeBSD, Linux, Windows                                                             |
+|**user interface**        |Graphical User Interface (GUI) with scriptable command-line control                 |
+|**running modes**         |Normal or interpreter                                                               |
+|**simulation type**       |Instruction-level operation (not cycle-accurate)                                    |
+|**supported architecture**|Neumann and Harvard architectures                                                   |
+|**supported processors**  |Byte based uPs and simple MCUs                                                      |
+|**simulation environment**|Configurable memory space and virtual I/O ports or devices                          |
+|**modular architecture**  |Dynamically loadable CPUs and peripherals                                           |
+|**script syntax plugins** |For editors using GtkSourceView, MCEdit, Micro, Nano, Notepad++, (Neo)Vim and VSCode|
 
 ### Integrated modules
 

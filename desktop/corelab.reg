@@ -1,0 +1,53 @@
+Windows Registry Editor Version 5.00
+
+; .clprj - CoreLAB project
+[HKEY_CLASSES_ROOT\.clprj]
+@="CoreLAB.Project"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Project]
+@="CoreLAB project"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Project\DefaultIcon]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\",1"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Project\shell\open\command]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\" \"%1\""
+
+; .clsce - CoreLAB scriptembly
+[HKEY_CLASSES_ROOT\.clsce]
+@="CoreLAB.Scriptembly"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Scriptembly]
+@="CoreLAB scriptembly"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Scriptembly\DefaultIcon]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\",2"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Scriptembly\shell\open\command]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\" \"%1\""
+
+; .clsht - CoreLAB snapshot
+[HKEY_CLASSES_ROOT\.clsht]
+@="CoreLAB.Snapshot"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Snapshot]
+@="CoreLAB snapshot"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Snapshot\DefaultIcon]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\",3"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Snapshot\shell\open\command]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\" \"%1\""
+
+; .clpst - CoreLAB plugin status
+[HKEY_CLASSES_ROOT\.clpst]
+@="CoreLAB.Status"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Status]
+@="CoreLAB plugin status"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Status\DefaultIcon]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\",4"
+
+[HKEY_CLASSES_ROOT\CoreLAB.Status\shell\open\command]
+@="\"C:\\Program Files\\CoreLAB\\corelab.exe\" \"%1\""
