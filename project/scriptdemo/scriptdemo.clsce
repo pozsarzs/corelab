@@ -16,8 +16,10 @@ LOOP:
 	CALL	PRINT_HEX		; Subroutine 1: print counter in hex
 	ADD	$R0			; Add loop variable to accumulator
 	WAIT	800			; Wait 800 ms for visual tracking
-	INC	$R0			; Increment R0 by 1
-	COMP	$R0 $R1			; Compare R0 and R1
+	SWAP	$RA $R0	
+	INC				; Increment RA by 1
+	COMP	$R1			; Compare RA and R1
+	SWAP	$RA $R0	
 	JPZE	NEXT			; Jump to NEXT label if equal
 	JUMP	LOOP			; Unconditional jump to LOOP label
 
@@ -32,13 +34,13 @@ NEXT:
 ; Subroutine 1: Convert and print R0 counter in hexadecimal format
 PRINT_HEX:
 	SWAP	$RA $R0			; Move R0 value to RA
-	CONV	$R2 16			; Convert RA to base 16, result in R2
+	CONV	R2 16			; Convert RA to base 16, result in R2
 	SWAP	$RA $R0			; Swap back so the sum is in RA again
 	PRNT	"Counter (HEX): " $R2	; Print counter in hex
 	RTRN				; Return to the caller
 
 ; Subroutine 2: Multiply the accumulator value
 DOUBLE:
-	MUL	$RA 2			; Multiply accumulator content by 2
+	MUL	2			; Multiply accumulator content by 2
 	PRNT	"Doubling finished." "" ; Text feedback
 	RTRN				; Return to the caller

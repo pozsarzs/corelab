@@ -95,7 +95,7 @@ end;
 // RESET ALL FLAGS
 procedure TScriptRuntime.ClearFlags;
 begin
-  FSysRegs['F'] := 0;
+  FSysRegs['F'] := Byte(0);
 end;
 
 // GET FLAG
@@ -167,7 +167,8 @@ begin
   for c:='0' to '9' do FGenRegs[c] := '';
   // RA-F
   for c:='A' to 'B' do FSysRegs[c] := '';
-  for c:='C' to 'F' do FSysRegs[c] := 0;
+  for c:='C' to 'E' do FSysRegs[c] := 0;
+  ClearFlags;
 end;
 
 // GET REGISTER CONTENT
@@ -231,13 +232,22 @@ end;
 // PUSH LINE NUMBER TO STACK
 function TScriptRuntime.PushCallStack(ALine: Integer): Boolean;
 begin
-
+  FCallStack.Push(ALine);
+  Result := True;
 end;
 
 // POP LINE NUMBER FROM STACK
 function TScriptRuntime.PopCallStack(out ALine: Integer): Boolean;
 begin
-
+  if FCallStack.Count > 0 then
+  begin
+    ALine := FCallStack.Pop;
+    Result := True;
+  end else
+  begin
+    ALine := -1;
+    Result := False;
+  end;
 end;
 
 // CLEAR CALL STACK

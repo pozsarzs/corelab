@@ -553,7 +553,7 @@ resourcestring
   MSG09 = 'Cannot destroy attached module named ''%s''.';                 { SM }
   MSG10 = 'Cannot be used ''%s'' in interactive mode.';                   { SC }
   MSG11 = 'Cannot be used ''%s'' in script mode.';                        { SC }
-  MSG12 = 'Command ''%s'' execute error.';                                { SC }
+  MSG12 = 'Error in line ''%s''.';                                        { SC }
   MSG13 = 'No continuous viewer updates during a 100 ms execution delay.';{ SC }
   MSG14 = 'Bad or duplicated label name: ''%s''.';                        { SC }
   MSG18 = 'Missing help file.';                                           { SC }
@@ -5873,7 +5873,6 @@ procedure TForm1.SStopScriptOperation(AActionContext: TActionContext);
 begin
   CommandEngine2.FScriptRuntime.SetRegister('C', 0, True);
   FScriptIsRunning := False;
-  Form12.ClearContent;                                    // clear ScriptConsole
   // stop simualtion
   try
     if Length(FSysBus.FCPUs) > 0 then

@@ -26,18 +26,17 @@ begin
     // get accu value
     Temp := 0;
     if not FScriptRuntime.GetRegister('A', Temp) then Exit;
-    if not ChkVarInt(Temp) then Exit;
-    Operandus1 := DWord(Temp);
+    // check value type
+    if not TryStrToDWord(VarToStr(Temp), Operandus1) then Exit;
     // get target register
-    if not ChkRegName(SArg1, True) then Exit;
+    if not ChkRegName(SArg1, False) then Exit;
     // get base (2, 8, 16)
     if ChkRegName(SArg2, True) then
     begin
       // value in register
       if not FScriptRuntime.GetRegister(SArg2[3], Temp) then Exit;
       // check type
-      if not ChkVarInt(Temp) then Exit;
-      Operandus3 := DWord(Temp);
+      if not TryStrToDWord(VarToStr(Temp), Operandus3) then Exit;
     end else
     begin
       // direct value
@@ -45,9 +44,9 @@ begin
     end;
     // convert value $RA
     case Operandus3 of
-      2: s := DezToBin(VarToStr(Operandus1));
-      8: s := DezToOkt(VarToStr(Operandus1));
-      16: s := DezToHex(VarToStr(Operandus1));
+      2: s := DezToBin(IntToStr(Operandus1));
+      8: s := DezToOkt(IntToStr(Operandus1));
+      16: s := DezToHex(IntToStr(Operandus1));
     else
       Exit;
     end;
@@ -101,9 +100,9 @@ begin
       // address in register
       if not FScriptRuntime.GetRegister(SArg1[3], Delay) then Exit;
       // check type
-      if not ChkVarInt(Delay) then Exit;
+      if not TryStrToDWord(VarToStr(Delay), WDelay) then Exit;
       // sleeping
-      Sleep(DWord(Delay));
+      Sleep(WDelay);
     end else
     begin
       // address in value

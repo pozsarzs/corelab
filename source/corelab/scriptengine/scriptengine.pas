@@ -25,9 +25,6 @@ type
   TScriptEngine = class(TCommandEngine)
   private
     function ChkRegName(var ARegName: string; ARepr: Boolean): Boolean;
-    function ChkVarByte(var AVariant: Variant): Boolean;
-    function ChkVarInt(var AVariant: Variant): Boolean;
-    function ChkVarStr(var AVariant: Variant): Boolean;
   protected
     // access
     procedure CmdRDIO(AActionContext: TActionContext);
@@ -93,38 +90,13 @@ begin
   Result := False;
   if ARepr then
   begin
-    if (Length(ARegName) = NL + 1) then
+    if Length(ARegName) = (NL + 1) then
       if (ARegName[1] + ARegName[2] = '$' + NP) then Result := True;
   end else
   begin
-    if (Length(ARegName) = NL) then
-      if (ARegName[1] + ARegName[2] = NP) then Result := True;
+    if Length(ARegName) = NL then
+      if ARegName[1] = NP then Result := True;
   end;
-end;
-
-// CHECK VARIANT VALUE
-function TScriptEngine.ChkVarByte(var AVariant: Variant): Boolean;
-begin
-  Result := False;
-  if (VarType(AVariant) in [varByte, varShortInt, varWord, varSmallint,
-    varLongWord, varInteger, varInt64, varQWord]) then
-    if (AVariant >= 0) and (AVariant <= High(Byte)) then Result := True;
-end;
-
-// CHECK VARIANT VALUE
-function TScriptEngine.ChkVarInt(var AVariant: Variant): Boolean;
-begin
-  Result := False;
-  if (VarType(AVariant) in [varByte, varShortInt, varWord, varSmallint,
-    varLongWord, varInteger, varInt64, varQWord]) then
-    if (AVariant >= 0) and (AVariant <= High(DWord)) then Result := True;
-end;
-
-// CHECK VARIANT VALUE
-function TScriptEngine.ChkVarStr(var AVariant: Variant): Boolean;
-begin
-  Result := False;
-  if (VarType(AVariant) in [varString]) then Result := True;
 end;
 
 // ---- PROTECTED METHODS ----
@@ -187,6 +159,12 @@ begin
     CommandName := LowerCase(Tokens[0].RawText);
     // some internal commands
     {...}
+    // LABEL: labels
+    if CommandName[Length(CommandName)] = ':' then
+    begin
+      Result := 0;
+      Exit;
+    end;
     // HELP command
     if CommandName = 'help' then
     begin
@@ -246,7 +224,7 @@ begin
       Exit;
     end;
     // argument number error
-    if (Tokens.Count - 1) <> Command.RequiredArgs then
+    if (Tokens.Count - 1) < Command.RequiredArgs then
     begin
       Result := -4;
       Exit;
@@ -279,7 +257,8 @@ begin
         DArg2 := 0;
         if Tokens.Count > 1 then SArg1 := Tokens[1].RawText;
         if Tokens.Count > 2 then SArg2 := Tokens[2].RawText;
-        Form12.WriteMessage(Tokens[0].RawText + ' ' + SArg1 + ' ' + SArg2);
+        // for debug only
+        // Form12.WriteMessage(Tokens[0].RawText + ' ' + SArg1 + ' ' + SArg2);
         Command.Operation(ActionContext);
         // command run error
         if HasError then Result := -8 else Result := 0;

@@ -31,9 +31,9 @@ begin
       // address in register
       if not FScriptRuntime.GetRegister(SArg1[3], VAddress) then Exit;
       // check type
-      if not ChkVarInt(VAddress) then Exit;
+      if not TryStrToDWord(VarToStr(VAddress), WAddress) then Exit;
       // read data from port via SysBus
-      Data := FReadPortFunc(DWord(VAddress));
+      Data := FReadPortFunc(DWord(WAddress));
       // store in accumulator
       if not FScriptRuntime.SetRegister('A', Data, False) then Exit;
     end else
@@ -53,6 +53,7 @@ end;
 procedure TScriptEngine.CmdWRIO(AActionContext: TActionContext);
 var
   Data:     Variant;
+  IData:    Integer;
   VAddress: Variant;
   WAddress: DWord;
 begin
@@ -60,6 +61,7 @@ begin
   begin
     HasError := True;
     Data := 0;
+    IData := 0;
     VAddress := 0;
     WAddress := 0;
     // get and check arguments
@@ -68,12 +70,13 @@ begin
       // address in register
       if not FScriptRuntime.GetRegister(SArg1[3], VAddress) then Exit;
       // check type
-      if not ChkVarInt(VAddress) then Exit;
+      if not TryStrToDWord(VarToStr(VAddress), WAddress) then Exit;
       // data in accumulator
       if not FScriptRuntime.GetRegister('A', Data) then Exit;
-      if not ChkVarByte(Data) then Exit;
+      // check data type
+      if not TryStrToInt(VarToStr(Data), IData) then Exit;
       // write data to port via SysBus
-      FWritePortProc(DWord(VAddress), Byte(Data));
+      FWritePortProc(WAddress, Byte(IData));
     end else
     begin
       // address in value
@@ -81,9 +84,10 @@ begin
       if not TryStrToDWord(SArg1, WAddress) then Exit;
       // data in accumulator
       if not FScriptRuntime.GetRegister('A', Data) then Exit;
-      if not ChkVarByte(Data) then Exit;
+      // check data type
+      if not TryStrToInt(VarToStr(Data), IData) then Exit;
       // write data to port via SysBus
-      FWritePortProc(DWord(WAddress), Byte(Data));
+      FWritePortProc(WAddress, Byte(IData));
     end;
     HasError := False;
   end;
@@ -107,9 +111,9 @@ begin
       // address in register
       if not FScriptRuntime.GetRegister(SArg1[3], VAddress) then Exit;
       // check type
-      if not ChkVarInt(VAddress) then Exit;
+      if not TryStrToDWord(VarToStr(VAddress), WAddress) then Exit;
       // read data from memory via SysBus
-      Data := FReadMemoryFunc(DWord(VAddress));
+      Data := FReadMemoryFunc(WAddress);
       // store in accumulator
       if not FScriptRuntime.SetRegister('A', Data, False) then Exit;
     end else
@@ -129,6 +133,7 @@ end;
 procedure TScriptEngine.CmdWRME(AActionContext: TActionContext);
 var
   Data:     Variant;
+  IData:    Integer;
   VAddress: Variant;
   WAddress: DWord;
 begin
@@ -136,6 +141,7 @@ begin
   begin
     HasError := True;
     Data := 0;
+    IData := 0;
     VAddress := 0;
     WAddress := 0;
     // get and check arguments
@@ -144,12 +150,13 @@ begin
       // address in register
       if not FScriptRuntime.GetRegister(SArg1[3], VAddress) then Exit;
       // check type
-      if not ChkVarInt(VAddress) then Exit;
+      if not TryStrToDWord(VarToStr(VAddress), WAddress) then Exit;
       // data in accumulator
       if not FScriptRuntime.GetRegister('A', Data) then Exit;
-      if not ChkVarByte(Data) then Exit;
+      // check value type
+      if not TryStrToInt(VarToStr(Data), IData) then Exit;
       // write data to memory via SysBus
-      FWriteMemoryProc(DWord(VAddress), Byte(Data));
+      FWriteMemoryProc(WAddress, Byte(IData));
     end else
     begin
       // address in value
@@ -157,9 +164,10 @@ begin
       if not TryStrToDWord(SArg1, WAddress) then Exit;
       // data in accumulator
       if not FScriptRuntime.GetRegister('A', Data) then Exit;
-      if not ChkVarByte(Data) then Exit;
+      // check value type
+      if not TryStrToInt(VarToStr(Data), IData) then Exit;
       // write data to memory via SysBus
-      FWriteMemoryProc(DWord(WAddress), Byte(Data));
+      FWriteMemoryProc(WAddress, Byte(IData));
     end;
     HasError := False;
   end;
@@ -199,12 +207,12 @@ begin
     Temp1 := 0;
     Temp2 := 0;
     // get and check arguments
-    if not (ChkRegName(SArg1, False) and ChkRegName(SArg2, False)) then Exit;
+    if not (ChkRegName(SArg1, True) and ChkRegName(SArg2, True)) then Exit;
     // swap register content
-    if not FScriptRuntime.GetRegister(SArg1[2], Temp1) then Exit;
-    if not FScriptRuntime.GetRegister(SArg2[2], Temp2) then Exit;
-    if not FScriptRuntime.SetRegister(SArg1[2], Temp2, False) then Exit;
-    if not FScriptRuntime.SetRegister(SArg2[2], Temp1, False) then Exit;
+    if not FScriptRuntime.GetRegister(SArg1[3], Temp1) then Exit;
+    if not FScriptRuntime.GetRegister(SArg2[3], Temp2) then Exit;
+    if not FScriptRuntime.SetRegister(SArg1[3], Temp2, False) then Exit;
+    if not FScriptRuntime.SetRegister(SArg2[3], Temp1, False) then Exit;
     HasError := False;
   end;
 end;
