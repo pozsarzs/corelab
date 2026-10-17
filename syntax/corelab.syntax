@@ -45,6 +45,7 @@ context default
     keyword whole ENPU white 
     keyword whole EXAP white 
     keyword whole EXIT white 
+    keyword whole HELP white 
     keyword whole INC white 
     keyword whole INRG white 
     keyword whole JPCA white 

@@ -10,6 +10,122 @@
 	<param name="Local" value="about.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value=".bin">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value=".clprj (Project)">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value=".clpst (Plugin status)">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value=".clsce (Scriptembly)">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value=".clsht (Snapshot)">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value=".hex">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Attach to bus">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Breakpoint Manager">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="BusLogger">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="CPU (Processor)">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Detach from bus">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Examine/Deposit">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="HexViewer">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="I/O port">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Interactive mode">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="IntLogger">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Memory">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Module Explorer">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="NMI (Non-Maskable Interrupt)">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="RegViewer">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="RunLogger">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Script mode">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="ScriptConsole">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="ScriptEditor">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Scriptembly">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Snapshot">
+	<param name="Local" value="framework/menucommands.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Syntax highlighting">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="SysConsole">
+	<param name="Local" value="framework/userinterface.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="System Bus">
+	<param name="Local" value="framework/appendix.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="CLIOPort">
 	<param name="Local" value="applications/clioport.html">
 	</OBJECT>

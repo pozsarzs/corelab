@@ -230,6 +230,13 @@
         ],
         "description": "Terminate the script."
     },
+    "HELP": {
+        "prefix": "HELP",
+        "body": [
+            "HELP [command]"
+        ],
+        "description": "Display help overview or detailed usage for a command."
+    },
     "INC": {
         "prefix": "INC",
         "body": [
