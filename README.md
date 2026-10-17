@@ -292,6 +292,7 @@ Registers can store string and double word values.
 |ENPU       |Enable processor module.                              |[csCommandLine, csScript]|[omInteractive, omScript]|
 |EXAP       |Exit from application.                                |[csCommandLine, csScript]|[omInteractive, omScript]|
 |EXIT       |Terminate the script.                                 |[csScript]               |[omScript]               |
+|HELP       |Display help overview or detailed usage for a command.|[csCommandLine, csScript]|[omInteractive, omScript]|
 |INC        |Increment RA by 1 in-place.                           |[csScript]               |[omScript]               |
 |INRG       |Check if RA is between min and max.                   |[csScript]               |[omScript]               |
 |JPCA       |Jump to the specified label; if RF/C = true.          |[csScript]               |[omScript]               |

@@ -144,7 +144,7 @@ begin
               then InfoText := InfoText + '  Scope:  Script only'
               else
                 if Scope = [csCommandLine]
-                  then InfoText := InfoText + '  Scope:  Interactive only';
+                  then InfoText := InfoText + '  Scope:  Command line only';
       end;
       Form1.SysConsole1.WriteMessage(InfoText);
       Result := 0;

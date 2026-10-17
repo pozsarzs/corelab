@@ -16,6 +16,40 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Keretprogram">
 		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Bevezetés">
+			<param name="Local" value="framework/introduction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Felhasználói felület">
+			<param name="Local" value="framework/userinterface.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Az alkalmazás használata">
+			<param name="Local" value="framework/usingtheapplication.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Menüparancsok">
+			<param name="Local" value="framework/menucommands.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Parancsok">
+			<param name="Local" value="framework/commands.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Beállítások">
+			<param name="Local" value="framework/settings.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Hibaelhárítás">
+			<param name="Local" value="framework/troubleshooting.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Mellékletek">
+			<param name="Local" value="framework/appendix.html">
+			</OBJECT>
+	</UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Alkalmazások">
 		</OBJECT>

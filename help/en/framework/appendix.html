@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 9. Appendix</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="appendix">9. Appendix</h2>
+<h3 id="file-formats">9.1 File Formats</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>Extension / Pattern</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>*.bin</code></td>
+<td>General binary file.</td>
+</tr>
+<tr class="even">
+<td><code>*.clprj</code></td>
+<td>CoreLAB project file.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clpst</code></td>
+<td>CoreLAB plugin status file.</td>
+</tr>
+<tr class="even">
+<td><code>*.clsce</code></td>
+<td>CoreLAB scriptembly (script) file.</td>
+</tr>
+<tr class="odd">
+<td><code>*.clsht</code></td>
+<td>CoreLAB snapshot file.</td>
+</tr>
+<tr class="even">
+<td><code>*.hex</code></td>
+<td>Intel hexa file.</td>
+</tr>
+<tr class="odd">
+<td><code>*.log</code></td>
+<td>General log file.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keyboard-shortcuts">9.2 Keyboard Shortcuts</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Shortcut</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-1</td>
+<td>Switch to interactive mode</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-2</td>
+<td>Switch to script mode</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-N</td>
+<td>New project</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-O</td>
+<td>Load project…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-S</td>
+<td>Save project</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-D</td>
+<td>Change work directory</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-P</td>
+<td>Settings…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F11</td>
+<td>Show Module Explorer…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-B</td>
+<td>Show Breakpoint Manager…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-B</td>
+<td>Show BusLogger…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-R</td>
+<td>Show RunLogger…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-I</td>
+<td>Show IntLogger…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Shift-F4</td>
+<td>Show ScriptEditor…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shift-F12</td>
+<td>Show ScriptConsole…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F9</td>
+<td>Run</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F8</td>
+<td>Step</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F10</td>
+<td>Stop</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F2</td>
+<td>Make snapshot</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F3</td>
+<td>Restore snapshot…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-Shift-N</td>
+<td>New script</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Ctrl-Shift-O</td>
+<td>Load script…</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Ctrl-Shift-S</td>
+<td>Save script</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Shift-F9</td>
+<td>Run script</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shift-F8</td>
+<td>Step script</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Shift-F10</td>
+<td>Stop script</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F1</td>
+<td>Help</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: Menu commands can also be accessed quickly using standard
+<code>Alt</code> key combinations (e.g., Alt-F for File menu).
+Additional shortcuts may depend on the operating system.</em></p>
+<h3 id="glossary">9.3 Glossary</h3>
+<ul>
+<li><strong>CoreLAB:</strong> Modular Processor Simulation Framework
+designed for the functional simulation of classic 8-bit microprocessors
+and microcontrollers.</li>
+<li><strong>Module/Plugin:</strong> A dynamically loadable software
+component representing a virtual CPU, memory block, or I/O device (e.g.,
+virtual LED array, switch matrix).</li>
+<li><strong>Scriptembly:</strong> The custom scripting language used by
+CoreLAB (<code>.clsce</code> files) to automate testing, build
+topologies, and manipulate registers via the command-line shell.</li>
+<li><strong>System Bus:</strong> The virtual communication bus that
+connects the instantiated processor, memory, and I/O modules, enabling
+data exchange.</li>
+<li><strong>Snapshot:</strong> A saved execution state of the simulation
+(<code>.clsht</code> file) that can be restored later.</li>
+<li><strong>Module Explorer:</strong> A built-in graphical tool used to
+manage and view the hierarchical list of active module instances.</li>
+</ul>
+<h3 id="version-history">9.4 Version History</h3>
+<ul>
+<li><strong>v0.1.0:</strong> First developer test release. Functional
+processor simulator framework with script engine, plugin support, and
+basic diagnostic tools.</li>
+</ul>
+</body>
+</html>

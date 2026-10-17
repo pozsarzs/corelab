@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 3. User Interface</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="user-interface">3. User Interface</h2>
+<h3 id="main-window">3.1 Main Window</h3>
+<p>The main window of the CoreLAB framework provides a centralized
+environment for managing the simulation workspace. It consists of the
+following main sections:</p>
+<ul>
+<li><strong>Menu bar:</strong> Provides access to all application
+commands, views, and settings.</li>
+<li><strong>Toolbars:</strong> Context-sensitive toolbars that offer
+quick access to frequently used commands. Their availability changes
+depending on the selected operation mode (Interactive or Script) and the
+active tab.</li>
+<li><strong>Run Delay Selector:</strong> A dropdown box used to
+configure the run delay between execution steps in milliseconds (e.g.,
+1000 ms).</li>
+<li><strong>Tabbed Control Panel:</strong> Organizes module management
+and execution tasks into five distinct tabs:
+<ul>
+<li><strong>Operation:</strong> Contains controls for running, stepping,
+stopping, and resetting the overall simulation, as well as triggering
+NMI (Non-Maskable Interrupts).</li>
+<li><strong>Processor:</strong> Provides tools to create, configure,
+enable, disable, and attach/detach CPU modules to the system bus.</li>
+<li><strong>Memory:</strong> Used for managing memory modules, altering
+their properties, and loading/saving memory contents (Binary or Intel
+HEX formats).</li>
+<li><strong>I/O port:</strong> Manages input/output ports and virtual
+devices. It also handles the configuration of their interactive
+graphical panels.</li>
+<li><strong>Script:</strong> Dedicated controls for creating, loading,
+saving, and executing custom scripts when the framework is in Script
+mode.</li>
+</ul></li>
+<li><strong>System Console (SysConsole):</strong> Located at the bottom
+of the main window. It serves as an interactive command-line interface
+and displays system messages, command feedback, and warnings.</li>
+</ul>
+<h3 id="integrated-viewer-and-logger-windows">3.2 Integrated Viewer and
+Logger Windows</h3>
+<p>CoreLAB includes several integrated visual modules to inspect the
+internal state of the simulated hardware and monitor execution. These
+can be launched as separate windows:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Module Explorer</strong></td>
+<td>Used for managing and viewing all instantiated CPU, memory, and I/O
+port modules in a structured tree view.</td>
+</tr>
+<tr class="even">
+<td><strong>Breakpoint Manager</strong></td>
+<td>A tool for managing execution breakpoints to halt the simulation at
+specific conditions or addresses.</td>
+</tr>
+<tr class="odd">
+<td><strong>HexViewer</strong></td>
+<td>A memory viewer component that allows real-time inspection of a
+selected memory module’s data.</td>
+</tr>
+<tr class="even">
+<td><strong>RegViewer</strong></td>
+<td>Displays real-time information about the internal registers and
+flags of the attached processor.</td>
+</tr>
+<tr class="odd">
+<td><strong>RunLogger</strong></td>
+<td>Provides real-time output of the executed instructions, including
+address, machine code, and assembly mnemonic.</td>
+</tr>
+<tr class="even">
+<td><strong>BusLogger</strong></td>
+<td>Logs data, address, and control signals passing through the system
+bus (MEMRD, MEMWR, IORD, IOWR).</td>
+</tr>
+<tr class="odd">
+<td><strong>IntLogger</strong></td>
+<td>Keeps a log of hardware interrupt requests triggered by connected
+I/O modules.</td>
+</tr>
+<tr class="even">
+<td><strong>ScriptEditor</strong></td>
+<td>A built-in text editor environment for writing, editing, and
+managing custom control scripts.</td>
+</tr>
+<tr class="odd">
+<td><strong>ScriptConsole</strong></td>
+<td>A dedicated output console displaying the results and custom text
+messages from a running script.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interactive-io-panels">3.3 Interactive I/O Panels</h3>
+<p>Certain virtual I/O modules (like displays, switches, or LED arrays)
+feature interactive graphical panels. These panels can be moved,
+resized, renamed, and toggled (hidden/shown) directly via the
+<strong>I/O port</strong> tab or the <strong>View</strong> menu to
+customize the virtual hardware workspace according to your needs.</p>
+</body>
+</html>

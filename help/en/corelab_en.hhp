@@ -28,6 +28,14 @@ cpus/cpu_8008.html
 cpus/cpu_8080.html
 cpus/cpu_8085.html
 cpus/cpu_z80.html
+framework/appendix.html
+framework/commands.html
+framework/introduction.html
+framework/menucommands.html
+framework/settings.html
+framework/troubleshooting.html
+framework/userinterface.html
+framework/usingtheapplication.html
 parts/display_til302.html
 parts/display_til311.html
 parts/led_round.html

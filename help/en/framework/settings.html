@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 7. Settings</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="settings">7. Settings</h2>
+<p>The Settings dialog allows you to customize the visual appearance of
+the application. The program automatically saves the size and position
+of all windows, as well as the column widths of the internal loggers and
+viewers. These configurations are stored in an INI file within your user
+profile directory.</p>
+<h3 id="configurable-colors">7.1 Configurable Colors</h3>
+<p>You can modify the background and font colors for several internal
+modules to suit your preferences:</p>
+<ul>
+<li><strong>SysConsole:</strong> General background and font
+colors.</li>
+<li><strong>ScriptConsole:</strong> General background and font
+colors.</li>
+<li><strong>ScriptEditor:</strong> Background, font, and line number
+gutter font colors. You can also toggle the visibility of line numbers
+and syntax highlighting.</li>
+<li><strong>HexViewer:</strong> Colors for address, data, line selector,
+and alternating row backgrounds (odd/even).</li>
+<li><strong>RunLogger:</strong> Colors for instruction count, address,
+opcode, mnemonic, cycles, total cycles, line selector, and alternating
+row backgrounds.</li>
+<li><strong>BusLogger:</strong> Colors for operation, device, absolute
+address, relative address, data, status, line selector, and alternating
+row backgrounds.</li>
+<li><strong>IntLogger:</strong> Colors for sender, interrupt vector,
+status, flags, line selector, and alternating row backgrounds.</li>
+</ul>
+<p>Modifications to these color settings are applied immediately upon
+closing the Settings dialog with the OK button.</p>
+<h3 id="automatically-saved-properties">7.2 Automatically Saved
+Properties</h3>
+<p>The application automatically remembers the layout and state of the
+workspace upon exit, so you don’t have to manually arrange the windows
+every time you start CoreLAB. The following properties are saved:</p>
+<ul>
+<li><strong>Main Window:</strong> Position (top, left), size (width,
+height), and the splitter position.</li>
+<li><strong>Internal Windows:</strong> The position and size of the
+BreakPoint Manager, HexViewer, IntLogger, Module Explorer, Module
+Properties, RegViewer, RunLogger, ScriptConsole, ScriptEditor, and
+SysConsole.</li>
+<li><strong>Table Columns:</strong> The widths of individual columns in
+the BusLogger, IntLogger, Module Explorer, Module Properties, RegViewer,
+and RunLogger.</li>
+<li><strong>Visibility:</strong> The open/closed state of the Module
+Explorer window.</li>
+</ul>
+<h3 id="configuration-file-location">7.3 Configuration File
+Location</h3>
+<p>The application stores the settings in a <code>corelab.ini</code>
+file. Its location depends on the operating system:</p>
+<ul>
+<li><strong>Windows:</strong>
+<code>&lt;UserDirectory&gt;\Appdata\Local\corelab\corelab.ini</code></li>
+<li><strong>Linux / FreeBSD:</strong>
+<code>&lt;UserDirectory&gt;/.config/corelab/corelab.ini</code></li>
+</ul>
+<p>If the configuration file is missing or cannot be loaded, the
+application uses default values.</p>
+</body>
+</html>

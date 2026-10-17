@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 4. Using the Application</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="using-the-application">4. Using the Application</h2>
+<p>Although CoreLAB features a clean and intuitive graphical interface,
+understanding the basic workflow is essential for building and running
+your first simulated environment.</p>
+<h3 id="building-a-simulation-workspace">4.1 Building a Simulation
+Workspace</h3>
+<p>CoreLAB relies on a modular architecture. To simulate a computer
+system, you must instantiate the necessary components and connect them
+to the system bus.</p>
+<ol type="1">
+<li><strong>Create a Processor:</strong> Go to <strong>Processor &gt;
+Create…</strong>, select a CPU plugin (e.g., <code>cpu_8080</code>),
+give the instance a unique name, and click OK.</li>
+<li><strong>Create Memory:</strong> Go to <strong>Memory &gt;
+Create…</strong>, select a memory plugin (e.g.,
+<code>memory_standard</code>), name it, and set its size and base
+address using the <strong>Properties…</strong> command.</li>
+<li><strong>Create I/O Devices:</strong> If your simulation requires
+input/output, go to <strong>I/O port &gt; Create…</strong>, select the
+desired peripheral (e.g., switches, LEDs, or displays), and name
+it.</li>
+<li><strong>Attach to Bus:</strong> Modules will not communicate until
+they are attached to the system bus. Use the <strong>Attach to
+bus…</strong> command individually for your CPU, memory, and I/O
+modules.</li>
+</ol>
+<h3 id="loading-code-and-data">4.2 Loading Code and Data</h3>
+<p>Before starting the processor, you need to load an executable program
+into the memory. 1. Ensure your memory module is attached to the bus. 2.
+Go to <strong>Memory &gt; Load memory content…</strong>. 3. Select your
+compiled binary (<code>.bin</code>) or Intel HEX (<code>.hex</code>)
+file. 4. Specify the starting address if loading a binary file (HEX
+files contain their own address mapping, so they will load into the
+correct locations automatically).</p>
+<h3 id="running-the-simulation">4.3 Running the Simulation</h3>
+<p>Once the virtual hardware is built and the code is loaded in memory:
+1. Navigate to the <strong>Operation</strong> tab on the main toolbar.
+2. Adjust the <strong>Run Delay</strong> dropdown (e.g., 1000 ms) to
+control how fast the simulation executes. This is highly recommended for
+visual debugging. 3. Click <strong>Run</strong> to start continuous
+execution, or use <strong>Step</strong> to execute instructions one by
+one. 4. Use visual tools like <strong>RunLogger</strong>,
+<strong>RegViewer</strong>, or <strong>BusLogger</strong> from the
+<strong>View</strong> menu to monitor the execution logic, registers,
+and bus traffic in real-time.</p>
+<h3 id="using-projects">4.4 Using Projects</h3>
+<p>Building a complex hardware setup manually every time can be tedious.
+- Once you have configured your CPU, memory, and I/O ports, use
+<strong>File &gt; Save project</strong> to save your environment as a
+<code>.clprj</code> file. - Next time, simply use <strong>File &gt; Load
+project…</strong> to instantly restore your entire hardware topology and
+module properties.</p>
+<h3 id="working-with-scripts">4.5 Working with Scripts</h3>
+<p>For automated testing and environment building, you can switch from
+Interactive Mode to Script Mode. 1. Go to <strong>File &gt; Switch to
+script mode</strong>. 2. Open the built-in editor via <strong>View &gt;
+Show ScriptEditor…</strong>. 3. Write or load your <code>.clsce</code>
+(Scriptembly) commands to automatically instantiate modules, load
+memory, modify registers, and assert conditions. 4. Click <strong>Run
+script</strong> on the Script toolbar and monitor the text output in the
+<strong>ScriptConsole</strong>.</p>
+</body>
+</html>

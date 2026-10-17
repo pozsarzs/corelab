@@ -1,0 +1,865 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 6. Commands</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="commands">6. Commands</h2>
+<p>You can use these commands both in the SysConsol command line
+(csCommandLine) and in scripts, provided that the specific instruction
+is permitted for the current context—that is, whether it is allowed
+during simulation and in the active operating mode (omInteractive or
+omScript). In terms of syntax, comments must begin with a semicolon
+(‘;’), and character strings must be enclosed in quotation marks (“).
+Values (such as <em>index</em> or <em>address</em>) may be specified
+either directly or by referencing register contents (e.g., <em><span
+class="math inline"><em>R</em>0 * –*</span>RF</em>); however, registers
+themselves must be specified solely by their names
+(<em>R0</em>–<em>RF</em>).</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 3%" />
+<col style="width: 34%" />
+<col style="width: 16%" />
+<col style="width: 20%" />
+<col style="width: 3%" />
+<col style="width: 6%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>inst.</th>
+<th>description</th>
+<th>scope</th>
+<th>syntax</th>
+<th>args.</th>
+<th>under sim.</th>
+<th>operation mode</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ADD</td>
+<td>Add value to RA in-place.</td>
+<td>[csScript]</td>
+<td>ADD value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>AND</td>
+<td>Bitwise/logical AND in-place.</td>
+<td>[csScript]</td>
+<td>AND value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>ATIO</td>
+<td>Attach I/O port or device module to bus.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ATIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>ATME</td>
+<td>Attach memory module to bus.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ATME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>ATPU</td>
+<td>Attach processor module to bus.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ATPU instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>BIT</td>
+<td>Check the specified bit.</td>
+<td>[csScript]</td>
+<td>BIT index</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>CALL</td>
+<td>Call subroutine.</td>
+<td>[csScript]</td>
+<td>CALL label</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>CFIO</td>
+<td>Configure I/O port module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CFIO instancename.property value</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>CFME</td>
+<td>Configure memory module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CFME instancename.property value</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>CFPU</td>
+<td>Configure processor module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CFPU instancename.property value</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>CHWD</td>
+<td>Change work directory.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CHWD directory</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>COMP</td>
+<td>Compare RA with value by subtraction.</td>
+<td>[csScript]</td>
+<td>COMP value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>CONV</td>
+<td>Convert the number in RA into base 2/8/16.</td>
+<td>[csScript]</td>
+<td>CONV target base</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>CRIO</td>
+<td>Instantiate a I/O port or device module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CRIO library instancename</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>CRME</td>
+<td>Instantiate a memory module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CRME library instancename</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>CRPU</td>
+<td>Instantiate a processor module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CRPU library instancename</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DEC</td>
+<td>Decrement RA by 1 in-place.</td>
+<td>[csScript]</td>
+<td>DEC</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>DIIO</td>
+<td>Disable I/O port or device module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DIIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DIME</td>
+<td>Disable memory module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DIME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DIPU</td>
+<td>Disable processor module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DIPU instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DSIO</td>
+<td>Destroy I/O port or device module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DSIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DSME</td>
+<td>Destroy memory module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DSME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DSPU</td>
+<td>Destroy processor module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DSPU instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DTIO</td>
+<td>Detach I/O port or device module from bus.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DTIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DTME</td>
+<td>Detach memory module from bus.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DTME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DTPU</td>
+<td>Detach processor module from bus.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DTPU instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>EDME</td>
+<td>Show examine/deposit window</td>
+<td>[csCommandLine]</td>
+<td>EDME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>END</td>
+<td>End of main program.</td>
+<td>[csScript]</td>
+<td>END</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>ENIO</td>
+<td>Enable I/O port or device module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ENIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>ENME</td>
+<td>Enable memory module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ENME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>ENPU</td>
+<td>Enable processor module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ENPU instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>EXAP</td>
+<td>Exit from application.</td>
+<td>[csCommandLine, csScript]</td>
+<td>EXAP</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>EXIT</td>
+<td>Terminate the script.</td>
+<td>[csScript]</td>
+<td>EXIT</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>HELP</td>
+<td>Display help overview or detailed usage for a command.</td>
+<td>[csCommandLine, csScript]</td>
+<td>HELP [command]</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>INC</td>
+<td>Increment RA by 1 in-place.</td>
+<td>[csScript]</td>
+<td>INC</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>INRG</td>
+<td>Check if RA is between min and max.</td>
+<td>[csScript]</td>
+<td>INRG min max</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>JPCA</td>
+<td>Jump to the specified label; if RF/C = true.</td>
+<td>[csScript]</td>
+<td>JPCA label</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>JPNC</td>
+<td>Jump to the specified label; if RF/C = false.</td>
+<td>[csScript]</td>
+<td>JPNC label</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>JPNZ</td>
+<td>Jump to the specified label; if RF/Z = false.</td>
+<td>[csScript]</td>
+<td>JPNZ label</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>JPZE</td>
+<td>Jump to the specified label if RF/Z = true.</td>
+<td>[csScript]</td>
+<td>JPZE label</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>JUMP</td>
+<td>Jump to the specified label.</td>
+<td>[csScript]</td>
+<td>JUMP label</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>LDME</td>
+<td>Load memory content from file</td>
+<td>[csCommandLine, csScript]</td>
+<td>LDME instancename filename</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>LDPR</td>
+<td>Change to interactive mode and load project from file.</td>
+<td>[csCommandLine]</td>
+<td>LDPR filename.clprj</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>LDRG</td>
+<td>Load a value to specified register.</td>
+<td>[csScript]</td>
+<td>LDRG register value</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>LDSC</td>
+<td>Change to script mode and load script from file.</td>
+<td>[csCommandLine]</td>
+<td>LDSC filename.clsce</td>
+<td>1</td>
+<td>No</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>MUL</td>
+<td>Multiply RA by value in-place.</td>
+<td>[csScript]</td>
+<td>MUL value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>MVIO</td>
+<td>Set position of I/O device panel.</td>
+<td>[csCommandLine, csScript]</td>
+<td>MVIO instancename left-top</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>NMI</td>
+<td>Call non-maskable interrupt.</td>
+<td>[csCommandLine]</td>
+<td>NMI</td>
+<td>0</td>
+<td>No</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="odd">
+<td>NOT</td>
+<td>Bitwise/logical NOT in-place.</td>
+<td>[csScript]</td>
+<td>NOT</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>NWPR</td>
+<td>Change to interactive mode and create new project.</td>
+<td>[csCommandLine]</td>
+<td>NWPR</td>
+<td>0</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>NWSC</td>
+<td>Change to script mode and create new script.</td>
+<td>[csCommandLine]</td>
+<td>NWSC</td>
+<td>0</td>
+<td>No</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>OR</td>
+<td>Bitwise/logical OR in-place.</td>
+<td>[csScript]</td>
+<td>OR value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>PRNT</td>
+<td>Write text to console.</td>
+<td>[csScript]</td>
+<td>PRNT “text” [“text”]</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>RDIO</td>
+<td>Read a value from I/O port and store in register RA.</td>
+<td>[csScript]</td>
+<td>RDIO address</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>RDME</td>
+<td>Read a value from memory and store in register RA.</td>
+<td>[csScript]</td>
+<td>RDME address</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>RNIO</td>
+<td>Rename I/O device panel.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RNIO instancename caption</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>RSAP</td>
+<td>Restart application.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSAP</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>RSIO</td>
+<td>Reset I/O port or device module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>RSME</td>
+<td>Reset memory module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSME instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>RSPU</td>
+<td>Reset processor module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSPU instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>RST</td>
+<td>Reset all module.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RST</td>
+<td>0</td>
+<td>No</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>RTRN</td>
+<td>Return from subroutine.</td>
+<td>[csScript]</td>
+<td>RTRN</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>RUN</td>
+<td>Run simulation.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RUN</td>
+<td>0</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>RUSC</td>
+<td>Run script.</td>
+<td>[csCommandLine]</td>
+<td>RUN</td>
+<td>0</td>
+<td>No</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>RWIO</td>
+<td>Show read/write window</td>
+<td>[csCommandLine]</td>
+<td>RWIO instancename</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>SESC</td>
+<td>Run script step-by-step.</td>
+<td>[csCommandLine]</td>
+<td>SESC</td>
+<td>0</td>
+<td>No</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHBL</td>
+<td>Show BusLogger window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHBL</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHBM</td>
+<td>Show BreakPoint Manager window.</td>
+<td>[csCommandLine]</td>
+<td>SHBM</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHHV</td>
+<td>Show HexViewer window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHHV instancename</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHIL</td>
+<td>Show IntLogger window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHIL</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHIO</td>
+<td>Show I/O device panel.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHIO instancename</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHL</td>
+<td>Shift target bits left by count in-place.</td>
+<td>[csScript]</td>
+<td>SHL count</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHME</td>
+<td>Show Module Explorer window.</td>
+<td>[csCommandLine]</td>
+<td>SHME</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>SHRL</td>
+<td>Show RunLogger window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHRL</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHR</td>
+<td>Shift target bits right by count in-place.</td>
+<td>[csScript]</td>
+<td>SHR count</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>SHRV</td>
+<td>Show RegViewer window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHRV instancename</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHSC</td>
+<td>Show ScriptConsole window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHSC</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHSE</td>
+<td>Show ScriptEditor window.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHSE</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>STEP</td>
+<td>Run simulation step-by-step.</td>
+<td>[csCommandLine, csScript]</td>
+<td>STEP</td>
+<td>0</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>STOP</td>
+<td>Stop simulation.</td>
+<td>[csCommandLine, csScript]</td>
+<td>STOP</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>STSC</td>
+<td>Stop script.</td>
+<td>[csCommandLine]</td>
+<td>STSC</td>
+<td>0</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>SUB</td>
+<td>Subtract value from RA in-place.</td>
+<td>[csScript]</td>
+<td>SUB value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SVME</td>
+<td>Save memory content to file</td>
+<td>[csCommandLine, csScript]</td>
+<td>SVME filename instancename</td>
+<td>2</td>
+<td>No</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SVPR</td>
+<td>Save project to file.</td>
+<td>[csCommandLine]</td>
+<td>SVPR filename.clprj</td>
+<td>1</td>
+<td>No</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="odd">
+<td>SVSC</td>
+<td>Save script to file.</td>
+<td>[csCommandLine]</td>
+<td>SVSC filename.clsce</td>
+<td>1</td>
+<td>No</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>SWAP</td>
+<td>Swap the values of two registers.</td>
+<td>[csScript]</td>
+<td>SWAP register register</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SZIO</td>
+<td>Set size of I/O device panel.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SZIO instancename width-height</td>
+<td>2</td>
+<td>Yes</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>WAIT</td>
+<td>Wait specified ms.</td>
+<td>[csScript]</td>
+<td>WAIT ms</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>WRIO</td>
+<td>Read a value from register RA and write to I/O port</td>
+<td>[csScript]</td>
+<td>WRIO address</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>WRME</td>
+<td>Read a value from register RA and store in memory</td>
+<td>[csScript]</td>
+<td>WRME address</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>XOR</td>
+<td>Bitwise/logical XOR in-place.</td>
+<td>[csScript]</td>
+<td>XOR value</td>
+<td>1</td>
+<td>Yes</td>
+<td>[omScript]</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

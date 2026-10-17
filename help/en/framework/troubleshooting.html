@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 8. Troubleshooting</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="troubleshooting">8. Troubleshooting</h2>
+<p>The following table lists common error messages and warnings you
+might encounter while using CoreLAB, along with their possible causes
+and solutions.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Error / Warning</th>
+<th>Possible Cause / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Plugin directory does not exist.</td>
+<td>Check the plugin directory path or ensure the default
+<code>library</code> folder exists.</td>
+</tr>
+<tr class="even">
+<td>Cannot load plugins from [path].</td>
+<td>The specified directory might be empty, or the plugin files are
+corrupted or incompatible.</td>
+</tr>
+<tr class="odd">
+<td>Missing help file. / Missing help viewer.</td>
+<td>Check that the <code>corelab_en.chm</code> (or localized) file and
+the <code>lhelp</code> viewer are available in your system path or
+application directory.</td>
+</tr>
+<tr class="even">
+<td>Cannot destroy attached module named ‘[name]’.</td>
+<td>You must detach the module from the system bus before destroying
+it.</td>
+</tr>
+<tr class="odd">
+<td>Cannot be used ‘[command]’ in interactive/script mode.</td>
+<td>The executed command is restricted to the other operation mode.
+Switch modes and try again.</td>
+</tr>
+<tr class="even">
+<td>Command ‘[command]’ is not available while simulation is
+running.</td>
+<td>Stop the simulation execution before using configuration or module
+management commands.</td>
+</tr>
+<tr class="odd">
+<td>Module named ‘[name]’ exists.</td>
+<td>Module instance names must be unique. Choose a different name for
+the new module.</td>
+</tr>
+<tr class="even">
+<td>Module named ‘[name]’ not exists.</td>
+<td>Check the spelling of the instance name in your command or
+script.</td>
+</tr>
+<tr class="odd">
+<td>Cannot create module named ‘[name]’.</td>
+<td>The plugin might be missing or failed to initialize. Check the
+available loaded plugins.</td>
+</tr>
+<tr class="even">
+<td>Module named ‘[name]’ has been already attached.</td>
+<td>The module is already connected to the system bus.</td>
+</tr>
+<tr class="odd">
+<td>Only one CPU connection is allowed.</td>
+<td>CoreLAB currently supports attaching only one CPU module to the
+system bus at a time.</td>
+</tr>
+<tr class="even">
+<td>Cannot load/save memory content…</td>
+<td>Check file permissions, ensure the file format (BIN/HEX) is correct,
+and verify checksums for Intel HEX files.</td>
+</tr>
+<tr class="odd">
+<td>Property ‘[name]’ is read only or not exists.</td>
+<td>Check the property name spelling. Some properties cannot be modified
+manually.</td>
+</tr>
+<tr class="even">
+<td>Value ‘[value]’ is bad.</td>
+<td>Ensure the provided value is in the correct format (e.g., correct
+hexadecimal syntax or boolean values).</td>
+</tr>
+<tr class="odd">
+<td>Cannot load/save project from [file].</td>
+<td>Ensure you have the necessary read/write permissions and the file is
+a valid <code>.clprj</code> format.</td>
+</tr>
+<tr class="even">
+<td>Cannot load/save script to [file].</td>
+<td>Check the file permissions and verify it is a valid
+<code>.clsce</code> script file.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
