@@ -9,7 +9,7 @@ A CoreLAB egy moduláris processzor-szimulációs keretrendszer. Átfogó grafik
 - Moduláris felépítés dinamikusan betölthető processzor-, memória- és I/O port bővítményekkel.
 - Két elsődleges működési mód: Interaktív mód a kézi vezérléshez és Szkript mód az automatizált végrehajtáshoz.
 - Projektkezelés a teljes szimulációs munkakörnyezetek létrehozásához, betöltéséhez és mentéséhez (`.clprj`).
-- Fejlett hibakereső és megfigyelő eszközök: Modulfelfedező (Module Explorer), Töréspontkezelő (Breakpoint Manager), RegViewer és HexViewer.
+- Fejlett hibakereső és megfigyelő eszközök: Module Explorer, Breakpoint Manager, RegViewer és HexViewer.
 - Integrált naplózó ablakok: BusLogger, RunLogger és IntLogger.
 - Beépített szkriptszerkesztő (Script Editor) és szkriptkonzol (Script Console) az egyedi `.clsce` szkriptekhez.
 - Teljes szimulációvezérlés: futtatás, léptetés, leállítás, modulok visszaállítása (reset), és nem maszkolható megszakítások (NMI) kiváltása.

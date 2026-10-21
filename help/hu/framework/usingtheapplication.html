@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 4. Az alkalmazás használata</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="az-alkalmazás-használata">4. Az alkalmazás használata</h2>
+<p>Bár a CoreLAB letisztult és intuitív grafikus felülettel rendelkezik,
+az alapvető munkafolyamatok megértése elengedhetetlen az első szimulált
+környezet felépítéséhez és futtatásához.</p>
+<h3 id="szimulációs-munkaterület-felépítése">4.1 Szimulációs
+munkaterület felépítése</h3>
+<p>A CoreLAB moduláris felépítésre épül. Egy számítógépes rendszer
+szimulálásához példányosítania kell a szükséges összetevőket, és
+csatlakoztatnia kell őket a rendszerbuszhoz.</p>
+<ol type="1">
+<li><strong>Processzor létrehozása:</strong> Lépjen a <strong>Processzor
+&gt; Létrehozás… (Processor &gt; Create…)</strong> menüpontra, válasszon
+ki egy CPU bővítményt (pl. <code>cpu_8080</code>), adjon a példánynak
+egy egyedi nevet, majd kattintson az OK gombra.</li>
+<li><strong>Memória létrehozása:</strong> Lépjen a <strong>Memória &gt;
+Létrehozás… (Memory &gt; Create…)</strong> menüpontra, válasszon ki egy
+memória bővítményt (pl. <code>memory_standard</code>), nevezze el, és
+állítsa be a méretét, valamint az alapcímét a <strong>Tulajdonságok…
+(Properties…)</strong> parancs segítségével.</li>
+<li><strong>I/O eszközök létrehozása:</strong> Ha a szimuláció
+bemenetet/kimenetet igényel, lépjen az <strong>I/O port &gt; Létrehozás…
+(I/O port &gt; Create…)</strong> menüpontra, válassza ki a kívánt
+perifériát (pl. kapcsolók, LED-ek vagy kijelzők), és nevezze el.</li>
+<li><strong>Csatlakoztatás a buszhoz:</strong> A modulok nem fognak
+kommunikálni, amíg nincsenek a rendszerbuszhoz csatlakoztatva. Használja
+a <strong>Csatlakoztatás a buszhoz… (Attach to bus…)</strong> parancsot
+külön-külön a CPU, a memória és az I/O modulokhoz.</li>
+</ol>
+<h3 id="kód-és-adatok-betöltése">4.2 Kód és adatok betöltése</h3>
+<p>A processzor elindítása előtt be kell töltenie egy végrehajtható
+programot a memóriába. 1. Győződjön meg arról, hogy a memóriamodul
+csatlakoztatva van a buszhoz. 2. Lépjen a <strong>Memória &gt;
+Memóriatartalom betöltése… (Memory &gt; Load memory content…)</strong>
+menüpontra. 3. Válassza ki a lefordított bináris (<code>.bin</code>)
+vagy Intel HEX (<code>.hex</code>) fájlt. 4. Adja meg a kezdőcímet, ha
+bináris fájlt tölt be (a HEX fájlok tartalmazzák a saját címtérképüket,
+így automatikusan a megfelelő helyekre töltődnek be).</p>
+<h3 id="a-szimuláció-futtatása">4.3 A szimuláció futtatása</h3>
+<p>Miután a virtuális hardver felépült és a kód betöltődött a memóriába:
+1. Lépjen a fő eszköztár <strong>Műveletek (Operation)</strong> lapjára.
+2. Állítsa be a <strong>Futtatási késleltetés (Run Delay)</strong>
+legördülő menüt (pl. 1000 ms), hogy szabályozza a szimuláció
+végrehajtási sebességét. Ez erősen ajánlott a vizuális hibakereséshez.
+3. Kattintson a <strong>Futtatás (Run)</strong> gombra a folyamatos
+végrehajtás elindításához, vagy használja a <strong>Léptetés
+(Step)</strong> gombot az utasítások egyenkénti végrehajtásához. 4.
+Használjon olyan vizuális eszközöket, mint a <strong>RunLogger</strong>,
+a <strong>RegViewer</strong> vagy a <strong>BusLogger</strong> a
+<strong>Nézet (View)</strong> menüből, hogy valós időben nyomon
+követhesse a végrehajtási logikát, a regisztereket és a busz
+forgalmát.</p>
+<h3 id="projektek-használata">4.4 Projektek használata</h3>
+<p>Egy bonyolult hardverbeállítás manuális felépítése minden alkalommal
+fárasztó lehet. - Miután konfigurálta a CPU-t, a memóriát és az I/O
+portokat, használja a <strong>Fájl &gt; Projekt mentése (File &gt; Save
+project)</strong> parancsot a környezet <code>.clprj</code> fájlként
+történő mentéséhez. - Legközelebb egyszerűen használja a <strong>Fájl
+&gt; Projekt betöltése… (File &gt; Load project…)</strong> parancsot a
+teljes hardvertopológia és a modulok tulajdonságainak azonnali
+visszaállításához.</p>
+<h3 id="munkavégzés-szkriptekkel">4.5 Munkavégzés szkriptekkel</h3>
+<p>Az automatizált teszteléshez és környezetépítéshez Interaktív módból
+Szkript módba válthat. 1. Lépjen a <strong>Fájl &gt; Váltás szkript
+módba (File &gt; Switch to script mode)</strong> menüpontra. 2. Nyissa
+meg a beépített szerkesztőt a <strong>Nézet &gt; Szkriptszerkesztő
+megjelenítése… (View &gt; Show ScriptEditor…)</strong> menüponton
+keresztül. 3. Írja meg vagy töltse be a <code>.clsce</code>
+(Scriptembly) parancsait a modulok automatikus példányosításához, a
+memória betöltéséhez, a regiszterek módosításához és a feltételek
+érvényesítéséhez. 4. Kattintson a <strong>Szkript futtatása (Run
+script)</strong> gombra a Szkript eszköztáron, és figyelje a szöveges
+kimenetet a <strong>Szkriptkonzolban (ScriptConsole)</strong>.</p>
+</body>
+</html>

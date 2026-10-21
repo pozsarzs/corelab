@@ -47,7 +47,7 @@
 </tbody>
 </table>
 <h3 id="keyboard-shortcuts">9.2 Keyboard Shortcuts</h3>
-<table border="1" cellspacing="0" cellpadding="4">
+<table>
 <thead>
 <tr class="header">
 <th style="text-align: center;">Shortcut</th>
@@ -183,7 +183,51 @@ data exchange.</li>
 <li><strong>Module Explorer:</strong> A built-in graphical tool used to
 manage and view the hierarchical list of active module instances.</li>
 </ul>
-<h3 id="version-history">9.4 Version History</h3>
+<h3 id="external-editors-and-syntax-highlighting">9.4 External Editors
+and Syntax Highlighting</h3>
+<p>While CoreLAB includes a built-in ScriptEditor, you may prefer
+writing <code>.clsce</code> (Scriptembly) files in your favorite
+external text editor. To improve readability, the CoreLAB package
+provides syntax highlighting definition files for several popular
+editors. Follow the instructions below to install the syntax
+highlighting file for your specific editor:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Editor</th>
+<th>File</th>
+<th>Installation Path / Method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>MCEdit</strong></td>
+<td><code>Syntax</code> / <code>corelab.syntax</code></td>
+<td>Insert <code>Syntax</code> content to top of
+<code>~/.local/share/mc/Syntax</code>, then copy
+<code>corelab.syntax</code> to
+<code>~/.local/share/mc/Syntax/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>*<strong>GTKSourceView:</strong> Applications using GtkSourceView
+include Builder, Geany, Gedit, Mousepad, Pluma, and Scribes. Note that
+the exact target directory might vary depending on the specific
+application and OS.</li>
+<li><strong>VSCode Marketplace:</strong> The Visual Studio Code
+extension can also be installed directly from the Marketplace using this
+URL: <a
+href="https://marketplace.visualstudio.com/items?itemName=pozsarzs.corelab-script">CoreLAB
+Script Extension</a></li>
+</ul>
+<h3 id="version-history">9.5 Version History</h3>
 <ul>
 <li><strong>v0.1.0:</strong> First developer test release. Functional
 processor simulator framework with script engine, plugin support, and

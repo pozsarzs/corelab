@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 5. Menüparancsok</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="menüparancsok">5. Menüparancsok</h2>
+<p>A menüsor hozzáférést biztosít a projektek kezeléséhez, a modulok
+konfigurálásához és a szimuláció vezérléséhez szükséges összes
+funkcióhoz.</p>
+<h3 id="fájl">5.1 Fájl</h3>
+<ul>
+<li><strong>Váltás interaktív módba:</strong> Átkapcsolja az alkalmazást
+interaktív módba, lehetővé téve a modulok kézi kezelését és a szimuláció
+vezérlését.</li>
+<li><strong>Váltás szkript módba:</strong> Átkapcsolja az alkalmazást
+szkript módba az automatizált végrehajtáshoz <code>.clsce</code>
+szkripteken keresztül.</li>
+<li><strong>Új projekt:</strong> Létrehoz egy új, üres szimulációs
+munkaterületet.</li>
+<li><strong>Projekt betöltése…:</strong> Betölt egy meglévő CoreLAB
+projektfájlt (<code>.clprj</code>).</li>
+<li><strong>Projekt mentése:</strong> Menti az aktuális
+projektkonfigurációt.</li>
+<li><strong>Projekt mentése másként…:</strong> Az aktuális
+projektkonfigurációt egy újonnan megadott fájlba menti.</li>
+<li><strong>Munkakönyvtár megváltoztatása:</strong> Beállítja az
+alapértelmezett munkakönyvtárat a fájlműveletekhez.</li>
+<li><strong>Beállítások…:</strong> Megnyitja az általános beállítások
+párbeszédpanelt a felhasználói felület színeinek és egyéb elrendezési
+beállításainak konfigurálásához.</li>
+<li><strong>Alkalmazás újraindítása:</strong> Újraindítja a CoreLAB
+alkalmazást.</li>
+<li><strong>Kilépés:</strong> Bezárja az alkalmazást, és visszatér az
+operációs rendszerhez.</li>
+</ul>
+<h3 id="nézet">5.2 Nézet</h3>
+<ul>
+<li><strong>Module Explorer megjelenítése…:</strong> Megnyit egy
+fa-nézetű ablakot az összes példányosított CPU, memória és I/O modul
+kezeléséhez.</li>
+<li><strong>Breakpoint Manager megjelenítése…:</strong> Megnyit egy
+ablakot a végrehajtási töréspontok kezeléséhez.</li>
+<li><strong>BusLogger megjelenítése…:</strong> Megnyitja a BusLogger-t a
+rendszerbuszon történő olvasási és írásási műveletek figyeléséhez.</li>
+<li><strong>RunLogger megjelenítése…:</strong> Megnyitja a RunLogger-t a
+CPU utasítások valós idejű végrehajtásának figyeléséhez.</li>
+<li><strong>IntLogger megjelenítése…:</strong> Megnyitja az IntLogger-t
+a hardveres megszakításkérések megtekintéséhez.</li>
+<li><strong>RegViewer megjelenítése…:</strong> Megnyitja a RegViewer-t
+egy adott processzor belső regisztereinek és jelzőinek (flag)
+vizsgálatához.</li>
+<li><strong>HexViewer megjelenítése…:</strong> Megnyitja a HexViewer-t
+egy adott memóriamodul adattartalmának vizsgálatához.</li>
+<li><strong>Szkriptszerkesztő megjelenítése…:</strong> Megnyitja a
+beépített szövegszerkesztőt az automatizálási szkriptek írásához és
+módosításához.</li>
+<li><strong>Szkriptkonzol megjelenítése…:</strong> Megnyitja a konzolt,
+amely a szkriptparancsok által generált szöveges kimeneteket jeleníti
+meg.</li>
+<li><strong>I/O panel átnevezése…:</strong> Lehetővé teszi egy
+kiválasztott I/O eszköz interaktív grafikus paneljének átnevezését.</li>
+<li><strong>I/O panel mozgatása/átméretezése…:</strong> Lehetővé teszi
+egy I/O eszköz interaktív panelje pozíciójának és méretének
+módosítását.</li>
+<li><strong>I/O panel megjelenítése…:</strong> Megjeleníti a
+kiválasztott I/O eszköz interaktív grafikus paneljét.</li>
+</ul>
+<h3 id="processzor">5.3 Processzor</h3>
+<ul>
+<li><strong>Létrehozás…:</strong> Példányosít és betölt egy új
+processzormodult az elérhető bővítmények közül.</li>
+<li><strong>Megsemmisítés…:</strong> Megsemmisíti és eltávolítja a
+kiválasztott processzormodult.</li>
+<li><strong>Visszaállítás…:</strong> Visszaállítja a kiválasztott
+processzort a kezdeti hardveres állapotára.</li>
+<li><strong>Engedélyezés…:</strong> Engedélyezi a kiválasztott
+processzormodult.</li>
+<li><strong>Letiltás…:</strong> Letiltja a kiválasztott
+processzormodult.</li>
+<li><strong>Csatlakoztatás a buszhoz…:</strong> Csatlakoztatja a
+processzormodult a szimulált rendszerbuszhoz.</li>
+<li><strong>Leválasztás a buszról…:</strong> Leválasztja a
+processzormodult a rendszerbuszról.</li>
+<li><strong>Tulajdonságok…:</strong> Megnyitja a konfigurációs ablakot a
+kiválasztott processzor tulajdonságainak szerkesztéséhez.</li>
+</ul>
+<h3 id="memória">5.4 Memória</h3>
+<ul>
+<li><strong>Létrehozás…:</strong> Példányosít és betölt egy új
+memóriamodult.</li>
+<li><strong>Megsemmisítés…:</strong> Megsemmisíti és eltávolítja a
+kiválasztott memóriamodult.</li>
+<li><strong>Visszaállítás…:</strong> Visszaállítja a kiválasztott
+memóriamodult, törölve az ideiglenes állapotait.</li>
+<li><strong>Engedélyezés…:</strong> Engedélyezi a kiválasztott
+memóriamodult.</li>
+<li><strong>Letiltás…:</strong> Letiltja a kiválasztott
+memóriamodult.</li>
+<li><strong>Csatlakoztatás a buszhoz…:</strong> Csatlakoztatja a
+memóriamodult a szimulált rendszerbuszhoz.</li>
+<li><strong>Leválasztás a buszról…:</strong> Leválasztja a memóriamodult
+a rendszerbuszról.</li>
+<li><strong>Tulajdonságok…:</strong> Megnyitja a konfigurációs ablakot a
+kiválasztott memória tulajdonságainak szerkesztéséhez.</li>
+<li><strong>Memóriatartalom betöltése…:</strong> Bináris
+(<code>.bin</code>) vagy Intel HEX (<code>.hex</code>) adatokat tölt be
+a memóriamodulba.</li>
+<li><strong>Memóriatartalom mentése…:</strong> A memóriamodul tartalmát
+<code>.bin</code> vagy <code>.hex</code> fájlba menti.</li>
+<li><strong>Vizsgálat/módosítás…:</strong> Megnyit egy eszközt az egyes
+bájtok adott memóriacímeken történő manuális olvasásához vagy
+írásához.</li>
+</ul>
+<h3 id="io-port">5.5 I/O port</h3>
+<ul>
+<li><strong>Létrehozás…:</strong> Példányosít és betölt egy új I/O
+portot vagy eszközmodult.</li>
+<li><strong>Megsemmisítés…:</strong> Megsemmisíti és eltávolítja a
+kiválasztott I/O modult.</li>
+<li><strong>Visszaállítás…:</strong> Visszaállítja a kiválasztott I/O
+modult a kezdeti állapotára.</li>
+<li><strong>Engedélyezés…:</strong> Engedélyezi a kiválasztott I/O
+modult.</li>
+<li><strong>Letiltás…:</strong> Letiltja a kiválasztott I/O modult.</li>
+<li><strong>Csatlakoztatás a buszhoz…:</strong> Csatlakoztatja az I/O
+modult a szimulált rendszerbuszhoz.</li>
+<li><strong>Leválasztás a buszról…:</strong> Leválasztja az I/O modult a
+rendszerbuszról.</li>
+<li><strong>Tulajdonságok…:</strong> Megnyitja a konfigurációs ablakot a
+kiválasztott I/O port vagy eszköz tulajdonságainak szerkesztéséhez.</li>
+<li><strong>Olvasás/Írás…:</strong> Megnyit egy eszközt a konkrét I/O
+portról történő manuális olvasáshoz, vagy az oda történő
+adatíráshoz.</li>
+</ul>
+<h3 id="műveletek">5.6 Műveletek</h3>
+<ul>
+<li><strong>Futtatás:</strong> Elindítja a hardverszimuláció folyamatos
+végrehajtását.</li>
+<li><strong>Léptetés:</strong> Végrehajt egyetlen
+processzorutasítás-lépést a szimulációban.</li>
+<li><strong>Leállítás:</strong> Leállítja a futó szimulációt.</li>
+<li><strong>NMI:</strong> Egy nem maszkolható megszakítást (Non-Maskable
+Interrupt) vált ki a csatlakoztatott processzoron.</li>
+<li><strong>Minden csatlakoztatott modul visszaállítása:</strong>
+Globális visszaállítási (reset) jelet küld a rendszerbuszhoz
+csatlakoztatott összes CPU-nak, memóriamodulnak és I/O portnak.</li>
+<li><strong>Pillanatkép készítése:</strong> Menti a szimuláció aktuális
+végrehajtási állapotát.</li>
+<li><strong>Pillanatkép visszaállítása…:</strong> Visszaállít egy
+korábban mentett szimulációs végrehajtási állapotot.</li>
+</ul>
+<h3 id="szkript">5.7 Szkript</h3>
+<ul>
+<li><strong>Új szkript:</strong> Létrehoz egy új, üres szkriptet.</li>
+<li><strong>Szkript betöltése…:</strong> Betölt egy meglévő szkriptfájlt
+(<code>.clsce</code>).</li>
+<li><strong>Szkript mentése:</strong> Menti az aktuális szkriptet.</li>
+<li><strong>Szkript mentése másként…:</strong> Az aktuális szkriptet egy
+új fájlba menti.</li>
+<li><strong>Szkript futtatása:</strong> Automatikusan végrehajtja a
+betöltött szkriptet.</li>
+<li><strong>Szkript léptetése:</strong> Lépésenként hajtja végre a
+szkriptet, ami hasznos az automatizálási logika hibakereséséhez
+(debugging).</li>
+<li><strong>Szkript leállítása:</strong> Leállítja az éppen futó szkript
+végrehajtását.</li>
+</ul>
+<h3 id="súgó">5.8 Súgó</h3>
+<ul>
+<li><strong>Súgó:</strong> Megnyitja a CoreLAB Súgó adatbázisát.</li>
+<li><strong>Névjegy:</strong> Információkat jelenít meg a CoreLAB
+keretrendszerről, a verziójáról és a szerzői jogi (copyright)
+részletekről.</li>
+</ul>
+</body>
+</html>

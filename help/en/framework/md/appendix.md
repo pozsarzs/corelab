@@ -56,6 +56,26 @@
 - **Snapshot:** A saved execution state of the simulation (`.clsht` file) that can be restored later.
 - **Module Explorer:** A built-in graphical tool used to manage and view the hierarchical list of active module instances.
 
-### 9.4 Version History
+### 9.4 External Editors and Syntax Highlighting
+
+While CoreLAB includes a built-in ScriptEditor, you may prefer writing `.clsce` (Scriptembly) files in your favorite external text editor. To improve readability, the CoreLAB package provides syntax highlighting definition files for several popular editors.
+Follow the instructions below to install the syntax highlighting file for your specific editor:
+
+| Editor | File | Installation Path / Method |
+|---|---|---|
+| **GTKSourceView*** | `corelab.lang` | Copy to `~/.local/share/gtksourceview-?/language-specs/` |
+| **MCEdit** | `Syntax` / `corelab.syntax` | Insert `Syntax` content to top of `~/.local/share/mc/Syntax`, then copy `corelab.syntax` to `~/.local/share/mc/Syntax/` |
+| **Micro** | `corelab.yaml` | Copy to `~/.config/micro/syntax/` |
+| **Nano** | `corelab.nanorc` | Copy to `/usr/share/nano/` |
+| **Notepad++** | `corelab.xml` | Copy to `%USERPROFILE%\AppData\Roaming\Notepad++\userDefineLangs\` |
+| **(Neo)Vim** | `corelab.vim` / `scripts.vim` | Copy `corelab.vim` to `~/.config/vim/syntax/` and insert `scripts.vim` content into `~/.config/vim/scripts.vim` |
+| **Visual Studio Code** | `corelab-script` extension | Copy directory to `~/.vscode/extensions/` OR install the `.vsix` file from the application |
+
+**Notes:**  
+
+- ***GTKSourceView:** Applications using GtkSourceView include Builder, Geany, Gedit, Mousepad, Pluma, and Scribes. Note that the exact target directory might vary depending on the specific application and OS.
+- **VSCode Marketplace:** The Visual Studio Code extension can also be installed directly from the Marketplace using this URL: [CoreLAB Script Extension](https://marketplace.visualstudio.com/items?itemName=pozsarzs.corelab-script)
+
+### 9.5 Version History
 
 - **v0.1.0:** First developer test release. Functional processor simulator framework with script engine, plugin support, and basic diagnostic tools.

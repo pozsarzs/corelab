@@ -23,15 +23,15 @@ A CoreLAB számos integrált vizuális modult tartalmaz a szimulált hardver bel
 
 | Modul | Leírás |
 |---|---|
-| **Modulfelfedező (Module Explorer)** | Az összes példányosított CPU, memória és I/O port modul kezelésére és megtekintésére szolgál egy strukturált fastruktúrában. |
-| **Töréspontkezelő (Breakpoint Manager)** | Eszköz a végrehajtási töréspontok kezelésére, amellyel a szimuláció adott feltételek vagy címek esetén megállítható. |
+| **Module Explorer** | Az összes példányosított CPU, memória és I/O port modul kezelésére és megtekintésére szolgál egy strukturált fastruktúrában. |
+| **Breakpoint Manager** | Eszköz a végrehajtási töréspontok kezelésére, amellyel a szimuláció adott feltételek vagy címek esetén megállítható. |
 | **HexViewer** | Egy memórianézegető összetevő, amely lehetővé teszi egy kiválasztott memóriamodul adatainak valós idejű vizsgálatát. |
 | **RegViewer** | Valós idejű információkat jelenít meg a csatlakoztatott processzor belső regisztereiről és jelzőiről (flags). |
 | **RunLogger** | Valós idejű kimenetet biztosít a végrehajtott utasításokról, beleértve a címet, a gépi kódot és az assembly mnemonikot. |
 | **BusLogger** | Naplózza a rendszerbuszon áthaladó adat-, cím- és vezérlőjeleket (MEMRD, MEMWR, IORD, IOWR). |
 | **IntLogger** | Naplót vezet a csatlakoztatott I/O modulok által kiváltott hardveres megszakításkérésekről. |
-| **Szkriptszerkesztő (ScriptEditor)** | Beépített szövegszerkesztő környezet egyéni vezérlőszkriptek írásához, szerkesztéséhez és kezeléséhez. |
-| **Szkriptkonzol (ScriptConsole)** | Egy dedikált kimeneti konzol, amely megjeleníti egy futó szkript eredményeit és egyedi szöveges üzeneteit. |
+| **ScriptEditor** | Beépített szövegszerkesztő környezet egyéni vezérlőszkriptek írásához, szerkesztéséhez és kezeléséhez. |
+| **ScriptConsole** | Egy dedikált kimeneti konzol, amely megjeleníti egy futó szkript eredményeit és egyedi szöveges üzeneteit. |
 
 ### 3.3 Interaktív I/O panelek
 

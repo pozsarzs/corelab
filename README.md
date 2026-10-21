@@ -61,6 +61,7 @@ Second release will be with the following changes:
  - [ ] Intel 8008 8 bits microprocessor plugin.
  - [ ] Intel 8085 8 bits microprocessor plugin.
  - [ ] Zilog Z80 8 bits microprocessor plugin.
+ - [ ] AMD 2900 bit-slice microprocessor family plugin.
  
 ### Actual releases  
 

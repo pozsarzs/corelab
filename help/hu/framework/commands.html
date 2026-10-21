@@ -1,0 +1,867 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 6. Parancsok</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="parancsok">6. Parancsok</h2>
+<p>Ezeket a parancsokat a SysConsol parancssorában (csCommandLine) és
+szkriptekben is használhatja, feltéve, hogy az adott utasítás az
+aktuális kontextusban megengedett - vagyis, hogy engedélyezett-e a
+szimuláció során és az aktív működési módban (omInteractive vagy
+omScript). A szintaxist tekintve a megjegyzéseknek pontosvesszővel
+(<code>;</code>) kell kezdődniük, a karakterláncokat pedig idézőjelek
+közé (<code>"</code>) kell tenni. Az értékeket (például <em>index</em>
+vagy <em>address</em> /cím/) közvetlenül vagy a regiszterek tartalmára
+hivatkozva (pl. <em><span
+class="math inline"><em>R</em>0 *  − *</span>RF</em>) is meg lehet adni;
+magukat a regisztereket azonban kizárólag a nevükkel
+(<em>R0</em>-<em>RF</em>) kell megadni.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>utasítás</th>
+<th>leírás</th>
+<th>hatókör</th>
+<th>szintaxis</th>
+<th>arg.</th>
+<th>szim. alatt</th>
+<th>működési mód</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ADD</td>
+<td>Hozzáadja az értéket az RA-hoz helyben.</td>
+<td>[csScript]</td>
+<td>ADD value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>AND</td>
+<td>Bitenkénti/logikai ÉS helyben.</td>
+<td>[csScript]</td>
+<td>AND value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>ATIO</td>
+<td>I/O port vagy eszközmodul csatlakoztatása a buszhoz.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ATIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>ATME</td>
+<td>Memóriamodul csatlakoztatása a buszhoz.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ATME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>ATPU</td>
+<td>Processzormodul csatlakoztatása a buszhoz.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ATPU instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>BIT</td>
+<td>A megadott bit ellenőrzése.</td>
+<td>[csScript]</td>
+<td>BIT index</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>CALL</td>
+<td>Szubrutin meghívása.</td>
+<td>[csScript]</td>
+<td>CALL label</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>CFIO</td>
+<td>I/O port modul konfigurálása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CFIO instancename.property value</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>CFME</td>
+<td>Memóriamodul konfigurálása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CFME instancename.property value</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>CFPU</td>
+<td>Processzormodul konfigurálása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CFPU instancename.property value</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>CHWD</td>
+<td>Munkakönyvtár megváltoztatása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CHWD directory</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>COMP</td>
+<td>Az RA összehasonlítása egy értékkel kivonás útján.</td>
+<td>[csScript]</td>
+<td>COMP value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>CONV</td>
+<td>Az RA-ban lévő szám átalakítása 2/8/16-os számrendszerbe.</td>
+<td>[csScript]</td>
+<td>CONV target base</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>CRIO</td>
+<td>I/O port vagy eszközmodul példányosítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CRIO library instancename</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>CRME</td>
+<td>Memóriamodul példányosítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CRME library instancename</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>CRPU</td>
+<td>Processzormodul példányosítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>CRPU library instancename</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DEC</td>
+<td>Az RA csökkentése 1-gyel helyben.</td>
+<td>[csScript]</td>
+<td>DEC</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>DIIO</td>
+<td>I/O port vagy eszközmodul letiltása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DIIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DIME</td>
+<td>Memóriamodul letiltása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DIME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DIPU</td>
+<td>Processzormodul letiltása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DIPU instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DSIO</td>
+<td>I/O port vagy eszközmodul megsemmisítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DSIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DSME</td>
+<td>Memóriamodul megsemmisítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DSME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DSPU</td>
+<td>Processzormodul megsemmisítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DSPU instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DTIO</td>
+<td>I/O port vagy eszközmodul leválasztása a buszról.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DTIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>DTME</td>
+<td>Memóriamodul leválasztása a buszról.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DTME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>DTPU</td>
+<td>Processzormodul leválasztása a buszról.</td>
+<td>[csCommandLine, csScript]</td>
+<td>DTPU instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>EDME</td>
+<td>A vizsgálat/elhelyezés (examine/deposit) ablak megjelenítése.</td>
+<td>[csCommandLine]</td>
+<td>EDME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>END</td>
+<td>A főprogram vége.</td>
+<td>[csScript]</td>
+<td>END</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>ENIO</td>
+<td>I/O port vagy eszközmodul engedélyezése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ENIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>ENME</td>
+<td>Memóriamodul engedélyezése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ENME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>ENPU</td>
+<td>Processzormodul engedélyezése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>ENPU instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>EXAP</td>
+<td>Kilépés az alkalmazásból.</td>
+<td>[csCommandLine, csScript]</td>
+<td>EXAP</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>EXIT</td>
+<td>Szkript befejezése (leállítása).</td>
+<td>[csScript]</td>
+<td>EXIT</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>HELP</td>
+<td>Súgó áttekintés vagy egy parancs részletes használatának
+megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>HELP [command]</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>INC</td>
+<td>Az RA növelése 1-gyel helyben.</td>
+<td>[csScript]</td>
+<td>INC</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>INRG</td>
+<td>Ellenőrzi, hogy az RA a min és max értékek között van-e.</td>
+<td>[csScript]</td>
+<td>INRG min max</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>JPCA</td>
+<td>Ugrás a megadott címkére, ha RF/C = true.</td>
+<td>[csScript]</td>
+<td>JPCA label</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>JPNC</td>
+<td>Ugrás a megadott címkére, ha RF/C = false.</td>
+<td>[csScript]</td>
+<td>JPNC label</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>JPNZ</td>
+<td>Ugrás a megadott címkére, ha RF/Z = false.</td>
+<td>[csScript]</td>
+<td>JPNZ label</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>JPZE</td>
+<td>Ugrás a megadott címkére, ha RF/Z = true.</td>
+<td>[csScript]</td>
+<td>JPZE label</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>JUMP</td>
+<td>Ugrás a megadott címkére.</td>
+<td>[csScript]</td>
+<td>JUMP label</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>LDME</td>
+<td>Memóriatartalom betöltése fájlból.</td>
+<td>[csCommandLine, csScript]</td>
+<td>LDME instancename filename</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>LDPR</td>
+<td>Váltás interaktív módba és projekt betöltése fájlból.</td>
+<td>[csCommandLine]</td>
+<td>LDPR filename.clprj</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>LDRG</td>
+<td>Érték betöltése a megadott regiszterbe.</td>
+<td>[csScript]</td>
+<td>LDRG register value</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>LDSC</td>
+<td>Váltás szkript módba és szkript betöltése fájlból.</td>
+<td>[csCommandLine]</td>
+<td>LDSC filename.clsce</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>MUL</td>
+<td>Az RA szorzása az értékkel helyben.</td>
+<td>[csScript]</td>
+<td>MUL value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>MVIO</td>
+<td>I/O eszközpanel pozíciójának beállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>MVIO instancename left-top</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>NMI</td>
+<td>Nem maszkolható megszakítás hívása.</td>
+<td>[csCommandLine]</td>
+<td>NMI</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="odd">
+<td>NOT</td>
+<td>Bitenkénti/logikai NEM helyben.</td>
+<td>[csScript]</td>
+<td>NOT</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>NWPR</td>
+<td>Váltás interaktív módba és új projekt létrehozása.</td>
+<td>[csCommandLine]</td>
+<td>NWPR</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>NWSC</td>
+<td>Váltás szkript módba és új szkript létrehozása.</td>
+<td>[csCommandLine]</td>
+<td>NWSC</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>OR</td>
+<td>Bitenkénti/logikai VAGY helyben.</td>
+<td>[csScript]</td>
+<td>OR value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>PRNT</td>
+<td>Szöveg kiírása a konzolra.</td>
+<td>[csScript]</td>
+<td>PRNT “text” [“text”]</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>RDIO</td>
+<td>Érték olvasása az I/O portról és tárolása az RA regiszterben.</td>
+<td>[csScript]</td>
+<td>RDIO address</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>RDME</td>
+<td>Érték olvasása a memóriából és tárolása az RA regiszterben.</td>
+<td>[csScript]</td>
+<td>RDME address</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>RNIO</td>
+<td>I/O eszközpanel átnevezése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RNIO instancename caption</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>RSAP</td>
+<td>Alkalmazás újraindítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSAP</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>RSIO</td>
+<td>I/O port vagy eszközmodul visszaállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>RSME</td>
+<td>Memóriamodul visszaállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSME instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>RSPU</td>
+<td>Processzormodul visszaállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RSPU instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>RST</td>
+<td>Minden modul visszaállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RST</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>RTRN</td>
+<td>Visszatérés a szubrutinból.</td>
+<td>[csScript]</td>
+<td>RTRN</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>RUN</td>
+<td>Szimuláció futtatása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>RUN</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>RUSC</td>
+<td>Szkript futtatása.</td>
+<td>[csCommandLine]</td>
+<td>RUN</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>RWIO</td>
+<td>Olvasás/írás ablak megjelenítése.</td>
+<td>[csCommandLine]</td>
+<td>RWIO instancename</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>SESC</td>
+<td>Szkript lépésenkénti futtatása.</td>
+<td>[csCommandLine]</td>
+<td>SESC</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHBL</td>
+<td>BusLogger ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHBL</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHBM</td>
+<td>BreakPoint Manager ablak megjelenítése.</td>
+<td>[csCommandLine]</td>
+<td>SHBM</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHHV</td>
+<td>HexViewer ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHHV instancename</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHIL</td>
+<td>IntLogger ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHIL</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHIO</td>
+<td>I/O eszközpanel megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHIO instancename</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHL</td>
+<td>A célbitek eltolása balra a megadott számmal helyben.</td>
+<td>[csScript]</td>
+<td>SHL count</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHME</td>
+<td>Module Explorer ablak megjelenítése.</td>
+<td>[csCommandLine]</td>
+<td>SHME</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="even">
+<td>SHRL</td>
+<td>RunLogger ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHRL</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHR</td>
+<td>A célbitek eltolása jobbra a megadott számmal helyben.</td>
+<td>[csScript]</td>
+<td>SHR count</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>SHRV</td>
+<td>RegViewer ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHRV instancename</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>SHSC</td>
+<td>ScriptConsole ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHSC</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SHSE</td>
+<td>ScriptEditor ablak megjelenítése.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SHSE</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>STEP</td>
+<td>Szimuláció lépésenkénti futtatása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>STEP</td>
+<td>0</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>STOP</td>
+<td>Szimuláció leállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>STOP</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="odd">
+<td>STSC</td>
+<td>Szkript leállítása.</td>
+<td>[csCommandLine]</td>
+<td>STSC</td>
+<td>0</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>SUB</td>
+<td>Érték kivonása az RA-ból helyben.</td>
+<td>[csScript]</td>
+<td>SUB value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SVME</td>
+<td>Memóriatartalom mentése fájlba.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SVME filename instancename</td>
+<td>2</td>
+<td>Nem</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>SVPR</td>
+<td>Projekt mentése fájlba.</td>
+<td>[csCommandLine]</td>
+<td>SVPR filename.clprj</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omInteractive]</td>
+</tr>
+<tr class="odd">
+<td>SVSC</td>
+<td>Szkript mentése fájlba.</td>
+<td>[csCommandLine]</td>
+<td>SVSC filename.clsce</td>
+<td>1</td>
+<td>Nem</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>SWAP</td>
+<td>Két regiszter értékének felcserélése.</td>
+<td>[csScript]</td>
+<td>SWAP register register</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>SZIO</td>
+<td>I/O eszközpanel méretének beállítása.</td>
+<td>[csCommandLine, csScript]</td>
+<td>SZIO instancename width-height</td>
+<td>2</td>
+<td>Igen</td>
+<td>[omInteractive, omScript]</td>
+</tr>
+<tr class="even">
+<td>WAIT</td>
+<td>Várakozás a megadott milliszekundumig.</td>
+<td>[csScript]</td>
+<td>WAIT ms</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>WRIO</td>
+<td>Érték olvasása az RA regiszterből és írása az I/O portra.</td>
+<td>[csScript]</td>
+<td>WRIO address</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="even">
+<td>WRME</td>
+<td>Érték olvasása az RA regiszterből és tárolása a memóriában.</td>
+<td>[csScript]</td>
+<td>WRME address</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+<tr class="odd">
+<td>XOR</td>
+<td>Bitenkénti/logikai kizáró VAGY (XOR) helyben.</td>
+<td>[csScript]</td>
+<td>XOR value</td>
+<td>1</td>
+<td>Igen</td>
+<td>[omScript]</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

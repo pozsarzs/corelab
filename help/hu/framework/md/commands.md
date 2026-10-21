@@ -2,7 +2,7 @@
 
 ## 6. Parancsok
 
-Ezeket a parancsokat a SysConsol parancssorában (csCommandLine) és szkriptekben is használhatja, feltéve, hogy az adott utasítás az aktuális kontextusban megengedett – vagyis, hogy engedélyezett-e a szimuláció során és az aktív működési módban (omInteractive vagy omScript). A szintaxist tekintve a megjegyzéseknek pontosvesszővel (`;`) kell kezdődniük, a karakterláncokat pedig idézőjelek közé (`"`) kell tenni. Az értékeket (például *index* vagy *address* /cím/) közvetlenül vagy a regiszterek tartalmára hivatkozva (pl. *$R0*–*$RF*) is meg lehet adni; magukat a regisztereket azonban kizárólag a nevükkel (*R0*–*RF*) kell megadni.
+Ezeket a parancsokat a SysConsol parancssorában (csCommandLine) és szkriptekben is használhatja, feltéve, hogy az adott utasítás az aktuális kontextusban megengedett - vagyis, hogy engedélyezett-e a szimuláció során és az aktív működési módban (omInteractive vagy omScript). A szintaxist tekintve a megjegyzéseknek pontosvesszővel (`;`) kell kezdődniük, a karakterláncokat pedig idézőjelek közé (`"`) kell tenni. Az értékeket (például *index* vagy *address* /cím/) közvetlenül vagy a regiszterek tartalmára hivatkozva (pl. *$R0*-*$RF*) is meg lehet adni; magukat a regisztereket azonban kizárólag a nevükkel (*R0*-*RF*) kell megadni.
 
 | utasítás | leírás | hatókör | szintaxis | arg. | szim. alatt | működési mód |
 |---|---|---|---|---|---|---|
@@ -78,7 +78,7 @@ Ezeket a parancsokat a SysConsol parancssorában (csCommandLine) és szkriptekbe
 | SHIL | IntLogger ablak megjelenítése. | [csCommandLine, csScript] | SHIL | 0 | Igen | [omInteractive, omScript] |
 | SHIO | I/O eszközpanel megjelenítése. | [csCommandLine, csScript] | SHIO instancename | 1 | Igen | [omInteractive, omScript] |
 | SHL | A célbitek eltolása balra a megadott számmal helyben. | [csScript] | SHL count | 1 | Igen | [omScript] |
-| SHME | Modulfelfedező ablak megjelenítése. | [csCommandLine] | SHME | 0 | Igen | [omInteractive] |
+| SHME | Module Explorer ablak megjelenítése. | [csCommandLine] | SHME | 0 | Igen | [omInteractive] |
 | SHRL | RunLogger ablak megjelenítése. | [csCommandLine, csScript] | SHRL | 0 | Igen | [omInteractive, omScript] |
 | SHR | A célbitek eltolása jobbra a megadott számmal helyben. | [csScript] | SHR count | 1 | Igen | [omScript] |
 | SHRV | RegViewer ablak megjelenítése. | [csCommandLine, csScript] | SHRV instancename | 1 | Igen | [omInteractive, omScript] |

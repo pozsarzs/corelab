@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - 7. Beállítások</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="beállítások">7. Beállítások</h2>
+<p>A Beállítások párbeszédpanel lehetővé teszi az alkalmazás vizuális
+megjelenésének testreszabását. A program automatikusan menti az összes
+ablak méretét és pozícióját, valamint a belső naplózók (loggers) és
+nézegetők (viewers) oszlopszélességeit. Ezeket a konfigurációkat egy INI
+fájl tárolja a felhasználói profil könyvtárában.</p>
+<h3 id="konfigurálható-színek">7.1 Konfigurálható színek</h3>
+<p>Saját igényei szerint módosíthatja több belső modul háttér- és
+betűszínét:</p>
+<ul>
+<li><strong>SysConsole:</strong> Általános háttér- és betűszínek.</li>
+<li><strong>ScriptConsole:</strong> Általános háttér- és
+betűszínek.</li>
+<li><strong>ScriptEditor:</strong> Háttér, betűtípus és a sorszámozás
+sávjának betűszínei. Emellett be- és kikapcsolható a sorszámok és a
+szintaxiskiemelés láthatósága.</li>
+<li><strong>HexViewer:</strong> A cím (address), az adat (data), a
+sorkiválasztó (line selector) és a váltakozó (páros/páratlan) sorok
+hátterének színei.</li>
+<li><strong>RunLogger:</strong> Az utasításszám, cím, opkód (opcode),
+mnemonik, ciklusok, összes ciklus, sorkiválasztó és a váltakozó sorok
+hátterének színei.</li>
+<li><strong>BusLogger:</strong> A művelet, eszköz, abszolút cím, relatív
+cím, adat, állapot, sorkiválasztó és a váltakozó sorok hátterének
+színei.</li>
+<li><strong>IntLogger:</strong> A küldő, megszakításvektor, állapot,
+jelzők (flags), sorkiválasztó és a váltakozó sorok hátterének
+színei.</li>
+</ul>
+<p>Ezen színbeállítások módosításai azonnal érvénybe lépnek, amint a
+Beállítások párbeszédpanelt az OK gombbal bezárja.</p>
+<h3 id="automatikusan-mentett-tulajdonságok">7.2 Automatikusan mentett
+tulajdonságok</h3>
+<p>Az alkalmazás kilépéskor automatikusan megjegyzi a munkaterület
+elrendezését és állapotát, így nem kell minden egyes indításkor
+manuálisan elrendezni az ablakokat. A következő tulajdonságok kerülnek
+mentésre:</p>
+<ul>
+<li><strong>Főablak (Main Window):</strong> Pozíció (felső, bal), méret
+(szélesség, magasság) és az elválasztó (splitter) pozíciója.</li>
+<li><strong>Belső ablakok:</strong> A BreakPoint Manager, HexViewer,
+IntLogger, Module Explorer, Module Properties, RegViewer, RunLogger,
+ScriptConsole, ScriptEditor és a SysConsole pozíciója és mérete.</li>
+<li><strong>Táblázatoszlopok:</strong> Az egyes oszlopok szélessége a
+BusLogger, IntLogger, Module Explorer, Module Properties, RegViewer és
+RunLogger modulokban.</li>
+<li><strong>Láthatóság:</strong> A Module Explorer ablak nyitott/zárt
+állapota.</li>
+</ul>
+<h3 id="konfigurációs-fájl-helye">7.3 Konfigurációs fájl helye</h3>
+<p>Az alkalmazás a beállításokat egy <code>corelab.ini</code> fájlban
+tárolja. Ennek helye az operációs rendszertől függ:</p>
+<ul>
+<li><strong>Windows:</strong>
+<code>&lt;FelhasználóiKönyvtár&gt;\Appdata\Local\corelab\corelab.ini</code></li>
+<li><strong>Linux / FreeBSD:</strong>
+<code>&lt;FelhasználóiKönyvtár&gt;/.config/corelab/corelab.ini</code></li>
+</ul>
+<p>Ha a konfigurációs fájl hiányzik vagy nem tölthető be, az alkalmazás
+az alapértelmezett értékeket használja.</p>
+</body>
+</html>
