@@ -10,17 +10,17 @@
 class in cpu_8080 unit</h2>
 <p><code>T8080CPU</code> is the Intel 8080 processor implementation for
 the CoreLAB framework. It derives from <code>TCPU</code> and implements
-the Intel 8080 register set, reset operation, state persistence,
-instruction stepping, current-instruction reporting and register
-access.</p>
+the Intel 8080 register set, flag handling, reset operation, state
+persistence, instruction stepping, interrupt reporting,
+current-instruction reporting and register access.</p>
 <p>The actual instruction implementation is included from
-<code>microcode.pas</code> during compilation. Therefore, the
+<code>cpu_8080_microcode.pas</code> during compilation. Therefore, the
 instruction set behaviour is distributed between this unit and that
 included microcode source.</p>
 <h3 id="cpu-configuration">CPU configuration</h3>
 <p>The constructor configures the inherited <code>TCPU</code> properties
 as follows:</p>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>item</th>
@@ -41,39 +41,41 @@ as follows:</p>
 <td><code>arNeumann</code></td>
 </tr>
 <tr class="even">
-<td>Bit width</td>
-<td>8</td>
-</tr>
-<tr class="odd">
 <td>Address width</td>
 <td>16</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Endianness</td>
 <td><code>enLittle</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Maximum memory address</td>
 <td><code>$FFFF</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Maximum code address</td>
 <td><code>$FFFF</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Maximum I/O port address</td>
 <td><code>$00FF</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Separate I/O bus</td>
 <td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Default clock frequency</td>
+<td>2000000 Hz (2 MHz)</td>
 </tr>
 </tbody>
 </table>
 <h3 id="reset-state">Reset state</h3>
-<p><code>Reset</code> clears the complete <code>T8080Registers</code>
-record and then explicitly assigns:</p>
-<table>
+<p><code>Reset</code> disables execution, clears the halt and interrupt
+state, resets the execution counters, clears the complete
+<code>T8080Registers</code> record and sets the stack pointer to
+<code>$FFFF</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>register/state</th>
@@ -97,43 +99,126 @@ record and then explicitly assigns:</p>
 <td><code>Halted</code></td>
 <td><code>False</code></td>
 </tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FIRQPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FNMIPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
 </tbody>
 </table>
-<p>The method also emits the inherited <code>ceReset</code> event.</p>
+<p>The complete register record is cleared, so <code>A</code>,
+<code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>,
+<code>H</code>, <code>L</code> and <code>F</code> are all initially
+zero. The method emits the inherited <code>ceReset</code> event.</p>
 <h3 id="instruction-execution">Instruction execution</h3>
 <p><code>Step</code> performs the following operations:</p>
 <ol type="1">
+<li>Stops immediately when the CPU is disabled
+(<code>FEnabled = False</code>).</li>
 <li>Calls <code>CheckInterrupts</code>; execution stops immediately when
 an interrupt is accepted.</li>
 <li>Stops immediately if the CPU is halted.</li>
 <li>Reads the opcode from the system bus at the current
 <code>PC</code>.</li>
-<li>Stores the address and opcode in <code>LogRecord</code>.</li>
-<li>Clears the operand count in the log record.</li>
+<li>Stores the address, opcode and operand count in
+<code>FLastInstruction</code>.</li>
 <li>Increments <code>PC</code>.</li>
-<li>Emits <code>ceInstructionBoundary</code>.</li>
 <li>Includes and executes the instruction implementation from
-<code>microcode.pas</code>.</li>
-<li>Increments the inherited instruction counter.</li>
+<code>cpu_8080_microcode.pas</code>.</li>
+<li>Adds the instruction cycle count to <code>FTotalCycles</code>.</li>
+<li>Emits <code>ceInstructionBoundary</code>.</li>
+<li>Increments <code>FTotalInstructions</code>.</li>
 </ol>
 <p>The source therefore requires a connected <code>FBus</code> for
 opcode fetching.</p>
-<h3 id="current-instruction-format">Current-instruction format</h3>
-<p><code>GetCurrentInstruction</code> returns a tab-separated textual
-representation containing:</p>
+<h3 id="flag-handling">Flag handling</h3>
+<p><code>UpdateFlags</code> updates the Intel 8080 flag register
+<code>F</code> according to the arithmetic result.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>S</code></td>
+<td>Sign, bit 7 of the 8-bit result</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>Zero, set when the 8-bit result is zero</td>
+</tr>
+<tr class="odd">
+<td><code>A</code></td>
+<td>Auxiliary Carry, calculated from bit 4 of the operands/result</td>
+</tr>
+<tr class="even">
+<td><code>P</code></td>
+<td>Parity, set for even parity of the 8-bit result</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>Carry, set when bit 8 of the 16-bit result is set</td>
+</tr>
+</tbody>
+</table>
+<p>The Intel 8080 constant flag bits are also enforced: bits 5 and 3 are
+cleared and bit 1 is set.</p>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p><code>DoInterrupt</code> first calls the inherited interrupt handler.
+When <code>AEvent</code> is <code>ceInterrupt</code>, further interrupts
+are disabled by clearing <code>FInterruptEnabled</code>.</p>
+<p>For an interrupt vector in the RST form
+(<code>FIRQVector &gt;= $C0</code> and
+<code>(FIRQVector and $07) = $07</code>), the current <code>PC</code> is
+pushed onto the stack as two bytes and the <code>PC</code> is changed to
+the corresponding restart address:</p>
+<p><code>((FIRQVector shr 3) and $07) * 8</code></p>
+<p>For other interrupt instructions, the current source contains the
+handling location but does not implement additional behaviour there.</p>
+<p><code>GetCurrentInterrupt</code> reports the current interrupt vector
+as two hexadecimal digits. The <code>Flag</code> field is
+<code>EI</code> when interrupts are enabled and <code>DI</code>
+otherwise. The <code>Status</code> field is <code>Pending</code> when
+<code>FIRQPending</code> is set; otherwise it is empty. The
+<code>Sender</code> field is empty.</p>
+<h3 id="current-instruction-information">Current-instruction
+information</h3>
+<p><code>GetCurrentInstruction</code> returns a <code>TLogRec</code>
+containing:</p>
 <ol type="1">
+<li>the total instruction count;</li>
 <li>the instruction address as four hexadecimal digits;</li>
-<li>the opcode as two hexadecimal digits;</li>
-<li>up to two encoded operand values;</li>
-<li>the mnemonic;</li>
-<li>the operand values again in the formatted operand portion.</li>
+<li>the opcode as a two-digit hexadecimal string, followed by encoded
+operands;</li>
+<li>the mnemonic followed by formatted operand values;</li>
+<li>the cycle count of the last instruction;</li>
+<li>the accumulated total cycle count.</li>
 </ol>
-<p>The returned string is stored in the private <code>s</code> field
-before its character pointer is returned.</p>
+<p>Up to two operands are included. Operand values are formatted as
+two-digit hexadecimal values and two operands are separated by a comma
+in the mnemonic.</p>
 <h3 id="register-access">Register access</h3>
 <p><code>GetRegister</code> and <code>SetRegister</code> compare
 register names case-insensitively using <code>UpperCase</code>.</p>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>register</th>
@@ -156,30 +241,48 @@ register names case-insensitively using <code>UpperCase</code>.</p>
 <td>Yes</td>
 </tr>
 <tr class="odd">
-<td><code>BC</code></td>
-<td>16 bit</td>
+<td><code>B</code></td>
+<td>8 bit</td>
 <td>Yes</td>
 <td>Yes</td>
 </tr>
 <tr class="even">
-<td><code>DE</code></td>
-<td>16 bit</td>
+<td><code>C</code></td>
+<td>8 bit</td>
 <td>Yes</td>
 <td>Yes</td>
 </tr>
 <tr class="odd">
-<td><code>HL</code></td>
-<td>16 bit</td>
+<td><code>D</code></td>
+<td>8 bit</td>
 <td>Yes</td>
 <td>Yes</td>
 </tr>
 <tr class="even">
+<td><code>E</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>H</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>L</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
 <td><code>PC</code></td>
 <td>16 bit</td>
 <td>Yes</td>
 <td>Yes</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>SP</code></td>
 <td>16 bit</td>
 <td>Yes</td>
@@ -187,15 +290,226 @@ register names case-insensitively using <code>UpperCase</code>.</p>
 </tr>
 </tbody>
 </table>
-<p><code>SetRegister</code> masks <code>A</code> and <code>F</code> to
-<code>$FF</code>, and <code>BC</code>, <code>DE</code>, <code>HL</code>,
-<code>PC</code> and <code>SP</code> to <code>$FFFF</code>.</p>
+<p><code>SetRegister</code> masks the eight-bit registers to
+<code>$FF</code> and <code>PC</code> and <code>SP</code> to
+<code>$FFFF</code>.</p>
 <p>Names not handled by the <code>case</code> statement have no effect
 in <code>SetRegister</code> and return <code>0</code> from
 <code>GetRegister</code>.</p>
+<h3 id="public-register-enumeration">Public register enumeration</h3>
+<p>The public register enumeration contains ten entries:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>name</th>
+<th>size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>A</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>B</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>C</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>D</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>E</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>H</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>L</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>F</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><code>PC</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>SP</code></td>
+<td>4 nibbles</td>
+</tr>
+</tbody>
+</table>
+<p><code>GetRegisterCount</code> returns the number of entries in
+<code>PubRegNames</code>. <code>GetRegisterName</code> returns the
+register name for a valid index and <code>nil</code> otherwise.
+<code>GetRegisterSize</code> returns the corresponding size in nibbles
+and <code>0</code> for an invalid index.</p>
+<h3 id="t8080registers">T8080Registers</h3>
+<p><code>T8080Registers</code> provides both 16-bit register-pair access
+and individual 8-bit register access through a variant record.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>16-bit register</th>
+<th>8-bit representation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BC</code></td>
+<td><code>B</code>, <code>C</code></td>
+</tr>
+<tr class="even">
+<td><code>DE</code></td>
+<td><code>D</code>, <code>E</code></td>
+</tr>
+<tr class="odd">
+<td><code>HL</code></td>
+<td><code>H</code>, <code>L</code></td>
+</tr>
+<tr class="even">
+<td><code>AF</code></td>
+<td><code>A</code>, <code>F</code></td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>PCL</code>, <code>PCH</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>SPL</code>, <code>SPH</code></td>
+</tr>
+</tbody>
+</table>
+<p>The register set therefore contains the Intel 8080 accumulator and
+flags, general-purpose register pairs, program counter and stack
+pointer.</p>
+<h3 id="internal-register-names">Internal register names</h3>
+<p>The internal <code>RegNames</code> table uses the following
+order:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>B</code></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>C</code></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>D</code></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>E</code></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>H</code></td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>L</code></td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>M</code></td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>A</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>M</code> has no direct register pointer because it represents
+the memory location addressed by <code>HL</code>.</p>
+<h3 id="protected-fields-and-methods">Protected fields and methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 19%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T8080Registers</code></td>
+<td>Complete Intel 8080 register set.</td>
+</tr>
+<tr class="even">
+<td><code>RegPointers</code></td>
+<td><code>array[0..7] of PByte</code></td>
+<td>Pointers to the 8-bit register variables used by the instruction
+implementation.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 6%" />
+<col style="width: 51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>method</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);</code></td>
+<td></td>
+<td>Updates the Intel 8080 flag register according to the supplied
+arithmetic result.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent); override;</code></td>
+<td><code>override</code></td>
+<td>Handles interrupt notification and Intel 8080 RST interrupt
+processing.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="state-persistence">State persistence</h3>
 <p><code>LoadState</code> reads the following data in order:</p>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>order</th>
@@ -243,166 +557,14 @@ in <code>SetRegister</code> and return <code>0</code> from
 </table>
 <p>If a stream exception occurs, <code>LoadState</code> returns
 <code>False</code>; otherwise it returns <code>True</code>.</p>
-<p><code>SaveState</code> writes the same fields in the same order, but
-only when <code>InstanceID &gt; -1</code>. When the instance ID is
-invalid, it returns <code>False</code>.</p>
-<h3 id="t8080registers">T8080Registers</h3>
-<p><code>T8080Registers</code> provides both 16-bit register-pair access
-and individual 8-bit register access through a variant record.</p>
-<table>
-<thead>
-<tr class="header">
-<th>16-bit register</th>
-<th>8-bit representation</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>BC</code></td>
-<td><code>B</code>, <code>C</code></td>
-</tr>
-<tr class="even">
-<td><code>DE</code></td>
-<td><code>D</code>, <code>E</code></td>
-</tr>
-<tr class="odd">
-<td><code>HL</code></td>
-<td><code>H</code>, <code>L</code></td>
-</tr>
-<tr class="even">
-<td><code>AF</code></td>
-<td><code>A</code>, <code>F</code></td>
-</tr>
-<tr class="odd">
-<td><code>PC</code></td>
-<td><code>PCL</code>, <code>PCH</code></td>
-</tr>
-<tr class="even">
-<td><code>SP</code></td>
-<td><code>SPL</code>, <code>SPH</code></td>
-</tr>
-</tbody>
-</table>
-<p>The register set therefore contains the Intel 8080 accumulator,
-flags, general-purpose register pairs, program counter and stack
-pointer.</p>
-<h3 id="register-names">Register names</h3>
-<p>The internal register-pointer table uses the following order:</p>
-<table>
-<thead>
-<tr class="header">
-<th>index</th>
-<th>name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>0</td>
-<td><code>B</code></td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td><code>C</code></td>
-</tr>
-<tr class="odd">
-<td>2</td>
-<td><code>D</code></td>
-</tr>
-<tr class="even">
-<td>3</td>
-<td><code>E</code></td>
-</tr>
-<tr class="odd">
-<td>4</td>
-<td><code>H</code></td>
-</tr>
-<tr class="even">
-<td>5</td>
-<td><code>L</code></td>
-</tr>
-<tr class="odd">
-<td>6</td>
-<td><code>M</code></td>
-</tr>
-<tr class="even">
-<td>7</td>
-<td><code>A</code></td>
-</tr>
-</tbody>
-</table>
-<p><code>M</code> has no direct register pointer because it represents
-the memory location addressed by <code>HL</code>.</p>
-<h3 id="protected-fields">Protected fields</h3>
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 18%" />
-<col style="width: 65%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>name</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>FRegs</code></td>
-<td><code>T8080Registers</code></td>
-<td>Complete Intel 8080 register set.</td>
-</tr>
-<tr class="even">
-<td><code>FLastInstruction</code></td>
-<td><code>TLastInstruction</code></td>
-<td>Raw information about the last fetched instruction.</td>
-</tr>
-<tr class="odd">
-<td><code>RegPointers</code></td>
-<td><code>array[0..7] of PByte</code></td>
-<td>Pointers to the 8-bit register variables used by instruction
-implementation.</td>
-</tr>
-<tr class="even">
-<td><code>s</code></td>
-<td><code>string</code></td>
-<td>Temporary string used to format the current-instruction
-display.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="protected-methods">Protected methods</h3>
-<table>
-<colgroup>
-<col style="width: 43%" />
-<col style="width: 3%" />
-<col style="width: 52%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>name</th>
-<th>flags</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);</code></td>
-<td></td>
-<td>Updates the Intel 8080 flag register according to the supplied
-arithmetic result.</td>
-</tr>
-</tbody>
-</table>
-<p><code>UpdateFlags</code> handles the Sign, Zero, Auxiliary Carry,
-Parity and Carry flags. It also forces the Intel 8080 constant flag bits
-to their required values.</p>
+<p><code>SaveState</code> writes the same fields in the same order and
+returns <code>True</code> after the write operations complete.</p>
 <h3 id="public-methods">Public methods</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 27%" />
-<col style="width: 2%" />
-<col style="width: 70%" />
+<col style="width: 24%" />
+<col style="width: 4%" />
+<col style="width: 71%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -414,62 +576,80 @@ to their required values.</p>
 <tbody>
 <tr class="odd">
 <td><code>constructor Create;</code></td>
-<td>Or</td>
+<td><code>override</code></td>
 <td>Creates an Intel 8080 CPU, configures its architecture parameters
 and register pointers, and performs a reset.</td>
 </tr>
 <tr class="even">
 <td><code>procedure Reset;</code></td>
-<td>Or</td>
-<td>Clears the register set, sets <code>PC</code> to <code>0</code>,
-sets <code>SP</code> to <code>$FFFF</code>, clears running and halt
-states, and emits <code>ceReset</code>.</td>
-</tr>
-<tr class="odd">
-<td><code>function GetCurrentInstruction: PChar;</code></td>
-<td>Or</td>
-<td>Returns a formatted representation of the most recently fetched
-instruction.</td>
-</tr>
-<tr class="even">
-<td><code>function GetRegister(const RegName: PChar): QWord;</code></td>
-<td>Or</td>
-<td>Returns the value of the named <code>A</code>, <code>F</code>,
-<code>BC</code>, <code>DE</code>, <code>HL</code>, <code>PC</code> or
-<code>SP</code> register.</td>
+<td><code>override</code></td>
+<td>Clears the register set, execution and interrupt state, resets
+counters, sets <code>PC</code> to <code>0</code> and <code>SP</code> to
+<code>$FFFF</code>, and emits <code>ceReset</code>.</td>
 </tr>
 <tr class="odd">
 <td><code>function LoadState(AStream: TStream): Boolean;</code></td>
-<td>Or</td>
-<td>Loads the enabled state, complete register set, execution state,
-interrupt state and execution counters from a stream.</td>
+<td><code>override</code></td>
+<td>Loads the enabled state, register set, execution state, interrupt
+state and execution counters from a stream.</td>
 </tr>
 <tr class="even">
 <td><code>function SaveState(AStream: TStream): Boolean;</code></td>
-<td>Or</td>
+<td><code>override</code></td>
 <td>Saves the enabled state, register set, execution state, interrupt
-state and execution counters when the CPU has a valid instance ID.</td>
+state and execution counters to a stream.</td>
 </tr>
 <tr class="odd">
-<td><code>procedure SetRegister(const RegName: PChar; Value: QWord);</code></td>
-<td>Or</td>
-<td>Sets the named <code>A</code>, <code>F</code>, <code>BC</code>,
-<code>DE</code>, <code>HL</code>, <code>PC</code> or <code>SP</code>
-register, masking the value to the register width.</td>
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Fetches and executes one Intel 8080 instruction, including interrupt
+checking, opcode fetch, cycle accounting, instruction-boundary
+notification and instruction counting.</td>
 </tr>
 <tr class="even">
-<td><code>procedure Step;</code></td>
-<td>Or</td>
-<td>Fetches and executes one Intel 8080 instruction, including interrupt
-checking, opcode fetch, instruction-boundary notification and
-instruction counting.</td>
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td><code>override</code></td>
+<td>Returns structured information about the most recently fetched
+instruction.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<td><code>override</code></td>
+<td>Returns the current interrupt vector, interrupt-enable state and
+pending status.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Returns the value of the named public register.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Sets the named public register, masking it to its register
+width.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the number of publicly enumerated registers.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register name for a valid index.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register size in nibbles for a valid index.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="exported-plugin-interface">Exported plugin interface</h3>
 <p>The unit is compiled as the <code>cpu_8080</code> dynamic library and
 exports four plugin entry points:</p>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
 <col style="width: 12%" />
 <col style="width: 9%" />

@@ -1,11 +1,711 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - T8008CPU a TCPU osztályból a cpu_8008 egységben</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="t8008cpu-a-tcpu-osztályból-a-cpu_8008-egységben">T8008CPU a TCPU
+osztályból a cpu_8008 egységben</h2>
+<p><code>T8008CPU</code> az Intel 8008 processzor megvalósítása a
+CoreLAB keretrendszerhez. A következőből származik: <code>TCPU</code> és
+megvalósítja az Intel 8008 regiszterkészletét, a flagk kezelését, a
+reset műveletet, az állapot megőrzését, az utasításonkénti végrehajtást,
+a megszakítások jelentését, az aktuális utasítás jelentését és a
+regiszterek elérését.</p>
+<p>A tényleges utasítás-megvalósítás a következőből kerül beillesztésre:
+<code>cpu_8008_microcode.pas</code> a fordítás során. Ezért az
+utasításkészlet működése megoszlik ezen egység és a beillesztett
+mikrokódforrás között.</p>
+<h3 id="cpu-konfiguráció">CPU konfiguráció</h3>
+<p>A konstruktor az örökölt <code>TCPU</code> tulajdonságait a
+következőképpen állítja be:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modul neve</td>
+<td><code>8008</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Intel 8008 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architektúra</td>
+<td><code>arNeumann</code></td>
+</tr>
+<tr class="even">
+<td>Cím szélessége</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td>Bájtsorrend</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximális memória-cím</td>
+<td><code>$3FFF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális kód-cím</td>
+<td><code>$3FFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximális I/O-port cím</td>
+<td><code>$001F</code></td>
+</tr>
+<tr class="odd">
+<td>Külön I/O-busz</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Alapértelmezett órajel-frekvencia</td>
+<td>500000 Hz (500 kHz)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reset-állapot">Reset állapot</h3>
+<p><code>Reset</code> törli a teljes <code>T8008Registers</code>,
+<code>T8008Stack</code> és <code>T8008Flags</code> rekordot. rekordokat.
+Emellett törli a végrehajtási és megszakítási állapotot, valamint a
+számlálókat.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter/állapot</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FIRQPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FNMIPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>A négy flag <code>C</code>, <code>Z</code>, <code>S</code> és
+<code>P</code> szintén törlődik. A belső hétszintű hardveres verem
+törlődik, és a mutatója is alaphelyzetbe kerül a rekord
+inicializálásának részeként.</p>
+<p>A metódus kiváltja az örökölt <code>ceReset</code> event.</p>
+<h3 id="utasítás-végrehajtás">Utasítás-végrehajtás</h3>
+<p><code>Step</code> a következő műveleteket végzi el:</p>
+<ol type="1">
+<li>Azonnal leáll, ha a CPU le van tiltva
+(<code>FEnabled = False</code>).</li>
+<li>Meghívja <code>CheckInterrupts</code>; a végrehajtás azonnal leáll,
+ha egy megszakítás elfogadásra kerül.</li>
+<li>Azonnal leáll, ha a CPU várakozó (halt) állapotban van.</li>
+<li>Beolvassa az opkódot a rendszerbuszról az aktuális
+<code>PC</code>.</li>
+<li>Eltárolja a címet, a ciklusszámot, az opkódot és az operésusszámot a
+következőben: <code>FLastInstruction</code>.</li>
+<li>Növeli <code>PC</code> és a 14 bites címtartományra korlátozza a
+következővel: <code>$3FFF</code>.</li>
+<li>Beilleszti és végrehajtja az utasítás megvalósítását innen:
+<code>cpu_8008_microcode.pas</code>.</li>
+<li>Hozzáadja az utasítás ciklusszámát a következőhöz:
+<code>FTotalCycles</code>.</li>
+<li>Kiváltja <code>ceInstructionBoundary</code>.</li>
+<li>Növeli <code>FTotalInstructions</code>.</li>
+</ol>
+<p>A forrás ezért csatlakoztatott <code>FBus</code> rendszerbuszt
+igényel az opkód lekéréséhez.</p>
+<h3 id="zászlók-kezelése">Zászlók kezelése</h3>
+<p><code>UpdateFlags</code> kiszámítja az Intel 8008 flagit egy 16 bites
+aritmetikai eredményből.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>feltétel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td>az eredmény 8. bitje be van állítva</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>az eredmény alsó 8 bitje nulla</td>
+</tr>
+<tr class="odd">
+<td><code>S</code></td>
+<td>az alsó 8 bit 7. bitje be van állítva</td>
+</tr>
+<tr class="even">
+<td><code>P</code></td>
+<td>az alsó 8 bites eredmény páros paritású</td>
+</tr>
+</tbody>
+</table>
+<p>A megvalósított flagkészlet tehát a Átvitel, Nulla, Előjel és
+Paritás.</p>
+<h3 id="megszakítás-kezelés">Megszakítás-kezelés</h3>
+<p><code>DoInterrupt</code> meghívja az örökölt megszakításkezelőt.
+Amikor <code>AEvent</code> is <code>ceInterrupt</code>, a metódus
+tartalmazza az Intel 8008 újraindítás (RST) kezelésének helyét, de a
+jelenlegi forrás nem valósít meg további RST-működést itt.</p>
+<p><code>GetCurrentInterrupt</code> az aktuális IRQ-vektort a
+következőből jelenti: <code>FIRQVector</code> as a two-digit hexadecimal
+value. Its <code>Status</code> értéke <code>Pending</code>, ha
+<code>FIRQPending</code> is be van állítva; egyébként üres. A
+<code>Sender</code> mező üres.</p>
+<h3 id="aktuális-utasítás-információi">Aktuális utasítás
+információi</h3>
+<p><code>GetCurrentInstruction</code> egy <code>TLogRec</code>
+tartalmazó értéket ad vissza:</p>
+<ol type="1">
+<li>az utasítások teljes számát;</li>
+<li>az utasítás címét négy hexadecimális számjeggyel;</li>
+<li>az opkódot kétjegyű hexadecimális karakterláncként;</li>
+<li>legfeljebb két kódolt operésusértéket;</li>
+<li>a mnemonikot, amelyet a formázott operésusok követnek;</li>
+<li>az utolsó utasítás ciklusszámát;</li>
+<li>az összesített ciklusszámot.</li>
+</ol>
+<p>Az operésusértékek kétjegyű hexadecimális értékként vannak formázva.
+Ha két operésus van jelen, akkor a formázott mnemonikban vessző
+választja el őket.</p>
+<h3 id="regiszterelérés">Regiszterelérés</h3>
+<p><code>GetRegister</code> és <code>SetRegister</code> a
+regiszterneveket a kis- és nagybetűk figyelmen kívül hagyásával
+hasonlítják össze az <code>UpperCase</code> használatával.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter</th>
+<th>szélesség</th>
+<th>olvasható</th>
+<th>írható</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+</tbody>
+</table>
+<p><code>SetRegister</code> masks all seven regiszters to
+<code>$FF</code>.</p>
+<p>A <code>PC</code> regiszter a <code>T8008Registers</code> része, de a
+jelenlegi <code>GetRegister</code> és <code>SetRegister</code> a
+aktuális <code>GetRegister</code> or <code>SetRegister</code>
+`<code>case</code> által nem kezelt nevek` utasításai nem teszik
+elérhetővé.</p>
+<p>A `<code>case</code> által nem kezelt
+nevek<code>állapotment nem okoznak változást a</code>SetRegister<code>és return</code>0<code>értéket adnak vissza innen:</code>GetRegister`.</p>
+<h3 id="regiszterek-felsorolása">Regiszterek felsorolása</h3>
+<p>A nyilvános regiszterfelsorolás hét regisztert tartalmaz:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>név</th>
+<th>méret</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>A</code></td>
+<td>2 nibble</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>B</code></td>
+<td>2 nibble</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>C</code></td>
+<td>2 nibble</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>D</code></td>
+<td>2 nibble</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>E</code></td>
+<td>2 nibble</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>H</code></td>
+<td>2 nibble</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>L</code></td>
+<td>2 nibble</td>
+</tr>
+</tbody>
+</table>
+<p><code>GetRegisterCount</code> a <code>PubRegNames</code>.
+<code>GetRegisterName</code> érvényes index esetén visszaadja a
+regiszter nevét, egyébként <code>nil</code> értéket ad.
+<code>GetRegisterSize</code> visszaadja a megfelelő regiszterméretet
+nibble és <code>0</code> érvénytelen index esetén.</p>
+<p>A belső <code>RegNames</code> tábla az <code>M</code> értéket is
+tartalmazza, de az <code>M</code> nem szerepel a nyilvános
+regiszterfelsorolásban, és nincs hozzá regisztermutató.</p>
+<h3 id="t8008registers">T8008Registers</h3>
+<p>A <code>T8008Registers</code> a hét 8 bites általános célú regisztert
+és a 14 bites programszámlálót:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>szélesség</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>PC</code></td>
+<td>16-bit storage, limited to 14-bit address range</td>
+</tr>
+</tbody>
+</table>
+<h3 id="t8008flags">T8008Flags</h3>
+<p>A <code>T8008Flags</code> az Intel 8008 négy feltételflagját
+tartalmazza:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td>Átvitel</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>Nulla</td>
+</tr>
+<tr class="odd">
+<td><code>S</code></td>
+<td>Előjel</td>
+</tr>
+<tr class="even">
+<td><code>P</code></td>
+<td>Paritás</td>
+</tr>
+</tbody>
+</table>
+<h3 id="t8008stack">T8008Stack</h3>
+<p><code>T8008Stack</code> az Intel 8008 belső hétszintű hardveres
+vermét modellezi.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Regs</code></td>
+<td><code>array[0..6] of Word</code></td>
+<td>Hét tárolt programszámláló-érték</td>
+</tr>
+<tr class="even">
+<td><code>Pointer</code></td>
+<td><code>Byte</code></td>
+<td>Aktuális veremmutató/index</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-mezők-és-metódusok">Protected mezők és metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 28%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T8008Registers</code></td>
+<td>Complete 8008 regiszter set.</td>
+</tr>
+<tr class="even">
+<td><code>FFlags</code></td>
+<td><code>T8008Flags</code></td>
+<td>Intel 8008 feltétel flags.</td>
+</tr>
+<tr class="odd">
+<td><code>FStack</code></td>
+<td><code>T8008Stack</code></td>
+<td>Belső hétszintű hardveres verem.</td>
+</tr>
+<tr class="even">
+<td><code>RegPointers</code></td>
+<td><code>array[0..6] of PByte</code></td>
+<td>Mutatók a hét 8 bites regiszterváltozóra.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 6%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>metódus</th>
+<th>flag</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure UpdateFlags(Value16: Word);</code></td>
+<td></td>
+<td>Frissíti a következőket: C, Z, S és P flags értéket adnak vissza
+innen: an arithmetic result.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td><code>override</code></td>
+<td>Meghívja az örökölt megszakításkezelőt, és biztosítja a kapcsolódási
+pontot a 8008 újraindítás-kezeléséhez.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="állapot-megőrzése">Állapot megőrzése</h3>
+<p><code>LoadState</code> a következő adatokat olvassa be ebben a
+sorrendben:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>sorrend</th>
+<th>adat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FFlags</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FStack</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FIRQPending</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FNMIPending</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ha adatfolyam-kivétel történik, a <code>LoadState</code>
+<code>False</code> értéket ad vissza; egyébként <code>True</code>.</p>
+<p>A <code>SaveState</code> ugyanazokat a mezőket írja ki ugyanebben a
+sorrendben, és a műveletek <code>True</code> értéket ad vissza.</p>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 3%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>flag</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Létrehoz egy Intel 8008 CPU-t, beállítja az
+architektúra-paramétereit és a regisztermutatókat, majd resetet hajt
+végre.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Törli a regiszter-, flag- és belső veremállapotot, törli a
+végrehajtási és megszakítási állapotot, nullázza a számlálókat, és
+kiváltja a <code>ceReset</code> eseményt.</td>
+</tr>
+<tr class="odd">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Betölti az engedélyezési állapotot, a regiszterkészletet, a flagkat,
+a hardveres vermet, a végrehajtási és megszakítási állapotot, valamint a
+végrehajtási számlálókat egy adatfolyamból.</td>
+</tr>
+<tr class="even">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Elmenti az engedélyezési állapotot, a regiszterkészletet, a flagkat,
+a hardveres vermet, a végrehajtási és megszakítási állapotot, valamint a
+végrehajtási számlálókat egy adatfolyamba.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Lekér és végrehajt egy Intel 8008 utasítást, beleértve a
+megszakítások ellenőrzését, az opkód lekérését, a programszámláló
+körbefordulását, a ciklusok számlálását, az utasításhatár jelzését és az
+utasítások számlálását.</td>
+</tr>
+<tr class="even">
+<td><code>függvény GetCurrentInstruction: TLogRec;</code></td>
+<td><code>override</code></td>
+<td>Strukturált információt ad vissza a legutóbb lekért
+utasításról.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja az aktuális IRQ-vektort és a függőben lévő
+állapotot.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a megnevezett nyilvános 8 bites regiszter értékét.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Beállítja a megnevezett nyilvános 8 bites regisztert, az értéket
+<code>$FF</code>-re maszkolva.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a nyilvánosan felsorolt regiszterek számát.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja az érvényes indexhez tartozó nyilvános
+regiszternevet.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja az érvényes indexhez tartozó nyilvános regiszterméretet
+nibble-ekben.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-plugininterfész">Exportált plugininterfész</h3>
+<p>Az egység a <code>cpu_8008</code> dinamikus könyvtárként fordul, és
+négy plugin belépési pontot exportál:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportált név</th>
+<th>függvény</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Létrehoz és visszaad egy új <code>T8008CPU</code> példányt
+<code>TCPU</code>-ként.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Megsemmisíti a megadott CPU-példányt, ha az hozzá van rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Állapotot tölt be a megadott <code>TCPU</code> referencián
+keresztül. Az értéke <code>False</code> ha a referencia
+<code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Állapotot ment a megadott <code>TCPU</code> referencián keresztül.
+Az értéke <code>False</code> ha a referencia <code>nil</code>.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

@@ -1,11 +1,697 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - T8008CPU from TCPU class in cpu_8008 unit</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<h2 id="t8008cpu-from-tcpu-class-in-cpu_8008-unit">T8008CPU from TCPU
+class in cpu_8008 unit</h2>
+<p><code>T8008CPU</code> is the Intel 8008 processor implementation for
+the CoreLAB framework. It derives from <code>TCPU</code> and implements
+the Intel 8008 register set, flag handling, reset operation, state
+persistence, instruction stepping, interrupt reporting,
+current-instruction reporting and register access.</p>
+<p>The actual instruction implementation is included from
+<code>cpu_8008_microcode.pas</code> during compilation. Therefore, the
+instruction set behaviour is distributed between this unit and that
+included microcode source.</p>
+<h3 id="cpu-configuration">CPU configuration</h3>
+<p>The constructor configures the inherited <code>TCPU</code> properties
+as follows:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>item</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module name</td>
+<td><code>8008</code></td>
+</tr>
+<tr class="even">
+<td>Description</td>
+<td><code>Intel 8008 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architecture</td>
+<td><code>arNeumann</code></td>
+</tr>
+<tr class="even">
+<td>Address width</td>
+<td>14</td>
+</tr>
+<tr class="odd">
+<td>Endianness</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximum memory address</td>
+<td><code>$3FFF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximum code address</td>
+<td><code>$3FFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximum I/O port address</td>
+<td><code>$001F</code></td>
+</tr>
+<tr class="odd">
+<td>Separate I/O bus</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Default clock frequency</td>
+<td>500000 Hz (500 kHz)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reset-state">Reset state</h3>
+<p><code>Reset</code> clears the complete <code>T8008Registers</code>,
+<code>T8008Stack</code> and <code>T8008Flags</code> records. It also
+clears the execution and interrupt state and counters.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>register/state</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FIRQPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FNMIPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>The four flags <code>C</code>, <code>Z</code>, <code>S</code> and
+<code>P</code> are also cleared. The internal seven-level hardware stack
+is cleared and its pointer is reset as part of the record
+initialization.</p>
+<p>The method emits the inherited <code>ceReset</code> event.</p>
+<h3 id="instruction-execution">Instruction execution</h3>
+<p><code>Step</code> performs the following operations:</p>
+<ol type="1">
+<li>Stops immediately when the CPU is disabled
+(<code>FEnabled = False</code>).</li>
+<li>Calls <code>CheckInterrupts</code>; execution stops immediately when
+an interrupt is accepted.</li>
+<li>Stops immediately if the CPU is halted.</li>
+<li>Reads the opcode from the system bus at the current
+<code>PC</code>.</li>
+<li>Stores the address, cycle count, opcode and operand count in
+<code>FLastInstruction</code>.</li>
+<li>Increments <code>PC</code> and limits it to the 14-bit address range
+with <code>$3FFF</code>.</li>
+<li>Includes and executes the instruction implementation from
+<code>cpu_8008_microcode.pas</code>.</li>
+<li>Adds the instruction cycle count to <code>FTotalCycles</code>.</li>
+<li>Emits <code>ceInstructionBoundary</code>.</li>
+<li>Increments <code>FTotalInstructions</code>.</li>
+</ol>
+<p>The source therefore requires a connected <code>FBus</code> for
+opcode fetching.</p>
+<h3 id="flag-handling">Flag handling</h3>
+<p><code>UpdateFlags</code> calculates the Intel 8008 flags from a
+16-bit arithmetic result.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>condition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td>bit 8 of the result is set</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>the low 8 bits of the result are zero</td>
+</tr>
+<tr class="odd">
+<td><code>S</code></td>
+<td>bit 7 of the low 8 bits is set</td>
+</tr>
+<tr class="even">
+<td><code>P</code></td>
+<td>the low 8-bit result has even parity</td>
+</tr>
+</tbody>
+</table>
+<p>The implemented flag set is therefore Carry, Zero, Sign and
+Parity.</p>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p><code>DoInterrupt</code> calls the inherited interrupt handler. When
+<code>AEvent</code> is <code>ceInterrupt</code>, the method contains the
+location for Intel 8008 restart (RST) handling, but the current source
+does not implement additional RST behaviour there.</p>
+<p><code>GetCurrentInterrupt</code> reports the current IRQ vector from
+<code>FIRQVector</code> as a two-digit hexadecimal value. Its
+<code>Status</code> is <code>Pending</code> when
+<code>FIRQPending</code> is set; otherwise it is empty. The
+<code>Sender</code> field is empty.</p>
+<h3 id="current-instruction-information">Current-instruction
+information</h3>
+<p><code>GetCurrentInstruction</code> returns a <code>TLogRec</code>
+containing:</p>
+<ol type="1">
+<li>the total instruction count;</li>
+<li>the instruction address as four hexadecimal digits;</li>
+<li>the opcode as a two-digit hexadecimal string;</li>
+<li>up to two encoded operand values;</li>
+<li>the mnemonic followed by the formatted operands;</li>
+<li>the cycle count of the last instruction;</li>
+<li>the accumulated total cycle count.</li>
+</ol>
+<p>Operand values are formatted as two-digit hexadecimal values. If two
+operands are present, they are separated by a comma in the formatted
+mnemonic.</p>
+<h3 id="register-access">Register access</h3>
+<p><code>GetRegister</code> and <code>SetRegister</code> compare
+register names case-insensitively using <code>UpperCase</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>register</th>
+<th>width</th>
+<th>readable</th>
+<th>writable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><code>SetRegister</code> masks all seven registers to
+<code>$FF</code>.</p>
+<p>The <code>PC</code> register is part of <code>T8008Registers</code>,
+but it is not exposed through the current <code>GetRegister</code> or
+<code>SetRegister</code> case statements.</p>
+<p>Names not handled by the <code>case</code> statement have no effect
+in <code>SetRegister</code> and return <code>0</code> from
+<code>GetRegister</code>.</p>
+<h3 id="register-enumeration">Register enumeration</h3>
+<p>The public register enumeration contains seven registers:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>name</th>
+<th>size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>A</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>B</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>C</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>D</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>E</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>H</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>L</code></td>
+<td>2 nibbles</td>
+</tr>
+</tbody>
+</table>
+<p><code>GetRegisterCount</code> returns the number of entries in
+<code>PubRegNames</code>. <code>GetRegisterName</code> returns the
+register name for a valid index and <code>nil</code> otherwise.
+<code>GetRegisterSize</code> returns the corresponding register size in
+nibbles and <code>0</code> for an invalid index.</p>
+<p>The internal <code>RegNames</code> table also contains
+<code>M</code>, but <code>M</code> is not included in the public
+register enumeration and there is no register pointer for it.</p>
+<h3 id="t8008registers">T8008Registers</h3>
+<p><code>T8008Registers</code> contains the seven 8-bit general-purpose
+registers and the 14-bit program counter:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>width</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td>8 bit</td>
+</tr>
+<tr class="even">
+<td><code>PC</code></td>
+<td>16-bit storage, limited to 14-bit address range</td>
+</tr>
+</tbody>
+</table>
+<h3 id="t8008flags">T8008Flags</h3>
+<p><code>T8008Flags</code> contains the four Intel 8008 condition
+flags:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td>Carry</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>Zero</td>
+</tr>
+<tr class="odd">
+<td><code>S</code></td>
+<td>Sign</td>
+</tr>
+<tr class="even">
+<td><code>P</code></td>
+<td>Parity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="t8008stack">T8008Stack</h3>
+<p><code>T8008Stack</code> models the Intel 8008 internal seven-level
+hardware stack.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Regs</code></td>
+<td><code>array[0..6] of Word</code></td>
+<td>Seven stored program-counter values</td>
+</tr>
+<tr class="even">
+<td><code>Pointer</code></td>
+<td><code>Byte</code></td>
+<td>Current stack pointer/index</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields-and-methods">Protected fields and methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 26%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T8008Registers</code></td>
+<td>Complete 8008 register set.</td>
+</tr>
+<tr class="even">
+<td><code>FFlags</code></td>
+<td><code>T8008Flags</code></td>
+<td>Intel 8008 condition flags.</td>
+</tr>
+<tr class="odd">
+<td><code>FStack</code></td>
+<td><code>T8008Stack</code></td>
+<td>Internal seven-level hardware stack.</td>
+</tr>
+<tr class="even">
+<td><code>RegPointers</code></td>
+<td><code>array[0..6] of PByte</code></td>
+<td>Pointers to the seven 8-bit register variables.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 6%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>method</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure UpdateFlags(Value16: Word);</code></td>
+<td></td>
+<td>Updates the C, Z, S and P flags from an arithmetic result.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td><code>override</code></td>
+<td>Calls the inherited interrupt handler and provides the hook for 8008
+restart handling.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="state-persistence">State persistence</h3>
+<p><code>LoadState</code> reads the following data in order:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>order</th>
+<th>data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FFlags</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FStack</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FIRQPending</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FNMIPending</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>If a stream exception occurs, <code>LoadState</code> returns
+<code>False</code>; otherwise it returns <code>True</code>.</p>
+<p><code>SaveState</code> writes the same fields in the same order and
+returns <code>True</code> after the write operations complete.</p>
+<h3 id="public-methods">Public methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 3%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Creates an Intel 8008 CPU, configures its architecture parameters
+and register pointers, and performs a reset.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Clears the register, flag and internal stack state, clears execution
+and interrupt state, resets counters, and emits
+<code>ceReset</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Loads the enabled state, register set, flags, hardware stack,
+execution state, interrupt state and execution counters from a
+stream.</td>
+</tr>
+<tr class="even">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Saves the enabled state, register set, flags, hardware stack,
+execution state, interrupt state and execution counters to a
+stream.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Fetches and executes one Intel 8008 instruction, including interrupt
+checking, opcode fetch, program-counter wrapping, cycle accounting,
+instruction-boundary notification and instruction counting.</td>
+</tr>
+<tr class="even">
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td><code>override</code></td>
+<td>Returns structured information about the most recently fetched
+instruction.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<td><code>override</code></td>
+<td>Returns the current IRQ vector and pending status.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Returns the value of the named public 8-bit register.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Sets the named public 8-bit register, masking the value to
+<code>$FF</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the number of publicly enumerated registers.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register name for a valid index.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register size in nibbles for a valid index.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exported-plugin-interface">Exported plugin interface</h3>
+<p>The unit is compiled as the <code>cpu_8008</code> dynamic library and
+exports four plugin entry points:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exported name</th>
+<th>function</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Creates and returns a new <code>T8008CPU</code> instance as
+<code>TCPU</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Destroys the supplied CPU instance when it is assigned.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Loads state through the supplied <code>TCPU</code> reference.
+Returns <code>False</code> when the reference is <code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Saves state through the supplied <code>TCPU</code> reference.
+Returns <code>False</code> when the reference is <code>nil</code>.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
