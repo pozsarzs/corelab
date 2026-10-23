@@ -71,7 +71,7 @@ Second release will be with the following changes:
  functional. The purpose of this release is to test the program's construction,
  operation, packaging, and package installation in all supported environments.
  In addition, the documentation and other files are checked for possible typos
- and errors. Only a source package will be released.
+ and errors. Only a source package will be released.<br>
 </details>
 
 ## II. Features
@@ -123,6 +123,11 @@ Second release will be with the following changes:
 |**Virtual memory (RAM/ROM)**           |Configurable volatile and non-volatile memory blocks with custom sizing and address mapping. |
 |**Virtual pushbutton array and matrix**|Linear and matrix-arranged momentary pushbuttons for interactive binary input.               |
 |**Virtual switch array and matrix**    |Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.|
+
+### Supported processors
+
+ - Intel 8008 Neumann architecture 8 bit microprocessor (1972).
+ - Intel 8080 Neumann architecture 8 bit microprocessor (1974).
 
 ## III. Screenshots
 

@@ -986,7 +986,7 @@
          (OC = $56) or (OC = $5E) or 
          (OC = $66) or (OC = $6E) or 
          (OC = $77) or (OC = $7E) or 
-         ((OC >= $70) and (OC >= $75))
+         ((OC >= $70) and (OC <= $75))
         then FLastInstruction.Cycles := 7
         else FLastInstruction.Cycles := 5;
     end;
