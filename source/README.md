@@ -8,6 +8,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 |name           |description                             |
 |---------------|----------------------------------------|
+|_dev           |Component development directory         |
 |_ext           |External components                     |
 |_inc           |Pascal include files                    |
 |_lib           |Target library for units and executables|

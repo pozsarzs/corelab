@@ -136,14 +136,16 @@ begin
   FModname := '8080';
   FDescription := 'Intel 8080 microprocessor';
   // CPU features
-  FArchitecture := arNeumann;                            // Type of architecture
-  FAddressWidth := 16;                              // Address bus width in bits
-  FEndianness := enLittle;                                         // Byte order
-  FMaxMemAddress := $FFFF;                  // The highest (data) memory address
-  FMaxCodeAddress := $FFFF;                   // The highest code memory address
-  FMaxIOPortAddress := $00FF;                    // The highest I/O port address
-  FHasSeparateIOBus := true;          // Indicates separate memory and I/O buses
-  // Set register pointers
+  FArchitecture := arNeumann;                            // type of architecture
+  FAddressWidth := 16;                              // address bus width in bits
+  FEndianness := enLittle;                                         // byte order
+  FMaxMemAddress := $FFFF;                  // the highest (data) memory address
+  FMaxCodeAddress := $FFFF;                   // the highest code memory address
+  FMaxIOPortAddress := $00FF;                    // the highest I/O port address
+  FHasSeparateIOBus := true;          // indicates separate memory and I/O buses
+  FDefaultClockFreq := 2000000; {2 MHz}              // original clock frequency
+
+  // set register pointers
   RegPointers[0] := @FRegs.B;
   RegPointers[1] := @FRegs.C;
   RegPointers[2] := @FRegs.D;

@@ -88,6 +88,7 @@ type
     // CPU features
     FAddressWidth:      Byte;                       // Address bus width in bits
     FArchitecture:      TArchitecture;                   // Type of architecture
+    FDefaultClockFreq:  DWord;            // Clock frequency of the original CPU
     FEnabled:           Boolean;        // Enable device without detach from bus
     FEndianness:        TEndianness;                               // Byte order
     FLastInstruction:   TLastInstruction;            // Data of last instruction
@@ -226,17 +227,19 @@ constructor TCPU.Create;
 begin
   inherited Create;
   FEnabled := false;
-  // Initial execution state
+  // initial execution state
   FRunning := false;
   FHalted := false;
   FInterruptEnabled := false;
-  // No pending interrupts
+  // no pending interrupts
   FIRQVector := 0;
   FIRQPending := false;
   FNMIPending := false;
-  // Clear counters
+  // clear counters
   FTotalCycles := 0;
   FTotalInstructions := 0;
+  // others
+  FDefaultClockFreq := 1000000;
   with FVersion do
   begin
     Major := 0;

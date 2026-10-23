@@ -1,0 +1,264 @@
+{ +--------------------------------------------------------------------------+ }
+{ | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
+{ | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
+{ | microcode.pas                                                            | }
+{ | Microcode for Intel 8008 CPU implementation module                       | }
+{ +--------------------------------------------------------------------------+ }
+{ This program is free software: you can redistribute it and/or modify it
+  under the terms of the European Union Public License 1.2 version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE. }
+
+
+{|opcode|mnemonic|size|cycles|flags|
+|:----:|:-------|---:|-----:|-----|
+|02    |RLC     |1   |10    |---C |
+|03    |RFC     |1   |10/6  |---- |
+|04    |ADI d8  |2   |16    |SZP- |
+|05    |RST 0   |1   |10    |---- |
+|06    |LAI d8  |2   |16    |---- |
+|07    |RET     |1   |10    |---- |
+|08    |INB     |1   |10    |SZP- |
+|09    |DCB     |1   |10    |SZP- |
+|0A    |RRC     |1   |10    |---C |
+|0B    |RFZ     |1   |10/6  |---- |
+|0C    |ACI d8  |2   |16    |SZP- |
+|0D    |RST 1   |1   |10    |---- |
+|0E    |LBI d8  |2   |16    |---- |
+|0F    |*RET    |1   |10    |---- |
+|10    |INC     |1   |10    |SZP- |
+|11    |DCC     |1   |10    |SZP- |
+|12    |RAL     |1   |10    |---C |
+|13    |RFS     |1   |10/6  |---- |
+|14    |SUI d8  |2   |16    |SZP- |
+|15    |RST 2   |1   |10    |---- |
+|16    |LCI d8  |2   |16    |---- |
+|17    |*RET    |1   |10    |---- |
+|18    |IND     |1   |10    |SZP- |
+|19    |DCD     |1   |10    |SZP- |
+|1A    |RAR     |1   |10    |---C |
+|1B    |RFP     |1   |10/6  |---- |
+|1C    |SBI d8  |2   |16    |SZP- |
+|1D    |RST 3   |1   |10    |---- |
+|1E    |LDI d8  |2   |16    |---- |
+|1F    |*RET    |1   |10    |---- |
+|20    |INE     |1   |10    |SZP- |
+|21    |DCE     |1   |10    |SZP- |
+|23    |RTC     |1   |10/6  |---- |
+|24    |NDI d8  |2   |16    |SZP- |
+|25    |RST 4   |1   |10    |---- |
+|26    |LEI d8  |2   |16    |---- |
+|27    |*RET    |1   |10    |---- |
+|28    |INH     |1   |10    |SZP- |
+|29    |DCH     |1   |10    |SZP- |
+|2B    |RTZ     |1   |10/6  |---- |
+|2C    |XRI d8  |2   |16    |SZP- |
+|2D    |RST 5   |1   |10    |---- |
+|2E    |LHI d8  |2   |16    |---- |
+|2F    |*RET    |1   |10    |---- |
+|30    |INL     |1   |10    |SZP- |
+|31    |DCL     |1   |10    |SZP- |
+|33    |RTS     |1   |10/6  |---- |
+|34    |ORI d8  |2   |16    |SZP- |
+|35    |RST 6   |1   |10    |---- |
+|36    |LLI d8  |2   |16    |---- |
+|37    |*RET    |1   |10    |---- |
+|3B    |RTP     |1   |10/6  |---- |
+|3C    |CPI d8  |2   |16    |SZP- |
+|3D    |RST 7   |1   |10    |---- |
+|3E    |LMI d8  |2   |18    |---- |
+|3F    |*RET    |1   |10    |---- |
+|40    |JFC a16 |3   |22/18 |---- |
+|42    |CFC a16 |3   |22/18 |---- |
+|44    |JMP a16 |3   |22    |---- |
+|46    |CAL a16 |3   |22    |---- |
+|48    |JFZ a16 |3   |22/18 |---- |
+|4A    |CFZ a16 |3   |22/18 |---- |
+|4C    |*JMP a16|3   |22    |---- |
+|4E    |*CAL a16|3   |22    |---- |
+|50    |JFS a16 |3   |22/18 |---- |
+|52    |CFS a16 |3   |22/18 |---- |
+|54    |*JMP a16|3   |22    |---- |
+|56    |*CAL a16|3   |22    |---- |
+|58    |JFP a16 |3   |22/18 |---- |
+|5A    |CFP a16 |3   |22/18 |---- |
+|5C    |*JMP a16|3   |22    |---- |
+|5E    |*CAL a16|3   |22    |---- |
+|60    |JTC a16 |3   |22/18 |---- |
+|62    |CTC a16 |3   |22/18 |---- |
+|64    |*JMP a16|3   |22    |---- |
+|66    |*CAL a16|3   |22    |---- |
+|68    |JTZ a16 |3   |22/18 |---- |
+|6A    |CTZ a16 |3   |22/18 |---- |
+|6C    |*JMP a16|3   |22    |---- |
+|6E    |*CAL a16|3   |22    |---- |
+|70    |JTS a16 |3   |22/18 |---- |
+|72    |CTS a16 |3   |22/18 |---- |
+|74    |*JMP a16|3   |22    |---- |
+|76    |*CAL a16|3   |22    |---- |
+|78    |JTP a16 |3   |22/18 |---- |
+|7A    |CTP a16 |3   |22/18 |---- |
+|7C    |*JMP a16|3   |22    |---- |
+|7E    |*CAL a16|3   |22    |---- |
+|80    |ADA     |1   |10    |SZPC |
+|81    |ADB     |1   |10    |SZPC |
+|82    |ADC     |1   |10    |SZPC |
+|83    |ADD     |1   |10    |SZPC |
+|84    |ADE     |1   |10    |SZPC |
+|85    |ADH     |1   |10    |SZPC |
+|86    |ADL     |1   |10    |SZPC |
+|87    |ADM     |1   |16    |SZPC |
+|88    |ACA     |1   |10    |SZPC |
+|89    |ACB     |1   |10    |SZPC |
+|8A    |ACC     |1   |10    |SZPC |
+|8B    |ACD     |1   |10    |SZPC |
+|8C    |ACE     |1   |10    |SZPC |
+|8D    |ACH     |1   |10    |SZPC |
+|8E    |ACL     |1   |10    |SZPC |
+|8F    |ACM     |1   |16    |SZPC |
+|90    |SUA     |1   |10    |SZPC |
+|91    |SUB     |1   |10    |SZPC |
+|92    |SUC     |1   |10    |SZPC |
+|93    |SUD     |1   |10    |SZPC |
+|94    |SUE     |1   |10    |SZPC |
+|95    |SUH     |1   |10    |SZPC |
+|96    |SUL     |1   |10    |SZPC |
+|97    |SUM     |1   |16    |SZPC |
+|98    |SBA     |1   |10    |SZPC |
+|99    |SBB     |1   |10    |SZPC |
+|9A    |SBC     |1   |10    |SZPC |
+|9B    |SBD     |1   |10    |SZPC |
+|9C    |SBE     |1   |10    |SZPC |
+|9D    |SBH     |1   |10    |SZPC |
+|9E    |SBL     |1   |10    |SZPC |
+|9F    |SBM     |1   |16    |SZPC |
+|A0    |NDA     |1   |10    |SZPC |
+|A1    |NDB     |1   |10    |SZPC |
+|A2    |NDC     |1   |10    |SZPC |
+|A3    |NDD     |1   |10    |SZPC |
+|A4    |NDE     |1   |10    |SZPC |
+|A5    |NDH     |1   |10    |SZPC |
+|A6    |NDL     |1   |10    |SZPC |
+|A7    |NDM     |1   |16    |SZPC |
+|A8    |XRA     |1   |10    |SZPC |
+|A9    |XRB     |1   |10    |SZPC |
+|AA    |XRC     |1   |10    |SZPC |
+|AB    |XRD     |1   |10    |SZPC |
+|AC    |XRE     |1   |10    |SZPC |
+|AD    |XRH     |1   |10    |SZPC |
+|AE    |XRL     |1   |10    |SZPC |
+|AF    |XRM     |1   |16    |SZPC |
+|B0    |ORA     |1   |10    |SZPC |
+|B1    |ORB     |1   |10    |SZPC |
+|B2    |ORC     |1   |10    |SZPC |
+|B3    |ORD     |1   |10    |SZPC |
+|B4    |ORE     |1   |10    |SZPC |
+|B5    |ORH     |1   |10    |SZPC |
+|B6    |ORL     |1   |10    |SZPC |
+|B7    |ORM     |1   |16    |SZPC |
+|B8    |CPA     |1   |10    |SZPC |
+|B9    |CPB     |1   |10    |SZPC |
+|BA    |CPC     |1   |10    |SZPC |
+|BB    |CPD     |1   |10    |SZPC |
+|BC    |CPE     |1   |10    |SZPC |
+|BD    |CPH     |1   |10    |SZPC |
+|BE    |CPL     |1   |10    |SZPC |
+|BF    |CPM     |1   |16    |SZPC |
+|C1    |LAB     |1   |10    |---- |
+|C2    |LAC     |1   |10    |---- |
+|C3    |LAD     |1   |10    |---- |
+|C4    |LAE     |1   |10    |---- |
+|C5    |LAH     |1   |10    |---- |
+|C6    |LAL     |1   |10    |---- |
+|C7    |LAM     |1   |16    |---- |
+|C8    |LBA     |1   |10    |---- |
+|C9    |LBB     |1   |10    |---- |
+|CA    |LBC     |1   |10    |---- |
+|CB    |LBD     |1   |10    |---- |
+|CC    |LBE     |1   |10    |---- |
+|CD    |LBH     |1   |10    |---- |
+|CE    |LBL     |1   |10    |---- |
+|CF    |LBM     |1   |16    |---- |
+|D0    |LCA     |1   |10    |---- |
+|D1    |LCB     |1   |10    |---- |
+|D2    |LCC     |1   |10    |---- |
+|D3    |LCD     |1   |10    |---- |
+|D4    |LCE     |1   |10    |---- |
+|D5    |LCH     |1   |10    |---- |
+|D6    |LCL     |1   |10    |---- |
+|D7    |LCM     |1   |16    |---- |
+|D8    |LDA     |1   |10    |---- |
+|D9    |LDB     |1   |10    |---- |
+|DA    |LDC     |1   |10    |---- |
+|DB    |LDD     |1   |10    |---- |
+|DC    |LDE     |1   |10    |---- |
+|DD    |LDH     |1   |10    |---- |
+|DE    |LDL     |1   |10    |---- |
+|DF    |LDM     |1   |16    |---- |
+|E0    |LEA     |1   |10    |---- |
+|E1    |LEB     |1   |10    |---- |
+|E2    |LEC     |1   |10    |---- |
+|E3    |LED     |1   |10    |---- |
+|E4    |LEE     |1   |10    |---- |
+|E5    |LEH     |1   |10    |---- |
+|E6    |LEL     |1   |10    |---- |
+|E7    |LEM     |1   |16    |---- |
+|E8    |LHA     |1   |10    |---- |
+|E9    |LHB     |1   |10    |---- |
+|EA    |LHC     |1   |10    |---- |
+|EB    |LHD     |1   |10    |---- |
+|EC    |LHE     |1   |10    |---- |
+|ED    |LHH     |1   |10    |---- |
+|EE    |LHL     |1   |10    |---- |
+|EF    |LHM     |1   |16    |---- |
+|F0    |LLA     |1   |10    |---- |
+|F1    |LLB     |1   |10    |---- |
+|F2    |LLC     |1   |10    |---- |
+|F3    |LLD     |1   |10    |---- |
+|F4    |LLE     |1   |10    |---- |
+|F5    |LLH     |1   |10    |---- |
+|F6    |LLL     |1   |10    |---- |
+|F7    |LLM     |1   |16    |---- |
+|F8    |LMA     |1   |14    |---- |
+|F9    |LMB     |1   |14    |---- |
+|FA    |LMC     |1   |14    |---- |
+|FB    |LMD     |1   |14    |---- |
+|FC    |LME     |1   |14    |---- |
+|FD    |LMH     |1   |14    |---- |
+|FE    |LML     |1   |14    |---- |
+}
+
+  case OC of  
+    // HLT
+    $00, $01, $FF:
+         begin
+           FLastInstruction.Mnemonic := 'HLT';
+           FHalted := true;
+           EmitEvent(ceHalt);
+           FLastInstruction.Cycles := 8;
+         end;
+    // NOP
+    $C0: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 10;
+         end;
+    else
+    // INP n
+    // $43, $45, $47, $49, $4B, $4D, $4F
+    if (Odd(OC)) and (OC >= $41) and (OC <= $4F) then
+    begin
+      FRegs.A := FBus.ReadPort((OC - $41) div 2);
+      FLastInstruction.Mnemonic := 'INP' + IntToStr((OC - $41) div 2);
+      FLastInstruction.Cycles := 16;
+    end;  
+    // OUT n
+    // $51, $53, ... $7F
+    if (Odd(OC)) and (OC >= $51) and (OC <= $7F) then
+    begin
+      FBus.WritePort((OC - $41) div 2, FRegs.A);
+      FLastInstruction.Mnemonic := 'OUT' + IntToStr((OC - $41) div 2);
+      FLastInstruction.Cycles := 12;
+    end;  
+  end;
