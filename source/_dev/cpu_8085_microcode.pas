@@ -10,3 +10,14 @@
   This program is distributed in the hope that it will be useful, but WITHOUT
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
+
+    // RIM
+    $20: begin
+           FLastInstruction.Mnemonic := 'RIM';
+           FLastInstruction.Cycles := 4;
+         end;
+    // SIM
+    $30: begin
+           FLastInstruction.Mnemonic := 'SIM';
+           FLastInstruction.Cycles := 4;
+         end;

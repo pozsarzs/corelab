@@ -43,6 +43,7 @@ type
     FRegs: T8080Registers;
     procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
     procedure DoInterrupt(AEvent: TCPUEvent); override;
+    procedure RunOpCode(AOC: Byte); virtual;
   public
     constructor Create; override;
     procedure Reset; override;
@@ -135,6 +136,17 @@ begin
       // other interrupt instructions (e.g. CALL vector)
     end;
   end;
+end;
+
+// RUN SPECIFIED OPCODE
+procedure T8080CPU.RunOpCode(AOC: Byte);
+var
+  SourceRegIndex, DestRegIndex: Byte;
+  dw1:                          Cardinal;
+  w1, w2:                       Word;
+  b1, b2:                       Byte;
+begin
+  {$I cpu_8080_microcode.pas}
 end;
 
 // ---- PUBLIC METHODS ----
@@ -234,11 +246,7 @@ end;
 // EXECUTING AN INSTRUCTION
 procedure T8080CPU.Step;
 var
-  OC:                           Byte;
-  SourceRegIndex, DestRegIndex: Byte;
-  dw1:                          Cardinal;
-  w1, w2:                       Word;
-  b1, b2:                       Byte;
+  OC: Byte;
 begin
   if not FEnabled then Exit;
   if CheckInterrupts then Exit;
@@ -252,7 +260,7 @@ begin
     NumOperand := 0;
   end;
   Inc(FRegs.PC);                                    // Increment Program Counter
-  {$I cpu_8080_microcode.pas}
+  RunOpcode(OC);
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
   EmitEvent(ceInstructionBoundary);              // Notify debugger/trace system
   Inc(FTotalInstructions);                           // Increment Instruction Counter

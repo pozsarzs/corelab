@@ -22,6 +22,7 @@ type
   private
   protected
     procedure DoInterrupt(AEvent: TCPUEvent); override;
+    procedure RunOpCode(AOC: Byte); override;
   public
     constructor Create; override;
     procedure Reset; override;
@@ -59,6 +60,21 @@ begin
       // other interrupt instructions (e.g. CALL vector)
     end;
   end;
+end;
+
+// RUN SPECIFIED OPCODE
+procedure T8085CPU.RunOpCode(AOC: Byte);
+var
+  SourceRegIndex, DestRegIndex: Byte;
+  dw1:                          Cardinal;
+  w1, w2:                       Word;
+  b1, b2:                       Byte;
+begin
+  case AOC of
+    {$I cpu_8085_microcode.pas}
+  else
+    inherited RunOpCode(AOC);
+  end;  
 end;
 
 // ---- PUBLIC METHODS ----
@@ -167,8 +183,7 @@ begin
     NumOperand := 0;
   end;
   Inc(FRegs.PC);                                    // Increment Program Counter
-  {$I cpu_8080_microcode.pas}
-  {$I cpu_8085_microcode.pas}
+  RunOpcode(OC);  
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
   EmitEvent(ceInstructionBoundary);              // Notify debugger/trace system
   Inc(FTotalInstructions);                           // Increment Instruction Counter

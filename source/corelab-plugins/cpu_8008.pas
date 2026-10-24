@@ -42,6 +42,7 @@ type
     FStack: T8008Stack;
     procedure UpdateFlags(Value16: Word);
     procedure DoInterrupt(AEvent: TCPUEvent); override;
+    procedure RunOpCode(AOC: Byte);
   public
     constructor Create; override;
     procedure Reset; override;
@@ -97,6 +98,17 @@ begin
   begin
     // 8008 restart (RST) handling if needed
   end;
+end;
+
+// RUN SPECIFIED OPCODE
+procedure T8008CPU.RunOpCode(AOC: Byte);
+var
+  SourceRegIndex, DestRegIndex: Byte;
+  w1, w2:                       Word;
+  b1, b2:                       Byte;
+  bool1:                        Boolean;
+begin
+  {$I cpu_8008_microcode.pas}
 end;
 
 // ---- PUBLIC METHODS ----
@@ -193,11 +205,7 @@ end;
 // EXECUTING AN INSTRUCTION
 procedure T8008CPU.Step;
 var
-  OC:                           Byte;
-  SourceRegIndex, DestRegIndex: Byte;
-  w1, w2:                       Word;
-  b1, b2:                       Byte;
-  bool1:                        Boolean;
+  OC: Byte;
 begin
   if not FEnabled then Exit;
   if CheckInterrupts then Exit;
@@ -212,7 +220,7 @@ begin
   end;
   Inc(FRegs.PC);
   FRegs.PC := FRegs.PC and $3FFF;
-  {$I cpu_8008_microcode.pas}
+  RunOpCode(OC);
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
   EmitEvent(ceInstructionBoundary);
   Inc(FTotalInstructions);
