@@ -14,7 +14,7 @@ all:
 	@mkdir -p $(outdir)/
 	@for x in $(project); do \
 	  if [ -f $$x ]; then \
-	  $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x; \
+	  $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) -dNOT_A_LIBRARY_BUT_A_UNIT $$x; \
           $(call addtobuildlog,$$x.pas,$$?); \
 	  echo ""; \
 	  fi; \

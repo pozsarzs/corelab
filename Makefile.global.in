@@ -55,12 +55,12 @@ fpcargs		= -T@os@ \
                   -Fi../_inc/ \
                   -Fi../_inc/* \
                   -Fi../corelab-parts/ \
+                  -Fi../corelab-plugins/ \
                   -Fu../_ext/* \
                   -Fu../_ppu/ \
                   -Fu../_ppu/* \
                   -Fu../corelab-core/ \
                   -Fu../corelab-parts/ \
-                  -Fu../corelab-plugins/ \
                   -Fu../corelab-plugins/ \
                   -Fu./commandengine/ \
                   -Fu./projectengine/ \

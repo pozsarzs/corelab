@@ -11,7 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+unit cpu_8080;
+interface
+{$ELSE}
 library cpu_8080;
+{$ENDIF}
+
 {$MODE OBJFPC}{$H+}
 {$I DEFINE.PAS}
 uses
@@ -32,8 +38,8 @@ type
   { T8080CPU }
   T8080CPU = class(TCPU)
   private
-    RegPointers: array[0..7] of PByte;         // Pointers to register variables
   protected
+    RegPointers: array[0..7] of PByte;         // Pointers to register variables
     FRegs: T8080Registers;
     procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
     procedure DoInterrupt(AEvent: TCPUEvent); override;
@@ -56,6 +62,11 @@ const
   PubRegNames: array[0..9] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
                                         'F', 'PC','SP');
   PubRegSize: array[0..9] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4);
+
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+implementation
+{$ELSE}
+{$ENDIF}
 
 { T8080CPU }
                                            
@@ -144,7 +155,6 @@ begin
   FMaxIOPortAddress := $00FF;                    // the highest I/O port address
   FHasSeparateIOBus := true;          // indicates separate memory and I/O buses
   FDefaultClockFreq := 2000000; {2 MHz}              // original clock frequency
-
   // set register pointers
   RegPointers[0] := @FRegs.B;
   RegPointers[1] := @FRegs.C;
@@ -342,6 +352,9 @@ begin
     else Result := 0;
 end;
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+{$ELSE}
+
 // ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
 
 function CreateCPU: TCPU; CALLTYPE; export;
@@ -374,5 +387,7 @@ exports CreateCPU name 'cpu_create';
 exports DestroyCPU name 'cpu_destroy';
 exports LoadState name 'cpu_loadstate';
 exports SaveState name 'cpu_savestate';
+
+{$ENDIF}
 
 end.
