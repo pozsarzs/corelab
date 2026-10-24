@@ -41,7 +41,7 @@ type
     FFlags: T8008Flags;
     FStack: T8008Stack;
     procedure UpdateFlags(Value16: Word);
-    procedure DoInterrupt(AEvent: TCPUEvent); override;
+    procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte);
   public
     constructor Create; override;
@@ -50,7 +50,7 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
-    function GetCurrentInterrupt: TIntLogRec; override;
+    function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; override;
     function GetRegister(const RegName: PChar): Word; override;
     procedure SetRegister(const RegName: PChar; Value: Word); override;
     function GetRegisterCount: Byte; override;
@@ -91,27 +91,27 @@ begin
 end;
 
 // INTERRUPT HANDLER
-procedure T8008CPU.DoInterrupt(AEvent: TCPUEvent);
+procedure T8008CPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
 begin
   // send event to host
   inherited DoInterrupt(AEvent); 
   if AEvent = ceInterrupt then
   begin
     // detect instruction
-    if (FIRQVector and $C7) = $05 then
+    if (FIRQVector[AMode] and $C7) = $05 then
     begin
       // RST n
       // save return address to stack
       FStack.Regs[FStack.Pointer] := FRegs.PC;
       FStack.Pointer := (FStack.Pointer + 1) mod 7;
       // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector shr 3) and $07) * 8;
+      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
     end else
     begin
       // other interrupt instructions (e.g. CALL vector)
     end;
   end;
-end;end;
+end;
 
 // RUN SPECIFIED OPCODE
 procedure T8008CPU.RunOpCode(AOC: Byte);
@@ -151,14 +151,17 @@ begin
   RegPointers[5] := @FRegs.H;
   RegPointers[6] := @FRegs.L;
   Reset;
+  FInterruptEnabled := True
 end;
 
 // RESET CPU
 procedure T8008CPU.Reset;
+var
+  b: Byte;
 begin
   FRunning := false;
   FHalted := false;
-  FIRQPending := false;
+  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
   FNMIPending := false;
   FTotalCycles := 0;
   FTotalInstructions := 0;
@@ -265,13 +268,13 @@ begin
 end;
 
 // QUERY FOR THE LAST INTERRUPT DATA
-function T8008CPU.GetCurrentInterrupt: TIntLogRec;
+function T8008CPU.GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;
 begin
   with Result do
   begin
     Sender := '';
-    Vector := IntToHex(FIRQVector, 2);
-    if FIRQPending then Status := 'Pending' else Status := '';
+    Vector := IntToHex(FIRQVector[AMode], 2);
+    if FIRQPending[AMode] then Status := 'Pending' else Status := '';
   end;
 end;
 

@@ -42,7 +42,7 @@ type
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
     FRegs: T8080Registers;
     procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
-    procedure DoInterrupt(AEvent: TCPUEvent); override;
+    procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte); virtual;
   public
     constructor Create; override;
@@ -51,7 +51,7 @@ type
     function SaveState(AStream: TStream): Boolean; override;
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
-    function GetCurrentInterrupt: TIntLogRec; override;
+    function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; override;
     function GetRegister(const RegName: PChar): Word; override;
     procedure SetRegister(const RegName: PChar; Value: Word); override;
     function GetRegisterCount: Byte; override;
@@ -112,16 +112,16 @@ begin
 end;
 
 // INTERRUPT HANDLER
-procedure T8080CPU.DoInterrupt(AEvent: TCPUEvent);
+procedure T8080CPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
 begin
   // send event to host
-  inherited DoInterrupt(AEvent); 
+  inherited DoInterrupt(AEvent, AMode); 
   if AEvent = ceInterrupt then
   begin
     // prohibit further interruption
     FInterruptEnabled := false; 
     // detect instruction
-    if (FIRQVector >= $C0) and ((FIRQVector and $07) = $07) then
+    if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
     begin
       // RST n
       // save return address to stack
@@ -130,7 +130,7 @@ begin
       Dec(FRegs.SP);
       FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
       // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector shr 3) and $07) * 8;
+      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
     end else
     begin
       // other interrupt instructions (e.g. CALL vector)
@@ -182,13 +182,15 @@ end;
 
 // RESET CPU
 procedure T8080CPU.Reset;
+var
+  b: Byte;
 begin
   // Initial execution state
   FRunning := false;
   FHalted := false;
   FInterruptEnabled := false;
-  // No pending interrupts
-  FIRQPending := false;
+  // interrupts
+  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
   FNMIPending := false;
   // Clear counters
   FTotalCycles := 0;
@@ -292,14 +294,14 @@ begin
 end;
 
 // QUERY FOR THE LAST INTERRUPT DATA
-function T8080CPU.GetCurrentInterrupt: TIntLogRec;
+function T8080CPU.GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;
 begin
   with Result do
   begin
     Sender := '';
-    Vector := IntToHex(FIRQVector, 2);
+    Vector := IntToHex(FIRQVector[AMode], 2);
     if FInterruptEnabled then Flag := 'EI' else Flag := 'DI';
-    if FIRQPending then Status := 'Pending' else Status := '';
+    if FIRQPending[AMode] then Status := 'Pending' else Status := '';
   end;
 end;
 

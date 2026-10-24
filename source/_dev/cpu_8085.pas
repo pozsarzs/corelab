@@ -21,7 +21,7 @@ type
   T8085CPU = class(T8080CPU)
   private
   protected
-    procedure DoInterrupt(AEvent: TCPUEvent); override;
+    procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte); override;
   public
     constructor Create; override;
@@ -36,7 +36,7 @@ type
 // ---- PROTECTED METHODS ----
 
 // INTERRUPT HANDLER
-procedure T8085CPU.DoInterrupt(AEvent: TCPUEvent);
+procedure T8085CPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
 begin
   // send event to host
   inherited DoInterrupt(AEvent); 
@@ -44,7 +44,7 @@ begin
   begin
     // prohibit further interruption
     FInterruptEnabled := false; 
-    if (FIRQVector >= $C0) and ((FIRQVector and $07) = $07) then
+    if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
     begin
       // RST interrupt instructions
       // save return address to stack
@@ -53,7 +53,7 @@ begin
       Dec(FRegs.SP);
       FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
       // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector shr 3) and $07) * 8;
+      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
     end
     else
     begin
@@ -133,18 +133,20 @@ end;
 
 // RESET CPU
 procedure T8085CPU.Reset;
+var
+  b: Byte;
 begin
-  // Initial execution state
+  // initial execution state
   FRunning := false;
   FHalted := false;
   FInterruptEnabled := false;
-  // No pending interrupts
-  FIRQPending := false;
+  // interrupts
+  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
   FNMIPending := false;
-  // Clear counters
+  // clear counters
   FTotalCycles := 0;
   FTotalInstructions := 0;
-  // Others
+  // others
   FillChar(FRegs, SizeOf(FRegs), 0);
   FRegs.PC := 0;
   FRegs.SP := $FFFF;

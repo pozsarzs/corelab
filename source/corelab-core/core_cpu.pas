@@ -100,8 +100,8 @@ type
     FRunning:           Boolean;                          // CPU execution state
     FHalted:            Boolean;                               // CPU HALT state
     FInterruptEnabled:  Boolean;                 // Global interrupt enable flag
-    FIRQPending:        Boolean;                   // Pending maskable interrupt
-    FIRQVector:         Byte;                       // Received interrupt vector
+    FIRQPending:        array[0..7] of Boolean;   // Pending maskable interrupts
+    FIRQVector:         array[0..7] of Byte;       // Received interrupt vectors
     FNMIPending:        Boolean;               // Pending non-maskable interrupt
     // Execution statistics
     FTotalCycles:       QWord;                                   // Total cycles
@@ -109,7 +109,7 @@ type
     FOnDestroy:         TProcessorDestroyEvent;
     var FRegPtr:        array of ^Word;
     procedure EmitEvent(AEvent: TCPUEvent); virtual;
-    procedure DoInterrupt(AEvent: TCPUEvent); virtual;
+    procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); virtual;
   public
     procedure ConnectBus(const Bus: ISysBus); virtual;
     // Public methods
@@ -117,14 +117,14 @@ type
     destructor Destroy; override;
     function CheckInterrupts: Boolean;
     function GetCurrentInstruction: TLogRec; virtual; abstract;
-    function GetCurrentInterrupt: TIntLogRec; virtual; abstract;
+    function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; virtual; abstract;
     function GetRegister(const RegName: PChar): Word; virtual; abstract;
     function GetRegisterCount: Byte; virtual; abstract;
     function GetRegisterName(AIndex: Byte): PChar; virtual; abstract;
     function GetRegisterSize(AIndex: Byte): Byte; virtual; abstract;
     function LoadState(AStream: TStream): Boolean; virtual; abstract;
     function SaveState(AStream: TStream): Boolean; virtual; abstract;
-    procedure IRQ(AVector: Byte); virtual;
+    procedure IRQ(AVector: Byte; AMode: Byte = 0); virtual;
     procedure NMI; virtual;
     procedure Reset; virtual; abstract;
     procedure Run; virtual;
@@ -215,7 +215,7 @@ begin
 end;
 
 // INTERRUPT HANDLER
-procedure TCPU.DoInterrupt(AEvent: TCPUEvent);
+procedure TCPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
 begin
   EmitEvent(AEvent); 
 end;
@@ -224,6 +224,8 @@ end;
 
 // CREATE CPU INSTANCE
 constructor TCPU.Create;
+var
+  b: Byte;
 begin
   inherited Create;
   FEnabled := false;
@@ -231,9 +233,9 @@ begin
   FRunning := false;
   FHalted := false;
   FInterruptEnabled := false;
-  // no pending interrupts
-  FIRQVector := 0;
-  FIRQPending := false;
+  // interrupts
+  for b := 0 to Length(FIRQVector) do FIRQVector[b] := 0;
+  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
   FNMIPending := false;
   // clear counters
   FTotalCycles := 0;
@@ -269,11 +271,11 @@ begin
 end;
 
 // SIGNAL MASKABLE INTERRUPT
-procedure TCPU.IRQ(AVector: Byte);
+procedure TCPU.IRQ(AVector: Byte; AMode: Byte = 0);
 begin
   if not FEnabled then Exit;
-  FIRQVector := AVector;
-  FIRQPending := true;                                   // Set pending IRQ flag
+  FIRQVector[AMode] := AVector;
+  FIRQPending[AMode] := true;                            // Set pending IRQ flag
   EmitEvent(ceInterrupt);                             // Notify host application
 end;
 
@@ -287,6 +289,8 @@ end;
 
 // CHECK PENDING INTERRUPT
 function TCPU.CheckInterrupts: Boolean;
+var
+  b: Byte;
 begin
   Result := false;
   if FNMIPending then
@@ -297,13 +301,14 @@ begin
     Result := true;
     Exit;
   end;
-  if FIRQPending and FInterruptEnabled then
-  begin
-    FIRQPending := false;                                          // Accept IRQ
-    FHalted := false;                                             // Wake-up CPU
-    DoInterrupt(ceInterrupt);                     // Call the instance's handler
-    Result := true;
-  end;
+  for b := 0 to Length(FIRQPending) do
+    if FIRQPending[b] and FInterruptEnabled then
+    begin
+      FIRQPending[b] := false;                                     // Accept IRQ
+      FHalted := false;                                           // Wake-up CPU
+      DoInterrupt(ceInterrupt);                   // Call the instance's handler
+      Result := true;
+    end;
 end;
 
 // CONNECT CPU TO EXTERNAL SYSTEM BUS
