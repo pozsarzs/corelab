@@ -74,6 +74,38 @@ begin
     {$I cpu_8085_microcode.pas}
   else
     inherited RunOpCode(AOC);
+    with FLastInstruction do
+      case AOC of
+        // Jcc
+        $C2, $CA, $D2, $DA, $E2, $EA, $F2, $FA: if FRegs.PC = (Address + 3) then
+                                                  Cycles := 7
+                                                else
+                                                  Cycles := 10;
+        // Ccc
+        $C4, $CC, $D4, $DC, $E4, $EC, $F4, $FC: case Cycles of
+                                                  11: Cycles := 9;
+                                                  17: Cycles := 18;
+                                                else
+                                                  Cycles := 12;
+                                                end;
+        // Rcc
+        $C0, $C8, $D0, $D8, $E0, $E8, $F0, $F8: case Cycles of
+                                                  5: Cycles := 6;
+                                                  11: Cycles := 12;
+                                                else
+                                                  Cycles := 12;
+                                                end;
+        // CALL a16
+        $CD:                                    Cycles := 18;
+        // INR r
+        $04, $0C, $14, $1C, $24, $2C, $3C:      Cycles := 4;
+        // DCR r
+        $05, $0D, $15, $1D, $25, $2D, $3D:      Cycles := 4;
+        // INX r
+        $03, $13, $23, $33:                     Cycles := 6;
+        // DCX r
+        $0B, $1B, $2B, $3B:                     Cycles := 6;
+      end;
   end;  
 end;
 

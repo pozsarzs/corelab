@@ -93,12 +93,25 @@ end;
 // INTERRUPT HANDLER
 procedure T8008CPU.DoInterrupt(AEvent: TCPUEvent);
 begin
+  // send event to host
   inherited DoInterrupt(AEvent); 
   if AEvent = ceInterrupt then
   begin
-    // 8008 restart (RST) handling if needed
+    // detect instruction
+    if (FIRQVector and $C7) = $05 then
+    begin
+      // RST n
+      // save return address to stack
+      FStack.Regs[FStack.Pointer] := FRegs.PC;
+      FStack.Pointer := (FStack.Pointer + 1) mod 7;
+      // jump based on vector (RST n = n * 8)
+      FRegs.PC := ((FIRQVector shr 3) and $07) * 8;
+    end else
+    begin
+      // other interrupt instructions (e.g. CALL vector)
+    end;
   end;
-end;
+end;end;
 
 // RUN SPECIFIED OPCODE
 procedure T8008CPU.RunOpCode(AOC: Byte);
