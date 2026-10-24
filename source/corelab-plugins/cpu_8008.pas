@@ -161,7 +161,7 @@ var
 begin
   FRunning := false;
   FHalted := false;
-  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
+  for b := 0 to Length(FIRQPending) - 1 do FIRQPending[b] := false;
   FNMIPending := false;
   FTotalCycles := 0;
   FTotalInstructions := 0;

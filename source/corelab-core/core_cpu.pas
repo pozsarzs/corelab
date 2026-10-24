@@ -115,7 +115,7 @@ type
     // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
-    function CheckInterrupts: Boolean;
+    function CheckInterrupts: Boolean; virtual;
     function GetCurrentInstruction: TLogRec; virtual; abstract;
     function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; virtual; abstract;
     function GetRegister(const RegName: PChar): Word; virtual; abstract;
@@ -234,8 +234,8 @@ begin
   FHalted := false;
   FInterruptEnabled := false;
   // interrupts
-  for b := 0 to Length(FIRQVector) do FIRQVector[b] := 0;
-  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
+  for b := 0 to Length(FIRQVector) - 1  do FIRQVector[b] := 0;
+  for b := 0 to Length(FIRQPending) - 1 do FIRQPending[b] := false;
   FNMIPending := false;
   // clear counters
   FTotalCycles := 0;
@@ -301,14 +301,17 @@ begin
     Result := true;
     Exit;
   end;
-  for b := 0 to Length(FIRQPending) do
+  for b := 0 to Length(FIRQPending) - 1 do
+  begin
     if FIRQPending[b] and FInterruptEnabled then
     begin
       FIRQPending[b] := false;                                     // Accept IRQ
       FHalted := false;                                           // Wake-up CPU
-      DoInterrupt(ceInterrupt);                   // Call the instance's handler
+      DoInterrupt(ceInterrupt, b);                                  // b = AMode
       Result := true;
+      Exit;                                 // One check - one interrupt calling
     end;
+  end;
 end;
 
 // CONNECT CPU TO EXTERNAL SYSTEM BUS

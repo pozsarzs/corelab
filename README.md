@@ -58,7 +58,6 @@ Second release will be with the following changes:
  - [ ] Calculating virtual processor time from cycle time for more precise timing.
  - [ ] Intel 4004 4 bits microprocessor plugin.
  - [ ] Intel 4040 4 bits microprocessor plugin.
- - [ ] Intel 8085 8 bits microprocessor plugin.
  - [ ] Zilog Z80 8 bits microprocessor plugin.
  - [ ] AMD 2900 bit-slice microprocessor family plugin.
  
@@ -127,6 +126,7 @@ Second release will be with the following changes:
 
  - Intel 8008 Neumann architecture 8 bit microprocessor (1972).
  - Intel 8080 Neumann architecture 8 bit microprocessor (1974).
+ - Intel 8085 Neumann architecture 8 bit microprocessor (1976).
 
 ## III. Screenshots
 
