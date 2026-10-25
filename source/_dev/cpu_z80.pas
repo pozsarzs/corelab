@@ -39,8 +39,10 @@ type
   TZ80CPU = class(TCPU)
   private
   protected
-    RegPointers: array[0..7] of PByte;         // Pointers to register variables
+    RegPointers: array[0..7] of PByte;         // pointers to register variables
     FRegs: TZ80Registers;
+    FInterruptMode: Byte;                                      // interrupt mode
+    FInterruptEnabled2:  Boolean;           // global interrupt enable flag IFF2
     procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
     procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte; APrefix: Byte = 0);
@@ -49,6 +51,7 @@ type
     procedure Reset; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
+    procedure NMI; override;
     procedure Step; override;
     function GetCurrentInstruction: TLogRec; override;
     function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; override;
@@ -60,7 +63,7 @@ type
   end;
 const
   // registers
-  RegNames:    array[0..7] of char = ('B', 'C', 'D', 'E', 'H', 'L', 'M', 'A');
+  RegNames:    array[0..7] of string[4] = ('B', 'C', 'D', 'E', 'H', 'L', '(HL)', 'A');
   PubRegNames: array[0..13] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
                                         'F', 'PC', 'SP', 'IX', 'IY', 'I', 'R');
   PubRegSize: array[0..13] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2);
@@ -123,6 +126,8 @@ end;
 
 // INTERRUPT HANDLER
 procedure TZ80CPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
+var
+  IntVectorAddress: Word;
 begin
   // send event to host
   inherited DoInterrupt(AEvent, AMode); 
@@ -130,20 +135,42 @@ begin
   begin
     // prohibit further interruption
     FInterruptEnabled := false; 
-    // detect instruction
-    if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
-    begin
-      // RST n
-      // save return address to stack
-      Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
-      Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
-      // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
-    end else
-    begin
-      // other interrupt instructions (e.g. CALL vector)
+    FInterruptEnabled2 := false; 
+    // save return address to stack
+    Dec(FRegs.SP);
+    FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
+    Dec(FRegs.SP);
+    FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
+
+    case FInterruptMode of
+      0: begin
+           // IM 0: instruction received from the bus
+           // detect instruction
+           if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
+           begin
+             // RST n
+             // jump based on vector (RST n = n * 8)
+             FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
+             FTotalCycles := FTotalCycles + 13;
+           end else
+           begin
+             // other interrupt instructions (e.g. CALL vector)
+           end;
+         end;
+      1: begin
+           // IM 1: fixed jump to $0038
+           // jump to fixed address
+           FRegs.PC := $0038;
+           FTotalCycles := FTotalCycles + 13;
+         end;
+      2: begin
+           // IM 2: address based on the I register and the fetched vector
+           IntVectorAddress := (FRegs.I shl 8) or FIRQVector[AMode];
+           // jump to address
+           FRegs.PCL := FBus.ReadMemory(IntVectorAddress);
+           FRegs.PCH := FBus.ReadMemory(IntVectorAddress + 1);
+           FTotalCycles := FTotalCycles + 19;
+         end;
     end;
   end;
 end;
@@ -157,14 +184,14 @@ var
   b1, b2:                       Byte;
 begin
   case APrefix of
-    prNone: begin {$I cpu_Z80_microcode.pas} end;
-    prCB: begin {$I cpu_Z80_microcode_cbxx.pas} end;
-    prDD: begin {$I cpu_Z80_microcode_ddxx.pas} end;
-    prED: begin {$I cpu_Z80_microcode_edxx.pas} end;
-    prFD: begin {$I cpu_Z80_microcode_fdxx.pas} end;
-    prDDCB: begin {$I cpu_Z80_microcode_ddcbxx.pas} end;
-    prFDCB: begin {$I cpu_Z80_microcode_fdcbxx.pas} end;
-  end; 
+    prNone: begin {$I cpu_z80_microcode.pas} end;
+    prCB:   begin {$I cpu_z80_microcode_cbxx.pas} end;
+    prDD:   begin {$I cpu_z80_microcode_ddxx.pas} end;
+    prED:   begin {$I cpu_z80_microcode_edxx.pas} end;
+    prFD:   begin {$I cpu_z80_microcode_fdxx.pas} end;
+    prDDCB: begin {$I cpu_z80_microcode_ddcbxx.pas} end;
+    prFDCB: begin {$I cpu_z80_microcode_fdcbxx.pas} end;
+  end;
 end;
   
 // ---- PUBLIC METHODS ----
@@ -263,6 +290,16 @@ begin
   end;
 end;
 
+// SIGNAL NON-MASKABLE INTERRUPT
+procedure TZ80CPU.NMI;
+begin
+  if not FEnabled then Exit;
+  FNMIPending := true;                                   // set pending NMI flag
+  FInterruptEnabled2 := FInterruptEnabled;     // save maskable interrupt status
+  FInterruptEnabled := false;                      // disable maskable interrupt
+  EmitEvent(ceInterrupt);                             // notify host application
+end;
+
 // EXECUTING AN INSTRUCTION
 procedure TZ80CPU.Step;
 var
@@ -297,8 +334,18 @@ begin
     if NumOperand > 0 then RawCode := RawCode + ' ' + IntToHex(Operands[1], 2);
     if NumOperand > 1 then RawCode := RawCode + ' ' + IntToHex(Operands[2], 2);
     AsmText := Mnemonic;
-    if NumOperand > 0 then AsmText := AsmText + ' ' + IntToHex(Operands[1], 2);
-    if NumOperand > 1 then AsmText := AsmText + ', ' + IntToHex(Operands[2], 2);
+    if Pos('%', Mnemonic) > 0 then
+    begin
+      if NumOperand = 1 then AsmText := Format(Mnemonic, [Operands[1]]) else
+        if NumOperand = 2
+          then AsmText := Format(Mnemonic, [Operands[1], Operands[2]])
+          else AsmText := Mnemonic;
+    end else
+    begin
+      AsmText := Mnemonic;
+      if NumOperand > 0 then AsmText := AsmText + ' ' + IntToHex(Operands[1], 2);
+      if NumOperand > 1 then AsmText := AsmText + ', ' + IntToHex(Operands[2], 2);
+    end;
   end;
   with Result do
   begin
