@@ -35,7 +35,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -60,7 +60,7 @@
            FLastInstruction.Mnemonic := 'RET';
            with FStack do
            begin
-             Pointer := (Pointer - 1) and $07;
+             if Pointer = 0 then Pointer := 6 else Dec(Pointer);
              FRegs.PC := Regs[Pointer];
            end;
            FLastInstruction.Cycles := 7;
@@ -80,7 +80,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -116,7 +116,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -150,7 +150,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -176,7 +176,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -200,7 +200,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -224,7 +224,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -248,7 +248,7 @@
            begin
              with FStack do
              begin
-               Pointer := (Pointer - 1) and $07;
+               if Pointer = 0 then Pointer := 6 else Dec(Pointer);
                FRegs.PC := Regs[Pointer];
              end;
              FLastInstruction.Cycles := 10;
@@ -294,7 +294,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -326,7 +326,7 @@
            with FStack do
            begin
              Regs[Pointer] := FRegs.PC;
-             Pointer := (Pointer + 1) and $07;
+             Pointer := (Pointer + 1) mod 7;
            end;  
            FRegs.PC := w1 and $3FFF;
            FLastInstruction.Cycles := 28;
@@ -360,7 +360,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -395,7 +395,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -430,7 +430,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -465,7 +465,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -500,7 +500,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -535,7 +535,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -570,7 +570,7 @@
              with FStack do
              begin
                Regs[Pointer] := FRegs.PC;
-               Pointer := (Pointer + 1) and $07;
+               Pointer := (Pointer + 1) mod 7;
              end;  
              FRegs.PC := w1 and $3FFF;
              FLastInstruction.Cycles := 22;
@@ -637,7 +637,7 @@
       with FStack do
       begin
         Regs[Pointer] := FRegs.PC;
-        Pointer := (Pointer + 1) and $07; 
+        Pointer := (Pointer + 1) mod 7; 
       end;
       FRegs.PC := w1 * 8;
       FLastInstruction.Cycles := 10;

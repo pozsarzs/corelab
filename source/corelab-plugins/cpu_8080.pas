@@ -120,21 +120,8 @@ begin
   begin
     // prohibit further interruption
     FInterruptEnabled := false; 
-    // detect instruction
-    if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
-    begin
-      // RST n
-      // save return address to stack
-      Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
-      Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
-      // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
-    end else
-    begin
-      // other interrupt instructions (e.g. CALL vector)
-    end;
+    // execute the injected instruction (RST, CALL, etc.)
+    RunOpCode(FIRQVector[AMode]);
   end;
 end;
 

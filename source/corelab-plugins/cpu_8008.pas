@@ -46,6 +46,7 @@ type
   public
     constructor Create; override;
     procedure Reset; override;
+    function CheckInterrupts: Boolean; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
     procedure Step; override;
@@ -93,24 +94,8 @@ end;
 // INTERRUPT HANDLER
 procedure T8008CPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
 begin
-  // send event to host
-  inherited DoInterrupt(AEvent); 
-  if AEvent = ceInterrupt then
-  begin
-    // detect instruction
-    if (FIRQVector[AMode] and $C7) = $05 then
-    begin
-      // RST n
-      // save return address to stack
-      FStack.Regs[FStack.Pointer] := FRegs.PC;
-      FStack.Pointer := (FStack.Pointer + 1) mod 7;
-      // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
-    end else
-    begin
-      // other interrupt instructions (e.g. CALL vector)
-    end;
-  end;
+  inherited DoInterrupt(AEvent, AMode);
+  if AEvent = ceInterrupt then RunOpCode(FIRQVector[AMode]);
 end;
 
 // RUN SPECIFIED OPCODE
@@ -154,6 +139,25 @@ begin
   FInterruptEnabled := True
 end;
 
+// CHECK PENDING INTERRUPT
+function T8008CPU.CheckInterrupts: Boolean;
+var
+  b: Byte;
+begin
+  Result := false;
+  for b := 0 to Length(FIRQPending) - 1 do
+  begin
+    if FIRQPending[b] and FInterruptEnabled then
+    begin
+      FIRQPending[b] := false;                                     // Accept IRQ
+      FHalted := false;                                           // Wake-up CPU
+      DoInterrupt(ceInterrupt, b);                                  // b = AMode
+      Result := true;
+      Exit;                                 // One check - one interrupt calling
+    end;
+  end;
+end;
+
 // RESET CPU
 procedure T8008CPU.Reset;
 var
@@ -190,7 +194,6 @@ begin
       ReadBuffer(FRunning, SizeOf(FRunning));
       ReadBuffer(FHalted, SizeOf(FHalted));
       ReadBuffer(FIRQPending, SizeOf(FIRQPending));
-      ReadBuffer(FNMIPending, SizeOf(FNMIPending));
       ReadBuffer(FTotalCycles, SizeOf(FTotalCycles));
       ReadBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
     except
@@ -211,7 +214,6 @@ begin
     WriteBuffer(FRunning, SizeOf(FRunning));
     WriteBuffer(FHalted, SizeOf(FHalted));
     WriteBuffer(FIRQPending, SizeOf(FIRQPending));
-    WriteBuffer(FNMIPending, SizeOf(FNMIPending));
     WriteBuffer(FTotalCycles, SizeOf(FTotalCycles));
     WriteBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
     Result := true;

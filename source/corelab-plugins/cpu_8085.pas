@@ -37,6 +37,7 @@ const
   imRST5_5 = 1;
   imRST6_5 = 2;
   imRST7_5 = 3;
+  imNMI    = 255;
 
 { T8085CPU }
                                            
@@ -46,36 +47,43 @@ const
 procedure T8085CPU.DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);
 begin
   // send event to host
-  inherited DoInterrupt(AEvent); 
+  inherited DoInterrupt(AEvent, AMode);                  // T8080CPU.DoInterrupt
   if AEvent = ceInterrupt then
   begin
-    // prohibit further interruption
     FInterruptEnabled := false; 
-    if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
+    // NMI (TRAP)
+    if AMode = imNMI then
     begin
-      // RST interrupt instructions
-      // save return address to stack
       Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
+      FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF);
       Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
-      // jump based on vector (RST n = n * 8)
-      FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
-    end
-    else
-    begin
-      // other interrupt instructions (e.g. CALL vector)
+      FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);
+      FRegs.PC := $0024;
+      Exit;
     end;
+    // RST 5.5, 6.5, 7.5
+    if AMode in [imRST5_5, imRST6_5, imRST7_5] then
+    begin
+      Dec(FRegs.SP);
+      FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF);
+      Dec(FRegs.SP);
+      FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);
+      case AMode of
+        imRST5_5: FRegs.PC := $002C;
+        imRST6_5: FRegs.PC := $0034;
+        imRST7_5: FRegs.PC := $003C;
+      end;
+      Exit;
+    end;
+    // INTR
+    if AMode = imINTR then RunOpCode(FIRQVector[AMode]);
   end;
 end;
 
 // RUN SPECIFIED OPCODE
 procedure T8085CPU.RunOpCode(AOC: Byte);
 var
-  SourceRegIndex, DestRegIndex: Byte;
-  dw1:                          Cardinal;
-  w1, w2:                       Word;
-  b1, b2:                       Byte;
+  b1: Byte;
 begin
   case AOC of
     {$I cpu_8085_microcode.pas}
@@ -148,7 +156,7 @@ begin
   FHalted := false;
   FInterruptEnabled := false;
   // interrupts
-  for b := 0 to Length(FIRQPending) do FIRQPending[b] := false;
+  for b := 0 to Length(FIRQPending) - 1 do FIRQPending[b] := false;
   FIRQMask := $07;
   FNMIPending := false;
   // clear counters
@@ -209,16 +217,12 @@ end;
 // EXECUTING AN INSTRUCTION
 procedure T8085CPU.Step;
 var
-  OC:                           Byte;
-  SourceRegIndex, DestRegIndex: Byte;
-  dw1:                          Cardinal;
-  w1, w2:                       Word;
-  b1, b2:                       Byte;
+  OC: Byte;
 begin
   if not FEnabled then Exit;
   if CheckInterrupts then Exit;
   if FHalted then Exit;
-  OC := FBus.ReadMemory(FRegs.PC);                     // Fetch opcode from (PC)
+  OC := FBus.ReadMemory(FRegs.PC);                     // fetch opcode from (PC)
   with FLastInstruction do
   begin
     Address := FRegs.PC;
@@ -226,25 +230,24 @@ begin
     Opcode := OC;
     NumOperand := 0;
   end;
-  Inc(FRegs.PC);                                    // Increment Program Counter
+  Inc(FRegs.PC);                                    // increment Program Counter
   RunOpcode(OC);  
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
-  EmitEvent(ceInstructionBoundary);              // Notify debugger/trace system
-  Inc(FTotalInstructions);                           // Increment Instruction Counter
+  EmitEvent(ceInstructionBoundary);              // notify debugger/trace system
+  Inc(FTotalInstructions);                      // increment Instruction Counter
 end;
 
 // CHECK PENDING INTERRUPT
 function T8085CPU.CheckInterrupts: Boolean;
 var
   b: Byte;
-  Mask: Byte;
 begin
   Result := false;
   if FNMIPending then
   begin
     FNMIPending := false;                                          // Accept NMI
     FHalted := false;                                             // Wake-up CPU
-    DoInterrupt(ceInterrupt);                     // Call the instance's handler
+    DoInterrupt(ceInterrupt, imNMI);              // Call the instance's handler
     Result := true;
     Exit;
   end;
@@ -259,11 +262,11 @@ begin
         if ((FIRQMask shr (b - 1)) and $01) = 1 then
         Continue;
       end;
-      FIRQPending[b] := false;                                     // Accept IRQ
-      FHalted := false;                                           // Wake-up CPU
-      DoInterrupt(ceInterrupt, b);                                // b = AMode
+      FIRQPending[b] := false;                                     // accept IRQ
+      FHalted := false;                                           // wake-up CPU
+      DoInterrupt(ceInterrupt, b);                                  // b = AMode
       Result := true;
-      Exit;                               // One check - one interrupt calling
+      Exit;                                 // One check - one interrupt calling
     end;
   end;
 end;
