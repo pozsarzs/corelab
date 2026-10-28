@@ -4,3 +4,4 @@
 
 ### Interrupt handling
 
+This microprocessor does not have interrupt handling.
