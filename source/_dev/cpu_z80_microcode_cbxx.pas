@@ -13,22 +13,36 @@
 
   case AOC of
     $00..$07: begin
-                // RLC r, RLC M
+                // RLC r; RLC M
               end;
     $08..$0F: begin
-                // RRC r, RRC M
+                // RRC r; RRC M
               end;
     $10..$17: begin
-                // RL r, RL M
+                // RL r; RL M
               end;
     $18..$1F: begin
-                // RR r, RR M
+                // RR r; RR M
               end;
     $20..$27: begin
-                // SLA r, SLA M
+                // SLA r; SLA M
               end;
     $28..$2F: begin
-                // SRA r, SRA M
+                // SRA r; SRA M
               end;
-  
+    $30..$37: begin
+                // SLL r; SLL M
+              end;
+    $38..$3F: begin
+                // SRL r; SRL M
+              end;
+    $40..$7F: begin
+                // BIT n, r; BIT n, M
+              end;
+    $80..$BF: begin
+                // RES n, r; RES n, M
+              end;
+    $C0..$FF: begin
+                // SET n, r; SET n, M
+              end;
   end;
