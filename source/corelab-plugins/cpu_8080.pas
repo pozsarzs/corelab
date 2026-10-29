@@ -41,7 +41,7 @@ type
   protected
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
     FRegs: T8080Registers;
-    procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
+    procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);
     procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte); virtual;
   public

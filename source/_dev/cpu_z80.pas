@@ -43,11 +43,12 @@ type
     FRegs: TZ80Registers;
     FInterruptMode: Byte;                                      // interrupt mode
     FInterruptEnabled2:  Boolean;           // global interrupt enable flag IFF2
-    procedure UpdateFlags(Value16: word; OldValue, ValueToAdd: byte);
+    procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte; N: Boolean = False; P: Boolean = False);
     procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte; APrefix: Byte = 0);
   public
     constructor Create; override;
+    function CheckInterrupts: Boolean; override;
     procedure Reset; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
@@ -68,20 +69,25 @@ const
                                         'F', 'PC', 'SP', 'IX', 'IY', 'I', 'R');
   PubRegSize: array[0..13] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2);
   // opcode prefixes
-  prNone = 0;
-  prCB =   1;
-  prDD =   2;
-  prED =   3;
-  prFD =   4;
-  prDDCB = 5;
-  prFDCB = 6;
+  prNone =    0;
+  prCB =      1;
+  prDD =      2;
+  prED =      3;
+  prFD =      4;
+  prDDCB =    5;
+  prFDCB =    6;
+  // interrupt modes
+  imINT_IM0 = 0;
+  imINT_IM1 = 1;
+  imINT_IM2 = 2;
+  imNMI =     255;
 
 { TZ80CPU }
                                            
 // ---- PROTECTED METHODS ----
 
 // UPDATE REGISTER F (SZ0A 0P1C)
-procedure TZ80CPU.UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);
+procedure TZ80CPU.UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte; N: Boolean = False; P: Boolean = False);
 var
   b:      Byte;
   l:      Boolean;
@@ -96,32 +102,38 @@ begin
   if Value8 = 0
     then FRegs.F := FRegs.F or $40
     else FRegs.F := FRegs.F and $BF;
-  // 5. Constant:        xx0x xxxx
-  // 4. Half-Carry: xxxH xxxx
+  // 4. Half-Carry:      xxxH xxxx
   if ((Value8 xor OldValue xor ValueToAdd) and $10) <> 0
     then FRegs.F := FRegs.F or $10
     else FRegs.F := FRegs.F and $EF;
-  // 3. Constant:        xxxx 0xxx
   // 2. Parity/Overflow: xxxx xPxx
-  l := true;
-  for b := 0 to 7 do
-    if (Value8 and (1 shl b)) <> 0 then l := not l;
-  if l 
-    then FRegs.F := FRegs.F or $04
-    else FRegs.F := FRegs.F and $FB;
-
-  // matematikai műveleteknél a kettes komplemens túlcsordulás is
-    
-  // 1. Constant:        xxxx xxNx
-
-  // értéke 1, ha az utolsó művelet kivonás
-
+  if P then
+  begin
+    // parity (at logical operations)
+    l := true;
+    for b := 0 to 7 do
+      if (Value8 and (1 shl b)) <> 0 then l := not l;
+    if l 
+      then FRegs.F := FRegs.F or $04
+      else FRegs.F := FRegs.F and $FB;
+  end else
+  begin
+    // overflow (at aritmetical operations)
+    if ((OldValue xor ValueToAdd xor $80) and
+       (OldValue xor Value8) and $80) <> 0
+      then FRegs.F := FRegs.F or $04
+      else FRegs.F := FRegs.F and $FB;
+  end;
+  // 1. Add/Subtract:    xxxx xxNx
+  if N
+    then FRegs.F := FRegs.F or $02
+    else FRegs.F := FRegs.F and $FD;
   // 0. Carry:           xxxx xxxC
   if (Value16 and $0100) <> 0
     then FRegs.F := FRegs.F or $01
     else FRegs.F := FRegs.F and $FE;
-  // Constants:          xx0x 0x1x
-  FRegs.F := (FRegs.F and $D5) or $02;
+  // 5, 3.:              xxYx Xxxx
+  FRegs.F := (FRegs.F and $D7) or (Value8 and $28);
 end;
 
 // INTERRUPT HANDLER
@@ -133,42 +145,44 @@ begin
   inherited DoInterrupt(AEvent, AMode); 
   if AEvent = ceInterrupt then
   begin
-    // prohibit further interruption
-    FInterruptEnabled := false; 
-    FInterruptEnabled2 := false; 
+    // If is not NMI then disable more interrupt requests
+    if AMode <> imNMI then
+    begin
+      FInterruptEnabled := false; 
+      FInterruptEnabled2 := false; 
+    end;
     // save return address to stack
     Dec(FRegs.SP);
     FBus.WriteMemory(FRegs.SP, (FRegs.PC shr 8) and $FF); // PCH
     Dec(FRegs.SP);
     FBus.WriteMemory(FRegs.SP, FRegs.PC and $FF);         // PCL
-
+    // NMI
+    if AMode = imNMI then
+    begin
+      FRegs.PC := $0066;
+      FTotalCycles := FTotalCycles + 11;
+      Exit;
+    end;
+    // maskable INTs
     case FInterruptMode of
       0: begin
-           // IM 0: instruction received from the bus
-           // detect instruction
+           // IM 0
            if (FIRQVector[AMode] >= $C0) and ((FIRQVector[AMode] and $07) = $07) then
            begin
-             // RST n
-             // jump based on vector (RST n = n * 8)
              FRegs.PC := ((FIRQVector[AMode] shr 3) and $07) * 8;
              FTotalCycles := FTotalCycles + 13;
-           end else
-           begin
-             // other interrupt instructions (e.g. CALL vector)
            end;
          end;
       1: begin
            // IM 1: fixed jump to $0038
-           // jump to fixed address
            FRegs.PC := $0038;
            FTotalCycles := FTotalCycles + 13;
          end;
       2: begin
            // IM 2: address based on the I register and the fetched vector
            IntVectorAddress := (FRegs.I shl 8) or FIRQVector[AMode];
-           // jump to address
-           FRegs.PCL := FBus.ReadMemory(IntVectorAddress);
-           FRegs.PCH := FBus.ReadMemory(IntVectorAddress + 1);
+           FRegs.PC := FBus.ReadMemory(IntVectorAddress) or
+                       (FBus.ReadMemory(IntVectorAddress + 1) shl 8);
            FTotalCycles := FTotalCycles + 19;
          end;
     end;
@@ -223,6 +237,35 @@ begin
   RegPointers[7] := @FRegs.A;
   // Reset CPU
   Reset;
+end;
+
+// CHECK PENDING INTERRUPT
+function TZ80CPU.CheckInterrupts: Boolean;
+var
+  b: Byte;
+begin
+  Result := false;
+  // Check NMI
+  if FNMIPending then
+  begin
+    FNMIPending := false;                                          // Accept NMI
+    FHalted := false;                                             // Wake-up CPU
+    DoInterrupt(ceInterrupt, imNMI);              // Call the instance's handler
+    Result := true;
+    Exit;
+  end;
+  // Check maskable INTs
+  for b := 0 to Length(FIRQPending) - 1 do
+  begin
+    if FIRQPending[b] and FInterruptEnabled then
+    begin
+      FIRQPending[b] := false;                                     // Accept IRQ
+      FHalted := false;                                           // Wake-up CPU
+      DoInterrupt(ceInterrupt, b);                                  // b = AMode
+      Result := true;
+      Exit;                                 // One check - one interrupt calling
+    end;
+  end;
 end;
 
 // RESET CPU
