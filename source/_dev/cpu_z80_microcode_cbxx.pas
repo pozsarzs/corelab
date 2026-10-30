@@ -12,37 +12,37 @@
   FOR A PARTICULAR PURPOSE. }
 
   case AOC of
+    // RLC r; RLC M
     $00..$07: begin
-                // RLC r; RLC M
               end;
+    // RRC r; RRC M
     $08..$0F: begin
-                // RRC r; RRC M
               end;
+    // RL r; RL M
     $10..$17: begin
-                // RL r; RL M
               end;
+    // RR r; RR M
     $18..$1F: begin
-                // RR r; RR M
               end;
+    // SLA r; SLA M
     $20..$27: begin
-                // SLA r; SLA M
               end;
+    // SRA r; SRA M
     $28..$2F: begin
-                // SRA r; SRA M
               end;
+    // SLL r; SLL M
     $30..$37: begin
-                // SLL r; SLL M
               end;
+    // SRL r; SRL M
     $38..$3F: begin
-                // SRL r; SRL M
               end;
+    // BIT n, r; BIT n, M
     $40..$7F: begin
-                // BIT n, r; BIT n, M
               end;
+    // RES n, r; RES n, M
     $80..$BF: begin
-                // RES n, r; RES n, M
               end;
+    // SET n, r; SET n, M
     $C0..$FF: begin
-                // SET n, r; SET n, M
               end;
   end;

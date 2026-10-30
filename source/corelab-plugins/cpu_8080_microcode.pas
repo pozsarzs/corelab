@@ -48,6 +48,11 @@
            FRegs.F := (FRegs.F and $FE) or b1;                    { CY refresh }
            FLastInstruction.Cycles := 4;
          end;
+    // NOP
+    $08: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 4;
+         end;
     // LDAX B
     $0A: begin
            FLastInstruction.Mnemonic:='LDAX B';
@@ -66,6 +71,11 @@
            b1 := FRegs.A and $01; { A 0. bit }
            FRegs.A := (FRegs.A shr 1) or (b1 shl 7);
            FRegs.F := (FRegs.F and $FE) or b1;
+           FLastInstruction.Cycles := 4;
+         end;
+    // NOP
+    $10: begin
+           FLastInstruction.Mnemonic := 'NOP';
            FLastInstruction.Cycles := 4;
          end;
     // LXI D, d16
@@ -100,6 +110,11 @@
            FRegs.F := (FRegs.F and $FE) or b2;
            FLastInstruction.Cycles := 4;
          end;         
+    // NOP
+    $18: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 4;
+         end;
     // LDAX D
     $1A: begin
            FLastInstruction.Mnemonic:='LDAX D';
@@ -119,6 +134,11 @@
            b2 := FRegs.A and $01;
            FRegs.A := (FRegs.A shr 1) or (b1 shl 7);
            FRegs.F := (FRegs.F and $FE) or b2;
+           FLastInstruction.Cycles := 4;
+         end;
+    // NOP
+    $20: begin
+           FLastInstruction.Mnemonic := 'NOP';
            FLastInstruction.Cycles := 4;
          end;
     // LXI H, d16
@@ -151,6 +171,11 @@
            Inc(FRegs.HL);
            FLastInstruction.Cycles := 5;
          end;
+    // NOP
+    $28: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 4;
+         end;
     // LHLD a16
     $2A: begin
            FLastInstruction.Mnemonic:='LHLD';
@@ -174,6 +199,11 @@
     $2F: begin
            FLastInstruction.Mnemonic := 'CMA';
            FRegs.A := FRegs.A xor $FF;
+           FLastInstruction.Cycles := 4;
+         end;
+    // NOP
+    $30: begin
+           FLastInstruction.Mnemonic := 'NOP';
            FLastInstruction.Cycles := 4;
          end;
     // LXI SP, d16
@@ -211,6 +241,11 @@
            FRegs.F := FRegs.F or $01;
            FLastInstruction.Cycles := 4;
          end;
+    // NOP
+    $38: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 4;
+         end;
     // LDA a16
     $3A: begin
            FLastInstruction.Mnemonic:='LDA';
@@ -241,6 +276,138 @@
            FHalted := true;
            EmitEvent(ceHalt);
            FLastInstruction.Cycles := 7;
+         end;
+    // ADD r
+    $80..$87:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'ADD ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then w1 := FBus.ReadMemory(FRegs.HL) 
+             else w1 := RegPointers[SourceRegIndex]^;
+           b1 := FRegs.A;
+           w2 := b1 + w1;
+           FRegs.A := w2 and $00FF;
+           UpdateFlags(w2, b1, w1);
+           if AOC = $86
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // ADC r
+    $88..$8F:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'ADC ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then w1 := FBus.ReadMemory(FRegs.HL) 
+             else w1 := RegPointers[SourceRegIndex]^;
+           b1 := FRegs.A;
+           b2 := FRegs.F and $01;
+           w2 := b1 + w1 + b2;
+           FRegs.A := w2 and $00FF;
+           UpdateFlags(w2, b1, w1 + b2);
+           if AOC = $8E
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // SUB r
+    $90..$97:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'SUB ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then w1 := FBus.ReadMemory(FRegs.HL) 
+             else w1 := RegPointers[SourceRegIndex]^;
+           b1 := FRegs.A;
+           w2 := b1 - w1;
+           FRegs.A := w2 and $00FF;
+           UpdateFlags(b1 + (w1 xor $FF) + 1, b1, w1 xor $FF);
+           FRegs.F := FRegs.F xor $01;
+           if AOC = $96
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // SBB r
+    $98..$9F:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'SBB ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then w1 := FBus.ReadMemory(FRegs.HL) 
+             else w1 := RegPointers[SourceRegIndex]^;
+           b1 := FRegs.A;
+           b2 := FRegs.F and $01;
+           w2 := b1 - w1 - b2;
+           FRegs.A := w2 and $00FF;
+           UpdateFlags(b1 + ((w1 + b2) xor $FF) + 1, b1, (w1 + b2) xor $FF);
+           FRegs.F := FRegs.F xor $01;
+           if AOC = $9E
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // ANA r
+    $A0..$A7:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'ANA ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then b1 := FBus.ReadMemory(FRegs.HL) 
+             else b1 := RegPointers[SourceRegIndex]^;
+           b2 := FRegs.A;
+           FRegs.A := FRegs.A and b1;
+           UpdateFlags(FRegs.A, b2, b2);
+           FRegs.F := (FRegs.F and $FE) or $10;
+           if AOC = $A6
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // XRA r
+    $A8..$AF:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'XRA ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then b1 := FBus.ReadMemory(FRegs.HL) 
+             else b1 := RegPointers[SourceRegIndex]^;
+           b2 := FRegs.A;
+           FRegs.A := FRegs.A xor b1;
+           UpdateFlags(FRegs.A, b2, b2);
+           FRegs.F := FRegs.F and $EE;
+           if AOC = $AE
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // ORA r
+    $B0..$B7:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'ORA ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then b1 := FBus.ReadMemory(FRegs.HL) 
+             else b1 := RegPointers[SourceRegIndex]^;
+           b2 := FRegs.A;
+           FRegs.A := FRegs.A or b1;
+           UpdateFlags(FRegs.A, b2, b2);
+           FRegs.F := FRegs.F and $EE;
+           if AOC = $B6
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
+         end;
+    // CMP r
+    $B8..$BF:
+         begin
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'CMP ' + RegNames[SourceRegIndex];
+           if SourceRegIndex = 6
+             then w1 := FBus.ReadMemory(FRegs.HL) 
+             else w1 := RegPointers[SourceRegIndex]^;
+           b1 := FRegs.A;
+           w2 := b1 - w1;
+           UpdateFlags(b1 + (w1 xor $FF) + 1, b1, w1 xor $FF);
+           FRegs.F := FRegs.F xor $01;
+           if AOC = $BE
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 4;
          end;
     // XTHL
     $E3: begin
@@ -535,10 +702,14 @@
              FLastInstruction.Cycles := 11;
            end else FLastInstruction.Cycles := 5;
          end;
-    // PCHL
+    // RET
     $D9: begin
-           FLastInstruction.Mnemonic := 'PCHL';
-           Fregs.PC := Fregs.HL;
+           FLastInstruction.Mnemonic := 'RET';
+           w1 := FBus.ReadMemory(FRegs.SP);
+           Inc(FRegs.SP);
+           w1 := w1 + FBus.ReadMemory(FRegs.SP) * 256;
+           Inc(FRegs.SP);
+           FRegs.PC := w1;
            FLastInstruction.Cycles := 10;
          end;
     // JC a16
@@ -581,6 +752,22 @@
              FRegs.PC := w1;
              FLastInstruction.Cycles := 17;
            end else FLastInstruction.Cycles := 11;
+         end;
+    // CALL a16
+    $DD: begin
+           FLastInstruction.Mnemonic := 'CALL';
+           FLastInstruction.NumOperand := 1;
+           w1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := w1;
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCH);
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCL);
+           FRegs.PC := w1;
+           FLastInstruction.Cycles := 17;
          end;
     // SBI d8
     $DE: begin
@@ -685,6 +872,12 @@
              FLastInstruction.Cycles := 11;
            end else FLastInstruction.Cycles := 5;
          end;
+    // PCHL
+    $E9: begin
+           FLastInstruction.Mnemonic := 'PCHL';
+           Fregs.PC := Fregs.HL;
+           FLastInstruction.Cycles := 10;
+         end;
     // JPE a16
     $EA: begin
            FLastInstruction.Mnemonic := 'JPE';
@@ -715,6 +908,22 @@
              FRegs.PC := w1;
              FLastInstruction.Cycles := 17;
            end else FLastInstruction.Cycles := 11;
+         end;
+    // CALL a16
+    $ED: begin
+           FLastInstruction.Mnemonic := 'CALL';
+           FLastInstruction.NumOperand := 1;
+           w1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := w1;
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCH);
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCL);
+           FRegs.PC := w1;
+           FLastInstruction.Cycles := 17;
          end;
     // XRI d8
     $EE: begin
@@ -866,6 +1075,22 @@
              FLastInstruction.Cycles := 17;
            end else FLastInstruction.Cycles := 11;
          end;
+    // CALL a16
+    $FD: begin
+           FLastInstruction.Mnemonic := 'CALL';
+           FLastInstruction.NumOperand := 1;
+           w1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := w1;
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCH);
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCL);
+           FRegs.PC := w1;
+           FLastInstruction.Cycles := 17;
+         end;
     // CPI d8
     $FE: begin
            FLastInstruction.Mnemonic := 'CPI';
@@ -989,146 +1214,6 @@
          ((AOC >= $70) and (AOC <= $75))
         then FLastInstruction.Cycles := 7
         else FLastInstruction.Cycles := 5;
-    end;
-    // ADD r
-    // $80-$87
-    if (AOC >= $80) and (AOC <= $87) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'ADD ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then w1 := FBus.ReadMemory(FRegs.HL) 
-        else w1 := RegPointers[SourceRegIndex]^;
-      b1 := FRegs.A;
-      w2 := b1 + w1;
-      FRegs.A := w2 and $00FF;
-      UpdateFlags(w2, b1, w1);
-      if AOC = $86
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // ADC r
-    // $88-$8F
-    if (AOC >= $88) and (AOC <= $8F) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'ADC ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then w1 := FBus.ReadMemory(FRegs.HL) 
-        else w1 := RegPointers[SourceRegIndex]^;
-      b1 := FRegs.A;
-      b2 := FRegs.F and $01;
-      w2 := b1 + w1 + b2;
-      FRegs.A := w2 and $00FF;
-      UpdateFlags(w2, b1, w1 + b2);
-      if AOC = $8E
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // SUB r
-    // $90-$97
-    if (AOC >= $90) and (AOC <= $97) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'SUB ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then w1 := FBus.ReadMemory(FRegs.HL) 
-        else w1 := RegPointers[SourceRegIndex]^;
-      b1 := FRegs.A;
-      w2 := b1 - w1;
-      FRegs.A := w2 and $00FF;
-      UpdateFlags(b1 + (w1 xor $FF) + 1, b1, w1 xor $FF);
-      FRegs.F := FRegs.F xor $01;
-      if AOC = $96
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // SBB r
-    // $98-$9F
-    if (AOC >= $98) and (AOC <= $9F) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'SBB ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then w1 := FBus.ReadMemory(FRegs.HL) 
-        else w1 := RegPointers[SourceRegIndex]^;
-      b1 := FRegs.A;
-      b2 := FRegs.F and $01;
-      w2 := b1 - w1 - b2;
-      FRegs.A := w2 and $00FF;
-      UpdateFlags(b1 + ((w1 + b2) xor $FF) + 1, b1, (w1 + b2) xor $FF);
-      FRegs.F := FRegs.F xor $01;
-      if AOC = $9E
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // ANA r
-    // $A0-$A7
-    if (AOC >= $A0) and (AOC <= $A7) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'ANA ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then b1 := FBus.ReadMemory(FRegs.HL) 
-        else b1 := RegPointers[SourceRegIndex]^;
-      b2 := FRegs.A;
-      FRegs.A := FRegs.A and b1;
-      UpdateFlags(FRegs.A, b2, b2);
-      FRegs.F := (FRegs.F and $FE) or $10;
-      if AOC = $A6
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // XRA r
-    // $A8-$AF
-    if (AOC >= $A8) and (AOC <= $AF) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'XRA ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then b1 := FBus.ReadMemory(FRegs.HL) 
-        else b1 := RegPointers[SourceRegIndex]^;
-      b2 := FRegs.A;
-      FRegs.A := FRegs.A xor b1;
-      UpdateFlags(FRegs.A, b2, b2);
-      FRegs.F := FRegs.F and $EE;
-      if AOC = $AE
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // ORA r
-    // $B0-$B7
-    if (AOC >= $B0) and (AOC <= $B7) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'ORA ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then b1 := FBus.ReadMemory(FRegs.HL) 
-        else b1 := RegPointers[SourceRegIndex]^;
-      b2 := FRegs.A;
-      FRegs.A := FRegs.A or b1;
-      UpdateFlags(FRegs.A, b2, b2);
-      FRegs.F := FRegs.F and $EE;
-      if AOC = $B6
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
-    end;
-    // CMP r
-    // $B8-$BF
-    if (AOC >= $B8) and (AOC <= $BF) then
-    begin
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'CMP ' + RegNames[SourceRegIndex];
-      if SourceRegIndex = 6
-        then w1 := FBus.ReadMemory(FRegs.HL) 
-        else w1 := RegPointers[SourceRegIndex]^;
-      b1 := FRegs.A;
-      w2 := b1 - w1;
-      UpdateFlags(b1 + (w1 xor $FF) + 1, b1, w1 xor $FF);
-      FRegs.F := FRegs.F xor $01;
-      if AOC = $BE
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 4;
     end;
     // RST n
     // $C7, $D7, $E7, $F7, $CF, $DF, $EF, $FF

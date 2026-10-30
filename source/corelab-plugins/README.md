@@ -8,11 +8,12 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 |filename                  |base, parent        |class           |description            |
 |--------------------------|--------------------|----------------|-----------------------|
-|cpu_4004.pas              |TCPU                |T4004CPU        |Virtual Intel 4004 uP  |
-|cpu_4040.pas              |TCPU                |T4040CPU        |Virtual Intel 4040 uP  |
-|cpu_8008.pas              |TCPU                |T8008CPU        |Virtual Intel 8008 uP  |
-|cpu_8080.pas              |TCPU                |T8080CPU        |Virtual Intel 8080 uP  |
-|cpu_z80.pas               |TCPU                |TZ80CPU         |Virtual Zilog Z80 uP   |
+|cpu_4004.pas              |TCPU                |T4004CPU        |Intel 4004 uP          |
+|cpu_4040.pas              |TCPU                |T4040CPU        |Intel 4040 uP          |
+|cpu_8008.pas              |TCPU                |T8008CPU        |Intel 8008 uP          |
+|cpu_8080.pas              |TCPU                |T8080CPU        |Intel 8080 uP          |
+|cpu_8085.pas              |T8080CPU            |T8085CPU        |Intel 8085 uP          |
+|cpu_z80.pas               |TCPU                |TZ80CPU         |Zilog Z80 uP           |
 |ioport_bell.pas           |TIOPort             |TBELLPort       |System bell device     |
 |ioport_null.pas           |TIOPort             |TNULLPort       |NULL device            |
 |ioport_realport.pas       |TIOPort             |TRealPort       |Redirect to real port  |
@@ -41,5 +42,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |ioport_disp2hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp2HexMUXBCD |2-digit hexa display   |
 |ioport_disp4hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp4HexMUXBCD |4-digit hexa display   |
 |ioport_disp8hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp8HexMUXBCD |8-digit hexa display   |
+|memory_4001rom.pas        |TMemory             |T4001ROM        |Intel 4001 ROM chip    |
+|memory_4002ram.pas        |TMemory             |T4002RAM        |Intel 4002 RAM chip    |
 |memory_standard.pas       |TMemory             |TStandardMemory |standard RAM/ROM       |
 

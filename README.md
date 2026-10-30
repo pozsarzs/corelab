@@ -56,9 +56,6 @@ _0.2.0_
 Second release will be with the following changes:
  - [ ] Saving and restoring the current state of the program and the simulation;  
  - [ ] Calculating virtual processor time from cycle time for more precise timing.
- - [ ] Intel 4004 4 bits microprocessor plugin.
- - [ ] Intel 4040 4 bits microprocessor plugin.
- - [ ] Zilog Z80 8 bits microprocessor plugin.
  - [ ] AMD 2900 bit-slice microprocessor family plugin.
  
 ### Actual releases  
@@ -122,11 +119,16 @@ Second release will be with the following changes:
 |**Virtual pushbutton array and matrix**|Linear and matrix-arranged momentary pushbuttons for interactive binary input.               |
 |**Virtual switch array and matrix**    |Linear and matrix-arranged toggle switches providing persistent binary data to virtual ports.|
 
-### Supported processors
+### Supported processor
 
+ - Intel 4004 Harvard architecture 4 bit microprocessor (1971)*.
+ - Intel 4040 Harvard architecture 4 bit microprocessor (1974).
  - Intel 8008 Neumann architecture 8 bit microprocessor (1972).
  - Intel 8080 Neumann architecture 8 bit microprocessor (1974).
  - Intel 8085 Neumann architecture 8 bit microprocessor (1976).
+ - Zilog Z80 Neumann 8 bit microprocessor (1976).
+ 
+* With the corresponding special ROM and RAM chip.
 
 ## III. Screenshots
 
