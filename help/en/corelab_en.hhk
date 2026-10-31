@@ -338,6 +338,14 @@
 	<param name="Local" value="parts/led_square.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="T4001ROM">
+	<param name="Local" value="plugins/memory_4001rom.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="T4002RAM">
+	<param name="Local" value="plugins/memory_4002ram.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TStandardMemory">
 	<param name="Local" value="plugins/memory_standard.html">
 	</OBJECT>

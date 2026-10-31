@@ -11,9 +11,32 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+  // store prefix for log
+  with FLastInstruction do
+  begin
+    NumPrefix := 1;
+    Prefixes[NumPrefix] := OpCode
+  end;
+  // prefix-depends operations
+  { 
+    - The DD prefix redirects operations associated with the HL register to the IX
+      register.
+    - Indirect addressing via (HL) is replaced by indexed addressing using (IX+d)
+      or (IY+d). In this mode, an extra byte always follows the opcode in memory.
+      This is a signed 8-bit value (ranging from -128 to +127) that is added to
+      the 16-bit index register to calculate the actual memory address.
+  }
+  Fregs.IY :=  Fregs.HL;
+  // instructions
   case AOC of
+    // NOP
+    $00: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 8;
+         end;
+
+
 { 
-|FD 00  |NOP          |2   |8     |--------|
 |FD 01  |LD BC,d16    |4   |14    |--------|
 |FD 02  |LD (BC),A    |2   |11    |--------|
 |FD 03  |INC BC       |2   |10    |--------|

@@ -75,5 +75,7 @@ plugins/ioport_switch16bcd.html
 plugins/ioport_switch16mux.html
 plugins/ioport_switch8.html
 plugins/memory_standard.html
+plugins/memory_4001rom.html
+plugins/memory_4002ram.html
 
 [INFOTYPES]

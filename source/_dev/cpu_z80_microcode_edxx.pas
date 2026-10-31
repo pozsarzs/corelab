@@ -11,12 +11,19 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+  // store prefix for log
+  with FLastInstruction do
+  begin
+    NumPrefix := 1;
+    Prefixes[NumPrefix] := OpCode
+  end;
+  // instructions
   case AOC of
     // NOP
     $00..$3F:
          begin
            FLastInstruction.Mnemonic := 'NOP';
-           FLastInstruction.Cycles := 4;
+           FLastInstruction.Cycles := 8;
          end;
 { 
 |ED 40  |IN B,(C)     |2   |12    |SZX0XP0-|
@@ -74,7 +81,12 @@
 |ED 74  |NEG          |2   |8     |SZXHXV1C|
 |ED 75  |RETN         |2   |14    |--------|
 |ED 76  |IM 1         |2   |8     |--------|
-|ED 77  |NOP          |2   |8     |--------|
+}
+    $77: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 8;
+         end;
+{ 
 |ED 78  |IN A,(C)     |2   |12    |SZX0XP0-|
 |ED 79  |OUT (C),A    |2   |12    |--------|
 |ED 7A  |ADC HL,SP    |2   |15    |SZXHXV0C|
@@ -87,33 +99,42 @@
     $7F..$9F:
          begin
            FLastInstruction.Mnemonic := 'NOP';
-           FLastInstruction.Cycles := 4;
+           FLastInstruction.Cycles := 8;
          end;
 { 
 |ED A0  |LDI          |2   |16    |--X0XV0-|
 |ED A1  |CPI          |2   |16    |SZXHXV1-|
 |ED A2  |INI          |2   |16    |SZXHXV1-|
 |ED A3  |OUTI         |2   |16    |SZXHXV1-|
-|ED A4  |NOP          |2   |8     |--------|
-|ED A5  |NOP          |2   |8     |--------|
-|ED A6  |NOP          |2   |8     |--------|
-|ED A7  |NOP          |2   |8     |--------|
+}
+    $A4..$A7:
+         begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 8;
+         end;
+{-
 |ED A8  |LDD          |2   |16    |--X0XV0-|
 |ED A9  |CPD          |2   |16    |SZXHXV1-|
 |ED AA  |IND          |2   |16    |SZXHXV1-|
 |ED AB  |OUTD         |2   |16    |SZXHXV1-|
-|ED AC  |NOP          |2   |8     |--------|
-|ED AD  |NOP          |2   |8     |--------|
-|ED AE  |NOP          |2   |8     |--------|
-|ED AF  |NOP          |2   |8     |--------|
+}
+    $AC..$AF:
+         begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 8;
+         end;
+{-
 |ED B0  |LDIR         |2   |21/16 |--X0XV0-|
 |ED B1  |CPIR         |2   |21/16 |SZXHXV1-|
 |ED B2  |INIR         |2   |21/16 |SZXHXV1-|
 |ED B3  |OTIR         |2   |21/16 |SZXHXV1-|
-|ED B4  |NOP          |2   |8     |--------|
-|ED B5  |NOP          |2   |8     |--------|
-|ED B6  |NOP          |2   |8     |--------|
-|ED B7  |NOP          |2   |8     |--------|
+}
+    $B4..$B7:
+         begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 8;
+         end;
+{-
 |ED B8  |LDDR         |2   |21/16 |--X0XV0-|
 |ED B9  |CPDR         |2   |21/16 |SZXHXV1-|
 |ED BA  |INDR         |2   |21/16 |SZXHXV1-|
@@ -123,6 +144,6 @@
     $BC..$FF:
          begin
            FLastInstruction.Mnemonic := 'NOP';
-           FLastInstruction.Cycles := 4;
+           FLastInstruction.Cycles := 8;
          end;
   end;

@@ -11,6 +11,22 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+  // store prefix for log
+  with FLastInstruction do
+  begin
+    NumPrefix := 2;
+    Prefixes[NumPrefix] := AOC;
+  end;
+  // prefix-depends operations
+  //DDCB és FDCB prefixek: Ezek a legnyakatekertebbek. Egyrészt a bájtsorrend kevert (Prefix1, Prefix2, Eltolás, Opkód). Másrészt van egy hírhedt dokumentálatlan trükk: ha az utasítás módosítja az (IX+d) memóriacímet (pl. SET, RES, RLC), a Z80 a hardveres kialakítás miatt az eredményt ezzel egy időben beírja az opkód alsó 3 bitje által mutatott alap 8 bites regiszterbe is (kivéve a BIT utasításokat, amik csak a flageket módosítják). A pontos emulátoroknak ezt a kettős írást is támogatniuk kell.
+In the Z80 processor, the DD prefix redirects operations associated with the HL register to the IX register.
+
+The FD prefix, on the other hand, redirects these operations to the IY register.
+
+Memory references: Indirect addressing via (HL) is replaced by indexed addressing using (IX+d) or (IY+d). In this mode, an extra byte—the displacement *d*—always follows the opcode in memory. This is a signed 8-bit value (ranging from -128 to +127) that is added to the 16-bit index register to calculate the actual memory address. For example, the instruction `LD A, (HL)` becomes `LD A, (IX+d)`.  // instructions
+
+
+
 //  case AOC of
 { 
 |DDCB 00|RLC B        |3   |12    |SZY0XP0C|

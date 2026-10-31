@@ -55,6 +55,8 @@ type
   TLastInstruction = record
     Address:     Word;
     Opcode:      Byte;
+    NumPrefix:   Byte;
+    Prefixes:    array[1..2] of Word;
     NumOperand:  Byte;
     Operands:    array[1..2] of Word;
     Mnemonic:    string[32];

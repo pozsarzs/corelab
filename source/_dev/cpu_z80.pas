@@ -357,6 +357,7 @@ begin
     Address := FRegs.PC;
     Cycles := 0;
     Opcode := OC;
+    NumPrefix := 0;
     NumOperand := 0;
   end;
   Inc(FRegs.PC);                                    // increment program counter

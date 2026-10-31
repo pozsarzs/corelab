@@ -11,70 +11,123 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+//DD és FD prefixek: Itt történik a HL -> IX (vagy IY) csere. A bájtsorrend lineáris: Prefix + Opkód + Eltolás (d). A trükk: Ha az alaputasítás nem hivatkozik a HL/H/L regiszterekre, a processzor az utasítást normálként hajtja végre, a prefixet eldobja (de a beolvasás +4 órajele elfogy).
+
+
+  // store prefix for log
+  with FLastInstruction do
+  begin
+    NumPrefix := 1;
+    Prefixes[NumPrefix] := OpCode
+  end;
+  // prefix-depends operations
+
+  // instructions
   case AOC of
 { 
-|DD 00  |NOP          |2   |8     |--------|
+}
+    $00: begin
+           FLastInstruction.Mnemonic := 'NOP';
+           FLastInstruction.Cycles := 8;
+         end;
+{-
 |DD 01  |LD BC,d16    |4   |14    |--------|
 |DD 02  |LD (BC),A    |2   |11    |--------|
-|DD 03  |INC BC       |2   |10    |--------|
-|DD 04  |INC B        |2   |8     |-----V0-|
-|DD 05  |DEC B        |2   |8     |-----V1-|
+}
+    // INC BC
+    $03: begin
+           FLastInstruction.Mnemonic:='INC BC';
+           b2 := FRegs.BC;
+           Inc(FRegs.BC);
+           FLastInstruction.Cycles := 10;
+         end;
+    // INC B
+    $04: begin
+           FLastInstruction.Mnemonic:='INC B';
+           b2 := FRegs.B;
+           Inc(FRegs.B);
+           UpdateFlags(FRegs.B, b2, 1, False, False);
+           FLastInstruction.Cycles := 8;
+         end;
+    // DEC B
+    $05: begin
+           FLastInstruction.Mnemonic:='DEC B';
+           b2 := FRegs.B;
+           Inc(FRegs.B);
+           UpdateFlags(FRegs.B, b2, 1, False, False);
+           FLastInstruction.Cycles := 8;
+         end;
+{ 
 |DD 06  |LD B,d8      |3   |11    |--------|
 |DD 07  |RLCA         |2   |8     |--Y0X-0C|
 |DD 08  |EX AF,AF'    |2   |8     |--------|
 |DD 09  |ADD IX,BC    |2   |15    |--YHX-0C|
 |DD 0A  |LD A,(BC)    |2   |11    |--------|
+
 |DD 0B  |DEC BC       |2   |10    |--------|
 |DD 0C  |INC C        |2   |8     |-----V0-|
 |DD 0D  |DEC C        |2   |8     |-----V1-|
+
 |DD 0E  |LD C,d8      |3   |11    |--------|
 |DD 0F  |RRCA         |2   |8     |--Y0X-0C|
 |DD 10  |DJNZ r8      |3   |17/12 |--------|
 |DD 11  |LD DE,d16    |4   |14    |--------|
 |DD 12  |LD (DE),A    |2   |11    |--------|
+
 |DD 13  |INC DE       |2   |10    |--------|
 |DD 14  |INC D        |2   |8     |-----V0-|
 |DD 15  |DEC D        |2   |8     |-----V1-|
+
 |DD 16  |LD D,d8      |3   |11    |--------|
 |DD 17  |RLA          |2   |8     |--Y0X-0C|
 |DD 18  |JR r8        |3   |16    |--------|
 |DD 19  |ADD IX,DE    |2   |15    |--YHX-0C|
 |DD 1A  |LD A,(DE)    |2   |11    |--------|
+
 |DD 1B  |DEC DE       |2   |10    |--------|
 |DD 1C  |INC E        |2   |8     |-----V0-|
 |DD 1D  |DEC E        |2   |8     |-----V1-|
+
 |DD 1E  |LD E,d8      |3   |11    |--------|
 |DD 1F  |RRA          |2   |8     |--Y0X-0C|
 |DD 20  |JR NZ,r8     |3   |16/11 |--------|
 |DD 21  |LD IX,d16    |4   |14    |--------|
 |DD 22  |LD (a16),IX  |4   |20    |--------|
+
 |DD 23  |INC IX       |2   |10    |--------|
 |DD 24  |INC IXh      |2   |8     |-----V0-|
 |DD 25  |DEC IXh      |2   |8     |-----V1-|
+
 |DD 26  |LD IXh,d8    |3   |11    |--------|
 |DD 27  |DAA          |2   |8     |SZYHXP-C|
 |DD 28  |JR Z,r8      |3   |16/11 |--------|
 |DD 29  |ADD IX,IX    |2   |15    |--YHX-0C|
 |DD 2A  |LD IX,(a16)  |4   |20    |--------|
+
 |DD 2B  |DEC IX       |2   |10    |--------|
 |DD 2C  |INC IXl      |2   |8     |-----V0-|
 |DD 2D  |DEC IXl      |2   |8     |-----V1-|
+
 |DD 2E  |LD IXl,d8    |3   |11    |--------|
 |DD 2F  |CPL          |2   |8     |--Y1X-1-|
 |DD 30  |JR NC,r8     |3   |16/11 |--------|
 |DD 31  |LD SP,d16    |4   |14    |--------|
 |DD 32  |LD (a16),A   |4   |17    |--------|
+
 |DD 33  |INC SP       |2   |10    |--------|
 |DD 34  |INC (IX+r8)  |3   |23    |-----V0-|
 |DD 35  |DEC (IX+r8)  |3   |23    |-----V1-|
+
 |DD 36  |LD (IX+r8),d8|4   |19    |--------|
 |DD 37  |SCF          |2   |8     |--Y0X-01|
 |DD 38  |JR C,r8      |3   |16/11 |--------|
 |DD 39  |ADD IX,SP    |2   |15    |--YHX-0C|
 |DD 3A  |LD A,(a16)   |4   |17    |--------|
+
 |DD 3B  |DEC SP       |2   |10    |--------|
 |DD 3C  |INC A        |2   |8     |-----V0-|
 |DD 3D  |DEC A        |2   |8     |-----V1-|
+
 |DD 3E  |LD A,d8      |3   |11    |--------|
 |DD 3F  |CCF          |2   |8     |--YHX-0C|
 |DD 40  |LD B,B       |2   |8     |--------|

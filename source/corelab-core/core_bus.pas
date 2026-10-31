@@ -26,6 +26,8 @@ type
     Data:       string[31];
     Status:     string[31];
   end;
+  // Type of system bus
+  TBusType = (btStandard, btIntel4000);
   { ISysBus }
   ISysBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
@@ -33,6 +35,17 @@ type
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
     function ReadPort(APort: DWord): Byte;
     procedure WritePort(APort: DWord; AValue: Byte);
+  end;
+  { IIntel4000Bus }
+  IIntel4000Bus = interface
+    ['{923A5391-77FD-41FB-B935-046D62F45C18}']
+    procedure SendSRC(AAddress: Byte);
+    function ReadRAM: Byte;
+    function ReadRAMStatus: Byte;
+    procedure WriteRAM(AData: Byte);
+    procedure WriteRAMIOPort(AData: Byte);
+    function ReadROM(AAddress: Word): Byte;
+    function ReadROMIOPort: Byte;
   end;
 
 implementation

@@ -11,6 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+  // store prefix for log
+  with FLastInstruction do
+  begin
+    NumPrefix := 1;
+    Prefixes[NumPrefix] := OpCode
+  end;
+  // instructions
 //  case AOC of
 { 
 |FDCB 00|RLC B        |3   |12    |SZY0XP0C|

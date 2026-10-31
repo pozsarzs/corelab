@@ -290,6 +290,14 @@
 			<param name="Local" value="plugins\ioport_switch8.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="T4001ROM from TMemory class in memory_4001rom">
+			<param name="Local" value="plugins\memory_4001rom.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="T4002RAM from TMemory class in memory_4002ram">
+			<param name="Local" value="plugins\memory_4002ram.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TStandardMemory osztály a TMemory osztályból, a memory_standard modulban">
 			<param name="Local" value="plugins\memory_standard.html">
 			</OBJECT>
