@@ -88,7 +88,7 @@ const
                                            
 // ---- PROTECTED METHODS ----
 
-// UPDATE REGISTER F (SZ0A 0P1C)
+// UPDATE REGISTER F (SZYH XPNC)
 procedure TZ80CPU.UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte; N: Boolean = False; P: Boolean = False);
 var
   b:      Byte;
@@ -197,7 +197,7 @@ var
   SourceRegIndex, DestRegIndex: Byte;
   dw1:                          Cardinal;
   w1, w2:                       Word;
-  b1, b2:                       Byte;
+  b1, b2, b3:                   Byte;
   offset:                       Byte;
 begin
   case APrefix of

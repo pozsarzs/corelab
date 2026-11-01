@@ -20,47 +20,253 @@
   // instructions
   case AOC of
     // RLC r; RLC (IY+r8)
-    $00..$07: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $00..$07:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'RLC (IY+%.2X)'
+             else Mnemonic := 'RLC ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b2 := b1 shr 7; { A 7. bit }
+           b1 := ((b1 shl 1) or b2) and $FF;
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           w1 := (Word(b2) shl 8) or b1;
+           UpdateFlags(w1, b1, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // RRC r; RRC (IY+r8)
-    $08..$0F: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $08..$0F:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'RRC (IY+%.2X)'
+             else Mnemonic := 'RRC ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b2 := b1 and $01; { A 0. bit }
+           b1 := (b1 shr 1) or (b2 shl 7);
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           w1 := (Word(b2) shl 8) or b1;
+           UpdateFlags(w1, b1, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // RL r; RL (IY+r8)
-    $10..$17: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $10..$17:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'RL (IY+%.2X)'
+             else Mnemonic := 'RL ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b3 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b1 := FRegs.F and $01;                                   // Old Carry
+           b2 := b3 shr 7;                                          // New Carry
+           b3 := ((b3 shl 1) or b1) and $FF;
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b3);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b3;
+           w1 := (Word(b2) shl 8) or b3;
+           UpdateFlags(w1, b3, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // RR r; RR (IY+r8)
-    $18..$1F: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $18..$1F:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'RR (IY+%.2X)'
+             else Mnemonic := 'RR ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b3 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b1 := FRegs.F and $01;                                   // Old Carry
+           b2 := b3 and $01;                                        // New Carry
+           b3 := (b3 shr 1) or (b1 shl 7);
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b3);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b3;
+           w1 := (Word(b2) shl 8) or b3;
+           UpdateFlags(w1, b3, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // SLA r; SLA (IY+r8)
-    $20..$27: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $20..$27:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'SLA (IY+%.2X)'
+             else Mnemonic := 'SLA ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b2 := b1 shr 7;                                          // New Carry
+           b1 := b1 shl 1;
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           w1 := (Word(b2) shl 8) or b1;
+           UpdateFlags(w1, b1, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // SRA r; SRA (IY+r8)
-    $28..$2F: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $28..$2F:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'SRA (IY+%.2X)'
+             else Mnemonic := 'SRA ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b2 := b1 and 1;                                          // New Carry
+           b1 := b1 shr 1;
+           b1 := b1 or ((b1 and $40) shl 1);
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           w1 := (Word(b2) shl 8) or b1;
+           UpdateFlags(w1, b1, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // SLL r; SLL (IY+r8)
-    $30..$37: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $30..$37:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'SLL (IY+%.2X)'
+             else Mnemonic := 'SLL ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b2 := b1 shr 7;                                          // New Carry
+           b1 := (b1 shl 1) or 1;
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           w1 := (Word(b2) shl 8) or b1;
+           UpdateFlags(w1, b1, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // SRL r; SRL (IY+r8)
-    $38..$3F: begin
-              // |SZY0XP0C|12, 23
-              end;
+    $38..$3F:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+             then Mnemonic := 'SRL (IY+%.2X)'
+             else Mnemonic := 'SRL ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b2 := b1 and 1;                                          // New Carry
+           b1 := b1 shr 1;
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           w1 := (Word(b2) shl 8) or b1;
+           UpdateFlags(w1, b1, 0, False, True);
+           FLastInstruction.Cycles := 23;
+         end;
     // BIT n, r; BIT n, (IY+r8)
-    $40..$7F: begin
-              // |SZY1XU0-|12, 20
-              end;
+    $40..$7F:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           b2 := (AOC shr 3) and 7;                                 // bit index
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             Mnemonic := 'BIT ' + IntToStr(b2) + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           if (b1 and (1 shl b2)) > 0                                   // set Z
+             then FRegs.F := FRegs.F and $BF
+             else FRegs.F := FRegs.F or $40;
+           FRegs.F := FRegs.F or $10;                                   // H = 1
+           FRegs.F := FRegs.F and $FD;                                  // N = 0
+           FLastInstruction.Cycles := 20;
+         end;
     // RES n, r; RES n, (IY+r8)
-    $80..$BF: begin
-              // 12, 20
-              end;
+    $80..$BF:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           b2 := (AOC shr 3) and 7;                                 // bit index
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+               then Mnemonic := 'RES ' + IntToStr(b2) + ', (IY+%.2X)'
+               else Mnemonic := 'RES ' + IntToStr(b2) + ', ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b1 := b1 and (not(1 shl b2));
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           FLastInstruction.Cycles := 23;
+         end;
     // SET n, r; SET n, (IY+r8)
-    $C0..$FF: begin
-              // 12, 23
-              end;
+    $C0..$FF:
+         begin
+           offset := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           SourceRegIndex := AOC and $07;
+           b2 := (AOC shr 3) and 7;                                 // bit index
+           with FLastInstruction do
+           begin
+             NumOperand := 1;
+             Operands[NumOperand] := offset;
+             if SourceRegIndex = 6
+               then Mnemonic := 'SET ' + IntToStr(b2) + ', (IY+%.2X)'
+               else Mnemonic := 'SET ' + IntToStr(b2) + ', ' + RegNames[SourceRegIndex] + ', (IY+%.2X)';
+           end;
+           b1 := FBus.ReadMemory(FRegs.IY + ShortInt(offset));
+           b1 := b1 or (1 shl b2);
+           FBus.WriteMemory(FRegs.IY + ShortInt(offset), b1);
+           if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
+           FLastInstruction.Cycles := 23;
+         end;
   end;
