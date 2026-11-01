@@ -1136,17 +1136,15 @@
     end;
     // LD r1, r2; LD (HL), r1; LD r1, (HL)
     // $40-$7F
-    if (AOC >= $40) and (AOC <= $7F) then
+    if (AOC >= $40) and (AOC <= $7F) and (AOC <> $76) then
     begin
       DestRegIndex := (AOC shr 3) and $07;
       SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'LD ' +
-                            RegNames[DestRegIndex] + ', ' +
-                            RegNames[SourceRegIndex];
-      if (DestRegIndex = 6) and (SourceRegIndex = 6) then {HLT} else
-        if DestRegIndex = 6
-          then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {LD (HL), r} else
-	  if SourceRegIndex = 6
+      FLastInstruction.Mnemonic := 'LD ' + RegNames[DestRegIndex] + ', ' +
+                                           RegNames[SourceRegIndex];
+      if DestRegIndex = 6
+        then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {LD (HL), r} else
+          if SourceRegIndex = 6
             then RegPointers[DestRegIndex]^ := FBus.ReadMemory(FRegs.HL) {LD r, (HL)}
             else RegPointers[DestRegIndex]^ := RegPointers[SourceRegIndex]^; {LD r1, r2}
       if (AOC = $46) or (AOC = $4E) or 

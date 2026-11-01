@@ -7,20 +7,29 @@
 
 include ../../Makefile.global
 
-project=`ls | grep -v README.md | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
+project=`ls | grep -v README.md | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64 | grep -v microcode`
 logfile=../../build.log
 
 all:
-	@mkdir -p $(outdir)/
+	@mkdir -p $(outdir)/ppu
+	@$(rm) --force $(outdir)/ppu/*
+	@$(rm) --force $(outdir)/*.*
 	@for x in $(project); do \
 	  if [ -f $$x ]; then \
-	  $(fpc) $(fpcargs) -Cg -Fu../corelab/core/ -FE$(outdir) $$x; \
-          $(call addtobuildlog,$$x.pas,$$?); \
-	  echo ""; \
+	    if [ "$$x" = "cpu_8080.pas" ]; then \
+	      $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -FE$(outdir)/ppu $$x; \
+	      $(fpc) $(fpcargs) $$x; \
+	    elif [ "$$x" = "cpu_8085.pas" ]; then \
+	      $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -Fu$(outdir)/ppu $$x; \
+	    else \
+	      $(fpc) $(fpcargs) $$x; \
+	    fi; \
+	    $(call addtobuildlog,$$x.pas,$$?); \
 	  fi; \
 	done
-
 clean:
+	@$(rm) $(outdir)/ppu/*
+	@if [ -d $(outdir)/ppu ]; then $(rmdir) $(outdir)/ppu; fi
 	@$(rm) $(outdir)/*
 
 install:

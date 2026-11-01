@@ -65,6 +65,8 @@ type
 const
   // registers
   RegNames:    array[0..7] of string[4] = ('B', 'C', 'D', 'E', 'H', 'L', '(HL)', 'A');
+  XRegNames:   array[0..7] of string[4] = ('B', 'C', 'D', 'E', 'IXH', 'IXL', '(IX)', 'A');
+  YRegNames:   array[0..7] of string[4] = ('B', 'C', 'D', 'E', 'IYH', 'IYL', '(IY)', 'A');
   PubRegNames: array[0..13] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L',
                                         'F', 'PC', 'SP', 'IX', 'IY', 'I', 'R');
   PubRegSize: array[0..13] of Byte = (2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2);
@@ -196,6 +198,7 @@ var
   dw1:                          Cardinal;
   w1, w2:                       Word;
   b1, b2:                       Byte;
+  offset:                       Byte;
 begin
   case APrefix of
     prNone: begin {$I cpu_z80_microcode.pas} end;
@@ -346,25 +349,39 @@ end;
 // EXECUTING AN INSTRUCTION
 procedure TZ80CPU.Step;
 var
-  OC: Byte;
+  OC, Prefix: Byte;
 begin
   if not FEnabled then Exit;
   if CheckInterrupts then Exit;
   if FHalted then Exit;
-  OC := FBus.ReadMemory(FRegs.PC);                     // Fetch opcode from (PC)
   with FLastInstruction do
   begin
     Address := FRegs.PC;
     Cycles := 0;
-    Opcode := OC;
     NumPrefix := 0;
     NumOperand := 0;
   end;
-  Inc(FRegs.PC);                                    // increment program counter
-  RunOpcode(OC);
+  Prefix := prNone;
+  while True do
+  begin
+    OC := FBus.ReadMemory(FRegs.PC);
+    Inc(FRegs.PC);
+    if OC = $DD then
+    begin
+      Prefix := prDD;
+      Inc(FLastInstruction.Cycles, 4);
+    end else
+      if OC = $FD then
+      begin
+        Prefix := prFD;
+        Inc(FLastInstruction.Cycles, 4);
+      end else Break;
+  end;
+  FLastInstruction.Opcode := OC;
+  RunOpcode(OC, Prefix);
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
-  EmitEvent(ceInstructionBoundary);              // notify debugger/trace system
-  Inc(FTotalInstructions);                      // increment instruction counter
+  EmitEvent(ceInstructionBoundary);
+  Inc(FTotalInstructions);
 end;
 
 // QUERY FOR THE LAST STATEMENT

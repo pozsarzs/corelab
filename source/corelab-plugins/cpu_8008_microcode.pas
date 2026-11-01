@@ -11,6 +11,7 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+  // instructions
   case AOC of  
     // HLT
     $00, $01, $FF:

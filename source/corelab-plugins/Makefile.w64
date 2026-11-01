@@ -40,7 +40,19 @@ fpcargs = -T$(os) \
 all:
 	@if not exist ..\_lib\nul md ..\_lib
 	@if not exist $(outdir)\nul md $(outdir)
-	@for %%x in ($(name)) do $(fpc) $(fpcargs) %%x
+	@if not exist $(outdir)\ppu\nul md $(outdir)\ppu
+	@del /q $(outdir)\ppu\*.* 2>nul
+	@del /q $(outdir)\*.* 2>nul
+	@for %%x in ($(name)) do ( \
+	  if "%%x"=="cpu_8080.pas" ( \
+	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -FE$(outdir)\ppu %%x & \
+	    $(fpc) $(fpcargs) %%x \
+	  ) else if "%%x"=="cpu_8085.pas" ( \
+	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -Fu$(outdir)\ppu %%x \
+	  ) else ( \
+	    $(fpc) $(fpcargs) %%x \
+	  ) \
+	)
 	@copy $(outdir)\*.dll ..\..\library
 
 clean:

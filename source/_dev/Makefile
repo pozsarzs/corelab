@@ -7,7 +7,7 @@
 
 include ../../Makefile.global
 
-project=`ls | grep -v README.md | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64`
+project=`ls *.pas| grep -v README.md | grep -v Makefile | grep -v Makefile.w32 | grep -v Makefile.w64 | grep -v microcode`
 logfile=../../build.log
 
 all:

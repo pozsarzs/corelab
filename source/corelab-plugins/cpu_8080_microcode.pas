@@ -11,6 +11,7 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+  // instructions
   case AOC of  
     // NOP
     $00: begin
@@ -1194,17 +1195,15 @@
     end;
     // MOV r1, r2; MOV M, r1; MOV r1, M
     // $40-$7F
-    if (AOC >= $40) and (AOC <= $7F) then
+    if (AOC >= $40) and (AOC <= $7F) and (AOC <> $76) then
     begin
       DestRegIndex := (AOC shr 3) and $07;
       SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'MOV ' +
-                            RegNames[DestRegIndex] + ', ' +
-                            RegNames[SourceRegIndex];
-      if (DestRegIndex = 6) and (SourceRegIndex = 6) then {HLT} else
-        if DestRegIndex = 6
-          then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {MOV M, r} else
-	  if SourceRegIndex = 6
+      FLastInstruction.Mnemonic := 'MOV ' + RegNames[DestRegIndex] + ', ' +
+                                            RegNames[SourceRegIndex];
+      if DestRegIndex = 6
+        then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {MOV M, r} else
+          if SourceRegIndex = 6
             then RegPointers[DestRegIndex]^ := FBus.ReadMemory(FRegs.HL) {MOV r, M}
             else RegPointers[DestRegIndex]^ := RegPointers[SourceRegIndex]^; {MOV r1, r2}
       if (AOC = $46) or (AOC = $4E) or 
