@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | CoreLab v0.1 - Modular Processor Simulation Framework                    | }
 { | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                     | }
-{ | cpu_z80_microcode_fdxx.pas                                               | }
+{ | cpu_z80_microcode_ddxx.pas                                               | }
 { | Microcode for Zilog Z80 CPU implementation module                        | }
 { +--------------------------------------------------------------------------+ }
 { This program is free software: you can redistribute it and/or modify it
