@@ -27,36 +27,104 @@
          end;
     // LD I, A
     $47: begin
-           FLastInstruction.Mnemonic := 'LD I,A';
+           FLastInstruction.Mnemonic := 'LD I, A';
+           FRegs.I := FRegs.A;
            FLastInstruction.Cycles := 9;
          end;
     // LD R, A
     $4F: begin
-           FLastInstruction.Mnemonic := 'LD R,A';
+           FLastInstruction.Mnemonic := 'LD R, A';
+           FRegs.R := FRegs.A;
            FLastInstruction.Cycles := 9;
          end;
     // LD A, I
     $57: begin
-           FLastInstruction.Mnemonic := 'LD A,I';
-           // |SZY0XP0-|
+           FLastInstruction.Mnemonic := 'LD A, I';
+           FRegs.A := FRegs.I;
+           if (FRegs.A and $80) <> 0                                    // set S
+             then FRegs.F := FRegs.F or $80
+             else FRegs.F := FRegs.F and $7F;
+           if FRegs.A > 0                                               // set Z
+             then FRegs.F := FRegs.F and $BF
+             else FRegs.F := FRegs.F or $40;
+           if FInterruptEnabled2                                        // set P
+             then FRegs.F := FRegs.F or $04
+             else FRegs.F := FRegs.F and $FB;
+           FRegs.F := FRegs.F and $ED;                              // H = N = 0
+           FRegs.F := (FRegs.F and $D7) or (FRegs.A and $28);     // set X and Y
            FLastInstruction.Cycles := 9;
          end;
     // LD A, R
     $5F: begin
-           FLastInstruction.Mnemonic := 'LD A,R';
-           // |SZY0XP0-|
+           FLastInstruction.Mnemonic := 'LD A, R';
+           FRegs.A := FRegs.R;
+           if (FRegs.A and $80) <> 0                                    // set S
+             then FRegs.F := FRegs.F or $80
+             else FRegs.F := FRegs.F and $7F;
+           if FRegs.A > 0                                               // set Z
+             then FRegs.F := FRegs.F and $BF
+             else FRegs.F := FRegs.F or $40;
+           if FInterruptEnabled2                                        // set P
+             then FRegs.F := FRegs.F or $04
+             else FRegs.F := FRegs.F and $FB;
+           FRegs.F := FRegs.F and $ED;                              // H = N = 0
+           FRegs.F := (FRegs.F and $D7) or (FRegs.A and $28);     // set X and Y
            FLastInstruction.Cycles := 9;
          end;
     // RRD
     $67: begin
            FLastInstruction.Mnemonic := 'RRD';
-           // |SZY0XP0-|
+           b1 := FRegs.A;
+           b2 := FBus.ReadMemory(FRegs.HL);
+           b3 := b1 and $0F;                   // Al
+           b1 := b1 and $F0;
+           b1 := b1 or (b2 and $0F);           // (HL)l -> Al
+           b2 := b2 shr 4;                     // (HL)h -> (HL)l
+           b2 := b2 or (b3 shl 4);             // Al -> (HL)h
+           FRegs.A := b1;
+           FBus.WriteMemory(FRegs.HL, b2);
+           if (FRegs.A and $80) <> 0                                    // set S
+             then FRegs.F := FRegs.F or $80
+             else FRegs.F := FRegs.F and $7F;
+           if FRegs.A > 0                                               // set Z
+             then FRegs.F := FRegs.F and $BF
+             else FRegs.F := FRegs.F or $40;
+           b3 := b1 xor (b1 shr 4);                                     // set P
+           b3 := b3 xor (b3 shr 2);
+           b3 := b3 xor (b3 shr 1);
+           if (b3 and 1) = 0
+             then FRegs.F := FRegs.F or $04
+             else FRegs.F := FRegs.F and $FB;
+           FRegs.F := FRegs.F and $ED;                              // H = N = 0
+           FRegs.F := (FRegs.F and $D7) or (FRegs.A and $28);     // set X and Y
            FLastInstruction.Cycles := 18;
          end;
     // RLD
     $6F: begin
            FLastInstruction.Mnemonic := 'RLD';
-           // |SZY0XP0-|
+           b1 := FRegs.A;
+           b2 := FBus.ReadMemory(FRegs.HL);
+           b3 := b1 and $0F;                   // Al
+           b1 := b1 and $F0;
+           b1 := b1 or (b2 shr 4);             // (HL)h -> Al
+           b2 := b2 shl 4;                     // (HL)l -> (HL)h
+           b2 := b2 or b3;                     // Al -> (HL)l
+           FRegs.A := b1;
+           FBus.WriteMemory(FRegs.HL, b2);
+           if (FRegs.A and $80) <> 0                                    // set S
+             then FRegs.F := FRegs.F or $80
+             else FRegs.F := FRegs.F and $7F;
+           if FRegs.A > 0                                               // set Z
+             then FRegs.F := FRegs.F and $BF
+             else FRegs.F := FRegs.F or $40;
+           b3 := b1 xor (b1 shr 4);                                     // set P
+           b3 := b3 xor (b3 shr 2);
+           b3 := b3 xor (b3 shr 1);
+           if (b3 and 1) = 0
+             then FRegs.F := FRegs.F or $04
+             else FRegs.F := FRegs.F and $FB;
+           FRegs.F := FRegs.F and $ED;                              // H = N = 0
+           FRegs.F := (FRegs.F and $D7) or (FRegs.A and $28);     // set X and Y
            FLastInstruction.Cycles := 18;
          end;
     // IN (C)
@@ -67,7 +135,7 @@
          end;
     // OUT (C),0
     $71: begin
-           FLastInstruction.Mnemonic := 'OUT (C),0';
+           FLastInstruction.Mnemonic := 'OUT (C), 0';
            FLastInstruction.Cycles := 12;
          end;
     // NOP
@@ -78,13 +146,13 @@
 
     // IN A,(C)
     $78: begin
-           FLastInstruction.Mnemonic := 'IN A,(C)';
+           FLastInstruction.Mnemonic := 'IN A, (C)';
            // |SZY0XP0-|
            FLastInstruction.Cycles := 12;
          end;
     // OUT (C),A
     $79: begin
-           FLastInstruction.Mnemonic := 'OUT (C),A';
+           FLastInstruction.Mnemonic := 'OUT (C), A';
            FLastInstruction.Cycles := 12;
          end;
     // NOP
