@@ -44,7 +44,7 @@
     // RLC
     $07: begin
            FLastInstruction.Mnemonic := 'RLC';
-           b1 := FRegs.A shr 7; { A 7. bit }
+           b1 := FRegs.A shr 7;
            FRegs.A := ((FRegs.A shl 1) or b1) and $FF;
            FRegs.F := (FRegs.F and $FE) or b1;                    { CY refresh }
            FLastInstruction.Cycles := 4;
@@ -69,7 +69,7 @@
     // RRC
     $0F: begin
            FLastInstruction.Mnemonic := 'RRC';
-           b1 := FRegs.A and $01; { A 0. bit }
+           b1 := FRegs.A and $01;
            FRegs.A := (FRegs.A shr 1) or (b1 shl 7);
            FRegs.F := (FRegs.F and $FE) or b1;
            FLastInstruction.Cycles := 4;

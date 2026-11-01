@@ -30,11 +30,11 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'RLC (IX+%.2X)'
-             else Mnemonic := 'RLC ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'RLC (IX+%.2X)'
+               else Mnemonic := 'RLC ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b1 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
-           b2 := b1 shr 7; { A 7. bit }
+           b2 := b1 shr 7;
            b1 := ((b1 shl 1) or b2) and $FF;
            FBus.WriteMemory(FRegs.IX + ShortInt(offset), b1);
            if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
@@ -53,11 +53,11 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'RRC (IX+%.2X)'
-             else Mnemonic := 'RRC ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'RRC (IX+%.2X)'
+               else Mnemonic := 'RRC ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b1 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
-           b2 := b1 and $01; { A 0. bit }
+           b2 := b1 and $01;
            b1 := (b1 shr 1) or (b2 shl 7);
            FBus.WriteMemory(FRegs.IX + ShortInt(offset), b1);
            if SourceRegIndex <> 6 then RegPointers[SourceRegIndex]^ := b1;
@@ -76,8 +76,8 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'RL (IX+%.2X)'
-             else Mnemonic := 'RL ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'RL (IX+%.2X)'
+               else Mnemonic := 'RL ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b3 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
            b1 := FRegs.F and $01;                                   // Old Carry
@@ -100,8 +100,8 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'RR (IX+%.2X)'
-             else Mnemonic := 'RR ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'RR (IX+%.2X)'
+               else Mnemonic := 'RR ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b3 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
            b1 := FRegs.F and $01;                                   // Old Carry
@@ -124,8 +124,8 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'SLA (IX+%.2X)'
-             else Mnemonic := 'SLA ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'SLA (IX+%.2X)'
+               else Mnemonic := 'SLA ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b1 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
            b2 := b1 shr 7;                                          // New Carry
@@ -147,8 +147,8 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'SRA (IX+%.2X)'
-             else Mnemonic := 'SRA ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'SRA (IX+%.2X)'
+               else Mnemonic := 'SRA ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b1 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
            b2 := b1 and 1;                                          // New Carry
@@ -171,8 +171,8 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'SLL (IX+%.2X)'
-             else Mnemonic := 'SLL ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'SLL (IX+%.2X)'
+               else Mnemonic := 'SLL ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b1 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
            b2 := b1 shr 7;                                          // New Carry
@@ -194,8 +194,8 @@
              NumOperand := 1;
              Operands[NumOperand] := offset;
              if SourceRegIndex = 6
-             then Mnemonic := 'SRL (IX+%.2X)'
-             else Mnemonic := 'SRL ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
+               then Mnemonic := 'SRL (IX+%.2X)'
+               else Mnemonic := 'SRL ' + RegNames[SourceRegIndex] + ', (IX+%.2X)';
            end;
            b1 := FBus.ReadMemory(FRegs.IX + ShortInt(offset));
            b2 := b1 and 1;                                          // New Carry
