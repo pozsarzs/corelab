@@ -194,11 +194,12 @@ end;
 // RUN SPECIFIED OPCODE
 procedure TZ80CPU.RunOpCode(AOC: Byte; APrefix: Byte = 0);
 var
-  SourceRegIndex, DestRegIndex: Byte;
-  dw1:                          Cardinal;
-  w1, w2:                       Word;
   b1, b2, b3:                   Byte;
+  dw1:                          Cardinal;
+  i1:                           Integer;
   offset:                       Byte;
+  SourceRegIndex, DestRegIndex: Byte;
+  w1, w2:                       Word;
 begin
   case APrefix of
     prNone: begin {$I cpu_z80_microcode.pas} end;
