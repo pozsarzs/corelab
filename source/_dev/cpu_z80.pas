@@ -12,7 +12,7 @@
   FOR A PARTICULAR PURPOSE. }
 
 library cpu_z80;
-{$MODE OBJFPC}{$H+}
+{$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
   CMem, Classes, SysUtils, core_cpu;
@@ -121,10 +121,19 @@ begin
   end else
   begin
     // overflow (at aritmetical operations)
-    if ((OldValue xor ValueToAdd xor $80) and
-       (OldValue xor Value8) and $80) <> 0
-      then FRegs.F := FRegs.F or $04
-      else FRegs.F := FRegs.F and $FB;
+    if N then
+    begin
+      // Subtraction overflow (SUB, SBC, CP, NEG)
+      if ((OldValue xor ValueToAdd) and (OldValue xor Value8) and $80) <> 0
+        then FRegs.F := FRegs.F or $04
+        else FRegs.F := FRegs.F and $FB;
+    end else
+    begin
+      // Addition overflow (ADD, ADC)
+      if ((OldValue xor ValueToAdd xor $80) and (OldValue xor Value8) and $80) <> 0
+        then FRegs.F := FRegs.F or $04
+        else FRegs.F := FRegs.F and $FB;
+    end;
   end;
   // 1. Add/Subtract:    xxxx xxNx
   if N

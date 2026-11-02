@@ -211,7 +211,6 @@
          begin
            SourceRegIndex := AOC and $07;
            b2 := (AOC shr 3) and 7;                                 // bit index
-
            if SourceRegIndex = 6 then
            begin
              FLastInstruction.Mnemonic := 'BIT ' + IntToStr(b2) + ', (HL)';
