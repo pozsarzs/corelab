@@ -70,6 +70,52 @@
            end;
            FLastInstruction.Cycles := 12;
          end;
+    // SBC rp
+    $42, $52, $62, $72:
+         begin
+           SourceRegIndex := (AOC shr 4) and $03;
+           case SourceRegIndex of
+             0: begin FLastInstruction.Mnemonic := 'SBC HL, BC'; w1 := FRegs.BC; end;
+             1: begin FLastInstruction.Mnemonic := 'SBC HL, DE'; w1 := FRegs.DE; end;
+             2: begin FLastInstruction.Mnemonic := 'SBC HL, HL'; w1 := FRegs.HL; end;
+             3: begin FLastInstruction.Mnemonic := 'SBC HL, SP'; w1 := FRegs.SP; end;
+           end;
+           w2 := FRegs.HL;
+           b1 := FRegs.F and $01;                                   // get Carry
+           dw1 := Cardinal(w2) - Cardinal(w1) - b1;
+           FRegs.HL := dw1 and $FFFF;
+           b2 := $02;                                                   // N = 1
+           if (dw1 and $FFFF) = 0 then b2 := b2 or $40;                // Z flag
+           if (dw1 and $8000) <> 0 then b2 := b2 or $80;               // S flag
+           b2 := b2 or (((w2 xor w1 xor dw1) shr 8) and $10);          // H flag
+           if (((w2 xor w1) and (w2 xor dw1) and $8000) <> 0)
+             then b2 := b2 or $04;                                   // P/V flag
+           b2 := b2 or ((dw1 shr 16) and $01);                         // C flag
+           b2 := b2 or ((dw1 shr 8) and $28);                      // X, Y flags
+           
+           FRegs.F := b2;
+           FLastInstruction.Cycles := 15;
+         end;
+    // LD (a16), rp
+    $43, $53, $63, $73:
+         begin
+           SourceRegIndex := (AOC shr 4) and $03;
+           case SourceRegIndex of
+             0: begin FLastInstruction.Mnemonic := 'LD (%.4X), BC'; w2 := FRegs.BC; end;
+             1: begin FLastInstruction.Mnemonic := 'LD (%.4X), DE'; w2 := FRegs.DE; end;
+             2: begin FLastInstruction.Mnemonic := 'LD (%.4X), HL'; w2 := FRegs.HL; end;
+             3: begin FLastInstruction.Mnemonic := 'LD (%.4X), SP'; w2 := FRegs.SP; end;
+           end;
+           w1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           FLastInstruction.NumOperand := 1;
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := w1;
+           FBus.WriteMemory(w1, w2 and $FF);
+           FBus.WriteMemory((w1 + 1) and $FFFF, w2 shr 8);
+           FLastInstruction.Cycles := 20;
+         end;
     // NEG
     $44, $4C, $54, $5C, $64, $6C, $74, $7C:
          begin
@@ -99,25 +145,56 @@
            FInterruptMode := 0;
            FLastInstruction.Cycles := 8;
          end;
-    // IM 1
-    $56, $76:
-         begin
-           FLastInstruction.Mnemonic := 'IM 1';
-           FInterruptMode := 1;
-           FLastInstruction.Cycles := 8;
-         end;
-    // IM 2
-    $5E, $7E:
-         begin
-           FLastInstruction.Mnemonic := 'IM 2';
-           FInterruptMode := 2;
-           FLastInstruction.Cycles := 8;
-         end;
     // LD I, A
     $47: begin
            FLastInstruction.Mnemonic := 'LD I, A';
            FRegs.I := FRegs.A;
            FLastInstruction.Cycles := 9;
+         end;
+    // ADC rp
+    $4A, $5A, $6A, $7A:
+         begin
+           SourceRegIndex := (AOC shr 4) and $03;
+           case SourceRegIndex of
+             0: begin FLastInstruction.Mnemonic := 'ADC HL, BC'; w1 := FRegs.BC; end;
+             1: begin FLastInstruction.Mnemonic := 'ADC HL, DE'; w1 := FRegs.DE; end;
+             2: begin FLastInstruction.Mnemonic := 'ADC HL, HL'; w1 := FRegs.HL; end;
+             3: begin FLastInstruction.Mnemonic := 'ADC HL, SP'; w1 := FRegs.SP; end;
+           end;
+           w2 := FRegs.HL;
+           b1 := FRegs.F and $01;                                   // get Carry
+           dw1 := Cardinal(w2) + Cardinal(w1) + b1;
+           FRegs.HL := dw1 and $FFFF;
+           b2 := $00;                                                   // N = 0
+           if (dw1 and $FFFF) = 0 then b2 := b2 or $40;                // Z flag
+           if (dw1 and $8000) <> 0 then b2 := b2 or $80;               // S flag
+           b2 := b2 or (((w2 xor w1 xor dw1) shr 8) and $10);          // H flag
+           if (((w2 xor w1 xor $8000) and (w2 xor dw1) and $8000) <> 0)   // P/V
+             then b2 := b2 or $04;                                      
+           b2 := b2 or ((dw1 shr 16) and $01);                         // C flag
+           b2 := b2 or ((dw1 shr 8) and $28);                      // X, Y flags
+           FRegs.F := b2;
+           FLastInstruction.Cycles := 15;
+         end;
+    // LD rp, (a16)
+    $4B, $5B, $6B, $7B:
+         begin
+           w1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           w1 := w1 + FBus.ReadMemory(FRegs.PC) * 256;
+           Inc(FRegs.PC);
+           w2 := FBus.ReadMemory(w1);
+           w2 := w2 + (FBus.ReadMemory((w1 + 1) and $FFFF) shl 8);
+           SourceRegIndex := (AOC shr 4) and $03;
+           case SourceRegIndex of
+             0: begin FLastInstruction.Mnemonic := 'LD BC, (%.4X)'; FRegs.BC := w2; end;
+             1: begin FLastInstruction.Mnemonic := 'LD DE, (%.4X)'; FRegs.DE := w2; end;
+             2: begin FLastInstruction.Mnemonic := 'LD HL, (%.4X)'; FRegs.HL := w2; end;
+             3: begin FLastInstruction.Mnemonic := 'LD SP, (%.4X)'; FRegs.SP := w2; end;
+           end;
+           FLastInstruction.NumOperand := 1;
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := w1;
+           FLastInstruction.Cycles := 20;
          end;
     // RETI
     $4D: begin
@@ -136,6 +213,13 @@
            FRegs.R := FRegs.A;
            FLastInstruction.Cycles := 9;
          end;
+    // IM 1
+    $56, $76:
+         begin
+           FLastInstruction.Mnemonic := 'IM 1';
+           FInterruptMode := 1;
+           FLastInstruction.Cycles := 8;
+         end;
     // LD A, I
     $57: begin
            FLastInstruction.Mnemonic := 'LD A, I';
@@ -152,6 +236,13 @@
            FRegs.F := FRegs.F and $ED;                              // H = N = 0
            FRegs.F := (FRegs.F and $D7) or (FRegs.A and $28);     // set X and Y
            FLastInstruction.Cycles := 9;
+         end;
+    // IM 2
+    $5E, $7E:
+         begin
+           FLastInstruction.Mnemonic := 'IM 2';
+           FInterruptMode := 2;
+           FLastInstruction.Cycles := 8;
          end;
     // LD A, R
     $5F: begin
@@ -689,24 +780,12 @@
            FLastInstruction.Mnemonic := 'NOP';
            FLastInstruction.Cycles := 8;
          end;
-  else
-
 
 { 
-|ED 42  |SBC HL,BC    |2   |15    |SZXHXV1C|
-|ED 52  |SBC HL,DE    |2   |15    |SZXHXV1C|
-|ED 62  |SBC HL,HL    |2   |15    |SZXHXV1C|
-|ED 72  |SBC HL,SP    |2   |15    |SZXHXV1C|
-
 |ED 43  |LD (a16),BC  |4   |20    |--------|
 |ED 53  |LD (a16),DE  |4   |20    |--------|
 |ED 63  |LD (a16),HL  |4   |20    |--------|
 |ED 73  |LD (a16),SP  |4   |20    |--------|
-
-|ED 4A  |ADC HL,BC    |2   |15    |SZXHXV0C|
-|ED 5A  |ADC HL,DE    |2   |15    |SZXHXV0C|
-|ED 6A  |ADC HL,HL    |2   |15    |SZXHXV0C|
-|ED 7A  |ADC HL,SP    |2   |15    |SZXHXV0C|
 
 |ED 4B  |LD BC,(a16)  |4   |20    |--------|
 |ED 5B  |LD DE,(a16)  |4   |20    |--------|
