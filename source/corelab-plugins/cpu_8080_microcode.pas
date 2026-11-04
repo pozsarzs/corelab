@@ -41,18 +41,104 @@
            Inc(FRegs.BC);
            FLastInstruction.Cycles := 5;
          end;
+    // INR r; INR M
+    $04, $0C, $14, $1C, $24, $2C, $34, $3C:
+         begin
+           DestRegIndex := (AOC shr 3) and $07;
+           FLastInstruction.Mnemonic := 'INR ' + RegNames[DestRegIndex];
+           b1 := FRegs.F and $01;                                { store Carry }
+           if DestRegIndex = 6 then
+           begin
+             // INR M
+             b2 := FBus.ReadMemory(FRegs.HL);
+             w1 := (b2 + 1) and $FF;
+             FBus.WriteMemory(FRegs.HL, w1);
+             UpdateFlags(w1, b2, 1);
+             FLastInstruction.Cycles := 10;
+           end else
+           begin
+             // INR r
+             b2 := RegPointers[DestRegIndex]^;
+             Inc(RegPointers[DestRegIndex]^);
+             UpdateFlags(RegPointers[DestRegIndex]^, b2, 1);
+             FLastInstruction.Cycles := 5;
+           end;
+           FRegs.F := (FRegs.F and $FE) or b1;                 { restore Carry }
+         end;
+    // DCR r; DCR M
+    $05, $0D, $15, $1D, $25, $2D, $35, $3D:
+         begin
+           DestRegIndex := (AOC shr 3) and $07;
+           FLastInstruction.Mnemonic := 'DCR ' + RegNames[DestRegIndex];
+           b1 := FRegs.F and $01;                                { store Carry }
+           if DestRegIndex = 6 then
+           begin
+             // DCR M
+             b2 := FBus.ReadMemory(FRegs.HL);
+             w1 := (b2 - 1) and $FF;
+             FBus.WriteMemory(FRegs.HL, w1);
+             UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
+             FLastInstruction.Cycles := 10;
+           end else
+           begin
+             // DCR r
+             b2 := RegPointers[DestRegIndex]^;
+             Dec(RegPointers[DestRegIndex]^);
+             UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
+             FLastInstruction.Cycles := 5;
+           end;
+           FRegs.F := (FRegs.F and $FE) or b1;                 { restore Carry }
+         end;
+    // MVI r, d8; MVI M, d8
+    $06, $0E, $16, $1E, $26, $2E, $36, $3E:
+         begin
+           DestRegIndex := (AOC shr 3) and $07;
+           FLastInstruction.Mnemonic := 'MVI ' + RegNames[DestRegIndex];
+           FLastInstruction.NumOperand := 1;
+           b1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           FLastInstruction.Operands[1] := b1;
+           if DestRegIndex = 6 then
+           begin
+             // MVI M, d8
+             FBus.WriteMemory(FRegs.HL, b1);
+             FLastInstruction.Cycles := 10;
+           end else
+           begin
+             // MVI r, d8
+             RegPointers[DestRegIndex]^ := b1;
+             FLastInstruction.Cycles := 7;
+           end;
+    end;
     // RLC
     $07: begin
            FLastInstruction.Mnemonic := 'RLC';
            b1 := FRegs.A shr 7;
            FRegs.A := ((FRegs.A shl 1) or b1) and $FF;
-           FRegs.F := (FRegs.F and $FE) or b1;                    { CY refresh }
+           FRegs.F := (FRegs.F and $FE) or b1;
            FLastInstruction.Cycles := 4;
          end;
     // NOP
     $08: begin
            FLastInstruction.Mnemonic := 'NOP';
            FLastInstruction.Cycles := 4;
+         end;
+    // DAD rp
+    $09, $19, $29, $39: 
+         begin
+           SourceRegIndex := (AOC shr 4) and $03;
+           case SourceRegIndex of
+             0: begin FLastInstruction.Mnemonic := 'DAD B'; w1 := FRegs.BC; end;
+             1: begin FLastInstruction.Mnemonic := 'DAD D'; w1 := FRegs.DE; end;
+             2: begin FLastInstruction.Mnemonic := 'DAD H'; w1 := FRegs.HL; end;
+             3: begin FLastInstruction.Mnemonic := 'DAD SP'; w1 := FRegs.SP; end;
+           end;
+           dw1 := Cardinal(FRegs.HL) + Cardinal(w1);
+           FRegs.HL := dw1 and $FFFF;
+           if (dw1 and $10000) <> 0 
+             then FRegs.F := FRegs.F or $01
+             else FRegs.F := FRegs.F and $FE;
+           FLastInstruction.Cycles := 10;
          end;
     // LDAX B
     $0A: begin
@@ -271,6 +357,24 @@
            FRegs.F := FRegs.F xor $01;
            FLastInstruction.Cycles := 4;
          end;
+    // MOV r1, r2; MOV M, r1; MOV r1, M
+    $40..$75, $77..$7F:
+         begin
+           DestRegIndex := (AOC shr 3) and $07;
+           SourceRegIndex := AOC and $07;
+           FLastInstruction.Mnemonic := 'MOV ' + RegNames[DestRegIndex] + ', ' +
+                                                 RegNames[SourceRegIndex];
+           if DestRegIndex = 6
+             then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {MOV M, r} else
+               if SourceRegIndex = 6
+                 then RegPointers[DestRegIndex]^ := FBus.ReadMemory(FRegs.HL) {MOV r, M}
+                 else RegPointers[DestRegIndex]^ := RegPointers[SourceRegIndex]^; {MOV r1, r2}
+           if (AOC = $46) or (AOC = $4E) or (AOC = $56) or (AOC = $5E) or 
+              (AOC = $66) or (AOC = $6E) or (AOC = $77) or (AOC = $7E) or 
+              ((AOC >= $70) and (AOC <= $75))
+             then FLastInstruction.Cycles := 7
+             else FLastInstruction.Cycles := 5;
+         end;
     // HLT
     $76: begin
            FLastInstruction.Mnemonic := 'HLT';
@@ -340,8 +444,7 @@
            b2 := FRegs.F and $01;
            w2 := b1 - w1 - b2;
            FRegs.A := w2 and $00FF;
-           UpdateFlags(b1 + ((w1 + b2) xor $FF) + 1, b1, (w1 + b2) xor $FF);
-           FRegs.F := FRegs.F xor $01;
+           UpdateFlags(b1 + (((w1 + b2) and $FF) xor $FF) + 1, b1, ((w1 + b2) and $FF) xor $FF);           FRegs.F := FRegs.F xor $01;
            if AOC = $9E
              then FLastInstruction.Cycles := 7
              else FLastInstruction.Cycles := 4;
@@ -417,10 +520,9 @@
            b1 := FBus.ReadMemory(FRegs.SP);
            FBus.WriteMemory(FRegs.SP, FRegs.L);
            FRegs.L := b1;
-           
            // H <-> [SP + 1]
-           b2 := FBus.ReadMemory(FRegs.SP + 1);
-           FBus.WriteMemory(FRegs.SP + 1, FRegs.H);
+           b2 := FBus.ReadMemory((FRegs.SP + 1) and $FFFF);
+           FBus.WriteMemory((FRegs.SP + 1) and $FFFF, FRegs.H);
            FRegs.H := b2;
            FLastInstruction.Cycles := 18;
          end;
@@ -519,6 +621,18 @@
            Fregs.A := w1 and $00FF;
            UpdateFlags(w1, b2, b1);
            FLastInstruction.Cycles := 8;
+         end;
+    // RST n
+    $C7, $CF, $D7, $DF, $E7, $EF, $F7, $FF:
+         begin
+           w1 := (AOC shr 3) and $07;
+           FLastInstruction.Mnemonic := 'RST ' + IntToStr(w1);
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCH);
+           Dec(FRegs.SP);
+           FBus.WriteMemory(FRegs.SP, FRegs.PCL);
+           FRegs.PC := w1 * 8;
+           FLastInstruction.Cycles := 11;
          end;
     // RZ
     $C8: begin
@@ -781,7 +895,7 @@
            b2 := FRegs.F and $01;
            w2 := b1 - w1 - b2;
            FRegs.A := w2 and $00FF;
-           UpdateFlags(b1 + ((w1 + b2) xor $FF) + 1, b1, (w1 + b2) xor $FF);
+           UpdateFlags(b1 + (((w1 + b2) and $FF) xor $FF) + 1, b1, ((w1 + b2) and $FF) xor $FF);
            FRegs.F := FRegs.F xor $01;
            FLastInstruction.Cycles := 7;
          end;
@@ -1104,127 +1218,4 @@
            FRegs.F := FRegs.F xor $01;
            FLastInstruction.Cycles := 7;
          end;
-   else  
-    // INR r; INR M
-    // $04, $14, $24, $34, $0C, $1C, $2C, $3C
-    if (AOC <= $3F) and ((AOC and $07) = $04) then
-    begin
-      DestRegIndex := (AOC shr 3) and $07;
-      FLastInstruction.Mnemonic := 'INR ' + RegNames[DestRegIndex];
-      b1 := FRegs.F and $01;                                     { store Carry }
-      if DestRegIndex = 6 then
-      begin
-        // INR M
-        b2 := FBus.ReadMemory(FRegs.HL);
-        w1 := (b2 + 1) and $FF;
-        FBus.WriteMemory(FRegs.HL, w1);
-        UpdateFlags(w1, b2, 1);
-        FLastInstruction.Cycles := 10;
-      end else
-      begin
-        // INR r
-        b2 := RegPointers[DestRegIndex]^;
-        Inc(RegPointers[DestRegIndex]^);
-        UpdateFlags(RegPointers[DestRegIndex]^, b2, 1);
-        FLastInstruction.Cycles := 5;
-      end;
-      FRegs.F := (FRegs.F and $FE) or b1;                      { restore Carry }
-    end;
-    // DCR r; DCR M
-    // $05, $15, $25, $35, $0D, $1D, $2D, $3D
-    if (AOC <= $3F) and ((AOC and $07) = $05) then
-    begin
-      DestRegIndex := (AOC shr 3) and $07;
-      FLastInstruction.Mnemonic := 'DCR ' + RegNames[DestRegIndex];
-      b1 := FRegs.F and $01;                                     { store Carry }
-      if DestRegIndex = 6 then
-      begin
-        // DCR M
-        b2 := FBus.ReadMemory(FRegs.HL);
-        w1 := (b2 - 1) and $FF;
-        FBus.WriteMemory(FRegs.HL, w1);
-        UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
-        FLastInstruction.Cycles := 10;
-      end else
-      begin
-        // DCR r
-        b2 := RegPointers[DestRegIndex]^;
-        Dec(RegPointers[DestRegIndex]^);
-        UpdateFlags(b2 + ($01 xor $FF) + 1, b2, $01 xor $FF);
-        FLastInstruction.Cycles := 5;
-      end;
-      FRegs.F := (FRegs.F and $FE) or b1;                      { restore Carry }
-    end;
-    // MVI r, d8; MVI M, d8
-    // $06, $16, $26, $36, $0E, $1E, $2E, $3E
-    if (AOC <= $3F) and ((AOC and $07) = $06) then
-    begin
-      DestRegIndex := (AOC shr 3) and $07;
-      FLastInstruction.Mnemonic := 'MVI ' + RegNames[DestRegIndex];
-      FLastInstruction.NumOperand := 1;
-      b1 := FBus.ReadMemory(FRegs.PC);
-      Inc(FRegs.PC);
-      FLastInstruction.Operands[1] := b1;
-      if DestRegIndex = 6 then
-      begin
-        FBus.WriteMemory(FRegs.HL, b1);                            { MVI M, d8 }
-        FLastInstruction.Cycles := 10;
-      end else
-      begin
-        RegPointers[DestRegIndex]^ := b1;                          { MVI r, d8 }
-        FLastInstruction.Cycles := 7;
-      end;
-    end;
-    // DAD rp
-    // $09, $19, $29, $39)
-    if (AOC <= $3F) and ((AOC and $0F) = $09) then
-    begin
-      SourceRegIndex := (AOC shr 4) and $03;
-      case SourceRegIndex of
-        0: begin FLastInstruction.Mnemonic := 'DAD B'; w1 := FRegs.BC; end;
-        1: begin FLastInstruction.Mnemonic := 'DAD D'; w1 := FRegs.DE; end;
-        2: begin FLastInstruction.Mnemonic := 'DAD H'; w1 := FRegs.HL; end;
-        3: begin FLastInstruction.Mnemonic := 'DAD SP'; w1 := FRegs.SP; end;
-      end;
-      dw1 := Cardinal(FRegs.HL) + Cardinal(w1);
-      FRegs.HL := dw1 and $FFFF;
-      if (dw1 and $10000) <> 0 
-        then FRegs.F := FRegs.F or $01
-        else FRegs.F := FRegs.F and $FE;
-      FLastInstruction.Cycles := 10;
-    end;
-    // MOV r1, r2; MOV M, r1; MOV r1, M
-    // $40-$7F
-    if (AOC >= $40) and (AOC <= $7F) and (AOC <> $76) then
-    begin
-      DestRegIndex := (AOC shr 3) and $07;
-      SourceRegIndex := AOC and $07;
-      FLastInstruction.Mnemonic := 'MOV ' + RegNames[DestRegIndex] + ', ' +
-                                            RegNames[SourceRegIndex];
-      if DestRegIndex = 6
-        then FBus.WriteMemory(FRegs.HL, RegPointers[SourceRegIndex]^) {MOV M, r} else
-          if SourceRegIndex = 6
-            then RegPointers[DestRegIndex]^ := FBus.ReadMemory(FRegs.HL) {MOV r, M}
-            else RegPointers[DestRegIndex]^ := RegPointers[SourceRegIndex]^; {MOV r1, r2}
-      if (AOC = $46) or (AOC = $4E) or 
-         (AOC = $56) or (AOC = $5E) or 
-         (AOC = $66) or (AOC = $6E) or 
-         (AOC = $77) or (AOC = $7E) or 
-         ((AOC >= $70) and (AOC <= $75))
-        then FLastInstruction.Cycles := 7
-        else FLastInstruction.Cycles := 5;
-    end;
-    // RST n
-    // $C7, $D7, $E7, $F7, $CF, $DF, $EF, $FF
-    if (AOC >= $C0) and ((AOC and $07) = $07) then
-    begin
-      w1 := (AOC shr 3) and $07;
-      FLastInstruction.Mnemonic := 'RST ' + IntToStr(w1);
-      Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, FRegs.PCH);
-      Dec(FRegs.SP);
-      FBus.WriteMemory(FRegs.SP, FRegs.PCL);
-      FRegs.PC := w1 * 8;
-      FLastInstruction.Cycles := 11;
-    end;
   end;

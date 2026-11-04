@@ -18,7 +18,7 @@ interface
 library cpu_8080;
 {$ENDIF}
 
-{$MODE OBJFPC}{$H+}
+{$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
   CMem, Classes, SysUtils, core_cpu;

@@ -12,7 +12,7 @@
   FOR A PARTICULAR PURPOSE. }
 
 library cpu_8085;
-{$MODE OBJFPC}{$H+}
+{$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
   CMem, Classes, SysUtils, core_cpu, cpu_8080;
