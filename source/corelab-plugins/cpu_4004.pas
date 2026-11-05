@@ -11,7 +11,13 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
   FOR A PARTICULAR PURPOSE. }
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+unit cpu_4004;
+interface
+{$ELSE}
 library cpu_4004;
+{$ENDIF}
+
 {$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
@@ -28,7 +34,7 @@ type
   T4004Flags = record
     C: Boolean;
   end;
-  // Internal 7-level hardware stack for PC
+  // Internal 3-level hardware stack for PC
   T4004Stack = record
     Regs:    array[0..2] of Word;
     Pointer: Byte; 
@@ -68,6 +74,11 @@ const
   PubRegSize:  array[0..17] of Byte  = (1, 1, 1, 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1, 1, 1, 1,
                                         1, 3);
+
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+implementation
+{$ELSE}
+{$ENDIF}
 
 { T4004CPU }
 
@@ -274,6 +285,9 @@ begin
   if AIndex < Length(PubRegSize) then Result := PubRegSize[AIndex] else Result := 0;
 end;
 
+{$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}
+{$ELSE}
+
 // ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----
 
 function CreateCPU: TCPU; CALLTYPE; export;
@@ -302,5 +316,7 @@ exports CreateCPU name 'cpu_create';
 exports DestroyCPU name 'cpu_destroy';
 exports LoadState name 'cpu_loadstate';
 exports SaveState name 'cpu_savestate';
+
+{$ENDIF}
 
 end.

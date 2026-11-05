@@ -9,7 +9,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |filename                  |base, parent        |class           |description            |
 |--------------------------|--------------------|----------------|-----------------------|
 |cpu_4004.pas              |TCPU                |T4004CPU        |Intel 4004 uP          |
-|cpu_4040.pas              |TCPU                |T4040CPU        |Intel 4040 uP          |
+|cpu_4040.pas              |T4004CPU            |T4040CPU        |Intel 4040 uP          |
 |cpu_8008.pas              |TCPU                |T8008CPU        |Intel 8008 uP          |
 |cpu_8080.pas              |TCPU                |T8080CPU        |Intel 8080 uP          |
 |cpu_8085.pas              |T8080CPU            |T8085CPU        |Intel 8085 uP          |
