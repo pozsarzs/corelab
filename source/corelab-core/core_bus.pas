@@ -27,25 +27,32 @@ type
     Status:     string[31];
   end;
   // Type of system bus
-  TBusType = (btStandard, btIntel4000);
+  TBusType = (btStandard, btMCS4);
   { ISysBus }
   ISysBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
+    // memory functions
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
+    // I/O functions
     function ReadPort(APort: DWord): Byte;
     procedure WritePort(APort: DWord; AValue: Byte);
   end;
-  { IIntel4000Bus }
-  IIntel4000Bus = interface
+  { IMCS4Bus }
+  IMCS4Bus = interface
     ['{923A5391-77FD-41FB-B935-046D62F45C18}']
+    // common addressing
     procedure SendSRC(AAddress: Byte);
+    // RAM functions (r/w memory and w I/O)
     function ReadRAM: Byte;
-    function ReadRAMStatus: Byte;
     procedure WriteRAM(AData: Byte);
+    function ReadRAMStatus(AIndex: Byte): Byte;
+    procedure WriteRAMStatus(AIndex: Byte; AData: Byte);
     procedure WriteRAMIOPort(AData: Byte);
+    // ROM functions (r memory and r/w I/O)
     function ReadROM(AAddress: Word): Byte;
     function ReadROMIOPort: Byte;
+    procedure WriteROMIOPort(AData: Byte);
   end;
 
 implementation

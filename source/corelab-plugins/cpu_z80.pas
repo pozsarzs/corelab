@@ -15,7 +15,7 @@ library cpu_z80;
 {$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
-  CMem, Classes, SysUtils, core_cpu;
+  CMem, Classes, SysUtils, core_cpu, core_bus;
 type
   // Register set
   TZ80Registers = record
@@ -40,7 +40,8 @@ type
   private
   protected
     RegPointers: array[0..7] of PByte;         // pointers to register variables
-    FRegs: TZ80Registers;
+    FBus:        ISysBus;                              // Connected external bus
+    FRegs:       TZ80Registers;
     FInterruptMode: Byte;                                      // interrupt mode
     FInterruptEnabled2:  Boolean;           // global interrupt enable flag IFF2
     procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte; N: Boolean = False; P: Boolean = False);
@@ -50,6 +51,7 @@ type
     constructor Create; override;
     function CheckInterrupts: Boolean; override;
     procedure Reset; override;
+    function ConnectBus(const ABus: IInterface): Boolean; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
     procedure NMI; override;
@@ -250,6 +252,12 @@ begin
   RegPointers[7] := @FRegs.A;
   // Reset CPU
   Reset;
+end;
+
+// CONNECT CPU TO EXTERNAL SYSTEM BUS
+function TZ80CPU.ConnectBus(const ABus: IInterface): Boolean;
+begin
+  Result := Supports(ABus, ISysBus, FBus);
 end;
 
 // CHECK PENDING INTERRUPT

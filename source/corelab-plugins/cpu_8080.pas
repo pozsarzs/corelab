@@ -21,7 +21,7 @@ library cpu_8080;
 {$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
-  CMem, Classes, SysUtils, core_cpu;
+  CMem, Classes, SysUtils, core_cpu, core_bus;
 type
   // Register set
   T8080Registers = record
@@ -40,13 +40,15 @@ type
   private
   protected
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
-    FRegs: T8080Registers;
+    FBus:        ISysBus;                              // Connected external bus
+    FRegs:       T8080Registers;
     procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);
     procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
     procedure RunOpCode(AOC: Byte); virtual;
   public
     constructor Create; override;
     procedure Reset; override;
+    function ConnectBus(const ABus: IInterface): Boolean; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
     procedure Step; override;
@@ -187,6 +189,12 @@ begin
   FRegs.PC := 0;
   FRegs.SP := $FFFF;
   EmitEvent(ceReset);
+end;
+
+// CONNECT CPU TO EXTERNAL SYSTEM BUS
+function T8080CPU.ConnectBus(const ABus: IInterface): Boolean;
+begin
+  Result := Supports(ABus, ISysBus, FBus);
 end;
 
 // LOAD SAVED STATE

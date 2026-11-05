@@ -15,7 +15,7 @@ library cpu_8008;
 {$MODE OBJFPC}{$H+}{$Q-}{$R-}
 {$I DEFINE.PAS}
 uses
-  CMem, Classes, SysUtils, core_cpu;
+  CMem, Classes, SysUtils, core_cpu, core_bus;
 type
   // Register set
   T8008Registers = record
@@ -37,6 +37,7 @@ type
   private
     RegPointers: array[0..6] of PByte;
   protected
+    FBus:   ISysBus;                                   // Connected external bus
     FRegs:  T8008Registers;
     FFlags: T8008Flags;
     FStack: T8008Stack;
@@ -46,6 +47,7 @@ type
   public
     constructor Create; override;
     procedure Reset; override;
+    function ConnectBus(const ABus: IInterface): Boolean; override;
     function CheckInterrupts: Boolean; override;
     function LoadState(AStream: TStream): Boolean; override;
     function SaveState(AStream: TStream): Boolean; override;
@@ -179,6 +181,12 @@ begin
     P := false;
   end;
   EmitEvent(ceReset);
+end;
+
+// CONNECT CPU TO EXTERNAL SYSTEM BUS
+function T8008CPU.ConnectBus(const ABus: IInterface): Boolean;
+begin
+  Result := Supports(ABus, ISysBus, FBus);
 end;
 
 // LOAD SAVED STATE

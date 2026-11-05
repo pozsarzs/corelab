@@ -15,6 +15,7 @@ input/output operations, timer interrupts, and state machine logic of a processo
 ### 1. Required Hardware Environment
 
 * **Processor:** Any 4-bit or 8-bit microprocessor/microcontroller.
+* **Memory:**  1 kB standard memory.
 * **Display:** A 4-digit hexadecimal display driven on a BCD basis.
 * **Input:** An 8-button keypad.
 * **Output:** An 8-LED row (1 byte output).

@@ -81,7 +81,6 @@ type
   { TCPU }
   TCPU = class
   protected
-    FBus:               ISysBus;                       // Connected external bus
     FOnEvent:           TCPUEventHandler;                      // Event callback
     // CPU identity information
     FModname:           PChar;
@@ -90,6 +89,7 @@ type
     // CPU features
     FAddressWidth:      Byte;                       // Address bus width in bits
     FArchitecture:      TArchitecture;                   // Type of architecture
+    FBusType:           TBusType;                          // Type of system bus
     FDefaultClockFreq:  DWord;            // Clock frequency of the original CPU
     FEnabled:           Boolean;        // Enable device without detach from bus
     FEndianness:        TEndianness;                               // Byte order
@@ -113,7 +113,7 @@ type
     procedure EmitEvent(AEvent: TCPUEvent); virtual;
     procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); virtual;
   public
-    procedure ConnectBus(const Bus: ISysBus); virtual;
+    function ConnectBus(const ABus: IInterface): Boolean; virtual; abstract;
     // Public methods
     constructor Create; virtual;
     destructor Destroy; override;
@@ -136,6 +136,8 @@ type
     // properties
     property AddressWidth: Byte read FAddressWidth;
     property Architecture: TArchitecture read FArchitecture;
+    property BusType: TBusType read FBusType;
+    property DefaultClockFreq: DWord read FDefaultClockFreq;
     property TotalCycles: QWord read FTotalCycles;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
@@ -243,6 +245,7 @@ begin
   FTotalCycles := 0;
   FTotalInstructions := 0;
   // others
+  FBusType := btStandard;
   FDefaultClockFreq := 1000000;
   with FVersion do
   begin
@@ -314,12 +317,6 @@ begin
       Exit;                                 // One check - one interrupt calling
     end;
   end;
-end;
-
-// CONNECT CPU TO EXTERNAL SYSTEM BUS
-procedure TCPU.ConnectBus(const Bus: ISysBus);
-begin
-  FBus := Bus;                                   // Store external bus reference
 end;
 
 end.
