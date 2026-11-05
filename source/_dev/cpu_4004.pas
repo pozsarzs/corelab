@@ -59,15 +59,20 @@ type
     function GetRegisterSize(AIndex: Byte): Byte; override;
   end;
 const
-  RegNames: array[0..7] of char = ('A', 'B', 'C', 'D', 'E', 'H', 'L', 'M');
-  PubRegNames: array[0..6] of PChar = ('A', 'B', 'C', 'D', 'E', 'H', 'L');
-  PubRegSize:  array[0..6] of Byte  = (2, 2, 2, 2, 2, 2, 2);
+  PubRegNames: array[0..17] of PChar = ('R0',  'R1',  'R2',  'R3',
+                                       'R4',  'R5',  'R6',  'R7',
+                                       'R8',  'R9',  'R10', 'R11',
+                                       'R12', 'R13', 'R14', 'R15',
+                                       'A',   'PC');
+  PubRegSize:  array[0..17] of Byte  = (1, 1, 1, 1, 1, 1, 1, 1,
+                                        1, 1, 1, 1, 1, 1, 1, 1,
+                                        1, 3);
 
 { T4004CPU }
 
 // ---- PROTECTED METHODS ----
 
-// UPDATE FLAGS (CZSP)
+// UPDATE FLAGS (C)
 procedure T4004CPU.UpdateFlags(Value16: Word);
 var
   Value8: Byte;
@@ -139,39 +144,39 @@ end;
 function T4004CPU.LoadState(AStream: TStream): Boolean;
 begin
   Result := true;
-{  with AStream do
+  with AStream do
     try
       ReadBuffer(FEnabled, SizeOf(FEnabled));
       ReadBuffer(FRegs, SizeOf(FRegs));
       ReadBuffer(FFlags, SizeOf(FFlags));
       ReadBuffer(FStack, SizeOf(FStack));
+      ReadBuffer(FLastInstruction, SizeOf(FLastInstruction));
       ReadBuffer(FRunning, SizeOf(FRunning));
       ReadBuffer(FHalted, SizeOf(FHalted));
-      ReadBuffer(FIRQPending, SizeOf(FIRQPending));
       ReadBuffer(FTotalCycles, SizeOf(FTotalCycles));
       ReadBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
     except
       Result := false;
-    end;}
+    end;
 end;
 
 // SAVE ACTUAL STATE
 function T4004CPU.SaveState(AStream: TStream): Boolean;
 begin
   Result := false;
-{  with AStream do
+  with AStream do
   begin
     WriteBuffer(FEnabled, SizeOf(FEnabled));
     WriteBuffer(FRegs, SizeOf(FRegs));
     WriteBuffer(FFlags, SizeOf(FFlags));
     WriteBuffer(FStack, SizeOf(FStack));
+    WriteBuffer(FLastInstruction, SizeOf(FLastInstruction));
     WriteBuffer(FRunning, SizeOf(FRunning));
     WriteBuffer(FHalted, SizeOf(FHalted));
-    WriteBuffer(FIRQPending, SizeOf(FIRQPending));
     WriteBuffer(FTotalCycles, SizeOf(FTotalCycles));
     WriteBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
     Result := true;
-  end;}
+  end;
 end;
 
 // EXECUTING AN INSTRUCTION
@@ -181,7 +186,8 @@ var
 begin
   if not FEnabled then Exit;
   if FHalted then Exit;
-{  OC := FBus.ReadMemory(FRegs.PC);
+  OC := 0;
+  OC := FBus.ReadROM(FRegs.PC);
   with FLastInstruction do
   begin
     Address := FRegs.PC;
@@ -191,7 +197,7 @@ begin
   end;
   Inc(FRegs.PC);
   FRegs.PC := FRegs.PC and $FFF;
-  RunOpCode(OC);}
+  RunOpCode(OC);
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
   EmitEvent(ceInstructionBoundary);
   Inc(FTotalInstructions);
@@ -243,16 +249,20 @@ end;
 
 // SETTING REGISTERS
 procedure T4004CPU.SetRegister(const RegName: PChar; Value: Word);
+var
+  b: Byte;
+  s: string[3];
 begin
-{  case UpperCase(RegName) of
-    'A': FRegs.A := Value and $FF;
-    'B': FRegs.B := Value and $FF;
-    'C': FRegs.C := Value and $FF;
-    'D': FRegs.D := Value and $FF;
-    'E': FRegs.E := Value and $FF;
-    'H': FRegs.H := Value and $FF;
-    'L': FRegs.L := Value and $FF;
-  end;}
+  s := UpperCase(StrPas(RegName));
+  if s = 'A' then FRegs.A := Byte(Value) and $0F else
+  begin
+    if s[1] = 'R' then
+    begin
+      delete(s, 1, 1);
+      for b := 0 to 15 do
+        if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
+    end;
+  end;
 end;
 
 // QUERYING NUMBER OF THE ALL REGISTERS

@@ -321,6 +321,7 @@ begin
       ReadBuffer(FEnabled, SizeOf(FEnabled));
       // common fields related to CPU
       ReadBuffer(FRegs, SizeOf(FRegs));
+      ReadBuffer(FLastInstruction, SizeOf(FLastInstruction));
       ReadBuffer(FRunning, SizeOf(FRunning));
       ReadBuffer(FHalted, SizeOf(FHalted));
       ReadBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
@@ -343,6 +344,7 @@ begin
     WriteBuffer(FEnabled, SizeOf(FEnabled));
     // common fields related to CPU
     WriteBuffer(FRegs, SizeOf(FRegs));
+    WriteBuffer(FLastInstruction, SizeOf(FLastInstruction));
     WriteBuffer(FRunning, SizeOf(FRunning));
     WriteBuffer(FHalted, SizeOf(FHalted));
     WriteBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));

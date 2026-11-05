@@ -199,6 +199,7 @@ begin
       ReadBuffer(FRegs, SizeOf(FRegs));
       ReadBuffer(FFlags, SizeOf(FFlags));
       ReadBuffer(FStack, SizeOf(FStack));
+      ReadBuffer(FLastInstruction, SizeOf(FLastInstruction));
       ReadBuffer(FRunning, SizeOf(FRunning));
       ReadBuffer(FHalted, SizeOf(FHalted));
       ReadBuffer(FIRQPending, SizeOf(FIRQPending));
@@ -219,6 +220,7 @@ begin
     WriteBuffer(FRegs, SizeOf(FRegs));
     WriteBuffer(FFlags, SizeOf(FFlags));
     WriteBuffer(FStack, SizeOf(FStack));
+    WriteBuffer(FLastInstruction, SizeOf(FLastInstruction));
     WriteBuffer(FRunning, SizeOf(FRunning));
     WriteBuffer(FHalted, SizeOf(FHalted));
     WriteBuffer(FIRQPending, SizeOf(FIRQPending));

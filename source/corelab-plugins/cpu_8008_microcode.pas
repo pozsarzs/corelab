@@ -97,7 +97,8 @@
              RegPointers[DestRegIndex]^ := b1;
              FLastInstruction.Cycles := 16;
            end;
-         end;    // RET
+         end;
+    // RET
     $07, $0F, $17, $1F, $27, $2F, $37, $3F:
          begin
            FLastInstruction.Mnemonic := 'RET';

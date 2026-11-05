@@ -18,62 +18,158 @@
            FLastInstruction.Mnemonic := 'NOP';
            FLastInstruction.Cycles := 8;
          end;
+    // FIM 0-7 d8; SRC 0-7
+    $20..$2F:
+         if Odd(AOC) then
+         begin
+           // SRC 0-7
+           SourceRegIndex := ((AOC shr 1) and $07);
+           FLastInstruction.Mnemonic := 'SRC ' + IntToStr(SourceRegIndex);
+           SourceRegIndex := SourceRegIndex * 2;
+           FBus.SendSRC((RegPointers[SourceRegIndex]^ shl 4) or
+                        (RegPointers[SourceRegIndex + 1]^));
+           FLastInstruction.Cycles := 8;
+         end else
+         begin
+           // FIM 0-7 d8
+           DestRegIndex := ((AOC shr 1) and $07);
+           FLastInstruction.Mnemonic := 'FIM ' + IntToStr(DestRegIndex);
+           FLastInstruction.NumOperand := 1;
+           DestRegIndex := DestRegIndex * 2;
+           b1 := FBus.ReadROM(FRegs.PC);
+           Inc(FRegs.PC);
+           FRegs.PC := FRegs.PC and $0FFF;
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
+           RegPointers[DestRegIndex]^ := b1 shr 4;
+           RegPointers[DestRegIndex + 1]^ := b1 and $0F;
+           FLastInstruction.Cycles := 16;
+         end;
+    // FIN 0-7; JIN 0-7
+    $30..$3F:
+         if Odd(AOC) then
+         begin
+           // JIN 0-7
+           SourceRegIndex := ((AOC shr 1) and $07);
+           FLastInstruction.Mnemonic := 'JIN ' + IntToStr(SourceRegIndex);
+           SourceRegIndex := SourceRegIndex * 2;
+           b1 := FRegs.PC and $0F00;
+           b1 := b1 or (RegPointers[SourceRegIndex]^ shl 4) or
+                       (RegPointers[SourceRegIndex + 1]^);
+           FRegs.PC := b1 and $0FFF;
+           FLastInstruction.Cycles := 8;
+         end else
+         begin
+           // FIN 0-7
+           SourceRegIndex := (AOC shr 1) and $07;
+           DestRegIndex := SourceRegIndex * 2;
+           FLastInstruction.Mnemonic := 'FIN ' + IntToStr(SourceRegIndex);
+           b1 := FBus.ReadROM((FRegs.PC and $0F00) or (Fregs.R[0] shl 4) or (Fregs.R[1] and $0F));
+           RegPointers[DestRegIndex]^ := b1 shr 4;
+           RegPointers[DestRegIndex + 1]^ := b1 and $0F;
+           FLastInstruction.Cycles := 16;
+         end;
+    // INC 0-15
+    $60..$6F:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'INC ' + IntToStr(SourceRegIndex);
+           Inc(RegPointers[SourceRegIndex]^);
+           RegPointers[SourceRegIndex]^ := RegPointers[SourceRegIndex]^ and $0F;
+           FLastInstruction.Cycles := 8;
+         end;
+    // ADD 0-15
+    $80..$8F:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'ADD ' + IntToStr(SourceRegIndex);
+           b1 := FRegs.A + RegPointers[SourceRegIndex]^;
+           if FFlags.C then Inc(b1);
+           FRegs.A := b1 and $0F;
+           FFlags.C := b1 > $0F;
+           FLastInstruction.Cycles := 8;
+         end;
+    // SUB 0-15
+    $90..$9F:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'SUB ' + IntToStr(SourceRegIndex);
+           b1 := FRegs.A + ((not RegPointers[SourceRegIndex]^) and $0F);
+           if FFlags.C then Inc(b1);
+           FRegs.A := b1 and $0F;
+           FFlags.C := b1 > $0F;
+           FLastInstruction.Cycles := 8;
+         end;
+    // LD 0-15
+    $A0..$AF:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'LD ' + IntToStr(SourceRegIndex);
+           FRegs.A := RegPointers[SourceRegIndex]^;
+           FLastInstruction.Cycles := 8;
+         end;
+    // XCH 0-15
+    $B0..$BF:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'XCH ' + IntToStr(SourceRegIndex);
+           b1 := FRegs.A;
+           FRegs.A := RegPointers[SourceRegIndex]^;
+           RegPointers[SourceRegIndex]^ := b1;
+           FLastInstruction.Cycles := 8;
+         end;
+    // BBL 0-15
+    $C0..$CF:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'BBL ' + IntToStr(SourceRegIndex);
+           with FStack do
+           begin
+             if Pointer = 0 then Pointer := 2 else Dec(Pointer);
+             FRegs.PC := Regs[Pointer];
+           end;
+           Fregs.A := SourceRegIndex;
+           FLastInstruction.Cycles := 8;
+         end;
+    // LDM 0-15
+    $D0..$DF:
+         begin
+           SourceRegIndex := AOC and $0F;
+           FLastInstruction.Mnemonic := 'LDM ' + IntToStr(SourceRegIndex);
+           Fregs.A := SourceRegIndex;
+           FLastInstruction.Cycles := 8;
+         end;
   end;
-{ 
-|10    |JCN 0 a8 |2   |16    |---- |
-|15    |JCN 5 a8 |2   |16    |---- |
-|16    |JCN 6 a8 |2   |16    |---- |
-|17    |JCN 7 a8 |2   |16    |---- |
-|18    |JCN 8 a8 |2   |16    |---- |
-|1B    |JCN 11 a8|2   |16    |---- |
-|1D    |JCN 13 a8|2   |16    |---- |
-|1E    |JCN 14 a8|2   |16    |---- |
-|1F    |JCN 15 a8|2   |16    |---- |
 
+{ 
+    // common addressing
+    procedure SendSRC(AAddress: Byte);
+    // RAM functions (r/w memory and w I/O)
+    function ReadRAM: Byte;
+    procedure WriteRAM(AData: Byte);
+    function ReadRAMStatus(AIndex: Byte): Byte;
+    procedure WriteRAMStatus(AIndex: Byte; AData: Byte);
+    procedure WriteRAMIOPort(AData: Byte);
+    // ROM functions (r memory and r/w I/O)
+    function ReadROM(AAddress: Word): Byte;
+    function ReadROMIOPort: Byte;
+    procedure WriteROMIOPort(AData: Byte);
+
+|10    |JCN 0 a8 |2   |16    |---- |
 |11    |JNT a8   |2   |16    |---- |
 |12    |JC a8    |2   |16    |---- |
 |13    |JCN 3 a8 |2   |16    |---- |
 |14    |JZ a8    |2   |16    |---- |
+|15    |JCN 5 a8 |2   |16    |---- |
+|16    |JCN 6 a8 |2   |16    |---- |
+|17    |JCN 7 a8 |2   |16    |---- |
+|18    |JCN 8 a8 |2   |16    |---- |
 |19    |JT a8    |2   |16    |---- |
 |1A    |JNC a8   |2   |16    |---- |
+|1B    |JCN 11 a8|2   |16    |---- |
 |1C    |JNZ a8   |2   |16    |---- |
-
-|20    |FIM 0 d8 |2   |16    |---- |
-|22    |FIM 1 d8 |2   |16    |---- |
-|24    |FIM 2 d8 |2   |16    |---- |
-|26    |FIM 3 d8 |2   |16    |---- |
-|28    |FIM 4 d8 |2   |16    |---- |
-|2A    |FIM 5 d8 |2   |16    |---- |
-|2C    |FIM 6 d8 |2   |16    |---- |
-|2E    |FIM 7 d8 |2   |16    |---- |
-
-|21    |SRC 0    |1   |8     |---- |
-|23    |SRC 1    |1   |8     |---- |
-|25    |SRC 2    |1   |8     |---- |
-|27    |SRC 3    |1   |8     |---- |
-|29    |SRC 4    |1   |8     |---- |
-|2B    |SRC 5    |1   |8     |---- |
-|2D    |SRC 6    |1   |8     |---- |
-|2F    |SRC 7    |1   |8     |---- |
-
-|30    |FIN 0    |1   |16    |---- |
-|32    |FIN 1    |1   |16    |---- |
-|34    |FIN 2    |1   |16    |---- |
-|36    |FIN 3    |1   |16    |---- |
-|38    |FIN 4    |1   |16    |---- |
-|3A    |FIN 5    |1   |16    |---- |
-|3C    |FIN 6    |1   |16    |---- |
-|3E    |FIN 7    |1   |16    |---- |
-
-|31    |JIN 0    |1   |8     |---- |
-|33    |JIN 1    |1   |8     |---- |
-|35    |JIN 2    |1   |8     |---- |
-|37    |JIN 3    |1   |8     |---- |
-|39    |JIN 4    |1   |8     |---- |
-|3B    |JIN 5    |1   |8     |---- |
-|3D    |JIN 6    |1   |8     |---- |
-|3F    |JIN 7    |1   |8     |---- |
-
+|1D    |JCN 13 a8|2   |16    |---- |
+|1E    |JCN 14 a8|2   |16    |---- |
+|1F    |JCN 15 a8|2   |16    |---- |
 |40    |JUN 0 a8 |2   |16    |---- |
 |41    |JUN 1 a8 |2   |16    |---- |
 |42    |JUN 2 a8 |2   |16    |---- |
@@ -90,7 +186,6 @@
 |4D    |JUN 13 a8|2   |16    |---- |
 |4E    |JUN 14 a8|2   |16    |---- |
 |4F    |JUN 15 a8|2   |16    |---- |
-
 |50    |JMS 0 a8 |2   |16    |---- |
 |51    |JMS 1 a8 |2   |16    |---- |
 |52    |JMS 2 a8 |2   |16    |---- |
@@ -107,24 +202,6 @@
 |5D    |JMS 13 a8|2   |16    |---- |
 |5E    |JMS 14 a8|2   |16    |---- |
 |5F    |JMS 15 a8|2   |16    |---- |
-
-|60    |INC 0    |1   |8     |---- |
-|61    |INC 1    |1   |8     |---- |
-|62    |INC 2    |1   |8     |---- |
-|63    |INC 3    |1   |8     |---- |
-|64    |INC 4    |1   |8     |---- |
-|65    |INC 5    |1   |8     |---- |
-|66    |INC 6    |1   |8     |---- |
-|67    |INC 7    |1   |8     |---- |
-|68    |INC 8    |1   |8     |---- |
-|69    |INC 9    |1   |8     |---- |
-|6A    |INC 10   |1   |8     |---- |
-|6B    |INC 11   |1   |8     |---- |
-|6C    |INC 12   |1   |8     |---- |
-|6D    |INC 13   |1   |8     |---- |
-|6E    |INC 14   |1   |8     |---- |
-|6F    |INC 15   |1   |8     |---- |
-
 |70    |ISZ 0 a8 |2   |16    |---- |
 |71    |ISZ 1 a8 |2   |16    |---- |
 |72    |ISZ 2 a8 |2   |16    |---- |
@@ -141,129 +218,22 @@
 |7D    |ISZ 13 a8|2   |16    |---- |
 |7E    |ISZ 14 a8|2   |16    |---- |
 |7F    |ISZ 15 a8|2   |16    |---- |
-
-|80    |ADD 0    |1   |8     |C    |
-|81    |ADD 1    |1   |8     |C    |
-|82    |ADD 2    |1   |8     |C    |
-|83    |ADD 3    |1   |8     |C    |
-|84    |ADD 4    |1   |8     |C    |
-|85    |ADD 5    |1   |8     |C    |
-|86    |ADD 6    |1   |8     |C    |
-|87    |ADD 7    |1   |8     |C    |
-|88    |ADD 8    |1   |8     |C    |
-|89    |ADD 9    |1   |8     |C    |
-|8A    |ADD 10   |1   |8     |C    |
-|8B    |ADD 11   |1   |8     |C    |
-|8C    |ADD 12   |1   |8     |C    |
-|8D    |ADD 13   |1   |8     |C    |
-|8E    |ADD 14   |1   |8     |C    |
-|8F    |ADD 15   |1   |8     |C    |
-
-|90    |SUB 0    |1   |8     |C    |
-|91    |SUB 1    |1   |8     |C    |
-|92    |SUB 2    |1   |8     |C    |
-|93    |SUB 3    |1   |8     |C    |
-|94    |SUB 4    |1   |8     |C    |
-|95    |SUB 5    |1   |8     |C    |
-|96    |SUB 6    |1   |8     |C    |
-|97    |SUB 7    |1   |8     |C    |
-|98    |SUB 8    |1   |8     |C    |
-|99    |SUB 9    |1   |8     |C    |
-|9A    |SUB 10   |1   |8     |C    |
-|9B    |SUB 11   |1   |8     |C    |
-|9C    |SUB 12   |1   |8     |C    |
-|9D    |SUB 13   |1   |8     |C    |
-|9E    |SUB 14   |1   |8     |C    |
-|9F    |SUB 15   |1   |8     |C    |
-
-|A0    |LD 0     |1   |8     |---- |
-|A1    |LD 1     |1   |8     |---- |
-|A2    |LD 2     |1   |8     |---- |
-|A3    |LD 3     |1   |8     |---- |
-|A4    |LD 4     |1   |8     |---- |
-|A5    |LD 5     |1   |8     |---- |
-|A6    |LD 6     |1   |8     |---- |
-|A7    |LD 7     |1   |8     |---- |
-|A8    |LD 8     |1   |8     |---- |
-|A9    |LD 9     |1   |8     |---- |
-|AA    |LD 10    |1   |8     |---- |
-|AB    |LD 11    |1   |8     |---- |
-|AC    |LD 12    |1   |8     |---- |
-|AD    |LD 13    |1   |8     |---- |
-|AE    |LD 14    |1   |8     |---- |
-|AF    |LD 15    |1   |8     |---- |
-
-|B0    |XCH 0    |1   |8     |---- |
-|B1    |XCH 1    |1   |8     |---- |
-|B2    |XCH 2    |1   |8     |---- |
-|B3    |XCH 3    |1   |8     |---- |
-|B4    |XCH 4    |1   |8     |---- |
-|B5    |XCH 5    |1   |8     |---- |
-|B6    |XCH 6    |1   |8     |---- |
-|B7    |XCH 7    |1   |8     |---- |
-|B8    |XCH 8    |1   |8     |---- |
-|B9    |XCH 9    |1   |8     |---- |
-|BA    |XCH 10   |1   |8     |---- |
-|BB    |XCH 11   |1   |8     |---- |
-|BC    |XCH 12   |1   |8     |---- |
-|BD    |XCH 13   |1   |8     |---- |
-|BE    |XCH 14   |1   |8     |---- |
-|BF    |XCH 15   |1   |8     |---- |
-
-|C0    |BBL 0    |1   |8     |---- |
-|C1    |BBL 1    |1   |8     |---- |
-|C2    |BBL 2    |1   |8     |---- |
-|C3    |BBL 3    |1   |8     |---- |
-|C4    |BBL 4    |1   |8     |---- |
-|C5    |BBL 5    |1   |8     |---- |
-|C6    |BBL 6    |1   |8     |---- |
-|C7    |BBL 7    |1   |8     |---- |
-|C8    |BBL 8    |1   |8     |---- |
-|C9    |BBL 9    |1   |8     |---- |
-|CA    |BBL 10   |1   |8     |---- |
-|CB    |BBL 11   |1   |8     |---- |
-|CC    |BBL 12   |1   |8     |---- |
-|CD    |BBL 13   |1   |8     |---- |
-|CE    |BBL 14   |1   |8     |---- |
-|CF    |BBL 15   |1   |8     |---- |
-
-|D0    |LDM 0    |1   |8     |---- |
-|D1    |LDM 1    |1   |8     |---- |
-|D2    |LDM 2    |1   |8     |---- |
-|D3    |LDM 3    |1   |8     |---- |
-|D4    |LDM 4    |1   |8     |---- |
-|D5    |LDM 5    |1   |8     |---- |
-|D6    |LDM 6    |1   |8     |---- |
-|D7    |LDM 7    |1   |8     |---- |
-|D8    |LDM 8    |1   |8     |---- |
-|D9    |LDM 9    |1   |8     |---- |
-|DA    |LDM 10   |1   |8     |---- |
-|DB    |LDM 11   |1   |8     |---- |
-|DC    |LDM 12   |1   |8     |---- |
-|DD    |LDM 13   |1   |8     |---- |
-|DE    |LDM 14   |1   |8     |---- |
-|DF    |LDM 15   |1   |8     |---- |
-
 |E0    |WRM      |1   |8     |---- |
 |E1    |WMP      |1   |8     |---- |
 |E2    |WRR      |1   |8     |---- |
 |E3    |WPM      |1   |8     |---- |
-
 |E4    |WR0      |1   |8     |---- |
 |E5    |WR1      |1   |8     |---- |
 |E6    |WR2      |1   |8     |---- |
 |E7    |WR3      |1   |8     |---- |
-
 |E8    |SBM      |1   |8     |C    |
 |E9    |RDM      |1   |8     |---- |
 |EA    |RDR      |1   |8     |---- |
 |EB    |ADM      |1   |8     |C    |
-
 |EC    |RD0      |1   |8     |---- |
 |ED    |RD1      |1   |8     |---- |
 |EE    |RD2      |1   |8     |---- |
 |EF    |RD3      |1   |8     |---- |
-
 |F0    |CLB      |1   |8     |C    |
 |F1    |CLC      |1   |8     |C    |
 |F2    |IAC      |1   |8     |C    |

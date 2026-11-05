@@ -119,7 +119,7 @@ type
     destructor Destroy; override;
     function CheckInterrupts: Boolean; virtual;
     function GetCurrentInstruction: TLogRec; virtual; abstract;
-    function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; virtual; abstract;
+    function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec; virtual;
     function GetRegister(const RegName: PChar): Word; virtual; abstract;
     function GetRegisterCount: Byte; virtual; abstract;
     function GetRegisterName(AIndex: Byte): PChar; virtual; abstract;
@@ -317,6 +317,12 @@ begin
       Exit;                                 // One check - one interrupt calling
     end;
   end;
+end;
+
+// QUERY FOR THE LAST INTERRUPT DATA
+function TCPU.GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;
+begin
+  Result.Sender := '';
 end;
 
 end.
