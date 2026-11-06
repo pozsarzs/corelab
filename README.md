@@ -90,6 +90,15 @@ Second release will be with the following changes:
 |**modular architecture**  |Dynamically loadable CPUs and peripherals                                           |
 |**script syntax plugins** |For editors using GtkSourceView, MCEdit, Micro, Nano, Notepad++, (Neo)Vim and VSCode|
 
+### Applications
+
+|Name           |Specification / Description                                   |
+|---------------|--------------------------------------------------------------|
+|**CoreLAB**    |Simulation framework                                          |
+|**CLIOPort**   |standard bus compatible I/O port/device plugin tester         |
+|**CLMemory**   |standard bus compatible memory plugin tester                  |
+|**CLProcessor**|standard bus compatible Neumann architecture CPU plugin tester|
+
 ### Integrated modules
 
 |Features              |Specification / Description                            |
