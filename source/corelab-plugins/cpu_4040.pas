@@ -85,13 +85,6 @@ end;
 constructor T4040CPU.Create;
 begin
   inherited Create;
-  // base sets
-  FStackSize := 7;
-  SetLength(FStack.Regs, FStackSize);
-  SetLength(FRegs.R, 24);
-  FPCMask := $1FFF;
-  FROMBank := 0;
-  FInterruptEnabled := False;
   // CPU identity information
   FModname := '4040';
   FDescription := 'Intel 4040 microprocessor';
@@ -106,6 +99,11 @@ begin
   FDefaultClockFreq := 500000; {500 kHz}             // original clock frequency
   FTestPin := True;                                      // active low input pin
   Reset;
+  // base sets
+  FStackSize := 7;
+  SetLength(FStack.Regs, FStackSize);
+  SetLength(FRegs.R, 24);
+  FPCMask := $1FFF;
 end;
 
 // RESET CPU
@@ -137,14 +135,15 @@ begin
   Result := 0;
   s := UpperCase(StrPas(RegName));
   if s = 'A' then Result := FRegs.A else
-  begin
-    if s[1] = 'R' then
+    if s = 'PC' then Result := FRegs.PC else
     begin
-      Delete(s, 1, 1);
-      for b := 0 to 23 do
-        if StrToInt(s) = b then Result := FRegs.R[b];
+      if s[1] = 'R' then
+      begin
+        Delete(s, 1, 1);
+        for b := 0 to 23 do
+          if StrToInt(s) = b then Result := FRegs.R[b];
+      end;
     end;
-  end;
 end;
 
 // SETTING REGISTERS
@@ -155,14 +154,15 @@ var
 begin
   s := UpperCase(StrPas(RegName));
   if s = 'A' then FRegs.A := Byte(Value) and $0F else
-  begin
-    if s[1] = 'R' then
+    if s = 'PC' then FRegs.PC := Value and FPCMask else
     begin
-      Delete(s, 1, 1);
-      for b := 0 to 23 do
-        if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
+      if s[1] = 'R' then
+      begin
+        Delete(s, 1, 1);
+        for b := 0 to 23 do
+          if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
+      end;
     end;
-  end;
 end;
 
 // QUERYING NUMBER OF THE ALL REGISTERS
@@ -174,13 +174,17 @@ end;
 // QUERYING REGISTER NAME
 function T4040CPU.GetRegisterName(AIndex: Byte): PChar;
 begin
-  if AIndex < Length(PubRegNames4040) then Result := PubRegNames4040[AIndex] else Result := nil;
+  if AIndex < Length(PubRegNames4040)
+    then Result := PubRegNames4040[AIndex]
+    else Result := nil;
 end;
 
 // QUERYING REGISTER SIZE IN NIBBLES
 function T4040CPU.GetRegisterSize(AIndex: Byte): Byte;
 begin
-  if AIndex < Length(PubRegSize4040) then Result := PubRegSize4040[AIndex] else Result := 0;
+  if AIndex < Length(PubRegSize4040)
+    then Result := PubRegSize4040[AIndex]
+    else Result := 0;
 end;
 
 // ---- EXPORTABLE FUNCTIONS AND PROCEDURES ----

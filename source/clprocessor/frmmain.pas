@@ -32,6 +32,8 @@ type
   // Handled plugin attributes
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
+    PBusType:          TBusType;                           // Type of system bus
+    PDefaultClockFreq: DWord;             // Clock frequency of the original CPU
     PDescription:      string;                              // short description
     PEnabled:          Boolean;     // disable processor without detach from bus
     PModname:          string;                                    // module name
@@ -44,12 +46,12 @@ type
     PHasSeparateIOBus: Boolean;       // Indicates separate memory and I/O buses
   end;
   // direction pairs for data moving procedures
-  TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
+  TOpDirection =          (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
-  TCreateProcessorFunc = function: TCPU; CALLTYPE;
+  TCreateProcessorFunc =  function: TCPU; CALLTYPE;
   TDestroyProcessorProc = procedure(AProcessor: TCPU); CALLTYPE;
-  TLoadStateFunc  = function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateFunc = function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  TLoadStateFunc  =       function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateFunc =        function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   { TTestSysBus }
   TTestSysBus = class(TInterfacedObject, ISysBus)
     function ReadMemory(AAddress: DWord): Byte;
@@ -310,6 +312,7 @@ resourcestring
   MSG37 = 'Data converting error.';
   MSG38 = 'Checksum error.';
   MSG39 = 'Unexpected error.';
+  MSG40 = 'Only Neumann architecture CPU compatible with the standard bus can be used!';
 
 {$R *.lfm}
 
@@ -367,9 +370,11 @@ begin
         then PDescription := String(CurrentProcessor.Description)
         else PDescription := '';
       // read processor properties
-      PEnabled := CurrentProcessor.Enabled;
       PAddressWidth := CurrentProcessor.AddressWidth;
       PArchitecture := CurrentProcessor.Architecture;
+      PBusType := CurrentProcessor.BusType;
+      PDefaultClockFreq := CurrentProcessor.DefaultClockFreq;
+      PEnabled := CurrentProcessor.Enabled;
       PEndianness := CurrentProcessor.Endianness;
       PMaxCodeAddress := CurrentProcessor.MaxCodeAddress;
       PMaxIOPortAddress := CurrentProcessor.MaxIOPortAddress;
@@ -426,6 +431,10 @@ begin
         PickList.CommaText := 'true,false';
         ReadOnly := True;
       end;
+      InsertRow('BusType', LoadedPlugin.PBusType.ToString, True);
+      ItemProps['BusType'].ReadOnly := True;
+      InsertRow('DefaultClockFreq', IntToStr(LoadedPlugin.PDefaultClockFreq div 1000) + ' kHz', True);
+      ItemProps['DefaultClockFreq'].ReadOnly := True;
       InsertRow('AddressWidth', IntToStr(LoadedPlugin.PAddressWidth), True);
       ItemProps['AddressWidth'].ReadOnly := True;
       InsertRow('Architecture', LoadedPlugin.PArchitecture.ToString, True);
@@ -785,10 +794,10 @@ begin
       ImpExpProperties(opPlugin2Var);
       // show properties
       RefreshProperties(opVar2List);
+      ValueListEditor1.Enabled := True;
       // show registers
       RefreshRegisters(opVar2List);
       ValueListEditor2.Enabled := True;
-      ValueListEditor1.Enabled := True;
       // enable/disable actions
       LoadRegisterValuesFromCPU.Enabled := True;
       SaveRegisterValuesToCPU.Enabled := True;
@@ -808,6 +817,25 @@ begin
         Items[0].Text := '#' + FLoadCounter.ToString + ' ';
         Items[1].Text := ' ' + ShellListView1.Selected.Caption;
         Items[2].Text := '';
+      end;
+      // module with non-standard system bus or non-Neumann architecture
+      if (LoadedPlugin.PBusType <> btStandard) or
+         (LoadedPlugin.PArchitecture <> arNeumann) then
+      begin
+        with ActionList1 do
+        begin
+          LoadRegisterValuesFromCPU.Enabled := False;
+          SaveRegisterValuesToCPU.Enabled := False;
+          Reset.Enabled := False;
+          NMI.Enabled := False;
+          IRQ.Enabled := False;
+          Step.Enabled := False;
+          Run.Enabled := False;
+          Stop.Enabled := False;
+          LoadStatus.Enabled := False;
+          SaveStatus.Enabled := False;
+        end;
+        ShowMessage(MSG40);
       end;
     end else
     begin

@@ -36,8 +36,8 @@ type
   end;
   // Internal 3-level hardware stack for PC
   T4004Stack = record
-    Regs:    array of Word;
     Pointer: Byte; 
+    Regs:    array of Word;
   end;
 type
   { T4004CPU }
@@ -106,12 +106,6 @@ var
   b: Byte;
 begin
   inherited Create;
-  // base sets
-  FStackSize := 3;
-  SetLength(FStack.Regs, FStackSize);
-  SetLength(FRegs.R, 16);
-  FPCMask := $0FFF;
-  FROMBank := 0;
   // set register pointers
   for b := 0 to 15 do RegPointers[b] := @FRegs.R[b];
   RegPointers[16] := @FRegs.A;
@@ -130,6 +124,12 @@ begin
   FDefaultClockFreq := 500000; {500 kHz}             // original clock frequency
   FTestPin := True;                                      // active low input pin
   Reset;
+  // base sets
+  FStackSize := 3;
+  SetLength(FStack.Regs, FStackSize);
+  SetLength(FRegs.R, 16);
+  FPCMask := $0FFF;
+  FROMBank := 0;
 end;
 
 // RESET CPU
@@ -246,16 +246,17 @@ var
   s: string[3];
 begin
   Result := 0;
-  s := UpperCase(StrPas(RegName));
+  s := UpperCase(RegName);
   if s = 'A' then Result := FRegs.A else
-  begin
-    if s[1] = 'R' then
+    if s = 'PC' then Result := FRegs.PC else
     begin
-      Delete(s, 1, 1);
-      for b := 0 to 15 do
-        if StrToInt(s) = b then Result := FRegs.R[b];
+      if s[1] = 'R' then
+      begin
+        Delete(s, 1, 1);
+        for b := 0 to 15 do
+          if StrToInt(s) = b then Result := FRegs.R[b];
+      end;
     end;
-  end;
 end;
 
 // SETTING REGISTERS
@@ -266,14 +267,15 @@ var
 begin
   s := UpperCase(StrPas(RegName));
   if s = 'A' then FRegs.A := Byte(Value) and $0F else
-  begin
-    if s[1] = 'R' then
+    if s = 'PC' then FRegs.PC := Value and FPCMask else
     begin
-      Delete(s, 1, 1);
-      for b := 0 to 15 do
-        if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
+      if s[1] = 'R' then
+      begin
+        Delete(s, 1, 1);
+        for b := 0 to 15 do
+          if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
+      end;
     end;
-  end;
 end;
 
 // QUERYING NUMBER OF THE ALL REGISTERS
@@ -285,13 +287,17 @@ end;
 // QUERYING REGISTER NAME
 function T4004CPU.GetRegisterName(AIndex: Byte): PChar;
 begin
-  if AIndex < Length(PubRegNames) then Result := PubRegNames[AIndex] else Result := nil;
+  if AIndex < Length(PubRegNames)
+    then Result := PubRegNames[AIndex]
+    else Result := nil;
 end;
 
 // QUERYING REGISTER SIZE IN NIBBLES
 function T4004CPU.GetRegisterSize(AIndex: Byte): Byte;
 begin
-  if AIndex < Length(PubRegSize) then Result := PubRegSize[AIndex] else Result := 0;
+  if AIndex < Length(PubRegSize)
+    then Result := PubRegSize[AIndex]
+    else Result := 0;
 end;
 
 {$IFDEF NOT_A_LIBRARY_BUT_A_UNIT}

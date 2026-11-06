@@ -586,6 +586,11 @@ msgstr ""
 msgid "Unexpected error."
 msgstr ""
 
+#: frmmain:msg40
+msgid ""
+"Only Neumann architecture CPU compatible with the standard bus can be used!"
+msgstr ""
+
 #: frmrunlogger:msg02
 msgid "Save log to file"
 msgstr ""

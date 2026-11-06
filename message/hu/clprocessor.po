@@ -599,6 +599,11 @@ msgstr "Hibás ellenőrzőösszeg."
 msgid "Unexpected error."
 msgstr "Váratlan hiba."
 
+#: frmmain:msg40
+msgid ""
+"Only Neumann architecture CPU compatible with the standard bus can be used!"
+msgstr "Csak a standard busszal kompatibilis Neumann architektúrájú CPU modulok használhatóak!"
+
 #: frmrunlogger:msg02
 msgid "Save log to file"
 msgstr "Napló mentése fájlba"

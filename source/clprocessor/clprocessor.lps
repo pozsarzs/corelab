@@ -7,8 +7,8 @@
       <Unit>
         <Filename Value="clprocessor.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <CursorPos X="30" Y="14"/>
+        <TopLine Value="103"/>
+        <CursorPos X="19" Y="109"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -18,6 +18,7 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
@@ -29,7 +30,7 @@
         <ComponentName Value="Form2"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <CursorPos X="13"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
@@ -41,7 +42,7 @@
         <ComponentName Value="Form3"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <CursorPos X="5" Y="2"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
@@ -53,7 +54,7 @@
         <ComponentName Value="Form4"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -64,7 +65,7 @@
         <ComponentName Value="Form5"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <CursorPos Y="2"/>
         <UsageCount Value="233"/>
         <Loaded Value="True"/>
@@ -76,7 +77,7 @@
         <ComponentName Value="Form7"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <UsageCount Value="205"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -117,7 +118,7 @@
       </Unit>
       <Unit>
         <Filename Value="../_ppu/ucommon.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <CursorPos X="3" Y="3"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
@@ -144,131 +145,156 @@
       </Unit>
       <Unit>
         <Filename Value="../_ppu/uintelhex.pas"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <CursorPos X="2"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/interfaces/gtk2/gtk2widgetset.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2561"/>
+        <CursorPos X="21" Y="2565"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/valedit.pas"/>
+        <UnitName Value="ValEdit"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="700"/>
+        <CursorPos X="6" Y="707"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <UnitName Value="Grids"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="3197"/>
+        <CursorPos Y="3212"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="857" TopLine="805"/>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7941" TopLine="7919"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7944" TopLine="7922"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7945" TopLine="7923"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7804" TopLine="7791"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7806" TopLine="7791"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7807" TopLine="7791"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7810" TopLine="7791"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7812" TopLine="7791"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7813" TopLine="7791"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7814" TopLine="7792"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7816" TopLine="7794"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7819" TopLine="7797"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7821" TopLine="7800"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7828" TopLine="7815"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7829" TopLine="7815"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7831" TopLine="7815"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7832" TopLine="7815"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7834" TopLine="7815"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7835" TopLine="7815"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7837" TopLine="7816"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7848" TopLine="7835"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="7851" TopLine="7835"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="3211" TopLine="3197"/>
+      </Position>
+      <Position>
+        <Filename Value="/usr/lib/lazarus/2.2.6/lcl/grids.pas"/>
+        <Caret Line="3212" TopLine="3197"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="38" TopLine="38"/>
+        <Caret Line="493" TopLine="476"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="312" Column="8" TopLine="297"/>
+        <Caret Line="494" TopLine="476"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="1110" TopLine="1081"/>
+        <Caret Line="495" TopLine="476"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="24" Column="29" TopLine="13"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="14" Column="15" TopLine="2"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="18" Column="20" TopLine="9"/>
+        <Caret Line="496" TopLine="476"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="24" Column="29" TopLine="13"/>
+        <Caret Line="497" TopLine="476"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>
-        <Caret Line="1132" Column="40" TopLine="1119"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="1053" Column="33" TopLine="1037"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="1055" Column="45" TopLine="1043"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="1056" Column="46" TopLine="1017"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="1030" Column="3" TopLine="1013"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="1081" Column="3" TopLine="1069"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="1033" TopLine="1022"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="221" TopLine="197"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="86" Column="32" TopLine="74"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="40" Column="3" TopLine="27"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="86" Column="32" TopLine="75"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="19" Column="29"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="20" Column="23"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="61" Column="27" TopLine="42"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="92" Column="14" TopLine="72"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="142" Column="65" TopLine="122"/>
-      </Position>
-      <Position>
-        <Filename Value="../_ppu/uintelhex.pas"/>
-        <Caret Line="144" Column="22" TopLine="124"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="60" Column="56" TopLine="40"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="3" Column="7"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="57" Column="22" TopLine="33"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="332" Column="30" TopLine="329"/>
+        <Caret Line="482" Column="27" TopLine="479"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -286,4 +312,24 @@
       </List>
     </HistoryLists>
   </ProjectSession>
+  <Debugging>
+    <BreakPoints>
+      <Item>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="frmmain.pas"/>
+        <Line Value="798"/>
+      </Item>
+    </BreakPoints>
+    <Watches>
+      <Item/>
+      <Item>
+        <Expression Value="RegCount"/>
+      </Item>
+      <Item>
+        <Expression Value="b"/>
+      </Item>
+    </Watches>
+  </Debugging>
 </CONFIG>
