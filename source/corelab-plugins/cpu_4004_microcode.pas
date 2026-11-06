@@ -22,7 +22,7 @@
     $10..$1F:
          begin
            b1 := FBus.ReadROM(FRegs.PC);
-           FRegs.PC := (FRegs.PC + 1) and $0FFF;
+           FRegs.PC := (FRegs.PC + 1) and FPCMask;
            b2 := AOC and $0F;
            FLastInstruction.Mnemonic := 'JCN ' + IntToStr(b2);
            bool1 := False;
@@ -57,7 +57,7 @@
            DestRegIndex := DestRegIndex * 2;
            b1 := FBus.ReadROM(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.PC := FRegs.PC and $0FFF;
+           FRegs.PC := FRegs.PC and FPCMask;
            FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
            RegPointers[DestRegIndex]^ := b1 shr 4;
            RegPointers[DestRegIndex + 1]^ := b1 and $0F;
@@ -74,7 +74,7 @@
            b1 := FRegs.PC and $0F00;
            b1 := b1 or (RegPointers[SourceRegIndex]^ shl 4) or
                        (RegPointers[SourceRegIndex + 1]^);
-           FRegs.PC := b1 and $0FFF;
+           FRegs.PC := b1 and FPCMask;
            FLastInstruction.Cycles := 8;
          end else
          begin
@@ -95,9 +95,9 @@
            FLastInstruction.NumOperand := 1;
            b1 := FBus.ReadROM(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.PC := FRegs.PC and $0FFF;
+           FRegs.PC := FRegs.PC and FPCMask;
            FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
-           FRegs.PC := ((Word(SourceRegIndex) shl 8) or b1) and $0FFF;
+           FRegs.PC := ((Word(SourceRegIndex) shl 8) or b1) and FPCMask;
            FLastInstruction.Cycles := 16;
          end;
     // JMS 0-15 a8
@@ -108,14 +108,14 @@
            FLastInstruction.NumOperand := 1;
            b1 := FBus.ReadROM(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.PC := FRegs.PC and $0FFF;
+           FRegs.PC := FRegs.PC and FPCMask;
            FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
            with FStack do
            begin
              Regs[Pointer] := FRegs.PC;
              Pointer := (Pointer + 1) mod 3; 
            end;
-           FRegs.PC := ((Word(SourceRegIndex) shl 8) or b1) and $0FFF;
+           FRegs.PC := ((Word(SourceRegIndex) shl 8) or b1) and FPCMask;
            FLastInstruction.Cycles := 16;
          end;
     // INC 0-15
@@ -137,7 +137,7 @@
            RegPointers[SourceRegIndex]^ := RegPointers[SourceRegIndex]^ and $0F;
            b1 := FBus.ReadROM(FRegs.PC);
            Inc(FRegs.PC);
-           FRegs.PC := FRegs.PC and $0FFF;
+           FRegs.PC := FRegs.PC and FPCMask;
            FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
            if RegPointers[SourceRegIndex]^ <> 0
              then Fregs.PC := (Fregs.PC and $0F00) or b1;

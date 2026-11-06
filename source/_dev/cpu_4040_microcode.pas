@@ -12,3 +12,9 @@
   FOR A PARTICULAR PURPOSE. }
 
     // instructions
+    // SB 0
+    $0A: begin
+         end;
+    // SB 1
+    $0B: begin
+         end;

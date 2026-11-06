@@ -25,7 +25,7 @@ uses
 type
   // Register set
   T4004Registers = record
-    R:   array[0..15] of Byte; // 4 bit general registers
+    R:   array of Byte;        // 4 bit general registers
     A:   Byte;                 // 4 bit Accumulator
     PC:  Word;                 // 12 bit Program Counter
     CCR: Byte;                 // 3 bit Command Control Register
@@ -36,21 +36,22 @@ type
   end;
   // Internal 3-level hardware stack for PC
   T4004Stack = record
-    Regs:    array[0..2] of Word;
+    Regs:    array of Word;
     Pointer: Byte; 
   end;
 type
   { T4004CPU }
   T4004CPU = class(TCPU)
   private
-    RegPointers: array[0..16] of PByte;
   protected
-    FBus:     IMCS4Bus;                                // Connected external bus
-    FRegs:    T4004Registers;
-    FFlags:   T4004Flags;
-    FStack:   T4004Stack;
-    FTestPin: Boolean;                                     // simulated TEST pin
-    procedure RunOpCode(AOC: Byte);
+    RegPointers: array[0..16] of PByte;
+    FBus:        IMCS4Bus;                             // Connected external bus
+    FFlags:      T4004Flags;
+    FPCMask:     Word;
+    FRegs:       T4004Registers;
+    FStack:      T4004Stack;
+    FTestPin:    Boolean;                                  // simulated TEST pin
+    procedure RunOpCode(AOC: Byte); virtual;
   public
     constructor Create; override;
     procedure Reset; override;
@@ -67,10 +68,10 @@ type
   end;
 const
   PubRegNames: array[0..17] of PChar = ('R0',  'R1',  'R2',  'R3',
-                                       'R4',  'R5',  'R6',  'R7',
-                                       'R8',  'R9',  'R10', 'R11',
-                                       'R12', 'R13', 'R14', 'R15',
-                                       'A',   'PC');
+                                        'R4',  'R5',  'R6',  'R7',
+                                        'R8',  'R9',  'R10', 'R11',
+                                        'R12', 'R13', 'R14', 'R15',
+                                        'A',   'PC');
   PubRegSize:  array[0..17] of Byte  = (1, 1, 1, 1, 1, 1, 1, 1,
                                         1, 1, 1, 1, 1, 1, 1, 1,
                                         1, 3);
@@ -103,6 +104,13 @@ var
   b: Byte;
 begin
   inherited Create;
+  // base sets
+  SetLength(FStack.Regs, 3);
+  SetLength(FRegs.R, 16);
+  FPCMask := $0FFF;
+  // set register pointers
+  for b := 0 to 15 do RegPointers[b] := @FRegs.R[b];
+  RegPointers[16] := @FRegs.A;
   // CPU identity information
   FModname := '4004';
   FBusType := btMCS4;
@@ -117,9 +125,6 @@ begin
   FHasSeparateIOBus := true;          // Indicates separate memory and I/O buses
   FDefaultClockFreq := 500000; {500 kHz}             // original clock frequency
   FTestPin := True;                                      // active low input pin
-  // set register pointers
-  for b := 0 to 16 do RegPointers[b] := @FRegs.R[b];
-  RegPointers[16] := @FRegs.A;
   Reset;
 end;
 
@@ -198,7 +203,7 @@ begin
     NumOperand := 0;
   end;
   Inc(FRegs.PC);
-  FRegs.PC := FRegs.PC and $FFF;
+  FRegs.PC := FRegs.PC and FPCMask;
   RunOpCode(OC);
   FTotalCycles := FTotalCycles + FLastInstruction.Cycles;
   EmitEvent(ceInstructionBoundary);
@@ -242,7 +247,7 @@ begin
   begin
     if s[1] = 'R' then
     begin
-      delete(s, 1, 1);
+      Delete(s, 1, 1);
       for b := 0 to 15 do
         if StrToInt(s) = b then Result := FRegs.R[b];
     end;
@@ -260,7 +265,7 @@ begin
   begin
     if s[1] = 'R' then
     begin
-      delete(s, 1, 1);
+      Delete(s, 1, 1);
       for b := 0 to 15 do
         if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
     end;
