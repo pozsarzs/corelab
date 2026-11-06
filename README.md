@@ -130,14 +130,12 @@ Second release will be with the following changes:
 
 ### Supported processor
 
- - Intel 4004 Harvard architecture 4 bit microprocessor (1971)*.
+ - Intel 4004 Harvard architecture 4 bit microprocessor (1971) - with 4001 and 4002 chips.
  - Intel 4040 Harvard architecture 4 bit microprocessor (1974).
  - Intel 8008 Neumann architecture 8 bit microprocessor (1972).
  - Intel 8080 Neumann architecture 8 bit microprocessor (1974).
  - Intel 8085 Neumann architecture 8 bit microprocessor (1976).
  - Zilog Z80 Neumann 8 bit microprocessor (1976).
- 
-* With the corresponding special ROM and RAM chip.
 
 ## III. Screenshots
 
