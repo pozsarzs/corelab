@@ -34,7 +34,7 @@
            if ((b2 and $01) = $01) and (FTestPin = False) then bool1 := True;
            // Bit 3: inversion
            if (b2 and $08) = $08 then bool1 := not bool1;
-           if bool1 then FRegs.PC := (FRegs.PC and $0F00) or b1;
+           if bool1 then FRegs.PC := (FRegs.PC and FPCMask and $FF00) or b1;
            FLastInstruction.Cycles := 16;
          end;
     // FIM 0-7 d8; SRC 0-7
@@ -71,7 +71,7 @@
            SourceRegIndex := ((AOC shr 1) and $07);
            FLastInstruction.Mnemonic := 'JIN ' + IntToHex(SourceRegIndex, 1);
            SourceRegIndex := SourceRegIndex * 2;
-           b1 := FRegs.PC and $0F00;
+           b1 := FRegs.PC and FPCMask and $FF00;
            b1 := b1 or (RegPointers[SourceRegIndex]^ shl 4) or
                        (RegPointers[SourceRegIndex + 1]^);
            FRegs.PC := b1 and FPCMask;
@@ -82,7 +82,7 @@
            SourceRegIndex := (AOC shr 1) and $07;
            DestRegIndex := SourceRegIndex * 2;
            FLastInstruction.Mnemonic := 'FIN ' + IntToHex(SourceRegIndex, 1);
-           b1 := FBus.ReadROM((FRegs.PC and $0F00) or (Fregs.R[0] shl 4) or (Fregs.R[1] and $0F));
+           b1 := FBus.ReadROM((FRegs.PC and FPCMask and $FF00) or (Fregs.R[0] shl 4) or (Fregs.R[1] and $0F));
            RegPointers[DestRegIndex]^ := b1 shr 4;
            RegPointers[DestRegIndex + 1]^ := b1 and $0F;
            FLastInstruction.Cycles := 16;
@@ -97,7 +97,7 @@
            Inc(FRegs.PC);
            FRegs.PC := FRegs.PC and FPCMask;
            FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
-           FRegs.PC := ((Word(SourceRegIndex) shl 8) or b1) and FPCMask;
+           FRegs.PC := (((Word(SourceRegIndex) shl 8) or b1) or (FROMBank shl 12)) and FPCMask;
            FLastInstruction.Cycles := 16;
          end;
     // JMS 0-15 a8
@@ -113,9 +113,9 @@
            with FStack do
            begin
              Regs[Pointer] := FRegs.PC;
-             Pointer := (Pointer + 1) mod 3; 
+             Pointer := (Pointer + 1) mod FStackSize; 
            end;
-           FRegs.PC := ((Word(SourceRegIndex) shl 8) or b1) and FPCMask;
+           FRegs.PC := (((Word(SourceRegIndex) shl 8) or b1) or (FROMBank shl 12)) and FPCMask;
            FLastInstruction.Cycles := 16;
          end;
     // INC 0-15
@@ -140,7 +140,7 @@
            FRegs.PC := FRegs.PC and FPCMask;
            FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
            if RegPointers[SourceRegIndex]^ <> 0
-             then Fregs.PC := (Fregs.PC and $0F00) or b1;
+             then Fregs.PC := (Fregs.PC and FPCMask and $FF00) or b1;
            FLastInstruction.Cycles := 16;
          end;
     // ADD 0-15
@@ -190,7 +190,7 @@
            FLastInstruction.Mnemonic := 'BBL ' + IntToHex(SourceRegIndex, 1);
            with FStack do
            begin
-             if Pointer = 0 then Pointer := 2 else Dec(Pointer);
+             if Pointer = 0 then Pointer := FStackSize -1 else Dec(Pointer);
              FRegs.PC := Regs[Pointer];
            end;
            Fregs.A := SourceRegIndex;

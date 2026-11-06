@@ -49,6 +49,8 @@ type
     FFlags:      T4004Flags;
     FPCMask:     Word;
     FRegs:       T4004Registers;
+    FROMBank:    Byte;                                               // ROM bank
+    FStackSize:  Byte;
     FStack:      T4004Stack;
     FTestPin:    Boolean;                                  // simulated TEST pin
     procedure RunOpCode(AOC: Byte); virtual;
@@ -105,9 +107,11 @@ var
 begin
   inherited Create;
   // base sets
-  SetLength(FStack.Regs, 3);
+  FStackSize := 3;
+  SetLength(FStack.Regs, FStackSize);
   SetLength(FRegs.R, 16);
   FPCMask := $0FFF;
+  FROMBank := 0;
   // set register pointers
   for b := 0 to 15 do RegPointers[b] := @FRegs.R[b];
   RegPointers[16] := @FRegs.A;
