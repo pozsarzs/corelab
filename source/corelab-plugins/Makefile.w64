@@ -47,7 +47,12 @@ all:
 	  if "%%x"=="cpu_8080.pas" ( \
 	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -FE$(outdir)\ppu %%x & \
 	    $(fpc) $(fpcargs) %%x \
+	  ) else if "%%x"=="cpu_4004.pas" ( \
+	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -FE$(outdir)\ppu %%x & \
+	    $(fpc) $(fpcargs) %%x \
 	  ) else if "%%x"=="cpu_8085.pas" ( \
+	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -Fu$(outdir)\ppu %%x \
+	  ) else if "%%x"=="cpu_4040.pas" ( \
 	    $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -Fu$(outdir)\ppu %%x \
 	  ) else ( \
 	    $(fpc) $(fpcargs) %%x \

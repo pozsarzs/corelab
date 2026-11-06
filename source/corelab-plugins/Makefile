@@ -16,10 +16,10 @@ all:
 	@$(rm) --force $(outdir)/*.*
 	@for x in $(project); do \
 	  if [ -f $$x ]; then \
-	    if [ "$$x" = "cpu_8080.pas" ]; then \
+	    if [ "$$x" = "cpu_8080.pas" ] || [ "$$x" = "cpu_4004.pas" ]; then \
 	      $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -FE$(outdir)/ppu $$x; \
 	      $(fpc) $(fpcargs) $$x; \
-	    elif [ "$$x" = "cpu_8085.pas" ]; then \
+	    elif [ "$$x" = "cpu_8085.pas" ] || [ "$$x" = "cpu_4040.pas" ]; then \
 	      $(fpc) $(fpcargs) -dNOT_A_LIBRARY_BUT_A_UNIT -Fu$(outdir)/ppu $$x; \
 	    else \
 	      $(fpc) $(fpcargs) $$x; \
@@ -27,6 +27,7 @@ all:
 	    $(call addtobuildlog,$$x.pas,$$?); \
 	  fi; \
 	done
+
 clean:
 	@$(rm) $(outdir)/ppu/*
 	@if [ -d $(outdir)/ppu ]; then $(rmdir) $(outdir)/ppu; fi
