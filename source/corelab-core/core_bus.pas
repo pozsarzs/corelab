@@ -13,9 +13,10 @@
 
 unit core_bus;
 {$MODE OBJFPC}{$H+}
+{$MODESWITCH TYPEHELPERS}
 interface
 uses
-  CMem;
+  CMem, TypInfo;
 type
   // Last bus operation record for BusLogger
   TBusLogRec = record
@@ -28,6 +29,10 @@ type
   end;
   // Type of system bus
   TBusType = (btStandard, btMCS4);
+  TBusTypeHelper = type helper for TBusType
+    function ToString: string;
+    function FromString(const Value: string): TBusType;
+  end;
   { ISysBus }
   ISysBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
@@ -56,5 +61,17 @@ type
   end;
 
 implementation
+
+// ---- HELPER FOR OWN TYPES ----
+
+function TBusTypeHelper.ToString: string;
+begin
+  WriteStr(Result, Self);
+end;
+
+function TBusTypeHelper.FromString(const Value: string): TBusType;
+begin
+  Result := TBusType(GetEnumValue(TypeInfo(TBusType), Value));
+end;
 
 end.

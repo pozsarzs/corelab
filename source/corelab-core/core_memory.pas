@@ -16,7 +16,7 @@ unit core_memory;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  CMem, Classes, SysUtils, TypInfo;
+  CMem, Classes, SysUtils, TypInfo, core_bus;
 type
   TMemory = class;
   // Destroy event type
@@ -42,6 +42,7 @@ type
   protected
     FAddressRangeSize: DWord;                              // Address range size
     FBaseAddress:      DWord;                                    // Base address
+    FBusType:          TBusType;                           // Type of system bus
     FDescription:      PChar;                               // Short description
     FEnabled:          Boolean;         // Enable memory without detach from bus
     FMemoryMode:       TMemoryMode;                      //Memory operation mode
@@ -63,6 +64,7 @@ type
     // properties
     property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
     property BaseAddress: DWord read FBaseAddress write FBaseAddress;
+    property BusType: TBusType read FBusType;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
     property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
@@ -130,6 +132,7 @@ begin
   // Initial state
   SetFAddressRangeSize(1024);
   FBaseAddress := 0;
+  FBusType := btStandard;
   FEnabled := false;
   FMemoryMode := mmRAM;
   FModname := PChar('RAM/ROM');

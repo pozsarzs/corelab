@@ -321,3 +321,7 @@ msgstr ""
 #: frmmain:msg28
 msgid "The memory size can be 16 B-16 MB"
 msgstr ""
+
+#: frmmain:msg29
+msgid "Only memory compatible with the standard bus can be used!"
+msgstr ""

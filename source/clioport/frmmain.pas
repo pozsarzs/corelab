@@ -18,12 +18,13 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_ioport,
-  core_gioport, frmabout, frmcaption, frmsizepos, ucommon;
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, StdCtrls, core_bus,
+  core_ioport, core_gioport, frmabout, frmcaption, frmsizepos, ucommon;
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
     PAddressRangeSize: DWord;                              // address range size
+    PBusType:          TBusType;                           // type of system bus
     PDataInMode:       TLineMode;                   // decoding input data lines
     PDataInNegation:   Boolean;             // negation of databit (port -> CPU)
     PDataOutMode:      TLineMode;                  // decoding output data lines
@@ -39,20 +40,20 @@ type
     PSelNegation:      Boolean;              // negation of matrix selector bits
   end;
   // direction pairs for data moving procedures
-  TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
+  TOpDirection =       (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
-  TCreatePortFunc = function: TIOPort; CALLTYPE;
-  TDestroyPortProc = procedure(APort: TIOPort); CALLTYPE;
-  TCreatePanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TShowPanelProc = procedure(APort: TIOPort); CALLTYPE;
-  THidePanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TFreePanelProc = procedure(APort: TIOPort); CALLTYPE;
-  TRenamePanelProc = procedure(APort: TIOPort; Caption: PChar); CALLTYPE;
-  TResizePanelFunc = function(APort: TIOPort; Width, Height: Integer): Boolean; CALLTYPE;
-  TMovePanelFunc = function(APort: TIOPort; Left, Top: Integer): Boolean; CALLTYPE;
+  TCreatePortFunc =    function: TIOPort; CALLTYPE;
+  TDestroyPortProc =   procedure(APort: TIOPort); CALLTYPE;
+  TCreatePanelProc =   procedure(APort: TIOPort); CALLTYPE;
+  TShowPanelProc =     procedure(APort: TIOPort); CALLTYPE;
+  THidePanelProc =     procedure(APort: TIOPort); CALLTYPE;
+  TFreePanelProc =     procedure(APort: TIOPort); CALLTYPE;
+  TRenamePanelProc =   procedure(APort: TIOPort; Caption: PChar); CALLTYPE;
+  TResizePanelFunc =   function(APort: TIOPort; Width, Height: Integer): Boolean; CALLTYPE;
+  TMovePanelFunc =     function(APort: TIOPort; Left, Top: Integer): Boolean; CALLTYPE;
   TSetIntHandlerProc = procedure(APort: TIOPort; IntProc: TInterruptCallback; IntVector: Byte); CALLTYPE;
-  TLoadStateFunc  = function(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateFunc = function(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TLoadStateFunc  =    function(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateFunc =     function(APort: TIOPort; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
     About:                       TAction;
@@ -217,8 +218,9 @@ resourcestring
   MSG25 = 'Cannot write state data to plugin.';
   MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Interrupt request received with vector %s.';
+  MSG28 = 'Only I/O device compatible with the standard bus can be used!';
 
-{$R *.lfm}
+  {$R *.lfm}
 
 { TForm1 }
 
@@ -241,6 +243,7 @@ begin
         else PDescription := '';
       // read port properties
       PAddressRangeSize := CurrentPort.AddressRangeSize;
+      PBusType := CurrentPort.BusType;
       PDataInMode := CurrentPort.DataInMode;
       PDataInNegation := CurrentPort.DataInNegation;
       PDataOutMode := CurrentPort.DataOutMode;
@@ -307,6 +310,8 @@ begin
         PickList.CommaText := 'true,false';
         ReadOnly := True;
       end;
+      InsertRow('BusType', LoadedPlugin.PBusType.ToString, True);
+      ItemProps['BusType'].ReadOnly := True;
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
       ItemProps['AddressRangeSize'].ReadOnly := True;
       InsertRow('LatchedOutput', BoolToStr(LoadedPlugin.PLatchedOutput, 'true', 'false'), True);
@@ -679,6 +684,21 @@ begin
       ShowPluginWindow.Enabled := LoadedPlugin.PHasPanel;
       SetPluginWindowCaption.Enabled := LoadedPlugin.PHasPanel;
       SetPluginWindowSizePosition.Enabled := LoadedPlugin.PHasPanel;
+      // module with non-standard system bus
+      if LoadedPlugin.PBusType <> btStandard then
+      begin
+        with ActionList1 do
+        begin
+          ReadAByte.Enabled := False;
+          WriteAByte.Enabled := False;
+          LoadStatus.Enabled := False;
+          SaveStatus.Enabled := False;
+          ShowPluginWindow.Enabled := False;
+          SetPluginWindowCaption.Enabled := False;
+          SetPluginWindowSizePosition.Enabled := False;
+        end;
+        ShowMessage(MSG28);
+      end;
     end else
     begin
       // loading error

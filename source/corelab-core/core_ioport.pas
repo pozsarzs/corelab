@@ -16,7 +16,7 @@ unit core_ioport;
 {$MODESWITCH TYPEHELPERS}
 interface
 uses
-  Classes, SysUtils, TypInfo;
+  Classes, SysUtils, TypInfo, core_bus;
 type
   TIOPort = class;
   // Data mode
@@ -42,6 +42,7 @@ type
   protected
     FAddressRangeSize: DWord;                              // Address range size
     FBaseAddress:      DWord;                                    // Base address
+    FBusType:          TBusType;                           // Type of system bus
     FDataInMode:       TLineMode;                   // Decoding input data lines
     FDataInNegation:   Boolean;             // Negation of databit (port -> CPU)
     FDataOutMode:      TLineMode;                  // Decoding output data lines
@@ -70,6 +71,7 @@ type
     // properties
     property AddressRangeSize: DWord read FAddressRangeSize;
     property BaseAddress: DWord read FBaseAddress write FBaseAddress;
+    property BusType: TBusType read FBusType;
     property DataInMode: TLineMode read FDataInMode write FDataInMode;
     property DataInNegation: Boolean read FDataInNegation write FDataInNegation;
     property DataOutMode: TLineMode read FDataOutMode write FDataOutMode;
@@ -139,6 +141,7 @@ begin
   // Initial state
   FAddressRangeSize := 1;
   FBaseAddress := 0;
+  FBusType := btStandard;
   FDataInMode := lmBCD;
   FDataInNegation := false;
   FDataOutMode := lmBCD;

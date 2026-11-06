@@ -18,24 +18,25 @@ interface
 uses
   CMem, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, ValEdit,
   ExtCtrls, EditBtn, ShellCtrls, DynLibs, Grids, Menus, ComCtrls, ActnList,
-  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_memory,
+  Types, Process, HelpIntfs, LazHelpCHM, LazHelpIntf, core_bus, core_memory,
   frmabout, ucommon;
 type
   TPluginAttributes = record
     PFilename:         string;                         // filename of the module
     PAddressRangeSize: DWord;                              // address range size
+    PBusType:          TBusType;                           // type of system bus
     PDescription:      string;                              // short description
     PEnabled:          Boolean;        // disable memory without detach from bus
     PMemoryMode:       TMemoryMode;                      //Memory operation mode
     PModname:          string;                                    // Module name
   end;
   // direction pairs for data moving procedures
-  TOpDirection = (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
+  TOpDirection =       (opPlugin2Var, opVar2List, opList2Var, opVar2Plugin);
   // procedural types pointing to the plugin entry point
-  TCreateMemoryFunc = function: TMemory; CALLTYPE;
+  TCreateMemoryFunc =  function: TMemory; CALLTYPE;
   TDestroyMemoryProc = procedure(AMemory: TMemory); CALLTYPE;
-  TLoadStateFunc  = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
-  TSaveStateFunc = function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TLoadStateFunc  =    function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
+  TSaveStateFunc =     function(AMemory: TMemory; AStream: TStream): Boolean; CALLTYPE;
   { TForm1 }
   TForm1 = class(TForm)
     About:                 TAction;
@@ -180,6 +181,7 @@ resourcestring
   MSG26 = 'CoreLAB plugin status file|*.clpst|All file|*.*';
   MSG27 = 'Read-only!';
   MSG28 = 'The memory size can be 16 B-16 MB';
+  MSG29 = 'Only memory compatible with the standard bus can be used!';
 
 {$R *.lfm}
 
@@ -204,6 +206,7 @@ begin
         else PDescription := '';
       // read memory properties
       PAddressRangeSize := CurrentMemory.AddressRangeSize;
+      PBusType := CurrentMemory.BusType;
       PEnabled := CurrentMemory.Enabled;
       PMemoryMode := CurrentMemory.MemoryMode;
     end;
@@ -224,6 +227,7 @@ end;
 // REFRESH PROPERTY LIST
 procedure TForm1.RefreshProperties(Direction: TOpDirection);
 var
+  bt: TBusType;
   mm: TMemoryMode;
 begin
   if Direction = opVar2List then
@@ -253,6 +257,8 @@ begin
         for mm := Low(TMemoryMode) to High(TMemoryMode) do PickList.Add(mm.ToString);
         ReadOnly := True;
       end;
+      InsertRow('BusType', LoadedPlugin.PBusType.ToString, True);
+      ItemProps['BusType'].ReadOnly := True;
       InsertRow('AddressRangeSize', LoadedPlugin.PAddressRangeSize.ToString, True);
       ItemProps['AddressRangeSize'].ReadOnly := False;
       Row := 1;
@@ -543,6 +549,18 @@ begin
         Items[0].Text := '#' + FLoadCounter.ToString + ' ';
         Items[1].Text := ' ' + ShellListView1.Selected.Caption;
         Items[2].Text := '';
+      end;
+      // module with non-standard system bus
+      if LoadedPlugin.PBusType <> btStandard then
+      begin
+        with ActionList1 do
+        begin
+          Examine.Enabled := False;
+          Deposit.Enabled := False;
+          LoadStatus.Enabled := False;
+          SaveStatus.Enabled := False;
+        end;
+        ShowMessage(MSG29);
       end;
     end else
     begin

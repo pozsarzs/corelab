@@ -357,3 +357,7 @@ msgstr ""
 #: frmmain:msg27
 msgid "Interrupt request received with vector %s."
 msgstr ""
+
+#: frmmain:msg28
+msgid "Only I/O device compatible with the standard bus can be used!"
+msgstr ""
