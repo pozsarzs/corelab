@@ -402,6 +402,8 @@ object Form1: TForm1
           Align = alClient
           Caption = 'ToolBar2'
           Images = ImageList1
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 0
           object ToolButton1: TToolButton
             Left = 1
@@ -492,6 +494,8 @@ object Form1: TForm1
           Align = alClient
           Caption = 'ToolBar3'
           Images = ImageList1
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 0
           object ToolButton2: TToolButton
             Left = 1
@@ -568,6 +572,8 @@ object Form1: TForm1
           Align = alClient
           Caption = 'ToolBar4'
           Images = ImageList1
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 0
           object ToolButton3: TToolButton
             Left = 1
@@ -673,6 +679,8 @@ object Form1: TForm1
           Align = alClient
           Caption = 'ToolBar5'
           Images = ImageList1
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 0
           object ToolButton4: TToolButton
             Left = 1
@@ -778,6 +786,8 @@ object Form1: TForm1
           Align = alClient
           Caption = 'ToolBar6'
           Images = ImageList1
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 0
           object ToolButton5: TToolButton
             Left = 1

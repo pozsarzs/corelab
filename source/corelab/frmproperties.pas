@@ -16,7 +16,8 @@ unit frmproperties;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ValEdit, core_cpu, core_memory, core_ioport, uconfig, uproperties, Grids, Types;
+  ValEdit, core_bus, core_cpu, core_memory, core_ioport, uconfig, uproperties,
+  Grids, Types;
 type
   { TForm15 }
   TForm15 = class(TForm)
@@ -220,16 +221,12 @@ procedure TForm15.FormShow(Sender: TObject);
         end;
         InsertRow(uproperties.IOPropertyInfoArray[4].Name, BoolToStr(APortInstance.HasPanel, 'true', 'false'), True);
         ItemProps[uproperties.IOPropertyInfoArray[4].Name].ReadOnly := not uproperties.IOPropertyInfoArray[4].Writable;
-        with ItemProps[uproperties.IOPropertyInfoArray[4].Name] do
-        begin
-          EditStyle := esPickList;
-          PickList.CommaText := 'true,false';
-          ReadOnly := True;
-        end;
         InsertRow(uproperties.IOPropertyInfoArray[6].Name, IntToStr(APortInstance.AddressRangeSize), True);
         ItemProps[uproperties.IOPropertyInfoArray[6].Name].ReadOnly := not uproperties.IOPropertyInfoArray[6].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(APortInstance.BaseAddress, 4), True);
         ItemProps[uproperties.IOPropertyInfoArray[5].Name].ReadOnly := not uproperties.IOPropertyInfoArray[5].Writable;
+        InsertRow(uproperties.IOPropertyInfoArray[16].Name, APortInstance.BusType.ToString, True);
+        ItemProps[uproperties.IOPropertyInfoArray[16].Name].ReadOnly := not uproperties.IOPropertyInfoArray[16].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[7].Name, IntToHex(APortInstance.IntVector, 2), True);
         ItemProps[uproperties.IOPropertyInfoArray[7].Name].ReadOnly := not uproperties.IOPropertyInfoArray[7].Writable;
         InsertRow(uproperties.IOPropertyInfoArray[8].Name, APortInstance.DataInMode.ToString, True);
@@ -319,6 +316,8 @@ procedure TForm15.FormShow(Sender: TObject);
         ItemProps[uproperties.MPropertyInfoArray[5].Name].ReadOnly := not uproperties.MPropertyInfoArray[5].Writable;
         InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(AMemInstance.BaseAddress, 4), True);
         ItemProps[uproperties.MPropertyInfoArray[4].Name].ReadOnly := not uproperties.MPropertyInfoArray[4].Writable;
+        InsertRow(uproperties.MPropertyInfoArray[7].Name, AMemInstance.BusType.ToString, True);
+        ItemProps[uproperties.MPropertyInfoArray[7].Name].ReadOnly := not uproperties.MPropertyInfoArray[7].Writable;
         InsertRow(uproperties.MPropertyInfoArray[6].Name, AMemInstance.MemoryMode.ToString, True);
         ItemProps[uproperties.MPropertyInfoArray[6].Name].ReadOnly := not uproperties.MPropertyInfoArray[6].Writable;
         with ItemProps[uproperties.MPropertyInfoArray[6].Name] do
@@ -360,6 +359,10 @@ procedure TForm15.FormShow(Sender: TObject);
         ItemProps[uproperties.PPropertyInfoArray[5].Name].ReadOnly := not uproperties.PPropertyInfoArray[5].Writable;
         InsertRow(uproperties.PPropertyInfoArray[6].Name, AProcInstance.Architecture.ToString, True);
         ItemProps[uproperties.PPropertyInfoArray[6].Name].ReadOnly := not uproperties.PPropertyInfoArray[6].Writable;
+        InsertRow(uproperties.PPropertyInfoArray[12].Name, AProcInstance.BusType.ToString, True);
+        ItemProps[uproperties.PPropertyInfoArray[12].Name].ReadOnly := not uproperties.PPropertyInfoArray[12].Writable;
+        InsertRow(uproperties.PPropertyInfoArray[13].Name, IntToStr(AProcInstance.DefaultClockFreq div 1000) + 'kHz', True);
+        ItemProps[uproperties.PPropertyInfoArray[13].Name].ReadOnly := not uproperties.IOPropertyInfoArray[13].Writable;
         InsertRow(uproperties.PPropertyInfoArray[7].Name, AProcInstance.Endianness.ToString, True);
         ItemProps[uproperties.PPropertyInfoArray[7].Name].ReadOnly := not uproperties.PPropertyInfoArray[7].Writable;
         InsertRow(uproperties.PPropertyInfoArray[8].Name, BoolToStr(AProcInstance.HasSeparateIOBus, 'true', 'false'), True);

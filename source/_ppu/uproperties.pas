@@ -16,7 +16,7 @@ unit uproperties;
 interface
 type
   TDataType = (dtBoolean, dtDWord, dtInteger, dtString, dtPChar, dtVersion,
-               dtMemoryMode, dtLineMode, dtArchitecture, dtEndianness);
+               dtMemoryMode, dtLineMode, dtArchitecture, dtEndianness, dtBusType);
   TPropertyInfo = record
     Name:     string;
     DataType: TDataType;
@@ -32,7 +32,7 @@ implementation
 
 initialization
   // I/O port
-  SetLength(IOPropertyInfoArray, 16);
+  SetLength(IOPropertyInfoArray, 17);
 begin
   with IOPropertyInfoArray[0] do
   begin
@@ -130,8 +130,14 @@ begin
     DataType := dtBoolean;
     Writable := False;
   end;
+  with IOPropertyInfoArray[16] do
+  begin
+    Name := 'BusType';
+    DataType := dtBusType;
+    Writable := False;
+  end;
   // MEMORY
-  SetLength(MPropertyInfoArray, 7);
+  SetLength(MPropertyInfoArray, 8);
   with MPropertyInfoArray[0] do
   begin
     Name := 'ModName';
@@ -174,8 +180,14 @@ begin
     DataType := dtMemoryMode;
     Writable := True;
   end;
+  with MPropertyInfoArray[7] do
+  begin
+    Name := 'BusType';
+    DataType := dtBusType;
+    Writable := False;
+  end;
   // CPU
-  SetLength(PPropertyInfoArray, 12);
+  SetLength(PPropertyInfoArray, 14);
   with PPropertyInfoArray[0] do
   begin
     Name := 'Modname';
@@ -245,6 +257,18 @@ begin
   with PPropertyInfoArray[11] do
   begin
     Name := 'MaxCodeAddress';
+    DataType := dtDWord;
+    Writable := False;
+  end;
+  with PPropertyInfoArray[12] do
+  begin
+    Name := 'BusType';
+    DataType := dtBusType;
+    Writable := False;
+  end;
+  with PPropertyInfoArray[13] do
+  begin
+    Name := 'DefaultClockFreq';
     DataType := dtDWord;
     Writable := False;
   end;

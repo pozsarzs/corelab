@@ -16,8 +16,8 @@ unit frmmoduleexplorer;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, EditBtn,
-  ExtCtrls, ValEdit, Menus, uconfig, Types, LCLType, core_cpu, core_ioport,
-  core_memory, ucommon, uproperties;
+  ExtCtrls, ValEdit, Menus, uconfig, Types, LCLType, core_bus, core_cpu,
+  core_ioport, core_memory, ucommon, uproperties;
 type
   { TForm9 }
   TForm9 = class(TForm)
@@ -112,6 +112,7 @@ var
         InsertRow(uproperties.IOPropertyInfoArray[4].Name, BoolToStr(PortInfo.Port.HasPanel, 'true', 'false'), True);
         InsertRow(uproperties.IOPropertyInfoArray[6].Name, IntToStr(PortInfo.Port.AddressRangeSize), True);
         InsertRow(uproperties.IOPropertyInfoArray[5].Name, IntToHex(PortInfo.Port.BaseAddress, 4), True);
+        InsertRow(uproperties.IOPropertyInfoArray[16].Name, PortInfo.Port.BusType.ToString, True);
         InsertRow(uproperties.IOPropertyInfoArray[7].Name, IntToHex(PortInfo.Port.IntVector, 2), True);
         InsertRow(uproperties.IOPropertyInfoArray[8].Name, PortInfo.Port.DataInMode.ToString, True);
         InsertRow(uproperties.IOPropertyInfoArray[9].Name, BoolToStr(PortInfo.Port.DataInNegation, True), True);
@@ -146,6 +147,7 @@ var
         InsertRow(uproperties.MPropertyInfoArray[3].Name, BoolToStr(MemInfo.Memory.Enabled, 'true', 'false'), True);
         InsertRow(uproperties.MPropertyInfoArray[5].Name, IntToStr(MemInfo.Memory.AddressRangeSize), True);
         InsertRow(uproperties.MPropertyInfoArray[4].Name, IntToHex(MemInfo.Memory.BaseAddress, 4), True);
+        InsertRow(uproperties.MPropertyInfoArray[7].Name, MemInfo.Memory.BusType.ToString, True);
         InsertRow(uproperties.MPropertyInfoArray[6].Name, MemInfo.Memory.MemoryMode.ToString, True);
         InsertRow('Attached to bus', BoolToStr(MemInfo.AttachedToBus, 'true', 'false'), True);
         ValueListEditor1.TopRow := 1;
@@ -172,6 +174,8 @@ var
         InsertRow(uproperties.PPropertyInfoArray[3].Name, BoolToStr(ProcInfo.Processor.Enabled, 'true', 'false'), True);
         InsertRow(uproperties.MPropertyInfoArray[5].Name, IntToStr(ProcInfo.Processor.AddressWidth), True);
         InsertRow(uproperties.PPropertyInfoArray[6].Name, ProcInfo.Processor.Architecture.ToString, True);
+        InsertRow(uproperties.PPropertyInfoArray[12].Name, ProcInfo.Processor.BusType.ToString, True);
+        InsertRow(uproperties.PPropertyInfoArray[13].Name, IntToStr(ProcInfo.Processor.DefaultClockFreq div 1000) + 'kHz', True);
         InsertRow(uproperties.PPropertyInfoArray[7].Name, ProcInfo.Processor.Endianness.ToString, True);
         InsertRow(uproperties.PPropertyInfoArray[8].Name, BoolToStr(ProcInfo.Processor.HasSeparateIOBus, 'true', 'false'), True);
         InsertRow(uproperties.PPropertyInfoArray[9].Name, IntToHex(ProcInfo.Processor.MaxIOPortAddress, 4), True);
