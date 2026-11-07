@@ -50,7 +50,9 @@ type
     FModname:          PChar;                                     // Module name
     FVersion:          TSemanticVersion;                       // Module version
     FOnDestroy:        TMemoryDestroyEvent;
-    procedure SetFAddressRangeSize(AAddressRangeSize: DWord);
+    procedure SetFAddressRangeSize(AAddressRangeSize: DWord); virtual;
+    procedure SetFBaseAddress(ABaseAddress: DWord); virtual;
+    procedure SetFMemoryMode(AMemoryMode: TMemoryMode); virtual;
   public
     constructor Create; virtual;
     destructor Destroy; override;
@@ -63,11 +65,11 @@ type
     procedure SaveToStream(AStream: TStream; AAddress, ACount: DWord); virtual;
     // properties
     property AddressRangeSize: DWord read FAddressRangeSize write SetFAddressRangeSize;
-    property BaseAddress: DWord read FBaseAddress write FBaseAddress;
+    property BaseAddress: DWord read FBaseAddress write SetFBaseAddress;
     property BusType: TBusType read FBusType;
     property Description: PChar read FDescription;
     property Enabled: Boolean read FEnabled write FEnabled;
-    property MemoryMode: TMemoryMode read FMemoryMode write FMemoryMode;
+    property MemoryMode: TMemoryMode read FMemoryMode write SetFMemoryMode;
     property ModName: PChar read FModname;
     property Version: TSemanticVersion read FVersion;
     property OnDestroy: TMemoryDestroyEvent read FOnDestroy write FOnDestroy;
@@ -121,6 +123,18 @@ begin
     if FAddressRangeSize > dw then FAddressRangeSize := dw;
     SetLength(FMemCells, FAddressRangeSize);
   end;
+end;
+
+// SET BASE ADDRESS
+procedure TMemory.SetFBaseAddress(ABaseAddress: DWord);
+begin
+  FBaseAddress := ABaseAddress;
+end;
+
+// SET MEMORY MODE
+procedure TMemory.SetFMemoryMode(AMemoryMode: TMemoryMode);
+begin
+  FMemoryMode := AMemoryMode;
 end;
 
 // ---- PUBLIC METHODS ----
