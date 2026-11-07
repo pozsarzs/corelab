@@ -28,21 +28,33 @@ uses
   simulationthread;
 type
   { TSysBus }
-  TSysBus = class(TInterfacedObject, ISysBus)
+  TSysBus = class(TInterfacedObject, ISysBus, IMCS4Bus)
     FCPUs:     array of TBusProc;
     FMemories: array of TBusMem;
     FIOPorts:  array of TBusPort;
   public
+    // common
     function AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
     function AttachMemory(const AModuleName: string; AMemory: TMemory): Byte;
     function AttachIOPort(const AModuleName: string; AIOPort: TIOPort): Byte;
     function DetachCPU(const AModuleName: string): Byte;
     function DetachMemory(const AModuleName: string): Byte;
     function DetachIOPort(const AModuleName: string): Byte;
+    // ISysBus
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
     function ReadPort(APort: DWord): Byte;
     procedure WritePort(APort: DWord; AValue: Byte);
+    // IMCS4Bus
+    procedure SendSRC(AAddress: Byte);
+    function ReadRAM: Byte;
+    procedure WriteRAM(AData: Byte);
+    function ReadRAMStatus(AIndex: Byte): Byte;
+    procedure WriteRAMStatus(AIndex: Byte; AData: Byte);
+    procedure WriteRAMIOPort(AData: Byte);
+    function ReadROM(AAddress: Word): Byte;
+    function ReadROMIOPort: Byte;
+    procedure WriteROMIOPort(AData: Byte);
   end;
   { TForm1 }
   TForm1 = class(TForm)
@@ -650,302 +662,9 @@ resourcestring
 
 // ---- PUBLIC METHODS ----
 
-// ATTACH CPU TO SYSTEM BUS
-function TSysBus.AttachCPU(const AModuleName: string; ACPU: TCPU): Byte;
-var
-  i: Integer;
-begin
-  // module name is valid?
-  Result := 1;
-  if (AModuleName = '') or not Assigned(ACPU) then Exit;
-  // already is attached?
-  Result := 2;
-  for i := 0 to High(FCPUs) do
-    if FCPUs[i].ModuleName = AModuleName then Exit;
-  // one CPU is allowed
-  Result := 3;
-  if Length(FCPUs) >= 1 then Exit;
-  // create entry
-  SetLength(FCPUs, Length(FCPUs) + 1);
-  with FCPUs[High(FCPUs)] do
-  begin
-    ModuleName := AModuleName;
-    CPU := ACPU;
-  end;
-  Result := 0;
-end;
-
-// ATTACH MEMORY TO SYSTEM BUS
-function TSysBus.AttachMemory(const AModuleName: string; AMemory: TMemory): Byte;
-var
-  i: Integer;
-begin
-  // module name is valid?
-  Result := 1;
-  if (AModuleName = '') or not Assigned(AMemory) then Exit;
-  // already is attached?
-  Result := 2;
-  for i := 0 to High(FMemories) do
-    if FMemories[i].ModuleName = AModuleName then Exit;
-  // create entry
-  SetLength(FMemories, Length(FMemories) + 1);
-  with FMemories[High(FMemories)] do
-  begin
-    ModuleName := AModuleName;
-    Memory := AMemory;
-  end;
-  Result := 0;
-end;
-
-// ATTACH I/O PORT TO SYSTEM BUS
-function TSysBus.AttachIOPort(const AModuleName: string; AIOPort: TIOPort): Byte;
-var
-  i: Integer;
-begin
-  // module name is valid?
-  Result := 1;
-  if (AModuleName = '') or not Assigned(AIOPort) then Exit;
-  // already is attached?
-  Result := 2;
-  for i := 0 to High(FIOPorts) do
-    if FIOPorts[i].ModuleName = AModuleName then Exit;
-  // create entry
-  SetLength(FIOPorts, Length(FIOPorts) + 1);
-  with FIOPorts[High(FIOPorts)] do
-  begin
-    ModuleName := AModuleName;
-    IOPort := AIOPort;
-  end;
-  Result := 0;
-end;
-
-// DETACH CPU FROM SYSTEM BUS
-function TSysBus.DetachCPU(const AModuleName: string): Byte;
-var
-  i: Integer;
-begin
-  // module name is valid?
-  Result := 1;
-  if AModuleName = '' then Exit;
-  // already is detached?
-  Result := 2;
-  for i := 0 to High(FCPUs) do
-    if FCPUs[i].ModuleName = AModuleName then
-    begin
-      // remove entry
-      if i < High(FCPUs) then FCPUs[i] := FCPUs[High(FCPUs)];
-      SetLength(FCPUs, Length(FCPUs) - 1);
-      Result := 0;
-      Exit;
-    end;
-end;
-
-// DETACH MEMORY FROM SYSTEM BUS
-function TSysBus.DetachMemory(const AModuleName: string): Byte;
-var
-  i: Integer;
-begin
-  // module name is valid?
-  Result := 1;
-  if AModuleName = '' then Exit;
-  // already is detached?
-  Result := 2;
-  for i := 0 to High(FMemories) do
-    if FMemories[i].ModuleName = AModuleName then
-    begin
-      // remove entry
-      if i < High(FMemories) then FMemories[i] := FMemories[High(FMemories)];
-      SetLength(FMemories, Length(FMemories) - 1);
-      Result := 0;
-      Exit;
-    end;
-end;
-
-// DETACH I/O PORT FROM SYSTEM BUS
-function TSysBus.DetachIOPort(const AModuleName: string): Byte;
-var
-  i: Integer;
-begin
-  // module name is valid?
-  Result := 1;
-  if AModuleName = '' then Exit;
-  // already detached?
-  Result := 2;
-  for i := 0 to High(FIOPorts) do
-    if FIOPorts[i].ModuleName = AModuleName then
-    begin
-      // remove entry
-      if i < High(FIOPorts) then FIOPorts[i] := FIOPorts[High(FIOPorts)];
-      SetLength(FIOPorts, Length(FIOPorts) - 1);
-      Result := 0;
-      Exit;
-    end;
-end;
-
-// READ MEMORY
-function TSysBus.ReadMemory(AAddress: DWord): Byte;
-var
-  BusLogRec: TBusLogRec;
-  i:         Integer;
-  s:         string;
-begin
-  s := '';
-  // default output values
-  Result := 0;
-  with BusLogRec do
-  begin
-    Operation := 'MEMRD';
-    Device := MSG110;                                                 { 'none' }
-    FormatHexValue(IntToHex(AAddress, 6), 6, s);
-    Address := s;
-    RelAddress := MSG110;
-    Data := MSG110;
-    Status := MSG112;                                            { 'Unsuccess' }
-  end;
-  // check address-conflict
-  for i := 0 to High(FMemories) do
-    with FMemories[i].Memory do
-      if Enabled and
-       (AAddress >= BaseAddress) and
-       (AAddress < BaseAddress + AddressRangeSize) then
-      begin
-        // operation
-        Result := ReadMemory(AAddress - BaseAddress);
-        with BusLogRec do
-        begin
-          Device := FMemories[i].ModuleName;
-          FormatHexValue(IntToHex(AAddress - FMemories[i].Memory.BaseAddress, 6), 6, s);
-          RelAddress := s;
-          FormatHexValue(IntToHex(Result, 2), 2, s);
-          Data := s;
-          Status := MSG111;                                        { 'Success' }
-        end;
-        Break;
-      end;
-  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
-end;
-
-// WRITE MEMORY
-procedure TSysBus.WriteMemory(AAddress: DWord; AValue: Byte);
-var
-  BusLogRec: TBusLogRec;
-  i:         Integer;
-  s:         string;
-begin
-  s := '';
-  // default output values
-  with BusLogRec do
-  begin
-    Operation := 'MEMWR';
-    Device := MSG110;                                                 { 'none' }
-    FormatHexValue(IntToHex(AAddress, 6), 6, s);
-    Address := s;
-    RelAddress := MSG110;
-    FormatHexValue(IntToHex(AValue, 2), 2, s);
-    Data := s;
-    Status := MSG112;                                            { 'Unsuccess' }
-  end;
-  // check address-conflict
-  for i := 0 to High(FMemories) do
-    with FMemories[i].Memory do
-      if Enabled and
-       (AAddress >= BaseAddress) and
-       (AAddress < BaseAddress + AddressRangeSize) then
-      begin
-        WriteMemory(AAddress - BaseAddress, AValue);
-        with BusLogRec do
-        begin
-          Device := FMemories[i].ModuleName;
-          FormatHexValue(IntToHex(AAddress - FMemories[i].Memory.BaseAddress, 6), 6, s);
-          RelAddress := s;
-          Status := MSG111;                                        { 'Success' }
-        end;
-        Break;
-      end;
-  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
-end;
-
-// READ I/O PORT
-function TSysBus.ReadPort(APort: DWord): Byte;
-var
-  BusLogRec: TBusLogRec;
-  i:         Integer;
-  s:         string;
-begin
-  s := '';
-  // default output values
-  Result := 0;
-  with BusLogRec do
-  begin
-    Operation := 'IORD';
-    Device := MSG110;                                                 { 'none' }
-    FormatHexValue(IntToHex(APort, 6), 6, s);
-    Address := s;
-    RelAddress := MSG110;
-    Data := MSG110;
-    Status := MSG112;                                            { 'Unsuccess' }
-  end;
-  // check address-conflict
-  for i := 0 to High(FIOPorts) do
-    with FIOPorts[i].IOPort do
-      if Enabled and
-       (APort >= BaseAddress) and
-       (APort < BaseAddress + AddressRangeSize) then
-      begin
-        Result := ReadPort(APort - BaseAddress);
-        with BusLogRec do
-        begin
-          Device := FIOPorts[i].ModuleName;
-          FormatHexValue(IntToHex(APort - FIOPorts[i].IOPort.BaseAddress, 6), 6, s);
-          RelAddress := s;
-          FormatHexValue(IntToHex(Result, 2), 2, s);
-          Data := s;
-          Status := MSG111;                                        { 'Success' }
-        end;
-        Break;
-      end;
-  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
-end;
-
-// WRITE I/O PORT
-procedure TSysBus.WritePort(APort: DWord; AValue: Byte);
-var
-  BusLogRec: TBusLogRec;
-  i:         Integer;
-  s:         string;
-begin
-  s := '';
-  // default output values
-  with BusLogRec do
-  begin
-    Operation := 'IOWR';
-    Device := MSG110;                                                 { 'none' }
-    FormatHexValue(IntToHex(APort, 6), 6, s);
-    Address := s;
-    RelAddress := MSG110;
-    FormatHexValue(IntToHex(AValue, 2), 2, s);
-    Data := s;
-    Status := MSG112;                                            { 'Unsuccess' }
-  end;
-  // check address-conflict
-  for i := 0 to High(FIOPorts) do
-    with FIOPorts[i].IOPort do
-      if Enabled and
-       (APort >= BaseAddress) and
-       (APort < BaseAddress + AddressRangeSize) then
-      begin
-        WritePort(APort - BaseAddress, AValue);
-        with BusLogRec do
-        begin
-          Device := FIOPorts[i].ModuleName;
-          FormatHexValue(IntToHex(APort - FIOPorts[i].IOPort.BaseAddress, 6), 6, s);
-          RelAddress := s;
-          Status := MSG111;                                        { 'Success' }
-        end;
-        Break;
-      end;
-  if Assigned(Form14) then Form14.AppendRecord(BusLogrec);
-end;
+{$I tsysbus-common.pas}
+{$I tsysbus-isysbus.pas}
+{$I tsysbus-imcs4bus.pas}
 
 { TForm1 }
 
