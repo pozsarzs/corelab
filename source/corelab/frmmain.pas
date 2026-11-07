@@ -28,7 +28,7 @@ uses
   simulationthread;
 type
   { TSysBus }
-  TSysBus = class(TInterfacedObject, ISysBus, IMCS4Bus)
+  TSysBus = class(TInterfacedObject, IStandardBus, IMCS4Bus)
     FCPUs:     array of TBusProc;
     FMemories: array of TBusMem;
     FIOPorts:  array of TBusPort;
@@ -40,7 +40,7 @@ type
     function DetachCPU(const AModuleName: string): Byte;
     function DetachMemory(const AModuleName: string): Byte;
     function DetachIOPort(const AModuleName: string): Byte;
-    // ISysBus
+    // IStandardBus
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
     function ReadPort(APort: DWord): Byte;
@@ -663,7 +663,7 @@ resourcestring
 // ---- PUBLIC METHODS ----
 
 {$I tsysbus-common.pas}
-{$I tsysbus-isysbus.pas}
+{$I tsysbus-istandardbus.pas}
 {$I tsysbus-imcs4bus.pas}
 
 { TForm1 }

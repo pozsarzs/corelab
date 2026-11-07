@@ -33,8 +33,8 @@ type
     function ToString: string;
     function FromString(const Value: string): TBusType;
   end;
-  { ISysBus }
-  ISysBus = interface
+  { IStandardBus }
+  IStandardBus = interface
     ['{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}']
     // memory functions
     function ReadMemory(AAddress: DWord): Byte;

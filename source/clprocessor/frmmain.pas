@@ -53,7 +53,7 @@ type
   TLoadStateFunc  =       function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   TSaveStateFunc =        function(AProcessor: TCPU; AStream: TStream): Boolean; CALLTYPE;
   { TTestSysBus }
-  TTestSysBus = class(TInterfacedObject, ISysBus)
+  TTestSysBus = class(TInterfacedObject, IStandardBus)
     function ReadMemory(AAddress: DWord): Byte;
     procedure WriteMemory(AAddress: DWord; AValue: Byte);
     function ReadPort(APort: DWord): Byte;
@@ -223,7 +223,7 @@ type
     CurrentProcessor: TCPU;                    // created object from TCPU class
     LibHandle:        TLibHandle;                 // handle of the loaded module
     LoadedPlugin:     TPluginAttributes;      // properties of the loaded module
-    FTestSysBus:      ISysBus;                      // Test system bus interface
+    FTestSysBus:      IStandardBus;                 // Test system bus interface
     // pointers to the plugin entry point
     CreateProcessor:  TCreateProcessorFunc;           // create plugin processor
     DestroyProcessor: TDestroyProcessorProc;         // destroy plugin processor

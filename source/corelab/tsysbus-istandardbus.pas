@@ -31,10 +31,11 @@ begin
     Data := MSG110;
     Status := MSG112;                                            { 'Unsuccess' }
   end;
-  // check address-conflict
+  // check bus type and address-conflict
   for i := 0 to High(FMemories) do
     with FMemories[i].Memory do
       if Enabled and
+       (BusType = btStandard) and
        (AAddress >= BaseAddress) and
        (AAddress < BaseAddress + AddressRangeSize) then
       begin
@@ -74,10 +75,11 @@ begin
     Data := s;
     Status := MSG112;                                            { 'Unsuccess' }
   end;
-  // check address-conflict
+  // check bus type and address-conflict
   for i := 0 to High(FMemories) do
     with FMemories[i].Memory do
       if Enabled and
+       (BusType = btStandard) and
        (AAddress >= BaseAddress) and
        (AAddress < BaseAddress + AddressRangeSize) then
       begin
@@ -114,10 +116,11 @@ begin
     Data := MSG110;
     Status := MSG112;                                            { 'Unsuccess' }
   end;
-  // check address-conflict
+  // check bus type and address-conflict
   for i := 0 to High(FIOPorts) do
     with FIOPorts[i].IOPort do
       if Enabled and
+       (BusType = btStandard) and
        (APort >= BaseAddress) and
        (APort < BaseAddress + AddressRangeSize) then
       begin
@@ -156,10 +159,11 @@ begin
     Data := s;
     Status := MSG112;                                            { 'Unsuccess' }
   end;
-  // check address-conflict
+  // check bus type and address-conflict
   for i := 0 to High(FIOPorts) do
     with FIOPorts[i].IOPort do
       if Enabled and
+       (BusType = btStandard) and
        (APort >= BaseAddress) and
        (APort < BaseAddress + AddressRangeSize) then
       begin

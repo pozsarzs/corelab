@@ -7,6 +7,7 @@
       <Unit>
         <Filename Value="corelab.lpr"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <UsageCount Value="216"/>
         <Loaded Value="True"/>
       </Unit>
@@ -68,8 +69,8 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
+        <CursorPos X="35" Y="14"/>
         <UsageCount Value="206"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -347,7 +348,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="45"/>
-        <UsageCount Value="194"/>
+        <UsageCount Value="199"/>
       </Unit>
       <Unit>
         <Filename Value="scriptengine/scriptruntime.pas"/>
@@ -355,7 +356,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="223"/>
         <CursorPos X="38" Y="233"/>
-        <UsageCount Value="120"/>
+        <UsageCount Value="125"/>
       </Unit>
       <Unit>
         <Filename Value="projectengine/projectengine.pas"/>
@@ -363,7 +364,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos X="48" Y="27"/>
-        <UsageCount Value="120"/>
+        <UsageCount Value="125"/>
       </Unit>
       <Unit>
         <Filename Value="../_ext/convert/convert.pas"/>
@@ -372,7 +373,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="212"/>
         <CursorPos X="22" Y="219"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="58"/>
       </Unit>
       <Unit>
         <Filename Value="commandengine/cmd-p.pas"/>
@@ -561,8 +562,14 @@
         <CursorPos X="44" Y="615"/>
         <UsageCount Value="7"/>
       </Unit>
+      <Unit>
+        <Filename Value="tsysbus-imcs4bus.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="47" Y="226"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="5">
+    <JumpHistory HistoryIndex="6">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="556" Column="44" TopLine="504"/>
@@ -586,6 +593,10 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="338" Column="44" TopLine="317"/>
+      </Position>
+      <Position>
+        <Filename Value="frmmain.pas"/>
+        <Caret Line="14" Column="35"/>
       </Position>
     </JumpHistory>
     <RunParams>
