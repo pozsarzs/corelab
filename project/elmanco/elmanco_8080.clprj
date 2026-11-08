@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoreLAB_Workspace version="1.0">
+  <Modules>
+    <TCPU id="Processor" type="cpu_8080">
+      <Enabled>false</Enabled>
+      <AttachedToBus>false</AttachedToBus>
+    </TCPU>
+    <TIOPort id="Buttons" type="ioport_button8">
+      <BaseAddress>000001</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>CF</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>Hit #1!</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>500-550</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
+    <TIOPort id="LEDs" type="ioport_ledgreen8">
+      <BaseAddress>000002</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>00</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>Result</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>500-350</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
+    <TIOPort id="Display" type="ioport_disp4hexmuxbcd">
+      <BaseAddress>000003</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>00</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>* * * El Manco * * *</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>300-400</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
+    <TMemory id="RAM" type="memory_standard">
+      <BaseAddress>00</BaseAddress>
+      <AddressRangeSize>1024</AddressRangeSize>
+      <MemoryMode>mmRAM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+    </TMemory>
+  </Modules>
+</CoreLAB_Workspace>

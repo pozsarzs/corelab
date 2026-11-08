@@ -1,0 +1,30 @@
+; +----------------------------------------------------------------------------+
+; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+; | elmanco_8080.lst                                                           |
+; | El Manco testprogram for 8080 processor                                    |
+; +----------------------------------------------------------------------------+
+; This program is free software: you can redistribute it and/or modify it
+; under the terms of the European Union Public License 1.2 version.
+;
+; This program is distributed in the hope that it will be useful, but WITHOUT
+; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+; FOR A PARTICULAR PURPOSE.
+
+			; ---- CONSTANTS ----
+			PRT_BTN	EQU	10h		; I/O base addresses
+			PRT_DSP	EQU	20h
+			PRT_LED	EQU	25h
+
+			; ---- ENTRIES ----
+				ORG	0000h
+0000	C3 00 01		JMP     START		; reset vector
+
+        			ORG     0008h
+0008	C3 ?? ??        	JMP     BTNINT		; RST 1 interrupt vector
+
+			; ---- MAIN PROGRAM ----
+        			ORG     0100h
+			START:				; START MAIN PROGRAM
+0100	31 00 04		LXI     SP, 0400h       ; set stack pointer to top of 1KB RAM
+0103	FB			EI			; enable interrupt
