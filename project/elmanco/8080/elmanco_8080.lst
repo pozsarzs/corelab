@@ -1,7 +1,7 @@
 ; +----------------------------------------------------------------------------+
 ; | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
 ; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
-; | elmanco_8080.lst                                                           |
+; | elmanco_8080.asm                                                           |
 ; | El Manco testprogram for 8080 processor                                    |
 ; +----------------------------------------------------------------------------+
 ; This program is free software: you can redistribute it and/or modify it
@@ -15,16 +15,231 @@
 			PRT_BTN	EQU	10h		; I/O base addresses
 			PRT_DSP	EQU	20h
 			PRT_LED	EQU	25h
-
+			
 			; ---- ENTRIES ----
 				ORG	0000h
 0000	C3 00 01		JMP     START		; reset vector
 
         			ORG     0008h
-0008	C3 ?? ??        	JMP     BTNINT		; RST 1 interrupt vector
+0008	C3 BTNINT        	JMP     BTNINT		; RST 1 interrupt vector
 
 			; ---- MAIN PROGRAM ----
         			ORG     0100h
 			START:				; START MAIN PROGRAM
 0100	31 00 04		LXI     SP, 0400h       ; set stack pointer to top of 1KB RAM
 0103	FB			EI			; enable interrupt
+			
+			LPMAIN:				; MAIN LOOP
+			; -- DECELERATION -- 
+0104	2A DELAY		LHLD	DELAY		; load delay counter value
+0107	2B			DCX	H		; decrement delay counter
+0108	22 DELAY		SHLD	DELAY		; store delay counter value
+010B	7C			MOV	A, H
+010C	B5			ORA	L
+010D	C2 SKDELAY		JNZ	SKDELAY		; if H or L <> 0 then skip main program 
+0110	21 00 10		LXI	H, 1000H	; reload counter
+0113	22 DELAY		SHLD	DELAY		; store counter value
+			
+			; -- DISPLAY --
+0116	CD DSPPROC		CALL	DSPPROC		; call display handler
+0119	CD LEDPROC		CALL	LEDPROC		; call LED handler
+			
+			; -- CHECK RUN STATE --
+011C	21 MACHINE		LXI	H, MACHINE	; H = machine state address
+011F	7E			MOV	A, M		; A = machine state
+0120	5F			MOV	E, A		; store machine state in E
+0121	FE 02			CPI	2		; check run state
+0123	C2 46 01		JNZ	SKRUN		; in other skip this block
+0126	0E 04			MVI	C, 4		; counter = 4
+			LPRUN:
+0128	0D			DCR	C		; decrement counter
+0129	21 REELS		LXI	H, REELS	; H = reels variable address
+012C	06 00			MVI	B, 0		; B = 0 (upper byte)
+012E	09			DAD	B		; HL = HL + BC
+012F	7E			MOV	A, M		; A = status of a reel
+0130	FE 01			CPI	1
+0132	CA 40 01		JZ	NXTRUN		; if it is stopped go next
+0135	21 DISPLAY		LXI	H, DISPLAY	; H = load display variable address
+0138	06 00			MVI	B, 0		; B = 0 (upper byte)
+013A	09			DAD	B		; HL = HL + BC
+013B	7E			MOV	A, M		; A = digit value
+013C	3C			INR	A		; increment value
+013D	E6 0F			ANI	0Fh		; masking value (0-FH)
+013F	77			MOV	M, A		; store digit value
+			NXTRUN:
+0140	79			MOV	A, C		; A = counter
+0141	FE 00			CPI	0		; if counter > 0 then go back
+0143	C2 28 01		JNZ	LPRUN
+			SKRUN:				; SKIP this block
+			
+			; -- CHECK WIN STATE --
+0146	7B			MOV	A, E		; A = machine state
+0147	FE 01			CPI	1		; check "STAND" machine state
+0149	C2 SKWIN		JNZ	SKWIN		; in other skip this block
+			
+				MVI	C, 3		; counter = 3
+				LXI	H, DISPLAY	; H = display variable address
+				MOV	D, M		; D = digit value
+			LPWIN:
+				INX	H		; increment variable address
+				MOV	A, M		; A = next digit value
+				CMP	D		; compare first and next value
+				JNZ	LOSE		; if not equivalent go to lose
+				DCR	C		; decrement counter
+				MOV	A, C		; A = counter
+				CPI	0		; if counter > 0 then go back
+				JNZ	LPWIN
+				LXI	H, MACHINE	; H = machine variable address 
+				MVI	E, 3		; set machine state to "WIN"
+				MVI	M, 3		; set machine state to "WIN"
+				JMP	SKWIN		; exit from block
+			LOSE:
+				LXI	H, MACHINE	; H = machine variable address 
+				MVI	E, 4		; set machine state to "LOSE"
+				MVI	M, 4		; set machine state to "LOSE"
+			SKWIN:				; SKIP this block
+			
+			; -- CHECK EXIT STATE --
+				LXI	H, MACHINE	; H = machine state address
+				MOV	A, M		; A = machine state
+				CPI	5
+				JZ	EXIT		; if machine state is "EXIT" go exit
+			SKDELAY:
+				JMP	LPMAIN		; go back
+			EXIT:
+				DI			; disable interrupt
+				HLT			; exit program
+			
+			; ---- BUTTON HANDLER ----
+			BTNINT:
+				DI
+			        PUSH    PSW
+			        PUSH    H
+			        PUSH	B
+			        IN      PRT_BTN
+			        MOV	B, A
+			B0_BTN:				; START MACHINE
+				MOV	A, B
+			        ANI	01H
+			        JNZ	B1_BTN
+			
+			        XRA	A		; unlock all reels
+				LXI	H, REELS	; H = reels state address
+				MOV	M, A		; set reel states to "SPINNING"
+				INX	H
+				MOV	M, A
+				INX	H
+				MOV	M, A
+				INX	H
+				MOV	M, A
+			
+				LXI	H, MACHINE	; H = machine state address
+				MVI	M, 2		; set machine state to "RUN"
+				JMP	RLSBTN
+			B1_BTN:				; STOP REEL #1
+				MOV	A, B
+			        ANI	02H
+				JNZ	B2_BTN
+				LXI	H, REELS	; H = reels state address
+				MVI	M, 1		; set reel state to "STOPPED"
+				JMP	RLSBTN
+			B2_BTN:				; STOP REEL #2
+				MOV	A, B
+			        ANI	04H
+				JNZ	B3_BTN
+				LXI	H, REELS + 1	; H = reels state address
+				MVI	M, 1		; set reel state to "STOPPED"
+				JMP	RLSBTN
+			B3_BTN:				; STOP REEL #3
+				MOV	A, B
+			        ANI	08H
+				JNZ	B4_BTN
+				LXI	H, REELS + 2	; H = reels state address
+				MVI	M, 1		; set reel state to "STOPPED"
+				JMP	RLSBTN
+			B4_BTN:				; STOP REEL #4
+				MOV	A, B
+			        ANI	10H
+				JNZ	B7_BTN
+				LXI	H, REELS + 3	; H = reels state address
+				MVI	M, 1		; set reel state to "STOPPED"
+				JMP	RLSBTN
+			B7_BTN:				; START MACHINE
+				MOV	A, B
+			        ANI	80H
+				JNZ	RLSBTN
+				LXI	H, MACHINE	; H = machine state address
+				MVI	M, 5		; set machine state to "EXIT"
+			RLSBTN:
+				LXI	H, REELS	; check all reel states
+				MOV	A, M
+				INX	H
+				ADD	M
+				INX	H
+				ADD	M
+				INX	H
+				ADD	M
+				CPI	4
+				JNZ	RETBTN		; if all are "STOPPED", set machine state to "STOP"
+				LXI	H, MACHINE	; H = machine state address
+				MVI	M, 1		; machine state = 1
+			RETBTN:
+				POP	B
+			        POP     H
+			        POP     PSW
+			        EI
+			        RET
+			
+			; ---- DISPLAY HANDLER ----
+			DSPPROC:
+				MVI	C, 4		; counter = 4
+			DSPLOOP:
+				DCR	C		; decrement counter
+				MOV	A, C		;
+				OUT	PRT_DSP + 1	; select display digit (3..0)
+				LXI	H, DISPLAY	; H = variable address
+				MVI	B, 0		; B = 0
+				DAD	B		; HL = HL + BC
+				MOV	A, M		; load digit value
+				OUT	PRT_DSP		; write to display
+				MOV	A, C		; A = counter
+				CPI	0
+				JNZ	DSPLOOP		; if not zero go back
+				RET
+			
+			; ---- LED HANDLER ----
+			LEDPROC:
+				LXI	H, MACHINE	; H = machine state address
+				MOV	A, M		; A = machine state
+				CPI	4
+				JNZ	ST3LED
+				MVI	A, 81H		; at state "LOSE"
+				OUT	PRT_LED
+				RET
+			ST3LED:
+				CPI	3
+				JNZ	ST2LED
+				MVI	A, 7EH		; at state "WIN"
+				OUT	PRT_LED
+				RET
+			ST2LED:
+				CPI	2
+				JNZ	ST1LED
+				LXI	H, RUNLGHT	; at state "RUN"
+				MOV	A, M
+				CMA
+				MOV	M, A
+				OUT	PRT_LED
+				RET
+			ST1LED:
+				XRA	A		; at other states
+				OUT	PRT_LED
+				RET
+			
+			; ---- VARIABLES ----
+			DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn) 
+			REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
+			MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
+			RUNLGHT	DB	AAH		; running light sample (AAH/55H)
+				END
+			
