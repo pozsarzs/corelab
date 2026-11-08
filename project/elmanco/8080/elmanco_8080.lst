@@ -21,7 +21,7 @@
 0000	C3 00 01		JMP     START		; reset vector
 
         			ORG     0008h
-0008	C3 BTNINT        	JMP     BTNINT		; RST 1 interrupt vector
+0008	C3 7F 01        	JMP     BTNINT		; RST 1 interrupt vector
 
 			; ---- MAIN PROGRAM ----
         			ORG     0100h
@@ -31,21 +31,21 @@
 			
 			LPMAIN:				; MAIN LOOP
 			; -- DECELERATION -- 
-0104	2A DELAY		LHLD	DELAY		; load delay counter value
+0104	2A 45 02		LHLD	DELAY		; load delay counter value
 0107	2B			DCX	H		; decrement delay counter
-0108	22 DELAY		SHLD	DELAY		; store delay counter value
+0108	22 45 02		SHLD	DELAY		; store delay counter value
 010B	7C			MOV	A, H
 010C	B5			ORA	L
-010D	C2 SKDELAY		JNZ	SKDELAY		; if H or L <> 0 then skip main program 
+010D	C2 7A 01		JNZ	SKDELAY		; if H or L <> 0 then skip main program 
 0110	21 00 10		LXI	H, 1000H	; reload counter
 0113	22 DELAY		SHLD	DELAY		; store counter value
 			
 			; -- DISPLAY --
-0116	CD DSPPROC		CALL	DSPPROC		; call display handler
-0119	CD LEDPROC		CALL	LEDPROC		; call LED handler
+0116	CD FB 01		CALL	DSPPROC		; call display handler
+0119	CD 11 02		CALL	LEDPROC		; call LED handler
 			
 			; -- CHECK RUN STATE --
-011C	21 MACHINE		LXI	H, MACHINE	; H = machine state address
+011C	21 43 02		LXI	H, MACHINE	; H = machine state address
 011F	7E			MOV	A, M		; A = machine state
 0120	5F			MOV	E, A		; store machine state in E
 0121	FE 02			CPI	2		; check run state
@@ -53,13 +53,13 @@
 0126	0E 04			MVI	C, 4		; counter = 4
 			LPRUN:
 0128	0D			DCR	C		; decrement counter
-0129	21 REELS		LXI	H, REELS	; H = reels variable address
+0129	21 3F 02		LXI	H, REELS	; H = reels variable address
 012C	06 00			MVI	B, 0		; B = 0 (upper byte)
 012E	09			DAD	B		; HL = HL + BC
 012F	7E			MOV	A, M		; A = status of a reel
 0130	FE 01			CPI	1
 0132	CA 40 01		JZ	NXTRUN		; if it is stopped go next
-0135	21 DISPLAY		LXI	H, DISPLAY	; H = load display variable address
+0135	21 3B 02 		LXI	H, DISPLAY	; H = load display variable address
 0138	06 00			MVI	B, 0		; B = 0 (upper byte)
 013A	09			DAD	B		; HL = HL + BC
 013B	7E			MOV	A, M		; A = digit value
@@ -75,171 +75,172 @@
 			; -- CHECK WIN STATE --
 0146	7B			MOV	A, E		; A = machine state
 0147	FE 01			CPI	1		; check "STAND" machine state
-0149	C2 SKWIN		JNZ	SKWIN		; in other skip this block
+0149	C2 71 01		JNZ	SKWIN		; in other skip this block
 			
-				MVI	C, 3		; counter = 3
-				LXI	H, DISPLAY	; H = display variable address
-				MOV	D, M		; D = digit value
+014C	0E 03			MVI	C, 3		; counter = 3
+014E	21 3B 02		LXI	H, DISPLAY	; H = display variable address
+0151	56			MOV	D, M		; D = digit value
 			LPWIN:
-				INX	H		; increment variable address
-				MOV	A, M		; A = next digit value
-				CMP	D		; compare first and next value
-				JNZ	LOSE		; if not equivalent go to lose
-				DCR	C		; decrement counter
-				MOV	A, C		; A = counter
-				CPI	0		; if counter > 0 then go back
-				JNZ	LPWIN
-				LXI	H, MACHINE	; H = machine variable address 
-				MVI	E, 3		; set machine state to "WIN"
-				MVI	M, 3		; set machine state to "WIN"
-				JMP	SKWIN		; exit from block
+0152	23			INX	H		; increment variable address
+0153	7E			MOV	A, M		; A = next digit value
+0154	BA			CMP	D		; compare first and next value
+0155	C2 69 01		JNZ	LOSE		; if not equivalent go to lose
+0158	0D			DCR	C		; decrement counter
+0159	79			MOV	A, C		; A = counter
+015A	FE 00			CPI	0		; if counter > 0 then go back
+015C	C2 52 01		JNZ	LPWIN
+015F	21 43 02		LXI	H, MACHINE	; H = machine variable address 
+0162	1E 03			MVI	E, 3		; set machine state to "WIN"
+0164	36 03			MVI	M, 3		; set machine state to "WIN"
+0166	C3 71 01		JMP	SKWIN		; exit from block
 			LOSE:
-				LXI	H, MACHINE	; H = machine variable address 
-				MVI	E, 4		; set machine state to "LOSE"
-				MVI	M, 4		; set machine state to "LOSE"
+0169	21 43 02		LXI	H, MACHINE	; H = machine variable address 
+016C	1E 04			MVI	E, 4		; set machine state to "LOSE"
+016E	36 04			MVI	M, 4		; set machine state to "LOSE"
 			SKWIN:				; SKIP this block
 			
 			; -- CHECK EXIT STATE --
-				LXI	H, MACHINE	; H = machine state address
-				MOV	A, M		; A = machine state
-				CPI	5
-				JZ	EXIT		; if machine state is "EXIT" go exit
+0171	21 43 02		LXI	H, MACHINE	; H = machine state address
+0174	7E			MOV	A, M		; A = machine state
+0175	FE 05			CPI	5
+0177	CA 7D 01		JZ	EXIT		; if machine state is "EXIT" go exit
 			SKDELAY:
-				JMP	LPMAIN		; go back
+017A	C3 04 01		JMP	LPMAIN		; go back
 			EXIT:
-				DI			; disable interrupt
-				HLT			; exit program
+017D	F3			DI			; disable interrupt
+017E	76			HLT			; exit program
 			
 			; ---- BUTTON HANDLER ----
 			BTNINT:
-				DI
-			        PUSH    PSW
-			        PUSH    H
-			        PUSH	B
-			        IN      PRT_BTN
-			        MOV	B, A
+017F	F3			DI
+0180	F5		        PUSH    PSW
+0181	E5		        PUSH    H
+0182	C5		        PUSH	B
+0183	DB 10		        IN      PRT_BTN
+0185	47		        MOV	B, A
 			B0_BTN:				; START MACHINE
-				MOV	A, B
-			        ANI	01H
-			        JNZ	B1_BTN
+0186	78			MOV	A, B
+0187	E6 01		        ANI	01H
+0189	C2 9F 01	        JNZ	B1_BTN
 			
-			        XRA	A		; unlock all reels
-				LXI	H, REELS	; H = reels state address
-				MOV	M, A		; set reel states to "SPINNING"
-				INX	H
-				MOV	M, A
-				INX	H
-				MOV	M, A
-				INX	H
-				MOV	M, A
+018C	AF		        XRA	A		; unlock all reels
+018D	21 3F 02		LXI	H, REELS	; H = reels state address
+0190	77			MOV	M, A		; set reel states to "SPINNING"
+0191	23			INX	H
+0192	77			MOV	M, A
+0193	23			INX	H
+0194	77			MOV	M, A
+0195	23			INX	H
+0196	77			MOV	M, A
 			
-				LXI	H, MACHINE	; H = machine state address
-				MVI	M, 2		; set machine state to "RUN"
-				JMP	RLSBTN
+0197	21 43 02		LXI	H, MACHINE	; H = machine state address
+019A	36 02			MVI	M, 2		; set machine state to "RUN"
+019C	C3 E2 01		JMP	RLSBTN
 			B1_BTN:				; STOP REEL #1
-				MOV	A, B
-			        ANI	02H
-				JNZ	B2_BTN
-				LXI	H, REELS	; H = reels state address
-				MVI	M, 1		; set reel state to "STOPPED"
-				JMP	RLSBTN
+019F	78			MOV	A, B
+01A0	E6 02		        ANI	02H
+01A2	C2 AD 01		JNZ	B2_BTN
+01A5	21 3F 02		LXI	H, REELS	; H = reels state address
+01A8	36 01			MVI	M, 1		; set reel state to "STOPPED"
+01AA	C3 E2 01		JMP	RLSBTN
 			B2_BTN:				; STOP REEL #2
-				MOV	A, B
-			        ANI	04H
-				JNZ	B3_BTN
-				LXI	H, REELS + 1	; H = reels state address
-				MVI	M, 1		; set reel state to "STOPPED"
-				JMP	RLSBTN
+01AD	78			MOV	A, B
+01AE	E6 04		        ANI	04H
+01B0	C2 BB 01		JNZ	B3_BTN
+01B3	21 3F 02		LXI	H, REELS + 1	; H = reels state address
+01B6	36 01			MVI	M, 1		; set reel state to "STOPPED"
+01B8	C3 E2 01		JMP	RLSBTN
 			B3_BTN:				; STOP REEL #3
-				MOV	A, B
-			        ANI	08H
-				JNZ	B4_BTN
-				LXI	H, REELS + 2	; H = reels state address
-				MVI	M, 1		; set reel state to "STOPPED"
-				JMP	RLSBTN
+01BB	78			MOV	A, B
+01BC	E6 08		        ANI	08H
+01BE	C2 C9 01		JNZ	B4_BTN
+01C1	21 3F 02		LXI	H, REELS + 2	; H = reels state address
+01C4	36 01			MVI	M, 1		; set reel state to "STOPPED"
+01C6	C3 E2 01		JMP	RLSBTN
 			B4_BTN:				; STOP REEL #4
-				MOV	A, B
-			        ANI	10H
-				JNZ	B7_BTN
-				LXI	H, REELS + 3	; H = reels state address
-				MVI	M, 1		; set reel state to "STOPPED"
-				JMP	RLSBTN
-			B7_BTN:				; START MACHINE
-				MOV	A, B
-			        ANI	80H
-				JNZ	RLSBTN
-				LXI	H, MACHINE	; H = machine state address
-				MVI	M, 5		; set machine state to "EXIT"
+01C9	78			MOV	A, B
+01CA	E6 10		        ANI	10H
+01CC	C2 D7 01		JNZ	B7_BTN
+01CF	21 3F 02		LXI	H, REELS + 3	; H = reels state address
+01D2	36 01			MVI	M, 1		; set reel state to "STOPPED"
+01D4	C3 E2 01		JMP	RLSBTN
+			B7_BTN:				; EXIT MACHINE
+01D7	78			MOV	A, B
+01D8	E6 80		        ANI	80H
+01DA	C2 E2 01		JNZ	RLSBTN
+01DD	21 43 02		LXI	H, MACHINE	; H = machine state address
+01E0	36 05			MVI	M, 5		; set machine state to "EXIT"
 			RLSBTN:
-				LXI	H, REELS	; check all reel states
-				MOV	A, M
-				INX	H
-				ADD	M
-				INX	H
-				ADD	M
-				INX	H
-				ADD	M
-				CPI	4
-				JNZ	RETBTN		; if all are "STOPPED", set machine state to "STOP"
-				LXI	H, MACHINE	; H = machine state address
-				MVI	M, 1		; machine state = 1
+01E2	21 3F 02		LXI	H, REELS	; check all reel states
+01E5	7E			MOV	A, M
+01E6	23			INX	H
+01E7	86			ADD	M
+01E8	23			INX	H
+01E9	86			ADD	M
+01EA	23			INX	H
+01EB	86			ADD	M
+01EC	FE 04			CPI	4
+01EE	C2 F6 01		JNZ	RETBTN		; if all are "STOPPED", set machine state to "STOP"
+01F1	21 43 02		LXI	H, MACHINE	; H = machine state address
+01F4	36 01			MVI	M, 1		; machine state = 1
 			RETBTN:
-				POP	B
-			        POP     H
-			        POP     PSW
-			        EI
-			        RET
+01F6	C1			POP	B
+01F7	E1		        POP     H
+01F8	F1		        POP     PSW
+01F9	FB		        EI
+01FA	C9		        RET
 			
 			; ---- DISPLAY HANDLER ----
 			DSPPROC:
-				MVI	C, 4		; counter = 4
+01FB	0E 04			MVI	C, 4		; counter = 4
 			DSPLOOP:
-				DCR	C		; decrement counter
-				MOV	A, C		;
-				OUT	PRT_DSP + 1	; select display digit (3..0)
-				LXI	H, DISPLAY	; H = variable address
-				MVI	B, 0		; B = 0
-				DAD	B		; HL = HL + BC
-				MOV	A, M		; load digit value
-				OUT	PRT_DSP		; write to display
-				MOV	A, C		; A = counter
-				CPI	0
-				JNZ	DSPLOOP		; if not zero go back
-				RET
+01FD	0D			DCR	C		; decrement counter
+01FE	79			MOV	A, C		;
+01FF	D3 21			OUT	PRT_DSP + 1	; select display digit (3..0)
+0201	21 3B 02		LXI	H, DISPLAY	; H = variable address
+0204	06 00			MVI	B, 0		; B = 0
+0206	09			DAD	B		; HL = HL + BC
+0207	7E			MOV	A, M		; load digit value
+0208	D3 20			OUT	PRT_DSP		; write to display
+020A	79			MOV	A, C		; A = counter
+020B	FE 00			CPI	0
+020D	C2 FD 01		JNZ	DSPLOOP		; if not zero go back
+0210	C9			RET
 			
 			; ---- LED HANDLER ----
 			LEDPROC:
-				LXI	H, MACHINE	; H = machine state address
-				MOV	A, M		; A = machine state
-				CPI	4
-				JNZ	ST3LED
-				MVI	A, 81H		; at state "LOSE"
-				OUT	PRT_LED
-				RET
+0211	21 43 02		LXI	H, MACHINE	; H = machine state address
+0214	7E			MOV	A, M		; A = machine state
+0215	FE 04			CPI	4
+0217	C2 1F 02		JNZ	ST3LED
+021A	3E 81			MVI	A, 81H		; at state "LOSE"
+021C	D3 25			OUT	PRT_LED
+021E	C9			RET
 			ST3LED:
-				CPI	3
-				JNZ	ST2LED
-				MVI	A, 7EH		; at state "WIN"
-				OUT	PRT_LED
-				RET
+021F	FE 03			CPI	3
+0221	C2 29 02		JNZ	ST2LED
+0224	3E 7E			MVI	A, 7EH		; at state "WIN"
+0226	D3 25			OUT	PRT_LED
+0228	C9			RET
 			ST2LED:
-				CPI	2
-				JNZ	ST1LED
-				LXI	H, RUNLGHT	; at state "RUN"
-				MOV	A, M
-				CMA
-				MOV	M, A
-				OUT	PRT_LED
-				RET
+0229	FE 02			CPI	2
+022B	C2 37 02		JNZ	ST1LED
+022E	21 44 02		LXI	H, RUNLGHT	; at state "RUN"
+0231	7E			MOV	A, M
+0232	2F			CMA
+0233	77			MOV	M, A
+0234	D3 25			OUT	PRT_LED
+0236	C9			RET
 			ST1LED:
-				XRA	A		; at other states
-				OUT	PRT_LED
-				RET
+0237	AF			XRA	A		; at other states
+0238	D3 25			OUT	PRT_LED
+023A	C9			RET
 			
 			; ---- VARIABLES ----
-			DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn) 
-			REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
-			MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
-			RUNLGHT	DB	AAH		; running light sample (AAH/55H)
+023B	01 02 03 04	DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn) 
+023F	00 00 00 00	REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
+0243	00		MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
+0244	AA		RUNLGHT	DB	AAH		; running light sample (AAH/55H)
+0245	10 27		DELAY	DW	10000		; delay loop value
 				END
 			

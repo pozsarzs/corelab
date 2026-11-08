@@ -175,7 +175,7 @@ B4_BTN:				; STOP REEL #4
 	LXI	H, REELS + 3	; H = reels state address
 	MVI	M, 1		; set reel state to "STOPPED"
 	JMP	RLSBTN
-B7_BTN:				; START MACHINE
+B7_BTN:				; EXIT MACHINE
 	MOV	A, B
         ANI	80H
 	JNZ	RLSBTN
@@ -252,4 +252,5 @@ DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn)
 REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
 MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
 RUNLGHT	DB	AAH		; running light sample (AAH/55H)
+DELAY	DW	10000		; delay loop value
 	END
