@@ -1,0 +1,39 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | lst2bin                                                                    |
+# | Convert list file to binary                                                |
+# +----------------------------------------------------------------------------+
+
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '${1}' is required to use the script."
+    return 127
+  fi
+}
+
+# check dependency
+chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
+# convert file
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <input.lst> <output.bin>"
+    exit 1
+fi
+awk '
+/^[0-9A-Fa-f]{4}[ \t]/ {
+    printf "%s:", $1
+    for (i = 2; i <= NF; i++) {
+        if ($i ~ /^[0-9A-Fa-f]{2}$/) {
+            printf " %s", $i
+        } else {
+            break
+        }
+    }
+    printf "\n"
+}' "$1" | xxd -r > "$2"
+echo "Done."
