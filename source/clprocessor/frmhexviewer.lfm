@@ -434,7 +434,7 @@ object Form3: TForm3
     ColCount = 1
     Columns = <    
       item
-        Title.Caption = 'Title'
+        Title.Caption = ''
       end>
     ExtendedSelect = False
     FixedCols = 0

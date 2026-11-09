@@ -132,8 +132,8 @@ msgid "Value (Hex)"
 msgstr "Érték (hex)"
 
 #: frmmain.msg18
-msgid "Missing help file."
-msgstr "Hiányzó súgófájl."
+msgid "Bad or missing help file."
+msgstr "Hiányzó vagy hibás súgófájl."
 
 #: frmmain.msg19
 msgid "Missing help viewer."
@@ -177,7 +177,7 @@ msgstr "Csak olvasható!"
 msgid "The memory size can be 16 B-16 MB"
 msgstr "A memóriaméret 16 B és 16 MB között lehet"
 
-#: frmmain:msg29
+#: frmmain.msg29
 msgid "Only memory compatible with the standard bus can be used!"
 msgstr "Csak a standard busszal kompatibilis memóriamodulok használhatóak!"
 

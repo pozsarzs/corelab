@@ -469,19 +469,19 @@ object Form4: TForm4
     ColCount = 4
     Columns = <    
       item
-        Title.Caption = 'Count'
+        Title.Caption = ''
         Width = 80
       end    
       item
-        Title.Caption = 'Address'
+        Title.Caption = ''
         Width = 80
       end    
       item
-        Title.Caption = 'Opcode'
+        Title.Caption = ''
         Width = 150
       end    
       item
-        Title.Caption = 'Mnemonic'
+        Title.Caption = ''
         Width = 150
       end>
     ExtendedSelect = False

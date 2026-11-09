@@ -86,7 +86,6 @@ msgid "Filename"
 msgstr "Fájlnév"
 
 #: frmmain.msg07
-#| msgid "Size"
 msgctxt "frmmain.msg07"
 msgid "Size"
 msgstr "Méret"
@@ -126,7 +125,6 @@ msgid "Only 8-bit hexadecimal values can be entered (00 - FF)!"
 msgstr "Csak 8 bites hexadecimális értékek adhatók meg (00 - FF)!"
 
 #: frmmain.msg16
-#| msgid "Caption"
 msgctxt "frmmain.msg16"
 msgid "Caption"
 msgstr "Felirat"
@@ -136,8 +134,8 @@ msgid "This is not a graphics plugin."
 msgstr "Ez nem grafikus bővítmény."
 
 #: frmmain.msg18
-msgid "Missing help file."
-msgstr "Hiányzó súgófájl."
+msgid "Bad or missing help file."
+msgstr "Hiányzó vagy hibás súgófájl."
 
 #: frmmain.msg19
 msgid "Missing help viewer."
@@ -178,7 +176,7 @@ msgstr "CoreLAB bővítményállapot-fájl|*.clpst|Minden fájl|*.*"
 msgid "Interrupt request received with vector %s."
 msgstr "Megszakítási kérelem érkezett a(z) %s vektorral."
 
-#: frmmain:msg28
+#: frmmain.msg28
 msgid "Only I/O device compatible with the standard bus can be used!"
 msgstr "Csak a standard busszal kompatibilis I/O eszközök használhatóak!"
 
@@ -213,7 +211,6 @@ msgid "Load status"
 msgstr "Állapot betöltése"
 
 #: tform1.menuitem1.caption
-#| msgid "Filename"
 msgid "&File"
 msgstr "&Fájl"
 
@@ -394,7 +391,6 @@ msgid "Set panel caption"
 msgstr "Panel feliratának beállítása"
 
 #: tform3.label1.caption
-#| msgid "Caption"
 msgctxt "tform3.label1.caption"
 msgid "Caption"
 msgstr "Felirat"
@@ -414,7 +410,6 @@ msgid "Set panel size and position"
 msgstr "Panel méretének és helyzetének beállítása"
 
 #: tform4.groupbox1.caption
-#| msgid "Size"
 msgctxt "tform4.groupbox1.caption"
 msgid "Size"
 msgstr "Méret"

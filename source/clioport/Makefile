@@ -33,9 +33,9 @@ all:
 	  msgcat --unique $(outdir)/*.unique.po -o $(podir)/$(project).pot; \
 	  rm -f $(outdir)/*.po; \
 	fi
-	@if [ -f $(podir)/$(project).pot ]; then \
-	  cp $(podir)/$(project).pot  ../../message/; \
-	fi
+#	@if [ -f $(podir)/$(project).pot ]; then \
+#	  cp $(podir)/$(project).pot  ../../message/; \
+#	fi
 
 clean:
 	@$(rm) $(outdir)/*

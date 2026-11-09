@@ -208,12 +208,15 @@ begin
   s:=FMOFile.Translate(Content);
   if s = '' then
   begin
-    Component := Instance as TComponent;
-    if Component.Owner<>nil then
-      Section := UpperCase(Component.Owner.Name) + '.';
-    Section := 'T' + Section + UpperCase(Component.Name) + '.' +
-      UpperCase(PropInfo^.Name);
-    s := FMoFile.Translate(Section + #4 + Content);
+    if Instance is TComponent then
+    begin
+      Component := Instance as TComponent;
+      if Component.Owner<>nil then
+        Section := UpperCase(Component.Owner.Name) + '.';
+      Section := 'T' + Section + UpperCase(Component.Name) + '.' +
+        UpperCase(PropInfo^.Name);
+      s := FMoFile.Translate(Section + #4 + Content);
+    end;
   end;
   if s<>'' then Content:=s;
 end;

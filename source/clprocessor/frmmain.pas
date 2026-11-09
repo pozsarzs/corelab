@@ -24,7 +24,7 @@ uses
   core_bus, core_ioport, frmabout, frmhexviewer, frmrunlogger, frmexdepmemory,
   frmloadsavememory, ioport_console, ioport_standard, ucommon, uintelhex;
 const
-  MEM_SIZE = 1024;
+  MEM_SIZE =      1024;
   IOADD_CONSOLE = $A0;
   IVECT_CONSOLE = $CF;
   IOADD_STDPORT = $B0;
