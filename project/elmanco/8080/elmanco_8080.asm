@@ -41,16 +41,6 @@ START:				; START MAIN PROGRAM
 	EI			; enable interrupt
 
 LPMAIN:				; MAIN LOOP
-; -- DECELERATION -- 
-	LHLD	DELAY		; load delay counter value
-	DCX	H		; decrement delay counter
-	SHLD	DELAY		; store delay counter value
-	MOV	A, H
-	ORA	L
-	JNZ	SKDELAY		; if H or L <> 0 then skip main program 
-	LXI	H, 0001H	; reload counter
-	SHLD	DELAY		; store counter value
-
 ; -- DISPLAY --
 	CALL	DSPPROC		; call display handler
 	CALL	LEDPROC		; call LED handler
@@ -132,7 +122,7 @@ BTNINT:
 B0_BTN:				; START MACHINE
 	MOV	A, B
         ANI	01H
-        JNZ	B1_BTN
+        JZ	B1_BTN
 
         XRA	A		; unlock all reels
 	LXI	H, REELS	; H = reels state address
@@ -150,35 +140,35 @@ B0_BTN:				; START MACHINE
 B1_BTN:				; STOP REEL #1
 	MOV	A, B
         ANI	02H
-	JNZ	B2_BTN
+	JZ	B2_BTN
 	LXI	H, REELS	; H = reels state address
 	MVI	M, 1		; set reel state to "STOPPED"
 	JMP	RLSBTN
 B2_BTN:				; STOP REEL #2
 	MOV	A, B
         ANI	04H
-	JNZ	B3_BTN
+	JZ	B3_BTN
 	LXI	H, REELS + 1	; H = reels state address
 	MVI	M, 1		; set reel state to "STOPPED"
 	JMP	RLSBTN
 B3_BTN:				; STOP REEL #3
 	MOV	A, B
         ANI	08H
-	JNZ	B4_BTN
+	JZ	B4_BTN
 	LXI	H, REELS + 2	; H = reels state address
 	MVI	M, 1		; set reel state to "STOPPED"
 	JMP	RLSBTN
 B4_BTN:				; STOP REEL #4
 	MOV	A, B
         ANI	10H
-	JNZ	B7_BTN
+	JZ	B7_BTN
 	LXI	H, REELS + 3	; H = reels state address
 	MVI	M, 1		; set reel state to "STOPPED"
 	JMP	RLSBTN
 B7_BTN:				; EXIT MACHINE
 	MOV	A, B
         ANI	80H
-	JNZ	RLSBTN
+	JZ	RLSBTN
 	LXI	H, MACHINE	; H = machine state address
 	MVI	M, 5		; set machine state to "EXIT"
 RLSBTN:
@@ -252,5 +242,4 @@ DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn)
 REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
 MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
 RUNLGHT	DB	AAH		; running light sample (AAH/55H)
-DELAY	DW	0001H		; delay loop value
 	END

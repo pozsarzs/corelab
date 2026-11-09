@@ -9,7 +9,7 @@
       <BaseAddress>000010</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
-      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutMode>lmDirect</DataOutMode>
       <DataOutNegation>false</DataOutNegation>
       <Enabled>true</Enabled>
       <IntVector>CF</IntVector>

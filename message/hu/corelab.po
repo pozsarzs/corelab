@@ -1491,27 +1491,27 @@ msgstr "Töréspont-kezelő megjelenítése"
 
 #: tform1.vshowbuslogger.caption
 msgid "Show &BusLogger..."
-msgstr "&BuszNaplózó megjelenítése..."
+msgstr "&Busznaplózó megjelenítése..."
 
 #: tform1.vshowbuslogger.hint
 msgid " &BusLogger"
-msgstr " &BuszNaplózó"
+msgstr " &Busznaplózó"
 
 #: tform1.vshowhexviewer.caption
 msgid "Show He&xViewer..."
-msgstr "He&xNézegető megjelenítése..."
+msgstr "He&xnézegető megjelenítése..."
 
 #: tform1.vshowhexviewer.hint
 msgid "Show HexViewer"
-msgstr "HexNézegető megjelenítése"
+msgstr "Hexa nézegető megjelenítése"
 
 #: tform1.vshowintlogger.caption
 msgid "Show &IntLogger..."
-msgstr "&MegszakításNaplózó megjelenítése..."
+msgstr "&Megszakításnaplózó megjelenítése..."
 
 #: tform1.vshowintlogger.hint
 msgid "Show IntLogger"
-msgstr "MegszakításNaplózó megjelenítése"
+msgstr "Megszakításnaplózó megjelenítése"
 
 #: tform1.vshowiopanel.caption
 msgid "Show I/O panel..."
@@ -1523,27 +1523,27 @@ msgstr "I/O panel megjelenítése"
 
 #: tform1.vshowregviewer.caption
 msgid "Show Re&gViewer..."
-msgstr "Re&giszterNézegető megjelenítése..."
+msgstr "Re&giszter-nézegető megjelenítése..."
 
 #: tform1.vshowregviewer.hint
 msgid "Show RegViewer"
-msgstr "RegiszterNézegető megjelenítése"
+msgstr "Regiszter-nézegető megjelenítése"
 
 #: tform1.vshowrunlogger.caption
 msgid "Show &RunLogger..."
-msgstr "&FutásNaplózó megjelenítése..."
+msgstr "&Futásnaplózó megjelenítése..."
 
 #: tform1.vshowrunlogger.hint
 msgid "Show RunLogger"
-msgstr "FutásNaplózó megjelenítése"
+msgstr "Futásnaplózó megjelenítése"
 
 #: tform1.vshowscriptconsole.caption
 msgid "Show Scrip&tConsole..."
-msgstr "Szkrip&tKonzol megjelenítése..."
+msgstr "Szkrip&tkonzol megjelenítése..."
 
 #: tform1.vshowscriptconsole.hint
 msgid "Show ScriptConsole"
-msgstr "SzkriptKonzol megjelenítése"
+msgstr "Szkriptkonzol megjelenítése"
 
 #: tform1.vshowscripteditor.caption
 msgid "Show S&criptEditor..."
@@ -1586,7 +1586,7 @@ msgstr "&Kiolvasás"
 
 #: tform11.caption
 msgid "RegViewer"
-msgstr "RegiszterNézegető"
+msgstr "Regiszter-nézegető"
 
 #: tform12.button1.caption
 msgctxt "tform12.button1.caption"
@@ -1601,7 +1601,7 @@ msgstr "Tör&lés"
 #: tform12.caption
 msgctxt "tform12.caption"
 msgid "ScriptConsole"
-msgstr "SzkriptKonzol"
+msgstr "Szkriptkonzol"
 
 #: tform13.button1.caption
 msgctxt "tform13.button1.caption"
@@ -1639,7 +1639,7 @@ msgstr "Menté&s..."
 #: tform14.caption
 msgctxt "tform14.caption"
 msgid "BusLogger"
-msgstr "BuszNaplózó"
+msgstr "Busznaplózó"
 
 #: tform14.drawgrid1.columns[0].title.caption
 msgctxt "tform14.drawgrid1.columns[0].title.caption"
@@ -1927,16 +1927,16 @@ msgstr "Háttér:"
 #: tform18.tabsheet1.caption
 msgctxt "tform18.tabsheet1.caption"
 msgid "RunLogger"
-msgstr "FutásNaplózó"
+msgstr "Futásnaplózó"
 
 #: tform18.tabsheet2.caption
 msgid "SysConsole"
-msgstr "RendszerKonzol"
+msgstr "Rendszerkonzol"
 
 #: tform18.tabsheet3.caption
 msgctxt "tform18.tabsheet3.caption"
 msgid "HexViewer"
-msgstr "HexNézegető"
+msgstr "Hexa nézegető"
 
 #: tform18.tabsheet4.caption
 msgctxt "tform18.tabsheet4.caption"
@@ -1946,17 +1946,17 @@ msgstr "SzkriptSzerkesztő"
 #: tform18.tabsheet5.caption
 msgctxt "tform18.tabsheet5.caption"
 msgid "ScriptConsole"
-msgstr "SzkriptKonzol"
+msgstr "Szkriptkonzol"
 
 #: tform18.tabsheet6.caption
 msgctxt "tform18.tabsheet6.caption"
 msgid "IntLogger"
-msgstr "MegszakításNaplózó"
+msgstr "Megszakításnaplózó"
 
 #: tform18.tabsheet7.caption
 msgctxt "tform18.tabsheet7.caption"
 msgid "BusLogger"
-msgstr "BuszNaplózó"
+msgstr "Busznaplózó"
 
 #: tform2.button1.caption
 msgctxt "tform2.button1.caption"
@@ -2007,7 +2007,7 @@ msgstr "&Bezárás"
 #: tform3.caption
 msgctxt "tform3.caption"
 msgid "HexViewer"
-msgstr "HexNézegető"
+msgstr "Hexa nézegető"
 
 #: tform3.drawgrid1.columns[0].title.caption
 msgid "Title"
@@ -2035,7 +2035,7 @@ msgstr "Menté&s..."
 #: tform4.caption
 msgctxt "tform4.caption"
 msgid "RunLogger"
-msgstr "FutásNaplózó"
+msgstr "Futásnaplózó"
 
 #: tform4.drawgrid1.columns[0].title.caption
 msgid "Count"
@@ -2183,7 +2183,7 @@ msgstr "Menté&s..."
 #: tform8.caption
 msgctxt "tform8.caption"
 msgid "IntLogger"
-msgstr "MegszakításNaplózó"
+msgstr "Megszakításnaplózó"
 
 #: tform8.drawgrid1.columns[0].title.caption
 msgctxt "tform8.drawgrid1.columns[0].title.caption"
@@ -2253,195 +2253,3 @@ msgstr "Eltávolítás"
 #: tframe1.checkbox1.caption
 msgid "Enable"
 msgstr "Engedélyezés"
-
-#~ msgid "Untitled"
-#~ msgstr "Névtelen"
-
-#~ msgid "Asp"
-#~ msgstr "ASP"
-
-#~ msgid "DOCTYPE"
-#~ msgstr "DOCTYPE"
-
-#~ msgid "Annotation"
-#~ msgstr "Feljegyzés"
-
-#~ msgid "Attribute Name"
-#~ msgstr "Tulajdonság név"
-
-#~ msgid "Attribute Value"
-#~ msgstr "Tulajdonság érték"
-
-#~ msgid "Block"
-#~ msgstr "Blokk"
-
-#~ msgid "Brackets"
-#~ msgstr "Zárójelpárok kiemelése"
-
-#~ msgid "Character"
-#~ msgstr "Karakter"
-
-#~ msgid "Class"
-#~ msgstr "Osztály"
-
-#~ msgid "Comment"
-#~ msgstr "Megjegyzés"
-
-#~ msgid "Condition"
-#~ msgstr "Feltétel"
-
-#~ msgid "Data type"
-#~ msgstr "Adattí­pus"
-
-#~ msgid "Direction"
-#~ msgstr "Irány"
-
-#~ msgid "Directive"
-#~ msgstr "Direktíva"
-
-#~ msgid "Documentation"
-#~ msgstr "Dokumentáció"
-
-#~ msgid "Element Name"
-#~ msgstr "Elemnév"
-
-#~ msgid "Event"
-#~ msgstr "Esemény"
-
-#~ msgid "Exception"
-#~ msgstr "Kivétel"
-
-#~ msgid "Float"
-#~ msgstr "Lebegő"
-
-#~ msgid "Form"
-#~ msgstr "Űrlap"
-
-#~ msgid "Function"
-#~ msgstr "Függvény"
-
-#~ msgid "Hexadecimal"
-#~ msgstr "Hexadecimális"
-
-#~ msgid "Identifier"
-#~ msgstr "Azonosító"
-
-#~ msgid "Include"
-#~ msgstr "Include"
-
-#~ msgid "Internal function"
-#~ msgstr "Belső funkció"
-
-#~ msgid "Key"
-#~ msgstr "Kulcs"
-
-#~ msgid "Label"
-#~ msgstr "Címke"
-
-#~ msgid "Macro"
-#~ msgstr "Makró"
-
-#~ msgid "Marker"
-#~ msgstr "Marker"
-
-#~ msgid "Message"
-#~ msgstr "Üzenet"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Egyéb"
-
-#~ msgid "Null"
-#~ msgstr "Null"
-
-#~ msgid "Number"
-#~ msgstr "Szám"
-
-#~ msgid "Octal"
-#~ msgstr "Oktális"
-
-#~ msgid "Operator"
-#~ msgstr "Operátor"
-
-#~ msgid "Preprocessor"
-#~ msgstr "Előfeldolgozó"
-
-#~ msgid "Processing Instruction"
-#~ msgstr "Feldolgozóutasítás"
-
-#~ msgid "Qualifier"
-#~ msgstr "Minősítő"
-
-#~ msgid "Section"
-#~ msgstr "Fejezet"
-
-#~ msgid "Space"
-#~ msgstr "Szóköz"
-
-#~ msgid "Special variable"
-#~ msgstr "Speciális változó"
-
-#~ msgid "String"
-#~ msgstr "Karakterlánc"
-
-#~ msgid "Symbol"
-#~ msgstr "Jel"
-
-#~ msgid "Text"
-#~ msgstr "Szöveg"
-
-#~ msgid "User functions"
-#~ msgstr "Felhasználói funkciók"
-
-#~ msgid "Variable"
-#~ msgstr "Változó"
-
-#~ msgid "Whitespace"
-#~ msgstr "Szóköz"
-
-#~ msgid "Math Mode"
-#~ msgstr "Matematikai mód"
-
-#~ msgid "Selector"
-#~ msgstr "Választó"
-
-#~ msgid "Flags"
-#~ msgstr "Jelölők"
-
-#~ msgid "HTML"
-#~ msgstr "HTML"
-
-#~ msgid "%d - %d"
-#~ msgstr "%d × %d"
-
-#~ msgid "Page: %d"
-#~ msgstr "%d oldal"
-
-#~ msgid "<none>"
-#~ msgstr "<nincs>"
-
-#~ msgid "No Action"
-#~ msgstr "Nincs művelet"
-
-#~ msgid "Selection"
-#~ msgstr "Kijelölés"
-
-#~ msgid "Line Selection"
-#~ msgstr "Sorkiválasztás"
-
-#~ msgid "Select Word"
-#~ msgstr "Szó kiválasztása"
-
-#~ msgid "Select Line"
-#~ msgstr "Sorkiválasztás"
-
-#~ msgid "Popup Menu"
-#~ msgstr "Helyi menü"
-
-#~ msgid "Toggle Breakpoint"
-#~ msgstr "Töréspont-kezelő megjelenítése"
-
-#~ msgid "Selection (words)"
-#~ msgstr "Kiválasztás (szó)"
-
-#~ msgid "Selection (lines)"
-#~ msgstr "Kiválasztás (sor)"
