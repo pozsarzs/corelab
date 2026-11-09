@@ -904,13 +904,11 @@ msgid "&About"
 msgstr ""
 
 #: tform1.hhelp.caption
-msgctxt "tform1.hhelp.caption"
-msgid "&Help"
+msgid "&Help  "
 msgstr ""
 
 #: tform1.ioattachtobus.caption
-msgctxt "tform1.ioattachtobus.caption"
-msgid "&Attach to bus..."
+msgid "&Attach to bus...  "
 msgstr ""
 
 #: tform1.ioattachtobus.hint
@@ -919,8 +917,7 @@ msgid "Attach to bus"
 msgstr ""
 
 #: tform1.iocreate.caption
-msgctxt "tform1.iocreate.caption"
-msgid "&Create..."
+msgid "&Create...  "
 msgstr ""
 
 #: tform1.iocreate.hint
@@ -928,7 +925,7 @@ msgid "Create I/O port or device"
 msgstr ""
 
 #: tform1.iodestroy.caption
-msgid "&Destroy..."
+msgid "&Destroy...  "
 msgstr ""
 
 #: tform1.iodestroy.hint
@@ -936,8 +933,7 @@ msgid "Destroy I/O port or device"
 msgstr ""
 
 #: tform1.iodetachfrombus.caption
-msgctxt "tform1.iodetachfrombus.caption"
-msgid "&Detach from bus..."
+msgid "&Detach from bus...  "
 msgstr ""
 
 #: tform1.iodetachfrombus.hint
@@ -946,8 +942,7 @@ msgid "Detach from bus"
 msgstr ""
 
 #: tform1.iodisable.caption
-msgctxt "tform1.iodisable.caption"
-msgid "&Disable..."
+msgid "&Disable...  "
 msgstr ""
 
 #: tform1.iodisable.hint
@@ -955,8 +950,7 @@ msgid "Disable I/O module"
 msgstr ""
 
 #: tform1.ioenable.caption
-msgctxt "tform1.ioenable.caption"
-msgid "&Enable..."
+msgid "&Enable...  "
 msgstr ""
 
 #: tform1.ioenable.hint
@@ -964,8 +958,7 @@ msgid "Enable I/O module"
 msgstr ""
 
 #: tform1.ioproperties.caption
-msgctxt "tform1.ioproperties.caption"
-msgid "&Properties..."
+msgid "&Properties...  "
 msgstr ""
 
 #: tform1.ioproperties.hint
@@ -982,8 +975,7 @@ msgid "Read/write I/O port"
 msgstr ""
 
 #: tform1.ioreset.caption
-msgctxt "tform1.ioreset.caption"
-msgid "&Reset..."
+msgid "&Reset...  "
 msgstr ""
 
 #: tform1.ioreset.hint
@@ -991,8 +983,7 @@ msgid "Reset I/O port or device"
 msgstr ""
 
 #: tform1.mattachtobus.caption
-msgctxt "tform1.mattachtobus.caption"
-msgid "&Attach to bus..."
+msgid "&Attach to bus... "
 msgstr ""
 
 #: tform1.mattachtobus.hint
@@ -1001,8 +992,7 @@ msgid "Attach to bus"
 msgstr ""
 
 #: tform1.mcreate.caption
-msgctxt "tform1.mcreate.caption"
-msgid "&Create..."
+msgid "&Create... "
 msgstr ""
 
 #: tform1.mcreate.hint
@@ -1010,8 +1000,7 @@ msgid "Create memory"
 msgstr ""
 
 #: tform1.mdestroy.caption
-msgctxt "tform1.mdestroy.caption"
-msgid "Destro&y..."
+msgid "Destro&y... "
 msgstr ""
 
 #: tform1.mdestroy.hint
@@ -1019,8 +1008,7 @@ msgid "Destroy memory"
 msgstr ""
 
 #: tform1.mdetachfrombus.caption
-msgctxt "tform1.mdetachfrombus.caption"
-msgid "&Detach from bus..."
+msgid "&Detach from bus... "
 msgstr ""
 
 #: tform1.mdetachfrombus.hint
@@ -1029,8 +1017,7 @@ msgid "Detach from bus"
 msgstr ""
 
 #: tform1.mdisable.caption
-msgctxt "tform1.mdisable.caption"
-msgid "&Disable..."
+msgid "&Disable... "
 msgstr ""
 
 #: tform1.mdisable.hint
@@ -1038,8 +1025,7 @@ msgid "Disable memory modul"
 msgstr ""
 
 #: tform1.menable.caption
-msgctxt "tform1.menable.caption"
-msgid "&Enable..."
+msgid "&Enable... "
 msgstr ""
 
 #: tform1.menable.hint
@@ -1075,7 +1061,6 @@ msgid "&Script"
 msgstr ""
 
 #: tform1.menuitem8.caption
-msgctxt "tform1.menuitem8.caption"
 msgid "&Help"
 msgstr ""
 
@@ -1096,8 +1081,7 @@ msgid "Load memory content"
 msgstr ""
 
 #: tform1.mproperties.caption
-msgctxt "tform1.mproperties.caption"
-msgid "&Properties..."
+msgid "&Properties... "
 msgstr ""
 
 #: tform1.mproperties.hint
@@ -1106,8 +1090,7 @@ msgid "Properties"
 msgstr ""
 
 #: tform1.mreset.caption
-msgctxt "tform1.mreset.caption"
-msgid "&Reset..."
+msgid "&Reset... "
 msgstr ""
 
 #: tform1.mreset.hint
@@ -1179,7 +1162,6 @@ msgid "Stop"
 msgstr ""
 
 #: tform1.pattachtobus.caption
-msgctxt "tform1.pattachtobus.caption"
 msgid "&Attach to bus..."
 msgstr ""
 
@@ -1189,7 +1171,6 @@ msgid "Attach to bus"
 msgstr ""
 
 #: tform1.pcreate.caption
-msgctxt "tform1.pcreate.caption"
 msgid "&Create..."
 msgstr ""
 
@@ -1198,7 +1179,6 @@ msgid "Create processor"
 msgstr ""
 
 #: tform1.pdestroy.caption
-msgctxt "tform1.pdestroy.caption"
 msgid "Destro&y..."
 msgstr ""
 
@@ -1207,7 +1187,6 @@ msgid "Destroy processor"
 msgstr ""
 
 #: tform1.pdetachfrombus.caption
-msgctxt "tform1.pdetachfrombus.caption"
 msgid "&Detach from bus..."
 msgstr ""
 
@@ -1217,7 +1196,6 @@ msgid "Detach from bus"
 msgstr ""
 
 #: tform1.pdisable.caption
-msgctxt "tform1.pdisable.caption"
 msgid "&Disable..."
 msgstr ""
 
@@ -1226,7 +1204,6 @@ msgid "Disable processor module"
 msgstr ""
 
 #: tform1.penable.caption
-msgctxt "tform1.penable.caption"
 msgid "&Enable..."
 msgstr ""
 
@@ -1235,7 +1212,6 @@ msgid "Enable processor module"
 msgstr ""
 
 #: tform1.pproperties.caption
-msgctxt "tform1.pproperties.caption"
 msgid "&Properties..."
 msgstr ""
 
@@ -1245,7 +1221,6 @@ msgid "Properties"
 msgstr ""
 
 #: tform1.preset.caption
-msgctxt "tform1.preset.caption"
 msgid "&Reset..."
 msgstr ""
 

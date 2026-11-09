@@ -578,7 +578,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="1551" Column="12" TopLine="1523"/>
@@ -614,10 +614,6 @@
       <Position>
         <Filename Value="frmmain.pas"/>
         <Caret Line="5946" Column="29" TopLine="5918"/>
-      </Position>
-      <Position>
-        <Filename Value="frmmain.pas"/>
-        <Caret Line="5949" Column="45" TopLine="5961"/>
       </Position>
       <Position>
         <Filename Value="frmmain.pas"/>

@@ -1480,49 +1480,49 @@ object Form1: TForm1
       OnExecute = PPropertiesExecute
     end
     object MCreate: TAction
-      Caption = '&Create...'
+      Caption = '&Create... '
       Hint = 'Create memory'
       ImageIndex = 42
       OnExecute = MCreateExecute
     end
     object MDestroy: TAction
-      Caption = 'Destro&y...'
+      Caption = 'Destro&y... '
       Hint = 'Destroy memory'
       ImageIndex = 43
       OnExecute = MDestroyExecute
     end
     object MReset: TAction
-      Caption = '&Reset...'
+      Caption = '&Reset... '
       Hint = 'Reset I/O port'
       ImageIndex = 11
       OnExecute = MResetExecute
     end
     object MEnable: TAction
-      Caption = '&Enable...'
+      Caption = '&Enable... '
       Hint = 'Enable memory modul'
       ImageIndex = 61
       OnExecute = MEnableExecute
     end
     object MDisable: TAction
-      Caption = '&Disable...'
+      Caption = '&Disable... '
       Hint = 'Disable memory modul'
       ImageIndex = 62
       OnExecute = MDisableExecute
     end
     object MAttachToBus: TAction
-      Caption = '&Attach to bus...'
+      Caption = '&Attach to bus... '
       Hint = 'Attach to bus'
       ImageIndex = 41
       OnExecute = MAttachToBusExecute
     end
     object MDetachFromBus: TAction
-      Caption = '&Detach from bus...'
+      Caption = '&Detach from bus... '
       Hint = 'Detach from bus'
       ImageIndex = 40
       OnExecute = MDetachFromBusExecute
     end
     object MProperties: TAction
-      Caption = '&Properties...'
+      Caption = '&Properties... '
       Hint = 'Properties'
       ImageIndex = 44
       OnExecute = MPropertiesExecute
@@ -1546,49 +1546,49 @@ object Form1: TForm1
       OnExecute = MExamineDepositExecute
     end
     object IOCreate: TAction
-      Caption = '&Create...'
+      Caption = '&Create...  '
       Hint = 'Create I/O port or device'
       ImageIndex = 47
       OnExecute = IOCreateExecute
     end
     object IODestroy: TAction
-      Caption = '&Destroy...'
+      Caption = '&Destroy...  '
       Hint = 'Destroy I/O port or device'
       ImageIndex = 48
       OnExecute = IODestroyExecute
     end
     object IOReset: TAction
-      Caption = '&Reset...'
+      Caption = '&Reset...  '
       Hint = 'Reset I/O port or device'
       ImageIndex = 11
       OnExecute = IOResetExecute
     end
     object IOEnable: TAction
-      Caption = '&Enable...'
+      Caption = '&Enable...  '
       Hint = 'Enable I/O module'
       ImageIndex = 63
       OnExecute = IOEnableExecute
     end
     object IODisable: TAction
-      Caption = '&Disable...'
+      Caption = '&Disable...  '
       Hint = 'Disable I/O module'
       ImageIndex = 64
       OnExecute = IODisableExecute
     end
     object IOAttachToBus: TAction
-      Caption = '&Attach to bus...'
+      Caption = '&Attach to bus...  '
       Hint = 'Attach to bus'
       ImageIndex = 41
       OnExecute = IOAttachToBusExecute
     end
     object IODetachFromBus: TAction
-      Caption = '&Detach from bus...'
+      Caption = '&Detach from bus...  '
       Hint = 'Detach from bus'
       ImageIndex = 40
       OnExecute = IODetachFromBusExecute
     end
     object IOProperties: TAction
-      Caption = '&Properties...'
+      Caption = '&Properties...  '
       Hint = 'Properties'
       ImageIndex = 49
       OnExecute = IOPropertiesExecute
@@ -1699,7 +1699,7 @@ object Form1: TForm1
       ShortCut = 8313
     end
     object HHelp: TAction
-      Caption = '&Help'
+      Caption = '&Help  '
       ImageIndex = 25
       OnExecute = HHelpExecute
       ShortCut = 112

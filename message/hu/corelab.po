@@ -916,13 +916,11 @@ msgid "&About"
 msgstr "&Névjegy"
 
 #: tform1.hhelp.caption
-msgctxt "tform1.hhelp.caption"
-msgid "&Help"
+msgid "&Help  "
 msgstr "&Súgó"
 
 #: tform1.ioattachtobus.caption
-msgctxt "tform1.ioattachtobus.caption"
-msgid "&Attach to bus..."
+msgid "&Attach to bus...  "
 msgstr "&Csatolás a buszhoz..."
 
 #: tform1.ioattachtobus.hint
@@ -931,8 +929,7 @@ msgid "Attach to bus"
 msgstr "Csatolás a buszhoz"
 
 #: tform1.iocreate.caption
-msgctxt "tform1.iocreate.caption"
-msgid "&Create..."
+msgid "&Create...  "
 msgstr "&Létrehozás..."
 
 #: tform1.iocreate.hint
@@ -940,7 +937,7 @@ msgid "Create I/O port or device"
 msgstr "I/O port vagy eszköz létrehozása"
 
 #: tform1.iodestroy.caption
-msgid "&Destroy..."
+msgid "&Destroy...  "
 msgstr "Meg&semmisítés..."
 
 #: tform1.iodestroy.hint
@@ -948,8 +945,7 @@ msgid "Destroy I/O port or device"
 msgstr "I/O port vagy eszköz megsemmisítése"
 
 #: tform1.iodetachfrombus.caption
-msgctxt "tform1.iodetachfrombus.caption"
-msgid "&Detach from bus..."
+msgid "&Detach from bus...  "
 msgstr "Le&választás a buszról..."
 
 #: tform1.iodetachfrombus.hint
@@ -958,8 +954,7 @@ msgid "Detach from bus"
 msgstr "Leválasztás a buszról"
 
 #: tform1.iodisable.caption
-msgctxt "tform1.iodisable.caption"
-msgid "&Disable..."
+msgid "&Disable...  "
 msgstr "Le&tiltás..."
 
 #: tform1.iodisable.hint
@@ -967,8 +962,7 @@ msgid "Disable I/O module"
 msgstr "I/O modul letiltása"
 
 #: tform1.ioenable.caption
-msgctxt "tform1.ioenable.caption"
-msgid "&Enable..."
+msgid "&Enable...  "
 msgstr "&Engedélyezés..."
 
 #: tform1.ioenable.hint
@@ -976,9 +970,8 @@ msgid "Enable I/O module"
 msgstr "I/O modul engedélyezése"
 
 #: tform1.ioproperties.caption
-msgctxt "tform1.ioproperties.caption"
-msgid "&Properties..."
-msgstr "T&ulajdonságok..."
+msgid "&Properties...  "
+msgstr "&Tulajdonságok…"
 
 #: tform1.ioproperties.hint
 msgctxt "tform1.ioproperties.hint"
@@ -994,8 +987,7 @@ msgid "Read/write I/O port"
 msgstr "I/O port olvasása/írása"
 
 #: tform1.ioreset.caption
-msgctxt "tform1.ioreset.caption"
-msgid "&Reset..."
+msgid "&Reset...  "
 msgstr "Alap&helyzet..."
 
 #: tform1.ioreset.hint
@@ -1003,8 +995,7 @@ msgid "Reset I/O port or device"
 msgstr "I/O port vagy eszköz alaphelyzetbe állítása"
 
 #: tform1.mattachtobus.caption
-msgctxt "tform1.mattachtobus.caption"
-msgid "&Attach to bus..."
+msgid "&Attach to bus... "
 msgstr "&Csatolás a buszhoz..."
 
 #: tform1.mattachtobus.hint
@@ -1013,8 +1004,7 @@ msgid "Attach to bus"
 msgstr "Csatolás a buszhoz"
 
 #: tform1.mcreate.caption
-msgctxt "tform1.mcreate.caption"
-msgid "&Create..."
+msgid "&Create... "
 msgstr "&Létrehozás..."
 
 #: tform1.mcreate.hint
@@ -1022,8 +1012,7 @@ msgid "Create memory"
 msgstr "Memória létrehozása"
 
 #: tform1.mdestroy.caption
-msgctxt "tform1.mdestroy.caption"
-msgid "Destro&y..."
+msgid "Destro&y... "
 msgstr "Meg&semmisítés..."
 
 #: tform1.mdestroy.hint
@@ -1031,8 +1020,7 @@ msgid "Destroy memory"
 msgstr "Memória megsemmisítése"
 
 #: tform1.mdetachfrombus.caption
-msgctxt "tform1.mdetachfrombus.caption"
-msgid "&Detach from bus..."
+msgid "&Detach from bus... "
 msgstr "Le&választás a buszról..."
 
 #: tform1.mdetachfrombus.hint
@@ -1041,8 +1029,7 @@ msgid "Detach from bus"
 msgstr "Leválasztás a buszról"
 
 #: tform1.mdisable.caption
-msgctxt "tform1.mdisable.caption"
-msgid "&Disable..."
+msgid "&Disable... "
 msgstr "Le&tiltás..."
 
 #: tform1.mdisable.hint
@@ -1050,8 +1037,7 @@ msgid "Disable memory modul"
 msgstr "Memóriamodul letiltása"
 
 #: tform1.menable.caption
-msgctxt "tform1.menable.caption"
-msgid "&Enable..."
+msgid "&Enable... "
 msgstr "&Engedélyezés..."
 
 #: tform1.menable.hint
@@ -1087,7 +1073,6 @@ msgid "&Script"
 msgstr "&Szkript"
 
 #: tform1.menuitem8.caption
-msgctxt "tform1.menuitem8.caption"
 msgid "&Help"
 msgstr "&Súgó"
 
@@ -1108,8 +1093,7 @@ msgid "Load memory content"
 msgstr "Memóriatartalom betöltése"
 
 #: tform1.mproperties.caption
-msgctxt "tform1.mproperties.caption"
-msgid "&Properties..."
+msgid "&Properties... "
 msgstr "T&ulajdonságok..."
 
 #: tform1.mproperties.hint
@@ -1118,8 +1102,7 @@ msgid "Properties"
 msgstr "Tulajdonságok"
 
 #: tform1.mreset.caption
-msgctxt "tform1.mreset.caption"
-msgid "&Reset..."
+msgid "&Reset... "
 msgstr "Alap&helyzet..."
 
 #: tform1.mreset.hint
@@ -1191,7 +1174,6 @@ msgid "Stop"
 msgstr "Leállítás"
 
 #: tform1.pattachtobus.caption
-msgctxt "tform1.pattachtobus.caption"
 msgid "&Attach to bus..."
 msgstr "&Csatolás a buszhoz..."
 
@@ -1201,7 +1183,6 @@ msgid "Attach to bus"
 msgstr "Csatolás a buszhoz"
 
 #: tform1.pcreate.caption
-msgctxt "tform1.pcreate.caption"
 msgid "&Create..."
 msgstr "&Létrehozás..."
 
@@ -1210,7 +1191,6 @@ msgid "Create processor"
 msgstr "Processzor létrehozása"
 
 #: tform1.pdestroy.caption
-msgctxt "tform1.pdestroy.caption"
 msgid "Destro&y..."
 msgstr "Meg&semmisítés..."
 
@@ -1219,7 +1199,6 @@ msgid "Destroy processor"
 msgstr "Processzor megsemmisítése"
 
 #: tform1.pdetachfrombus.caption
-msgctxt "tform1.pdetachfrombus.caption"
 msgid "&Detach from bus..."
 msgstr "Le&választás a buszról..."
 
@@ -1229,7 +1208,6 @@ msgid "Detach from bus"
 msgstr "Leválasztás a buszról"
 
 #: tform1.pdisable.caption
-msgctxt "tform1.pdisable.caption"
 msgid "&Disable..."
 msgstr "Le&tiltás..."
 
@@ -1238,7 +1216,6 @@ msgid "Disable processor module"
 msgstr "Processzormodul letiltása"
 
 #: tform1.penable.caption
-msgctxt "tform1.penable.caption"
 msgid "&Enable..."
 msgstr "&Engedélyezés..."
 
@@ -1247,7 +1224,6 @@ msgid "Enable processor module"
 msgstr "Processzormodul engedélyezése"
 
 #: tform1.pproperties.caption
-msgctxt "tform1.pproperties.caption"
 msgid "&Properties..."
 msgstr "T&ulajdonságok..."
 
@@ -1257,7 +1233,6 @@ msgid "Properties"
 msgstr "Tulajdonságok"
 
 #: tform1.preset.caption
-msgctxt "tform1.preset.caption"
 msgid "&Reset..."
 msgstr "Alap&helyzet..."
 
@@ -2253,3 +2228,67 @@ msgstr "Eltávolítás"
 #: tframe1.checkbox1.caption
 msgid "Enable"
 msgstr "Engedélyezés"
+
+#~ msgctxt "tform1.mattachtobus.caption"
+#~ msgid "&Attach to bus..."
+#~ msgstr "&Csatolás a buszhoz..."
+
+#~ msgctxt "tform1.mcreate.caption"
+#~ msgid "&Create..."
+#~ msgstr "&Létrehozás..."
+
+#~ msgctxt "tform1.mdetachfrombus.caption"
+#~ msgid "&Detach from bus..."
+#~ msgstr "Le&választás a buszról..."
+
+#~ msgctxt "tform1.mdisable.caption"
+#~ msgid "&Disable..."
+#~ msgstr "Le&tiltás..."
+
+#~ msgctxt "tform1.menable.caption"
+#~ msgid "&Enable..."
+#~ msgstr "&Engedélyezés..."
+
+#~ msgctxt "tform1.menuitem8.caption"
+#~ msgid "&Help"
+#~ msgstr "&Súgó"
+
+#~ msgctxt "tform1.mproperties.caption"
+#~ msgid "&Properties..."
+#~ msgstr "T&ulajdonságok..."
+
+#~ msgctxt "tform1.mreset.caption"
+#~ msgid "&Reset..."
+#~ msgstr "Alap&helyzet..."
+
+#~ msgctxt "tform1.pattachtobus.caption"
+#~ msgid "&Attach to bus..."
+#~ msgstr "&Csatolás a buszhoz..."
+
+#~ msgctxt "tform1.pcreate.caption"
+#~ msgid "&Create..."
+#~ msgstr "&Létrehozás..."
+
+#~ msgctxt "tform1.pdestroy.caption"
+#~ msgid "Destro&y..."
+#~ msgstr "Meg&semmisítés..."
+
+#~ msgctxt "tform1.pdetachfrombus.caption"
+#~ msgid "&Detach from bus..."
+#~ msgstr "Le&választás a buszról..."
+
+#~ msgctxt "tform1.pdisable.caption"
+#~ msgid "&Disable..."
+#~ msgstr "Le&tiltás..."
+
+#~ msgctxt "tform1.penable.caption"
+#~ msgid "&Enable..."
+#~ msgstr "&Engedélyezés..."
+
+#~ msgctxt "tform1.pproperties.caption"
+#~ msgid "&Properties..."
+#~ msgstr "T&ulajdonságok..."
+
+#~ msgctxt "tform1.preset.caption"
+#~ msgid "&Reset..."
+#~ msgstr "Alap&helyzet..."
