@@ -37,7 +37,7 @@ type
   private
     RegPointers: array[0..6] of PByte;
   protected
-    FBus:   ISysBus;                                   // Connected external bus
+    FBus:   IStandardBus;                              // Connected external bus
     FRegs:  T8008Registers;
     FFlags: T8008Flags;
     FStack: T8008Stack;
@@ -186,7 +186,7 @@ end;
 // CONNECT CPU TO EXTERNAL SYSTEM BUS
 function T8008CPU.ConnectBus(const ABus: IInterface): Boolean;
 begin
-  Result := Supports(ABus, ISysBus, FBus);
+  Result := Supports(ABus, IStandardBus, FBus);
 end;
 
 // LOAD SAVED STATE

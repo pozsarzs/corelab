@@ -48,7 +48,7 @@ LPMAIN:				; MAIN LOOP
 	MOV	A, H
 	ORA	L
 	JNZ	SKDELAY		; if H or L <> 0 then skip main program 
-	LXI	H, 1000H	; reload counter
+	LXI	H, 0001H	; reload counter
 	SHLD	DELAY		; store counter value
 
 ; -- DISPLAY --
@@ -252,5 +252,5 @@ DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn)
 REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
 MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
 RUNLGHT	DB	AAH		; running light sample (AAH/55H)
-DELAY	DW	10000		; delay loop value
+DELAY	DW	0001H		; delay loop value
 	END

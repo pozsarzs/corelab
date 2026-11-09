@@ -462,7 +462,7 @@ object Form1: TForm1
             AutoSize = False
             BorderSpacing.Left = 4
             ItemHeight = 0
-            ItemIndex = 0
+            ItemIndex = 3
             Items.Strings = (
               '1000 ms'
               '500 ms'
@@ -471,13 +471,14 @@ object Form1: TForm1
               '50 ms'
               '20 ms'
               '10 ms'
+              '5 ms'
             )
             OnChange = ComboBox1Change
             ParentShowHint = False
             ReadOnly = True
             ShowHint = True
             TabOrder = 0
-            Text = '1000 ms'
+            Text = '100 ms'
             TextHint = 'Run delay between steps in ms'
           end
         end

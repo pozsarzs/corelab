@@ -2,11 +2,11 @@
 <CoreLAB_Workspace version="1.0">
   <Modules>
     <TCPU id="Processor" type="cpu_8080">
-      <Enabled>false</Enabled>
-      <AttachedToBus>false</AttachedToBus>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
     </TCPU>
     <TIOPort id="Buttons" type="ioport_button8">
-      <BaseAddress>000001</BaseAddress>
+      <BaseAddress>000010</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>
@@ -15,13 +15,13 @@
       <IntVector>CF</IntVector>
       <SelMode>lmBCD</SelMode>
       <SelNegation>false</SelNegation>
-      <PanelCaption>Hit #1!</PanelCaption>
+      <PanelCaption>[0][1-2-3-4][7]</PanelCaption>
       <PanelSize>320-240</PanelSize>
       <PanelPosition>500-550</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="LEDs" type="ioport_ledgreen8">
-      <BaseAddress>000002</BaseAddress>
+      <BaseAddress>000025</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>
@@ -30,13 +30,13 @@
       <IntVector>00</IntVector>
       <SelMode>lmBCD</SelMode>
       <SelNegation>false</SelNegation>
-      <PanelCaption>Result</PanelCaption>
+      <PanelCaption>Status</PanelCaption>
       <PanelSize>320-240</PanelSize>
       <PanelPosition>500-350</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="Display" type="ioport_disp4hexmuxbcd">
-      <BaseAddress>000003</BaseAddress>
+      <BaseAddress>000020</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>

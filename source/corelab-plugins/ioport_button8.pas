@@ -25,10 +25,11 @@ type
   protected
     FSB: array[0..MAXX] of TSpeedButton;
     procedure AllRelease(Amx: Byte);
+    procedure FSBOnClick(Sender: TObject);
   public
     constructor Create; override;
     destructor Destroy; override;
-    procedure Reset;  override;
+    procedure Reset; override;
     function ReadPort(APort: Word): Byte; override;
     procedure WritePort(APort: Word; AValue: Byte); override;
     procedure CreatePanel; override;
@@ -45,6 +46,12 @@ var
 begin
   for x := 0 to Amx do
     FSB[x].Down := false;
+end;
+
+// COMMON ONCLICK EVENT
+procedure TButton8.FSBOnClick(Sender: TObject);
+begin
+  RequestInterrupt;
 end;
 
 // ---- PUBLIC METHODS ----
@@ -129,6 +136,7 @@ begin
       if x = 0 then Left := 8 else Left := (4 * (x + 1) + x * 34) + 4;
       Height := 34;
       Width := Height;
+      OnClick := @FSBOnClick;
     end;
   end;
 

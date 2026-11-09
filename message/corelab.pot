@@ -179,7 +179,7 @@ msgid "ToolButton80"
 msgstr ""
 
 #: tform1:combobox1.text
-msgid "1000 ms"
+msgid "100 ms"
 msgstr ""
 
 #: tform1:combobox1.texthint
@@ -1018,7 +1018,7 @@ msgid "Bad or duplicated label name: '%s'."
 msgstr ""
 
 #: frmmain:msg18
-msgid "Missing help file."
+msgid "Bad or missing help file."
 msgstr ""
 
 #: frmmain:msg19

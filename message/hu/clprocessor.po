@@ -117,7 +117,7 @@ msgstr "Keresés a memóriakiíratásban"
 
 #: tform3:drawgrid1.columns[0].title.caption
 msgid "Title"
-msgstr "Cím"
+msgstr "Title"
 
 #: tform7:caption
 msgid "Form7"
@@ -421,7 +421,7 @@ msgstr "&Mentés..."
 
 #: tform4:drawgrid1.columns[0].title.caption
 msgid "Count"
-msgstr "Darabszám"
+msgstr "Count"
 
 #: frmabout:msg01
 msgid "Cannot open URL."
@@ -512,8 +512,8 @@ msgid "Value (Hex)"
 msgstr "Érték (hex)"
 
 #: frmmain:msg18
-msgid "Missing help file."
-msgstr "Hiányzó súgófájl."
+msgid "Bad or missing help file."
+msgstr "Hiányzó vagy hibás súgófájl."
 
 #: frmmain:msg19
 msgid "Missing help viewer."
@@ -602,7 +602,9 @@ msgstr "Váratlan hiba."
 #: frmmain:msg40
 msgid ""
 "Only Neumann architecture CPU compatible with the standard bus can be used!"
-msgstr "Csak a standard busszal kompatibilis Neumann architektúrájú CPU modulok használhatóak!"
+msgstr ""
+"Csak a standard busszal kompatibilis Neumann architektúrájú CPU modulok "
+"használhatóak!"
 
 #: frmrunlogger:msg02
 msgid "Save log to file"
@@ -620,124 +622,124 @@ msgstr "Naplófájl|*.log|Minden fájl|*.*"
 msgid "Counter"
 msgstr "Számláló"
 
-#~ msgctxt "frmexdepmemory.msg01"
-#~ msgid "ERROR: "
-#~ msgstr "HIBA: "
+msgctxt "frmexdepmemory.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
 
-#~ msgctxt "frmexdepmemory.msg02"
-#~ msgid "Only hexadecimal values can be entered for address value!"
-#~ msgstr "A címértékhez csak hexadecimális értékek adhatók meg!"
-
-#, object-pascal-format
-#~ msgctxt "frmexdepmemory.msg04"
-#~ msgid "Memory address too high! (> %s)"
-#~ msgstr "A memóriacím túl magas! (> %s)"
-
-#~ msgctxt "frmhexviewer.msg01"
-#~ msgid "Address"
-#~ msgstr "Cím"
-
-#~ msgctxt "frmloadsavememory.msg01"
-#~ msgid "ERROR: "
-#~ msgstr "HIBA: "
-
-#~ msgctxt "frmloadsavememory.msg02"
-#~ msgid "Only hexadecimal values can be entered for address value!"
-#~ msgstr "A címértékhez csak hexadecimális értékek adhatók meg!"
+msgctxt "frmexdepmemory.msg02"
+msgid "Only hexadecimal values can be entered for address value!"
+msgstr "A címértékhez csak hexadecimális értékek adhatók meg!"
 
 #, object-pascal-format
-#~ msgctxt "frmloadsavememory.msg03"
-#~ msgid "Memory address too high! (> %s)"
-#~ msgstr "A memóriacím túl magas! (> %s)"
+msgctxt "frmexdepmemory.msg04"
+msgid "Memory address too high! (> %s)"
+msgstr "A memóriacím túl magas! (> %s)"
 
-#~ msgctxt "frmmain.msg01"
-#~ msgid "ERROR: "
-#~ msgstr "HIBA: "
+msgctxt "frmhexviewer.msg01"
+msgid "Address"
+msgstr "Cím"
 
-#~ msgctxt "frmrunlogger.msg01"
-#~ msgid "ERROR: "
-#~ msgstr "HIBA: "
+msgctxt "frmloadsavememory.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
 
-#~ msgctxt "frmrunlogger.msg06"
-#~ msgid "Address"
-#~ msgstr "Cím"
+msgctxt "frmloadsavememory.msg02"
+msgid "Only hexadecimal values can be entered for address value!"
+msgstr "A címértékhez csak hexadecimális értékek adhatók meg!"
 
-#~ msgctxt "frmrunlogger.msg07"
-#~ msgid "Opcode"
-#~ msgstr "Opkód"
+#, object-pascal-format
+msgctxt "frmloadsavememory.msg03"
+msgid "Memory address too high! (> %s)"
+msgstr "A memóriacím túl magas! (> %s)"
 
-#~ msgctxt "frmrunlogger.msg08"
-#~ msgid "Mnemonic"
-#~ msgstr "Mnemonik"
+msgctxt "frmmain.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
 
-#~ msgctxt "tform1.edit1.text"
-#~ msgid "00"
-#~ msgstr "00"
+msgctxt "frmrunlogger.msg01"
+msgid "ERROR: "
+msgstr "HIBA: "
 
-#~ msgctxt "tform1.menuitem5.caption"
-#~ msgid "&Help"
-#~ msgstr "&Súgó"
+msgctxt "frmrunlogger.msg06"
+msgid "Address"
+msgstr "Cím"
 
-#~ msgctxt "tform1.selectplugindirectory.hint"
-#~ msgid "Select plugin directory"
-#~ msgstr "Bővítménykönyvtár kiválasztása"
+msgctxt "frmrunlogger.msg07"
+msgid "Opcode"
+msgstr "Opkód"
 
-#~ msgctxt "tform2.button1.caption"
-#~ msgid "&Close"
-#~ msgstr "&Bezárás"
+msgctxt "frmrunlogger.msg08"
+msgid "Mnemonic"
+msgstr "Mnemonik"
 
-#~ msgctxt "tform3.button1.caption"
-#~ msgid "&Close"
-#~ msgstr "&Bezárás"
+msgctxt "tform1.edit1.text"
+msgid "00"
+msgstr "00"
 
-#~ msgctxt "tform3.radiogroup1.hint"
-#~ msgid "Select memory type of the Harvard architecture"
-#~ msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+msgctxt "tform1.menuitem5.caption"
+msgid "&Help"
+msgstr "&Súgó"
 
-#~ msgctxt "tform4.button1.caption"
-#~ msgid "&Close"
-#~ msgstr "&Bezárás"
+msgctxt "tform1.selectplugindirectory.hint"
+msgid "Select plugin directory"
+msgstr "Bővítménykönyvtár kiválasztása"
 
-#~ msgctxt "tform4.drawgrid1.columns[1].title.caption"
-#~ msgid "Address"
-#~ msgstr "Cím"
+msgctxt "tform2.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
 
-#~ msgctxt "tform4.drawgrid1.columns[2].title.caption"
-#~ msgid "Opcode"
-#~ msgstr "Opkód"
+msgctxt "tform3.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
 
-#~ msgctxt "tform4.drawgrid1.columns[3].title.caption"
-#~ msgid "Mnemonic"
-#~ msgstr "Mnemonik"
+msgctxt "tform3.radiogroup1.hint"
+msgid "Select memory type of the Harvard architecture"
+msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
 
-#~ msgctxt "tform5.button5.caption"
-#~ msgid "&Close"
-#~ msgstr "&Bezárás"
+msgctxt "tform4.button1.caption"
+msgid "&Close"
+msgstr "&Bezárás"
 
-#~ msgctxt "tform5.editbutton1.text"
-#~ msgid "00 00 00"
-#~ msgstr "00 00 00"
+msgctxt "tform4.drawgrid1.columns[1].title.caption"
+msgid "Address"
+msgstr "Address"
 
-#~ msgctxt "tform5.editbutton2.text"
-#~ msgid "00"
-#~ msgstr "00"
+msgctxt "tform4.drawgrid1.columns[2].title.caption"
+msgid "Opcode"
+msgstr "Opcode"
 
-#~ msgctxt "tform5.label1.caption"
-#~ msgid "Address"
-#~ msgstr "Cím"
+msgctxt "tform4.drawgrid1.columns[3].title.caption"
+msgid "Mnemonic"
+msgstr "Mnemonic"
 
-#~ msgctxt "tform5.radiogroup1.hint"
-#~ msgid "Select memory type of the Harvard architecture"
-#~ msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+msgctxt "tform5.button5.caption"
+msgid "&Close"
+msgstr "&Bezárás"
 
-#~ msgctxt "tform7.editbutton1.text"
-#~ msgid "00 00 00"
-#~ msgstr "00 00 00"
+msgctxt "tform5.editbutton1.text"
+msgid "00 00 00"
+msgstr "00 00 00"
 
-#~ msgctxt "tform7.editbutton2.text"
-#~ msgid "00 00 00"
-#~ msgstr "00 00 00"
+msgctxt "tform5.editbutton2.text"
+msgid "00"
+msgstr "00"
 
-#~ msgctxt "tform7.radiogroup1.hint"
-#~ msgid "Select memory type of the Harvard architecture"
-#~ msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+msgctxt "tform5.label1.caption"
+msgid "Address"
+msgstr "Cím"
+
+msgctxt "tform5.radiogroup1.hint"
+msgid "Select memory type of the Harvard architecture"
+msgstr "A Harvard-architektúra memóriatípusának kiválasztása"
+
+msgctxt "tform7.editbutton1.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+msgctxt "tform7.editbutton2.text"
+msgid "00 00 00"
+msgstr "00 00 00"
+
+msgctxt "tform7.radiogroup1.hint"
+msgid "Select memory type of the Harvard architecture"
+msgstr "A Harvard-architektúra memóriatípusának kiválasztása"

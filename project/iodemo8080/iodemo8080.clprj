@@ -6,13 +6,13 @@
       <AttachedToBus>true</AttachedToBus>
     </TCPU>
     <TIOPort id="Keyboard" type="ioport_button16bcd">
-      <BaseAddress>000129</BaseAddress>
+      <BaseAddress>0081</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>
       <DataOutNegation>false</DataOutNegation>
       <Enabled>true</Enabled>
-      <IntVector>07</IntVector>
+      <IntVector>CF</IntVector>
       <SelMode>lmBCD</SelMode>
       <SelNegation>false</SelNegation>
       <PanelCaption>MyKeys</PanelCaption>
@@ -21,13 +21,13 @@
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="Console" type="ioport_console">
-      <BaseAddress>000128</BaseAddress>
+      <BaseAddress>0080</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>
       <DataOutNegation>false</DataOutNegation>
       <Enabled>true</Enabled>
-      <IntVector>15</IntVector>
+      <IntVector>D7</IntVector>
       <SelMode>lmBCD</SelMode>
       <SelNegation>false</SelNegation>
       <PanelCaption>MyConsole</PanelCaption>
@@ -36,7 +36,7 @@
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="Display" type="ioport_disp1hexbcd">
-      <BaseAddress>000144</BaseAddress>
+      <BaseAddress>0090</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>

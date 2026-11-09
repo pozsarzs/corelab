@@ -499,7 +499,7 @@ msgid "Value (Hex)"
 msgstr ""
 
 #: frmmain:msg18
-msgid "Missing help file."
+msgid "Bad or missing help file."
 msgstr ""
 
 #: frmmain:msg19

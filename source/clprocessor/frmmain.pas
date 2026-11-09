@@ -290,7 +290,7 @@ resourcestring
   MSG15 = 'Only hexadecimal values can be entered!';
   MSG16 = 'Out of range!';
   MSG17 = 'Value (Hex)';
-  MSG18 = 'Missing help file.';
+  MSG18 = 'Bad or missing help file.';
   MSG19 = 'Missing help viewer.';
   MSG20 = 'Cannot read state data from plugin.';
   MSG21 = 'Save plugin state to file';
@@ -547,17 +547,21 @@ begin
     CHMViewerExists := FileExists(CHMViewer);
     if CHMFileExists and CHMViewerExists then
     begin
-      CreateLCLHelpSystem;
-      with CHMHelpDatabase1 do
-      begin
-        Autoregister := true;
-        Filename := CHMFile;
-        KeywordPrefix := 'html'
-      end;
-      with LHelpConnector1 do
-      begin
-        Autoregister := true;
-        LHelpPath := CHMViewer;
+      try
+        CreateLCLHelpSystem;
+        with CHMHelpDatabase1 do
+        begin
+          Autoregister := true;
+          Filename := CHMFile;
+          KeywordPrefix := 'html'
+        end;
+        with LHelpConnector1 do
+        begin
+          Autoregister := true;
+          LHelpPath := CHMViewer;
+        end;
+      except
+        ShowMessage(MSG01 + MSG18);
       end;
     end else
     begin

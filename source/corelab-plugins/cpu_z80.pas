@@ -40,7 +40,7 @@ type
   private
   protected
     RegPointers: array[0..7] of PByte;         // pointers to register variables
-    FBus:        ISysBus;                              // Connected external bus
+    FBus:        IStandardBus;                         // Connected external bus
     FRegs:       TZ80Registers;
     FInterruptMode: Byte;                                      // interrupt mode
     FInterruptEnabled2:  Boolean;           // global interrupt enable flag IFF2
@@ -257,7 +257,7 @@ end;
 // CONNECT CPU TO EXTERNAL SYSTEM BUS
 function TZ80CPU.ConnectBus(const ABus: IInterface): Boolean;
 begin
-  Result := Supports(ABus, ISysBus, FBus);
+  Result := Supports(ABus, IStandardBus, FBus);
 end;
 
 // CHECK PENDING INTERRUPT

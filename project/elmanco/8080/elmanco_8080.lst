@@ -37,8 +37,8 @@
 010B	7C			MOV	A, H
 010C	B5			ORA	L
 010D	C2 7A 01		JNZ	SKDELAY		; if H or L <> 0 then skip main program 
-0110	21 00 10		LXI	H, 1000H	; reload counter
-0113	22 DELAY		SHLD	DELAY		; store counter value
+0110	21 01 00		LXI	H, 000AH	; reload counter
+0113	22 45 02		SHLD	DELAY		; store counter value
 			
 			; -- DISPLAY --
 0116	CD FB 01		CALL	DSPPROC		; call display handler
@@ -241,6 +241,6 @@
 023F	00 00 00 00	REELS	DB	0, 0, 0, 0	; 0=spinning, 1=stopped
 0243	00		MACHINE	DB	0		; machine state: 0..5: wait, stand, run, win, lose, exit
 0244	AA		RUNLGHT	DB	AAH		; running light sample (AAH/55H)
-0245	10 27		DELAY	DW	10000		; delay loop value
+0245	01 00		DELAY	DW	000AH		; delay loop value
 				END
 			

@@ -123,7 +123,7 @@ begin
         finally
           GlobalSimLock.Release;
         end;
-        Sleep(FDelay);
+        if FDelay > 0 then Sleep(FDelay);
       end;
     end else
     begin

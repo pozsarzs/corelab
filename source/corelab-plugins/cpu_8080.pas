@@ -40,7 +40,7 @@ type
   private
   protected
     RegPointers: array[0..7] of PByte;         // Pointers to register variables
-    FBus:        ISysBus;                              // Connected external bus
+    FBus:        IStandardBus;                         // Connected external bus
     FRegs:       T8080Registers;
     procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);
     procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;
@@ -194,7 +194,7 @@ end;
 // CONNECT CPU TO EXTERNAL SYSTEM BUS
 function T8080CPU.ConnectBus(const ABus: IInterface): Boolean;
 begin
-  Result := Supports(ABus, ISysBus, FBus);
+  Result := Supports(ABus, IStandardBus, FBus);
 end;
 
 // LOAD SAVED STATE

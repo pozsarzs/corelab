@@ -568,7 +568,7 @@ resourcestring
   MSG12 = 'Error in line ''%s''.';                                        { SC }
   MSG13 = 'No continuous viewer updates during a 100 ms execution delay.';{ SC }
   MSG14 = 'Bad or duplicated label name: ''%s''.';                        { SC }
-  MSG18 = 'Missing help file.';                                           { SC }
+  MSG18 = 'Bad or missing help file.';                                    { SC }
   MSG19 = 'Missing help viewer.';                                         { SC }
   MSG28 = 'Save memory content to file';
   MSG29 = 'Cannot save memory content to ''%s'' binary file.';            { SM }
@@ -1219,17 +1219,21 @@ begin
     CHMViewerExists := FileExists(CHMViewer);
     if CHMFileExists and CHMViewerExists then
     begin
-      CreateLCLHelpSystem;
-      with CHMHelpDatabase1 do
-      begin
-        Autoregister := true;
-        Filename := CHMFile;
-        KeywordPrefix := 'html'
-      end;
-      with LHelpConnector1 do
-      begin
-        Autoregister := true;
-        LHelpPath := CHMViewer;
+      try
+        CreateLCLHelpSystem;
+        with CHMHelpDatabase1 do
+        begin
+          Autoregister := true;
+          Filename := CHMFile;
+          KeywordPrefix := 'html'
+        end;
+        with LHelpConnector1 do
+        begin
+          Autoregister := true;
+          LHelpPath := CHMViewer;
+        end;
+      except
+        SysConsole1.WriteMessage(MSG02 + MSG18);
       end;
     end else
     begin
@@ -5606,7 +5610,7 @@ end;
 // HELP/SHOW HELP ACTION =======================================================
 procedure TForm1.HHelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/framework/index.html');
+  ShowHelpOrErrorForKeyword('','html/index.html');
 end;
 
 // HELP/SHOW ABOUT ACTION ------------------------------------------------------
@@ -5901,13 +5905,14 @@ end;
 procedure TForm1.CPUEventHandler(Sender: TObject; Event: TCPUEvent);
 begin
   if (Event = ceInstructionBoundary) { and (Sender is TCPU) } then
-  begin
-    // RunLogger
-    Form4.AppendRecord(TCPU(Sender).GetCurrentInstruction);
-    // RegViewer
-    if Assigned(Form11) and Form11.Visible and
-      (Form11.ProcInstance = TCPU(Sender)) then Form11.RefreshContent;
-  end;
+    if SimulationThread1.Delay >= 100 then
+    begin
+      // RunLogger
+      Form4.AppendRecord(TCPU(Sender).GetCurrentInstruction);
+      // RegViewer
+      if Assigned(Form11) and Form11.Visible and
+        (Form11.ProcInstance = TCPU(Sender)) then Form11.RefreshContent;
+    end;
 end;
 
 // INTERRUPT HANDLER
@@ -5929,10 +5934,13 @@ begin
           IntLogRec.Sender := Pair.Key;
           Break;
         end;
-      if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
-      // RegViewer
-      if Assigned(Form11) and Form11.Visible and
-        (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.RefreshContent;
+      if SimulationThread1.Delay >= 100 then
+      begin
+        if Assigned(Form8) and Form8.Visible then Form8.AppendRecord(IntLogRec);
+        // RegViewer
+        if Assigned(Form11) and Form11.Visible and
+          (Form11.ProcInstance = FSysBus.FCPUs[0].CPU) then Form11.RefreshContent;
+      end;
     end;
 end;
 
@@ -5997,7 +6005,7 @@ begin
   FActualProject := '';
   FActualProjectIsSaved := True;
   FActualScript := '';
-//  Form6.ClearModified;
+  // Form6.ClearModified;
   CommandEngine2.FScriptRuntime.SetRegister('C', '0', True);
   // system language
   FSystemLanguage := GetLang;
