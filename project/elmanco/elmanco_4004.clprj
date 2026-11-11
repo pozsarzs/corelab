@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoreLAB_Workspace version="1.0">
+  <Modules>
+    <TCPU id="Processor" type="cpu_4004">
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+    </TCPU>
+    <TIOPort id="Buttons" type="ioport_button8">
+      <BaseAddress>000010</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmDirect</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>CF</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>[0][1-2-3-4][7]</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>382-556</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
+    <TIOPort id="LEDs" type="ioport_ledgreen8">
+      <BaseAddress>000025</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>00</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>Status</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>426-305</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
+    <TIOPort id="Display" type="ioport_disp47segmux">
+      <BaseAddress>000020</BaseAddress>
+      <DataInMode>lmBCD</DataInMode>
+      <DataInNegation>false</DataInNegation>
+      <DataOutMode>lmBCD</DataOutMode>
+      <DataOutNegation>false</DataOutNegation>
+      <Enabled>true</Enabled>
+      <IntVector>00</IntVector>
+      <SelMode>lmBCD</SelMode>
+      <SelNegation>false</SelNegation>
+      <PanelCaption>* * * El Manco * * *</PanelCaption>
+      <PanelSize>320-240</PanelSize>
+      <PanelPosition>303-385</PanelPosition>
+      <AttachedToBus>true</AttachedToBus>
+    </TIOPort>
+    <TMemory id="ROM0" type="memory_4001rom">
+      <BaseAddress>00</BaseAddress>
+      <AddressRangeSize>256</AddressRangeSize>
+      <MemoryMode>mmROM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+      <TargetAddress></TargetAddress>
+      <TargetAddressPort></TargetAddressPort>
+    </TMemory>
+    <TMemory id="ROM1" type="memory_4001rom">
+      <BaseAddress>01</BaseAddress>
+      <AddressRangeSize>256</AddressRangeSize>
+      <MemoryMode>mmROM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+      <TargetAddress></TargetAddress>
+      <TargetAddressPort></TargetAddressPort>
+    </TMemory>
+    <TMemory id="RAM0" type="memory_4002ram">
+      <BaseAddress>00</BaseAddress>
+      <AddressRangeSize>80</AddressRangeSize>
+      <MemoryMode>mmRAM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+      <TargetAddress></TargetAddress>
+      <TargetAddressPort></TargetAddressPort>
+    </TMemory>
+    <TMemory id="RAM1" type="memory_4002ram">
+      <BaseAddress>01</BaseAddress>
+      <AddressRangeSize>80</AddressRangeSize>
+      <MemoryMode>mmRAM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+      <TargetAddress></TargetAddress>
+      <TargetAddressPort></TargetAddressPort>
+    </TMemory>
+    <TMemory id="RAM2" type="memory_4002ram">
+      <BaseAddress>02</BaseAddress>
+      <AddressRangeSize>80</AddressRangeSize>
+      <MemoryMode>mmRAM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+      <TargetAddress></TargetAddress>
+      <TargetAddressPort></TargetAddressPort>
+    </TMemory>
+    <TMemory id="RAM3" type="memory_4002ram">
+      <BaseAddress>03</BaseAddress>
+      <AddressRangeSize>80</AddressRangeSize>
+      <MemoryMode>mmRAM</MemoryMode>
+      <Enabled>true</Enabled>
+      <AttachedToBus>true</AttachedToBus>
+      <TargetAddress></TargetAddress>
+      <TargetAddressPort></TargetAddressPort>
+    </TMemory>
+  </Modules>
+</CoreLAB_Workspace>

@@ -1,0 +1,45 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | CoreLAB v0.1 - Modular Processor Simulation Framework                      |
+# | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>                       |
+# | lst2asm                                                                    |
+# | Convert list file to assembly                                              |
+# +----------------------------------------------------------------------------+
+
+# CHECK DEPENDENCY
+chkdep() {
+  if command -v $1 >/dev/null 2>&1;
+  then
+    return 0
+  else
+    echo -e "\nERROR: The '${1}' is required to use the script."
+    return 127
+  fi
+}
+
+# check dependency
+chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
+# convert file
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <input.lst> <output.asm>"
+    exit 1
+fi
+awk '
+{
+    # remove address and opcodes
+    sub(/^[0-9A-Fa-f]{4}( [0-9A-Fa-f]{2})*[ \t]+/, "")
+    # remove leading empty chars
+    sub(/^[ \t]+/, "")
+    if ($0 == "") {
+        print ""
+        next
+    }
+    # labels will be without indentation
+    if ($1 ~ /:$/ || $2 ~ /^(EQU|DB|DW|DS)$/) {
+        print $0
+    } else {
+        # others get one tabulator indentation
+        print "\t" $0
+    }
+}' "$1" > "$2"
+echo "Done."

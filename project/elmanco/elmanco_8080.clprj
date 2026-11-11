@@ -17,7 +17,7 @@
       <SelNegation>false</SelNegation>
       <PanelCaption>[0][1-2-3-4][7]</PanelCaption>
       <PanelSize>320-240</PanelSize>
-      <PanelPosition>500-550</PanelPosition>
+      <PanelPosition>382-556</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="LEDs" type="ioport_ledgreen8">
@@ -32,10 +32,10 @@
       <SelNegation>false</SelNegation>
       <PanelCaption>Status</PanelCaption>
       <PanelSize>320-240</PanelSize>
-      <PanelPosition>500-350</PanelPosition>
+      <PanelPosition>426-305</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
-    <TIOPort id="Display" type="ioport_disp4hexmuxbcd">
+    <TIOPort id="Display" type="ioport_disp47segmux">
       <BaseAddress>000020</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
@@ -47,7 +47,7 @@
       <SelNegation>false</SelNegation>
       <PanelCaption>* * * El Manco * * *</PanelCaption>
       <PanelSize>320-240</PanelSize>
-      <PanelPosition>300-400</PanelPosition>
+      <PanelPosition>303-385</PanelPosition>
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TMemory id="RAM" type="memory_standard">

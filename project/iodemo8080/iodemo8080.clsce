@@ -34,7 +34,6 @@
 	CFME	RAM.BaseAddress 0		; base address
 	CFME	RAM.AddressRangeSize 1024	; size
 	CFME	RAM.MemoryMode mmRAM		; mode
-	CHWD	"/home/pozsarzs/"
 	LDME	RAM "iodemo8080.hex"		; load program
 	ATME	RAM				; attach to bus
 	
