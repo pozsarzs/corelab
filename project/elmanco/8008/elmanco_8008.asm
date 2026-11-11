@@ -9,12 +9,12 @@
 * ----------------------------
 * cpu_8008
 * memory_standard	1 kB RAM at address (0000B-2000B)
-* ioport_button8	at address 00H, interrupt vector CF
+* ioport_button8	at address 00H
 * - 0:    start game
 * - 1..4: stop reels
 * - 7:    exit game
-* ioport_disp4hexmuxbcd	at address 20H and 21H
-* ioport_ledgreen8	at address 25H
+* ioport_disp4hexmuxbcd	at address 20B and 21B
+* ioport_ledgreen8	at address 25B
 
 * ---- CONSTANTS ----
 PRTBTN	EQU	00B		I/O base addresses
@@ -53,7 +53,7 @@ M_SKP1
 
 	LAM			A = status of a reel
 	CPI	1
-	JZ	M_NEXT		if it is stopped go next
+	JTZ	M_NEXT		if it is stopped go next
 	SHL	DISPLY		H, L = load display variable address
 
 	LAC			HL = HL + C
@@ -76,7 +76,7 @@ M_SKIP				skip this block
 	SHL	MACHIN		H, L = machine state address
 	LAM			A = machine state
 	CPI	5		check machine state
-	JZ	EXIT		if machine state is "EXIT" go exit
+	JTZ	EXIT		if machine state is "EXIT" go exit
 
 	JMP	M_LOOP		go back
 EXIT
@@ -89,7 +89,7 @@ BTNPRC
 B_B0				start machine
 	LAB
 	NDI	01B
-	JZ	B_CHKR		verify running state
+	JTZ	B_CHKR		verify running state
 
 	XRA			unlock all reels
 	SHL	REELS		HL = reels state address
@@ -123,35 +123,35 @@ B_CHKR
 B_B1				stop reel #1
 	LAB
 	NDI	02B
-	JZ	B_B2
+	JTZ	B_B2
 	SHL	REELS
 	LMI	1		set reel #1 state to "STOPPED"
 	JMP	B_REEL
 B_B2				stop reel #2
 	LAB
 	NDI	04B
-	JZ	B_B3
+	JTZ	B_B3
 	SHL	REELS + 1
 	LMI	1		set reel #2 state to "STOPPED"		
 	JMP	B_REEL
 B_B3				stop reel #3
 	LAB
 	NDI	10B
-	JZ	B_B4
+	JTZ	B_B4
 	SHL	REELS + 2
 	LMI	1		set reel #3 state to "STOPPED"
 	JMP	B_REEL
 B_B4				stop reel #4
 	LAB
 	NDI	20B
-	JZ	B_B7
+	JTZ	B_B7
 	SHL	REELS + 3
 	LMI	1		set reel #4 state to "STOPPED"
 	JMP	B_REEL
 B_B7				exit machine
 	LAB
 	NDI	200B
-	JZ	B_REEL
+	JTZ	B_REEL
 	SHL	MACHIN	
 	LMI	5		set machine state to "EXIT"
 
