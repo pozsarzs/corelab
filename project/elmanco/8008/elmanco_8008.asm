@@ -17,235 +17,309 @@
 * ioport_ledgreen8	at address 15H
 
 * ---- CONSTANTS ----
-PRTBTN	EQU	00h		 I/O base addresses
+PRTBTN	EQU	00h		I/O base addresses
 PRTDSP	EQU	10h
 PRTLED	EQU	15h
 
 * ---- ENTRIES ----
 	ORG	0000h
-	JMP	START		 reset vector
+	JMP	START		reset vector
 
 	ORG	0008h
-	JMP	BTNINT		 RST 1 interrupt vector
+	JMP	BTNINT		RST 1 interrupt vector
 
 * ---- MAIN PROGRAM ----
 	ORG	0100h
-START				 START MAIN PROGRAM
-	CAL	LEDPRC		 initialize LEDs
+START				START MAIN PROGRAM
+	CAL	LEDPRC		initialize LEDs
 
-M_LOOP				 MAIN LOOP
-	CAL	DSPPRC		 call display handler
+M_LOOP				MAIN LOOP
+	CAL	DSPPRC		call display handler
 
-	SHL	MACHIN		 H, L = machine state address
-	LAM			 A = machine state
-	CPI	2		 check run state
-	JFZ	M_SKIP		 in other skip this block
-	LCI	4		 counter = 4
-M_DIGI				 increment digits
-	DCC			 decrement counter
-;	LXI	H, REELS	 HL = reels variable address
-	LBI	0		 B = 0 (upper byte)
-;	DAD	B		 HL = HL + BC
-	LAM			 A = status of a reel
+	SHL	MACHIN		H, L = machine state address
+	LAM			A = machine state
+	CPI	2		check run state
+	JFZ	M_SKIP		in other skip this block
+	LCI	4		counter = 4
+M_DIGI				increment digits
+	DCC			decrement counter
+	SHL	REELS		H, L = reels variable address
+	LBI	0		B = 0 (upper byte)
+
+	LAC			HL = HL + C
+	ADL
+	LLA
+	JFC	M_SKP1
+	INH
+M_SKP1
+
+	LAM			A = status of a reel
 	CPI	1
-	JZ	M_NEXT		 if it is stopped go next
-;	LXI	H, DISPLY	 HL = load display variable address
-;	LBI	0		 B = 0 (upper byte)
-;	DAD	B		 HL = HL + BC
-	LAM			 A = digit value
-;	INR	A		 increment value
-	NDI	0Fh		 masking value (0-FH)
-	LMA	 		 store digit value
+	JZ	M_NEXT		if it is stopped go next
+	SHL	DISPLY		H, L = load display variable address
+
+	LAC			HL = HL + C
+	ADL
+	LLA
+	JFC	M_SKP2
+	INH
+M_SKP2
+
+	LAM			A = digit value
+	ADI	1		increment value
+	NDI	0Fh		masking value (0-FH)
+	LMA			store digit value
 M_NEXT
-	LAC			 A = counter
-	CPI	0		 if counter > 0 then go back
+	LAC			A = counter
+	CPI	0		if counter > 0 then go back
 	JFZ	M_DIGI
-M_SKIP				 skip this block
+M_SKIP				skip this block
 
-	SHL	MACHIN		 H, L = machine state address
-	LAM			 A = machine state
-	CPI	5		 check machine state
-	JZ	EXIT		 if machine state is "EXIT" go exit
+	SHL	MACHIN		H, L = machine state address
+	LAM			A = machine state
+	CPI	5		check machine state
+	JZ	EXIT		if machine state is "EXIT" go exit
 
-	JMP	M_LOOP		 go back
+	JMP	M_LOOP		go back
 EXIT
-	HLT			 exit program
+	HLT			exit program
 
 * ---- BUTTON INTERRUPT SERVICE ROUTINE (ISR) ----
 BTNINT
-;	PUSH	PSW
-;	PUSH	H
-;	PUSH	B
+	
+	LDH			save register L and H
+	LEL
+	SHL	SVREGL
+	LME
+	SHL	SVREGH
+	LMD
+
+	SHL	SVREGC		save register C
+	LMC
+	SHL	SVREGB		save register B
+	LMB
+
+	SHL	SVREGA		save register A
+	LMA
+
 	INP	PRTBTN
 	LBA
-B_B0				 start machine
+B_B0				start machine
 	LAB
 	NDI	01H
-	JZ	B_CHKR		 verify running state
+	JZ	B_CHKR		verify running state
 
-	XRA			 unlock all reels
-	SHL	REELS		 HL = reels state address
-	LMA			 set reel states to "SPINNING"
-;	INX	H
+	XRA			unlock all reels
+	SHL	REELS		HL = reels state address
+	LMA			set reel states to "SPINNING"
+	INL
+	JFZ	B_SKIP1
+	INH
+B_SKIP1
 	LMA
-;	INX	H
+	INL
+	JFZ	B_SKIP2
+	INH
+B_SKIP2
 	LMA
-;	INX	H
+	INL
+	JFZ	B_SKIP3
+	INH
+B_SKIP3
 	LMA
 
-	SHL	MACHIN		 H, L = machine state address
-;	MVI	M, 2		 set machine state to "RUN"
+	SHL	MACHIN		H, L = machine state address
+	LMI	2		set machine state to "RUN"
 	JMP	B_REEL
 
 B_CHKR
 	SHL	MACHIN
-	CPI	2		 is machine running?
-	JFZ	B_B7		 skip stop buttons if not running
+	CPI	2		is machine running?
+	JFZ	B_B7		skip stop buttons if not running
 
-B_B1				 stop reel #1
+B_B1				stop reel #1
 	LAB
 	NDI	02H
 	JZ	B_B2
-;	LXI	H, REELS
-;	MVI	M, 1		 set reel #1 state to "STOPPED"
+	SHL	REELS
+	LMI	1		set reel #1 state to "STOPPED"
 	JMP	B_REEL
-B_B2				 stop reel #2
+B_B2				stop reel #2
 	LAB
 	NDI	04H
 	JZ	B_B3
-;	LXI	H, REELS + 1	
-;	MVI	M, 1		 set reel #2 state to "STOPPED"		
+	SHL	REELS + 1
+	LMI	1		set reel #2 state to "STOPPED"		
 	JMP	B_REEL
-B_B3				 stop reel #3
+B_B3				stop reel #3
 	LAB
 	NDI	08H
 	JZ	B_B4
-;	LXI	H, REELS + 2	
-;	MVI	M, 1		 set reel #3 state to "STOPPED"
+	SHL	REELS + 2
+	LMI	1		set reel #3 state to "STOPPED"
 	JMP	B_REEL
-B_B4				 stop reel #4
+B_B4				stop reel #4
 	LAB
 	NDI	10H
 	JZ	B_B7
-;	LXI	H, REELS + 3
-;	MVI	M, 1		 set reel #4 state to "STOPPED"
+	SHL	REELS + 3
+	LMI	1		set reel #4 state to "STOPPED"
 	JMP	B_REEL
-B_B7				 exit machine
+B_B7				exit machine
 	LAB
 	NDI	80H
 	JZ	B_REEL
-;	LXI	H, MACHIN	
-;	MVI	M, 5		 set machine state to "EXIT"
+	SHL	MACHIN	
+	LMI	5		set machine state to "EXIT"
 
 * -- CHECK WIN STATE --
 B_REEL
-	SHL	REELS		 check all reel states
+	SHL	REELS		check all reel states
 	LAM
-;	INX	H
-;	ADD	M
-;	INX	H
-;	ADD	M
-;	INX	H
-;	ADD	M
+	INL
+	JFZ	B_SKIP4
+	INH
+B_SKIP4
+	ADM
+	INL
+	JFZ	B_SKIP5
+	INH
+B_SKIP5
+	ADM
+	INL
+	JFZ	B_SKIP6
+	INH
+B_SKIP6
+	ADM
 	CPI	4
-	JFZ	B_RET		 if not all are standing, then return
+	JFZ	B_RET		if not all are standing, then return
 
-	LCI	3		 counter = 3
+	LCI	3		counter = 3
 	SHL	DISPLY
-	LDM			 first reel value
+	LDM			first reel value
 B_WIN
-;	INX	H
-	LAM			 next reel value
-;	CMP	D
-	JFZ	B_LOSE		 different -> "LOSE"
+	INL
+	JFZ	B_SKIP7
+	INH
+B_SKIP7
+	LAM			next reel value
+	CPD	
+	JFZ	B_LOSE		different -> "LOSE"
 	DCC
 	LAC
 	CPI	0
 	JFZ	B_WIN
 
 	SHL	MACHIN
-;	MVI	M, 3		 set machine state to "WIN"
+	LMI	3		set machine state to "WIN"
 	JMP	B_RET
 B_LOSE
 	SHL	MACHIN
-;	MVI	M, 4		 set machine state to "LOSE"
+	LMI	4		set machine state to "LOSE"
 
 B_RET
-	CAL	LEDPRC		 refresh LEDs
-;	POP	B
-;	POP	H
-;	POP	PSW
+	CAL	LEDPRC		refresh LEDs
+
+	SHL	SVREGA		restore register A
+	LAM
+	
+	SHL	SVREGC		restore register C
+	LCM
+	SHL	SVREGB		restore register B
+	LBM
+
+	SHL	SVREGL		restore register L and H
+	LEM
+	SHL	SVREGH
+	LDM
+	LHD
+	LLE
+
 	RET
 
-* ---- DISPLY HANDLER SUBROUTINE ----
+* ---- DISPLAY HANDLER SUBROUTINE ----
 DSPPRC
-;	MVI	C, 4		 counter = 4
+	LCI	4		counter = 4
 D_LOOP
-	DCC			 decrement counter
+	DCC			decrement counter
 	LAC
-	OUT	PRTDSP + 1	 select display digit (3..0)
-	SHL	DISPLY		 H, L = variable address
-;	MVI	B, 0		 B = 0
-;	DAD	B		 HL = HL + BC
-	LAM			 load digit value
-	OUT	PRTDSP		 write to display
-	LAC			 A = counter
+	OUT	PRTDSP + 1	select display digit (3..0)
+	SHL	DISPLY		H, L = variable address
+
+	LAC			HL = HL + C
+	ADL
+	LLA
+	JFC	D_SKIP
+	INH
+D_SKIP
+
+	LAM			load digit value
+	OUT	PRTDSP		write to display
+	LAC			A = counter
 	CPI	0
-	JFZ	D_LOOP		 if not zero go back
+	JFZ	D_LOOP		if not zero go back
 	RET
 
 * ---- LED HANDLER SUBROUTINE ----
 LEDPRC
-	LCI	0		 LED 0-7 -> 0000 0000
+	LCI	0		LED 0-7 -> 0000 0000
 	SHL	REELS + 3
-	LAM			 reel #3 state
+	LAM			reel #3 state
 	ORA
 	JFZ	L_R2
 	LAC
-	ORI	08H		 LED 0-7 -> xxx1 xxxx 
+	ORI	08H		LED 0-7 -> xxx1 xxxx 
 	LCA
 L_R2
-;	LDA	REELS + 2	 reel #2 state
+	SHL	REELS + 2
+	LAM			reel #2 state
 	ORA
 	JFZ	L_R3
 	LAC
-	ORI	04H		 LED 0-7 -> xx1x xxxx 
+	ORI	04H		LED 0-7 -> xx1x xxxx 
 	LCA
 L_R3
-;	LDA	REELS + 1	 reel #1 state
+	SHL	REELS + 1
+	LAM			reel #1 state
 	ORA
 	JFZ	L_R4
 	LAC
-	ORI	02H		 LED 0-7 -> x1xx xxxx 
+	ORI	02H		LED 0-7 -> x1xx xxxx 
 	LCA
 L_R4
-;	LDA	REELS		 reel #0 state
+	SHL	REELS
+	LAM			reel #0 state
 	ORA
 	JFZ	L_MACH
 	LAC
-	ORI	01H		 LED 0-7 -> 1xxx xxxx 
+	ORI	01H		LED 0-7 -> 1xxx xxxx 
 	LCA
 L_MACH
-;	LDA	MACHIN		 machine state
-	CPI	2		 running?
+	SHL	MACHIN
+	LAM			machine state
+	CPI	2		running?
 	JFZ	L_WIN
 	LAC
-	ORI	60H		 LED 0-7 -> xxxx 0110
+	ORI	60H		LED 0-7 -> xxxx 0110
 	LCA
 	JMP	L_OUT
 L_WIN
-	CPI	3		 stand and win?
+	CPI	3		stand and win?
 	JFZ	L_OUT
 	LAC
-	ORI	0F0H		 LED 0-7 -> xxxx 1111 
+	ORI	0F0H		LED 0-7 -> xxxx 1111 
 	LCA
 L_OUT
 	LAC
-	OUT	PRTLED		 write to LEDs
+	OUT	PRTLED		write to LEDs
 	RET
 
-	 ---- VARIABLES ----
-DISPLY	DEF	1, 2, 3, 4	 display digits in BCD (0000 nnnn)
-REELS	DEF	1, 1, 1, 1	 reels' state (0/1: spinning/stopped)
-MACHIN	DEF	0		 machine state (0..5: wait, stand, run, win, lose, exit)
+	---- VARIABLES ----
+DISPLY	DEF	1, 2, 3, 4	display digits in BCD (0000 nnnn)
+REELS	DEF	1, 1, 1, 1	reels state (0/1: spinning/stopped)
+MACHIN	DEF	0		machine state (0..5: wait, stand, run, win, lose, exit)
+SVREGA	DEF	0		saved register content
+SVREGB	DEF	0
+SVREGC	DEF	0
+SVREGL	DEF	0
 	END
