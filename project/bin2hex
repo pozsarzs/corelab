@@ -20,4 +20,8 @@ chkdep() {
 # check dependency
 chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
 # convert file
-objcopy -I binary -O ihex "$1" "${1}.hex"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <input.bin> <output.hex>"
+    exit 1
+fi
+objcopy -I binary -O ihex "$1" "$2"

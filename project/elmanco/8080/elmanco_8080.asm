@@ -38,7 +38,7 @@ START:				; START MAIN PROGRAM
 M_LOOP:				; MAIN LOOP
 	CALL	DSPPROC		; call display handler
 
-	LXI	H, MACHINE	; H = machine state address
+	LXI	H, MACHINE	; HL = machine state address
 	MOV	A, M		; A = machine state
 	MOV	E, A		; store machine state in E
 	CPI	2		; check run state
@@ -46,13 +46,13 @@ M_LOOP:				; MAIN LOOP
 	MVI	C, 4		; counter = 4
 M_DIGITS:			; increment digits
 	DCR	C		; decrement counter
-	LXI	H, REELS	; H = reels variable address
+	LXI	H, REELS	; HL = reels variable address
 	MVI	B, 0		; B = 0 (upper byte)
 	DAD	B		; HL = HL + BC
 	MOV	A, M		; A = status of a reel
 	CPI	1
 	JZ	M_NEXT		; if it is stopped go next
-	LXI	H, DISPLAY	; H = load display variable address
+	LXI	H, DISPLAY	; HL = load display variable address
 	MVI	B, 0		; B = 0 (upper byte)
 	DAD	B		; HL = HL + BC
 	MOV	A, M		; A = digit value
@@ -65,7 +65,7 @@ M_NEXT:
 	JNZ	M_DIGITS
 M_SKIP:				; skip this block
 
-	LXI	H, MACHINE	; H = machine state address
+	LXI	H, MACHINE	; HL = machine state address
 	MOV	A, M		; A = machine state
 	CPI	5		; check machine state
 	JZ	EXIT		; if machine state is "EXIT" go exit
@@ -89,7 +89,7 @@ B_B0:				; start machine
 	JZ	B_CHKRUN	; verify running state
 
 	XRA	A		; unlock all reels
-	LXI	H, REELS	; H = reels state address
+	LXI	H, REELS	; HL = reels state address
 	MOV	M, A		; set reel states to "SPINNING"
 	INX	H
 	MOV	M, A
@@ -98,7 +98,7 @@ B_B0:				; start machine
 	INX	H
 	MOV	M, A
 
-	LXI	H, MACHINE	; H = machine state address
+	LXI	H, MACHINE	; HL = machine state address
 	MVI	M, 2		; set machine state to "RUN"
 	JMP	B_REELS
 
@@ -190,7 +190,7 @@ D_LOOP:
 	DCR	C		; decrement counter
 	MOV	A, C		;
 	OUT	PRT_DSP + 1	; select display digit (3..0)
-	LXI	H, DISPLAY	; H = variable address
+	LXI	H, DISPLAY	; HL = variable address
 	MVI	B, 0		; B = 0
 	DAD	B		; HL = HL + BC
 	MOV	A, M		; load digit value

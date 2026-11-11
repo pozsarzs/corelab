@@ -38,20 +38,20 @@
 			M_LOOP:				; MAIN LOOP
 0107  CD D8 01			CALL	DSPPROC		; call display handler
 
-010A  21 3C 02			LD	HL, MACHINE	; H = machine state address
+010A  21 3C 02			LD	HL, MACHINE	; HL = machine state address
 010D  7E			LD	A, (HL)		; A = machine state
 010E  FE 02			CP	2		; check run state
 0110  C2 33 01			JP	NZ, M_SKIP	; in other skip this block
 0113  0E 04			LD	C, 4		; counter = 4
 			M_DIGITS:			; increment digits
 0115  0D			DEC	C		; decrement counter
-0116  21 38 02			LD	HL, REELS	; H = reels variable address
+0116  21 38 02			LD	HL, REELS	; HL = reels variable address
 0119  06 00			LD	B, 0		; B = 0 (upper byte)
 011B  09			ADD	HL, BC		; HL = HL + BC
 011C  7E			LD	A, (HL)		; A = status of a reel
 011D  FE 01			CP	1
 011F  CA 2D 01			JP	Z, M_NEXT	; if it is stopped go next
-0122  21 34 02			LD	HL, DISPLAY	; H = load display variable address
+0122  21 34 02			LD	HL, DISPLAY	; HL = load display variable address
 0125  06 00			LD	B, 0		; B = 0 (upper byte)
 0127  09			ADD	HL, BC		; HL = HL + BC
 0128  7E			LD	A, (HL)		; A = digit value
@@ -64,7 +64,7 @@
 0130  C2 15 01			JP	NZ, M_DIGITS
 			M_SKIP:				; skip this block
 
-0133  21 3C 02			LD	HL, MACHINE	; H = machine state address
+0133  21 3C 02			LD	HL, MACHINE	; HL = machine state address
 0136  7E			LD	A, (HL)		; A = machine state
 0137  FE 05			CP	5		; check machine state
 0139  CA 3F 01			JP	Z, EXIT		; if machine state is "EXIT" go exit
@@ -87,7 +87,7 @@
 014A  CA 60 01			JP	Z, B_CHKRUN	; verify running state
 
 014D  AF			XOR	A		; unlock all reels
-014E  21 38 02			LD	HL, REELS	; H = reels state address
+014E  21 38 02			LD	HL, REELS	; HL = reels state address
 0151  77			LD	(HL), A		; set reel states to "SPINNING"
 0152  23			INC	HL
 0153  77			LD	(HL), A
@@ -96,7 +96,7 @@
 0156  23			INC	HL
 0157  77			LD	(HL), A
 			
-0158  21 3C 02			LD	HL, MACHINE	; H = machine state address
+0158  21 3C 02			LD	HL, MACHINE	; HL = machine state address
 015B  36 02			LD	(HL), 2		; set machine state to "RUN"
 015D  C3 A6 01			JP	B_REELS
 

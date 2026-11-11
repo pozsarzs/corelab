@@ -38,21 +38,21 @@
 			M_LOOP:				; MAIN LOOP
 0107  CD E4 01			CALL	DSPPROC		; call display handler
 
-010A  21 4C 02			LXI	H, MACHINE	; H = machine state address
+010A  21 4C 02			LXI	H, MACHINE	; HL = machine state address
 010D  7E			MOV	A, M		; A = machine state
 010E  5F			MOV	E, A		; store machine state in E
 010F  FE 02			CPI	2		; check run state
 0111  C2 34 01			JNZ	M_SKIP		; in other skip this block
 0114  0E 04			MVI	C, 4		; counter = 4
 			M_DIGITS:			; increment digits
-0116  0D				DCR	C		; decrement counter
-0117  21 48 02			LXI	H, REELS	; H = reels variable address
+0116  0D			DCR	C		; decrement counter
+0117  21 48 02			LXI	H, REELS	; HL = reels variable address
 011A  06 00			MVI	B, 0		; B = 0 (upper byte)
 011C  09			DAD	B		; HL = HL + BC
 011D  7E			MOV	A, M		; A = status of a reel
 011E  FE 01			CPI	1
 0120  CA 2E 01			JZ	M_NEXT		; if it is stopped go next
-0123  21 44 02			LXI	H, DISPLAY	; H = load display variable address
+0123  21 44 02			LXI	H, DISPLAY	; HL = load display variable address
 0126  06 00			MVI	B, 0		; B = 0 (upper byte)
 0128  09			DAD	B		; HL = HL + BC
 0129  7E			MOV	A, M		; A = digit value
@@ -65,7 +65,7 @@
 0131  C2 16 01			JNZ	M_DIGITS
 			M_SKIP:				; skip this block
 
-0134  21 4C 02			LXI	H, MACHINE	; H = machine state address
+0134  21 4C 02			LXI	H, MACHINE	; HL = machine state address
 0137  7E			MOV	A, M		; A = machine state
 0138  FE 05			CPI	5		; check machine state
 013A  CA 40 01			JZ	EXIT		; if machine state is "EXIT" go exit
@@ -89,7 +89,7 @@
 014C  CA 62 01			JZ	B_CHKRUN	; verify running state
 
 014F  AF			XRA	A		; unlock all reels
-0150  21 48 02			LXI	H, REELS	; H = reels state address
+0150  21 48 02			LXI	H, REELS	; HL = reels state address
 0153  77			MOV	M, A		; set reel states to "SPINNING"
 0154  23			INX	H
 0155  77			MOV	M, A
@@ -98,7 +98,7 @@
 0158  23			INX	H
 0159  77			MOV	M, A
 
-015A  21 4C 02			LXI	H, MACHINE	; H = machine state address
+015A  21 4C 02			LXI	H, MACHINE	; HL = machine state address
 015D  36 02			MVI	M, 2		; set machine state to "RUN"
 015F  C3 AD 01			JMP	B_REELS
 
@@ -157,7 +157,7 @@
 
 01BC  0E 03			MVI	C, 3		; counter = 3
 01BE  21 44 02			LXI	H, DISPLAY
-01C1  56				MOV	D, M		; first reel value
+01C1  56			MOV	D, M		; first reel value
 			B_WIN:
 01C2  23			INX	H
 01C3  7E			MOV	A, M		; next reel value
@@ -190,7 +190,7 @@
 01E6  0D			DCR	C		; decrement counter
 01E7  79			MOV	A, C		;
 01E8  D3 21			OUT	PRT_DSP + 1	; select display digit (3..0)
-01EA  21 44 02			LXI	H, DISPLAY	; H = variable address
+01EA  21 44 02			LXI	H, DISPLAY	; HL = variable address
 01ED  06 00			MVI	B, 0		; B = 0
 01EF  09			DAD	B		; HL = HL + BC
 01F0  7E			MOV	A, M		; load digit value
