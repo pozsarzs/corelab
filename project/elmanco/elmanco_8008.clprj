@@ -6,7 +6,7 @@
       <AttachedToBus>true</AttachedToBus>
     </TCPU>
     <TIOPort id="Buttons" type="ioport_button8">
-      <BaseAddress>000010</BaseAddress>
+      <BaseAddress>000000</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmDirect</DataOutMode>
@@ -21,7 +21,7 @@
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="LEDs" type="ioport_ledgreen8">
-      <BaseAddress>000025</BaseAddress>
+      <BaseAddress>000015</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>
@@ -36,7 +36,7 @@
       <AttachedToBus>true</AttachedToBus>
     </TIOPort>
     <TIOPort id="Display" type="ioport_disp47segmux">
-      <BaseAddress>000020</BaseAddress>
+      <BaseAddress>000010</BaseAddress>
       <DataInMode>lmBCD</DataInMode>
       <DataInNegation>false</DataInNegation>
       <DataOutMode>lmBCD</DataOutMode>

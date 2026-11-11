@@ -1,0 +1,244 @@
+; +----------------------------------------------------------------------------+
+; | CoreLAB v0.1 - Modular Processor Simulation Framework			 |
+; | Copyright (C) 2026 Pozsar Zsolt <pozsarzs@gmail.com>			  |
+; | elmanco_z80.lst									|
+; | El Manco - assembly with machine code for Z80 processor			  |
+; +----------------------------------------------------------------------------+
+			
+; Required virtual environment
+; ----------------------------
+; cpu_z80
+; memory_standard	1 kB RAM at address (0000H-0400H)
+; ioport_button8	at address 10H, interrupt vector CFH
+; - 0:	start game
+; - 1..4: stop reels
+; - 7:	exit game
+; ioport_disp4hexmuxbcd	at address 20H and 21H
+; ioport_ledgreen8	at address 25H
+			
+			; ---- CONSTANTS ----
+			PRT_BTN	EQU	10h		; I/O base addresses
+			PRT_DSP	EQU	20h
+			PRT_LED	EQU	25h
+
+			; ---- ENTRIES ----
+				ORG	0000h
+0000  C3 00 01			JP	START		; reset vector
+
+				ORG	0008h
+0008  C3 41 01			JP	BTNINT		; RST 1 interrupt vector
+
+			; ---- MAIN PROGRAM ----
+				ORG	0100h
+			START:				; START MAIN PROGRAM
+0100  31 00 04			LD	SP, 0400h	; set stack pointer to top of 1KB RAM
+0103  CD EA 01			CALL	LEDPROC		; initialize LEDs
+0106  FB			EI			; enable interrupt
+
+			M_LOOP:				; MAIN LOOP
+0107  CD D8 01			CALL	DSPPROC		; call display handler
+
+010A  21 3C 02			LD	HL, MACHINE	; H = machine state address
+010D  7E			LD	A, (HL)		; A = machine state
+010E  FE 02			CP	2		; check run state
+0110  C2 33 01			JP	NZ, M_SKIP	; in other skip this block
+0113  0E 04			LD	C, 4		; counter = 4
+			M_DIGITS:			; increment digits
+0115  0D			DEC	C		; decrement counter
+0116  21 38 02			LD	HL, REELS	; H = reels variable address
+0119  06 00			LD	B, 0		; B = 0 (upper byte)
+011B  09			ADD	HL, BC		; HL = HL + BC
+011C  7E			LD	A, (HL)		; A = status of a reel
+011D  FE 01			CP	1
+011F  CA 2D 01			JP	Z, M_NEXT	; if it is stopped go next
+0122  21 34 02			LD	HL, DISPLAY	; H = load display variable address
+0125  06 00			LD	B, 0		; B = 0 (upper byte)
+0127  09			ADD	HL, BC		; HL = HL + BC
+0128  7E			LD	A, (HL)		; A = digit value
+0129  3C			INC	A		; increment value
+012A  E6 0F			AND	0Fh		; masking value (0-FH)
+012C  77			LD	(HL), A		; store digit value
+			M_NEXT:
+012D  79			LD	A, C		; A = counter
+012E  FE 00			CP	0		; if counter > 0 then go back
+0130  C2 15 01			JP	NZ, M_DIGITS
+			M_SKIP:				; skip this block
+
+0133  21 3C 02			LD	HL, MACHINE	; H = machine state address
+0136  7E			LD	A, (HL)		; A = machine state
+0137  FE 05			CP	5		; check machine state
+0139  CA 3F 01			JP	Z, EXIT		; if machine state is "EXIT" go exit
+
+013C  C3 07 01			JP	M_LOOP		; go back
+			EXIT:
+013F  F3			DI			; disable interrupt
+0140  76			HALT			; exit program
+
+			; ---- BUTTON INTERRUPT SERVICE ROUTINE (ISR) ----
+			BTNINT:
+0141  F3			DI
+0142  F5			PUSH	AF
+0143  E5			PUSH	HL
+0144  C5			PUSH	BC
+0145  DB 10			IN	A, (PRT_BTN)
+0147  47			LD	B, A
+			B_B0:				; start machine
+0148  CB 40			BIT	0, B
+014A  CA 60 01			JP	Z, B_CHKRUN	; verify running state
+
+014D  AF			XOR	A		; unlock all reels
+014E  21 38 02			LD	HL, REELS	; H = reels state address
+0151  77			LD	(HL), A		; set reel states to "SPINNING"
+0152  23			INC	HL
+0153  77			LD	(HL), A
+0154  23			INC	HL
+0155  77			LD	(HL), A
+0156  23			INC	HL
+0157  77			LD	(HL), A
+			
+0158  21 3C 02			LD	HL, MACHINE	; H = machine state address
+015B  36 02			LD	(HL), 2		; set machine state to "RUN"
+015D  C3 A6 01			JP	B_REELS
+
+			B_CHKRUN:
+0160  3A 3C 02			LD	A, (MACHINE)
+0163  FE 02			CP	2		; is machine running?
+0165  C2 9C 01			JP	NZ,B_B7		; skip stop buttons if not running
+
+			B1_BTN:				; stop reel #1
+0168  CB 48			BIT	1, B
+016A  CA 75 01			JP	Z, B_B2
+016D  21 38 02			LD	HL, REELS
+0170  36 01			LD	(HL), 1		; set reel #1 state to "STOPPED"
+0172  C3 A6 01			JP	B_REELS
+			B_B2:				; stop reel #2
+0175  CB 50			BIT	2, B
+0177  CA 82 01			JP	Z, B_B3
+017A  21 39 02			LD	HL, REELS + 1	
+017D  36 01			LD	(HL), 1		; set reel #2 state to "STOPPED"		
+017F  C3 A6 01			JP	B_REELS
+			B_B3:				; stop reel #3
+0182  CB 58			BIT	3, B
+0184  CA 8F 01			JP	Z, B_B4
+0187  21 3A 02			LD	HL, REELS + 2	
+018A  36 01			LD	(HL), 1		; set reel #3 state to "STOPPED"
+018C  C3 A6 01			JP	B_REELS
+			B_B4:				; stop reel #4
+018F  CB 60			BIT	4, B
+0191  CA 9C 01			JP	Z, B_B7
+0194  21 3B 02			LD	HL, REELS + 3
+0197  36 01			LD	(HL), 1		; set reel #4 state to "STOPPED"
+0199  C3 A6 01			JP	B_REELS
+			B_B7:				; exit machine
+019C  CB 78			BIT	7, B
+019E  CA A6 01			JP	Z, B_REELS
+01A1  21 3C 02			LD	HL, MACHINE	
+01A4  36 05			LD	(HL), 5		; set machine state to "EXIT"
+
+			; -- CHECK WIN STATE --
+			B_REELS:
+01A6  21 38 02			LD	HL, REELS	; check all reel states
+01A9  7E			LD	A, (HL)
+01AA  23			INC	HL
+01AB  86			ADD	A, (HL)
+01AC  23			INC	HL
+01AD  86			ADD	A, (HL)
+01AE  23			INC	HL
+01AF  86			ADD	A, (HL)
+01B0  FE 04			CP	4
+01B2  C2 D0 01			JP	NZ, B_RET	; if not all are standing, then return
+			
+01B5  06 03			LD	B, 3		; counter = 3
+01B7  21 34 02			LD	HL, DISPLAY
+01BA  56			LD	D, (HL)		; first reel value
+			B_WIN:
+01BB  23			INC	HL
+01BC  7E			LD	A, (HL)		; next reel value
+01BD  BA			CP	D
+01BE  C2 CB 01			JP	NZ, B_LOSE	; different -> "LOSE"
+01C1  10 F8			DJNZ	B_WIN
+
+01C3  21 3C 02			LD	HL, MACHINE
+01C6  36 03			LD	(HL), 3		; set machine state to "WIN"
+01C8  C3 D0 01			JP	B_RET
+			B_LOSE:
+01CB  21 3C 02			LD	HL, MACHINE
+01CE  36 04			LD	(HL), 4		; set machine state to "LOSE"
+
+			B_RET:
+01D0  CD EA 01			CALL	LEDPROC		; refresh LEDs
+01D3  C1			POP	BC
+01D4  E1			POP	HL
+01D5  F1			POP	AF
+01D6  FB			EI
+01D7  C9			RET
+			
+				; ---- DISPLAY HANDLER SUBROUTINE ----
+			DSPPROC:
+01D8  06 04			LD	B, 4		; counter = 4
+01DA  0E 03			LD	C, 3		; digit selector = 3
+01DC  21 37 02			LD	HL, DISPLAY + 3 ; pointer to last digit
+			D_LOOP:
+01DF  79			LD	A, C
+01E0  D3 21			OUT	(PRT_DSP + 1), A; select display digit
+01E2  7E			LD	A, (HL)		; A = digit value
+01E3  D3 20			OUT	(PRT_DSP), A	; write to display
+01E5  2B			DEC	HL		; decrement pointer
+01E6  0D			DEC	C		; decrement digit selector
+01E7  10 F6			DJNZ	D_LOOP		; decrement B, if not zero jump back
+01E9  C9			RET
+			
+				; ---- LED HANDLER SUBROUTINE ----
+			LEDPROC:
+01EA  0E 00			LD	C, 0		; LED 0-7 -> 0000 0000
+01EC  3A 3B 02			LD	A, (REELS + 3)	; reel #3 state
+01EF  B7			OR	A
+01F0  C2 F7 01			JP	NZ, L_R2
+01F3  79			LD	A, C
+01F4  F6 08			OR	08H		; LED 0-7 -> xxx1 xxxx 
+01F6  4F			LD	C, A
+			L_R2:
+01F7  3A 3A 02			LD	A, (REELS + 2)	; reel #2 state
+01FA  B7			OR	A
+01FB  C2 02 02			JP	NZ, L_R3
+01FE  79			LD	A, C
+01FF  F6 04			OR	04H		; LED 0-7 -> xx1x xxxx 
+0201  4F			LD	C, A
+			L_R3:
+0202  3A 39 02			LD	A, (REELS + 1)	; reel #1 state
+0205  B7			OR	A
+0206  C2 0D 02			JP	NZ, L_R4
+0209  79			LD	A, C
+020A  F6 02			OR	02H		; LED 0-7 -> x1xx xxxx 
+020C  4F			LD	C, A
+			L_R4:
+020D  3A 38 02			LD	A, (REELS)	; reel #0 state
+0210  B7			OR	A
+0211  C2 18 02			JP	NZ, L_MACH
+0214  79			LD	A, C
+0215  F6 01			OR	01H		; LED 0-7 -> 1xxx xxxx 
+0217  4F			LD	C, A
+			L_MACH:
+0218  3A 3C 02			LD	A, (MACHINE)	; machine state
+021B  FE 02			CP	2		; running?
+021D  C2 27 02			JP	NZ, L_WIN
+0220  79			LD	A, C
+0221  F6 60			OR	60H		; LED 0-7 -> xxxx 0110
+0223  4F			LD	C, A
+0224  C3 30 02			JP	L_OUT
+			L_WIN:
+0227  FE 03			CP	3		; stand and win?
+0229  C2 30 02			JP	NZ, L_OUT
+022C  79			LD	A, C
+022D  F6 F0			OR	0F0H		; LED 0-7 -> xxxx 1111 
+022F  4F			LD	C, A
+				L_OUT:
+0230  79			LD	A, C
+0231  D3 25			OUT	(PRT_LED), A	; write to LEDs
+0233  C9			RET
+
+			; ---- VARIABLES ----
+0234  01 02 03 04	DISPLAY	DB	1, 2, 3, 4	; display digits in BCD (0000 nnnn)
+0238  01 01 01 01	REELS	DB	1, 1, 1, 1	; reels' state (0/1: spinning/stopped)
+023C  00		MACHINE	DB	0		; machine state (0..5: wait, stand, run, win, lose, exit)
+			END

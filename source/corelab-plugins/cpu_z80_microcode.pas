@@ -155,6 +155,22 @@
            FRegs.F := (FRegs.F and $FE) or b1;
            FLastInstruction.Cycles := 4;
          end;
+    // DJNZ d8
+    $10: begin
+           FLastInstruction.Mnemonic := 'DJNZ';
+           FLastInstruction.NumOperand := 1;
+           b1 := FBus.ReadMemory(FRegs.PC);
+           Inc(FRegs.PC);
+           FLastInstruction.Operands[FLastInstruction.NumOperand] := b1;
+           Dec(FRegs.B);
+           if FRegs.B <> 0 then
+           begin
+             if (b1 and $80) = $80
+               then FRegs.PC := FRegs.PC - ((b1 xor $FF) + 1)
+               else FRegs.PC := FRegs.PC + b1;
+             FLastInstruction.Cycles := 13;
+           end else FLastInstruction.Cycles := 8;
+         end;
     // LD DE, d16
     $11: begin
            FLastInstruction.Mnemonic := 'LD DE';
