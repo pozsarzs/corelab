@@ -27,7 +27,7 @@ fi
 awk '
 {
     # remove address and opcodes
-    sub(/^[0-9A-Fa-f]{4}( [0-9A-Fa-f]{2})*[ \t]+/, "")
+    sub(/^[0-9A-Fa-f]{4}([ \t]+[0-9A-Fa-f]{2})*[ \t]+/, "")
     # remove leading empty chars
     sub(/^[ \t]+/, "")
     if ($0 == "") {
@@ -35,7 +35,7 @@ awk '
         next
     }
     # labels will be without indentation
-    if ($1 ~ /:$/ || $2 ~ /^(EQU|DB|DW|DS)$/) {
+    if ($1 ~ /:$/ || $2 ~ /^(EQU|DB|DW|DS|DEF)$/) {
         print $0
     } else {
         # others get one tabulator indentation

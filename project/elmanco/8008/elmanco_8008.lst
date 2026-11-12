@@ -31,7 +31,7 @@
 0100  46 29 02			CAL	LEDPRC		initialize LEDs
 
 			M_LOOP				MAIN LOOP
-0103  46 04 16			CAL	DSPPRC		call display handler
+0103  46 10 02			CAL	DSPPRC		call display handler
 0106  46 4E 01			CAL	BTNPRC
 
 0109  2E 02			SHL	MACHIN		H, L = machine state address
@@ -118,8 +118,7 @@
 016E  2E 02			SHL	MACHIN		H, L = machine state address
 0170  36 84
 0172  3E 02			LMI	2		set machine state to "RUN"
-0174  44 C9 01			JMP	B_REEL
-
+0174  44 0C 02			JMP	B_RET
 			B_CHKR
 0177  2E 02			SHL	MACHIN
 0179  36 84
@@ -162,12 +161,12 @@
 			B_B7				exit machine
 01BD  C1			LAB
 01BE  24 80			NDI	200B
-01C0  68 C9 01			JTZ	B_REEL
-01C3  2E 02			SHL	MACHIN	
-01C5  36 84
-01C7  3E 05			LMI	5		set machine state to "EXIT"
+01C0  68 0C 02			JTZ	B_RET
+01C3  3E 05			LMI	5
+01C5  44 0C 02			JMP	B_RET
+01C8  00			NOP
 
-			* -- CHECK WIN STATE --JMP
+			* -- CHECK WIN STATE --
 			B_REEL
 01C9  2E 02			SHL	REELS		check all reel states
 01CB  36 80
@@ -196,7 +195,7 @@
 01EB  DF			LDM			first reel value
 			B_WIN
 01EC  30			INL
-01ED  48 F1 01		JFZ	B_SKIP7
+01ED  48 F1 01			JFZ	B_SKIP7
 01F0  28			INH
 			B_SKIP7
 01F1  C7			LAM			next reel value

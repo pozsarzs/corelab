@@ -16,18 +16,18 @@
 * ioport_disp4hexmuxbcd	at address 20B and 21B
 * ioport_ledgreen8	at address 25B
 
-* ---- CONSTANTS ----
+	* ---- CONSTANTS ----
 PRTBTN	EQU	00B		I/O base addresses
 PRTDSP	EQU	20B
 PRTLED	EQU	25B
 
-* ---- ENTRIES ----
+	* ---- ENTRIES ----
 	ORG	0000B
 	JMP	START		reset vector
 
-* ---- MAIN PROGRAM ----
+	* ---- MAIN PROGRAM ----
 	ORG	0400B
-START				START MAIN PROGRAM
+	START				START MAIN PROGRAM
 	CAL	LEDPRC		initialize LEDs
 
 M_LOOP				MAIN LOOP
@@ -112,8 +112,7 @@ B_SKIP3
 
 	SHL	MACHIN		H, L = machine state address
 	LMI	2		set machine state to "RUN"
-	JMP	B_REEL
-
+	JMP	B_RET
 B_CHKR
 	SHL	MACHIN
 	LAM
@@ -151,9 +150,10 @@ B_B4				stop reel #4
 B_B7				exit machine
 	LAB
 	NDI	200B
-	JTZ	B_REEL
-	SHL	MACHIN	
-	LMI	5		set machine state to "EXIT"
+	JTZ	B_RET
+	LMI	5
+	JMP	B_RET
+	NOP
 
 * -- CHECK WIN STATE --
 B_REEL
@@ -194,6 +194,7 @@ B_SKIP7
 	JFZ	B_WIN
 
 	SHL	MACHIN
+
 	LMI	3		set machine state to "WIN"
 	JMP	B_RET
 B_LOSE
