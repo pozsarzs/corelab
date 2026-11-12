@@ -8,7 +8,7 @@
 include ./Makefile.global
 
 logfile=./build.log
-dirs=desktop document help manual message script source syntax
+dirs=data desktop document help manual message script source syntax
 
 all:
 	@echo "Compiling source code..."
