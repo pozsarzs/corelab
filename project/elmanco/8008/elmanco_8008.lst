@@ -92,91 +92,99 @@
 014F  C8			LBA
 			B_B0				start machine
 0150  C1			LAB
-	NDI	01B
-	JTZ	B_CHKR		verify running state
+0151  24 01			NDI	01B
+0153  68 B_CHKR			JTZ	B_CHKR		verify running state
 
-	XRA			unlock all reels
-	SHL	REELS		HL = reels state address
-	LMA			set reel states to "SPINNING"
-	INL
-	JFZ	B_SKIP1
-	INH
-B_SKIP1
-	LMA
-	INL
-	JFZ	B_SKIP2
-	INH
-B_SKIP2
-	LMA
-	INL
-	JFZ	B_SKIP3
-	INH
-B_SKIP3
-	LMA
+0156  A8			XRA			unlock all reels
+0157  2E REELS			SHL	REELS		HL = reels state address
+0159  36 REELS
+015B  F8			LMA			set reel states to "SPINNING"
+015C  30			INL
+015D  48 B_SKIP1		JFZ	B_SKIP1
+0160  28			INH
+			B_SKIP1
+0161  F8			LMA
+0162  30			INL
+0163  48 B_SKIP2		JFZ	B_SKIP2
+0166  28			INH
+			B_SKIP2
+0167  F8			LMA
+0168  30			INL
+0169  48 B_SKIP3		JFZ	B_SKIP3
+016C  28			INH
+			B_SKIP3
+016D  F8			LMA
 
-	SHL	MACHIN		H, L = machine state address
-	LMI	2		set machine state to "RUN"
-	JMP	B_REEL
+016E  2E MACHIN			SHL	MACHIN		H, L = machine state address
+0170  36 MACHIN
+0172  3E 02			LMI	2		set machine state to "RUN"
+0174  44 B_REEL			JMP	B_REEL
 
-B_CHKR
-	SHL	MACHIN
-	LAM
-	CPI	2		is machine running?
-	JFZ	B_B7		skip stop buttons if not running
+			B_CHKR
+0177  2E MACHIN			SHL	MACHIN
+0179  36 MACHIN
+017B  C7			LAM
+017C  3C 02			CPI	2		is machine running?
+017E  48 B_B7			JFZ	B_B7		skip stop buttons if not running
 
-B_B1				stop reel #1
-	LAB
-	NDI	02B
-	JTZ	B_B2
-	SHL	REELS
-	LMI	1		set reel #1 state to "STOPPED"
-	JMP	B_REEL
-B_B2				stop reel #2
-	LAB
-	NDI	04B
-	JTZ	B_B3
-	SHL	REELS + 1
-	LMI	1		set reel #2 state to "STOPPED"		
-	JMP	B_REEL
-B_B3				stop reel #3
-	LAB
-	NDI	10B
-	JTZ	B_B4
-	SHL	REELS + 2
-	LMI	1		set reel #3 state to "STOPPED"
-	JMP	B_REEL
-B_B4				stop reel #4
-	LAB
-	NDI	20B
-	JTZ	B_B7
-	SHL	REELS + 3
-	LMI	1		set reel #4 state to "STOPPED"
-	JMP	B_REEL
-B_B7				exit machine
-	LAB
-	NDI	200B
-	JTZ	B_REEL
-	SHL	MACHIN	
-	LMI	5		set machine state to "EXIT"
+			B_B1				stop reel #1
+0181  C1			LAB
+0182  24 02			NDI	02B
+0184  68 B_B2			JTZ	B_B2
+0187  2E REELS			SHL	REELS
+0189  36 REELS
+018B  3E 01			LMI	1		set reel #1 state to "STOPPED"
+018D  44 B_REEL			JMP	B_REEL
+			B_B2				stop reel #2
+0190  C1			LAB
+0191  24 04			NDI	04B
+0193  68 B_B3			JTZ	B_B3
+0196  2E REELS + 1		SHL	REELS + 1
+0198  36 REELS + 1
+019A  3E 01			LMI	1		set reel #2 state to "STOPPED"		
+019C  44 B_REEL			JMP	B_REEL
+			B_B3				stop reel #3
+019F  C1			LAB
+01A0  24 08			NDI	10B
+01A2  68 B_B4			JTZ	B_B4
+01A5  2E REELS + 2		SHL	REELS + 2
+01A7  36 REELS + 2
+01A9  3E 01			LMI	1		set reel #3 state to "STOPPED"
+01AB  44 B_REEL			JMP	B_REEL
+			B_B4				stop reel #4
+01AE  C1			LAB
+01AF  24 10			NDI	20B
+01B1  68 B_B7			JTZ	B_B7
+01B4  2E REELS + 3		SHL	REELS + 3
+01B6  36 REELS + 3
+01B8  3E 01			LMI	1		set reel #4 state to "STOPPED"
+01BA  44 B_REEL			JMP	B_REEL
+			B_B7				exit machine
+01BD  C1			LAB
+01BE  24  80			NDI	200B
+01C0  68 B_REEL			JTZ	B_REEL
+01C3  2E MACHIN			SHL	MACHIN	
+01C5  36 MACHIN
+01C7  3E 05			LMI	5		set machine state to "EXIT"
 
-* -- CHECK WIN STATE --
-B_REEL
-	SHL	REELS		check all reel states
+			* -- CHECK WIN STATE --JMP
+			B_REEL
+01C9	SHL	REELS		check all reel states
 	LAM
 	INL
 	JFZ	B_SKIP4
 	INH
-B_SKIP4
+			B_SKIP4
 	ADM
 	INL
 	JFZ	B_SKIP5
 	INH
-B_SKIP5
+			B_SKIP5
 	ADM
 	INL
 	JFZ	B_SKIP6
 	INH
-B_SKIP6
+			B_SKIP6
 	ADM
 	CPI	4
 	JFZ	B_RET		if not all are standing, then return
@@ -184,11 +192,11 @@ B_SKIP6
 	LCI	3		counter = 3
 	SHL	DISPLY
 	LDM			first reel value
-B_WIN
+			B_WIN
 	INL
 	JFZ	B_SKIP7
 	INH
-B_SKIP7
+			B_SKIP7
 	LAM			next reel value
 	CPD	
 	JFZ	B_LOSE		different -> "LOSE"
@@ -200,18 +208,18 @@ B_SKIP7
 	SHL	MACHIN
 	LMI	3		set machine state to "WIN"
 	JMP	B_RET
-B_LOSE
+			B_LOSE
 	SHL	MACHIN
 	LMI	4		set machine state to "LOSE"
 
-B_RET
+			B_RET
 	CAL	LEDPRC		refresh LEDs
 	RET
 
-* ---- DISPLAY HANDLER SUBROUTINE ----
-DSPPRC
+			* ---- DISPLAY HANDLER SUBROUTINE ----
+			DSPPRC
 	LCI	4		counter = 4
-D_LOOP
+			D_LOOP
 	DCC			decrement counter
 	LAC
 	OUT	PRTDSP + 1	select display digit (3..0)
@@ -222,7 +230,7 @@ D_LOOP
 	LLA
 	JFC	D_SKIP
 	INH
-D_SKIP
+			D_SKIP
 
 	LAM			load digit value
 	OUT	PRTDSP		write to display
@@ -231,8 +239,8 @@ D_SKIP
 	JFZ	D_LOOP		if not zero go back
 	RET
 
-* ---- LED HANDLER SUBROUTINE ----
-LEDPRC
+			* ---- LED HANDLER SUBROUTINE ----
+			LEDPRC
 	LCI	0		LED 0-7 -> 0000 0000
 	SHL	REELS + 3
 	LAM			reel #3 state
@@ -241,7 +249,7 @@ LEDPRC
 	LAC
 	ORI	10B		LED 0-7 -> xxx1 xxxx 
 	LCA
-L_R2
+			L_R2
 	SHL	REELS + 2
 	LAM			reel #2 state
 	ORA
@@ -249,7 +257,7 @@ L_R2
 	LAC
 	ORI	04B		LED 0-7 -> xx1x xxxx 
 	LCA
-L_R3
+			L_R3
 	SHL	REELS + 1
 	LAM			reel #1 state
 	ORA
@@ -257,7 +265,7 @@ L_R3
 	LAC
 	ORI	02B		LED 0-7 -> x1xx xxxx 
 	LCA
-L_R4
+			L_R4
 	SHL	REELS
 	LAM			reel #0 state
 	ORA
@@ -265,7 +273,7 @@ L_R4
 	LAC
 	ORI	01B		LED 0-7 -> 1xxx xxxx 
 	LCA
-L_MACH
+			L_MACH
 	SHL	MACHIN
 	LAM			machine state
 	CPI	2		running?
@@ -274,19 +282,19 @@ L_MACH
 	ORI	140B		LED 0-7 -> xxxx 0110
 	LCA
 	JMP	L_OUT
-L_WIN
+			L_WIN
 	CPI	3		stand and win?
 	JFZ	L_OUT
 	LAC
 	ORI	360B		LED 0-7 -> xxxx 1111 
 	LCA
-L_OUT
+			L_OUT
 	LAC
 	OUT	PRTLED		write to LEDs
 	RET
 
-* ---- VARIABLES ----
-DISPLY	DEF	1, 2, 3, 4	display digits in BCD (0000 nnnn)
-REELS	DEF	1, 1, 1, 1	reels state (0/1: spinning/stopped)
-MACHIN	DEF	0		machine state (0..5: wait, stand, run, win, lose, exit)
-	END
+			* ---- VARIABLES ----
+			DISPLY	DEF	1, 2, 3, 4	display digits in BCD (0000 nnnn)
+			REELS	DEF	1, 1, 1, 1	reels state (0/1: spinning/stopped)
+			MACHIN	DEF	0		machine state (0..5: wait, stand, run, win, lose, exit)
+				END
