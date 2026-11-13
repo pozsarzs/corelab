@@ -1,11 +1,958 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - TZ80CPU a TCPU osztályból a cpu_z80 egységben</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="tz80cpu-a-tcpu-osztályból-a-cpu_z80-egységben">TZ80CPU a TCPU
+osztályból a cpu_z80 egységben</h2>
+<p>A <code>TZ80CPU</code> a Zilog Z80 processzor megvalósítása a CoreLAB
+keretrendszerhez. A <code>TCPU</code> osztályból származik, és
+megvalósítja a Z80 regiszterkészletét, a flagkezelést, a reset
+műveletet, az állapot megőrzését, az utasításonkénti végrehajtást, a
+megszakításkezelést és -jelentést, az aktuális utasítás jelentését,
+valamint a regiszterek elérését.</p>
+<h3 id="cpu-konfiguráció">CPU-konfiguráció</h3>
+<p>A konstruktor az örökölt <code>TCPU</code> tulajdonságait a
+következőképpen állítja be:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modul neve</td>
+<td><code>Z80</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Zilog Z80 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architektúra</td>
+<td><code>arNeumann</code></td>
+</tr>
+<tr class="even">
+<td>Címszélesség</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>Bájtsorrend</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximális memória-cím</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális kód-cím</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximális I/O-port cím</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="odd">
+<td>Külön I/O-busz</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Alapértelmezett órajel-frekvencia</td>
+<td>2500000 Hz (2,5 MHz)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reset-állapot">Reset állapot</h3>
+<p>A <code>Reset</code> letiltja a végrehajtást, törli a várakozási és
+függőben lévő megszakítási állapotot, nullázza a végrehajtási
+számlálókat, törli a teljes <code>TZ80Registers</code> rekordot, és a
+veremmutatót <code>$FFFF</code> értékre állítja.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter/állapot</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FIRQPending</code></td>
+<td>minden elem <code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FNMIPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>A teljes regiszterrekord törlődik, ezért a fő és alternatív
+regiszterkészlet, az indexregiszterek, az <code>I</code> és az
+<code>R</code> kezdetben nulla. A metódus kiváltja az örökölt
+<code>ceReset</code> eseményt.</p>
+<p>A forrás nem állítja vissza kifejezetten az
+<code>FInterruptMode</code> és <code>FInterruptEnabled2</code> mezőket.
+Ezek nem részei a <code>TZ80Registers</code> rekordnak.</p>
+<h3 id="utasítás-végrehajtás">Utasítás-végrehajtás</h3>
+<p>A <code>Step</code> a következő műveleteket végzi el:</p>
+<ol type="1">
+<li>Azonnal leáll, ha a CPU le van tiltva
+(<code>FEnabled = False</code>).</li>
+<li>Meghívja a <code>CheckInterrupts</code> metódust; a végrehajtás
+azonnal leáll, ha egy megszakítás elfogadásra kerül.</li>
+<li>Azonnal leáll, ha a CPU várakozó (halt) állapotban van.</li>
+<li>Inicializálja az utolsó utasítás címét, ciklusszámát, prefixszámát
+és operandusszámát.</li>
+<li>Beolvassa a bájtokat a rendszerbuszról az aktuális <code>PC</code>
+címről, és minden beolvasás után növeli a <code>PC</code> értékét.</li>
+<li>Felismeri az ismétlődő <code>DD</code> és <code>FD</code>
+prefixbájtokat, mindegyikhez négy ciklust rendel, és kiválasztja a
+megfelelő prefixmódot.</li>
+<li>A végső opkódot és a kiválasztott prefixet átadja a
+<code>RunOpCode</code> metódusnak.</li>
+<li>Hozzáadja az utasítás ciklusszámát a <code>FTotalCycles</code>
+értékéhez.</li>
+<li>Kiváltja a <code>ceInstructionBoundary</code> eseményt.</li>
+<li>Növeli a <code>FTotalInstructions</code> értékét.</li>
+</ol>
+<p>A <code>RunOpCode</code> a prefixmód alapján hét beillesztett
+mikrokódforrás egyikére irányítja a végrehajtást: prefix nélküli,
+<code>CB</code>, <code>DD</code>, <code>ED</code>, <code>FD</code>,
+<code>DDCB</code> vagy <code>FDCB</code>. A rendelkezésre álló
+<code>Step</code> megvalósítás kifejezetten a <code>DD</code> és
+<code>FD</code> prefixeket fogyasztja el; a többi prefixsorozat kezelése
+a beillesztett mikrokódtól függ.</p>
+<p>A forrás csatlakoztatott <code>FBus</code> buszt igényel az
+utasítások beolvasásához. A memória- és I/O-műveleteket a mikrokódban
+használt buszhívások végzik.</p>
+<h3 id="flagkezelés">Flagkezelés</h3>
+<p>Az <code>UpdateFlags</code> a Z80 <code>F</code> flagregiszterét a
+megadott eredmény, a régi érték, az operandus és két módparaméter
+alapján frissíti.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>jelentés</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>S</code></td>
+<td>Előjel, a 8 bites eredmény 7. bitjéből</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>Nulla, akkor van beállítva, ha a 8 bites eredmény nulla</td>
+</tr>
+<tr class="odd">
+<td><code>Y</code></td>
+<td>Nem dokumentált flagbit (5. bit), az eredmény 5. bitjéből</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>Félátvitel, a 4. bit és az operandusok alapján számítva</td>
+</tr>
+<tr class="odd">
+<td><code>X</code></td>
+<td>Nem dokumentált flagbit (3. bit), az eredmény 3. bitjéből</td>
+</tr>
+<tr class="even">
+<td><code>P/V</code></td>
+<td>Paritás vagy túlcsordulás, a <code>P</code> paraméter választása
+szerint</td>
+</tr>
+<tr class="odd">
+<td><code>N</code></td>
+<td>Összeadás/kivonás jelzőbit, akkor áll be, ha az <code>N</code>
+paraméter <code>True</code></td>
+</tr>
+<tr class="even">
+<td><code>C</code></td>
+<td>Átvitel, a 16 bites eredmény 8. bitjéből</td>
+</tr>
+</tbody>
+</table>
+<p>Ha <code>P = True</code>, a <code>P/V</code> bit páros paritás esetén
+áll be. Egyébként a metódus aritmetikai túlcsordulást számít:
+<code>N = True</code> esetén kivonási, egyébként összeadási szabályok
+szerint. Az <code>N</code> paraméter a kivonásjelző bitet is
+vezérli.</p>
+<h3 id="megszakítás-kezelés">Megszakítás-kezelés</h3>
+<p>A <code>CheckInterrupts</code> először a nem maszkolható megszakítást
+ellenőrzi. Ha az <code>FNMIPending</code> be van állítva, törli a
+függőben lévő jelzőt, kilépteti a CPU-t a várakozó állapotból, meghívja
+a <code>DoInterrupt(ceInterrupt, imNMI)</code> metódust, és jelzi, hogy
+megszakítás elfogadásra került.</p>
+<p>Ezután növekvő indexsorrendben ellenőrzi az <code>FIRQPending</code>
+elemeit. Maszkolható megszakítás csak akkor fogadható el, ha a megfelelő
+függőben lévő jelző és az <code>FInterruptEnabled</code> is be van
+állítva. A kiválasztott jelző törlődik, a CPU kilép a várakozó
+állapotból, majd a <code>DoInterrupt</code> az elem indexével mint
+módparaméterrel fut le. Egy ellenőrzés során legfeljebb egy megszakítás
+fogadható el.</p>
+<p>A <code>DoInterrupt</code> először meghívja az örökölt
+megszakításkezelőt. Maszkolható megszakítás esetén törli az
+<code>FInterruptEnabled</code> és az <code>FInterruptEnabled2</code>
+mezőket, majd a verembe menti az aktuális <code>PC</code> értékét:
+először a magas, majd az alacsony bájtot.</p>
+<ul>
+<li><strong>NMI:</strong> a <code>PC</code> értékét
+<code>$0066</code>-ra állítja, 11 ciklust ad hozzá, majd visszatér.</li>
+<li><strong>IM 0:</strong> a megadott vektort csak RST kódolás esetén
+fogadja el (<code>FIRQVector[AMode] &gt;= $C0</code> és az alsó három
+bit <code>$07</code>). Az újraindítási cím:
+<code>((FIRQVector[AMode] shr 3) and $07) * 8</code>; a metódus 13
+ciklust ad hozzá.</li>
+<li><strong>IM 1:</strong> a <code>PC</code> értékét
+<code>$0038</code>-ra állítja, és 13 ciklust ad hozzá.</li>
+<li><strong>IM 2:</strong> az <code>I</code> regiszterből képzi a
+vektortáblacím magas bájtját, a megszakítási vektorból pedig az alacsony
+bájtot. Az új <code>PC</code> értékét erről a címről, little-endian
+szóként olvassa be, és 19 ciklust ad hozzá.</li>
+</ul>
+<p>A megszakítási módot az <code>FInterruptMode</code> tárolja. A forrás
+az <code>imINT_IM0</code>, <code>imINT_IM1</code>,
+<code>imINT_IM2</code> és <code>imNMI</code> konstansokat használja,
+amelyek értéke rendre 0, 1, 2 és 255.</p>
+<p>Az <code>NMI</code> metódus letiltott CPU esetén nem végez műveletet.
+Egyébként beállítja az <code>FNMIPending</code> jelzőt, az
+<code>FInterruptEnabled</code> értékét elmenti az
+<code>FInterruptEnabled2</code> mezőbe, letiltja a maszkolható
+megszakításokat, és kiváltja a <code>ceInterrupt</code> eseményt.</p>
+<p>A <code>GetCurrentInterrupt(AMode)</code> a kiválasztott vektort két
+hexadecimális számjeggyel adja vissza. A <code>Flag</code> mező értéke
+<code>EI</code>, ha az <code>FInterruptEnabled</code> be van állítva,
+egyébként <code>DI</code>. A <code>Status</code> mező értéke
+<code>Pending</code>, ha az <code>FIRQPending[AMode]</code> be van
+állítva; egyébként üres. A <code>Sender</code> mező üres.</p>
+<h3 id="aktuális-utasítás-információi">Aktuális utasítás
+információi</h3>
+<p>A <code>GetCurrentInstruction</code> egy <code>TLogRec</code> értéket
+ad vissza, amely a következőket tartalmazza:</p>
+<ol type="1">
+<li>az utasítások teljes számát;</li>
+<li>az utasítás címét négy hexadecimális számjeggyel;</li>
+<li>az opkódot két hexadecimális számjeggyel, amelyet legfeljebb két
+rögzített operandusbájt követ;</li>
+<li>a mnemonikot: ha <code>%</code> karaktert tartalmaz, egy vagy két
+operandussal formázza, egyébként a hexadecimális operandusértékeket fűzi
+hozzá;</li>
+<li>az utolsó utasítás ciklusszámát;</li>
+<li>az összesített ciklusszámot.</li>
+</ol>
+<p>A metódus az opkódot és a rögzített operandusokat a
+<code>FLastInstruction</code> rekordból formázza. A pontos mnemonik és
+operandustartalom a beillesztett mikrokódtól függ.</p>
+<h3 id="regiszterelérés">Regiszterelérés</h3>
+<p>A <code>GetRegister</code> és <code>SetRegister</code> a
+regiszterneveket a kis- és nagybetűk figyelmen kívül hagyásával
+hasonlítja össze az <code>UpperCase</code> segítségével.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter</th>
+<th>szélesség</th>
+<th>olvasható</th>
+<th>írható</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>F</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>IX</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>IY</code></td>
+<td>16 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>I</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>R</code></td>
+<td>8 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+</tbody>
+</table>
+<p>A nyolcbites regiszterek értéke <code>$FF</code>, a 16 bites
+regisztereké <code>$FFFF</code> maszkolással kerül beállításra.</p>
+<p>A <code>case</code> utasításban nem kezelt nevek nem okoznak
+változást a <code>SetRegister</code> metódusban, a
+<code>GetRegister</code> pedig <code>0</code> értéket ad vissza.</p>
+<h3 id="nyilvános-regiszterfelsorolás">Nyilvános
+regiszterfelsorolás</h3>
+<p>A nyilvános regiszterfelsorolás tizennégy bejegyzést tartalmaz:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>név</th>
+<th>méret</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>A</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>B</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>C</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>D</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>E</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>H</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>L</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>F</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><code>PC</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>SP</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><code>IX</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><code>IY</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><code>I</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td><code>R</code></td>
+<td>2 nibbles</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>GetRegisterCount</code> a <code>PubRegNames</code>
+bejegyzéseinek számát adja vissza. A <code>GetRegisterName</code>
+érvényes index esetén visszaadja a regiszter nevét, egyébként
+<code>nil</code> értéket. A <code>GetRegisterSize</code> a megfelelő
+méretet adja vissza nibble-ben, érvénytelen index esetén pedig
+<code>0</code> értéket.</p>
+<h3 id="tz80registers">TZ80Registers</h3>
+<p>A <code>TZ80Registers</code> variánsrekord a 16 bites regiszterpárok
+és az egyedi 8 bites összetevők elérését is biztosítja.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>16 bites regiszter</th>
+<th>8 bites reprezentáció</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BC</code></td>
+<td><code>B</code>, <code>C</code></td>
+</tr>
+<tr class="even">
+<td><code>DE</code></td>
+<td><code>D</code>, <code>E</code></td>
+</tr>
+<tr class="odd">
+<td><code>HL</code></td>
+<td><code>H</code>, <code>L</code></td>
+</tr>
+<tr class="even">
+<td><code>AF</code></td>
+<td><code>A</code>, <code>F</code></td>
+</tr>
+<tr class="odd">
+<td><code>BC_</code></td>
+<td><code>B_</code>, <code>C_</code></td>
+</tr>
+<tr class="even">
+<td><code>DE_</code></td>
+<td><code>D_</code>, <code>E_</code></td>
+</tr>
+<tr class="odd">
+<td><code>HL_</code></td>
+<td><code>H_</code>, <code>L_</code></td>
+</tr>
+<tr class="even">
+<td><code>AF_</code></td>
+<td><code>A_</code>, <code>F_</code></td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>PCH</code>, <code>PCL</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>SPH</code>, <code>SPL</code></td>
+</tr>
+<tr class="odd">
+<td><code>IX</code></td>
+<td><code>IXH</code>, <code>IXL</code></td>
+</tr>
+<tr class="even">
+<td><code>IY</code></td>
+<td><code>IYH</code>, <code>IYL</code></td>
+</tr>
+</tbody>
+</table>
+<p>A rekord tartalmazza továbbá az <code>I</code> 8 bites
+megszakításvektor-regisztert és az <code>R</code> frissítőregisztert. Az
+alternatív regiszterkészletet az aláhúzásos utótaggal ellátott
+regiszterpárok és bájtok képviselik.</p>
+<h3 id="belső-regiszternevek-és-opkódprefixek">Belső regiszternevek és
+opkódprefixek</h3>
+<p>A belső regiszternév-táblák a következő indexelt operandusokat
+határozzák meg:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th><code>RegNames</code></th>
+<th><code>XRegNames</code></th>
+<th><code>YRegNames</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>B</code></td>
+<td><code>B</code></td>
+<td><code>B</code></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>C</code></td>
+<td><code>C</code></td>
+<td><code>C</code></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>D</code></td>
+<td><code>D</code></td>
+<td><code>D</code></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>E</code></td>
+<td><code>E</code></td>
+<td><code>E</code></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>H</code></td>
+<td><code>IXH</code></td>
+<td><code>IYH</code></td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>L</code></td>
+<td><code>IXL</code></td>
+<td><code>IYL</code></td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>(HL)</code></td>
+<td><code>(IX)</code></td>
+<td><code>(IY)</code></td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>A</code></td>
+<td><code>A</code></td>
+<td><code>A</code></td>
+</tr>
+</tbody>
+</table>
+<p>A prefixkonstansok a mikrokódforrás kiválasztására szolgálnak:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>konstans</th>
+<th>érték</th>
+<th>jelentés</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prNone</code></td>
+<td>0</td>
+<td>Prefix nélküli opkód</td>
+</tr>
+<tr class="even">
+<td><code>prCB</code></td>
+<td>1</td>
+<td><code>CB</code> prefix</td>
+</tr>
+<tr class="odd">
+<td><code>prDD</code></td>
+<td>2</td>
+<td><code>DD</code> prefix</td>
+</tr>
+<tr class="even">
+<td><code>prED</code></td>
+<td>3</td>
+<td><code>ED</code> prefix</td>
+</tr>
+<tr class="odd">
+<td><code>prFD</code></td>
+<td>4</td>
+<td><code>FD</code> prefix</td>
+</tr>
+<tr class="even">
+<td><code>prDDCB</code></td>
+<td>5</td>
+<td><code>DD CB</code> prefixsorozat</td>
+</tr>
+<tr class="odd">
+<td><code>prFDCB</code></td>
+<td>6</td>
+<td><code>FD CB</code> prefixsorozat</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-mezők-és-metódusok">Védett mezők és metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RegPointers</code></td>
+<td><code>array[0..7] of PByte</code></td>
+<td>Az utasítás-megvalósítás által használt 8 bites regiszterváltozók
+mutatói.</td>
+</tr>
+<tr class="even">
+<td><code>FBus</code></td>
+<td><code>IStandardBus</code></td>
+<td>Csatlakoztatott külső rendszerbusz.</td>
+</tr>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>TZ80Registers</code></td>
+<td>A teljes Z80 regiszterkészlet.</td>
+</tr>
+<tr class="even">
+<td><code>FInterruptMode</code></td>
+<td><code>Byte</code></td>
+<td>A kiválasztott maszkolható megszakítási mód.</td>
+</tr>
+<tr class="odd">
+<td><code>FInterruptEnabled2</code></td>
+<td><code>Boolean</code></td>
+<td>Másodlagos megszakításengedélyezési állapot
+(<code>IFF2</code>).</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 4%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>metódus</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte; N: Boolean = False; P: Boolean = False);</code></td>
+<td></td>
+<td>Frissíti a Z80 flagregisztert, beleértve a paritás/túlcsordulás és
+az összeadás/kivonás kezelését.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;</code></td>
+<td><code>override</code></td>
+<td>Elvégzi az NMI és a maszkolható megszakítások kezelését a
+kiválasztott módban.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte; APrefix: Byte = 0);</code></td>
+<td></td>
+<td>A megfelelő beillesztett mikrokódforráshoz irányítja az opkód
+végrehajtását.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="állapot-megőrzése">Állapot megőrzése</h3>
+<p>A <code>LoadState</code> a következő adatokat olvassa be ebben a
+sorrendben:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>sorrend</th>
+<th>adat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FLastInstruction</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FInterruptEnabled</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FInterruptEnabled2</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FInterruptMode</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FIRQPending</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><code>FNMIPending</code></td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ha adatfolyam-kivétel történik, a <code>LoadState</code>
+<code>False</code> értéket ad vissza; egyébként <code>True</code>
+értéket ad vissza.</p>
+<p>A <code>SaveState</code> ugyanazokat az adatokat, ugyanebben a
+sorrendben írja ki, és az írási műveletek befejezése után
+<code>True</code> értéket ad vissza.</p>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 3%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Létrehoz egy Zilog Z80 CPU-t, beállítja az
+architektúra-paramétereket és a regisztermutatókat, majd resetet hajt
+végre.</td>
+</tr>
+<tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td><code>override</code></td>
+<td>Ellenőrzi a függőben lévő NMI- és maszkolható megszakításokat, és
+hívásonként legfeljebb egyet fogad el.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Törli a regiszterkészletet, a végrehajtási és függőben lévő
+megszakítási állapotot, nullázza a számlálókat, a <code>PC</code>
+értékét <code>0</code>-ra, az <code>SP</code> értékét
+<code>$FFFF</code>-re állítja, és kiváltja a <code>ceReset</code>
+eseményt.</td>
+</tr>
+<tr class="even">
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Csatlakoztatja a megadott interfészt, ha az támogatja az
+<code>IStandardBus</code> interfészt.</td>
+</tr>
+<tr class="odd">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Betölti az engedélyezési állapotot, a regiszterkészletet, az utolsó
+utasítás rekordját, a végrehajtási és megszakítási állapotot, valamint a
+számlálókat.</td>
+</tr>
+<tr class="even">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Elmenti az engedélyezési állapotot, a regiszterkészletet, az utolsó
+utasítás rekordját, a végrehajtási és megszakítási állapotot, valamint a
+számlálókat.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure NMI;</code></td>
+<td><code>override</code></td>
+<td>Függőben lévő nem maszkolható megszakítást állít be, az
+<code>IFF2</code> mezőbe menti a maszkolható megszakítás engedélyezési
+állapotát, letiltja a maszkolható megszakításokat, és kiváltja a
+<code>ceInterrupt</code> eseményt.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Beolvassa és végrehajtja az utasítást, kezeli a
+<code>DD</code>/<code>FD</code> prefixbájtokat, számlálja a ciklusokat,
+kiváltja az utasításhatár eseményt és növeli az utasításszámot.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td><code>override</code></td>
+<td>Strukturált információt ad vissza a legutóbb végrehajtott
+utasításról.</td>
+</tr>
+<tr class="even">
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a kiválasztott megszakításvektort, a
+megszakítás-engedélyezési állapotot és a függőben lévő állapotot.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a megadott nyilvános regiszter értékét.</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Beállítja a megadott nyilvános regisztert, a regiszterszélességnek
+megfelelő maszkolással.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a nyilvánosan felsorolt regiszterek számát.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Érvényes index esetén visszaadja a nyilvános regiszter nevét.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Érvényes index esetén visszaadja a nyilvános regiszter méretét
+nibble-ben.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-plugininterfész">Exportált plugininterfész</h3>
+<p>Az egység a <code>cpu_z80</code> dinamikus könyvtárként fordul, és
+négy plugin belépési pontot exportál:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 8%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportált név</th>
+<th>függvény</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Létrehoz és <code>TCPU</code> típusúként visszaad egy új
+<code>TZ80CPU</code> példányt.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Megsemmisíti a megadott CPU-példányt, ha az hozzá van rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Állapotot tölt be a megadott <code>TCPU</code> referencián
+keresztül. <code>False</code> értéket ad vissza, ha a referencia
+<code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Állapotot ment a megadott <code>TCPU</code> referencián keresztül.
+<code>False</code> értéket ad vissza, ha a referencia
+<code>nil</code>.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

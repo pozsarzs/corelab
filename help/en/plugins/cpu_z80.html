@@ -1,11 +1,933 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - TZ80CPU from TCPU class in cpu_z80 unit</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<h2 id="tz80cpu-from-tcpu-class-in-cpu_z80-unit">TZ80CPU from TCPU class
+in cpu_z80 unit</h2>
+<p><code>TZ80CPU</code> is the Zilog Z80 processor implementation for
+the CoreLAB framework. It derives from <code>TCPU</code> and implements
+the Z80 register set, flag handling, reset operation, state persistence,
+instruction stepping, interrupt handling, interrupt reporting,
+current-instruction reporting and register access.</p>
+<h3 id="cpu-configuration">CPU configuration</h3>
+<p>The constructor configures the inherited <code>TCPU</code> properties
+as follows:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>item</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module name</td>
+<td><code>Z80</code></td>
+</tr>
+<tr class="even">
+<td>Description</td>
+<td><code>Zilog Z80 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architecture</td>
+<td><code>arNeumann</code></td>
+</tr>
+<tr class="even">
+<td>Address width</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>Endianness</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximum memory address</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximum code address</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximum I/O port address</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="odd">
+<td>Separate I/O bus</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Default clock frequency</td>
+<td>2500000 Hz (2.5 MHz)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reset-state">Reset state</h3>
+<p><code>Reset</code> disables execution, clears the halt and
+interrupt-pending states, resets the execution counters, clears the
+complete <code>TZ80Registers</code> record and sets the stack pointer to
+<code>$FFFF</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>register/state</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FIRQPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>FNMIPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Because the complete register record is cleared, the main and
+alternate register sets, the index registers, <code>I</code>, and
+<code>R</code> are initially zero. The method emits the inherited
+<code>ceReset</code> event.</p>
+<p>The source does not explicitly reset <code>FInterruptMode</code> or
+<code>FInterruptEnabled2</code>. These fields are not part of
+<code>TZ80Registers</code>.</p>
+<h3 id="instruction-execution">Instruction execution</h3>
+<p><code>Step</code> performs the following operations:</p>
+<ol type="1">
+<li>Stops immediately when the CPU is disabled
+(<code>FEnabled = False</code>).</li>
+<li>Calls <code>CheckInterrupts</code>; execution stops immediately when
+an interrupt is accepted.</li>
+<li>Stops immediately if the CPU is halted.</li>
+<li>Initializes the last-instruction address, cycle count, prefix count
+and operand count.</li>
+<li>Fetches bytes from the system bus at the current <code>PC</code>,
+incrementing <code>PC</code> after each fetch.</li>
+<li>Recognizes repeated <code>DD</code> and <code>FD</code> prefix
+bytes, records four cycles for each such prefix, and selects the
+corresponding prefix mode.</li>
+<li>Passes the final opcode and selected prefix to
+<code>RunOpCode</code>.</li>
+<li>Adds the instruction cycle count to <code>FTotalCycles</code>.</li>
+<li>Emits <code>ceInstructionBoundary</code>.</li>
+<li>Increments <code>FTotalInstructions</code>.</li>
+</ol>
+<p><code>RunOpCode</code> dispatches to one of seven included microcode
+sources according to the prefix mode: unprefixed, <code>CB</code>,
+<code>DD</code>, <code>ED</code>, <code>FD</code>, <code>DDCB</code> or
+<code>FDCB</code>. The supplied <code>Step</code> implementation
+explicitly consumes <code>DD</code> and <code>FD</code> prefixes; the
+handling of other prefix sequences depends on the included
+microcode.</p>
+<p>The source requires a connected <code>FBus</code> for instruction
+fetching. Memory and I/O operations are delegated to the bus calls used
+by the microcode.</p>
+<h3 id="flag-handling">Flag handling</h3>
+<p><code>UpdateFlags</code> updates the Z80 flag register <code>F</code>
+using the supplied result, original value, operand and two mode
+parameters.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>S</code></td>
+<td>Sign, copied from bit 7 of the 8-bit result</td>
+</tr>
+<tr class="even">
+<td><code>Z</code></td>
+<td>Zero, set when the 8-bit result is zero</td>
+</tr>
+<tr class="odd">
+<td><code>Y</code></td>
+<td>Undocumented flag bit 5, copied from bit 5 of the result</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>Half-carry, calculated from bit 4 of the result and operands</td>
+</tr>
+<tr class="odd">
+<td><code>X</code></td>
+<td>Undocumented flag bit 3, copied from bit 3 of the result</td>
+</tr>
+<tr class="even">
+<td><code>P/V</code></td>
+<td>Parity or arithmetic overflow, selected by the <code>P</code>
+parameter</td>
+</tr>
+<tr class="odd">
+<td><code>N</code></td>
+<td>Add/subtract flag, set when the <code>N</code> parameter is
+<code>True</code></td>
+</tr>
+<tr class="even">
+<td><code>C</code></td>
+<td>Carry, copied from bit 8 of the 16-bit result</td>
+</tr>
+</tbody>
+</table>
+<p>When <code>P</code> is <code>True</code>, bit <code>P/V</code> is set
+for even parity. Otherwise, the method calculates arithmetic overflow,
+using subtraction rules when <code>N</code> is <code>True</code> and
+addition rules otherwise. The <code>N</code> parameter also controls the
+subtract flag.</p>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p><code>CheckInterrupts</code> checks the non-maskable interrupt first.
+If <code>FNMIPending</code> is set, it clears the pending flag, exits
+the halted state, calls <code>DoInterrupt(ceInterrupt, imNMI)</code>,
+and reports that an interrupt was accepted.</p>
+<p>It then checks the entries of <code>FIRQPending</code> in ascending
+index order. A maskable request is accepted only when its pending flag
+and <code>FInterruptEnabled</code> are both set. The selected pending
+flag is cleared, the halted state is exited, and
+<code>DoInterrupt</code> is called with the entry index as the mode
+argument. Only one interrupt is accepted per check.</p>
+<p><code>DoInterrupt</code> first calls the inherited interrupt handler.
+For a maskable interrupt it clears both <code>FInterruptEnabled</code>
+and <code>FInterruptEnabled2</code>, then pushes the current
+<code>PC</code> onto the stack, high byte first and low byte second.</p>
+<ul>
+<li><strong>NMI:</strong> sets <code>PC</code> to <code>$0066</code>,
+adds 11 cycles and returns.</li>
+<li><strong>IM 0:</strong> accepts the supplied vector only when it has
+the RST encoding (<code>FIRQVector[AMode] &gt;= $C0</code> and its low
+three bits are <code>$07</code>). The restart address is
+<code>((FIRQVector[AMode] shr 3) and $07) * 8</code>; 13 cycles are
+added.</li>
+<li><strong>IM 1:</strong> sets <code>PC</code> to <code>$0038</code>
+and adds 13 cycles.</li>
+<li><strong>IM 2:</strong> forms the vector-table address from
+<code>I</code> as the high byte and the supplied interrupt vector as the
+low byte. It reads the new <code>PC</code> as a little-endian word from
+that address and adds 19 cycles.</li>
+</ul>
+<p>The interrupt mode is held in <code>FInterruptMode</code>. The source
+declares the constants <code>imINT_IM0</code>, <code>imINT_IM1</code>,
+<code>imINT_IM2</code> and <code>imNMI</code> for the interrupt mode
+values 0, 1, 2 and 255 respectively.</p>
+<p><code>NMI</code> does nothing when the CPU is disabled. Otherwise it
+sets <code>FNMIPending</code>, copies <code>FInterruptEnabled</code> to
+<code>FInterruptEnabled2</code>, disables maskable interrupts and emits
+<code>ceInterrupt</code>.</p>
+<p><code>GetCurrentInterrupt(AMode)</code> reports the selected vector
+as two hexadecimal digits. The <code>Flag</code> field is
+<code>EI</code> when <code>FInterruptEnabled</code> is set and
+<code>DI</code> otherwise. The <code>Status</code> field is
+<code>Pending</code> when <code>FIRQPending[AMode]</code> is set;
+otherwise it is empty. The <code>Sender</code> field is empty.</p>
+<h3 id="current-instruction-information">Current-instruction
+information</h3>
+<p><code>GetCurrentInstruction</code> returns a <code>TLogRec</code>
+containing:</p>
+<ol type="1">
+<li>the total instruction count;</li>
+<li>the instruction address as four hexadecimal digits;</li>
+<li>the opcode as two hexadecimal digits, followed by up to two recorded
+operand bytes;</li>
+<li>the mnemonic, with one or two operands formatted when the mnemonic
+contains <code>%</code>, or appended as hexadecimal values
+otherwise;</li>
+<li>the last instruction’s cycle count;</li>
+<li>the total cycle count.</li>
+</ol>
+<p>The method formats the opcode and recorded operands from
+<code>FLastInstruction</code>. The exact mnemonic and operand contents
+depend on the included microcode.</p>
+<h3 id="register-access">Register access</h3>
+<p><code>GetRegister</code> and <code>SetRegister</code> compare
+register names case-insensitively using <code>UpperCase</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>register</th>
+<th>width</th>
+<th>readable</th>
+<th>writable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>B</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>C</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>E</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>H</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>L</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>F</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td>16 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td>16 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>IX</code></td>
+<td>16 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>IY</code></td>
+<td>16 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>I</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>R</code></td>
+<td>8 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>Eight-bit registers are masked with <code>$FF</code>; 16-bit
+registers are masked with <code>$FFFF</code>.</p>
+<p>Unrecognized names do not change any register in
+<code>SetRegister</code>, and <code>GetRegister</code> returns
+<code>0</code>.</p>
+<h3 id="public-register-enumeration">Public register enumeration</h3>
+<p>The public register enumeration contains fourteen entries:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>name</th>
+<th>size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>A</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>B</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>C</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>D</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>E</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>H</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>L</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>F</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><code>PC</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>SP</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><code>IX</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><code>IY</code></td>
+<td>4 nibbles</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><code>I</code></td>
+<td>2 nibbles</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td><code>R</code></td>
+<td>2 nibbles</td>
+</tr>
+</tbody>
+</table>
+<p><code>GetRegisterCount</code> returns the number of entries in
+<code>PubRegNames</code>. <code>GetRegisterName</code> returns the
+register name for a valid index and <code>nil</code> otherwise.
+<code>GetRegisterSize</code> returns the corresponding size in nibbles
+and <code>0</code> for an invalid index.</p>
+<h3 id="tz80registers">TZ80Registers</h3>
+<p><code>TZ80Registers</code> is a variant record providing access to
+both 16-bit register pairs and their individual 8-bit components.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>16-bit register</th>
+<th>8-bit representation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BC</code></td>
+<td><code>B</code>, <code>C</code></td>
+</tr>
+<tr class="even">
+<td><code>DE</code></td>
+<td><code>D</code>, <code>E</code></td>
+</tr>
+<tr class="odd">
+<td><code>HL</code></td>
+<td><code>H</code>, <code>L</code></td>
+</tr>
+<tr class="even">
+<td><code>AF</code></td>
+<td><code>A</code>, <code>F</code></td>
+</tr>
+<tr class="odd">
+<td><code>BC_</code></td>
+<td><code>B_</code>, <code>C_</code></td>
+</tr>
+<tr class="even">
+<td><code>DE_</code></td>
+<td><code>D_</code>, <code>E_</code></td>
+</tr>
+<tr class="odd">
+<td><code>HL_</code></td>
+<td><code>H_</code>, <code>L_</code></td>
+</tr>
+<tr class="even">
+<td><code>AF_</code></td>
+<td><code>A_</code>, <code>F_</code></td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>PCH</code>, <code>PCL</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>SPH</code>, <code>SPL</code></td>
+</tr>
+<tr class="odd">
+<td><code>IX</code></td>
+<td><code>IXH</code>, <code>IXL</code></td>
+</tr>
+<tr class="even">
+<td><code>IY</code></td>
+<td><code>IYH</code>, <code>IYL</code></td>
+</tr>
+</tbody>
+</table>
+<p>The record also contains the 8-bit interrupt vector register
+<code>I</code> and refresh register <code>R</code>. The alternate
+register set is represented by the suffixed register pairs and
+bytes.</p>
+<h3 id="internal-register-names-and-opcode-prefixes">Internal register
+names and opcode prefixes</h3>
+<p>The internal register-name tables define the following indexed
+register operands:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th><code>RegNames</code></th>
+<th><code>XRegNames</code></th>
+<th><code>YRegNames</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>B</code></td>
+<td><code>B</code></td>
+<td><code>B</code></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>C</code></td>
+<td><code>C</code></td>
+<td><code>C</code></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>D</code></td>
+<td><code>D</code></td>
+<td><code>D</code></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>E</code></td>
+<td><code>E</code></td>
+<td><code>E</code></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>H</code></td>
+<td><code>IXH</code></td>
+<td><code>IYH</code></td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>L</code></td>
+<td><code>IXL</code></td>
+<td><code>IYL</code></td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>(HL)</code></td>
+<td><code>(IX)</code></td>
+<td><code>(IY)</code></td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>A</code></td>
+<td><code>A</code></td>
+<td><code>A</code></td>
+</tr>
+</tbody>
+</table>
+<p>The prefix constants select the microcode source:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>constant</th>
+<th>value</th>
+<th>purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prNone</code></td>
+<td>0</td>
+<td>Unprefixed opcode</td>
+</tr>
+<tr class="even">
+<td><code>prCB</code></td>
+<td>1</td>
+<td><code>CB</code> prefix</td>
+</tr>
+<tr class="odd">
+<td><code>prDD</code></td>
+<td>2</td>
+<td><code>DD</code> prefix</td>
+</tr>
+<tr class="even">
+<td><code>prED</code></td>
+<td>3</td>
+<td><code>ED</code> prefix</td>
+</tr>
+<tr class="odd">
+<td><code>prFD</code></td>
+<td>4</td>
+<td><code>FD</code> prefix</td>
+</tr>
+<tr class="even">
+<td><code>prDDCB</code></td>
+<td>5</td>
+<td><code>DD CB</code> prefix sequence</td>
+</tr>
+<tr class="odd">
+<td><code>prFDCB</code></td>
+<td>6</td>
+<td><code>FD CB</code> prefix sequence</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-fields-and-methods">Protected fields and methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 18%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RegPointers</code></td>
+<td><code>array[0..7] of PByte</code></td>
+<td>Pointers to the 8-bit register variables used by the instruction
+implementation.</td>
+</tr>
+<tr class="even">
+<td><code>FBus</code></td>
+<td><code>IStandardBus</code></td>
+<td>Connected external system bus.</td>
+</tr>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>TZ80Registers</code></td>
+<td>The complete Z80 register set.</td>
+</tr>
+<tr class="even">
+<td><code>FInterruptMode</code></td>
+<td><code>Byte</code></td>
+<td>Selected maskable interrupt mode.</td>
+</tr>
+<tr class="odd">
+<td><code>FInterruptEnabled2</code></td>
+<td><code>Boolean</code></td>
+<td>Secondary interrupt-enable state (<code>IFF2</code>).</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 5%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>method</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte; N: Boolean = False; P: Boolean = False);</code></td>
+<td></td>
+<td>Updates the Z80 flag register, including parity/overflow and
+add/subtract handling.</td>
+</tr>
+<tr class="even">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0); override;</code></td>
+<td><code>override</code></td>
+<td>Handles NMI and maskable interrupt processing for the selected
+interrupt mode.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte; APrefix: Byte = 0);</code></td>
+<td></td>
+<td>Dispatches the opcode to the corresponding included microcode
+source.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="state-persistence">State persistence</h3>
+<p><code>LoadState</code> reads the following data in order:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>order</th>
+<th>data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FLastInstruction</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FInterruptEnabled</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FInterruptEnabled2</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FInterruptMode</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FIRQPending</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><code>FNMIPending</code></td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>If a stream exception occurs, <code>LoadState</code> returns
+<code>False</code>; otherwise it returns <code>True</code>.</p>
+<p><code>SaveState</code> writes the same fields in the same order and
+returns <code>True</code> after the write operations complete.</p>
+<h3 id="public-methods">Public methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 4%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Creates a Zilog Z80 CPU, configures its architecture parameters and
+register pointers, and performs a reset.</td>
+</tr>
+<tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td><code>override</code></td>
+<td>Checks pending NMI and maskable interrupt requests and accepts at
+most one request per call.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Clears the register set, execution and pending-interrupt state,
+resets counters, sets <code>PC</code> to <code>0</code> and
+<code>SP</code> to <code>$FFFF</code>, and emits
+<code>ceReset</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Connects the supplied interface when it supports
+<code>IStandardBus</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Loads the enabled state, register set, last-instruction record,
+execution state, interrupt state and counters from a stream.</td>
+</tr>
+<tr class="even">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Saves the enabled state, register set, last-instruction record,
+execution state, interrupt state and counters to a stream.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure NMI;</code></td>
+<td><code>override</code></td>
+<td>Queues a non-maskable interrupt, saves the current
+maskable-interrupt enable state in <code>IFF2</code>, disables maskable
+interrupts and emits <code>ceInterrupt</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Fetches and executes an instruction, handles the
+<code>DD</code>/<code>FD</code> prefix bytes, accounts for cycles, emits
+the instruction-boundary event and increments the instruction
+count.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td><code>override</code></td>
+<td>Returns structured information about the most recently executed
+instruction.</td>
+</tr>
+<tr class="even">
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
+<td><code>override</code></td>
+<td>Returns the selected interrupt vector, interrupt-enable state and
+pending status.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Returns the value of the named public register.</td>
+</tr>
+<tr class="even">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Sets the named public register, masking the value to the register
+width.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the number of publicly enumerated registers.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register name for a valid index.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register size in nibbles for a valid index.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exported-plugin-interface">Exported plugin interface</h3>
+<p>The unit is compiled as the <code>cpu_z80</code> dynamic library and
+exports four plugin entry points:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exported name</th>
+<th>function</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Creates and returns a new <code>TZ80CPU</code> instance as
+<code>TCPU</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Destroys the supplied CPU instance when it is assigned.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Loads state through the supplied <code>TCPU</code> reference.
+Returns <code>False</code> when the reference is <code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Saves state through the supplied <code>TCPU</code> reference.
+Returns <code>False</code> when the reference is <code>nil</code>.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

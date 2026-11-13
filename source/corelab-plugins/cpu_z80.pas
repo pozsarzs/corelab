@@ -325,6 +325,8 @@ begin
       ReadBuffer(FRunning, SizeOf(FRunning));
       ReadBuffer(FHalted, SizeOf(FHalted));
       ReadBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
+      ReadBuffer(FInterruptEnabled2, SizeOf(FInterruptEnabled2));
+      ReadBuffer(FInterruptMode, SizeOf(FInterruptMode));
       ReadBuffer(FIRQPending, SizeOf(FIRQPending));
       ReadBuffer(FNMIPending, SizeOf(FNMIPending));
       ReadBuffer(FTotalCycles, SizeOf(FTotalCycles));
@@ -348,6 +350,8 @@ begin
     WriteBuffer(FRunning, SizeOf(FRunning));
     WriteBuffer(FHalted, SizeOf(FHalted));
     WriteBuffer(FInterruptEnabled, SizeOf(FInterruptEnabled));
+    WriteBuffer(FInterruptEnabled2, SizeOf(FInterruptEnabled2));
+    WriteBuffer(FInterruptMode, SizeOf(FInterruptMode));
     WriteBuffer(FIRQPending, SizeOf(FIRQPending));
     WriteBuffer(FNMIPending, SizeOf(FNMIPending));
     WriteBuffer(FTotalCycles, SizeOf(FTotalCycles));
@@ -488,7 +492,7 @@ begin
     'PC': FRegs.PC := Value and $FFFF;
     'SP': FRegs.SP := Value and $FFFF;
     'IX': FRegs.IX := Value and $FFFF;
-    'IY': FRegs.IX := Value and $FFFF;
+    'IY': FRegs.IY := Value and $FFFF;
     'I': FRegs.I := Value and $FF;
     'R': FRegs.R := Value and $FF;
   end;
