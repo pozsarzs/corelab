@@ -467,11 +467,16 @@ the memory location addressed by <code>HL</code>.</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>FBus</code></td>
+<td><code>IStandardBus</code></td>
+<td>Connected external standard system bus.</td>
+</tr>
+<tr class="even">
 <td><code>FRegs</code></td>
 <td><code>T8080Registers</code></td>
 <td>Complete Intel 8080 register set.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>RegPointers</code></td>
 <td><code>array[0..7] of PByte</code></td>
 <td>Pointers to the 8-bit register variables used by the instruction
@@ -500,10 +505,15 @@ implementation.</td>
 arithmetic result.</td>
 </tr>
 <tr class="even">
-<td><code>procedure DoInterrupt(AEvent: TCPUEvent); override;</code></td>
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
 <td><code>override</code></td>
-<td>Handles interrupt notification and Intel 8080 RST interrupt
-processing.</td>
+<td>Handles interrupt notification and executes the injected interrupt
+opcode.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td><code>virtual</code></td>
+<td>Executes the specified opcode.</td>
 </tr>
 </tbody>
 </table>
@@ -527,30 +537,34 @@ processing.</td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td><code>FRunning</code></td>
+<td><code>FLastInstruction</code></td>
 </tr>
 <tr class="even">
 <td>4</td>
-<td><code>FHalted</code></td>
+<td><code>FRunning</code></td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td><code>FInterruptEnabled</code></td>
+<td><code>FHalted</code></td>
 </tr>
 <tr class="even">
 <td>6</td>
-<td><code>FIRQPending</code></td>
+<td><code>FInterruptEnabled</code></td>
 </tr>
 <tr class="odd">
 <td>7</td>
-<td><code>FNMIPending</code></td>
+<td><code>FIRQPending</code></td>
 </tr>
 <tr class="even">
 <td>8</td>
-<td><code>FTotalCycles</code></td>
+<td><code>FNMIPending</code></td>
 </tr>
 <tr class="odd">
 <td>9</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
 <td><code>FTotalInstructions</code></td>
 </tr>
 </tbody>
@@ -588,58 +602,66 @@ counters, sets <code>PC</code> to <code>0</code> and <code>SP</code> to
 <code>$FFFF</code>, and emits <code>ceReset</code>.</td>
 </tr>
 <tr class="odd">
-<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Loads the enabled state, register set, execution state, interrupt
-state and execution counters from a stream.</td>
+<td>Connects the CPU to an external bus supporting
+<code>IStandardBus</code>.</td>
 </tr>
 <tr class="even">
-<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Saves the enabled state, register set, execution state, interrupt
-state and execution counters to a stream.</td>
+<td>Loads the enabled state, register set, last-instruction record,
+execution state, interrupt state and execution counters from a
+stream.</td>
 </tr>
 <tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Saves the enabled state, register set, last-instruction record,
+execution state, interrupt state and execution counters to a
+stream.</td>
+</tr>
+<tr class="even">
 <td><code>procedure Step;</code></td>
 <td><code>override</code></td>
 <td>Fetches and executes one Intel 8080 instruction, including interrupt
 checking, opcode fetch, cycle accounting, instruction-boundary
 notification and instruction counting.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetCurrentInstruction: TLogRec;</code></td>
 <td><code>override</code></td>
 <td>Returns structured information about the most recently fetched
 instruction.</td>
 </tr>
-<tr class="odd">
-<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<tr class="even">
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
 <td><code>override</code></td>
 <td>Returns the current interrupt vector, interrupt-enable state and
-pending status.</td>
+pending status for the selected interrupt mode.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetRegister(const RegName: PChar): Word;</code></td>
 <td><code>override</code></td>
 <td>Returns the value of the named public register.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
 <td><code>override</code></td>
 <td>Sets the named public register, masking it to its register
 width.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetRegisterCount: Byte;</code></td>
 <td><code>override</code></td>
 <td>Returns the number of publicly enumerated registers.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
 <td><code>override</code></td>
 <td>Returns the public register name for a valid index.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
 <td><code>override</code></td>
 <td>Returns the public register size in nibbles for a valid index.</td>

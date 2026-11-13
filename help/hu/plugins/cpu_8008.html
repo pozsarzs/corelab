@@ -127,17 +127,29 @@ számlálókat.</p>
 </tr>
 <tr class="odd">
 <td><code>FIRQPending</code></td>
-<td><code>False</code></td>
+<td>minden elem <code>False</code></td>
 </tr>
 <tr class="even">
 <td><code>FNMIPending</code></td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>TotalCycles</code></td>
+<td><code>C</code>, <code>Z</code>, <code>S</code>, <code>P</code></td>
+<td>minden flag <code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FStack.Regs</code></td>
+<td>mind a hét elem <code>$0000</code></td>
+</tr>
+<tr class="odd">
+<td><code>FStack.Pointer</code></td>
 <td><code>0</code></td>
 </tr>
 <tr class="even">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
 <td><code>TotalInstructions</code></td>
 <td><code>0</code></td>
 </tr>
@@ -451,11 +463,6 @@ vermét modellezi.</p>
 </table>
 <h3 id="protected-mezők-és-metódusok">Protected mezők és metódusok</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 28%" />
-<col style="width: 53%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th>név</th>
@@ -467,30 +474,25 @@ vermét modellezi.</p>
 <tr class="odd">
 <td><code>FRegs</code></td>
 <td><code>T8008Registers</code></td>
-<td>Complete 8008 regiszter set.</td>
+<td>A teljes 8008-as regiszterkészlet.</td>
 </tr>
 <tr class="even">
 <td><code>FFlags</code></td>
 <td><code>T8008Flags</code></td>
-<td>Intel 8008 feltétel flags.</td>
+<td>Az Intel 8008 feltételflagjei.</td>
 </tr>
 <tr class="odd">
 <td><code>FStack</code></td>
 <td><code>T8008Stack</code></td>
 <td>Belső hétszintű hardveres verem.</td>
 </tr>
-<tr class="even">
-<td><code>RegPointers</code></td>
-<td><code>array[0..6] of PByte</code></td>
-<td>Mutatók a hét 8 bites regiszterváltozóra.</td>
-</tr>
 </tbody>
 </table>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 26%" />
+<col style="width: 37%" />
 <col style="width: 6%" />
-<col style="width: 66%" />
+<col style="width: 56%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -503,14 +505,19 @@ vermét modellezi.</p>
 <tr class="odd">
 <td><code>procedure UpdateFlags(Value16: Word);</code></td>
 <td></td>
-<td>Frissíti a következőket: C, Z, S és P flags értéket adnak vissza
-innen: an arithmetic result.</td>
+<td>Aritmetikai eredmény alapján frissíti a C, Z, S és P flaget.</td>
 </tr>
 <tr class="even">
-<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
 <td><code>override</code></td>
-<td>Meghívja az örökölt megszakításkezelőt, és biztosítja a kapcsolódási
-pontot a 8008 újraindítás-kezeléséhez.</td>
+<td>Meghívja az örökölt kezelőt, majd IRQ esetén végrehajtja az
+<code>FIRQVector[AMode]</code> opkódját.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td></td>
+<td>Végrehajtja a megadott opkódot a beillesztett mikrokód
+segítségével.</td>
 </tr>
 </tbody>
 </table>
@@ -543,19 +550,19 @@ sorrendben:</p>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td><code>FRunning</code></td>
+<td><code>FLastInstruction</code></td>
 </tr>
 <tr class="even">
 <td>6</td>
-<td><code>FHalted</code></td>
+<td><code>FRunning</code></td>
 </tr>
 <tr class="odd">
 <td>7</td>
-<td><code>FIRQPending</code></td>
+<td><code>FHalted</code></td>
 </tr>
 <tr class="even">
 <td>8</td>
-<td><code>FNMIPending</code></td>
+<td><code>FIRQPending</code></td>
 </tr>
 <tr class="odd">
 <td>9</td>
@@ -574,9 +581,9 @@ sorrendben, és a műveletek <code>True</code> értéket ad vissza.</p>
 <h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 20%" />
+<col style="width: 24%" />
 <col style="width: 3%" />
-<col style="width: 76%" />
+<col style="width: 72%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -590,29 +597,42 @@ sorrendben, és a műveletek <code>True</code> értéket ad vissza.</p>
 <td><code>constructor Create;</code></td>
 <td><code>override</code></td>
 <td>Létrehoz egy Intel 8008 CPU-t, beállítja az
-architektúra-paramétereit és a regisztermutatókat, majd resetet hajt
-végre.</td>
+architektúra-paramétereket és a regisztermutatókat, resetet hajt végre,
+majd engedélyezi a megszakításokat.</td>
 </tr>
 <tr class="even">
 <td><code>procedure Reset;</code></td>
 <td><code>override</code></td>
 <td>Törli a regiszter-, flag- és belső veremállapotot, törli a
-végrehajtási és megszakítási állapotot, nullázza a számlálókat, és
+végrehajtási és megszakítási függő állapotot, nullázza a számlálókat, és
 kiváltja a <code>ceReset</code> eseményt.</td>
+</tr>
+<tr class="odd">
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
+<td><code>override</code></td>
+<td>A CPU-t <code>IStandardBus</code> interfészt támogató külső buszhoz
+csatlakoztatja.</td>
+</tr>
+<tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td><code>override</code></td>
+<td>Elfogadja az első engedélyezett függő IRQ-t, törli annak függő
+bejegyzését, felébreszti a várakozó CPU-t, és meghívja a
+megszakításkezelőt.</td>
 </tr>
 <tr class="odd">
 <td><code>function LoadState(AStream: TStream): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Betölti az engedélyezési állapotot, a regiszterkészletet, a flagkat,
-a hardveres vermet, a végrehajtási és megszakítási állapotot, valamint a
-végrehajtási számlálókat egy adatfolyamból.</td>
+<td>Betölti az engedélyezési állapotot, a regisztereket, a flageket, a
+hardveres vermet, az utolsó utasítás rekordját, a végrehajtási
+állapotot, az IRQ-függő tömböt és a számlálókat.</td>
 </tr>
 <tr class="even">
 <td><code>function SaveState(AStream: TStream): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Elmenti az engedélyezési állapotot, a regiszterkészletet, a flagkat,
-a hardveres vermet, a végrehajtási és megszakítási állapotot, valamint a
-végrehajtási számlálókat egy adatfolyamba.</td>
+<td>Elmenti az engedélyezési állapotot, a regisztereket, a flageket, a
+hardveres vermet, az utolsó utasítás rekordját, a végrehajtási
+állapotot, az IRQ-függő tömböt és a számlálókat.</td>
 </tr>
 <tr class="odd">
 <td><code>procedure Step;</code></td>
@@ -623,16 +643,16 @@ körbefordulását, a ciklusok számlálását, az utasításhatár jelzését �
 utasítások számlálását.</td>
 </tr>
 <tr class="even">
-<td><code>függvény GetCurrentInstruction: TLogRec;</code></td>
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
 <td><code>override</code></td>
 <td>Strukturált információt ad vissza a legutóbb lekért
 utasításról.</td>
 </tr>
 <tr class="odd">
-<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
 <td><code>override</code></td>
-<td>Visszaadja az aktuális IRQ-vektort és a függőben lévő
-állapotot.</td>
+<td>Visszaadja a kiválasztott megszakítási mód IRQ-vektorát és függő
+állapotát.</td>
 </tr>
 <tr class="even">
 <td><code>function GetRegister(const RegName: PChar): Word;</code></td>

@@ -480,11 +480,16 @@ mert a <code>HL</code> által címzett memóriahelyet jelöli.</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>FBus</code></td>
+<td><code>IStandardBus</code></td>
+<td>Csatlakoztatott külső standard rendszerbusz.</td>
+</tr>
+<tr class="even">
 <td><code>FRegs</code></td>
 <td><code>T8080Registers</code></td>
 <td>A teljes Intel 8080 regiszterkészlet.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>RegPointers</code></td>
 <td><code>array[0..7] of PByte</code></td>
 <td>Az utasítás-megvalósítás által használt 8 bites regiszterváltozók
@@ -494,9 +499,9 @@ mutatói.</td>
 </table>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 37%" />
-<col style="width: 5%" />
-<col style="width: 56%" />
+<col style="width: 44%" />
+<col style="width: 6%" />
+<col style="width: 49%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -509,14 +514,19 @@ mutatói.</td>
 <tr class="odd">
 <td><code>procedure UpdateFlags(Value16: Word; OldValue, ValueToAdd: Byte);</code></td>
 <td></td>
-<td>Updates the Intel 8080 flag register according to the supplied
-aritmetikai eredmény alapján frissíti.</td>
+<td>Frissíti az Intel 8080 flagregiszterét a megadott aritmetikai
+eredmény alapján.</td>
 </tr>
 <tr class="even">
-<td><code>procedure DoInterrupt(AEvent: TCPUEvent); override;</code></td>
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
 <td><code>override</code></td>
-<td>Kezeli a megszakítás jelzését és az Intel 8080 RST
-megszakítás-feldolgozását.</td>
+<td>Kezeli a megszakítás jelzését, és végrehajtja a beadott megszakítási
+opkódot.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td><code>virtual</code></td>
+<td>Végrehajtja a megadott opkódot.</td>
 </tr>
 </tbody>
 </table>
@@ -541,30 +551,34 @@ sorrendben:</p>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td><code>FRunning</code></td>
+<td><code>FLastInstruction</code></td>
 </tr>
 <tr class="even">
 <td>4</td>
-<td><code>FHalted</code></td>
+<td><code>FRunning</code></td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td><code>FInterruptEnabled</code></td>
+<td><code>FHalted</code></td>
 </tr>
 <tr class="even">
 <td>6</td>
-<td><code>FIRQPending</code></td>
+<td><code>FInterruptEnabled</code></td>
 </tr>
 <tr class="odd">
 <td>7</td>
-<td><code>FNMIPending</code></td>
+<td><code>FIRQPending</code></td>
 </tr>
 <tr class="even">
 <td>8</td>
-<td><code>FTotalCycles</code></td>
+<td><code>FNMIPending</code></td>
 </tr>
 <tr class="odd">
 <td>9</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
 <td><code>FTotalInstructions</code></td>
 </tr>
 </tbody>
@@ -578,9 +592,9 @@ returns <code>True</code> after befejezése után <code>True</code>
 <h3 id="public-metóduss">Public metóduss</h3>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 23%" />
-<col style="width: 3%" />
-<col style="width: 72%" />
+<col style="width: 24%" />
+<col style="width: 4%" />
+<col style="width: 70%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -606,63 +620,71 @@ végre.</td>
 állítja, és kiváltja a <code>ceReset</code> eseményt.</td>
 </tr>
 <tr class="odd">
-<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Betölti az engedélyezési állapotot, a regiszterkészletet, a
-végrehajtási és megszakítási állapotot, valamint a végrehajtási
-számlálókat egy adatfolyamból.</td>
+<td>A CPU-t egy <code>IStandardBus</code> interfészt támogató külső
+buszhoz csatlakoztatja.</td>
 </tr>
 <tr class="even">
-<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Elmenti az engedélyezési állapotot, a regiszterkészletet, a
-végrehajtási és megszakítási állapotot, valamint a végrehajtási
-számlálókat egy adatfolyamba.</td>
+<td>Betölti az engedélyezési állapotot, a regiszterkészletet, az
+utolsóutasítás-rekordot, a végrehajtási és megszakítási állapotot,
+valamint a számlálókat egy adatfolyamból.</td>
 </tr>
 <tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Elmenti az engedélyezési állapotot, a regiszterkészletet, az
+utolsóutasítás-rekordot, a végrehajtási és megszakítási állapotot,
+valamint a számlálókat egy adatfolyamba.</td>
+</tr>
+<tr class="even">
 <td><code>procedure Step;</code></td>
 <td><code>override</code></td>
 <td>Lekér és végrehajt egy Intel 8080 utasítást, beleértve a
 megszakítások ellenőrzését, az opkód lekérését, a ciklusok számlálását,
 az utasításhatár jelzését és az utasítások számlálását.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetCurrentInstruction: TLogRec;</code></td>
 <td><code>override</code></td>
 <td>Strukturált információt ad vissza a legutóbb lekért
 utasításról.</td>
 </tr>
-<tr class="odd">
-<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
-<td><code>override</code></td>
-<td>Visszaadja az aktuális megszakításvektort, a
-megszakítás-engedélyezési állapotot és a függőben lévő állapotot.</td>
-</tr>
 <tr class="even">
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a kiválasztott megszakítási mód vektorát, engedélyezési
+állapotát és függőben lévő állapotát.</td>
+</tr>
+<tr class="odd">
 <td><code>function GetRegister(const RegName: PChar): Word;</code></td>
 <td><code>override</code></td>
-<td>Returns the value of the névd public register.</td>
-</tr>
-<tr class="odd">
-<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
-<td><code>override</code></td>
-<td>Sets the névd public register, masking it to its register
-szélesség.</td>
+<td>Visszaadja a megnevezett nyilvános regiszter értékét.</td>
 </tr>
 <tr class="even">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Beállítja a megnevezett nyilvános regisztert, a saját szélességének
+megfelelően maszkolva.</td>
+</tr>
+<tr class="odd">
 <td><code>function GetRegisterCount: Byte;</code></td>
 <td><code>override</code></td>
 <td>Visszaadja a nyilvánosan felsorolt regiszterek számát.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
 <td><code>override</code></td>
-<td>Returns the public register név for a valid index.</td>
+<td>Visszaadja az érvényes indexhez tartozó nyilvános
+regiszternevet.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
 <td><code>override</code></td>
-<td>Returns the public register méret in nibbles for a valid index.</td>
+<td>Visszaadja az érvényes indexhez tartozó nyilvános regiszterméretet
+nibble-ekben.</td>
 </tr>
 </tbody>
 </table>

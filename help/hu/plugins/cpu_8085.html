@@ -1,11 +1,461 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - T8085CPU a T8080CPU osztályból a cpu_8085 egységben</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="t8085cpu-a-t8080cpu-osztályból-a-cpu_8085-egységben">T8085CPU a
+T8080CPU osztályból a cpu_8085 egységben</h2>
+<p>A <code>T8085CPU</code> a CoreLAB keretrendszer Intel 8085
+processzormegvalósítása. A <code>T8080CPU</code> osztályból származik,
+és az Intel 8080-kompatibilis megvalósítást az Intel 8085
+megszakításrendszerével, megszakításmaszkolással,
+megszakítás-ellenőrzéssel, valamint 8085-specifikus opkód- és
+cikluskezeléssel egészíti ki.</p>
+<p>A 8085-specifikus utasítás-megvalósítás a fordítás során a
+<code>cpu_8085_microcode.pas</code> fájlból kerül beillesztésre. Az
+ebben a forrásban nem kezelt opkódokat a program az örökölt
+<code>T8080CPU.RunOpCode</code> metódusnak adja át, majd bizonyos
+utasítások ciklusszámát az Intel 8085-nek megfelelően módosítja.</p>
+<h3 id="cpu-konfiguráció">CPU-konfiguráció</h3>
+<p>A konstruktor először meghívja az örökölt konstruktort, majd a CPU
+azonosító adatait és órajel-frekvenciáját az alábbiak szerint állítja
+be. A többi architektúra-tulajdonság az örökölt Intel 8080
+megvalósítással azonos értékű.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modul neve</td>
+<td><code>8085</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Intel 8085 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architektúra</td>
+<td><code>arNeumann</code></td>
+</tr>
+<tr class="even">
+<td>Címszélesség</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>Bájtsorrend</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximális memória-cím</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális kód-cím</td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximális I/O-port cím</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="odd">
+<td>Külön I/O-busz</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Alapértelmezett órajel-frekvencia</td>
+<td>3000000 Hz (3 MHz)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reset-állapot">Reset állapot</h3>
+<p>A <code>Reset</code> törli a végrehajtási és megszakítási állapotot,
+nullázza a végrehajtási számlálókat, törli az örökölt
+<code>T8080Registers</code> rekordot, a veremmutatót <code>$FFFF</code>
+értékre állítja, és a 8085 megszakításmaszkját <code>$07</code> értékre
+inicializálja.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter/állapot</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="even">
+<td><code>SP</code></td>
+<td><code>$FFFF</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FIRQMask</code></td>
+<td><code>$07</code></td>
+</tr>
+<tr class="odd">
+<td><code>FIRQPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FNMIPending</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>A teljes örökölt regiszterrekord törlődik, ezért a 8080-kompatibilis
+regiszterek kezdeti értéke nulla. A metódus kiváltja az örökölt
+<code>ceReset</code> eseményt.</p>
+<h3 id="utasítás-végrehajtás">Utasítás-végrehajtás</h3>
+<p>A <code>Step</code> a következő műveleteket végzi el:</p>
+<ol type="1">
+<li>Azonnal leáll, ha a CPU le van tiltva
+(<code>FEnabled = False</code>).</li>
+<li>Meghívja a <code>CheckInterrupts</code> metódust; a végrehajtás
+azonnal leáll, ha egy megszakítás elfogadásra kerül.</li>
+<li>Azonnal leáll, ha a CPU várakozó (halt) állapotban van.</li>
+<li>Beolvassa az opkódot a rendszerbuszról az aktuális <code>PC</code>
+címen.</li>
+<li>Eltárolja a címet, az opkódot és az operandusok számát a
+<code>FLastInstruction</code> rekordban.</li>
+<li>Növeli a <code>PC</code> értékét.</li>
+<li>Meghívja a <code>RunOpCode</code> metódust az opkód
+végrehajtásához.</li>
+<li>Hozzáadja az utasítás ciklusszámát a <code>FTotalCycles</code>
+számlálóhoz.</li>
+<li>Kiváltja a <code>ceInstructionBoundary</code> eseményt.</li>
+<li>Növeli a <code>FTotalInstructions</code> számlálót.</li>
+</ol>
+<p>Az opkód beolvasásához ezért az örökölt <code>FBus</code> busznak
+csatlakoztatva kell lennie.</p>
+<h3 id="opkód--és-cikluskezelés">Opkód- és cikluskezelés</h3>
+<p>A <code>RunOpCode</code> először a
+<code>cpu_8085_microcode.pas</code> fájlból beillesztett 8085-specifikus
+mikrokódot vizsgálja. Ha az opkódot ez nem kezeli, meghívja az örökölt
+<code>T8080CPU.RunOpCode</code> metódust.</p>
+<p>Az örökölt végrehajtás után a metódus a néhány utasításcsoport
+ciklusszámát ciklusszámát módosítja.</p>
+<h3 id="megszakítás-kezelés">Megszakítás-kezelés</h3>
+<p>Az egység a következő megszakítási módokat definiálja:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>konstans</th>
+<th>érték</th>
+<th>megszakításforrás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>imINTR</code></td>
+<td><code>0</code></td>
+<td>INTR</td>
+</tr>
+<tr class="even">
+<td><code>imRST5_5</code></td>
+<td><code>1</code></td>
+<td>RST 5.5</td>
+</tr>
+<tr class="odd">
+<td><code>imRST6_5</code></td>
+<td><code>2</code></td>
+<td>RST 6.5</td>
+</tr>
+<tr class="even">
+<td><code>imRST7_5</code></td>
+<td><code>3</code></td>
+<td>RST 7.5</td>
+</tr>
+<tr class="odd">
+<td><code>imNMI</code></td>
+<td><code>255</code></td>
+<td>NMI (TRAP)</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>CheckInterrupts</code> a függőben lévő megszakításokat a
+következő sorrendben ellenőrzi:</p>
+<ol type="1">
+<li>NMI (<code>FNMIPending</code>), amelynek elfogadása nem függ az
+<code>FInterruptEnabled</code> értékétől.</li>
+<li>RST 7.5.</li>
+<li>RST 6.5.</li>
+<li>RST 5.5.</li>
+<li>INTR.</li>
+</ol>
+<p>Az <code>FIRQMask</code> maszkolóregiszter a három maszkolható RST
+bemenetet vezérli. A 0. bit az RST 5.5, az 1. bit az RST 6.5, a 2. bit
+pedig az RST 7.5 megszakítást maszkolja. A beállított bit miatt a
+megfelelő függőben lévő megszakítás kimarad az ellenőrzésből. A
+maszkolható megszakításokat a program csak akkor vizsgálja, ha az
+<code>FInterruptEnabled</code> értéke <code>True</code>.</p>
+<p>Megszakítás elfogadásakor a hozzá tartozó függőbenléti jelző
+törlődik, a várakozó állapot megszűnik, majd meghívódik a
+<code>DoInterrupt</code>. Egy ellenőrzés során legfeljebb egy
+megszakítás fogadható el.</p>
+<p>A <code>DoInterrupt</code> először meghívja az örökölt
+<code>T8080CPU.DoInterrupt</code> metódust. Elfogadott megszakítás
+esetén (<code>AEvent = ceInterrupt</code>) letiltja a további
+maszkolható megszakításokat az <code>FInterruptEnabled</code>
+törlésével.</p>
+<ul>
+<li>Az NMI (TRAP) a verembe menti az aktuális <code>PC</code> értékét,
+majd a <code>PC</code> értékét <code>$0024</code>-re állítja.</li>
+<li>Az RST 5.5, RST 6.5 és RST 7.5 a verembe menti az aktuális
+<code>PC</code> értékét, majd a <code>PC</code> értékét rendre
+<code>$002C</code>, <code>$0034</code> és <code>$003C</code> címre
+állítja.</li>
+<li>Az INTR végrehajtja az <code>FIRQVector[imINTR]</code> által
+tartalmazott opkódot a <code>RunOpCode</code> meghívásával.</li>
+</ul>
+<p>A visszatérési cím két bájtban kerül a verembe: a veremmutató
+csökkentésekor először a felső bájt íródik ki, majd az alsó bájt.</p>
+<h3 id="állapot-megőrzése">Állapot megőrzése</h3>
+<p>A <code>LoadState</code> a következő adatokat olvassa be ebben a
+sorrendben:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>sorrend</th>
+<th>adat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FInterruptEnabled</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FIRQMask</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FIRQPending</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FNMIPending</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ha adatfolyam-kivétel történik, a <code>LoadState</code>
+<code>False</code> értéket ad vissza; egyébként <code>True</code>
+értéket ad vissza.</p>
+<p>A <code>SaveState</code> ugyanezeket a mezőket, ugyanebben a
+sorrendben írja ki, és az írási műveletek befejezése után
+<code>True</code> értéket ad vissza.</p>
+<h3 id="örökölt-funkcionalitás">Örökölt funkcionalitás</h3>
+<p>A regiszterkészlet, a regiszterelérési metódusok, az aktuális
+utasítás jelentése, az aktuális megszakítás jelentése, a flagkezelés és
+az alapvető utasítás-végrehajtás a <code>T8080CPU</code> osztályból
+öröklődik. Ez az egység csak az alább felsorolt metódusokat írja felül,
+és hozzáadja az <code>FIRQMask</code> mezőt.</p>
+<h3 id="védett-mezők-és-metódusok">Védett mezők és metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 8%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FIRQMask</code></td>
+<td><code>Byte</code></td>
+<td>Az RST 5.5, RST 6.5 és RST 7.5 megszakítások maszkja.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 4%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>metódus</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
+<td><code>override</code></td>
+<td>A 8085 megszakítási módjait kezeli, beleértve a TRAP, RST
+5.5/6.5/7.5 és INTR megszakításokat.</td>
+</tr>
+<tr class="even">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td><code>override</code></td>
+<td>Végrehajtja a 8085-specifikus mikrokódot, szükség esetén az örökölt
+opkódkezelőhöz fordul, majd módosítja egyes utasítások
+ciklusszámát.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 3%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Létrehoz egy Intel 8085 CPU-t az örökölt 8080-konfiguráció
+kiterjesztésével, és 3 MHz-re állítja az alapértelmezett órajelet.</td>
+</tr>
+<tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td><code>override</code></td>
+<td>Prioritási sorrendben ellenőrzi a függőben lévő megszakításokat,
+alkalmazza az RST megszakításmaszkot, legfeljebb egy megszakítást fogad
+el, és elfogadásakor felébreszti a várakozó CPU-t.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Visszaállítja az örökölt CPU-állapotot, és az <code>FIRQMask</code>
+értékét <code>$07</code>-re állítja.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Betölti az engedélyezési állapotot, az örökölt regiszterkészletet, a
+végrehajtási állapotot, a megszakításmaszkot, a függőben lévő
+megszakítások állapotát és a végrehajtási számlálókat egy
+adatfolyamból.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Elmenti az engedélyezési állapotot, az örökölt regiszterkészletet, a
+végrehajtási állapotot, a megszakításmaszkot, a függőben lévő
+megszakítások állapotát és a végrehajtási számlálókat egy
+adatfolyamba.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Lekér és végrehajt egy utasítást, beleértve a megszakítások
+ellenőrzését, az opkód lekérését, a ciklusok számlálását, az
+utasításhatár jelzését és az utasítások számlálását.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-plugininterfész">Exportált plugininterfész</h3>
+<p>Az egység <code>cpu_8085</code> dinamikus könyvtárként fordul, és
+négy plugin belépési pontot exportál:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 8%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportált</th>
+<th>függvény</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Létrehoz és <code>TCPU</code> típusúként visszaad egy új
+<code>T8085CPU</code> példányt.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Megsemmisíti a megadott CPU-példányt, ha az hozzá van rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Állapotot tölt be a megadott <code>TCPU</code> referencián
+keresztül. <code>False</code> értéket ad vissza, ha a referencia
+<code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Állapotot ment a megadott <code>TCPU</code> referencián keresztül.
+<code>False</code> értéket ad vissza, ha a referencia
+<code>nil</code>.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

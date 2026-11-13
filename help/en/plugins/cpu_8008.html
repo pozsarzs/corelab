@@ -124,17 +124,29 @@ clears the execution and interrupt state and counters.</p>
 </tr>
 <tr class="odd">
 <td><code>FIRQPending</code></td>
-<td><code>False</code></td>
+<td>all entries <code>False</code></td>
 </tr>
 <tr class="even">
 <td><code>FNMIPending</code></td>
 <td><code>False</code></td>
 </tr>
 <tr class="odd">
-<td><code>TotalCycles</code></td>
+<td><code>C</code>, <code>Z</code>, <code>S</code>, <code>P</code></td>
+<td>all flags <code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FStack.Regs</code></td>
+<td>all seven entries <code>$0000</code></td>
+</tr>
+<tr class="odd">
+<td><code>FStack.Pointer</code></td>
 <td><code>0</code></td>
 </tr>
 <tr class="even">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
 <td><code>TotalInstructions</code></td>
 <td><code>0</code></td>
 </tr>
@@ -445,11 +457,6 @@ hardware stack.</p>
 </table>
 <h3 id="protected-fields-and-methods">Protected fields and methods</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 26%" />
-<col style="width: 57%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th>name</th>
@@ -473,18 +480,13 @@ hardware stack.</p>
 <td><code>T8008Stack</code></td>
 <td>Internal seven-level hardware stack.</td>
 </tr>
-<tr class="even">
-<td><code>RegPointers</code></td>
-<td><code>array[0..6] of PByte</code></td>
-<td>Pointers to the seven 8-bit register variables.</td>
-</tr>
 </tbody>
 </table>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 35%" />
+<col style="width: 36%" />
 <col style="width: 6%" />
-<col style="width: 57%" />
+<col style="width: 56%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -500,10 +502,15 @@ hardware stack.</p>
 <td>Updates the C, Z, S and P flags from an arithmetic result.</td>
 </tr>
 <tr class="even">
-<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
 <td><code>override</code></td>
-<td>Calls the inherited interrupt handler and provides the hook for 8008
-restart handling.</td>
+<td>Calls the inherited handler and executes
+<code>FIRQVector[AMode]</code> as an opcode on an IRQ.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td></td>
+<td>Executes the supplied opcode using the included microcode.</td>
 </tr>
 </tbody>
 </table>
@@ -535,19 +542,19 @@ restart handling.</td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td><code>FRunning</code></td>
+<td><code>FLastInstruction</code></td>
 </tr>
 <tr class="even">
 <td>6</td>
-<td><code>FHalted</code></td>
+<td><code>FRunning</code></td>
 </tr>
 <tr class="odd">
 <td>7</td>
-<td><code>FIRQPending</code></td>
+<td><code>FHalted</code></td>
 </tr>
 <tr class="even">
 <td>8</td>
-<td><code>FNMIPending</code></td>
+<td><code>FIRQPending</code></td>
 </tr>
 <tr class="odd">
 <td>9</td>
@@ -566,9 +573,9 @@ returns <code>True</code> after the write operations complete.</p>
 <h3 id="public-methods">Public methods</h3>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 22%" />
+<col style="width: 26%" />
 <col style="width: 3%" />
-<col style="width: 73%" />
+<col style="width: 69%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -582,28 +589,40 @@ returns <code>True</code> after the write operations complete.</p>
 <td><code>constructor Create;</code></td>
 <td><code>override</code></td>
 <td>Creates an Intel 8008 CPU, configures its architecture parameters
-and register pointers, and performs a reset.</td>
+and register pointers, performs a reset and enables interrupts.</td>
 </tr>
 <tr class="even">
 <td><code>procedure Reset;</code></td>
 <td><code>override</code></td>
 <td>Clears the register, flag and internal stack state, clears execution
-and interrupt state, resets counters, and emits
+and interrupt-pending state, resets counters, and emits
 <code>ceReset</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Connects the CPU to an external bus supporting
+<code>IStandardBus</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td><code>override</code></td>
+<td>Accepts the first enabled pending IRQ, clears its pending entry,
+wakes a halted CPU and invokes the interrupt handler.</td>
 </tr>
 <tr class="odd">
 <td><code>function LoadState(AStream: TStream): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Loads the enabled state, register set, flags, hardware stack,
-execution state, interrupt state and execution counters from a
-stream.</td>
+<td>Loads the enabled state, registers, flags, hardware stack,
+last-instruction record, execution state, IRQ-pending array and
+execution counters from a stream.</td>
 </tr>
 <tr class="even">
 <td><code>function SaveState(AStream: TStream): Boolean;</code></td>
 <td><code>override</code></td>
-<td>Saves the enabled state, register set, flags, hardware stack,
-execution state, interrupt state and execution counters to a
-stream.</td>
+<td>Saves the enabled state, registers, flags, hardware stack,
+last-instruction record, execution state, IRQ-pending array and
+execution counters to a stream.</td>
 </tr>
 <tr class="odd">
 <td><code>procedure Step;</code></td>
@@ -619,9 +638,10 @@ instruction-boundary notification and instruction counting.</td>
 instruction.</td>
 </tr>
 <tr class="odd">
-<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
 <td><code>override</code></td>
-<td>Returns the current IRQ vector and pending status.</td>
+<td>Returns the IRQ vector and pending status for the selected interrupt
+mode.</td>
 </tr>
 <tr class="even">
 <td><code>function GetRegister(const RegName: PChar): Word;</code></td>
