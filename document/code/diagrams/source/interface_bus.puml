@@ -12,15 +12,61 @@ skinparam shadowing false
 skinparam monochrome true
 left to right direction
 
-package "CoreLAB system bus" {
+package "core_bus" {
 
-  interface ISysBus {
-    + ReadMemory(AAddress: DWord): QWord
-    + WriteMemory(AAddress: DWord; AValue: QWord)
-    + ReadPort(APort: DWord): Byte
-    + WritePort(APort: DWord; AValue: Byte)
+  class TBusLogRec <<record>> {
+    Operation: string[31]
+    Device: string[31]
+    Address: string[31]
+    RelAddress: string[31]
+    Data: string[31]
+    Status: string[31]
   }
 
+  enum TBusType {
+    btStandard
+    btMCS4
+  }
+
+  class TBusTypeHelper <<type helper>> {
+    +ToString(): string
+    +FromString(const Value: string): TBusType
+  }
+
+  interface IStandardBus {
+    +ReadMemory(AAddress: DWord): Byte
+    +WriteMemory(AAddress: DWord, AValue: Byte): procedure
+    +ReadPort(APort: DWord): Byte
+    +WritePort(APort: DWord, AValue: Byte): procedure
+  }
+
+  interface IMCS4Bus {
+    +SendSRC(AAddress: Byte): procedure
+    +ReadRAM(): Byte
+    +WriteRAM(AData: Byte): procedure
+    +ReadRAMStatus(AIndex: Byte): Byte
+    +WriteRAMStatus(AIndex: Byte, AData: Byte): procedure
+    +WriteRAMIOPort(AData: Byte): procedure
+    +ReadROM(AAddress: Word): Byte
+    +ReadROMIOPort(): Byte
+    +WriteROMIOPort(AData: Byte): procedure
+  }
 }
+
+TBusTypeHelper ..> TBusType : extends conversion
+note right of IStandardBus
+  GUID:
+  A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234
+end note
+
+note right of IMCS4Bus
+  GUID:
+  923A5391-77FD-41FB-B935-046D62F45C18
+end note
+
+note bottom of TBusLogRec
+  Record used to store the last bus operation
+  for BusLogger.
+end note
 
 @enduml

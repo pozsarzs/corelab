@@ -12,246 +12,197 @@ skinparam ranksep 10
 skinparam shadowing false
 skinparam monochrome true
 
-' ============================================================
-' Common CPU types
-' ============================================================
-
-enum TArchitecture {
+package "core_cpu" {
+  enum TArchitecture {
     arHarvard
     arNeumann
-}
+  }
 
-enum TEndianness {
+  enum TEndianness {
     enLittle
     enBig
-}
+  }
 
-enum TCPUEvent {
+  enum TCPUEvent {
     ceInstructionBoundary
     ceInterrupt
     ceHalt
     ceReset
-}
+  }
 
-class TSemanticVersion <<record>> {
-    Major: Integer
-    Minor: Integer
-    Patch: Integer
+  class TSemanticVersion <<record>> {
+    +Major: Integer
+    +Minor: Integer
+    +Patch: Integer
+  }
 
-    ToString(): string
-    Compare(AOther: TSemanticVersion): Integer
-}
+  class TLastInstruction <<record>> {
+    +Address: Word
+    +Opcode: Byte
+    +NumPrefix: Byte
+    +Prefixes: Word[2]
+    +NumOperand: Byte
+    +Operands: Word[2]
+    +Mnemonic: string[32]
+    +Cycles: Byte
+  }
 
-class TLogRec <<record>> {
-    InstCount: Integer
-    Address: string
-    OpCode: string
-    Mnemonic: string
-}
+  class TLogRec <<record>> {
+    +InstCount: Integer
+    +Address: string[32]
+    +OpCode: string[32]
+    +Mnemonic: string[32]
+    +Cycles: Byte
+    +TotalCycles: QWord
+  }
 
-' ============================================================
-' Event handling
-' ============================================================
+  class TIntLogRec <<record>> {
+    +Sender: string[32]
+    +Vector: string[32]
+    +Status: string[32]
+    +Flag: string[32]
+  }
 
-interface TCPUEventHandler <<procedure type>> {
-    (Sender: TObject, Event: TCPUEvent)
-}
+  class TCPUEventHandler <<procedure type>>
+  class TProcessorDestroyEvent <<procedure type>>
 
-' ============================================================
-' System bus
-' ============================================================
+  class TArchitectureHelper <<type helper>> {
+    +ToString(): string
+    +FromString(Value: string): TArchitecture
+  }
 
-interface ISysBus <<external>> {
-    ReadMemory(Address: DWord): Byte
-    WriteMemory(Address: DWord, Data: Byte)
-}
+  class TEndiannessHelper <<type helper>> {
+    +ToString(): string
+    +FromString(Value: string): TEndianness
+  }
 
-' ============================================================
-' Abstract CPU base class
-' ============================================================
+  class TCPUEventHelper <<type helper>> {
+    +ToString(): string
+    +FromString(Value: string): TCPUEvent
+  }
 
-abstract class TCPU {
-    #FBus: ISysBus
-    #FOnEvent: TCPUEventHandler
+  class TSemanticVersionHelper <<type helper>> {
+    +ToString(): string
+    +Compare(AOther: TSemanticVersion): Integer
+  }
 
-    #FModname: PChar
-    #FDescription: PChar
-    #FVersion: TSemanticVersion
+  abstract class TCPU {
+    {field} #FOnEvent: TCPUEventHandler
+    {field} #FModname: PChar
+    {field} #FDescription: PChar
+    {field} #FVersion: TSemanticVersion
+    {field} #FAddressWidth: Byte
+    {field} #FArchitecture: TArchitecture
+    {field} #FBusType: TBusType
+    {field} #FDefaultClockFreq: DWord
+    {field} #FEnabled: Boolean
+    {field} #FEndianness: TEndianness
+    {field} #FLastInstruction: TLastInstruction
+    {field} #FMaxCodeAddress: DWord
+    {field} #FMaxIOPortAddress: DWord
+    {field} #FMaxMemAddress: DWord
+    {field} #FHasSeparateIOBus: Boolean
+    {field} #FRunning: Boolean
+    {field} #FHalted: Boolean
+    {field} #FInterruptEnabled: Boolean
+    {field} #FIRQPending: Boolean[8]
+    {field} #FIRQVector: Byte[8]
+    {field} #FNMIPending: Boolean
+    {field} #FTotalCycles: QWord
+    {field} #FTotalInstructions: QWord
+    {field} #FOnDestroy: TProcessorDestroyEvent
+    {field} #FRegPtr: array of ^Word
 
-    #FAddressWidth: Byte
-    #FArchitecture: TArchitecture
-    #FEnabled: Boolean
-    #FEndianness: TEndianness
-    #FMaxCodeAddress: DWord
-    #FMaxIOPortAddress: DWord
-    #FMaxMemAddress: DWord
-    #FHasSeparateIOBus: Boolean
+    {method} #EmitEvent(AEvent: TCPUEvent): void <<virtual>>
+    {method} #DoInterrupt(AEvent: TCPUEvent, AMode: Byte = 0): void <<virtual>>
 
-    #FRunning: Boolean
-    #FHalted: Boolean
-    #FInterruptEnabled: Boolean
-    #FIRQPending: Boolean
-    #FIRQVector: Byte
-    #FNMIPending: Boolean
-
-    #FTotalCycles: QWord
-    #FTotalInstructions: QWord
-
-    #FRegPtr: array of ^Word
-
-    #EmitEvent(AEvent: TCPUEvent): virtual
-    #DoInterrupt(AEvent: TCPUEvent): virtual
-
-    +ConnectBus(const Bus: ISysBus): virtual
-
-    +Create()
+    +ConnectBus(ABus: IInterface): Boolean <<abstract, virtual>>
+    +TCPU()
     +Destroy()
+    +CheckInterrupts(): Boolean <<virtual>>
+    +GetCurrentInstruction(): TLogRec <<abstract, virtual>>
+    +GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec <<virtual>>
+    +GetRegister(RegName: PChar): Word <<abstract, virtual>>
+    +GetRegisterCount(): Byte <<abstract, virtual>>
+    +GetRegisterName(AIndex: Byte): PChar <<abstract, virtual>>
+    +GetRegisterSize(AIndex: Byte): Byte <<abstract, virtual>>
+    +LoadState(AStream: TStream): Boolean <<abstract, virtual>>
+    +SaveState(AStream: TStream): Boolean <<abstract, virtual>>
+    +IRQ(AVector: Byte, AMode: Byte = 0): void <<virtual>>
+    +NMI(): void <<virtual>>
+    +Reset(): void <<abstract, virtual>>
+    +Run(): void <<virtual>>
+    +SetRegister(RegName: PChar, AValue: Word): void <<abstract, virtual>>
+    +Step(): void <<abstract, virtual>>
+    +Stop(): void <<virtual>>
 
-    +SetRegister(RegName: PChar, AValue: Word): virtual {abstract}
-    +GetRegister(RegName: PChar): Word: virtual {abstract}
-    +GetRegisterCount(): Byte: virtual {abstract}
-    +GetRegisterName(AIndex: Byte): PChar: virtual {abstract}
-    +GetRegisterSize(AIndex: Byte): Byte: virtual {abstract}
-
-    +Run(): virtual
-    +Step(): virtual {abstract}
-    +Stop(): virtual
-
-    +GetCurrentInstruction(): TLogRec: virtual {abstract}
-
-    +IRQ(AVector: Byte): virtual
-    +NMI(): virtual
-    +CheckInterrupts(): Boolean
-
-    +Reset(): virtual {abstract}
-    +LoadState(AStream: TStream): Boolean: virtual {abstract}
-    +SaveState(AStream: TStream): Boolean: virtual {abstract}
-
-    +AddressWidth: Byte
-    +Architecture: TArchitecture
-    +Cycles: QWord
-    +Description: PChar
-    +Enabled: Boolean
-    +Endianness: TEndianness
-    +Halted: Boolean
-    +HasSeparateIOBus: Boolean
-    +Instructions: QWord
-    +InterruptEnabled: Boolean
-    +MaxCodeAddress: DWord
-    +MaxIOPortAddress: DWord
-    +MaxMemAddress: DWord
-    +Modname: PChar
-    +OnEvent: TCPUEventHandler
-    +Running: Boolean
-    +Version: TSemanticVersion
+    +AddressWidth: Byte {read-only}
+    +Architecture: TArchitecture {read-only}
+    +BusType: TBusType {read-only}
+    +DefaultClockFreq: DWord {read-only}
+    +TotalCycles: QWord {read-only}
+    +Description: PChar {read-only}
+    +Enabled: Boolean {read-write}
+    +Endianness: TEndianness {read-only}
+    +Halted: Boolean {read-only}
+    +HasSeparateIOBus: Boolean {read-only}
+    +TotalInstructions: QWord {read-only}
+    +InterruptEnabled: Boolean {read-only}
+    +MaxCodeAddress: DWord {read-only}
+    +MaxIOPortAddress: DWord {read-only}
+    +MaxMemAddress: DWord {read-only}
+    +Modname: PChar {read-only}
+    +OnEvent: TCPUEventHandler {read-write}
+    +Running: Boolean {read-only}
+    +Version: TSemanticVersion {read-only}
+    +OnDestroy: TProcessorDestroyEvent {read-write}
+  }
 }
 
-' ============================================================
-' Intel 8080
-' ============================================================
-
-class T8080Registers <<record>> {
-    BC: Word
-    DE: Word
-    HL: Word
-    AF: Word
-    PC: Word
-    SP: Word
-
-    C: Byte
-    B: Byte
-    E: Byte
-    D: Byte
-    L: Byte
-    H: Byte
-    F: Byte
-    A: Byte
-
-    PCL: Byte
-    PCH: Byte
-    SPL: Byte
-    SPH: Byte
+package "core_bus (external unit)" {
+  enum TBusType {
+    btStandard
+    btMCS4
+  }
 }
 
-class TLastInstruction <<record>> {
-    Address: Word
-    Opcode: Byte
-    NumOperand: Byte
-    Operands: Word[1..2]
-    Mnemonic: string
-    Cycles: Byte; 
-}
+TCPU --> TBusType : FBusType
+TCPU --> TArchitecture
+TCPU --> TEndianness
+TCPU --> TCPUEvent
+TCPU *-- TSemanticVersion : FVersion
+TCPU *-- TLastInstruction : FLastInstruction
+TCPU ..> TLogRec : returns
+TCPU ..> TIntLogRec : returns
+TCPU ..> TCPUEventHandler : callback
+TCPU ..> TProcessorDestroyEvent : callback
 
-class T8080CPU {
-    -FLastInstruction: TLastInstruction
-    -RegPointers: array[0..7] of PByte
-
-    #FRegs: T8080Registers
-
-    #UpdateFlags(
-        Value16: Word,
-        OldValue: Byte,
-        ValueToAdd: Byte
-    )
-
-    #DoInterrupt(AEvent: TCPUEvent): override
-
-    +Create(): override
-
-    +Reset(): override
-    +LoadState(AStream: TStream): Boolean: override
-    +SaveState(AStream: TStream): Boolean: override
-
-    +Step(): override
-    +GetCurrentInstruction(): TLogRec: override
-    +GetRegister(RegName: PChar): Word: override
-    +SetRegister(RegName: PChar, Value: Word): override
-    +GetRegisterCount(): Byte: override
-    +GetRegisterName(AIndex: Byte): PChar: override
-    +GetRegisterSize(AIndex: Byte): Byte: override
-}
-
-' ============================================================
-' Relationships
-' ============================================================
-
-T8080CPU --|> TCPU
-
-TCPU o-- ISysBus
-TCPU o-- TCPUEventHandler
-TCPU *-- TSemanticVersion
-
-TCPU ..> TArchitecture
-TCPU ..> TEndianness
-TCPU ..> TLastInstruction
-TCPU ..> TCPUEvent
-TCPU ..> TLogRec
-
-T8080CPU *-- T8080Registers
-
-T8080CPU ..> TCPUEvent
-T8080CPU ..> ISysBus
-T8080CPU ..> TLogRec
+TArchitectureHelper ..> TArchitecture : extends
+TEndiannessHelper ..> TEndianness : extends
+TCPUEventHelper ..> TCPUEvent : extends
+TSemanticVersionHelper ..> TSemanticVersion : extends
 
 note right of TCPU
-  Abstract CPU interface.
-  Concrete processors implement this
-  class.
+  Abstract base class.
 
-  The common control and
-  service API is
-  defined here.
+  IRQ channels: 0..7.
+  CheckInterrupts handles NMI first,
+  then the first enabled pending IRQ
+  in ascending channel order.
+  One interrupt is accepted per call.
+
+  The constructor initializes execution
+  and interrupt state, counters, bus type
+  (btStandard), default clock frequency
+  (1,000,000 Hz) and version (0.1.0).
 end note
 
-note right of T8080CPU
-  First CPU implementation.
+note bottom of TProcessorDestroyEvent
+  procedure(Sender: TCPU) of object
+end note
 
-  Other CPUs for example:
-
-  T4004CPU --|> TCPU
-  T4040CPU --|> TCPU
-  T8008CPU --|> TCPU
-  TZ80CPU --|> TCPU
+note bottom of TCPUEventHandler
+  procedure(Sender: TObject; Event: TCPUEvent) of object
 end note
 
 @enduml

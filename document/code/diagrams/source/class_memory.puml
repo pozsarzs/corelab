@@ -1,5 +1,4 @@
 @startuml
-
 title CoreLAB Memory plugin class diagram
 
 skinparam classAttributeIconSize 0
@@ -13,87 +12,92 @@ skinparam shadowing false
 skinparam monochrome true
 left to right direction
 
-abstract class TMemory {
-  # FAddressRangeSize : DWord
-  # FBaseAddress : DWord
-  # FDescription : PChar
-  # FEnabled : Boolean
-  # FMemoryMode : TMemoryMode
-  # FMemCells : array of Byte
-  # FModname : PChar
-  # FVersion : TSemanticVersion
-  --
-  # SetFAddressRangeSize(AAddressRangeSize : DWord)
-  --
-  + Create()
-  + Destroy()
-  + Reset()
-  + ReadMemory(AAddress : DWord) : Byte
-  + WriteMemory(AAddress : DWord; AValue : Byte)
-  + LoadState(AStream : TStream) : Boolean
-  + SaveState(AStream : TStream) : Boolean
-  + LoadFromStream(AStream : TStream; AAddress, ACount : DWord)
-  + SaveToStream(AStream : TStream; AAddress, ACount : DWord)
-  --
-  + AddressRangeSize : DWord
-  + Description : PChar
-  + Enabled : Boolean
-  + MemoryMode : TMemoryMode
-  + ModName : PChar
-  + Version : TSemanticVersion
+package "core_memory" {
+
+  class TMemory <<class>> {
+    {field} #FAddressRangeSize: DWord
+    {field} #FBaseAddress: DWord
+    {field} #FBusType: TBusType
+    {field} #FDescription: PChar
+    {field} #FEnabled: Boolean
+    {field} #FMemoryMode: TMemoryMode
+    {field} #FMemCells: array of Byte
+    {field} #FModname: PChar
+    {field} #FVersion: TSemanticVersion
+    {field} #FOnDestroy: TMemoryDestroyEvent
+    --
+    {method} +Create()
+    {method} +Destroy()
+    {method} +ReadMemory(AAddress: DWord): Byte
+    {method} +WriteMemory(AAddress: DWord, AValue: Byte): procedure
+    {method} +Reset(): procedure
+    {method} +LoadState(AStream: TStream): Boolean
+    {method} +SaveState(AStream: TStream): Boolean
+    {method} +LoadFromStream(AStream: TStream, AAddress: DWord, ACount: DWord): procedure
+    {method} +SaveToStream(AStream: TStream, AAddress: DWord, ACount: DWord): procedure
+    --
+    {property} +AddressRangeSize: DWord
+    {property} +BaseAddress: DWord
+    {property} +BusType: TBusType
+    {property} +Description: PChar
+    {property} +Enabled: Boolean
+    {property} +MemoryMode: TMemoryMode
+    {property} +ModName: PChar
+    {property} +Version: TSemanticVersion
+    {property} +OnDestroy: TMemoryDestroyEvent
+    --
+    {method} #SetFAddressRangeSize(AAddressRangeSize: DWord): procedure
+    {method} #SetFBaseAddress(ABaseAddress: DWord): procedure
+    {method} #SetFMemoryMode(AMemoryMode: TMemoryMode): procedure
+  }
+
+  class TMemoryDestroyEvent <<procedure type>> {
+    Sender: TMemory
+  }
+
+  enum TMemoryMode {
+    mmRAM
+    mmROM
+  }
+
+  class TMemoryModeHelper <<type helper>> {
+    +ToString(): string
+    +FromString(const Value: string): TMemoryMode
+  }
+
+  class TSemanticVersion <<record>> {
+    Major: Integer
+    Minor: Integer
+    Patch: Integer
+  }
+
+  class TSemanticVersionHelper <<type helper>> {
+    +ToString(): string
+    +Compare(AOther: TSemanticVersion): Integer
+  }
+
+  class "core_bus.TBusType" as TBusType <<external type>>
 }
 
-class TStandardMemory {
-  --
-  + Create()
-  + Destroy()
-}
+TMemory ..> TMemoryMode : uses
+TMemory ..> TSemanticVersion : stores
+TMemory ..> TBusType : uses
+TMemory ..> TMemoryDestroyEvent : callback
+TMemoryModeHelper ..> TMemoryMode : extends
+TSemanticVersionHelper ..> TSemanticVersion : extends
+TMemoryDestroyEvent ..> TMemory : Sender
 
-enum TMemoryMode {
-  mmRAM
-  mmROM
-}
+note right of TMemory
+  Constructor defaults:
+  - AddressRangeSize = 1024
+  - BaseAddress = 0
+  - BusType = btStandard
+  - Enabled = False
+  - MemoryMode = mmRAM
+  - Version = 0.1.0
 
-class TSemanticVersion <<record>> {
-  + Major : Integer
-  + Minor : Integer
-  + Patch : Integer
-}
-
-TMemory <|-- TStandardMemory
-
-TMemory ..> TMemoryMode
-TMemory ..> TSemanticVersion
-TMemory ..> TStream
-
-class "memory_standard library" as MemoryStandard <<plugin>> {
-  --
-  + CreateMemory() : TMemory
-  + DestroyMemory(AMemory : TMemory)
-  + LoadState(AMemory : TMemory; AStream : TStream) : Boolean
-  + SaveState(AMemory : TMemory; AStream : TStream) : Boolean
-}
-
-MemoryStandard ..> TStandardMemory : creates
-MemoryStandard ..> TMemory : uses
-
-note right of TStandardMemory
-Module name:
-Standard memory
-
-Description:
-Up to 16MB RAM/ROM
-
-Initial mode:
-mmRAM
-end note
-
-note bottom of MemoryStandard
-Exported names:
-memory_create
-memory_destroy
-memory_loadstate
-memory_savestate
+  Address range is capped at 16 MiB.
+  Writes are accepted only in RAM mode.
 end note
 
 @enduml
