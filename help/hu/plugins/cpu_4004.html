@@ -1,11 +1,605 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - T4004CPU a TCPU osztályból a cpu_4004 egységben</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="t4004cpu-a-tcpu-osztályból-a-cpu_4004-egységben">T4004CPU a TCPU
+osztályból a cpu_4004 egységben</h2>
+<p><code>T4004CPU</code> az Intel 4004 processzor megvalósítása a
+CoreLAB keretrendszerhez. A <code>TCPU</code> osztályból származik, és a
+4004 regiszterstruktúráit, a CPU konfigurációját, a reset műveletet, az
+állapotmentést, az utasításonkénti végrehajtást, az aktuális utasítás
+jelentését és a regiszterek elérését valósítja meg.</p>
+<p>A tényleges utasítás-megvalósítás a fordítás során a
+<code>cpu_4004_microcode.pas</code> fájlból kerül beillesztésre.</p>
+<h3 id="cpu-konfiguráció">CPU-konfiguráció</h3>
+<p>A konstruktor az örökölt <code>TCPU</code> tulajdonságait a
+következőképpen állítja be:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modul neve</td>
+<td><code>4004</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Intel 4004 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architektúra</td>
+<td><code>arHarvard</code></td>
+</tr>
+<tr class="even">
+<td>Címszélesség</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td>Bájtsorrend</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximális memória-cím</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális kód-cím</td>
+<td><code>$0FFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximális I/O-port cím</td>
+<td><code>$000F</code></td>
+</tr>
+<tr class="odd">
+<td>Külön I/O-busz</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Alapértelmezett órajel-frekvencia</td>
+<td>500000 Hz (500 kHz)</td>
+</tr>
+</tbody>
+</table>
+<p>A megvalósítás a busztípust <code>btMCS4</code> értékre állítja, és
+az <code>IMCS4Bus</code> interfészt használó buszhoz csatlakozik.</p>
+<h3 id="reset-állapot">Reset állapot</h3>
+<p>A <code>Reset</code> törli a végrehajtási állapotot, a számlálókat, a
+regiszterrekordot, a belső veremrekordot és az átviteljelzőt, majd
+kiváltja az örökölt <code>ceReset</code> eseményt.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter/állapot</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>CCR</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FFlags.C</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="utasítás-végrehajtás">Utasítás-végrehajtás</h3>
+<p>A <code>Step</code> a következő műveleteket végzi el:</p>
+<ol type="1">
+<li>Azonnal kilép, ha a CPU le van tiltva
+(<code>FEnabled = False</code>).</li>
+<li>Azonnal kilép, ha a CPU várakozó állapotban van
+(<code>FHalted = True</code>).</li>
+<li>Beolvassa az opkódot a ROM-ból az aktuális programszámláló címéről a
+<code>FBus.ReadROM</code> hívásával.</li>
+<li>Eltárolja az aktuális címet, az opkódot, a nulla ciklusszámot és a
+nulla operandusszámot a <code>FLastInstruction</code> rekordban.</li>
+<li>Növeli a <code>PC</code> értékét, majd alkalmazza a 12 bites
+programszámláló-maszkot (<code>FPCMask</code>).</li>
+<li>Meghívja a <code>RunOpCode</code> metódust az opkód
+végrehajtására.</li>
+<li>Hozzáadja az utasítás ciklusszámát az <code>FTotalCycles</code>
+értékéhez.</li>
+<li>Kiváltja a <code>ceInstructionBoundary</code> eseményt.</li>
+<li>Növeli az <code>FTotalInstructions</code> értékét.</li>
+</ol>
+<p>A <code>Step</code> megvalósításában nincs megszakítás-ellenőrzés. Az
+utasításdekóder megvalósítása a <code>cpu_4004_microcode.pas</code>
+fájlból kerül beillesztésre.</p>
+<h3 id="regiszter--és-flagstruktúrák">Regiszter- és flagstruktúrák</h3>
+<p>A <code>T4004Registers</code> rekord a processzor regisztereinek
+tárolását határozza meg:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>szélesség / típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>R</code></td>
+<td><code>array of Byte</code></td>
+<td>Tizenhat darab 4 bites általános regiszter</td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td><code>Byte</code></td>
+<td>4 bites akkumulátor</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>Word</code></td>
+<td>12 bites programszámláló</td>
+</tr>
+<tr class="even">
+<td><code>CCR</code></td>
+<td><code>Byte</code></td>
+<td>3 bites parancsvezérlő regiszter</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>T4004Flags</code> rekord egy logikai típusú átviteli jelzőt
+tartalmaz:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td><code>Boolean</code></td>
+<td>Átviteli jelző</td>
+</tr>
+</tbody>
+</table>
+<p>A forrás a <code>T4004Stack</code> rekordot háromszintű
+programszámláló-veremként deklarálja:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Pointer</code></td>
+<td><code>Byte</code></td>
+<td>Veremmutató</td>
+</tr>
+<tr class="even">
+<td><code>Regs</code></td>
+<td><code>array of Word</code></td>
+<td>Tárolt programszámláló-értékek</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regiszterelérés">Regiszterelérés</h3>
+<p>A <code>GetRegister</code> és a <code>SetRegister</code> a megadott
+regiszternevet nagybetűssé alakítja. A támogatott nevek:
+<code>R0</code>–<code>R15</code>, <code>A</code> és <code>PC</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter</th>
+<th>szélesség</th>
+<th>olvasható</th>
+<th>írható</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>R0</code>–<code>R15</code></td>
+<td>4 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td>4 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td>12 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>SetRegister</code> az <code>R0</code>–<code>R15</code> és az
+<code>A</code> értékét az alsó négy bitre maszkolja. A <code>PC</code>
+értékét az <code>FPCMask</code> maszkolja, amelynek inicializált értéke
+<code>$0FFF</code>.</p>
+<p>A nyilvános regiszterfelsorolás 18 bejegyzést tartalmaz:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>név</th>
+<th>méret</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>R0</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>R1</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>R2</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>R3</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>R4</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>R5</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>R6</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>R7</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><code>R8</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>R9</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><code>R10</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><code>R11</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><code>R12</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td><code>R13</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td><code>R14</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td><code>R15</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td><code>A</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td><code>PC</code></td>
+<td>3 nibble</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>GetRegisterCount</code> a <code>PubRegNames</code>
+bejegyzéseinek számát adja vissza. A <code>GetRegisterName</code>
+érvényes index esetén visszaadja a nevet, egyébként <code>nil</code>
+értéket ad. A <code>GetRegisterSize</code> a megfelelő méretet adja
+vissza nibble-ben, érvénytelen index esetén pedig <code>0</code> értéket
+ad.</p>
+<p>A <code>CCR</code>, az átviteli jelző és a belső verem nem szerepel a
+nyilvános regiszterfelsorolásban.</p>
+<h3 id="aktuális-utasítás-információi">Aktuális utasítás
+információi</h3>
+<p>A <code>GetCurrentInstruction</code> egy <code>TLogRec</code>
+rekordot ad vissza, amely tartalmazza az utasítások teljes számát, az
+utasítás címét, a nyers opkódszöveget, a mnemonikot, az utolsó utasítás
+ciklusszámát és az összesített ciklusszámot.</p>
+<p>A cím négy, az opkód két hexadecimális számjeggyel jelenik meg. Ha a
+<code>FLastInstruction.NumOperand</code> értéke nagyobb nullánál,
+legfeljebb két operandusbájt kerül a nyers opkódszöveghez és a
+mnemonikhoz. Az operandusbájtok két hexadecimális számjeggyel jelennek
+meg.</p>
+<h3 id="védett-mezők-és-metódusok">Védett mezők és metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 24%" />
+<col style="width: 61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RegPointers</code></td>
+<td><code>array[0..16] of PByte</code></td>
+<td>A 16 általános regiszter és az akkumulátor mutatói.</td>
+</tr>
+<tr class="even">
+<td><code>FBus</code></td>
+<td><code>IMCS4Bus</code></td>
+<td>Csatlakoztatott külső MCS-4 busz.</td>
+</tr>
+<tr class="odd">
+<td><code>FFlags</code></td>
+<td><code>T4004Flags</code></td>
+<td>A processzor flagjeit, köztük az átviteli jelzőt tárolja.</td>
+</tr>
+<tr class="even">
+<td><code>FPCMask</code></td>
+<td><code>Word</code></td>
+<td>A programszámlálóra alkalmazott maszk.</td>
+</tr>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T4004Registers</code></td>
+<td>A processzor regiszterkészlete.</td>
+</tr>
+<tr class="even">
+<td><code>FROMBank</code></td>
+<td><code>Byte</code></td>
+<td>ROM-bank értéke.</td>
+</tr>
+<tr class="odd">
+<td><code>FStackSize</code></td>
+<td><code>Byte</code></td>
+<td>A belső verem beállított mélysége.</td>
+</tr>
+<tr class="even">
+<td><code>FStack</code></td>
+<td><code>T4004Stack</code></td>
+<td>Belső programszámláló-verem.</td>
+</tr>
+<tr class="odd">
+<td><code>FTestPin</code></td>
+<td><code>Boolean</code></td>
+<td>Szimulált TEST bemeneti láb; kezdeti értéke <code>True</code>.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>metódus</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td><code>virtual</code></td>
+<td>A megadott opkódot a beillesztett mikrokód segítségével hajtja
+végre.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="állapot-megőrzése">Állapot megőrzése</h3>
+<p>A <code>LoadState</code> a következő adatokat olvassa be ebben a
+sorrendben:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>sorrend</th>
+<th>adat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FFlags</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FStack</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FLastInstruction</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ha adatfolyam-kivétel történik, a <code>LoadState</code>
+<code>False</code> értéket ad vissza; egyébként <code>True</code>
+értéket ad vissza.</p>
+<p>A <code>SaveState</code> ugyanezeket az adatokat, ugyanebben a
+sorrendben írja ki, és sikeres írás esetén <code>True</code> értéket ad
+vissza.</p>
+<h3 id="publikus-metódusok">Publikus metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 4%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Létrehoz egy Intel 4004 CPU-példányt, beállítja az azonosító- és
+architektúra-tulajdonságokat, inicializálja a regisztermutatókat és a
+tömböket, majd meghívja a resetet.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Törli a végrehajtási számlálókat, a regiszter- és veremrekordot, az
+átviteli jelzőt, majd kiváltja a <code>ceReset</code> eseményt.</td>
+</tr>
+<tr class="odd">
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
+<td><code>override</code></td>
+<td>A CPU-t egy <code>IMCS4Bus</code> interfészt támogató külső buszhoz
+csatlakoztatja.</td>
+</tr>
+<tr class="even">
+<td><code>function LoadState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Betölti az állapotmegőrzés fejezetben felsorolt mezőket egy
+adatfolyamból.</td>
+</tr>
+<tr class="odd">
+<td><code>function SaveState(AStream: TStream): Boolean;</code></td>
+<td><code>override</code></td>
+<td>Kiírja az állapotmegőrzés fejezetben felsorolt mezőket egy
+adatfolyamba.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Beolvassa és végrehajtja a ROM-ból származó opkódot, frissíti a
+programszámlálót és a végrehajtási számlálókat, majd kiváltja a
+<code>ceInstructionBoundary</code> eseményt.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetCurrentInstruction: TLogRec;</code></td>
+<td><code>override</code></td>
+<td>Strukturált információt ad vissza a legutóbb beolvasott
+utasításról.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a megnevezett regiszter értékét.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Beállítja a támogatott regisztert, alkalmazva a regiszter
+szélességének megfelelő maszkot.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a nyilvánosan felsorolt regiszterek számát.</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Érvényes index esetén visszaadja a nyilvános regiszter nevét.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Érvényes index esetén visszaadja a nyilvános regiszter méretét
+nibble-ben.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

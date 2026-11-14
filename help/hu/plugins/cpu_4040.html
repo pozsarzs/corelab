@@ -1,11 +1,787 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - T4040CPU a T4004CPU osztályból a cpu_4040 egységben</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="t4040cpu-a-t4004cpu-osztályból-a-cpu_4040-egységben">T4040CPU a
+T4004CPU osztályból a cpu_4040 egységben</h2>
+<p>A <code>T4040CPU</code> az Intel 4040 processzor megvalósítása a
+CoreLAB keretrendszerhez. A <code>T4004CPU</code> osztályból származik,
+és a 4004-es megvalósítást 13 bites programcímtérrel, 24 darab 4 bites
+általános regiszterrel, hétszintű belső programszámláló-veremmel és
+megszakításkezeléssel egészíti ki.</p>
+<p>A 4040-specifikus opkód-megvalósítás a fordítás során a
+<code>cpu_4040_microcode.pas</code> fájlból kerül beillesztésre. Azokat
+az opkódokat, amelyeket a 4040-specifikus <code>case</code> utasítás nem
+kezel, a program az örökölt <code>T4004CPU.RunOpCode</code> metódusnak
+adja át.</p>
+<h3 id="öröklés-és-örökölt-funkcionalitás">Öröklés és örökölt
+funkcionalitás</h3>
+<p>A <code>T4040CPU</code> örökli a MCS-4 buszkapcsolatot, az
+állapotmentést, az aktuális utasítás jelentését, a regisztertároló
+struktúrákat és a 4004 alapvető végrehajtási támogatását a
+<code>T4004CPU</code> osztálytól.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>örökölt tag</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FBus: IMCS4Bus</code></td>
+<td>Csatlakoztatott külső MCS-4 busz.</td>
+</tr>
+<tr class="even">
+<td><code>FRegs: T4004Registers</code></td>
+<td>A regisztereket, az akkumulátort, a programszámlálót és a
+parancsvezérlő regisztert tartalmazó rekord.</td>
+</tr>
+<tr class="odd">
+<td><code>FFlags: T4004Flags</code></td>
+<td>A flagtároló rekord, amely az átviteli jelzőt tartalmazza.</td>
+</tr>
+<tr class="even">
+<td><code>FStack: T4004Stack</code></td>
+<td>Belső programszámláló-verem; a 4040 hét bejegyzésre állítja be.</td>
+</tr>
+<tr class="odd">
+<td><code>ConnectBus</code></td>
+<td>Csatlakozás egy <code>IMCS4Bus</code> interfészt támogató
+buszhoz.</td>
+</tr>
+<tr class="even">
+<td><code>LoadState</code> / <code>SaveState</code></td>
+<td>Az örökölt 4004-es állapotformátumot használja.</td>
+</tr>
+<tr class="odd">
+<td><code>GetCurrentInstruction</code></td>
+<td>Az örökölt utasításnapló-rekordot adja vissza.</td>
+</tr>
+<tr class="even">
+<td><code>RunOpCode</code></td>
+<td>Először a 4040-specifikus opkódokat kezeli, a többit a 4004-es
+megvalósításnak adja át.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cpu-konfiguráció">CPU-konfiguráció</h3>
+<p>A konstruktor először meghívja a <code>T4004CPU.Create</code>
+konstruktort, majd beállítja a 4040 azonosító és
+processzorjellemzőit:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>elem</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modul neve</td>
+<td><code>4040</code></td>
+</tr>
+<tr class="even">
+<td>Leírás</td>
+<td><code>Intel 4040 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architektúra</td>
+<td><code>arHarvard</code></td>
+</tr>
+<tr class="even">
+<td>Címszélesség</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td>Bájtsorrend</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximális memória-cím</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximális kód-cím</td>
+<td><code>$1FFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximális I/O-port cím</td>
+<td><code>$000F</code></td>
+</tr>
+<tr class="odd">
+<td>Külön I/O-busz</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Alapértelmezett órajel-frekvencia</td>
+<td>500000 Hz (500 kHz)</td>
+</tr>
+<tr class="odd">
+<td>Busztípus</td>
+<td>Örökölt <code>btMCS4</code></td>
+</tr>
+<tr class="even">
+<td>TEST bemenet</td>
+<td><code>FTestPin = True</code></td>
+</tr>
+</tbody>
+</table>
+<p>Az adatmemória és az I/O-címzés korlátai, valamint a busztípus a
+4004-es megvalósításból öröklődnek, illetve az alapkonstuktor ugyanilyen
+értékeket állít be. A 4040-specifikus programszámláló-maszk értéke
+<code>$1FFF</code>.</p>
+<h3 id="reset-állapot">Reset állapot</h3>
+<p>A <code>T4040CPU.Reset</code> meghívja az örökölt
+<code>T4004CPU.Reset</code> metódust, majd nullázza a ROM-bankot,
+letiltja a megszakításokat, és beállítja az
+<code>R0</code>–<code>R7</code> regiszterek mutatóit. Az örökölt reset
+törli a végrehajtási állapotot, a számlálókat, a regiszter- és
+veremrekordot, az átviteli jelzőt, majd kiváltja a <code>ceReset</code>
+eseményt.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter/állapot</th>
+<th>érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>CCR</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>FROMBank</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FFlags.C</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>A konstruktor a belső verem méretét hétre állítja, és 24 bejegyzést
+foglal le az <code>FRegs.R</code> tömbben. A programszámláló maszkja
+<code>$1FFF</code>.</p>
+<h3 id="utasítás-végrehajtás">Utasítás-végrehajtás</h3>
+<p>A <code>T4040CPU.Step</code> a következő műveleteket végzi el:</p>
+<ol type="1">
+<li>Azonnal kilép, ha a CPU le van tiltva
+(<code>FEnabled = False</code>).</li>
+<li>Meghívja az örökölt <code>CheckInterrupts</code> metódust.</li>
+<li>Kilép, ha a CPU várakozó állapotban van
+(<code>FHalted = True</code>).</li>
+<li>Meghívja az örökölt <code>T4004CPU.Step</code> metódust egy utasítás
+beolvasásához és végrehajtásához.</li>
+</ol>
+<p>Az örökölt léptetés az <code>FBus.ReadROM</code> segítségével
+beolvassa az opkódot a ROM-ból, rögzíti az utasítás címét és opkódját,
+növeli és maszkolja a programszámlálót, meghívja a virtuális
+<code>RunOpCode</code> metódust, frissíti a ciklus- és
+utasításszámlálókat, majd kiváltja a <code>ceInstructionBoundary</code>
+eseményt.</p>
+<p>A 4040-es felülírás a <code>CheckInterrupts</code> után nem áll le;
+csak azt ellenőrzi, hogy a CPU várakozó állapotban van-e, mielőtt
+meghívja az örökölt léptetést. Ha a megszakítás-ellenőrzés meghívja a
+<code>DoInterrupt</code> metódust, de nem állítja le a CPU-t, az
+utasítás beolvasása ugyanebben a <code>Step</code> hívásban folytatódik,
+az interruptkezelő által beállított programszámlálóval.</p>
+<h3 id="megszakításkezelés">Megszakításkezelés</h3>
+<p>A <code>T4040CPU.DoInterrupt</code> először meghívja az örökölt
+megszakításkezelőt. Ha az <code>AEvent = ceInterrupt</code>, akkor:</p>
+<ol type="1">
+<li>letiltja a további maszkolható megszakításokat az
+<code>FInterruptEnabled := False</code> beállításával;</li>
+<li>elmenti az aktuális <code>PC</code> értékét a belső verem
+<code>FStack.Pointer</code> által kijelölt elemébe;</li>
+<li>a veremmutatót a <code>FStackSize</code> szerinti modulo művelettel
+lépteti;</li>
+<li>a <code>FROMBank := 0</code> beállítással a nulladik ROM-bankot
+választja ki;</li>
+<li>a programszámlálót <code>$003</code> értékre állítja.</li>
+</ol>
+<p>A konstruktor a verem méretét hét bejegyzésre állítja. A
+megszakításkezelő nem vizsgálja az <code>AMode</code> paramétert, és nem
+választ másik vektort a paraméter alapján.</p>
+<h3 id="regiszter--és-flagstruktúrák">Regiszter- és flagstruktúrák</h3>
+<p>A 4040 az örökölt <code>T4004Registers</code> rekordot használja. A
+mezői:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 23%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>szélesség / típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>R</code></td>
+<td><code>array of Byte</code></td>
+<td>24 darab 4 bites általános regiszter
+(<code>R0</code>–<code>R23</code>).</td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td><code>Byte</code></td>
+<td>4 bites akkumulátor.</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>Word</code></td>
+<td>13 bites programszámláló.</td>
+</tr>
+<tr class="even">
+<td><code>CCR</code></td>
+<td><code>Byte</code></td>
+<td>3 bites parancsvezérlő regiszter.</td>
+</tr>
+</tbody>
+</table>
+<p>Az örökölt <code>T4004Flags</code> rekord a következő jelzőt
+tartalmazza:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td><code>Boolean</code></td>
+<td>Átviteli jelző.</td>
+</tr>
+</tbody>
+</table>
+<p>Az örökölt <code>T4004Stack</code> rekord mezői:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 18%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>mező</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Pointer</code></td>
+<td><code>Byte</code></td>
+<td>Belső veremmutató.</td>
+</tr>
+<tr class="even">
+<td><code>Regs</code></td>
+<td><code>array of Word</code></td>
+<td>Tárolt programszámláló-értékek; hét elemre van lefoglalva.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regiszterelérés">Regiszterelérés</h3>
+<p>A <code>GetRegister</code> és a <code>SetRegister</code> a megadott
+regiszternevet nagybetűssé alakítja. A támogatott nevek:
+<code>R0</code>–<code>R23</code>, <code>A</code> és <code>PC</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>regiszter</th>
+<th>szélesség</th>
+<th>olvasható</th>
+<th>írható</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>R0</code>–<code>R23</code></td>
+<td>4 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td>4 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td>13 bit</td>
+<td>Igen</td>
+<td>Igen</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>SetRegister</code> az <code>R0</code>–<code>R23</code> és az
+<code>A</code> értékét az alsó négy bitre maszkolja. A <code>PC</code>
+értékét az <code>FPCMask</code> maszkolja, amelynek inicializált értéke
+<code>$1FFF</code>.</p>
+<h3 id="nyilvános-regiszterfelsorolás">Nyilvános
+regiszterfelsorolás</h3>
+<p>A nyilvános regiszterfelsorolás 26 bejegyzést tartalmaz:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>név</th>
+<th>méret</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>R0</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>R1</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>R2</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>R3</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>R4</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>R5</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>R6</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>R7</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><code>R8</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>R9</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><code>R10</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><code>R11</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><code>R12</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td><code>R13</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td><code>R14</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td><code>R15</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td><code>R16</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td><code>R17</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td><code>R18</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td><code>R19</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td><code>R20</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td><code>R21</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>22</td>
+<td><code>R22</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td><code>R23</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>24</td>
+<td><code>A</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>25</td>
+<td><code>PC</code></td>
+<td>3 nibble</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>GetRegisterCount</code> a <code>PubRegNames4040</code>
+bejegyzéseinek számát adja vissza. A <code>GetRegisterName</code>
+érvényes index esetén visszaadja a nevet, egyébként <code>nil</code>
+értéket ad. A <code>GetRegisterSize</code> a megfelelő méretet adja
+vissza nibble-ben, érvénytelen index esetén pedig <code>0</code> értéket
+ad.</p>
+<p>A <code>CCR</code>, az átviteli jelző és a belső verem nem szerepel a
+nyilvános regiszterfelsorolásban.</p>
+<h3 id="aktuális-utasítás-információi">Aktuális utasítás
+információi</h3>
+<p>A <code>GetCurrentInstruction</code> metódus a <code>T4004CPU</code>
+osztályból öröklődik. Egy <code>TLogRec</code> rekordot ad vissza, amely
+tartalmazza az utasítások teljes számát, az utasítás címét, a nyers
+opkódszöveget, a mnemonikot, az utolsó utasítás ciklusszámát és az
+összesített ciklusszámot.</p>
+<p>A cím négy, az opkód két hexadecimális számjeggyel jelenik meg. Ha a
+<code>FLastInstruction.NumOperand</code> értéke nagyobb nullánál,
+legfeljebb két operandusbájt kerül a nyers opkódszöveghez és a
+mnemonikhoz. Az operandusbájtok két hexadecimális számjeggyel jelennek
+meg.</p>
+<h3 id="védett-mezők-és-metódusok">Védett mezők és metódusok</h3>
+<p>A következő védett tagokat a <code>T4004CPU</code> deklarálja, és a
+<code>T4040CPU</code> is eléri:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 23%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>típus</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RegPointers</code></td>
+<td><code>array[0..16] of PByte</code></td>
+<td>Örökölt regisztermutató-tömb, 17 bejegyzéssel.</td>
+</tr>
+<tr class="even">
+<td><code>FBus</code></td>
+<td><code>IMCS4Bus</code></td>
+<td>Csatlakoztatott külső MCS-4 busz.</td>
+</tr>
+<tr class="odd">
+<td><code>FFlags</code></td>
+<td><code>T4004Flags</code></td>
+<td>A processzor flagjeit, köztük az átviteli jelzőt tárolja.</td>
+</tr>
+<tr class="even">
+<td><code>FPCMask</code></td>
+<td><code>Word</code></td>
+<td>A programszámlálóra alkalmazott maszk; értéke
+<code>$1FFF</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T4004Registers</code></td>
+<td>Örökölt regiszterrekord, 24 lefoglalt általános regiszterrel.</td>
+</tr>
+<tr class="even">
+<td><code>FROMBank</code></td>
+<td><code>Byte</code></td>
+<td>Aktuális ROM-bank értéke.</td>
+</tr>
+<tr class="odd">
+<td><code>FStackSize</code></td>
+<td><code>Byte</code></td>
+<td>A belső verem mélysége; értéke hét.</td>
+</tr>
+<tr class="even">
+<td><code>FStack</code></td>
+<td><code>T4004Stack</code></td>
+<td>Belső programszámláló-verem.</td>
+</tr>
+<tr class="odd">
+<td><code>FTestPin</code></td>
+<td><code>Boolean</code></td>
+<td>Szimulált TEST bemeneti láb; kezdeti értéke <code>True</code>.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 5%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>metódus</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
+<td><code>override</code></td>
+<td>Meghívja az örökölt kezelőt, majd <code>ceInterrupt</code> esetén
+elmenti a PC-t, a nulladik ROM-bankot választja és <code>$003</code>
+címre ugrik.</td>
+</tr>
+<tr class="even">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td><code>override</code></td>
+<td>Végrehajtja a 4040-specifikus opkódokat; a nem kezelt opkódokat
+átadja a <code>T4004CPU.RunOpCode</code> metódusnak.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="állapot-megőrzése">Állapot megőrzése</h3>
+<p>A <code>T4040CPU</code> nem írja felül a <code>LoadState</code> és
+<code>SaveState</code> metódusokat; mindkettőt a <code>T4004CPU</code>
+osztályból örökli. Az örökölt metódusok a következő adatokat olvassák,
+illetve írják ebben a sorrendben:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>sorrend</th>
+<th>adat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FFlags</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FStack</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FLastInstruction</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p>A <code>LoadState</code> adatfolyam-kivétel esetén
+<code>False</code>, egyébként <code>True</code> értéket ad vissza. A
+<code>SaveState</code> ugyanezeket a mezőket írja ki azonos sorrendben,
+és sikeres írás után <code>True</code> értéket ad vissza.</p>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 4%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>metódus</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Létrehoz egy 4040 CPU-példányt, beállítja az azonosító és
+architekturális tulajdonságokat, a veremmélységet és a regisztertömb
+méretét, majd resetet hajt végre.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Meghívja az örökölt resetet, nullázza a ROM-bank kiválasztását,
+letiltja a megszakításokat és beállítja az első nyolc
+regisztermutatót.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Ellenőrzi a CPU engedélyezését és a megszakításokat, majd az
+utasítás-végrehajtást a <code>T4004CPU.Step</code> metódusra bízza.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja az <code>R0</code>–<code>R23</code>, az <code>A</code>
+vagy a <code>PC</code> értékét.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Beállítja a támogatott regisztert, és alkalmazza a 4 vagy 13 bites
+maszkot.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Visszaadja a nyilvánosan felsorolt regiszterek számát (26).</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Érvényes index esetén visszaadja a nyilvános regiszter nevét.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Érvényes index esetén visszaadja a nyilvános regiszter méretét
+nibble-ben.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exportált-függvények">Exportált függvények</h3>
+<p>A könyvtár a következő belépési pontokat exportálja:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportnév</th>
+<th>függvény</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Létrehoz és visszaad egy <code>T4040CPU</code> példányt.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Felszabadítja a megadott CPU-példányt, ha az hozzá van
+rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Betölti az állapotot, ha CPU-példányt kapott; egyébként
+<code>False</code> értéket ad vissza.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Elmenti az állapotot, ha CPU-példányt kapott; egyébként
+<code>False</code> értéket ad vissza.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>

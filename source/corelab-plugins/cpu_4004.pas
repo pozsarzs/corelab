@@ -106,9 +106,6 @@ var
   b: Byte;
 begin
   inherited Create;
-  // set register pointers
-  for b := 0 to 15 do RegPointers[b] := @FRegs.R[b];
-  RegPointers[16] := @FRegs.A;
   // CPU identity information
   FModname := '4004';
   FBusType := btMCS4;
@@ -128,6 +125,9 @@ begin
   FStackSize := 3;
   SetLength(FStack.Regs, FStackSize);
   SetLength(FRegs.R, 16);
+  // set register pointers
+  for b := 0 to 15 do RegPointers[b] := @FRegs.R[b];
+  RegPointers[16] := @FRegs.A;
   FPCMask := $0FFF;
   FROMBank := 0;
 end;

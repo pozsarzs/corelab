@@ -1,11 +1,771 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - </title>
+<title>CoreLAB - T4040CPU from T4004CPU class in cpu_4040 unit</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
+<h2 id="t4040cpu-from-t4004cpu-class-in-cpu_4040-unit">T4040CPU from
+T4004CPU class in cpu_4040 unit</h2>
+<p><code>T4040CPU</code> is the Intel 4040 processor implementation for
+the CoreLAB framework. It derives from <code>T4004CPU</code> and extends
+the 4004 implementation with a 13-bit program address space, 24 four-bit
+general-purpose registers, a seven-level internal program-counter stack
+and interrupt handling.</p>
+<p>The 4040-specific opcode implementation is included from
+<code>cpu_4040_microcode.pas</code>. Opcodes not handled by the
+4040-specific <code>case</code> statement are passed to the inherited
+<code>T4004CPU.RunOpCode</code> implementation.</p>
+<h3 id="inheritance-and-inherited-functionality">Inheritance and
+inherited functionality</h3>
+<p><code>T4040CPU</code> inherits the MCS-4 bus connection, state
+persistence, current instruction reporting, register storage structures
+and the base 4004 execution support from <code>T4004CPU</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>inherited member</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FBus: IMCS4Bus</code></td>
+<td>Connected external MCS-4 bus.</td>
+</tr>
+<tr class="even">
+<td><code>FRegs: T4004Registers</code></td>
+<td>Register record containing the general registers, accumulator,
+program counter and command control register.</td>
+</tr>
+<tr class="odd">
+<td><code>FFlags: T4004Flags</code></td>
+<td>Flag storage containing the carry flag.</td>
+</tr>
+<tr class="even">
+<td><code>FStack: T4004Stack</code></td>
+<td>Internal program-counter stack; the 4040 configures it for seven
+entries.</td>
+</tr>
+<tr class="odd">
+<td><code>ConnectBus</code></td>
+<td>Connects to a bus supporting <code>IMCS4Bus</code>.</td>
+</tr>
+<tr class="even">
+<td><code>LoadState</code> / <code>SaveState</code></td>
+<td>Uses the inherited 4004 state format.</td>
+</tr>
+<tr class="odd">
+<td><code>GetCurrentInstruction</code></td>
+<td>Returns the inherited instruction log record.</td>
+</tr>
+<tr class="even">
+<td><code>RunOpCode</code></td>
+<td>4040-specific opcodes are handled first; other opcodes are delegated
+to the 4004 implementation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cpu-configuration">CPU configuration</h3>
+<p>The constructor first invokes <code>T4004CPU.Create</code>, then sets
+the 4040 identity and processor properties:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>item</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module name</td>
+<td><code>4040</code></td>
+</tr>
+<tr class="even">
+<td>Description</td>
+<td><code>Intel 4040 microprocessor</code></td>
+</tr>
+<tr class="odd">
+<td>Architecture</td>
+<td><code>arHarvard</code></td>
+</tr>
+<tr class="even">
+<td>Address width</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td>Endianness</td>
+<td><code>enLittle</code></td>
+</tr>
+<tr class="even">
+<td>Maximum memory address</td>
+<td><code>$00FF</code></td>
+</tr>
+<tr class="odd">
+<td>Maximum code address</td>
+<td><code>$1FFF</code></td>
+</tr>
+<tr class="even">
+<td>Maximum I/O port address</td>
+<td><code>$000F</code></td>
+</tr>
+<tr class="odd">
+<td>Separate I/O bus</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td>Default clock frequency</td>
+<td>500000 Hz (500 kHz)</td>
+</tr>
+<tr class="odd">
+<td>Bus type</td>
+<td>Inherited <code>btMCS4</code></td>
+</tr>
+<tr class="even">
+<td>TEST input</td>
+<td><code>FTestPin = True</code></td>
+</tr>
+</tbody>
+</table>
+<p>The data-memory and I/O address limits and bus type are inherited
+from the 4004 implementation or assigned the same values by the base
+constructor. The 4040-specific program-counter mask is set to
+<code>$1FFF</code>.</p>
+<h3 id="reset-state">Reset state</h3>
+<p><code>T4040CPU.Reset</code> calls the inherited
+<code>T4004CPU.Reset</code>, then sets the ROM bank to zero, disables
+interrupts and assigns register pointers for <code>R0</code> through
+<code>R7</code>. The inherited reset clears the execution state,
+counters, register and stack records, carry flag, and emits
+<code>ceReset</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>register/state</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>$0000</code></td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="odd">
+<td><code>CCR</code></td>
+<td><code>$00</code></td>
+</tr>
+<tr class="even">
+<td><code>FROMBank</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="odd">
+<td><code>Running</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>Halted</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>InterruptEnabled</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>FFlags.C</code></td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>TotalCycles</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>TotalInstructions</code></td>
+<td><code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>The constructor configures the internal stack size as seven and
+allocates 24 entries for <code>FRegs.R</code>. The program-counter mask
+is <code>$1FFF</code>.</p>
+<h3 id="instruction-execution">Instruction execution</h3>
+<p><code>T4040CPU.Step</code> performs these operations:</p>
+<ol type="1">
+<li>Stops immediately when the CPU is disabled
+(<code>FEnabled = False</code>).</li>
+<li>Calls the inherited <code>CheckInterrupts</code> method.</li>
+<li>Stops if the CPU is halted (<code>FHalted = True</code>).</li>
+<li>Calls the inherited <code>T4004CPU.Step</code> to fetch and execute
+one instruction.</li>
+</ol>
+<p>The inherited step reads the opcode from ROM through
+<code>FBus.ReadROM</code>, records the instruction address and opcode,
+increments and masks the program counter, calls the virtual
+<code>RunOpCode</code> method, updates the cycle and instruction
+counters, and emits <code>ceInstructionBoundary</code>.</p>
+<p>The 4040 override does not stop after <code>CheckInterrupts</code>;
+it only checks whether the CPU is halted before calling the inherited
+step. If interrupt checking invokes <code>DoInterrupt</code> without
+halting the CPU, instruction fetching then continues in the same
+<code>Step</code> call, using the program counter set by the interrupt
+handler.</p>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p><code>T4040CPU.DoInterrupt</code> first calls the inherited interrupt
+handler. When <code>AEvent = ceInterrupt</code>, it:</p>
+<ol type="1">
+<li>disables further maskable interrupts by setting
+<code>FInterruptEnabled</code> to <code>False</code>;</li>
+<li>stores the current <code>PC</code> in the internal stack at
+<code>FStack.Pointer</code>;</li>
+<li>advances the stack pointer modulo <code>FStackSize</code>;</li>
+<li>selects ROM bank zero by setting <code>FROMBank</code> to
+<code>0</code>;</li>
+<li>sets the program counter to <code>$003</code>.</li>
+</ol>
+<p>The stack size is configured as seven entries by the constructor. The
+interrupt handler does not inspect <code>AMode</code> and does not
+select a different vector based on that parameter.</p>
+<h3 id="register-and-flag-structures">Register and flag structures</h3>
+<p>The 4040 reuses the inherited <code>T4004Registers</code> record. Its
+fields are:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 21%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>width / type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>R</code></td>
+<td><code>array of Byte</code></td>
+<td>24 four-bit general-purpose registers
+(<code>R0</code>–<code>R23</code>).</td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td><code>Byte</code></td>
+<td>Four-bit accumulator.</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td><code>Word</code></td>
+<td>13-bit program counter.</td>
+</tr>
+<tr class="even">
+<td><code>CCR</code></td>
+<td><code>Byte</code></td>
+<td>Three-bit command control register.</td>
+</tr>
+</tbody>
+</table>
+<p>The inherited <code>T4004Flags</code> record contains the following
+flag:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>flag</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>C</code></td>
+<td><code>Boolean</code></td>
+<td>Carry flag.</td>
+</tr>
+</tbody>
+</table>
+<p>The inherited <code>T4004Stack</code> record contains:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 18%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Pointer</code></td>
+<td><code>Byte</code></td>
+<td>Internal stack pointer.</td>
+</tr>
+<tr class="even">
+<td><code>Regs</code></td>
+<td><code>array of Word</code></td>
+<td>Stored program-counter values; allocated to seven entries.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="register-access">Register access</h3>
+<p><code>GetRegister</code> and <code>SetRegister</code> convert the
+supplied register name to uppercase. The supported names are
+<code>R0</code>–<code>R23</code>, <code>A</code> and
+<code>PC</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>register</th>
+<th>width</th>
+<th>readable</th>
+<th>writable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>R0</code>–<code>R23</code></td>
+<td>4 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>A</code></td>
+<td>4 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>PC</code></td>
+<td>13 bit</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><code>SetRegister</code> masks <code>R0</code>–<code>R23</code> and
+<code>A</code> to the low four bits. It masks <code>PC</code> with
+<code>FPCMask</code>, initialized to <code>$1FFF</code>.</p>
+<h3 id="public-register-enumeration">Public register enumeration</h3>
+<p>The public register enumeration contains 26 entries:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>index</th>
+<th>name</th>
+<th>size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td><code>R0</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td><code>R1</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td><code>R2</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td><code>R3</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td><code>R4</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td><code>R5</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td><code>R6</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td><code>R7</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td><code>R8</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td><code>R9</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td><code>R10</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td><code>R11</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td><code>R12</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td><code>R13</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td><code>R14</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td><code>R15</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td><code>R16</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td><code>R17</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td><code>R18</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td><code>R19</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td><code>R20</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td><code>R21</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>22</td>
+<td><code>R22</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td><code>R23</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="odd">
+<td>24</td>
+<td><code>A</code></td>
+<td>1 nibble</td>
+</tr>
+<tr class="even">
+<td>25</td>
+<td><code>PC</code></td>
+<td>3 nibbles</td>
+</tr>
+</tbody>
+</table>
+<p><code>GetRegisterCount</code> returns the number of entries in
+<code>PubRegNames4040</code>. <code>GetRegisterName</code> returns the
+name for a valid index and <code>nil</code> otherwise.
+<code>GetRegisterSize</code> returns the corresponding size in nibbles
+and <code>0</code> for an invalid index.</p>
+<p><code>CCR</code>, the carry flag and the internal stack are not
+included in the public register enumeration.</p>
+<h3 id="current-instruction-information">Current-instruction
+information</h3>
+<p><code>GetCurrentInstruction</code> is inherited from
+<code>T4004CPU</code>. It returns a <code>TLogRec</code> containing the
+total instruction count, instruction address, raw opcode text, mnemonic,
+last instruction cycle count and accumulated cycle count.</p>
+<p>The address is formatted as four hexadecimal digits and the opcode as
+two hexadecimal digits. Up to two operand bytes are appended when
+<code>FLastInstruction.NumOperand</code> is greater than zero. Operand
+bytes are formatted as two hexadecimal digits.</p>
+<h3 id="protected-fields-and-methods">Protected fields and methods</h3>
+<p>The following protected members are declared by <code>T4004CPU</code>
+and remain available to <code>T4040CPU</code>:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 21%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RegPointers</code></td>
+<td><code>array[0..16] of PByte</code></td>
+<td>Inherited register-pointer array; it has 17 entries.</td>
+</tr>
+<tr class="even">
+<td><code>FBus</code></td>
+<td><code>IMCS4Bus</code></td>
+<td>Connected external MCS-4 bus.</td>
+</tr>
+<tr class="odd">
+<td><code>FFlags</code></td>
+<td><code>T4004Flags</code></td>
+<td>Processor flag storage, containing the carry flag.</td>
+</tr>
+<tr class="even">
+<td><code>FPCMask</code></td>
+<td><code>Word</code></td>
+<td>Mask applied to the program counter; set to <code>$1FFF</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>FRegs</code></td>
+<td><code>T4004Registers</code></td>
+<td>Inherited register record, with 24 allocated general-purpose
+registers.</td>
+</tr>
+<tr class="even">
+<td><code>FROMBank</code></td>
+<td><code>Byte</code></td>
+<td>Current ROM bank value.</td>
+</tr>
+<tr class="odd">
+<td><code>FStackSize</code></td>
+<td><code>Byte</code></td>
+<td>Internal stack depth; set to seven.</td>
+</tr>
+<tr class="even">
+<td><code>FStack</code></td>
+<td><code>T4004Stack</code></td>
+<td>Internal program-counter stack.</td>
+</tr>
+<tr class="odd">
+<td><code>FTestPin</code></td>
+<td><code>Boolean</code></td>
+<td>Simulated TEST input pin; initialized to <code>True</code>.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 5%" />
+<col style="width: 60%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>method</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
+<td><code>override</code></td>
+<td>Calls the inherited handler and, for <code>ceInterrupt</code>, saves
+the PC, selects ROM bank zero and jumps to <code>$003</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure RunOpCode(AOC: Byte);</code></td>
+<td><code>override</code></td>
+<td>Executes 4040-specific opcodes; delegates unhandled opcodes to
+<code>T4004CPU.RunOpCode</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="state-persistence">State persistence</h3>
+<p><code>T4040CPU</code> does not override <code>LoadState</code> or
+<code>SaveState</code>; it inherits both methods from
+<code>T4004CPU</code>. The inherited methods read and write the
+following data in this order:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>order</th>
+<th>data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>FEnabled</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>FRegs</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>FFlags</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>FStack</code></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>FLastInstruction</code></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><code>FRunning</code></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><code>FHalted</code></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><code>FTotalCycles</code></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><code>FTotalInstructions</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>LoadState</code> returns <code>False</code> if a stream
+exception occurs and <code>True</code> otherwise. <code>SaveState</code>
+writes the same fields in the same order and returns <code>True</code>
+after the write operations complete.</p>
+<h3 id="public-methods">Public methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 4%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>method</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td><code>override</code></td>
+<td>Creates a 4040 CPU instance, configures its identity and
+architecture properties, sets the stack depth and register-array length,
+and calls reset.</td>
+</tr>
+<tr class="even">
+<td><code>procedure Reset;</code></td>
+<td><code>override</code></td>
+<td>Calls the inherited reset, clears the ROM-bank selection, disables
+interrupts and assigns the first eight register pointers.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure Step;</code></td>
+<td><code>override</code></td>
+<td>Checks CPU enable and interrupt state, then delegates instruction
+execution to <code>T4004CPU.Step</code>.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegister(const RegName: PChar): Word;</code></td>
+<td><code>override</code></td>
+<td>Returns the value of <code>R0</code>–<code>R23</code>,
+<code>A</code> or <code>PC</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure SetRegister(const RegName: PChar; Value: Word);</code></td>
+<td><code>override</code></td>
+<td>Sets a supported register and applies its four-bit or 13-bit
+mask.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterCount: Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the number of publicly enumerated registers (26).</td>
+</tr>
+<tr class="odd">
+<td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register name for a valid index.</td>
+</tr>
+<tr class="even">
+<td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
+<td><code>override</code></td>
+<td>Returns the public register size in nibbles for a valid index.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exported-functions">Exported functions</h3>
+<p>The library exports the following entry points:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 12%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>export name</th>
+<th>function</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cpu_create</code></td>
+<td><code>CreateCPU</code></td>
+<td>Creates and returns a <code>T4040CPU</code> instance.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_destroy</code></td>
+<td><code>DestroyCPU</code></td>
+<td>Frees the supplied CPU instance when assigned.</td>
+</tr>
+<tr class="odd">
+<td><code>cpu_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Loads state when a CPU instance is supplied; otherwise returns
+<code>False</code>.</td>
+</tr>
+<tr class="even">
+<td><code>cpu_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Saves state when a CPU instance is supplied; otherwise returns
+<code>False</code>.</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
