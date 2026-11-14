@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 4002 RAM</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-4002-ram">Intel 4002 RAM</h2>
+<h3 id="technical-parameters">Technical Parameters</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Specification</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Release year</strong></td>
+<td>1971</td>
+</tr>
+<tr class="even">
+<td><strong>Process technology</strong></td>
+<td>P-channel silicon-gate PMOS</td>
+</tr>
+<tr class="odd">
+<td><strong>Memory type</strong></td>
+<td>RAM with internal refresh circuitry</td>
+</tr>
+<tr class="even">
+<td><strong>Memory capacity</strong></td>
+<td>320 bits (4 × 20 × 4-bit characters)</td>
+</tr>
+<tr class="odd">
+<td><strong>Memory organization</strong></td>
+<td>4 registers; each contains 16 main-memory and 4 status
+characters</td>
+</tr>
+<tr class="even">
+<td><strong>Output port</strong></td>
+<td>4-bit, buffered output port (O0–O3)</td>
+</tr>
+<tr class="odd">
+<td><strong>Data bus</strong></td>
+<td>4-bit, bidirectional and multiplexed</td>
+</tr>
+<tr class="even">
+<td><strong>Chip selection</strong></td>
+<td>4002-1 / 4002-2 metal options and P0 pin; 4 chip numbers per
+selected RAM bank</td>
+</tr>
+<tr class="odd">
+<td><strong>Package</strong></td>
+<td>16-pin DIP</td>
+</tr>
+<tr class="even">
+<td><strong>System compatibility</strong></td>
+<td>Intel MCS-4 / MCS-40</td>
+</tr>
+<tr class="odd">
+<td><strong>Timing signals</strong></td>
+<td>φ1, φ2 and SYNC, supplied by the system</td>
+</tr>
+<tr class="even">
+<td><strong>Power supply</strong></td>
+<td>VDD = −15 V relative to VSS</td>
+</tr>
+<tr class="odd">
+<td><strong>Main purpose</strong></td>
+<td>Data storage and peripheral output</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description">Description</h3>
+<p>The Intel 4002 is a 320-bit RAM designed for the MCS-4 microcomputer
+system. The memory is organized as four registers, each containing
+twenty 4-bit characters: sixteen main-memory characters and four status
+characters. The main-memory characters are addressed through an SRC
+instruction, while the status characters are selected by the OPA field
+of an I/O or RAM instruction.</p>
+<p>In addition to the RAM array, the 4002 contains a four-bit output
+port with buffered output lines O0–O3. Data written from the processor
+is held by the output registers, so the output remains stable after the
+port has been loaded. The port is used to transfer data from the CPU to
+external devices; it is an output-only port.</p>
+<p>The device communicates with the processor through the system’s
+four-bit bidirectional, multiplexed data bus. Its internal refresh
+circuitry maintains the RAM cell data. Two metal-mask versions, 4002-1
+and 4002-2, together with the external P0 pin, provide four
+chip-selection combinations within the selected RAM bank. The 4002 is
+housed in a 16-pin DIP package and uses the system’s two-phase clock and
+SYNC signal.</p>
+</body>
+</html>

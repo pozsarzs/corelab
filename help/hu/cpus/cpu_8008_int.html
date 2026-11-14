@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 8008 mikroprocesszor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-8008-mikroprocesszor">Intel 8008 mikroprocesszor</h2>
+<h3 id="megszakításkezelés">Megszakításkezelés</h3>
+<p><strong>Működési elv</strong></p>
+<p>A megszakítás (<code>INTR</code>) elfogadásakor a CPU megszakítja a
+normál végrehajtást, és a memóriából történő utasításolvasás helyett az
+adatbuszról vesz át egy utasítást közvetlenül a megszakítást kérő
+perifériától.</p>
+<p><strong>Átadható opkódok</strong></p>
+<p>Elméletileg bármilyen utasítás bejuttatható a CPU-ba. A gyakorlatban
+szinte kizárólag egybájtos utasításokat használnak, hogy a hardveres
+vezérlés egyszerű maradjon. Többbájtos utasítás (pl. <code>CALL</code>
+vagy <code>JMP</code>) átadása is lehetséges, de ehhez az azt kérő
+hardvernek kell a megfelelő időzítéssel a buszra helyeznie az utasítás
+2. és 3. bájtját is.</p>
+<p><strong>Ugrási címek</strong></p>
+<p>A leggyakrabban átadott utasítás az <code>RST</code>. Ez egy
+egybájtos szubrutinhívás, amely a hardveres verembe menti a
+programszámlálót (PC), majd a beépített 8 darab fix memóriacím egyikére
+ugrik:</p>
+<ul>
+<li>RST 0: <code>$0000</code></li>
+<li>RST 1: <code>$0008</code></li>
+<li>RST 2: <code>$0010</code></li>
+<li>RST 3: <code>$0018</code></li>
+<li>RST 4: <code>$0020</code></li>
+<li>RST 5: <code>$0028</code></li>
+<li>RST 6: <code>$0030</code></li>
+<li>RST 7: <code>$0038</code></li>
+</ul>
+<p><strong>Állapotmentés</strong></p>
+<p>A CPU az RST általi PC-mentésen kívül semmit nem csinál
+automatikusan. A regiszterek (A, B, C, D, E, H, L) és a flagek mentése
+és visszaállítása kizárólag a megszakítási rutin feladata.</p>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 8080 mikroprocesszor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-8080-mikroprocesszor">Intel 8080 mikroprocesszor</h2>
+<h3 id="megszakításkezelés">Megszakításkezelés</h3>
+<p><strong>Működési elv</strong></p>
+<p>A 8080-nak egyetlen hardveres megszakítási módja van (ez felel meg a
+Z80-as “IM 0” módjának). Ha a megszakítások engedélyezve vannak
+(<code>EI</code> utasítás után), és az <strong>INT</strong> lábon jelzés
+érkezik, a CPU megszakítja a normál futást. A memóriából történő olvasás
+helyett a CPU <code>INTA</code> (Interrupt Acknowledge) ciklust indít,
+és az adatbuszról olvassa be a végrehajtandó utasítást. A megszakítás
+elfogadásakor a megszakítás-engedélyezés automatikusan letiltódik
+(mintha egy <code>DI</code> utasítás futott volna le).</p>
+<p><strong>Átadható opkódok</strong></p>
+<ul>
+<li>Bármilyen érvényes 8080-as utasítás bejuttatható a
+processzorba.</li>
+<li>Leggyakrabban 1 bájtos utasításokat alkalmaznak, mert a hardveres
+vezérlés így a legegyszerűbb.</li>
+<li>Többbájtos utasítás (pl. egy 3 bájtos <code>CALL a16</code>) is
+átadható. Ilyenkor a megszakításvezérlő hardvernek (például egy Intel
+8259-nek) kell a CPU megfelelő olvasási ciklusaihoz igazodva a 2. és 3.
+bájtot a buszra tennie.</li>
+</ul>
+<p><strong>Ugrási címek</strong></p>
+<p>Ha a megszakítási hardver egybájtos utasítást ad át, az szinte
+kizárólag az <code>RST</code> (Restart). Ez automatikusan a verembe
+(Stack) menti a programszámlálót, majd 8 darab, hardveresen rögzített
+nulláslap-cím valamelyikére ugrik:</p>
+<ul>
+<li>RST 0: <code>$0000</code> (Opkód: <code>$C7</code>)</li>
+<li>RST 1: <code>$0008</code> (Opkód: <code>$CF</code>)</li>
+<li>RST 2: <code>$0010</code> (Opkód: <code>$D7</code>)</li>
+<li>RST 3: <code>$0018</code> (Opkód: <code>$DF</code>)</li>
+<li>RST 4: <code>$0020</code> (Opkód: <code>$E7</code>)</li>
+<li>RST 5: <code>$0028</code> (Opkód: <code>$EF</code>)</li>
+<li>RST 6: <code>$0030</code> (Opkód: <code>$F7</code>)</li>
+<li>RST 7: <code>$0038</code> (Opkód: <code>$FF</code>)</li>
+</ul>
+</body>
+</html>

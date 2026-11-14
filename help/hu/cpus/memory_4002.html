@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 4002 RAM – magyar leírás</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-4002-ram-magyar-leírás">Intel 4002 RAM – magyar
+leírás</h2>
+<h3 id="műszaki-paraméterek">Műszaki paraméterek</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Paraméter</th>
+<th>Jellemző</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Megjelenés éve</strong></td>
+<td>1971</td>
+</tr>
+<tr class="even">
+<td><strong>Gyártástechnológia</strong></td>
+<td>P-csatornás, szilíciumkapus PMOS</td>
+</tr>
+<tr class="odd">
+<td><strong>Memória típusa</strong></td>
+<td>RAM, belső frissítő áramkörrel</td>
+</tr>
+<tr class="even">
+<td><strong>Memóriakapacitás</strong></td>
+<td>320 bit (4 × 20 × 4 bites karakter)</td>
+</tr>
+<tr class="odd">
+<td><strong>Memóriaszervezés</strong></td>
+<td>4 regiszter; regiszterenként 16 adat- és 4 státuszkarakter</td>
+</tr>
+<tr class="even">
+<td><strong>Kimeneti port</strong></td>
+<td>4 bites, pufferelt kimeneti port (O0–O3)</td>
+</tr>
+<tr class="odd">
+<td><strong>Adatbusz</strong></td>
+<td>4 bites, kétirányú és multiplexelt</td>
+</tr>
+<tr class="even">
+<td><strong>Chipkiválasztás</strong></td>
+<td>4002-1 / 4002-2 fémmaszk-változat és P0 láb; 4 chipszám a
+kiválasztott RAM-bankban</td>
+</tr>
+<tr class="odd">
+<td><strong>Tokozás</strong></td>
+<td>16 lábú DIP</td>
+</tr>
+<tr class="even">
+<td><strong>Rendszerkompatibilitás</strong></td>
+<td>Intel MCS-4 / MCS-40</td>
+</tr>
+<tr class="odd">
+<td><strong>Időzítőjelek</strong></td>
+<td>φ1, φ2 és SYNC, a rendszertől érkeznek</td>
+</tr>
+<tr class="even">
+<td><strong>Tápfeszültség</strong></td>
+<td>VDD = −15 V a VSS ponthoz képest</td>
+</tr>
+<tr class="odd">
+<td><strong>Elsődleges feladat</strong></td>
+<td>Adattárolás és perifériák kimeneti vezérlése</td>
+</tr>
+</tbody>
+</table>
+<h3 id="leírás">Leírás</h3>
+<p>Az Intel 4002 egy 320 bites RAM, amelyet az MCS-4
+mikroszámítógép-rendszerhez terveztek. A memória négy regiszterből áll,
+regiszterenként húsz darab 4 bites karakterrel: tizenhat adatkarakterrel
+és négy státuszkarakterrel. Az adatkarakterek az SRC utasítással
+címezhetők, míg a státuszkaraktereket az I/O vagy RAM utasítás OPA
+mezője választja ki.</p>
+<p>A RAM mellett a 4002 egy négybites kimeneti portot is tartalmaz,
+O0–O3 jelű pufferelt kimenetekkel. A processzortól érkező adatot a
+kimeneti regiszterek tárolják, így a kimenetek a port betöltése után is
+stabilak maradnak. A port a CPU és a külső eszközök közötti
+adatátvitelre szolgál; kizárólag kimeneti port.</p>
+<p>Az áramkör a processzorral a rendszer négyszeres, kétirányú,
+multiplexelt adatbuszán keresztül kommunikál. A RAM celláinak
+adattartalmát belső frissítő áramkör tartja fenn. A 4002-1 és 4002-2
+fémmaszk-változat, valamint a külső P0 láb négyféle chipkiválasztást
+tesz lehetővé az aktuálisan kiválasztott RAM-bankon belül. Az áramkör 16
+lábú DIP tokban készült, és a rendszer kétfázisú órajelét, valamint SYNC
+jelét használja.</p>
+</body>
+</html>

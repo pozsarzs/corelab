@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 8085 microprocessor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-8085-microprocessor">Intel 8085 microprocessor</h2>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p><strong>Operating Principle</strong></p>
+<p>The 8085 features five dedicated interrupt inputs with a built-in
+priority hierarchy: <strong>TRAP</strong> (highest) &gt; <strong>RST
+7.5</strong> &gt; <strong>RST 6.5</strong> &gt; <strong>RST 5.5</strong>
+&gt; <strong>INTR</strong> (lowest). Among these, TRAP is non-maskable
+(NMI). RST 5.5, 6.5, and 7.5 can be individually enabled or disabled via
+a software-controlled interrupt mask (using the <code>SIM</code>
+instruction). Additionally, INTR and RST 5.5–7.5 can be disabled
+globally using the <code>DI</code> instruction.</p>
+<p><strong>Supplied Opcodes</strong></p>
+<p>Only the INTR input expects an external instruction; it functions
+exactly like the interrupt mechanism of the 8080. The external
+interrupt-control hardware must place an instruction (typically an
+<code>RST n</code> or a 3-byte <code>CALL</code>) onto the bus.</p>
+<p>In the case of TRAP and RST 5.5/6.5/7.5, no opcode is supplied. The
+CPU generates a subroutine call internally—without reading the data
+bus—and automatically saves the program counter (PC) onto the stack.</p>
+<p><strong>Jump Addresses</strong></p>
+<p>Jump addresses for dedicated hardware interrupts (internal,
+opcode-less):</p>
+<ul>
+<li>TRAP: <code>$0024</code></li>
+<li>RST 5.5: <code>$002C</code></li>
+<li>RST 6.5: <code>$0034</code></li>
+<li>RST 7.5: <code>$003C</code></li>
+</ul>
+<p>The addresses for standard 1-byte RST instructions—triggered via the
+INTR input or invoked via software from the program code—are the same as
+those for the 8080 processor:</p>
+<ul>
+<li>RST 0: <code>$0000</code></li>
+<li>RST 1: <code>$0008</code></li>
+<li>RST 2: <code>$0010</code></li>
+<li>RST 3: <code>$0018</code></li>
+<li>RST 4: <code>$0020</code></li>
+<li>RST 5: <code>$0028</code></li>
+<li>RST 6: <code>$0030</code></li>
+<li>RST 7: <code>$0038</code></li>
+</ul>
+</body>
+</html>

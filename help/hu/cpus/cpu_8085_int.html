@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 8085 mikroprocesszor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-8085-mikroprocesszor">Intel 8085 mikroprocesszor</h2>
+<h3 id="megszakításkezelés">Megszakításkezelés</h3>
+<p><strong>Működési elv</strong></p>
+<p>A 8085 öt dedikált megszakítási bemenettel rendelkezik, beépített
+prioritási sorrenddel: <strong>TRAP</strong> (legmagasabb) &gt;
+<strong>RST 7.5</strong> &gt; <strong>RST 6.5</strong> &gt; <strong>RST
+5.5</strong> &gt; <strong>INTR</strong> (legalacsonyabb), közülük a TRAP
+nem maszkolható (NMI). Az RST 5.5, 6.5 és 7.5 egyenként engedélyezhető
+vagy tiltható a szoftveres megszakítás-maszk segítségével
+(<code>SIM</code> utasítás). Az INTR és az RST 5.5-7.5 globálisan is
+letiltható a <code>DI</code> utasítással.</p>
+<p><strong>Átadható opkódok</strong></p>
+<p>Csak az INTR bemenet vár külső utasítást: ez pontosan úgy működik,
+mint a 8080 megszakítása. A megszakításvezérlő hardvernek kell egy
+utasítást (jellemzően <code>RST n</code> vagy 3 bájtos
+<code>CALL</code>) a buszra tennie.</p>
+<p>A TRAP és az RST 5.5/6.5/7.5 esetében nincs átadott opkód. A CPU az
+adatbusz beolvasása nélkül, belsőleg generál egy szubrutinhívást,
+automatikusan a verembe mentve a programszámlálót (PC).</p>
+<p><strong>Ugrási címek</strong></p>
+<p>A dedikált hardveres megszakítások (opkód nélküli, belső) ugrási
+címei:</p>
+<ul>
+<li>TRAP: <code>$0024</code></li>
+<li>RST 5.5: <code>$002C</code></li>
+<li>RST 6.5: <code>$0034</code></li>
+<li>RST 7.5: <code>$003C</code></li>
+</ul>
+<p>Az INTR bemeneten átadott (vagy a programkódból szoftveresen
+meghívott) hagyományos 1 bájtos RST utasítások címei megegyeznek a
+8080-as processzoréval:</p>
+<ul>
+<li>RST 0: <code>$0000</code></li>
+<li>RST 1: <code>$0008</code></li>
+<li>RST 2: <code>$0010</code></li>
+<li>RST 3: <code>$0018</code></li>
+<li>RST 4: <code>$0020</code></li>
+<li>RST 5: <code>$0028</code></li>
+<li>RST 6: <code>$0030</code></li>
+<li>RST 7: <code>$0038</code></li>
+</ul>
+</body>
+</html>

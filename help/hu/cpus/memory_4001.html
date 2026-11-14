@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 4001 ROM</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-4001-rom">Intel 4001 ROM</h2>
+<h3 id="műszaki-paraméterek">Műszaki paraméterek</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Paraméter</th>
+<th>Jellemző</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Megjelenés éve</strong></td>
+<td>1971</td>
+</tr>
+<tr class="even">
+<td><strong>Technológia</strong></td>
+<td>PMOS</td>
+</tr>
+<tr class="odd">
+<td><strong>Memória típusa</strong></td>
+<td>Maszkolással programozható ROM</td>
+</tr>
+<tr class="even">
+<td><strong>Memóriakapacitás</strong></td>
+<td>2048 bit (256 × 8 bites szó)</td>
+</tr>
+<tr class="odd">
+<td><strong>I/O port</strong></td>
+<td>4 konfigurálható I/O vonal</td>
+</tr>
+<tr class="even">
+<td><strong>Adatbusz</strong></td>
+<td>4 bites, multiplexelt</td>
+</tr>
+<tr class="odd">
+<td><strong>Chipkiválasztás</strong></td>
+<td>4 bites chipszám, fémmaszkkal meghatározva</td>
+</tr>
+<tr class="even">
+<td><strong>Tokozás</strong></td>
+<td>16 lábú DIP</td>
+</tr>
+<tr class="odd">
+<td><strong>Rendszerkompatibilitás</strong></td>
+<td>Intel MCS-4 / MCS-40</td>
+</tr>
+<tr class="even">
+<td><strong>Időzítőjelek</strong></td>
+<td>φ1, φ2 és SYNC, a rendszertől érkeznek</td>
+</tr>
+<tr class="odd">
+<td><strong>Elsődleges feladat</strong></td>
+<td>Program- és adattárolás, valamint periféria-I/O</td>
+</tr>
+</tbody>
+</table>
+<h3 id="leírás">Leírás</h3>
+<p>Az Intel 4001 egy maszkolással programozható ROM, amelyet az MCS-4
+mikroszámítógép-rendszerhez terveztek. A memória 256 darab, egyenként 8
+bites szó tárolására alkalmas, így összesen 2048 bit (2 kbit) programkód
+vagy adattábla tárolható benne.</p>
+<p>A ROM mellett a chip egy négyvonalas I/O portot és a hozzá tartozó
+vezérlőlogikát is tartalmazza. Az egyes I/O vonalak fémmaszk-opcióval
+bemenetként vagy kimenetként konfigurálhatók; a közvetlen vagy invertált
+működés is választható. A 4001 a processzorral a rendszer négyszeres,
+multiplexelt adatbuszán keresztül kommunikál.</p>
+<p>A ROM kiválasztása a fémmaszkkal meghatározott chipszám alapján
+történik. A szabványos rendszerben legfeljebb 16 különböző 4001-es
+chipszám címezhető. Az áramkör 16 lábú DIP tokban készült, és az MCS-4
+rendszer kétfázisú órajelét, valamint szinkronizáló jelét használja.</p>
+</body>
+</html>

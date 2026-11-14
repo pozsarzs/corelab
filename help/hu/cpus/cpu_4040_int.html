@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 4040 mikroprocesszor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-4040-mikroprocesszor">Intel 4040 mikroprocesszor</h2>
+<h3 id="megszakításkezelés">Megszakításkezelés</h3>
+<p><strong>Működési elv</strong></p>
+<p>A 4040 egyetlen hardveres megszakítási bemenettel rendelkezik
+(<strong>INTERRUPT</strong> láb). A megszakítás szoftveresen az
+<code>ENI</code> (Enable Interrupt) utasítással engedélyezhető és a
+<code>DIN</code> (Disable Interrupt) utasítással tiltható. A megszakítás
+elfogadásakor a CPU befejezi a folyó utasítást, majd automatikusan a
+kibővített (7 szintű) belső hardveres verembe menti a programszámlálót
+(PC).</p>
+<p><strong>Átadható opkódok</strong></p>
+<p>A 4040 nem olvas be sem opkódot, sem megszakítási vektort az
+adatbuszról az eljárás során. A folyamat teljesen belső és hardveresen
+“beégetett”.</p>
+<p><strong>Ugrási címek</strong></p>
+<p>A processzor fixen a ROM <code>$003</code> címére ugrik, és innen
+kezdi meg a megszakítási rutin végrehajtását.</p>
+<p><strong>Állapotmentés</strong></p>
+<p>Automatikus regiszter- vagy flagmentés nincs (csak a PC mentődik),
+így ezek szoftveres megőrzéséről a programozónak kell gondoskodnia. A
+megszakítási rutinból való visszatéréshez a 4040-ben újonnan bevezetett
+<code>BBS</code> utasítást kell használni. Ez nemcsak a veremből tölti
+vissza a hívás előtti PC-t, hanem hardveresen törli az <code>INTA</code>
+(Interrupt Acknowledge) állapotot is, amivel újra szabaddá teszi az utat
+a következő megszakítások számára.</p>
+</body>
+</html>

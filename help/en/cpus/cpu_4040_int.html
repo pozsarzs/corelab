@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - Intel 4040 microprocessor</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="intel-4040-microprocessor">Intel 4040 microprocessor</h2>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p><strong>Operating Principle</strong></p>
+<p>The 4040 features a single hardware interrupt input (the
+<strong>INTERRUPT</strong> pin). Interrupts can be enabled via software
+using the <code>ENI</code> (Enable Interrupt) instruction and disabled
+using the <code>DIN</code> (Disable Interrupt) instruction. Upon
+accepting an interrupt, the CPU completes the current instruction and
+then automatically saves the program counter (PC) to an expanded
+(7-level) internal hardware stack.</p>
+<p><strong>Opcode Handling</strong></p>
+<p>During this process, the 4040 does not fetch any opcodes or interrupt
+vectors from the data bus. The procedure is entirely internal and
+hardwired.</p>
+<p><strong>Jump Addresses</strong></p>
+<p>The processor jumps to a fixed address in ROM—specifically
+<code>$003</code>—and begins executing the interrupt routine from that
+location.</p>
+<p><strong>State Preservation</strong></p>
+<p>There is no automatic saving of registers or flags (only the PC is
+saved); therefore, the programmer must ensure these are preserved via
+software. To return from an interrupt routine, the <code>BBS</code>
+instruction—introduced specifically for the 4040—must be used. This
+instruction not only restores the program counter (PC) from the stack
+but also clears the <code>INTA</code> (Interrupt Acknowledge) state at
+the hardware level, thereby enabling the system to accept subsequent
+interrupts.</p>
+</body>
+</html>
