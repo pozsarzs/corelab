@@ -34,6 +34,7 @@ port read, and port write operations.
 |-------------------|--------------------|----------------------------------------------------|--------------------|
 |`FAddressRangeSize`|`DWord`             |Address range size                                  |`1`                 |
 |`FBaseAddress`     |`DWord`             |Base address.                                       |`0`                 |
+|`FBusType`         |`TBusType`          |Type of system bus.                                 |`btStandard`|
 |`FDataInMode`      |`TLineMode`         |Input data-line decoding mode                       |`lmBCD`             |
 |`FDataInNegation`  |`Boolean`           |Input data-bit negation                             |`false`             |
 |`FDataOutMode`     |`TLineMode`         |Output data-line decoding mode                      |`lmBCD`             |
@@ -76,6 +77,7 @@ port read, and port write operations.
 |------------------|--------------------|------|------------------------------------------|
 |`AddressRangeSize`|`DWord`             |Re    |Address range size                        |
 |`BaseAddress`     |`DWord`             |Re/Wr |Global start address                      |
+|`BusType`         |`TBusType`          |Re    |Type of system bus.                       |
 |`DataInMode`      |`TLineMode`         |Re/Wr |Input data-line decoding mode             |
 |`DataInNegation`  |`Boolean`           |Re/Wr |Input data-bit negation                   |
 |`DataOutMode`     |`TLineMode`         |Re/Wr |Output data-line decoding mode            |

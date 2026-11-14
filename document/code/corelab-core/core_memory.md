@@ -50,6 +50,7 @@ persistence.
 |-------------------|------------------|---------------------------------------------|----------------------------------------|
 |`FAddressRangeSize`|`DWord`           |Number of addressable memory cells.          |`1024`                                  |
 |`FBaseAddress`     |`DWord`           |Base address.                                |`0`                                     |
+|`FBusType`         |`TBusType`        |Type of system bus.                          |`btStandard`                            |
 |`FDescription`     |`PChar`           |Short module description.                    |`Standard memory with 8 bit data width.`|
 |`FEnabled`         |`Boolean`         |Enables memory access without bus detachment.|`False`                                 |
 |`FMemoryMode`      |`TMemoryMode`     |RAM or ROM operation mode.                   |`mmRAM`                                 |
@@ -83,6 +84,7 @@ persistence.
 |------------------|------------------|------|-------------------------------------|
 |`AddressRangeSize`|`DWord`           |Re/Wr |Configured memory address-space size.|
 |`BaseAddress`     |`DWord`           |Re/Wr |Global start address.                |
+|`BusType`         |`TBusType`        |Re    |Type of system bus.                  |
 |`Description`     |`PChar`           |Re    |Short module description.            |
 |`Enabled`         |`Boolean`         |Re/Wr |Enables or disables memory access.   |
 |`MemoryMode`      |`TMemoryMode`     |Re/Wr |Selects RAM or ROM operation.        |

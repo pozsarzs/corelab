@@ -137,6 +137,16 @@ Second release will be with the following changes:
  - Intel 8085 Neumann architecture 8 bit microprocessor (1976).
  - Zilog Z80 Neumann 8 bit microprocessor (1976).
 
+### Utility scripts
+
+|Name       |Specification / Description      |
+|-----------|---------------------------------|
+|**bin2hex**|Convert binary file to Intel hexa|
+|**hex2bin**|Convert Intel hexa file to binary|
+|**lst2asm**|Convert list file to assembly    |
+|**lst2bin**|Convert list file to binary      |
+|**opdict **|Opcode dictionary                |
+
 ## III. Screenshots
 
 ### CoreLAB framework application

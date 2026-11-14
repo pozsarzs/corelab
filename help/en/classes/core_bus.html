@@ -1,22 +1,94 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>CoreLAB - ISysBus from core_bus unit</title>
+<title>CoreLAB - Bus interfaces and types from core_bus unit</title>
 <meta http-equiv="content-language" content="en">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-<h2 id="isysbus-from-core_bus-unit">ISysBus from core_bus unit</h2>
-<p><code>ISysBus</code> is the CoreLAB system-bus interface. It defines
-the memory and I/O operations used by a CPU to communicate with memory
-and I/O-port devices through the system bus.</p>
-<p>The source identifies the interface as the CPU-to-device path from
-<code>TCPU</code> to <code>TIOPort</code> and <code>TMemory</code>.</p>
-<h3 id="interface-methods">Interface methods</h3>
+<h2 id="bus-interfaces-and-types-from-core_bus-unit">Bus interfaces and
+types from core_bus unit</h2>
+<p>The <code>core_bus</code> unit declares the bus types and interfaces
+used by the CoreLAB framework to connect CPUs with memory and I/O
+devices. It defines two bus interfaces: <code>IStandardBus</code> for
+standard memory and I/O-port access, and <code>IMCS4Bus</code> for the
+Intel MCS-4 family of RAM and ROM devices.</p>
+<h3 id="record-types">Record types</h3>
 <table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 29%" />
-<col style="width: 70%" />
+<col style="width: 13%" />
+<col style="width: 26%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>fields</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TBusLogRec</code></td>
+<td><code>Operation: string[31]</code></td>
+<td>Name of the bus operation recorded by the bus logger.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>Device: string[31]</code></td>
+<td>Device involved in the operation.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>Address: string[31]</code></td>
+<td>Address used by the operation.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>RelAddress: string[31]</code></td>
+<td>Relative address used by the operation.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><code>Data: string[31]</code></td>
+<td>Data associated with the operation.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><code>Status: string[31]</code></td>
+<td>Status information associated with the operation.</td>
+</tr>
+</tbody>
+</table>
+<p><code>TBusLogRec</code> is documented in the source comment as the
+record for the last bus operation used by <code>BusLogger</code>.</p>
+<h3 id="bus-type">Bus type</h3>
+<p><code>TBusType</code> identifies the system-bus type:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>value</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>btStandard</code></td>
+<td>Standard system bus.</td>
+</tr>
+<tr class="even">
+<td><code>btMCS4</code></td>
+<td>Intel MCS-4 bus.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tbustypehelper">TBusTypeHelper</h3>
+<p>The <code>TBusTypeHelper</code> type helper adds string conversion
+methods to <code>TBusType</code>.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 79%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -26,37 +98,115 @@ and I/O-port devices through the system bus.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>function ReadMemory(AAddress: DWord): QWord;</code></td>
-<td>Reads a value from the memory address specified by
-<code>AAddress</code>. The source specifies this operation as
-implemented only in <code>TMemory</code>.</td>
+<td><code>function ToString: string;</code></td>
+<td>Converts the current enumeration value to its string representation
+using <code>WriteStr</code>.</td>
 </tr>
 <tr class="even">
-<td><code>procedure WriteMemory(AAddress: DWord; AValue: QWord);</code></td>
-<td>Writes a value to the memory address specified by
-<code>AAddress</code>. The source specifies this operation as
-implemented only in <code>TMemory</code>.</td>
-</tr>
-<tr class="odd">
-<td><code>function ReadPort(APort: Word): Byte;</code></td>
-<td>Reads a byte from the specified I/O port. The source specifies this
-operation as implemented only in <code>TIOPort</code>.</td>
-</tr>
-<tr class="even">
-<td><code>procedure WritePort(APort: Word; AValue: Byte);</code></td>
-<td>Writes a byte to the specified I/O port. The source specifies this
-operation as implemented only in <code>TIOPort</code>.</td>
+<td><code>function FromString(const Value: string): TBusType;</code></td>
+<td>Converts the supplied string to a <code>TBusType</code> value using
+<code>GetEnumValue</code> and <code>TypeInfo(TBusType)</code>. This is
+declared as an instance helper method; the implementation uses the
+supplied <code>Value</code> for the conversion.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="interface-identifier">Interface identifier</h3>
-<p><code>ISysBus</code> is identified by GUID:</p>
+<h3 id="istandardbus-interface">IStandardBus interface</h3>
+<p><code>IStandardBus</code> defines byte-wide memory and I/O-port
+access for the standard bus.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>function ReadMemory(AAddress: DWord): Byte;</code></td>
+<td>Reads one byte from the specified memory address.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WriteMemory(AAddress: DWord; AValue: Byte);</code></td>
+<td>Writes one byte to the specified memory address.</td>
+</tr>
+<tr class="odd">
+<td><code>function ReadPort(APort: DWord): Byte;</code></td>
+<td>Reads one byte from the specified I/O-port address.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WritePort(APort: DWord; AValue: Byte);</code></td>
+<td>Writes one byte to the specified I/O-port address.</td>
+</tr>
+</tbody>
+</table>
+<p>Interface GUID:</p>
 <p><code>{A5E6D0B3-4A8B-4C6A-8F51-8D37B1C81234}</code></p>
-<h3 id="usage">Usage</h3>
-<p>The source comment identifies <code>ISysBus</code> as the
-communication path from <code>TCPU</code> to <code>TIOPort</code> and
-<code>TMemory</code>.</p>
-<p><code>TBus</code> implements <code>ISysBus</code> and therefore
-provides the bus-level implementation of these operations.</p>
+<h3 id="imcs4bus-interface">IMCS4Bus interface</h3>
+<p><code>IMCS4Bus</code> defines the operations required by Intel
+MCS-4-family memory and I/O devices.</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>procedure SendSRC(AAddress: Byte);</code></td>
+<td>Sends the common SRC addressing/control value.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadRAM: Byte;</code></td>
+<td>Reads data from the selected RAM location.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WriteRAM(AData: Byte);</code></td>
+<td>Writes data to the selected RAM location.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadRAMStatus(AIndex: Byte): Byte;</code></td>
+<td>Reads a RAM status character selected by <code>AIndex</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WriteRAMStatus(AIndex: Byte; AData: Byte);</code></td>
+<td>Writes a RAM status character selected by <code>AIndex</code>.</td>
+</tr>
+<tr class="even">
+<td><code>procedure WriteRAMIOPort(AData: Byte);</code></td>
+<td>Writes data to a RAM device’s I/O port.</td>
+</tr>
+<tr class="odd">
+<td><code>function ReadROM(AAddress: Word): Byte;</code></td>
+<td>Reads data from the specified ROM address.</td>
+</tr>
+<tr class="even">
+<td><code>function ReadROMIOPort: Byte;</code></td>
+<td>Reads data from a ROM device’s I/O port.</td>
+</tr>
+<tr class="odd">
+<td><code>procedure WriteROMIOPort(AData: Byte);</code></td>
+<td>Writes data to a ROM device’s I/O port.</td>
+</tr>
+</tbody>
+</table>
+<p>Interface GUID:</p>
+<p><code>{923A5391-77FD-41FB-B935-046D62F45C18}</code></p>
+<h3 id="unit-contents-and-scope">Unit contents and scope</h3>
+<p>The <code>core_bus</code> unit declares the bus-related record,
+enumeration, type helper, and interfaces. It does not declare a concrete
+bus class or implement the memory and I/O operations itself.
+Implementations of <code>IStandardBus</code> and <code>IMCS4Bus</code>
+are provided by the device or bus classes elsewhere in the
+framework.</p>
 </body>
 </html>

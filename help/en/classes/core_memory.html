@@ -15,7 +15,6 @@ identification and stream-based state persistence.</p>
 <h3 id="tmemorymode">TMemoryMode</h3>
 <p><code>TMemoryMode</code> defines the memory operation mode:</p>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <thead>
 <tr class="header">
 <th>value</th>
@@ -35,7 +34,6 @@ identification and stream-based state persistence.</p>
 </table>
 <h3 id="tmemorymodehelper">TMemoryModeHelper</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 66%" />
@@ -63,7 +61,6 @@ using RTTI.</td>
 <p><code>TSemanticVersion</code> stores the module version as three
 integer components.</p>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <thead>
 <tr class="header">
 <th>field</th>
@@ -91,7 +88,6 @@ integer components.</p>
 </table>
 <h3 id="tsemanticversionhelper">TSemanticVersionHelper</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 74%" />
@@ -117,7 +113,6 @@ older.</td>
 </table>
 <h3 id="protected-fields">Protected fields</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <colgroup>
 <col style="width: 15%" />
 <col style="width: 14%" />
@@ -146,36 +141,42 @@ older.</td>
 <td><code>0</code></td>
 </tr>
 <tr class="odd">
+<td><code>FBusType</code></td>
+<td><code>TBusType</code></td>
+<td>Type of system bus.</td>
+<td><code>btStandard</code></td>
+</tr>
+<tr class="even">
 <td><code>FDescription</code></td>
 <td><code>PChar</code></td>
 <td>Short module description.</td>
 <td><code>Standard memory with 8 bit data width.</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FEnabled</code></td>
 <td><code>Boolean</code></td>
 <td>Enables memory access without bus detachment.</td>
 <td><code>False</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FMemoryMode</code></td>
 <td><code>TMemoryMode</code></td>
 <td>RAM or ROM operation mode.</td>
 <td><code>mmRAM</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FMemCells</code></td>
 <td><code>array of Byte</code></td>
 <td>Internal byte-addressable memory storage.</td>
 <td>1024 bytes initially</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FModname</code></td>
 <td><code>PChar</code></td>
 <td>Module name.</td>
 <td><code>RAM/ROM</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FVersion</code></td>
 <td><code>TSemanticVersion</code></td>
 <td>Module version.</td>
@@ -185,7 +186,6 @@ older.</td>
 </table>
 <h3 id="protected-methods">Protected methods</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <colgroup>
 <col style="width: 32%" />
 <col style="width: 67%" />
@@ -207,7 +207,6 @@ bytes.</td>
 </table>
 <h3 id="public-methods">Public methods</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 2%" />
@@ -279,7 +278,6 @@ position when enabled and memory bounds are valid.</td>
 </table>
 <h3 id="public-properties">Public properties</h3>
 <table border="1" cellspacing="0" cellpadding="4">
-
 <colgroup>
 <col style="width: 22%" />
 <col style="width: 22%" />
@@ -308,30 +306,36 @@ position when enabled and memory bounds are valid.</td>
 <td>Global start address.</td>
 </tr>
 <tr class="odd">
+<td><code>BusType</code></td>
+<td><code>TBusType</code></td>
+<td>Re</td>
+<td>Type of system bus.</td>
+</tr>
+<tr class="even">
 <td><code>Description</code></td>
 <td><code>PChar</code></td>
 <td>Re</td>
 <td>Short module description.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>Enabled</code></td>
 <td><code>Boolean</code></td>
 <td>Re/Wr</td>
 <td>Enables or disables memory access.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>MemoryMode</code></td>
 <td><code>TMemoryMode</code></td>
 <td>Re/Wr</td>
 <td>Selects RAM or ROM operation.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>ModName</code></td>
 <td><code>PChar</code></td>
 <td>Re</td>
 <td>Module name.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>Version</code></td>
 <td><code>TSemanticVersion</code></td>
 <td>Re</td>

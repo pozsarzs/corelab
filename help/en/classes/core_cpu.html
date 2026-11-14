@@ -9,18 +9,18 @@
 <h2 id="tcpu-from-core_cpu-unit">TCPU from core_cpu unit</h2>
 <p><code>TCPU</code> is an abstract base class for processor
 implementations. It defines common CPU identity and architecture
-information, runtime state, execution statistics, interrupt handling,
-event notification and connection to an external
-<code>ISysBus</code>.</p>
-<p>Processor-specific register access, reset, single-step execution,
-current-instruction reporting and state persistence are left abstract
-for derived CPU classes.</p>
+information, bus configuration, runtime state, execution statistics,
+interrupt handling and event notification.</p>
+<p>The class does not implement processor-specific register access,
+reset, single-step execution, current-instruction reporting or state
+persistence. These operations are left to derived CPU classes. Bus
+connection is also abstract and is implemented by the derived class.</p>
 <h3 id="related-types">Related types</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 22%" />
-<col style="width: 17%" />
-<col style="width: 60%" />
+<col style="width: 27%" />
+<col style="width: 15%" />
+<col style="width: 56%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -31,50 +31,214 @@ for derived CPU classes.</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>TProcessorDestroyEvent</code></td>
+<td>procedure type</td>
+<td>Callback invoked when a CPU instance is destroyed.</td>
+</tr>
+<tr class="even">
 <td><code>TArchitecture</code></td>
 <td>enumeration</td>
 <td>CPU memory architecture.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>TEndianness</code></td>
 <td>enumeration</td>
 <td>CPU byte order.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>TCPUEvent</code></td>
 <td>enumeration</td>
 <td>Generic CPU events.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>TCPUEventHandler</code></td>
 <td>procedure type</td>
 <td>CPU event callback.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>TSemanticVersion</code></td>
 <td>record</td>
 <td>Major, minor and patch version information.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>TLastInstruction</code></td>
 <td>record</td>
-<td>Last executed instruction</td>
-</tr>
-<tr class="odd">
-<td><code>TLogRec</code></td>
-<td>record</td>
-<td>Information about the last executed instruction.</td>
+<td>Decoded data of the last executed instruction.</td>
 </tr>
 <tr class="even">
+<td><code>TLogRec</code></td>
+<td>record</td>
+<td>Information used for the last-instruction log.</td>
+</tr>
+<tr class="odd">
 <td><code>TIntLogRec</code></td>
 <td>record</td>
-<td>Information about the last interrupt request.</td>
+<td>Information used for the interrupt log.</td>
+</tr>
+<tr class="even">
+<td><code>TBusType</code></td>
+<td>enumeration</td>
+<td>System bus type, declared in <code>core_bus</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="record-fields">Record fields</h3>
+<h4 id="tsemanticversion">TSemanticVersion</h4>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Major</code></td>
+<td><code>Integer</code></td>
+<td>Major version number.</td>
+</tr>
+<tr class="even">
+<td><code>Minor</code></td>
+<td><code>Integer</code></td>
+<td>Minor version number.</td>
+</tr>
+<tr class="odd">
+<td><code>Patch</code></td>
+<td><code>Integer</code></td>
+<td>Patch version number.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tlastinstruction">TLastInstruction</h4>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Address</code></td>
+<td><code>Word</code></td>
+<td>Instruction address.</td>
+</tr>
+<tr class="even">
+<td><code>Opcode</code></td>
+<td><code>Byte</code></td>
+<td>Opcode byte.</td>
+</tr>
+<tr class="odd">
+<td><code>NumPrefix</code></td>
+<td><code>Byte</code></td>
+<td>Number of prefixes.</td>
+</tr>
+<tr class="even">
+<td><code>Prefixes</code></td>
+<td><code>array[1..2] of Word</code></td>
+<td>Prefix values.</td>
+</tr>
+<tr class="odd">
+<td><code>NumOperand</code></td>
+<td><code>Byte</code></td>
+<td>Number of operands.</td>
+</tr>
+<tr class="even">
+<td><code>Operands</code></td>
+<td><code>array[1..2] of Word</code></td>
+<td>Operand values.</td>
+</tr>
+<tr class="odd">
+<td><code>Mnemonic</code></td>
+<td><code>string[32]</code></td>
+<td>Instruction mnemonic.</td>
+</tr>
+<tr class="even">
+<td><code>Cycles</code></td>
+<td><code>Byte</code></td>
+<td>Cycle count for the instruction.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tlogrec">TLogRec</h4>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>InstCount</code></td>
+<td><code>Integer</code></td>
+<td>Instruction count.</td>
+</tr>
+<tr class="even">
+<td><code>Address</code></td>
+<td><code>string[32]</code></td>
+<td>Instruction address as text.</td>
+</tr>
+<tr class="odd">
+<td><code>OpCode</code></td>
+<td><code>string[32]</code></td>
+<td>Opcode as text.</td>
+</tr>
+<tr class="even">
+<td><code>Mnemonic</code></td>
+<td><code>string[32]</code></td>
+<td>Instruction mnemonic.</td>
+</tr>
+<tr class="odd">
+<td><code>Cycles</code></td>
+<td><code>Byte</code></td>
+<td>Instruction cycle count.</td>
+</tr>
+<tr class="even">
+<td><code>TotalCycles</code></td>
+<td><code>QWord</code></td>
+<td>Total cycle count.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="tintlogrec">TIntLogRec</h4>
+<table border="1" cellspacing="0" cellpadding="4">
+<thead>
+<tr class="header">
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Sender</code></td>
+<td><code>string[32]</code></td>
+<td>Interrupt source.</td>
+</tr>
+<tr class="even">
+<td><code>Vector</code></td>
+<td><code>string[32]</code></td>
+<td>Interrupt vector as text.</td>
+</tr>
+<tr class="odd">
+<td><code>Status</code></td>
+<td><code>string[32]</code></td>
+<td>Interrupt status as text.</td>
+</tr>
+<tr class="even">
+<td><code>Flag</code></td>
+<td><code>string[32]</code></td>
+<td>Interrupt flag information.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="enumeration-values">Enumeration values</h3>
 <h4 id="tarchitecture">TArchitecture</h4>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>value</th>
@@ -88,12 +252,12 @@ for derived CPU classes.</p>
 </tr>
 <tr class="even">
 <td><code>arNeumann</code></td>
-<td>von Neumann architecture.</td>
+<td>Neumann architecture.</td>
 </tr>
 </tbody>
 </table>
 <h4 id="tendianness">TEndianness</h4>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>value</th>
@@ -112,7 +276,7 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h4 id="tcpuevent">TCPUEvent</h4>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <thead>
 <tr class="header">
 <th>value</th>
@@ -138,8 +302,11 @@ for derived CPU classes.</p>
 </tr>
 </tbody>
 </table>
+<p><code>TBusType</code> is declared in <code>core_bus</code>. Its
+values used by the framework are <code>btStandard</code> and
+<code>btMCS4</code>.</p>
 <h3 id="type-helpers">Type helpers</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
 <col style="width: 37%" />
 <col style="width: 62%" />
@@ -187,12 +354,12 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="protected-fields">Protected fields</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 21%" />
-<col style="width: 18%" />
+<col style="width: 19%" />
+<col style="width: 23%" />
 <col style="width: 44%" />
-<col style="width: 15%" />
+<col style="width: 12%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -204,82 +371,94 @@ for derived CPU classes.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>FBus</code></td>
-<td><code>ISysBus</code></td>
-<td>Connected external bus.</td>
-<td><code>nil</code></td>
-</tr>
-<tr class="even">
 <td><code>FOnEvent</code></td>
 <td><code>TCPUEventHandler</code></td>
 <td>CPU event callback.</td>
 <td><code>nil</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FModname</code></td>
 <td><code>PChar</code></td>
 <td>Module name.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FDescription</code></td>
 <td><code>PChar</code></td>
 <td>Short description.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FVersion</code></td>
 <td><code>TSemanticVersion</code></td>
 <td>Module version.</td>
 <td><code>0.1.0</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>FAddressWidth</code></td>
 <td><code>Byte</code></td>
 <td>Address bus width in bits.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>FArchitecture</code></td>
 <td><code>TArchitecture</code></td>
 <td>CPU architecture.</td>
-<td>not initialized</td>
-</tr>
-<tr class="even">
-<td><code>FEnabled</code></td>
-<td><code>Boolean</code></td>
-<td>Enables CPU without bus detachment.</td>
-<td><code>False</code></td>
+<td>not set here</td>
 </tr>
 <tr class="odd">
+<td><code>FBusType</code></td>
+<td><code>TBusType</code></td>
+<td>System bus type.</td>
+<td><code>btStandard</code></td>
+</tr>
+<tr class="even">
+<td><code>FDefaultClockFreq</code></td>
+<td><code>DWord</code></td>
+<td>Default clock frequency in hertz.</td>
+<td><code>1000000</code></td>
+</tr>
+<tr class="odd">
+<td><code>FEnabled</code></td>
+<td><code>Boolean</code></td>
+<td>Enables the CPU without detaching it.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
 <td><code>FEndianness</code></td>
 <td><code>TEndianness</code></td>
 <td>CPU byte order.</td>
-<td>not initialized</td>
+<td>not set here</td>
+</tr>
+<tr class="odd">
+<td><code>FLastInstruction</code></td>
+<td><code>TLastInstruction</code></td>
+<td>Data of the last instruction.</td>
+<td>not set here</td>
 </tr>
 <tr class="even">
 <td><code>FMaxCodeAddress</code></td>
 <td><code>DWord</code></td>
 <td>Highest code memory address.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
 <tr class="odd">
 <td><code>FMaxIOPortAddress</code></td>
 <td><code>DWord</code></td>
 <td>Highest I/O port address.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
 <tr class="even">
 <td><code>FMaxMemAddress</code></td>
 <td><code>DWord</code></td>
 <td>Highest data memory address.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
 <tr class="odd">
 <td><code>FHasSeparateIOBus</code></td>
 <td><code>Boolean</code></td>
 <td>Indicates separate memory and I/O buses.</td>
-<td>not initialized</td>
+<td>not set here</td>
 </tr>
 <tr class="even">
 <td><code>FRunning</code></td>
@@ -301,15 +480,15 @@ for derived CPU classes.</p>
 </tr>
 <tr class="odd">
 <td><code>FIRQPending</code></td>
-<td><code>Boolean</code></td>
-<td>Pending maskable interrupt.</td>
-<td><code>False</code></td>
+<td><code>array[0..7] of Boolean</code></td>
+<td>Pending maskable interrupt flags.</td>
+<td>all <code>False</code></td>
 </tr>
 <tr class="even">
 <td><code>FIRQVector</code></td>
-<td><code>Byte</code></td>
-<td>Received interrupt vector.</td>
-<td><code>0</code></td>
+<td><code>array[0..7] of Byte</code></td>
+<td>Interrupt vectors for the eight IRQ channels.</td>
+<td>all <code>0</code></td>
 </tr>
 <tr class="odd">
 <td><code>FNMIPending</code></td>
@@ -330,6 +509,12 @@ for derived CPU classes.</p>
 <td><code>0</code></td>
 </tr>
 <tr class="even">
+<td><code>FOnDestroy</code></td>
+<td><code>TProcessorDestroyEvent</code></td>
+<td>CPU destruction callback.</td>
+<td>not set here</td>
+</tr>
+<tr class="odd">
 <td><code>FRegPtr</code></td>
 <td><code>array of ^Word</code></td>
 <td>Register pointers for derived CPU classes.</td>
@@ -338,11 +523,11 @@ for derived CPU classes.</p>
 </tbody>
 </table>
 <h3 id="protected-methods">Protected methods</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 49%" />
-<col style="width: 5%" />
-<col style="width: 44%" />
+<col style="width: 52%" />
+<col style="width: 4%" />
+<col style="width: 43%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -355,21 +540,21 @@ for derived CPU classes.</p>
 <tr class="odd">
 <td><code>procedure EmitEvent(AEvent: TCPUEvent);</code></td>
 <td>Vi</td>
-<td>Sends a CPU event to the host callback.</td>
+<td>Sends an event to the registered callback.</td>
 </tr>
 <tr class="even">
-<td><code>procedure DoInterrupt(AEvent: TCPUEvent);</code></td>
+<td><code>procedure DoInterrupt(AEvent: TCPUEvent; AMode: Byte = 0);</code></td>
 <td>Vi</td>
-<td>Dispatches an accepted interrupt event.</td>
+<td>Dispatches an interrupt event through <code>EmitEvent</code>.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="public-methods">Public methods</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 47%" />
+<col style="width: 37%" />
 <col style="width: 3%" />
-<col style="width: 48%" />
+<col style="width: 58%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -380,74 +565,78 @@ for derived CPU classes.</p>
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>function ConnectBus(const ABus: IInterface): Boolean;</code></td>
+<td>Ab,Vi</td>
+<td>Abstract bus connection implemented by derived classes.</td>
+</tr>
+<tr class="even">
 <td><code>constructor Create;</code></td>
 <td>Vi</td>
-<td>Initializes CPU state, interrupt flags, counters and version.</td>
+<td>Initializes runtime flags, interrupt arrays, counters, bus type,
+clock frequency and version.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>destructor Destroy;</code></td>
 <td>Or</td>
-<td>Destroys the CPU instance.</td>
-</tr>
-<tr class="odd">
-<td><code>function CheckInterrupts: Boolean;</code></td>
-<td></td>
-<td>Accepts a pending interrupt when applicable.</td>
+<td>Calls <code>OnDestroy</code> when assigned, then destroys the
+instance.</td>
 </tr>
 <tr class="even">
+<td><code>function CheckInterrupts: Boolean;</code></td>
+<td>Vi</td>
+<td>Accepts one pending interrupt, if one can be accepted.</td>
+</tr>
+<tr class="odd">
 <td><code>function GetCurrentInstruction: TLogRec;</code></td>
 <td>Ab,Vi</td>
-<td>Returns information about the current instruction.</td>
-</tr>
-<tr class="odd">
-<td><code>function GetCurrentInterrupt: TIntLogRec;</code></td>
-<td>Ab,Vi</td>
-<td>Returns information about the current interrupt reequest.</td>
+<td>Returns current-instruction log data; abstract.</td>
 </tr>
 <tr class="even">
+<td><code>function GetCurrentInterrupt(AMode: Byte = 0): TIntLogRec;</code></td>
+<td>Vi</td>
+<td>Returns interrupt log data; the base implementation clears
+<code>Sender</code> only.</td>
+</tr>
+<tr class="odd">
 <td><code>function GetRegister(const RegName: PChar): Word;</code></td>
 <td>Ab,Vi</td>
 <td>Reads a processor register; implemented by derived classes.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>function GetRegisterCount: Byte;</code></td>
 <td>Ab,Vi</td>
 <td>Returns the number of processor registers.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function GetRegisterName(AIndex: Byte): PChar;</code></td>
 <td>Ab,Vi</td>
 <td>Returns a register name by index.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>function GetRegisterSize(AIndex: Byte): Byte;</code></td>
 <td>Ab,Vi</td>
 <td>Returns a register size by index.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>function LoadState(AStream: TStream): Boolean;</code></td>
 <td>Ab,Vi</td>
 <td>Loads processor state; implemented by derived classes.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>function SaveState(AStream: TStream): Boolean;</code></td>
 <td>Ab,Vi</td>
 <td>Saves processor state; implemented by derived classes.</td>
 </tr>
-<tr class="even">
-<td><code>procedure ConnectBus(const Bus: ISysBus);</code></td>
-<td>Vi</td>
-<td>Connects the CPU to an external system bus.</td>
-</tr>
 <tr class="odd">
-<td><code>procedure IRQ(AVector: Byte);</code></td>
+<td><code>procedure IRQ(AVector: Byte; AMode: Byte = 0);</code></td>
 <td>Vi</td>
-<td>Sets the pending IRQ and stores its vector.</td>
+<td>Sets the pending IRQ and vector for the selected channel, then emits
+<code>ceInterrupt</code>.</td>
 </tr>
 <tr class="even">
 <td><code>procedure NMI;</code></td>
 <td>Vi</td>
-<td>Sets the pending non-maskable interrupt.</td>
+<td>Sets the pending NMI and emits <code>ceInterrupt</code>.</td>
 </tr>
 <tr class="odd">
 <td><code>procedure Reset;</code></td>
@@ -457,7 +646,7 @@ for derived CPU classes.</p>
 <tr class="even">
 <td><code>procedure Run;</code></td>
 <td>Vi</td>
-<td>Starts execution when the CPU is enabled.</td>
+<td>Sets the running state if the CPU is enabled.</td>
 </tr>
 <tr class="odd">
 <td><code>procedure SetRegister(const RegName: PChar; AValue: Word);</code></td>
@@ -472,17 +661,31 @@ for derived CPU classes.</p>
 <tr class="odd">
 <td><code>procedure Stop;</code></td>
 <td>Vi</td>
-<td>Stops CPU execution.</td>
+<td>Clears the running state.</td>
 </tr>
 </tbody>
 </table>
+<h3 id="interrupt-handling">Interrupt handling</h3>
+<p>The base class provides eight maskable interrupt channels, indexed
+from <code>0</code> to <code>7</code>. <code>IRQ(AVector, AMode)</code>
+stores the vector and sets the pending flag for the selected channel.
+<code>CheckInterrupts</code> checks NMI first. If no NMI is pending, it
+scans the maskable channels in ascending index order and accepts the
+first pending IRQ when global maskable interrupts are enabled. Accepting
+an interrupt clears its pending flag and the CPU HALT state, calls
+<code>DoInterrupt</code> and returns <code>True</code>. At most one
+interrupt is accepted per call.</p>
+<p>Both <code>IRQ</code> and <code>NMI</code> do nothing when the CPU is
+disabled. The base implementation of <code>DoInterrupt</code> only emits
+the supplied CPU event; its <code>AMode</code> parameter is not
+otherwise used there.</p>
 <h3 id="public-properties">Public properties</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 22%" />
-<col style="width: 21%" />
-<col style="width: 7%" />
-<col style="width: 49%" />
+<col style="width: 20%" />
+<col style="width: 26%" />
+<col style="width: 6%" />
+<col style="width: 46%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -504,6 +707,18 @@ for derived CPU classes.</p>
 <td><code>TArchitecture</code></td>
 <td>Re</td>
 <td>CPU architecture.</td>
+</tr>
+<tr class="odd">
+<td><code>BusType</code></td>
+<td><code>TBusType</code></td>
+<td>Re</td>
+<td>System bus type.</td>
+</tr>
+<tr class="even">
+<td><code>DefaultClockFreq</code></td>
+<td><code>DWord</code></td>
+<td>Re</td>
+<td>Default clock frequency in hertz.</td>
 </tr>
 <tr class="odd">
 <td><code>TotalCycles</code></td>
@@ -594,6 +809,12 @@ for derived CPU classes.</p>
 <td><code>TSemanticVersion</code></td>
 <td>Re</td>
 <td>Module version.</td>
+</tr>
+<tr class="even">
+<td><code>OnDestroy</code></td>
+<td><code>TProcessorDestroyEvent</code></td>
+<td>Re/Wr</td>
+<td>Callback invoked during destruction.</td>
 </tr>
 </tbody>
 </table>
