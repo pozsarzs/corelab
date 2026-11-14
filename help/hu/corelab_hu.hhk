@@ -138,7 +138,11 @@
 	<param name="Local" value="applications/clprocessor.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
-	<param name="Name" value="ISysBus">
+	<param name="Name" value="IStandardBus">
+	<param name="Local" value="classes/core_bus.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="IMCS4Bus">
 	<param name="Local" value="classes/core_bus.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
@@ -170,8 +174,16 @@
 	<param name="Local" value="cpus/cpu_4004.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="4004">
+	<param name="Local" value="cpus/cpu_4004_int.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="4040">
 	<param name="Local" value="cpus/cpu_4040.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="4040">
+	<param name="Local" value="cpus/cpu_4040_int.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="8008">
@@ -182,12 +194,24 @@
 	<param name="Local" value="cpus/cpu_8080.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="8080">
+	<param name="Local" value="cpus/cpu_8080_int.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="8085">
 	<param name="Local" value="cpus/cpu_8085.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="8085">
+	<param name="Local" value="cpus/cpu_8085_int.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="Z80">
 	<param name="Local" value="cpus/cpu_z80.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="Z80">
+	<param name="Local" value="cpus/cpu_z80_int.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="T4004CPU">

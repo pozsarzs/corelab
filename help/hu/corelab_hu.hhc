@@ -61,7 +61,7 @@
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CLMemory bővítménytesztelő alkalmazás">
 			<param name="Local" value="applications\clioport.html">
-			</OBJECT>
+		</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CLProcessor bővítménytesztelő alkalmazás">
 			<param name="Local" value="applications\clioport.html">
@@ -109,24 +109,48 @@
 			<param name="Local" value="cpus/cpu_4004.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Az Intel 4004 megszakításkezelése">
+			<param name="Local" value="cpus/cpu_4004_int.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Intel 4040">
 			<param name="Local" value="cpus/cpu_4040.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Az Intel 4040 megszakításkezelése">
+			<param name="Local" value="cpus/cpu_4040_int.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Intel 8008">
 			<param name="Local" value="cpus/cpu_8008.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Az Intel 8008 megszakításkezelése">
+			<param name="Local" value="cpus/cpu_8008_int.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Intel 8080">
 			<param name="Local" value="cpus/cpu_8080.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Az Intel 8080 megszakításkezelése">
+			<param name="Local" value="cpus/cpu_8080_int.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Intel 8085">
 			<param name="Local" value="cpus/cpu_8085.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Az Intel 8085 megszakításkezelése">
+			<param name="Local" value="cpus/cpu_8085_int.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="Zilog Z80">
 			<param name="Local" value="cpus/cpu_z80.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="A Zilog Z80 megszakításkezelése">
+			<param name="Local" value="cpus/cpu_z80_int.html">
 			</OBJECT>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
