@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - T4001ROM from TMemory class in memory_4001rom unit</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<h2 id="t4001rom-from-tmemory-class-in-memory_4001rom-unit">T4001ROM
+from TMemory class in memory_4001rom unit</h2>
+<p><code>T4001ROM</code> is the Intel 4001 ROM and I/O chip plugin of
+the CoreLAB framework. It is derived from <code>TMemory</code> and
+implements the <code>IMCS4Bus</code> interface. The component provides a
+256-byte ROM area and access to a 4-bit I/O port.</p>
+<h3 id="private-and-protected-fields">Private and protected fields</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 70%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>visibility</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FChipID</code></td>
+<td>Private</td>
+<td>Chip identifier derived from the configured base address.</td>
+</tr>
+<tr class="even">
+<td><code>FSelected</code></td>
+<td>Private</td>
+<td>Indicates whether the chip is selected by the last SRC command.</td>
+</tr>
+<tr class="odd">
+<td><code>FTargetAddress</code></td>
+<td>Private</td>
+<td>Address used when accessing the connected I/O port.</td>
+</tr>
+<tr class="even">
+<td><code>FTargetPort</code></td>
+<td>Private</td>
+<td>Reference to the target <code>TIOPort</code> instance.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="protected-methods">Protected methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SetFAddressRangeSize(AAddressRangeSize: DWord);</code></td>
+<td>Overrides the inherited setter and fixes the memory size at 256
+bytes, resizing <code>FMemCells</code>.</td>
+</tr>
+<tr class="even">
+<td><code>SetFBaseAddress(ABaseAddress: DWord);</code></td>
+<td>For base addresses up to <code>$0F00</code>, derives the chip ID by
+dividing the address by 256 and aligns the base address to the
+corresponding 256-byte block.</td>
+</tr>
+<tr class="odd">
+<td><code>SetFMemoryMode(AMemoryMode: TMemoryMode);</code></td>
+<td>Overrides the inherited setter and forces ROM mode.</td>
+</tr>
+<tr class="even">
+<td><code>QueryInterface(constref iid: TGuid; out obj): LongInt;</code></td>
+<td>Provides the <code>IMCS4Bus</code> interface when the requested
+interface identifier matches it.</td>
+</tr>
+<tr class="odd">
+<td><code>_AddRef: LongInt;</code></td>
+<td>Returns <code>-1</code>; reference counting is disabled for this
+interface implementation.</td>
+</tr>
+<tr class="even">
+<td><code>_Release: LongInt;</code></td>
+<td>Returns <code>-1</code>; reference counting is disabled for this
+interface implementation.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-methods">Public methods</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 2%" />
+<col style="width: 79%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>flags</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Calls the inherited constructor, sets the address range to 256
+bytes, selects the MCS-4 bus type and ROM mode, and initializes the
+module information and internal selection/port fields.</td>
+</tr>
+<tr class="even">
+<td><code>SendSRC(AAddress: Byte);</code></td>
+<td></td>
+<td>Receives an 8-bit SRC control value and updates the chip-selection
+state by comparing <code>AAddress shr 4</code> with the chip ID.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadRAM: Byte;</code></td>
+<td></td>
+<td>RAM operation is not supported; always returns <code>0</code>.</td>
+</tr>
+<tr class="even">
+<td><code>WriteRAM(AData: Byte);</code></td>
+<td></td>
+<td>RAM operation is not supported; performs no action.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadRAMStatus(AIndex: Byte): Byte;</code></td>
+<td></td>
+<td>RAM status operation is not supported; always returns
+<code>0</code>.</td>
+</tr>
+<tr class="even">
+<td><code>WriteRAMStatus(AIndex: Byte; AData: Byte);</code></td>
+<td></td>
+<td>RAM status operation is not supported; performs no action.</td>
+</tr>
+<tr class="odd">
+<td><code>WriteRAMIOPort(AData: Byte);</code></td>
+<td></td>
+<td>RAM I/O operation is not supported; performs no action.</td>
+</tr>
+<tr class="even">
+<td><code>ReadROM(AAddress: Word): Byte;</code></td>
+<td></td>
+<td>Reads a byte from the ROM by calling the inherited
+<code>ReadMemory</code> method.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadROMIOPort: Byte;</code></td>
+<td></td>
+<td>When the chip is selected and a target port is assigned, reads the
+target port and returns its lower 4 bits; otherwise returns
+<code>0</code>.</td>
+</tr>
+<tr class="even">
+<td><code>WriteROMIOPort(AData: Byte);</code></td>
+<td></td>
+<td>When the chip is selected and a target port is assigned, writes the
+lower 4 bits of the data to the target port.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="public-properties">Public properties</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 13%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>property</th>
+<th>access</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ChipID</code></td>
+<td>Read-only</td>
+<td>Chip identifier calculated from the base address.</td>
+</tr>
+<tr class="even">
+<td><code>TargetAddress</code></td>
+<td>Read/write</td>
+<td>Address used for access to the target I/O port.</td>
+</tr>
+<tr class="odd">
+<td><code>TargetPort</code></td>
+<td>Read/write</td>
+<td>Target <code>TIOPort</code> instance used for I/O operations.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="inherited-interface">Inherited interface</h3>
+<p>The class inherits the memory interface from <code>TMemory</code>,
+including:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>member</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressRangeSize</code></td>
+<td>Memory address-space size; this implementation fixes it at 256
+bytes.</td>
+</tr>
+<tr class="even">
+<td><code>DataWidth</code></td>
+<td>Memory data width.</td>
+</tr>
+<tr class="odd">
+<td><code>Description</code></td>
+<td>Module description.</td>
+</tr>
+<tr class="even">
+<td><code>Enabled</code></td>
+<td>Enables or disables memory access.</td>
+</tr>
+<tr class="odd">
+<td><code>InstanceID</code></td>
+<td>Module instance identifier.</td>
+</tr>
+<tr class="even">
+<td><code>MemoryMode</code></td>
+<td>Selects RAM or ROM operation; this implementation forces ROM
+mode.</td>
+</tr>
+<tr class="odd">
+<td><code>ModName</code></td>
+<td>Module name.</td>
+</tr>
+<tr class="even">
+<td><code>Version</code></td>
+<td>Module version.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadMemory</code></td>
+<td>Reads a byte from memory.</td>
+</tr>
+<tr class="even">
+<td><code>WriteMemory</code></td>
+<td>Writes a byte according to the inherited memory implementation and
+current mode.</td>
+</tr>
+<tr class="odd">
+<td><code>Reset</code></td>
+<td>Resets the memory component according to the inherited
+implementation.</td>
+</tr>
+<tr class="even">
+<td><code>LoadState</code></td>
+<td>Loads the memory state from a stream.</td>
+</tr>
+<tr class="odd">
+<td><code>SaveState</code></td>
+<td>Saves the memory state to a stream.</td>
+</tr>
+<tr class="even">
+<td><code>LoadFromStream</code></td>
+<td>Loads a block of data into memory.</td>
+</tr>
+<tr class="odd">
+<td><code>SaveToStream</code></td>
+<td>Saves a block of memory data to a stream.</td>
+</tr>
+</tbody>
+</table>
+<p><code>T4001ROM</code> also implements <code>IMCS4Bus</code> for
+connection to the MCS-4 bus. The interface methods are supplied by the
+class’s <code>QueryInterface</code>, <code>_AddRef</code>, and
+<code>_Release</code> implementations.</p>
+<h3 id="exported-functions-and-procedures">Exported functions and
+procedures</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exported name</th>
+<th>function/procedure</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>memory_create</code></td>
+<td><code>CreateMemory</code></td>
+<td>Creates and returns a new <code>T4001ROM</code> instance as a
+<code>TMemory</code> reference.</td>
+</tr>
+<tr class="even">
+<td><code>memory_destroy</code></td>
+<td><code>DestroyMemory</code></td>
+<td>Destroys the supplied memory object when it is assigned.</td>
+</tr>
+<tr class="odd">
+<td><code>memory_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Loads the state of the supplied memory object from a stream. Returns
+<code>False</code> when the memory object is <code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>memory_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Saves the state of the supplied memory object to a stream. Returns
+<code>False</code> when the memory object is <code>nil</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>memory_set_target_port</code></td>
+<td><code>SetTargetPort</code></td>
+<td>For a <code>T4001ROM</code> instance, assigns the target
+<code>TIOPort</code> and the address used for its I/O operations.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

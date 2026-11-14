@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>CoreLAB - T4001ROM a TMemory osztályból, a memory_4001rom modul</title>
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<p><strong>Moduláris processzorszimulációs keretrendszer</strong></p>
+<h2 id="t4001rom-a-tmemory-osztályból-a-memory_4001rom-modul">T4001ROM a
+TMemory osztályból, a memory_4001rom modul</h2>
+<p>A <code>T4001ROM</code> a CoreLAB keretrendszer Intel 4001 ROM- és
+I/O-chipbővítménye.</p>
+<p>A <code>TMemory</code> osztályból származik, és megvalósítja az
+<code>IMCS4Bus</code> interfészt. A komponens 256 bájtos ROM-területet
+és egy 4 bites I/O-port elérését biztosítja.</p>
+<h3 id="privát-és-védett-mezők">Privát és védett mezők</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 11%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>láthatóság</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FChipID</code></td>
+<td>Privát</td>
+<td>Az alapcímből meghatározott chipazonosító.</td>
+</tr>
+<tr class="even">
+<td><code>FSelected</code></td>
+<td>Privát</td>
+<td>Jelzi, hogy az utolsó SRC parancs kiválasztotta-e a chipet.</td>
+</tr>
+<tr class="odd">
+<td><code>FTargetAddress</code></td>
+<td>Privát</td>
+<td>A csatlakoztatott I/O-port elérésekor használt cím.</td>
+</tr>
+<tr class="even">
+<td><code>FTargetPort</code></td>
+<td>Privát</td>
+<td>A célként használt <code>TIOPort</code> példány referenciája.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="védett-metódusok">Védett metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SetFAddressRangeSize(AAddressRangeSize: DWord);</code></td>
+<td>Felülírja az örökölt beállítót, és 256 bájtra rögzíti a
+memóriaméretet, majd ennek megfelelően átméretezi az
+<code>FMemCells</code> tömböt.</td>
+</tr>
+<tr class="even">
+<td><code>SetFBaseAddress(ABaseAddress: DWord);</code></td>
+<td>Legfeljebb <code>$0F00</code> alapcím esetén 256-tal osztva
+meghatározza a chipazonosítót, majd az alapcímet a megfelelő 256 bájtos
+blokk kezdetére igazítja.</td>
+</tr>
+<tr class="odd">
+<td><code>SetFMemoryMode(AMemoryMode: TMemoryMode);</code></td>
+<td>Felülírja az örökölt beállítót, és ROM üzemmódot kényszerít ki.</td>
+</tr>
+<tr class="even">
+<td><code>QueryInterface(constref iid: TGuid; out obj): LongInt;</code></td>
+<td>A kért interfészazonosító egyezése esetén biztosítja az
+<code>IMCS4Bus</code> interfészt.</td>
+</tr>
+<tr class="odd">
+<td><code>_AddRef: LongInt;</code></td>
+<td><code>-1</code> értéket ad vissza; az interfész
+referencia-számlálása le van tiltva.</td>
+</tr>
+<tr class="even">
+<td><code>_Release: LongInt;</code></td>
+<td><code>-1</code> értéket ad vissza; az interfész
+referencia-számlálása le van tiltva.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 2%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>név</th>
+<th>jelzők</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>constructor Create;</code></td>
+<td>Or</td>
+<td>Meghívja az ősosztály konstruktorát, 256 bájtra állítja a
+címtartományt, kiválasztja az MCS-4 busztípust és a ROM üzemmódot,
+valamint inicializálja a modul adatait és a belső
+kiválasztási/portmezőket.</td>
+</tr>
+<tr class="even">
+<td><code>SendSRC(AAddress: Byte);</code></td>
+<td></td>
+<td>Fogadja a 8 bites SRC vezérlőértéket, és a chip kiválasztottságát az
+<code>AAddress shr 4</code> és a chipazonosító összehasonlításával
+állítja be.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadRAM: Byte;</code></td>
+<td></td>
+<td>A RAM-művelet nem támogatott; mindig <code>0</code> értéket ad
+vissza.</td>
+</tr>
+<tr class="even">
+<td><code>WriteRAM(AData: Byte);</code></td>
+<td></td>
+<td>A RAM-művelet nem támogatott; nem végez műveletet.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadRAMStatus(AIndex: Byte): Byte;</code></td>
+<td></td>
+<td>A RAM-állapot olvasása nem támogatott; mindig <code>0</code> értéket
+ad vissza.</td>
+</tr>
+<tr class="even">
+<td><code>WriteRAMStatus(AIndex: Byte; AData: Byte);</code></td>
+<td></td>
+<td>A RAM-állapot írása nem támogatott; nem végez műveletet.</td>
+</tr>
+<tr class="odd">
+<td><code>WriteRAMIOPort(AData: Byte);</code></td>
+<td></td>
+<td>A RAM I/O-művelet nem támogatott; nem végez műveletet.</td>
+</tr>
+<tr class="even">
+<td><code>ReadROM(AAddress: Word): Byte;</code></td>
+<td></td>
+<td>Bájtot olvas a ROM-ból az örökölt <code>ReadMemory</code> metódus
+meghívásával.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadROMIOPort: Byte;</code></td>
+<td></td>
+<td>Kiválasztott chip és hozzárendelt célport esetén beolvassa a port
+értékét, és annak alsó 4 bitjét adja vissza; egyébként <code>0</code>-t
+ad.</td>
+</tr>
+<tr class="even">
+<td><code>WriteROMIOPort(AData: Byte);</code></td>
+<td></td>
+<td>Kiválasztott chip és hozzárendelt célport esetén az adat alsó 4
+bitjét kiírja a célportra.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nyilvános-tulajdonságok">Nyilvános tulajdonságok</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 19%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>tulajdonság</th>
+<th>elérés</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ChipID</code></td>
+<td>Csak olvasható</td>
+<td>Az alapcímből meghatározott chipazonosító.</td>
+</tr>
+<tr class="even">
+<td><code>TargetAddress</code></td>
+<td>Olvasható/írható</td>
+<td>A cél I/O-port eléréséhez használt cím.</td>
+</tr>
+<tr class="odd">
+<td><code>TargetPort</code></td>
+<td>Olvasható/írható</td>
+<td>Az I/O-műveletekhez használt cél <code>TIOPort</code> példány.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="örökölt-interfész">Örökölt interfész</h3>
+<p>Az osztály a <code>TMemory</code> memória-interfészét örökli,
+beleértve a következőket:</p>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>tag</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AddressRangeSize</code></td>
+<td>Memóriacím-tartomány mérete; ez a megvalósítás 256 bájtra
+rögzíti.</td>
+</tr>
+<tr class="even">
+<td><code>DataWidth</code></td>
+<td>Memória-adatszélesség.</td>
+</tr>
+<tr class="odd">
+<td><code>Description</code></td>
+<td>Modulleírás.</td>
+</tr>
+<tr class="even">
+<td><code>Enabled</code></td>
+<td>Engedélyezi vagy letiltja a memóriaelérést.</td>
+</tr>
+<tr class="odd">
+<td><code>InstanceID</code></td>
+<td>Modulpéldány-azonosító.</td>
+</tr>
+<tr class="even">
+<td><code>MemoryMode</code></td>
+<td>RAM vagy ROM üzemmód; ez a megvalósítás ROM módot kényszerít
+ki.</td>
+</tr>
+<tr class="odd">
+<td><code>ModName</code></td>
+<td>Modulnév.</td>
+</tr>
+<tr class="even">
+<td><code>Version</code></td>
+<td>Modulverzió.</td>
+</tr>
+<tr class="odd">
+<td><code>ReadMemory</code></td>
+<td>Bájtot olvas a memóriából.</td>
+</tr>
+<tr class="even">
+<td><code>WriteMemory</code></td>
+<td>Bájtot ír az örökölt memória-megvalósítás és az aktuális üzemmód
+szerint.</td>
+</tr>
+<tr class="odd">
+<td><code>Reset</code></td>
+<td>Az örökölt megvalósítás szerint alaphelyzetbe állítja a
+memóriakomponenst.</td>
+</tr>
+<tr class="even">
+<td><code>LoadState</code></td>
+<td>Betölti a memória állapotát egy adatfolyamból.</td>
+</tr>
+<tr class="odd">
+<td><code>SaveState</code></td>
+<td>Elmenti a memória állapotát egy adatfolyamba.</td>
+</tr>
+<tr class="even">
+<td><code>LoadFromStream</code></td>
+<td>Adatblokkot tölt a memóriába.</td>
+</tr>
+<tr class="odd">
+<td><code>SaveToStream</code></td>
+<td>Memóriaadat-blokkot ment adatfolyamba.</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>T4001ROM</code> az <code>IMCS4Bus</code> interfészt is
+megvalósítja az MCS-4 buszhoz való csatlakozáshoz. Az interfészhez
+tartozó metódusokat a <code>QueryInterface</code>, <code>_AddRef</code>
+és <code>_Release</code> implementációi biztosítják.</p>
+<h3 id="exportált-függvények-és-eljárások">Exportált függvények és
+eljárások</h3>
+<table border="1" cellspacing="0" cellpadding="4">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 10%" />
+<col style="width: 74%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>exportált név</th>
+<th>függvény/eljárás</th>
+<th>leírás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>memory_create</code></td>
+<td><code>CreateMemory</code></td>
+<td>Létrehoz és <code>TMemory</code> referenciaként visszaad egy új
+<code>T4001ROM</code> példányt.</td>
+</tr>
+<tr class="even">
+<td><code>memory_destroy</code></td>
+<td><code>DestroyMemory</code></td>
+<td>Megsemmisíti a megadott memóriaobjektumot, ha az hozzá van
+rendelve.</td>
+</tr>
+<tr class="odd">
+<td><code>memory_loadstate</code></td>
+<td><code>LoadState</code></td>
+<td>Betölti a megadott memóriaobjektum állapotát egy adatfolyamból.
+<code>False</code> értéket ad vissza, ha a memóriaobjektum
+<code>nil</code>.</td>
+</tr>
+<tr class="even">
+<td><code>memory_savestate</code></td>
+<td><code>SaveState</code></td>
+<td>Elmenti a megadott memóriaobjektum állapotát egy adatfolyamba.
+<code>False</code> értéket ad vissza, ha a memóriaobjektum
+<code>nil</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>memory_set_target_port</code></td>
+<td><code>SetTargetPort</code></td>
+<td><code>T4001ROM</code> példány esetén hozzárendeli a cél
+<code>TIOPort</code> példányt és az I/O-műveletekhez használt
+címet.</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
