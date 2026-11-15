@@ -1,0 +1,64 @@
+.TH lst2asm 1 "2026 November 14" ""
+
+.SH NAME
+lst2asm \- Convert list file to assembly
+
+.SH SYNOPSIS
+.B lst2asm
+<input.lst> <output.asm>
+
+.SH COPYRIGHT
+CoreLAB is Copyright (C) 2026 by Pozsar Zsolt.
+
+.SH DESCRIPTION
+The lst2asm script converts a list file to an assembly file. It uses awk to
+remove addresses and opcodes, and attempts to restore proper indentation. Note
+that the indentation may not always be placed correctly, for example, if a label
+is not followed by a colon (such as in the Intel 1973 syntax).
+.PP
+The script is useable on Unix-like operating systems.
+
+.SH FILES
+.TP
+.B *.lst:
+Input list file.
+.TP
+.B *.asm:
+Output assembly file.
+
+.SH EXIT STATUS
+.TP
+.B 0
+Normal exit.
+.TP
+.B 1
+Insufficient parameters.
+.TP
+.B 2
+Missing dependency.
+
+.SH HOMEPAGE
+.UR https://pozsarzs.github.io/corelab
+.UE
+.PP
+.UR https://github.com/pozsarzs/corelab
+.UE
+
+.SH SEE ALSO
+.PD 0
+.LP
+\fBclioport\fP(1)
+\fBclmemory\fP(1)
+\fBcorelab\fP(1)
+\fBbin2hex\fP(1)
+\fBhex2bin\fP(1)
+\fBlst2bin\fP(1)
+\fBopdict\fP(1)
+and files in document or \fI/usr/share/doc/corelab/\fP folder (or equivalent on
+your system). The source code documentation for plugins can only be found in the
+source package and in the help.
+
+.SH AUTHOR
+Pozsar Zsolt
+.MT pozsarzs@gmail.com
+.ME

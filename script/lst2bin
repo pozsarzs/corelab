@@ -23,7 +23,7 @@ chkdep() {
 }
 
 # check dependency
-chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
+chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit 2; fi
 # check arguments
 if [ "$#" -ne 2 ]
 then

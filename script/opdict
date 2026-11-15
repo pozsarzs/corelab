@@ -139,7 +139,7 @@ help()
   echo -e "$MSG02\n"
   printf "$MSG06"
   proctypes
-  exit 0
+  exit 1
 }
 
 # CHECK DEPENDENCY
@@ -155,7 +155,7 @@ chkdep() {
 
 # MAIN
 # check dependency
-chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
+chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit 2; fi
 if [ $# -eq 0 ]; then help
   elif [ $# -eq 1 ]; then prompt "$1"
     elif [ $# -ge 2 ]; then term "$1" "$2"

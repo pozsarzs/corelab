@@ -22,7 +22,7 @@ chkdep() {
 }
 
 # check dependency
-chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
+chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then exit 2; fi
 # check arguments
 if [ "$#" -ne 2 ]
 then

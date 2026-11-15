@@ -1,0 +1,62 @@
+.TH hex2bin 1 "2026 November 14" ""
+
+.SH NAME
+hex2bin  \- Convert Intel hex file to binary
+
+.SH SYNOPSIS
+.B hex2bin
+<input.hex> <output.bin>
+
+.SH COPYRIGHT
+CoreLAB is Copyright (C) 2026 by Pozsar Zsolt.
+
+.SH DESCRIPTION
+The hex2bin script converts an Intel hex format file to a binary file. It serves
+as a simple wrapper around the objcopy utility.
+.PP
+The script is useable on Unix-like operating systems.
+
+.SH FILES
+.TP
+.B *.bin:
+Output file where the converted binary data is saved.
+.TP
+.B *.hex:
+Input file containing Intel hex data.
+
+.SH EXIT STATUS
+.TP
+.B 0
+Normal exit.
+.TP
+.B 1
+Insufficient parameters.
+.TP
+.B 2
+Missing dependency.
+
+.SH HOMEPAGE
+.UR https://pozsarzs.github.io/corelab
+.UE
+.PP
+.UR https://github.com/pozsarzs/corelab
+.UE
+
+.SH SEE ALSO
+.PD 0
+.LP
+\fBclioport\fP(1)
+\fBclmemory\fP(1)
+\fBcorelab\fP(1)
+\fBbin2hex\fP(1)
+\fBlst2asm\fP(1)
+\fBlst2bin\fP(1)
+\fBopdict\fP(1)
+and files in document or \fI/usr/share/doc/corelab/\fP folder (or equivalent on
+your system). The source code documentation for plugins can only be found in the
+source package and in the help.
+
+.SH AUTHOR
+Pozsar Zsolt
+.MT pozsarzs@gmail.com
+.ME
