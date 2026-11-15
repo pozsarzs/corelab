@@ -6,40 +6,47 @@
 # | Convert list file to assembly                                              |
 # +----------------------------------------------------------------------------+
 
+# MESSAGES
+MSG01="\nERROR: The '%s' is required to use the script.\n"
+MSG02="Usage: $0 <input.lst> <output.asm>"
+MSG03="Done."
+
 # CHECK DEPENDENCY
 chkdep() {
   if command -v $1 >/dev/null 2>&1;
   then
     return 0
   else
-    echo -e "\nERROR: The '${1}' is required to use the script."
+    printf "$MSG01\n" $1
     return 127
   fi
 }
 
 # check dependency
 chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
-# convert file
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <input.lst> <output.asm>"
-    exit 1
+# check arguments
+if [ "$#" -ne 2 ]
+then
+  echo "$MSG02"
+  exit 1
 fi
+# convert file
 awk '
-{
+  {
     # remove address and opcodes
     sub(/^[0-9A-Fa-f]{4}([ \t]+[0-9A-Fa-f]{2})*[ \t]+/, "")
     # remove leading empty chars
     sub(/^[ \t]+/, "")
     if ($0 == "") {
-        print ""
-        next
+      print ""
+      next
     }
     # labels will be without indentation
     if ($1 ~ /:$/ || $2 ~ /^(EQU|DB|DW|DS|DEF)$/) {
-        print $0
+      print $0
     } else {
-        # others get one tabulator indentation
-        print "\t" $0
+      # others get one tabulator indentation
+      print "\t" $0
     }
-}' "$1" > "$2"
-echo "Done."
+  }' "$1" > "$2"
+echo "$MSG03"

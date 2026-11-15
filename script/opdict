@@ -6,17 +6,157 @@
 # | Opcode dictionary                                                          |
 # +----------------------------------------------------------------------------+
 
+DATADIR="/usr/local/share/corelab"
+
+# MESSAGES
+MSG01="\nERROR: The '%s' is required to use the script.\n"
+MSG02=$(cat << EOF
+Usage:
+  $0 <cpu>           - Start interactive prompt
+  $0 <cpu> <pattern> - Direct term and exit
+EOF
+)
+MSG03="ERROR: The '%s' processor is not in the database.\n"
+MSG04="Enter the opcode or mnemonic. (or ':type', ':l', ':q'.)\n"
+MSG05="Not found."
+MSG06="Available processor types: "
+
+# SHOW PROCESSOR TYPES
+proctypes()
+{
+  local list=("$DATADIR"/cpu_*.csv.gz)
+  
+  if [ -e "${list[0]}" ]
+  then
+    list=("${list[@]##*/cpu_}")
+    list=("${list[@]%.csv.gz}")
+    echo "${list[@]^^}"
+  fi
+}
+
+# SEARCH IN DATAFILES
+terminfiles()
+{
+  local file="$1"
+  local term="$2"
+
+  zcat "$file" | awk -v term="$term" -v not_found="$MSG05" -F';' '
+    BEGIN {
+            GREEN = "\033[1;32m"
+            RED   = "\033[1;31m"
+            BASE  = "\033[0m"
+          }
+    # set header 
+    NR == 1 {
+              header = sprintf("%-8s\t%-10s\t%4s\t%6s\t%-8s\n", $1, $2, $3, $4, $5)
+              header = GREEN header BASE
+              next 
+            }
+    {
+      if (index(toupper($1), toupper(term)) || index(toupper($2), toupper(term))) {
+        # print header in one time
+        if (!f) {
+          printf "%s", header
+          f=1
+        }
+        gsub(/ /, "", $4)
+        # print found lines
+        printf "%-8s\t%-10s\t%4s\t%6s\t%-8s\n", $1, $2, $3, $4, $5 
+      }
+    }
+    END {
+      if (!f) print RED not_found BASE
+    }'
+}
+
+# DIRECT SEARCH
+term()
+{
+  DATAFILE="$DATADIR/cpu_${1,,}.csv.gz"
+  if [ -f "$DATAFILE" ]
+  then
+    terminfiles "$DATAFILE" "$2"
+  else
+    printf "$MSG03" "$1"
+    exit 1
+  fi
+}
+
+# INTERACTIVE SEARCH
+prompt()
+{
+  CPU="${1,,}"
+  DATAFILE="$DATADIR/cpu_${CPU}.csv.gz"
+
+  # check datafile
+  if [ ! -f "$DATAFILE" ]
+  then
+    printf "$MSG03" "$CPU"
+    exit 1
+  fi
+
+  # get commands
+  printf "$MSG04"
+  CODE=""
+  while [ "$CODE" != ":q" ]
+  do
+    # prompt
+    read -p "${CPU^^}> " CODE
+    if [ "$CODE" == ":q" ]
+    then
+      # command :q - exit
+      break
+      elif [ "$CODE" == ":l" ]
+      then
+        # command :l - list types
+        if [ -d "$DATADIR" ]; then proctypes; fi
+        elif [[ "$CODE" == :* ]]
+        then
+          # command :type - change processor type
+          NEW_CPU="${CODE#:}"
+          NEW_DATAFILE="$DATADIR/cpu_${NEW_CPU,,}.csv.gz"
+          # check type
+          if [ -f "$NEW_DATAFILE" ]
+          then
+            CPU="${NEW_CPU,,}"
+            DATAFILE="$NEW_DATAFILE"
+          else
+            # no datafile
+            printf "$MSG03" "$NEW_CPU"
+          fi
+          elif [ -n "$CODE" ]
+          then
+            # term in datafile
+            terminfiles "$DATAFILE" "$CODE"
+    fi
+  done
+  exit 0
+}
+
+# PRINT USAGE
+help()
+{
+  echo -e "$MSG02\n"
+  printf "$MSG06"
+  proctypes
+  exit 0
+}
+
 # CHECK DEPENDENCY
 chkdep() {
   if command -v $1 >/dev/null 2>&1;
   then
     return 0
   else
-    echo -e "\nERROR: The '${1}' is required to use the script."
+    printf "$MSG01\n" $1
     return 127
   fi
 }
 
+# MAIN
 # check dependency
 chkdep awk; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
-# ...
+if [ $# -eq 0 ]; then help
+  elif [ $# -eq 1 ]; then prompt "$1"
+    elif [ $# -ge 2 ]; then term "$1" "$2"
+fi

@@ -6,23 +6,28 @@
 # | Convert Intel hexa file to binary                                          |
 # +----------------------------------------------------------------------------+
 
+# MESSAGES
+MSG01="\nERROR: The '%s' is required to use the script.\n"
+MSG02="Usage: $0 <input.hex> <output.bin>"
+
 # CHECK DEPENDENCY
 chkdep() {
   if command -v $1 >/dev/null 2>&1;
   then
     return 0
   else
-    echo -e "\nERROR: The '${1}' is required to use the script."
+    printf "$MSG01\n" $1
     return 127
   fi
 }
 
 # check dependency
 chkdep objcopy; TOBE=$?; if [ $TOBE -ne 0 ]; then exit; fi
-# convert file
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <input.hex> <output.bin>"
-    exit 1
+# check arguments
+if [ "$#" -ne 2 ]
+then
+  echo "$MSG02"
+  exit 1
 fi
 # convert file
 objcopy -I ihex -O binary "$1" "$2"
