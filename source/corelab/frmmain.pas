@@ -1233,7 +1233,7 @@ begin
           LHelpPath := CHMViewer;
         end;
       except
-        SysConsole1.WriteMessage(MSG02 + MSG18);
+        SysConsole1.WriteMessage(MSG02 + MSG18 + 'asassa');
       end;
     end else
     begin
@@ -5610,7 +5610,7 @@ end;
 // HELP/SHOW HELP ACTION =======================================================
 procedure TForm1.HHelpExecute(Sender: TObject);
 begin
-  ShowHelpOrErrorForKeyword('','html/index.html');
+  ShowHelpOrErrorForKeyword('','html/main.html');
 end;
 
 // HELP/SHOW ABOUT ACTION ------------------------------------------------------
@@ -5974,6 +5974,7 @@ var
   Error:   Boolean;
   i:       Integer;
 begin
+  FIgnoreHelp := false;
   // system bus
   FSysBus := TSysBus.Create;
   // command interpreters

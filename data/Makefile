@@ -7,8 +7,8 @@
 
 include ../Makefile.global
 
-title="data files   \t"
-removetargetdir=1
+title="data files    "
+removetargetdir=0
 sourcedir="."
 targetdir=$(datarootdir)/$(name)
 filemode=$(txtmode)

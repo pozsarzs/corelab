@@ -7,7 +7,7 @@
 
 include ../Makefile.global
 
-title="shell scripts\t"
+title="shell scripts "
 removetargetdir=0
 sourcedir="."
 targetdir=$(bindir)

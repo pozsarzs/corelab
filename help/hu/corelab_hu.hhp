@@ -2,7 +2,7 @@
 Compatibility=1.1 or later
 Compiled file=corelab_hu.chm
 Contents file=corelab_hu.hhc
-Default topic=index.html
+Default topic=main.html
 Display compile progress=Yes
 Error log file=corelab_hu.log
 Index file=corelab_hu.hhk
@@ -10,7 +10,7 @@ Language=0x40E Hungarian
 Title=CoreLAB Súgó
 
 [FILES]
-index.html
+main.html
 about.html
 applications/clioport.html
 applications/clmemory.html

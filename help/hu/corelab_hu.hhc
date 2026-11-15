@@ -7,7 +7,7 @@
 <UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Bevezetés és projektcélok">
-		<param name="Local" value="index.html">
+		<param name="Local" value="main.html">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="A CoreLAB bemutatása">
@@ -60,11 +60,11 @@
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CLMemory bővítménytesztelő alkalmazás">
-			<param name="Local" value="applications\clioport.html">
+			<param name="Local" value="applications\clmemory.html">
 		</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="CLProcessor bővítménytesztelő alkalmazás">
-			<param name="Local" value="applications\clioport.html">
+			<param name="Local" value="applications\clprocessor.html">
 			</OBJECT>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">

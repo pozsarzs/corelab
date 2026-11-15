@@ -2392,4 +2392,12 @@ object Form1: TForm1
     OnTimer = RefreshTimerTimer
     Left = 656
   end
+  object CHMHelpDatabase1: TCHMHelpDatabase
+    AutoRegister = False
+    Left = 720
+  end
+  object LHelpConnector1: TLHelpConnector
+    AutoRegister = False
+    Left = 752
+  end
 end

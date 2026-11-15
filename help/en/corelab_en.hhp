@@ -2,7 +2,7 @@
 Compatibility=1.1 or later
 Compiled file=corelab_en.chm
 Contents file=corelab_en.hhc
-Default topic=index.html
+Default topic=main.html
 Display compile progress=Yes
 Error log file=corelab_en.log
 Index file=corelab_en.hhk
@@ -10,7 +10,7 @@ Language=0x409 English (United States)
 Title=CoreLAB Help
 
 [FILES]
-index.html
+main.html
 about.html
 applications/clioport.html
 applications/clmemory.html
