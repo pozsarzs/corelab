@@ -83,27 +83,34 @@ end;
 
 // CREATING A CPU INSTANCE 
 constructor T4040CPU.Create;
+var
+  b: Byte;
 begin
   inherited Create;
   // CPU identity information
   FModname := '4040';
   FDescription := 'Intel 4040 microprocessor';
   // CPU features
-  FArchitecture := arHarvard;                            // Type of architecture
-  FAddressWidth := 13;                              // Address bus width in bits
-  FEndianness := enLittle;                                         // Byte order
-  FMaxMemAddress := $FF;                    // The highest (data) memory address
-  FMaxCodeAddress := $1FFF;                   // The highest code memory address
-  FMaxIOPortAddress := $000F;                    // The highest I/O port address
-  FHasSeparateIOBus := true;          // Indicates separate memory and I/O buses
-  FDefaultClockFreq := 500000; {500 kHz}             // original clock frequency
-  FTestPin := True;                                      // active low input pin
-  Reset;
+  FArchitecture := arHarvard;
+  FAddressWidth := 13;
+  FEndianness := enLittle;
+  FMaxMemAddress := $FF;
+  FMaxCodeAddress := $1FFF;
+  FMaxIOPortAddress := $000F;
+  FHasSeparateIOBus := true;
+  FDefaultClockFreq := 500000; {500 kHz}
+  FTestPin := True;
   // base sets
+  FRegCount := 24;
+  SetLength(FRegs.R, FRegCount);
   FStackSize := 7;
   SetLength(FStack.Regs, FStackSize);
-  SetLength(FRegs.R, 24);
   FPCMask := $1FFF;
+  // set pointers
+  SetLength(RegPointers, FRegCount + 1);
+  for b := 0 to FRegCount - 1 do RegPointers[b] := @FRegs.R[b];
+  RegPointers[FRegCount] := @FRegs.A;
+  Reset;
 end;
 
 // RESET CPU
@@ -114,6 +121,7 @@ begin
   inherited Reset;
   FROMBank := 0;
   FInterruptEnabled := False;
+  // reset pointers
   for b := 0 to 7 do RegPointers[b] := @FRegs.R[b];
 end;
 
@@ -140,13 +148,13 @@ begin
       if s[1] = 'R' then
       begin
         Delete(s, 1, 1);
-        for b := 0 to 23 do
+        for b := 0 to FRegCount - 1 do
           if StrToInt(s) = b then Result := FRegs.R[b];
       end;
     end;
 end;
 
-// SETTING REGISTERS
+// SETTING REGISTER
 procedure T4040CPU.SetRegister(const RegName: PChar; Value: Word);
 var
   b: Byte;
@@ -159,7 +167,7 @@ begin
       if s[1] = 'R' then
       begin
         Delete(s, 1, 1);
-        for b := 0 to 23 do
+        for b := 0 to FRegCount - 1 do
           if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
       end;
     end;

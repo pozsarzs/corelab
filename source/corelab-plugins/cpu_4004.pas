@@ -44,10 +44,11 @@ type
   T4004CPU = class(TCPU)
   private
   protected
-    RegPointers: array[0..16] of PByte;
+    RegPointers: array of PByte;
     FBus:        IMCS4Bus;                             // Connected external bus
     FFlags:      T4004Flags;
     FPCMask:     Word;
+    FRegCount:   Byte;
     FRegs:       T4004Registers;
     FROMBank:    Byte;                                               // ROM bank
     FStackSize:  Byte;
@@ -120,28 +121,40 @@ begin
   FHasSeparateIOBus := true;          // Indicates separate memory and I/O buses
   FDefaultClockFreq := 500000; {500 kHz}             // original clock frequency
   FTestPin := True;                                      // active low input pin
-  Reset;
   // base sets
+  FRegCount := 16; 
+  SetLength(FRegs.R, FRegCount);
   FStackSize := 3;
   SetLength(FStack.Regs, FStackSize);
-  SetLength(FRegs.R, 16);
-  // set register pointers
-  for b := 0 to 15 do RegPointers[b] := @FRegs.R[b];
-  RegPointers[16] := @FRegs.A;
   FPCMask := $0FFF;
   FROMBank := 0;
+  // set register pointers
+  SetLength(RegPointers, FRegCount + 1);
+  for b := 0 to FRegCount - 1 do RegPointers[b] := @FRegs.R[b];
+  RegPointers[FRegCount] := @FRegs.A;
+  // reset
+  Reset;
 end;
 
 // RESET CPU
 procedure T4004CPU.Reset;
+var
+  b: Byte;
 begin
   FRunning := false;
   FHalted := false;
   FTotalCycles := 0;
   FTotalInstructions := 0;
-  FillChar(FRegs, SizeOf(FRegs), 0);
-  FillChar(FStack, SizeOf(FStack), 0);
   FFlags.C := false;
+  // registers
+  for b := 0 to FRegCount - 1 do FRegs.R[b] := 0;
+  FRegs.A := 0;
+  FRegs.PC := 0;
+  FRegs.CCR := 0;
+  // stack
+  for b := 0 to FStackSize - 1 do FStack.Regs[b] := 0;
+  FStack.Pointer := 0;
+  // send event 
   EmitEvent(ceReset);
 end;
 
@@ -158,9 +171,16 @@ begin
   with AStream do
     try
       ReadBuffer(FEnabled, SizeOf(FEnabled));
-      ReadBuffer(FRegs, SizeOf(FRegs));
+      // registers and Carry flag
+      if FRegCount > 0 then ReadBuffer(FRegs.R[0], FRegCount * SizeOf(Byte));
+      ReadBuffer(FRegs.A, SizeOf(FRegs.A));
+      ReadBuffer(FRegs.PC, SizeOf(FRegs.PC));
+      ReadBuffer(FRegs.CCR, SizeOf(FRegs.CCR));
       ReadBuffer(FFlags, SizeOf(FFlags));
-      ReadBuffer(FStack, SizeOf(FStack));
+      // stack
+      ReadBuffer(FStack.Pointer, SizeOf(FStack.Pointer));
+      if FStackSize > 0 then ReadBuffer(FStack.Regs[0], FStackSize * SizeOf(Word));
+      // others
       ReadBuffer(FLastInstruction, SizeOf(FLastInstruction));
       ReadBuffer(FRunning, SizeOf(FRunning));
       ReadBuffer(FHalted, SizeOf(FHalted));
@@ -176,20 +196,28 @@ function T4004CPU.SaveState(AStream: TStream): Boolean;
 begin
   Result := false;
   with AStream do
-  begin
-    WriteBuffer(FEnabled, SizeOf(FEnabled));
-    WriteBuffer(FRegs, SizeOf(FRegs));
-    WriteBuffer(FFlags, SizeOf(FFlags));
-    WriteBuffer(FStack, SizeOf(FStack));
-    WriteBuffer(FLastInstruction, SizeOf(FLastInstruction));
-    WriteBuffer(FRunning, SizeOf(FRunning));
-    WriteBuffer(FHalted, SizeOf(FHalted));
-    WriteBuffer(FTotalCycles, SizeOf(FTotalCycles));
-    WriteBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
-    Result := true;
-  end;
+    try
+      WriteBuffer(FEnabled, SizeOf(FEnabled));
+      // registers and Carry flag
+      if FRegCount > 0 then WriteBuffer(FRegs.R[0], FRegCount * SizeOf(Byte));
+      WriteBuffer(FRegs.A, SizeOf(FRegs.A));
+      WriteBuffer(FRegs.PC, SizeOf(FRegs.PC));
+      WriteBuffer(FRegs.CCR, SizeOf(FRegs.CCR));
+      WriteBuffer(FFlags, SizeOf(FFlags));
+      // stack
+      WriteBuffer(FStack.Pointer, SizeOf(FStack.Pointer));
+      if FStackSize > 0 then WriteBuffer(FStack.Regs[0], FStackSize * SizeOf(Word));
+      // others      
+      WriteBuffer(FLastInstruction, SizeOf(FLastInstruction));
+      WriteBuffer(FRunning, SizeOf(FRunning));
+      WriteBuffer(FHalted, SizeOf(FHalted));
+      WriteBuffer(FTotalCycles, SizeOf(FTotalCycles));
+      WriteBuffer(FTotalInstructions, SizeOf(FTotalInstructions));
+      Result := true;
+    except
+      Result := false;
+    end;
 end;
-
 // EXECUTING AN INSTRUCTION
 procedure T4004CPU.Step;
 var
@@ -253,7 +281,7 @@ begin
       if s[1] = 'R' then
       begin
         Delete(s, 1, 1);
-        for b := 0 to 15 do
+        for b := 0 to FRegCount - 1 do
           if StrToInt(s) = b then Result := FRegs.R[b];
       end;
     end;
@@ -272,7 +300,7 @@ begin
       if s[1] = 'R' then
       begin
         Delete(s, 1, 1);
-        for b := 0 to 15 do
+        for b := 0 to FRegCount - 1 do
           if StrToInt(s) = b then FRegs.R[b] := Byte(Value) and $0F;
       end;
     end;

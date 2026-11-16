@@ -110,7 +110,7 @@ AC_SUBST(sysconfdir)
 AC_SUBST(unix2dos)
 AC_SUBST(vardir)
 AC_SUBST(version)
-AC_CONFIG_FILES([Makefile.global])
+AC_CONFIG_FILES(Makefile.global script/opdict)
 
 dnl -- PRINT SUMMARY AND NOTES --
 AC_OUTPUT
@@ -136,3 +136,4 @@ Notes:
   remove program                        make uninstall
   create CHM help file                  make createhelp
 "
+chmod 755 script/opdict

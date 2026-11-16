@@ -2730,7 +2730,7 @@ if (test "$lhelp" = "") || (test $lhelp != "no"); then lhelp="yes"; fi
 
 
 
-ac_config_files="$ac_config_files Makefile.global"
+ac_config_files="$ac_config_files Makefile.global script/opdict"
 
 
 cat >confcache <<\_ACEOF
@@ -3434,6 +3434,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile.global") CONFIG_FILES="$CONFIG_FILES Makefile.global" ;;
+    "script/opdict") CONFIG_FILES="$CONFIG_FILES script/opdict" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -3905,4 +3906,5 @@ Notes:
   remove program                        make uninstall
   create CHM help file                  make createhelp
 "
+chmod 755 script/opdict
 

@@ -6,7 +6,11 @@
 # | Opcode dictionary                                                          |
 # +----------------------------------------------------------------------------+
 
-DATADIR="/usr/local/share/corelab"
+prefix=@prefix@
+DATADIR="@datarootdir@/corelab"
+DATADIR="@datarootdir@/corelab"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -d "$SCRIPT_DIR/data" ]; then DATADIR="$SCRIPT_DIR/data"; fi
 
 # MESSAGES
 MSG01="\nERROR: The '%s' is required to use the script.\n"

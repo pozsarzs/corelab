@@ -82,7 +82,7 @@
            SourceRegIndex := (AOC shr 1) and $07;
            DestRegIndex := SourceRegIndex * 2;
            FLastInstruction.Mnemonic := 'FIN ' + IntToHex(SourceRegIndex, 1);
-           b1 := FBus.ReadROM((FRegs.PC and FPCMask and $FF00) or (Fregs.R[0] shl 4) or (Fregs.R[1] and $0F));
+           b1 := FBus.ReadROM((FRegs.PC and FPCMask and $FF00) or (RegPointers[0]^ shl 4) or (RegPointers[1]^ and $0F));
            RegPointers[DestRegIndex]^ := b1 shr 4;
            RegPointers[DestRegIndex + 1]^ := b1 and $0F;
            FLastInstruction.Cycles := 16;

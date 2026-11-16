@@ -83,10 +83,10 @@
     // SB1
     $0B: begin
            FLastInstruction.Mnemonic := 'SB1';
-           for b1 := 17 to 24 do RegPointers[b1 - 17] := @FRegs.R[b1 -1];
+           for b1 := 0 to 7 do RegPointers[b1] := @FRegs.R[16 + b1];
            FLastInstruction.Cycles := 8;
          end;
-     // DIN
+    // DIN
     $0C: begin
            FLastInstruction.Mnemonic := 'DIN';
            FInterruptEnabled := False;
