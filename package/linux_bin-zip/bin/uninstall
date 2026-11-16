@@ -15,7 +15,8 @@ TARGET_BASE_DIR="/usr/local"
 TARGET_DIRECTORIES="$TARGET_BASE_DIR/bin \
                     $TARGET_BASE_DIR/share/applications \
                     $TARGET_BASE_DIR/share/man/man1"
-EXECUTABLES="clioport clmemory clprocessor corelab lhelp"
+EXECUTABLES="clioport clmemory clprocessor corelab lhelp hex2bin bin2hex \
+             lst2asm lst2bin opdict"
 ICON_SIZES="16x16 24x24 32x32 48x48 64x64 scalable"
 ICON_CATEGORIES="apps mimetypes"
 ICON_TARGET_BASE="$TARGET_BASE_DIR/share/icons/hicolor"

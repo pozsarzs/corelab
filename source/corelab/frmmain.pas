@@ -1200,14 +1200,14 @@ begin
   // search help file
   {$IFDEF UNIX}
     CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm',
-      './:./help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
+      GetExeDir +'help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
     if Length(CHMFile) = 0 then
       CHMFile := FileSearch('corelab_en.chm',
-        './:./help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
+        GetExeDir +'help/:/usr/share/corelab/help/:/usr/local/share/corelab/help/');
   {$ELSE}
-    CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm','.\;.\help\');
+    CHMFile := FileSearch('corelab_' + FSystemLanguage + '.chm', GetExeDir + 'help\');
     if Length(CHMFile) = 0 then
-      CHMFile := FileSearch('corelab_en.chm','.\;.\help\');
+      CHMFile := FileSearch('corelab_en.chm', GetExeDir + 'help\');
   {$ENDIF}
   // - search LHelp application
   {$IFDEF UNIX}

@@ -28,10 +28,16 @@ gtk-update-icon-cache -t %{_datadir}/icons
 %{_bindir}/clprocessor
 %{_bindir}/corelab
 %{_bindir}/lhelp
+%{_bindir}/bin2hex
+%{_bindir}/hex2bin
+%{_bindir}/lst2asm
+%{_bindir}/lst2bin
+%{_bindir}/opdict
 %{_datadir}/applications/clioport.desktop
 %{_datadir}/applications/clmemory.desktop
 %{_datadir}/applications/clprocessor.desktop
 %{_datadir}/applications/corelab.desktop
+%{_datadir}/corelab/*.csv.gz
 %{_datadir}/corelab/help/*.chm
 %{_datadir}/corelab/syntax/*
 %{_datadir}/icons/hicolor/16x16/apps/corelab-green.png
@@ -93,4 +99,9 @@ gtk-update-icon-cache -t %{_datadir}/icons
 %{_mandir}/man1/clmemory.1*
 %{_mandir}/man1/clprocessor.1*
 %{_mandir}/man1/corelab.1*
+%{_mandir}/man1/bin2hex.1*
+%{_mandir}/man1/hex2bin.1*
+%{_mandir}/man1/lst2asm.1*
+%{_mandir}/man1/lst2bin.1*
+%{_mandir}/man1/opdict.1*
 %{_prefix}/lib/corelab/*
