@@ -41,3 +41,6 @@ do
   echo '</html>' >> $x.html
   rm -f output.html temp.tmp
 done
+
+# rename files
+for f in *.md.html; do mv "$f" "${f%.md.html}.html"; done

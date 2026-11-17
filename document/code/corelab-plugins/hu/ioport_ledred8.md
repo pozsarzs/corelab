@@ -6,7 +6,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TLEDRed8 a TGIOPort osztályból, a ioport_ledred8 modul
 
-This is an output with red LEDs, each bit controls a specific LED within a Byte.
+Ez egy piros LED-ekből álló kimenet; minden bit egy adott LED-et vezérel a bájton belül.
 
 ### I/O-működés
 

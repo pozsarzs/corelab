@@ -6,7 +6,7 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
 ## TLEDGreen8 a TGIOPort osztályból, a ioport_ledgreen8 modul
 
-This is an output with green LEDs, each bit controls a specific LED within a Byte.
+Ez egy zöld LED-ekből álló kimenet; minden bit egy adott LED-et vezérel a bájton belül.
 
 ### I/O-működés
 

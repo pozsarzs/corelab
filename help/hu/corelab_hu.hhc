@@ -215,6 +215,10 @@
 			<param name="Local" value="plugins\ioport_button16mux.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TButton4 osztály a TGIOPort osztályból, a ioport_button4 modulban">
+			<param name="Local" value="plugins\ioport_button4.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TButton8 osztály a TGIOPort osztályból, a ioport_button8 modulban">
 			<param name="Local" value="plugins\ioport_button8.html">
 			</OBJECT>
@@ -263,6 +267,10 @@
 			<param name="Local" value="plugins\ioport_ledgreen64mux.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDGreen4 osztály a TGIOPort osztályból, a ioport_ledgreen4 modulban">
+			<param name="Local" value="plugins\ioport_ledgreen4.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDGreen8 osztály a TGIOPort osztályból, a ioport_ledgreen8 modulban">
 			<param name="Local" value="plugins\ioport_ledgreen8.html">
 			</OBJECT>
@@ -275,6 +283,10 @@
 			<param name="Local" value="plugins\ioport_ledred64mux.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDRed4 osztály a TGIOPort osztályból, a ioport_ledred4 modulban">
+			<param name="Local" value="plugins\ioport_ledred4.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDRed8 osztály a TGIOPort osztályból, a ioport_ledred8 modulban">
 			<param name="Local" value="plugins\ioport_ledred8.html">
 			</OBJECT>
@@ -285,6 +297,10 @@
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDYellow64MUX osztály a TGIOPort osztályból, a ioport_ledyellow64mux modulban">
 			<param name="Local" value="plugins\ioport_ledyellow64mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDYellow4 osztály a TGIOPort osztályból, a ioport_ledyellow4 modulban">
+			<param name="Local" value="plugins\ioport_ledyellow4.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDYellow8 osztály a TGIOPort osztályból, a ioport_ledyellow8 modulban">
@@ -308,6 +324,10 @@
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TSwitch16MUX osztály a TGIOPort osztályból, a ioport_switch16mux modulban">
 			<param name="Local" value="plugins\ioport_switch16mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TSwitch4 osztály a TGIOPort osztályból, a ioport_switch4 modulban">
+			<param name="Local" value="plugins\ioport_switch4.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TSwitch8 osztály a TGIOPort osztályból, a ioport_switch8 modulban">

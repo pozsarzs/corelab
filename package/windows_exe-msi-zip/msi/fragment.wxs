@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="dirC42DC0548C94C305547E0380F69CAE8A" Name=".">
+      <Directory Id="dir46D258F03C62398BEC82FEB22AF39571" Name=".">
         <Component Id="cmp6E0AD2B047414107E8CE2F294FA40D21" Guid="*">
           <File Id="fil066E06FF4A060779D1810FE0E758C24D" KeyPath="yes" Source="$(var.SourceDir)/LICENCE"/>
         </Component>
@@ -10,7 +10,7 @@
           <File Id="filC3E090343174C840CF48B8DD8660037F" KeyPath="yes" Source="$(var.SourceDir)/clmemory.exe"/>
         </Component>
       </Directory>
-      <Directory Id="dirF072B8316C093681F0003D57B04CD942" Name="message">
+      <Directory Id="dir64173E010FF24A244589C9F98EBF60CC" Name="message">
         <Component Id="cmpB3FFD198816EE6693E0139FAA5FA762C" Guid="*">
           <File Id="fil3021D2BA1496E083803DE9FF4C165632" KeyPath="yes" Source="$(var.SourceDir)/message/clioport.pot"/>
         </Component>
@@ -23,7 +23,7 @@
         <Component Id="cmp6370A10D5B0E82806DE4B7B79B097EF6" Guid="*">
           <File Id="fil16CF400EF4B80C2ED0F37875A2B3020A" KeyPath="yes" Source="$(var.SourceDir)/message/lhelp.pot"/>
         </Component>
-        <Directory Id="dir9DD1CF7818F4931E331113C0FD5FB71B" Name="hu">
+        <Directory Id="dirC70A499A5A15CD016A32ABE323668C1C" Name="hu">
           <Component Id="cmpA83233DB65EF603218DBC53EFC77015E" Guid="*">
             <File Id="filC77265FA686CCA4F5DFF97191F52B63E" KeyPath="yes" Source="$(var.SourceDir)/message/hu/clioport.mo"/>
           </Component>
@@ -44,12 +44,12 @@
           <File Id="fil1F2AF163CEDEC819CE721D97C0A8F470" KeyPath="yes" Source="$(var.SourceDir)/message/corelab.pot"/>
         </Component>
       </Directory>
-      <Directory Id="dir00F05CF9AC6CC54C32FC647A799E0797" Name=".">
+      <Directory Id="dir755BA0CE6805A92BD7B51E4341B6C9D7" Name=".">
         <Component Id="cmpFC5B4BC787C2A91CF66E684344771BC9" Guid="*">
           <File Id="fil096DC3312A1683D04CBD3A072456DBC5" KeyPath="yes" Source="$(var.SourceDir)/clioport.exe"/>
         </Component>
       </Directory>
-      <Directory Id="dirD956AAEFF4DFE34F9D1BCCE05A71ED84" Name="help">
+      <Directory Id="dir049253C390F185688668076020904B5A" Name="help">
         <Component Id="cmp282E9E4D3775E8C92EB8D536A3EBF0DB" Guid="*">
           <File Id="fil465D13601B312F75E259BFB79877904D" KeyPath="yes" Source="$(var.SourceDir)/help/corelab_en.chm"/>
         </Component>
@@ -57,11 +57,11 @@
           <File Id="fil4F8674570A00AC7AFA9709209DED3E27" KeyPath="yes" Source="$(var.SourceDir)/help/corelab_hu.chm"/>
         </Component>
       </Directory>
-      <Directory Id="dir56E0FF2734C1BCE5979CB9C46AB6AA98" Name="document">
+      <Directory Id="dir996A3E0CFCFA06E93F9FD7191B81FAA8" Name="document">
         <Component Id="cmpEE442633C7098415CD7AD25FBFE70C50" Guid="*">
           <File Id="filD84583CAE12E3BA6CDA111E5EB41109A" KeyPath="yes" Source="$(var.SourceDir)/document/copyright"/>
         </Component>
-        <Directory Id="dir57D645077FD5D3FFC2327452BB6B0A6B" Name="inpout32">
+        <Directory Id="dir996A4414BD822A1A1AC6920AB4CBF528" Name="inpout32">
           <Component Id="cmp372264E041956305FED34AED6779C8DC" Guid="*">
             <File Id="filBC1A1F6594E03BCA1049BD0E31C772D3" KeyPath="yes" Source="$(var.SourceDir)/document/inpout32/DLPortIO.txt"/>
           </Component>
@@ -88,7 +88,7 @@
           <File Id="fil34464C2FD633588E755F8F611EA24F61" KeyPath="yes" Source="$(var.SourceDir)/document/VERSION"/>
         </Component>
       </Directory>
-      <Directory Id="dir3F9B71DE0A3949A5279A2BC42B1C1D11" Name="syntax">
+      <Directory Id="dirD3779F8150F7963E647C5F4061CCF38A" Name="syntax">
         <Component Id="cmpD0E8AA572045E5E69056DAE48F12E689" Guid="*">
           <File Id="fil65A6F25AFFA09641B2D08FF87BD921B9" KeyPath="yes" Source="$(var.SourceDir)/syntax/scripts.vim"/>
         </Component>
@@ -120,7 +120,7 @@
           <File Id="fil972A2D38DF468AD83CDFD874AE2C2878" KeyPath="yes" Source="$(var.SourceDir)/syntax/Syntax"/>
         </Component>
       </Directory>
-      <Directory Id="dirB129A0CFE0D103FBAE2D7B2AB471F3D4" Name="library">
+      <Directory Id="dirB765B1707B1E14DFE630686F249437B3" Name="library">
         <Component Id="cmp41551347F1F725B393B1D409552A6D92" Guid="*">
           <File Id="fil785D080AC3323D01DCC926106063471E" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred512mux.dll"/>
         </Component>
@@ -148,17 +148,29 @@
         <Component Id="cmpAF4324DA66C78C4309B4AE0474DD688E" Guid="*">
           <File Id="filCC60FC7496C530F2B96BE38EB5BBCC19" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_realport.dll"/>
         </Component>
+        <Component Id="cmpA0613B71030A0A8DA5D85A942FCFDD5E" Guid="*">
+          <File Id="fil33DD39720FC6452CFA5EE4D033AE5954" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_button4.dll"/>
+        </Component>
         <Component Id="cmp77EA4601A5F60E289B877B47332EA91B" Guid="*">
           <File Id="fil915FD519667423CE016AE3A496672172" KeyPath="yes" Source="$(var.SourceDir)/library/cpu_8080.dll"/>
         </Component>
         <Component Id="cmp9514CD2DF7E88FC2DA49F6BE4D4D1191" Guid="*">
           <File Id="fil463C29F02F3A7F6F4C64A833E6F4224E" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp47segmux.dll"/>
         </Component>
+        <Component Id="cmp52D74BBD216F167E91528B06DAAF6208" Guid="*">
+          <File Id="filBB0B1ECF7DBD6C04EAB16FFD0D24A94D" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledyellow4.dll"/>
+        </Component>
         <Component Id="cmpF197FFF7CECC7350A2D5FD8EF8CC571B" Guid="*">
           <File Id="filF8C7918353BD7CB4C2A577ED0F741D35" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp8hexmuxbcd.dll"/>
         </Component>
         <Component Id="cmpA0B16643BAB4008746D83FFA30ED2244" Guid="*">
           <File Id="fil40B503E0856A5AC4729D42A33D080B7A" KeyPath="yes" Source="$(var.SourceDir)/library/cpu_z80.dll"/>
+        </Component>
+        <Component Id="cmp4BFD9260124CBE1FEC6D8B30C437C072" Guid="*">
+          <File Id="fil0A227C237E411A763D1EB5E3B40A77FF" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledgreen4.dll"/>
+        </Component>
+        <Component Id="cmp359661CD311FDC8203CD6990E0CC7DFA" Guid="*">
+          <File Id="filFCE1605CBCE552EEB8756C4F1886B127" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred4.dll"/>
         </Component>
         <Component Id="cmp7322FE459868A79999CB64C3BC4C61D3" Guid="*">
           <File Id="fil2D2D11681F135453FC2F783D2B70CB50" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_switch8.dll"/>
@@ -202,6 +214,9 @@
         <Component Id="cmp548E2A36ACC8A861BE18CA73EBFDA821" Guid="*">
           <File Id="fil0F352E79D0926F11E4314F8AC2DE07B1" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_disp27segmux.dll"/>
         </Component>
+        <Component Id="cmpB58F564342A5C4A536A5DC84EBA6B2AE" Guid="*">
+          <File Id="fil4667C8FB1B90201D959E7CE36D6C08B2" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_switch4.dll"/>
+        </Component>
         <Component Id="cmp81BE181967D332A144918B453E33A9C3" Guid="*">
           <File Id="fil8EA6A2C1F5E6AEA7299778CAA3A919C3" KeyPath="yes" Source="$(var.SourceDir)/library/ioport_ledred8.dll"/>
         </Component>
@@ -239,7 +254,7 @@
           <File Id="fil977336B26459C536E692F378C0B61E15" KeyPath="yes" Source="$(var.SourceDir)/library/cpu_4040.dll"/>
         </Component>
       </Directory>
-      <Directory Id="dirBC205CB3CBFEE7E3A163421649DB2035" Name=".">
+      <Directory Id="dirCE7A95F3B6F8CDED01DC910925E332ED" Name=".">
         <Component Id="cmp2B2AC0F4FD4FBDF45E5051BA21EB590E" Guid="*">
           <File Id="fil4AC183A9A4E363A38CDE05F7E5D6F220" KeyPath="yes" Source="$(var.SourceDir)/lhelp.exe"/>
         </Component>
@@ -300,10 +315,14 @@
       <ComponentRef Id="cmp25604A181FC435C1430128178D1F7BC0"/>
       <ComponentRef Id="cmp05E39FB174670155616A5AEC2DFD8BFC"/>
       <ComponentRef Id="cmpAF4324DA66C78C4309B4AE0474DD688E"/>
+      <ComponentRef Id="cmpA0613B71030A0A8DA5D85A942FCFDD5E"/>
       <ComponentRef Id="cmp77EA4601A5F60E289B877B47332EA91B"/>
       <ComponentRef Id="cmp9514CD2DF7E88FC2DA49F6BE4D4D1191"/>
+      <ComponentRef Id="cmp52D74BBD216F167E91528B06DAAF6208"/>
       <ComponentRef Id="cmpF197FFF7CECC7350A2D5FD8EF8CC571B"/>
       <ComponentRef Id="cmpA0B16643BAB4008746D83FFA30ED2244"/>
+      <ComponentRef Id="cmp4BFD9260124CBE1FEC6D8B30C437C072"/>
+      <ComponentRef Id="cmp359661CD311FDC8203CD6990E0CC7DFA"/>
       <ComponentRef Id="cmp7322FE459868A79999CB64C3BC4C61D3"/>
       <ComponentRef Id="cmp204F41E2D383D4D61F45322699D2F1FC"/>
       <ComponentRef Id="cmpE1743A6099E990631CEF8C56AEBC14E4"/>
@@ -318,6 +337,7 @@
       <ComponentRef Id="cmpD193E84B0ED4CA14D5E984A20181B019"/>
       <ComponentRef Id="cmp32F7519789A04AA6FE377EB2AAD73C86"/>
       <ComponentRef Id="cmp548E2A36ACC8A861BE18CA73EBFDA821"/>
+      <ComponentRef Id="cmpB58F564342A5C4A536A5DC84EBA6B2AE"/>
       <ComponentRef Id="cmp81BE181967D332A144918B453E33A9C3"/>
       <ComponentRef Id="cmp7088B66FEC207E0906DBC7E947406E32"/>
       <ComponentRef Id="cmpF245A1C3A405C3CEC5BBEA9EA07E368B"/>

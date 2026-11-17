@@ -215,6 +215,10 @@
 			<param name="Local" value="plugins\ioport_button16mux.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TButton4 from TGIOPort class in ioport_button4 unit">
+			<param name="Local" value="plugins\ioport_button4.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TButton8 from TGIOPort class in ioport_button8 unit">
 			<param name="Local" value="plugins\ioport_button8.html">
 			</OBJECT>
@@ -263,6 +267,10 @@
 			<param name="Local" value="plugins\ioport_ledgreen64mux.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDGreen4 from TGIOPort class in ioport_ledgreen4 unit">
+			<param name="Local" value="plugins\ioport_ledgreen4.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDGreen8 from TGIOPort class in ioport_ledgreen8 unit">
 			<param name="Local" value="plugins\ioport_ledgreen8.html">
 			</OBJECT>
@@ -275,6 +283,10 @@
 			<param name="Local" value="plugins\ioport_ledred64mux.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDRed4 from TGIOPort class in ioport_ledred4 unit">
+			<param name="Local" value="plugins\ioport_ledred4.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDRed8 from TGIOPort class in ioport_ledred8 unit">
 			<param name="Local" value="plugins\ioport_ledred8.html">
 			</OBJECT>
@@ -285,6 +297,10 @@
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDYellow64MUX from TGIOPort class in ioport_ledyellow64mux unit">
 			<param name="Local" value="plugins\ioport_ledyellow64mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TLEDYellow4 from TGIOPort class in ioport_ledyellow4 unit">
+			<param name="Local" value="plugins\ioport_ledyellow4.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TLEDYellow8 from TGIOPort class in ioport_ledyellow8 unit">
@@ -308,6 +324,10 @@
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TSwitch16MUX from TGIOPort class in ioport_switch16mux unit">
 			<param name="Local" value="plugins\ioport_switch16mux.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="TSwitch4 from TGIOPort class in ioport_switch4 unit">
+			<param name="Local" value="plugins\ioport_switch4.html">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="TSwitch8 from TGIOPort class in ioport_switch8 unit">

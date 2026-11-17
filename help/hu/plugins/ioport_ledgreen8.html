@@ -10,10 +10,10 @@
 <h2
 id="tledgreen8-a-tgioport-osztályból-a-ioport_ledgreen8-modul">TLEDGreen8
 a TGIOPort osztályból, a ioport_ledgreen8 modul</h2>
-<p>This is an output with green LEDs, each bit controls a specific LED
-within a Byte.</p>
+<p>Ez egy zöld LED-ekből álló kimenet; minden bit egy adott LED-et
+vezérel a bájton belül.</p>
 <h3 id="io-működés">I/O-működés</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
 <col style="width: 2%" />
 <col style="width: 97%" />
@@ -27,9 +27,10 @@ within a Byte.</p>
 <tbody>
 <tr class="odd">
 <td>0</td>
-<td>Each input bit controls the corresponding LED;
-<code>FDataInNegation</code> may invert the input. Read returns
-<code>00h</code> while enabled and <code>FFh</code> while disabled.</td>
+<td>Minden bemeneti bit a megfelelő LED-et vezérli; az
+<code>FDataInNegation</code> megfordíthatja a bemenetet. Olvasáskor
+engedélyezett állapotban <code>00h</code>, letiltott állapotban
+<code>FFh</code> értéket ad vissza.</td>
 </tr>
 </tbody>
 </table>
@@ -47,18 +48,18 @@ within a Byte.</p>
 <li><em>Wr</em>: jelentése: írás.</li>
 </ul>
 <h3 id="privát-mezők">Privát mezők</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 14%" />
-<col style="width: 7%" />
-<col style="width: 64%" />
-<col style="width: 12%" />
+<col style="width: 10%" />
+<col style="width: 6%" />
+<col style="width: 71%" />
+<col style="width: 11%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>név</th>
 <th>típus</th>
-<th>description</th>
+<th>leírás</th>
 <th>alapérték</th>
 </tr>
 </thead>
@@ -72,18 +73,18 @@ within a Byte.</p>
 </tbody>
 </table>
 <h3 id="védett-mezők">Védett mezők</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 13%" />
-<col style="width: 33%" />
-<col style="width: 43%" />
+<col style="width: 10%" />
+<col style="width: 26%" />
+<col style="width: 54%" />
 <col style="width: 8%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>név</th>
 <th>típus</th>
-<th>description</th>
+<th>leírás</th>
 <th>alapérték</th>
 </tr>
 </thead>
@@ -109,11 +110,11 @@ within a Byte.</p>
 </tbody>
 </table>
 <h3 id="védett-metódusok">Védett metódusok</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 45%" />
-<col style="width: 5%" />
-<col style="width: 48%" />
+<col style="width: 46%" />
+<col style="width: 6%" />
+<col style="width: 47%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -131,11 +132,11 @@ within a Byte.</p>
 </tbody>
 </table>
 <h3 id="nyilvános-metódusok">Nyilvános metódusok</h3>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 50%" />
+<col style="width: 46%" />
 <col style="width: 4%" />
-<col style="width: 45%" />
+<col style="width: 48%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -194,11 +195,11 @@ eljárások</h3>
 <li>Windows alatt: <code>stdcall</code>,</li>
 <li>Unix-szerű operációs rendszereken: <code>cdecl</code>.</li>
 </ul>
-<table>
+<table border="1" cellspacing="0" cellpadding="4">
 <colgroup>
-<col style="width: 56%" />
-<col style="width: 12%" />
-<col style="width: 30%" />
+<col style="width: 52%" />
+<col style="width: 11%" />
+<col style="width: 36%" />
 </colgroup>
 <thead>
 <tr class="header">

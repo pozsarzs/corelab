@@ -262,6 +262,10 @@
 	<param name="Local" value="plugins/ioport_button16mux.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="TButton4">
+	<param name="Local" value="plugins/ioport_button4.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TButton8">
 	<param name="Local" value="plugins/ioport_button8.html">
 	</OBJECT>
@@ -310,6 +314,10 @@
 	<param name="Local" value="plugins/ioport_ledgreen64mux.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="TLEDGreen4">
+	<param name="Local" value="plugins/ioport_ledgreen4.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TLEDGreen8">
 	<param name="Local" value="plugins/ioport_ledgreen8.html">
 	</OBJECT>
@@ -322,6 +330,10 @@
 	<param name="Local" value="plugins/ioport_ledred64mux.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="TLEDRed4">
+	<param name="Local" value="plugins/ioport_ledred4.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TLEDRed8">
 	<param name="Local" value="plugins/ioport_ledred8.html">
 	</OBJECT>
@@ -332,6 +344,10 @@
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TLEDYellow64MUX">
 	<param name="Local" value="plugins/ioport_ledyellow64mux.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="TLEDYellow4">
+	<param name="Local" value="plugins/ioport_ledyellow4.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TLEDYellow8">
@@ -348,6 +364,10 @@
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TStandardPort">
 	<param name="Local" value="plugins/ioport_standard.html">
+	</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+	<param name="Name" value="TSwitch4">
+	<param name="Local" value="plugins/ioport_switch4.html">
 	</OBJECT>
 <LI> <OBJECT type="text/sitemap">
 	<param name="Name" value="TSwitch8">

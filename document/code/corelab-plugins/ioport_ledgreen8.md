@@ -1,83 +1,83 @@
 # CoreLAB
 
-**Modular Processor Simulation Framework**
+**Moduláris processzorszimulációs keretrendszer**
 
 Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 
-## TLEDGreen8 from TGIOPort class in ioport_ledgreen8 unit
+## TLEDGreen8 a TGIOPort osztályból, a ioport_ledgreen8 modul
 
-This is an output with green LEDs, each bit controls a specific LED within a Byte.
+Ez egy zöld LED-ekből álló kimenet; minden bit egy adott LED-et vezérel a bájton belül.
 
-### I/O behaviour
+### I/O-működés
 
-|port|description                                                                                                                                      |
-|----|-------------------------------------------------------------------------------------------------------------------------------------------------|
-|0   |Each input bit controls the corresponding LED; `FDataInNegation` may invert the input. Read returns `00h` while enabled and `FFh` while disabled.|
+|port|leírás                                                                                                                                                                                   |
+|----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|0   |Minden bemeneti bit a megfelelő LED-et vezérli; az `FDataInNegation` megfordíthatja a bemenetet. Olvasáskor engedélyezett állapotban `00h`, letiltott állapotban `FFh` értéket ad vissza.|
 
-### Abbreviations
+### Rövidítések
 
-- _Ab_: means 'abstract',
-- _Co_: means 'constant',
-- _Il_: means 'inline',
-- _Ol_: means 'overload',
-- _Or_: means 'override',
-- _Re_: means 'read',
-- _Ri_: means 'reintroduce',
-- _St_: means 'static',
-- _Vi_: means 'virtual',
-- _Wr_: means 'write'.
+- _Ab_: jelentése: absztrakt,
+- _Co_: jelentése: konstans,
+- _Il_: jelentése: inline,
+- _Ol_: jelentése: túlterhelés,
+- _Or_: jelentése: felüldefiniálás,
+- _Re_: jelentése: olvasás,
+- _Ri_: jelentése: újradefiniálás,
+- _St_: jelentése: statikus,
+- _Vi_: jelentése: virtuális,
+- _Wr_: jelentése: írás.
 
-### Private fields
+### Privát mezők
 
-|name    |type|description                        |default|
-|--------|----|-----------------------------------|-------|
-|`FValue`|Byte|Device-specific state or GUI object|0      |
+|név     |típus|leírás                                                  |alapérték|
+|--------|-----|--------------------------------------------------------|---------|
+|`FValue`|Byte |Eszközspecifikus állapot vagy grafikus felületi objektum|0        |
 
-### Protected fields
+### Védett mezők
 
-|name       |type                       |description                        |default|
-|-----------|---------------------------|-----------------------------------|-------|
-|`FPanel`   |TPanel                     |Device-specific state or GUI object|nil    |
-|`FPaintBox`|TPaintBox                  |Device-specific state or GUI object|nil    |
-|`FLED`     |array[0..MAXX] of TLEDRound|Device-specific state or GUI object|       |
+|név        |típus                      |leírás                                                  |alapérték|
+|-----------|---------------------------|--------------------------------------------------------|---------|
+|`FPanel`   |TPanel                     |Eszközspecifikus állapot vagy grafikus felületi objektum|nil      |
+|`FPaintBox`|TPaintBox                  |Eszközspecifikus állapot vagy grafikus felületi objektum|nil      |
+|`FLED`     |array[0..MAXX] of TLEDRound|Eszközspecifikus állapot vagy grafikus felületi objektum|         |
 
-### Protected methods
+### Védett metódusok
 
-|name                                       |flags|description                                   |
-|-------------------------------------------|-----|----------------------------------------------|
-|`procedure PaintBoxPaint(Sender: TObject);`|     |Paints the device representation on the panel.|
+|név                                        |jelzők|leírás                                      |
+|-------------------------------------------|------|--------------------------------------------|
+|`procedure PaintBoxPaint(Sender: TObject);`|      |Megrajzolja az eszköz ábrázolását a panelen.|
 
-### Public methods
+### Nyilvános metódusok
 
-|name                                                       |flags|description                                          |
-|-----------------------------------------------------------|-----|-----------------------------------------------------|
-|`constructor Create; override;`                            |Or   |Initialises the object and its device-specific state.|
-|`destructor Destroy; override;`                            |Or   |Releases the object and its allocated resources.     |
-|`procedure Reset; override;`                               |Or   |Resets the device state.                             |
-|`function ReadPort(APort: Word): Byte; override;`          |Or   |Reads the selected virtual I/O port.                 |
-|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or   |Writes the selected virtual I/O port.                |
-|`function LoadState(AStream: TStream): Boolean; override;` |Or   |Loads the device state from a stream.                |
-|`function SaveState(AStream: TStream): Boolean; override;` |Or   |Saves the device state to a stream.                  |
-|`procedure CreatePanel; override;`                         |Or   |Creates the graphical user-interface panel.          |
+|név                                                        |jelzők|leírás                                                       |
+|-----------------------------------------------------------|------|-------------------------------------------------------------|
+|`constructor Create; override;`                            |Or    |Inicializálja az objektumot és az eszközspecifikus állapotát.|
+|`destructor Destroy; override;`                            |Or    |Felszabadítja az objektumot és a lefoglalt erőforrásait.     |
+|`procedure Reset; override;`                               |Or    |Alaphelyzetbe állítja az eszköz állapotát.                   |
+|`function ReadPort(APort: Word): Byte; override;`          |Or    |Kiolvassa a kiválasztott virtuális I/O-port értékét.         |
+|`procedure WritePort(APort: Word; AValue: Byte); override;`|Or    |Kiírja a kiválasztott virtuális I/O-port értékét.            |
+|`function LoadState(AStream: TStream): Boolean; override;` |Or    |Betölti az eszköz állapotát egy adatfolyamból.               |
+|`function SaveState(AStream: TStream): Boolean; override;` |Or    |Elmenti az eszköz állapotát egy adatfolyamba.                |
+|`procedure CreatePanel; override;`                         |Or    |Létrehozza a grafikus felhasználói felület paneljét.         |
 
-### Exported functions and procedures
+### Exportált függvények és eljárások
 
-**Calling mode:**  
+**Hívási konvenció:**  
 
-- on Windows: `stdcall`,
-- on Unix-like OS: `cdecl`.
+- Windows alatt: `stdcall`,
+- Unix-szerű operációs rendszereken: `cdecl`.
 
-|name                                                                                    |exported name       |description                                     |
-|----------------------------------------------------------------------------------------|--------------------|------------------------------------------------|
-|`function CreatePort: TIOPort;`                                                         |ioport_create       |Create a new device object.                     |
-|`procedure DestroyPort(APort: TIOPort);`                                                |ioport_destroy      |Destroy the device object.                      |
-|`procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);`|ioport_setinthandler|Set the interrupt callback and interrupt vector.|
-|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`                        |ioport_loadstate    |Load the device state from a stream.            |
-|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`                        |ioport_savestate    |Save the device state to a stream.              |
-|`procedure CreatePanel(APort: TIOPort);`                                                |ioport_createpanel  |Create the graphical user-interface panel.      |
-|`procedure FreePanel(APort: TIOPort);`                                                  |ioport_freepanel    |Destroy the graphical user-interface panel.     |
-|`procedure ShowPanel(APort: TIOPort);`                                                  |ioport_showpanel    |Show the graphical user-interface panel.        |
-|`procedure HidePanel(APort: TIOPort);`                                                  |ioport_hidepanel    |Hide the graphical user-interface panel.        |
-|`procedure RenamePanel(APort: TIOPort; ACaption: PChar);`                               |ioport_renamepanel  |Change the GUI panel caption.                   |
-|`function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;`              |ioport_resizepanel  |Resize the GUI panel.                           |
-|`function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;`                    |ioport_movepanel    |Move the GUI panel.                             |
+|név                                                                                     |exportált név       |leírás                                                       |
+|----------------------------------------------------------------------------------------|--------------------|-------------------------------------------------------------|
+|`function CreatePort: TIOPort;`                                                         |ioport_create       |Új eszközobjektumot hoz létre.                               |
+|`procedure DestroyPort(APort: TIOPort);`                                                |ioport_destroy      |Megsemmisíti az eszközobjektumot.                            |
+|`procedure SetIntHandler(APort: TIOPort; AIntProc: TInterruptCallback; AIntVect: Byte);`|ioport_setinthandler|Beállítja a megszakítás-visszahívást és a megszakításvektort.|
+|`function LoadState(APort: TIOPort; AStream: TStream): Boolean;`                        |ioport_loadstate    |Betölti az eszköz állapotát egy adatfolyamból.               |
+|`function SaveState(APort: TIOPort; AStream: TStream): Boolean;`                        |ioport_savestate    |Elmenti az eszköz állapotát egy adatfolyamba.                |
+|`procedure CreatePanel(APort: TIOPort);`                                                |ioport_createpanel  |Létrehozza a grafikus felhasználói felület paneljét.         |
+|`procedure FreePanel(APort: TIOPort);`                                                  |ioport_freepanel    |Megsemmisíti a grafikus felhasználói felület paneljét.       |
+|`procedure ShowPanel(APort: TIOPort);`                                                  |ioport_showpanel    |Megjeleníti a grafikus felhasználói felület paneljét.        |
+|`procedure HidePanel(APort: TIOPort);`                                                  |ioport_hidepanel    |Elrejti a grafikus felhasználói felület paneljét.            |
+|`procedure RenamePanel(APort: TIOPort; ACaption: PChar);`                               |ioport_renamepanel  |Módosítja a grafikus panel feliratát.                        |
+|`function ResizePanel(APort: TIOPort; AWidth, AHeight: Integer): Boolean;`              |ioport_resizepanel  |Átméretezi a grafikus panelt.                                |
+|`function MovePanel(APort: TIOPort; ALeft, ATop: Integer): Boolean;`                    |ioport_movepanel    |Áthelyezi a grafikus panelt.                                 |
