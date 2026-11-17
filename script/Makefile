@@ -12,7 +12,7 @@ removetargetdir=0
 sourcedir="."
 targetdir=$(bindir)
 filemode=$(binmode)
-files=`ls $(sourcedir) | grep -v Makefile | grep -v README.md` | grep -v '.in'`
+files=`ls $(sourcedir) | grep -v Makefile | grep -v README.md | grep -v '.in'`
 
 all:
 

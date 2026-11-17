@@ -15,33 +15,38 @@ Copyright (C) 2026 Pozsár Zsolt <pozsarzs@gmail.com>
 |cpu_8085.pas              |T8080CPU            |T8085CPU        |Intel 8085 uP          |
 |cpu_z80.pas               |TCPU                |TZ80CPU         |Zilog Z80 uP           |
 |ioport_bell.pas           |TIOPort             |TBELLPort       |System bell device     |
-|ioport_null.pas           |TIOPort             |TNULLPort       |NULL device            |
-|ioport_realport.pas       |TIOPort             |TRealPort       |Redirect to real port  |
-|ioport_console.pas        |TGIOPort            |TConsole        |Serial console         |
-|ioport_standard.pas       |TGIOPort            |TStandardPort   |Standard I/O port      |
-|ioport_button8.pas        |TGIOPort            |TButton8Port    |8-button device        |
 |ioport_button16bcd.pas    |TGIOPort            |TButton16BCDPort|1 from 16 button device|
 |ioport_button16mux.pas    |TGIOPort            |TButton16MUXPort|16-button device       |
-|ioport_switch8.pas        |TGIOPort            |TSwitch8Port    |8-switch device        |
+|ioport_button4.pas        |TGIOPort            |TButton4Port    |4-button device        |
+|ioport_button8.pas        |TGIOPort            |TButton8Port    |8-button device        |
+|ioport_console.pas        |TGIOPort            |TConsole        |Serial console         |
+|ioport_disp17seg.pas      |TGIOPort, TDisplay  |TDisp17seg      |1-digit 7s display     |
+|ioport_disp1hexbcd.pas    |TGIOPort, TDisplay  |TDisp1HexBCD    |1-digit hexa display   |
+|ioport_disp27segmux.pas   |TGIOPort, TDisplay  |TDisp27segMUX   |2-digit 7s display     |
+|ioport_disp2hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp2HexMUXBCD |2-digit hexa display   |
+|ioport_disp47segmux.pas   |TGIOPort, TDisplay  |TDisp47segMUX   |4-digit 7s display     |
+|ioport_disp4hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp4HexMUXBCD |4-digit hexa display   |
+|ioport_disp87segmux.pas   |TGIOPort, TDisplay  |TDisp87segMUX   |8-digit 7s display     |
+|ioport_disp8hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp8HexMUXBCD |8-digit hexa display   |
+|ioport_ledgreen4.pas      |TGIOPort, TLEDRound |TLEDGreen4      |4-LED device (green)   |
+|ioport_ledgreen512mux.pas |TGIOPort, TLEDSquare|TLEDGreen512MUX |512-LED device (green) |
+|ioport_ledgreen64mux.pas  |TGIOPort, TLEDSquare|TLEDGreen64MUX  |64-LED device (green)  |
+|ioport_ledgreen8.pas      |TGIOPort, TLEDRound |TLEDGreen8      |8-LED device (green)   |
+|ioport_ledred4.pas        |TGIOPort, TLEDRound |TLEDRed4        |4-LED device (red)     |
+|ioport_ledred512mux.pas   |TGIOPort, TLEDSquare|TLEDRed512MUX   |512-LED device (red)   |
+|ioport_ledred64mux.pas    |TGIOPort, TLEDSquare|TLEDRed64MUX    |64-LED device (red)    |
+|ioport_ledred8.pas        |TGIOPort, TLEDRound |TLEDRed8        |8-LED device (red)     |
+|ioport_ledyellow4.pas     |TGIOPort, TLEDRound |TLEDYellow4     |4-LED device (yellow)  |
+|ioport_ledyellow512mux.pas|TGIOPort, TLEDSquare|TLEDYellow512MUX|512-LED device (yellow)|
+|ioport_ledyellow64mux.pas |TGIOPort, TLEDSquare|TLEDYellow64MUX |64-LED device (yellow) |
+|ioport_ledyellow8.pas     |TGIOPort, TLEDRound |TLEDYellow8     |8-LED device (yellow)  |
+|ioport_null.pas           |TIOPort             |TNULLPort       |NULL device            |
+|ioport_realport.pas       |TIOPort             |TRealPort       |Redirect to real port  |
+|ioport_standard.pas       |TGIOPort            |TStandardPort   |Standard I/O port      |
 |ioport_switch16bcd.pas    |TGIOPort            |TSwitch16BCDPort|1 from 16 switch device|
 |ioport_switch16mux.pas    |TGIOPort            |TSwitch16MUXPort|16-switch device       |
-|ioport_ledgreen8.pas      |TGIOPort, TLEDRound |TLEDGreen8      |8-LED device (green)   |
-|ioport_ledred8.pas        |TGIOPort, TLEDRound |TLEDRed8        |8-LED device (red)     |
-|ioport_ledyellow8.pas     |TGIOPort, TLEDRound |TLEDYellow8     |8-LED device (yellow)  |
-|ioport_ledgreen64mux.pas  |TGIOPort, TLEDSquare|TLEDGreen64MUX  |64-LED device (green)  |
-|ioport_ledred64mux.pas    |TGIOPort, TLEDSquare|TLEDRed64MUX    |64-LED device (red)    |
-|ioport_ledyellow64mux.pas |TGIOPort, TLEDSquare|TLEDYellow64MUX |64-LED device (yellow) |
-|ioport_ledgreen512mux.pas |TGIOPort, TLEDSquare|TLEDGreen512MUX |512-LED device (green) |
-|ioport_ledred512mux.pas   |TGIOPort, TLEDSquare|TLEDRed512MUX   |512-LED device (red)   |
-|ioport_ledyellow512mux.pas|TGIOPort, TLEDSquare|TLEDYellow512MUX|512-LED device (yellow)|
-|ioport_disp17seg.pas      |TGIOPort, TDisplay  |TDisp17seg      |1-digit 7s display     |
-|ioport_disp27segmux.pas   |TGIOPort, TDisplay  |TDisp27segMUX   |2-digit 7s display     |
-|ioport_disp47segmux.pas   |TGIOPort, TDisplay  |TDisp47segMUX   |4-digit 7s display     |
-|ioport_disp87segmux.pas   |TGIOPort, TDisplay  |TDisp87segMUX   |8-digit 7s display     |
-|ioport_disp1hexbcd.pas    |TGIOPort, TDisplay  |TDisp1HexBCD    |1-digit hexa display   |
-|ioport_disp2hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp2HexMUXBCD |2-digit hexa display   |
-|ioport_disp4hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp4HexMUXBCD |4-digit hexa display   |
-|ioport_disp8hexmuxbcd.pas |TGIOPort, TDisplay  |TDisp8HexMUXBCD |8-digit hexa display   |
+|ioport_switch4.pas        |TGIOPort            |TSwitch4Port    |4-switch device        |
+|ioport_switch8.pas        |TGIOPort            |TSwitch8Port    |8-switch device        |
 |memory_4001rom.pas        |TMemory             |T4001ROM        |Intel 4001 ROM chip    |
 |memory_4002ram.pas        |TMemory             |T4002RAM        |Intel 4002 RAM chip    |
 |memory_standard.pas       |TMemory             |TStandardMemory |standard RAM/ROM       |
