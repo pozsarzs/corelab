@@ -52,7 +52,7 @@
          begin
            // FIM 0-7 d8
            DestRegIndex := ((AOC shr 1) and $07);
-           FLastInstruction.Mnemonic := 'FIM ' + IntToHex(SourceRegIndex, 1);
+           FLastInstruction.Mnemonic := 'FIM ' + IntToHex(DestRegIndex, 1);
            FLastInstruction.NumOperand := 1;
            DestRegIndex := DestRegIndex * 2;
            b1 := FBus.ReadROM(FRegs.PC);
@@ -67,14 +67,14 @@
     $30..$3F:
          if Odd(AOC) then
          begin
-           // JIN 0-7
+  // JIN 0-7
            SourceRegIndex := ((AOC shr 1) and $07);
            FLastInstruction.Mnemonic := 'JIN ' + IntToHex(SourceRegIndex, 1);
            SourceRegIndex := SourceRegIndex * 2;
-           b1 := FRegs.PC and FPCMask and $FF00;
-           b1 := b1 or (RegPointers[SourceRegIndex]^ shl 4) or
-                       (RegPointers[SourceRegIndex + 1]^);
-           FRegs.PC := b1 and FPCMask;
+           FRegs.PC := ((FRegs.PC and FPCMask and $FF00) or
+                        (RegPointers[SourceRegIndex]^ shl 4) or
+                        (RegPointers[SourceRegIndex + 1]^ and $0F)) and
+                         FPCMask;
            FLastInstruction.Cycles := 8;
          end else
          begin
@@ -160,7 +160,7 @@
            SourceRegIndex := AOC and $0F;
            FLastInstruction.Mnemonic := 'SUB ' + IntToHex(SourceRegIndex, 1);
            b1 := FRegs.A + ((not RegPointers[SourceRegIndex]^) and $0F);
-           if FFlags.C then Inc(b1);
+           if not FFlags.C then Inc(b1);
            FRegs.A := b1 and $0F;
            FFlags.C := b1 > $0F;
            FLastInstruction.Cycles := 8;
@@ -229,11 +229,11 @@
            // Write Program Memory function for 4008/4009/4289 chips
            FLastInstruction.Cycles := 8;
          end;
-    // WR 0-3
+    // WR0-WR3
     $E4..$E7:
          begin
            b1 := AOC and $03;
-           FLastInstruction.Mnemonic := 'WR ' + IntToStr(b1);
+           FLastInstruction.Mnemonic := 'WR' + IntToStr(b1);
            FBus.WriteRAMStatus(b1, FRegs.A);
            FLastInstruction.Cycles := 8;
          end;
@@ -241,7 +241,7 @@
     $E8: begin
            FLastInstruction.Mnemonic := 'SBM';
            b1 := FRegs.A + ((not FBus.ReadRAM) and $0F);
-           if FFlags.C then Inc(b1);
+           if not FFlags.C then Inc(b1);
            FRegs.A := b1 and $0F;
            FFlags.C := b1 > $0F;
            FLastInstruction.Cycles := 8;
@@ -263,17 +263,17 @@
     // ADM
     $EB: begin
            FLastInstruction.Mnemonic := 'ADM';
-           b1 := FRegs.A + FBus.ReadRAM;
+           b1 := FRegs.A + (FBus.ReadRAM and $0F);
            if FFlags.C then Inc(b1);
            FRegs.A := b1 and $0F;
            FFlags.C := b1 > $0F;
            FLastInstruction.Cycles := 8;
          end;
-    // RD 0-3
+    // RD0-RD3
     $EC..$EF:
          begin
            b1 := AOC and $03;
-           FLastInstruction.Mnemonic := 'RD ' + IntToStr(b1);
+           FLastInstruction.Mnemonic := 'RD' + IntToStr(b1);
            FRegs.A := FBus.ReadRAMStatus(b1) and $0F;
            FLastInstruction.Cycles := 8;
          end;
@@ -311,6 +311,16 @@
            FRegs.A := (not FRegs.A) and $0F;
            FLastInstruction.Cycles := 8;
          end;           
+    // RAL
+    $F5: begin
+           FLastInstruction.Mnemonic := 'RAL';
+           bool1 := FFlags.C;
+           b1 := FRegs.A and $0F;
+           FFlags.C := ((b1 and $08) = $08);
+           b1 := (b1 shl 1) and $0F;
+           if bool1 then FRegs.A := b1 or $01 else FRegs.A := b1;
+           FLastInstruction.Cycles := 8;
+         end;
     // RAR
     $F6: begin
            FLastInstruction.Mnemonic := 'RAR';
@@ -357,7 +367,7 @@
            begin
              w1 := FRegs.A + 6;
              FRegs.A := w1 and $0F;
-             FFlags.C := (w1 > 15);
+             if w1 > 15 then FFlags.C := True;
            end;
            FLastInstruction.Cycles := 8;
          end;
