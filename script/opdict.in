@@ -52,7 +52,7 @@ terminfiles()
           }
     # set header 
     NR == 1 {
-              header = sprintf("%-8s\t%-10s\t%4s\t%6s\t%-8s\n", $1, $2, $3, $4, $5)
+              header = sprintf("%-8s\t%-10s\t%4s\t%6s\t%-8s\t%-40s\n", $1, $2, $3, $4, $5, $6)
               header = GREEN header BASE
               next 
             }
@@ -65,7 +65,7 @@ terminfiles()
         }
         gsub(/ /, "", $4)
         # print found lines
-        printf "%-8s\t%-10s\t%4s\t%6s\t%-8s\n", $1, $2, $3, $4, $5 
+        printf "%-8s\t%-10s\t%4s\t%6s\t%-8s\t%-40s\n", $1, $2, $3, $4, $5, $6 
       }
     }
     END {
