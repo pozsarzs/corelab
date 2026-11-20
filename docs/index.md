@@ -21,7 +21,7 @@ studying the operation and low-level programming of classic architectures.
 * Intel 8008 Neumann architecture 8 bit microprocessor (1972).
 * Intel 8080 Neumann architecture 8 bit microprocessor (1974).
 * Intel 8085 Neumann architecture 8 bit microprocessor (1976).
-* Zilog Z80 Neumann 8 bit microprocessor (1976).
+* Zilog Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-page/cpu_z80.pdf).
 
 ![CoreLAB](corelab.png)
 
