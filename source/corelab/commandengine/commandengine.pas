@@ -15,7 +15,7 @@ unit commandengine;
 {$MODE OBJFPC}{$H+}
 interface
 uses
-  SysUtils, Classes, command, commandparser, commandregistry, uactcontext,
+  SysUtils, Classes, base64, command, commandparser, commandregistry, uactcontext,
   ucommon, token;
 type
   { TCommandEngine }
@@ -82,6 +82,9 @@ var
   InfoList:      TStringList;
   Line:          string;
   Tokens:        TTokenList;
+const
+  line1 = 'SSB3cm90ZSB0aGlzIGFwcGxpY2F0aW9uIGluIGhvbm9yIG9mIG15IGZyaWVuZCwgSmFuaSBLYXRvbmEs';
+  line2 = 'IHdobyBkZWRpY2F0ZWQgYSBncmVhdCBkZWFsIG9mIHZhbHVhYmxlIHRpbWUgdG8gbWUgYmVmb3JlIGhpcyByZXRpcmVtZW50Lg==';
 begin
   Result := 0;
   // empty line or comment
@@ -102,6 +105,15 @@ begin
     begin
       Infotext := LineEnding + '  /\_/\' + LineEnding +' ( o.o )' + LineEnding +
                   '  > ^ <' + LineEnding +'  /   \' +  LineEnding;
+      Form1.SysConsole1.WriteMessage(InfoText);
+      Result := 0;
+      Exit;
+    end;
+    if CommandName = 'jani' then
+    begin
+      Infotext :=  LineEnding +
+       DecodeStringBase64(line1) + LineEnding +
+       DecodeStringBase64(line2) + LineEnding;
       Form1.SysConsole1.WriteMessage(InfoText);
       Result := 0;
       Exit;
