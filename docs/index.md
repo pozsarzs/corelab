@@ -28,7 +28,7 @@ available - _you are the assembler_ yourself.
 * Intel 8008 Neumann architecture 8 bit microprocessor (1972) - [opcode pages](opcode-pages/cpu_8008.pdf).
 * Intel 8080 Neumann architecture 8 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_8080.pdf).
 * Intel 8085 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_8085.pdf).
-* Zilog Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_z80.pdf).
+* Zilog Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_z80.pdf){:target="_blank"}.
 
 ![CoreLAB](corelab.png)
 
