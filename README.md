@@ -192,6 +192,17 @@ Second release will be with the following changes:
 
 ## V. About the program
 
+CoreLAB is also a functional 8-bit microprocessor and microcontroller simulator.
+It is not a traditional closed emulator, but a  scriptable environment for
+studying the operation and low-level programming of classic architectures.
+
+Don't expect miracles from it, though—it is not suited for running large
+programs. Its purpose is learning: executing your own short programs slowly or
+step by step, while observing data flow and internal events.
+
+Programs can only be written in machine code, where - if nothing else is
+available - you are the assembler yourself.
+
 ### Project management
 
 CoreLAB uses a simple directory-based project structure. A project directory can

@@ -1,6 +1,13 @@
-CoreLAB is a functional 8-bit microprocessor and microcontroller simulator. It
-is not a traditional closed emulator, but a modern, scriptable environment for
+CoreLAB is also a functional 8-bit microprocessor and microcontroller simulator.
+It is not a traditional closed emulator, but a  scriptable environment for
 studying the operation and low-level programming of classic architectures.
+
+Don't expect miracles from it, though—it is not suited for running large programs.
+Its purpose is learning: executing your own short programs slowly or step by step,
+while observing data flow and internal events.
+
+Programs can only be written in machine code, where - if nothing else is
+available - _you are the assembler_ yourself.
 
 **Key features:**
 
@@ -16,12 +23,12 @@ studying the operation and low-level programming of classic architectures.
 
 **Supported processors:** 
 
-* Intel 4004 Harvard architecture 4 bit microprocessor (1971) - with 4001 and 4002 chips.
-* Intel 4040 Harvard architecture 4 bit microprocessor (1974).
-* Intel 8008 Neumann architecture 8 bit microprocessor (1972).
-* Intel 8080 Neumann architecture 8 bit microprocessor (1974).
-* Intel 8085 Neumann architecture 8 bit microprocessor (1976).
-* Zilog Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-page/cpu_z80.pdf).
+* Intel 4004 Harvard architecture 4 bit microprocessor (1971) - [opcode pages](opcode-pages/cpu_4004.pdf).
+* Intel 4040 Harvard architecture 4 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_4040.pdf).
+* Intel 8008 Neumann architecture 8 bit microprocessor (1972) - [opcode pages](opcode-pages/cpu_8008.pdf).
+* Intel 8080 Neumann architecture 8 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_8080.pdf).
+* Intel 8085 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_8085.pdf).
+* Zilog Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_z80.pdf).
 
 ![CoreLAB](corelab.png)
 
