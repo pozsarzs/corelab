@@ -23,12 +23,12 @@ available - _you are the assembler_ yourself.
 
 **Supported processors:** 
 
-* Intel 4004 Harvard architecture 4 bit microprocessor (1971) - [opcode pages](opcode-pages/cpu_4004.pdf).
-* Intel 4040 Harvard architecture 4 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_4040.pdf).
-* Intel 8008 Neumann architecture 8 bit microprocessor (1972) - [opcode pages](opcode-pages/cpu_8008.pdf).
-* Intel 8080 Neumann architecture 8 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_8080.pdf).
-* Intel 8085 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_8085.pdf).
-* Zilog Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_z80.pdf){:target="_blank"}.
+* Intel 4004 Harvard architecture 4 bit microprocessor (1971) - [opcode pages](opcode-pages/cpu_4004.pdf){:target="_blank"}.
+* Intel 4040 Harvard architecture 4 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_4040.pdf){:target="_blank"}.
+* Intel 8008 Neumann architecture 8 bit microprocessor (1972) - [opcode pages](opcode-pages/cpu_8008.pdf){:target="_blank"}.
+* Intel 8080 Neumann architecture 8 bit microprocessor (1974) - [opcode pages](opcode-pages/cpu_8080.pdf){:target="_blank"}.
+* Intel 8085 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_8085.pdf){:target="_blank"}.
+* Zilog <&nbsp;>Z80 Neumann architecture 8 bit microprocessor (1976) - [opcode pages](opcode-pages/cpu_z80.pdf){:target="_blank"}.
 
 ![CoreLAB](corelab.png)
 

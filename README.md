@@ -135,7 +135,7 @@ Second release will be with the following changes:
  - Intel 8008 Neumann architecture 8 bit microprocessor (1972).
  - Intel 8080 Neumann architecture 8 bit microprocessor (1974).
  - Intel 8085 Neumann architecture 8 bit microprocessor (1976).
- - Zilog Z80 Neumann 8 bit microprocessor (1976).
+ - Zilog  Z80 Neumann architecture 8 bit microprocessor (1976).
 
 ### Utility scripts
 
